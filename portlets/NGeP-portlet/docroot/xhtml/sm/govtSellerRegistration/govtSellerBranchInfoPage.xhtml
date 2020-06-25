@@ -207,9 +207,10 @@
 					<td>
 				<p:outputPanel id="divisionBranchInfoDropdownPanelId">
 				<ui:fragment rendered="#{!bb.managedBean.divisionBox}">
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.division']}"
-							value="#{bb.managedBean.divisionIds}"
+							value="#{bb.managedBean.selectedBranch.smAddress.pmDivision.divisionId}"
 							id="branchDivision">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDivision"
@@ -217,7 +218,7 @@
 							<p:ajax event="change" process="@this"
 							listener="#{bb.onChangeDivision('BRANCH_ADDRESS')}"
 								update="branchDist,branchCity" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
 						</ui:fragment>
 						</p:outputPanel>
 						</td>

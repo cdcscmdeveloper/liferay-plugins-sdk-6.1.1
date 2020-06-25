@@ -96,46 +96,41 @@
 							value="#{registrationBackingBean.managedBean.residentialStateLs}"
 							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateDistrictByAddType('residential', false)}"
-							update="divisionLabelPanelId,divisionDropdownPanelId,cmbResDistrict,cmbResCity" />
+							listener="#{registrationBackingBean.populateDistrictByAddType('residential', true)}"
+							update="pnlContactInfo,divisionContLabelPanelId,divisionContDropdownPanelId,cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
 				</td>
 			</tr>
 		<!-- 13320 -->
-		
-		<tr>
-				<td ></td>
-				<td ></td>
-                <td  class="tdTitle">
-				<p:outputPanel id="divisionLabelPanelId" >
-					<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+		<tr id="diviTrId">
+				<td></td>
+				<td></td>
+				<td class="tdTitle">
+					<h:panelGroup id="divisionContLabelPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-						</ui:fragment>
-					</p:outputPanel>
-					</td>
-					<td>
-				<p:outputPanel id="divisionDropdownPanelId">
-				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
-				<td class="tdContent"><p:selectOneMenu id="cmbResDivision"
-						label="#{lbl['lbl.sm.division']}" style="width:80%"
-						value="#{registrationBackingBean.managedBean.divisionId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="resDivision"
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionContDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
+						<p:selectOneMenu id="cmbResDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{registrationBackingBean.managedBean.smResAdd.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItem itemValue=""
+							itemLabel="#{lbl['lbl.txt.select'].concat('test testsss')}" />
+						<f:selectItems var="division"
 							value="#{registrationBackingBean.managedBean.residentialDivisionLs}"
-							itemValue="#{resDivision.divisionId}" itemLabel="#{resDivision.divisionName}" />
-						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateDivisionByAddType('residential', false)}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+						<p:ajax event="change" process="@this"
+							listener="#{registrationBackingBean.populateDivisionByAddType('residential', true)}"
 							update="cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu>
+					</h:panelGroup>
 				</td>
-				</ui:fragment>
-				</p:outputPanel>
-				</td>
-			</tr>
-		
-		
-		
+            </tr>
 
 			<tr>
 				<td class="tdTitle"></td>
@@ -158,7 +153,7 @@
 							value="#{registrationBackingBean.managedBean.residentialDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
 						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateCityByAddType('residential', false)}"
+							listener="#{registrationBackingBean.populateCityByAddType('residential', true)}"
 							update="cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
 						display="icon" /></td>
