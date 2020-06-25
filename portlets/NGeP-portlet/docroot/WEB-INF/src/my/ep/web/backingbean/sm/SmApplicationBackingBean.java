@@ -184,6 +184,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 // TODO: Auto-generated Javadoc
@@ -5085,16 +5086,59 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedPendingApprovalCategoryCodes() {
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
 				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean()
-					.getDeleteNewApplCategoryList();
-			deleteCatCodes(categories);
-			// API FOR LIST OF OVERLAPPING CATEGORIES
-			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 
-			initPhysicalConsultingCatcode();
+			List<SmSupplierCategory> categories = getManagedBean().getDeleteNewApplCategoryList();
+
+			// 28391: Disciplinary Action - start - <28391>
+			List<SmSupplierCategory> activeCategoryList = getManagedBean().getActiveCategoryList();
+			boolean flagProceedDeleteCategory = true;
+
+			for (SmSupplierCategory eachActiveCategory : activeCategoryList) {
+
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+					flagProceedDeleteCategory = false;
+				}
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
+			// 28391: Disciplinary Action - Start - <28391>
+			if (flagProceedDeleteCategory) {
+
+				deleteCatCodes(categories);
+
+				// API FOR LIST OF OVERLAPPING CATEGORIES
+				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+				initPhysicalConsultingCatcode();
+
+			} else {
+
+				for (SmSupplierCategory eachSelectedCategory : categories) {
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
+						flagProceedDeleteCategory = true;
+					}
+				}
+
+				if (flagProceedDeleteCategory) {
+					deleteCatCodes(categories);
+
+					// API FOR LIST OF OVERLAPPING CATEGORIES
+					SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+
+					initPhysicalConsultingCatcode();
+				} else {
+					throw new EpException(MessageConst.INFO_776044);
+				}
+			}
+			// 28391: Disciplinary Action - end - <28391>
+
 		} else {
-			throw new EpException(MessageConst.ERROR_722534,
-					new String[] { "Category Code" });
+			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
 		}
 	}
 
