@@ -146,6 +146,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private boolean LOPOSelected;
 	/* 27827 - START */
 	private List<PmZone> zoneList;
+	private Long selectedZoneId;
 	/* 27827 - END */
 
 	public RuleCatalogueManageBean() {
@@ -1491,6 +1492,14 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public void setZoneList(List<PmZone> zoneList) {
 		this.zoneList = zoneList;
+	}
+	
+	public Long getSelectedZoneId() {
+		return selectedZoneId;
+	}
+
+	public void setSelectedZoneId(Long selectedZoneId) {
+		this.selectedZoneId = selectedZoneId;
 	}
 
 }
