@@ -3088,16 +3088,7 @@ public class EvaluationBackingBean extends
 			ScQtScoreOfferPrice packageOfferPrice, TplSpecZoneDtl specZoneDtl) {
 		ITemplateSpecSO templateSpecSo;
 		TemplateSpecResDTO zoneSpecresDTO;
-		if(null == packageOfferPrice.getScoreType()){//#25138 - start
-			this.getManagedBean()
-				.setOfferScoreType(QTConstants.AUTO_SCORE);
-			packageOfferPrice
-				.setScoreType(new BigDecimal(QTConstants.AUTO_SCORE));
-		}else{
-			this.getManagedBean()
-				.setOfferScoreType(packageOfferPrice.getScoreType().toString());
-			
-		}//#25138 - end
+		
 		try {
 			if (null != packageOfferPrice) {
 				if (!scQt.isZonal()) {
@@ -3120,11 +3111,6 @@ public class EvaluationBackingBean extends
 									estimatedPrice.add(tovarieance));
 
 					}
-					if (null != packageOfferPrice.getScoreType()) {//#25138 - start
-						this.getManagedBean().setOfferScoreType(
-								packageOfferPrice.getScoreType().toString());
-
-						}//#25138 - end
 				} else {
 					if (null != specZoneDtl) {
 						templateSpecSo = BusinessDelegate.getInstance()
@@ -3164,11 +3150,6 @@ public class EvaluationBackingBean extends
 										.getEstimatedPrices().add(tovarieance));
 
 							}
-							if (null != packageOfferPrice.getScoreType()) {//#25138 - start
-								this.getManagedBean().setOfferScoreType(
-										packageOfferPrice.getScoreType().toString());
-
-							}//#25138 - end
 
 							this.getManagedBean().setFinSpecZoneEstimatedPrice(
 									zoneSpecresDTO.getEstimatedPrices());
