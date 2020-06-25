@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -594,6 +596,16 @@ public class ConsolidationReportBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
+				for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
+					if (StringUtils.isNotEmpty(remark.getRemark())) {
+						reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
+						break;
+					}
+				}
+			}
+			// #18685 - End
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 			//saveEvaluationReportsDetaills();
@@ -1034,17 +1046,52 @@ public class ConsolidationReportBackingBean extends
 	private void initializeRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
+		
+		// #18685 - Start
+		if (null != scQtFinalization && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationRemarks())) {
+			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
+			while (iterator.hasNext()) {
+				ScQtFinalizationRemarks remark = iterator.next();
+				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
+					List<ScQtFinalizationRemarks> itemizedRemarks = new ArrayList<>();
+					itemizedRemarks.add(remark);
+					getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		
 
-		// Retrieve finalization remarks
+		// Retrieve finalization remarks for Package Wise
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(
 				scQtFinalization, getManagedBean().getScQt()
 						.getCurrentWorkFlowStatus(),
 				scQtFinalization.getScQtFinalizationRemarks(),
 				ScQtFinalizationRemarks.class);
+		if (null != remarks && remarks.size() > 0) {
+			for (ScQtFinalizationRemarks remark : remarks) {
+				remark.setSourceName(CommonConstants.PACKAGE_WISE);
+			}
+		}
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
-
 		// Finalization Remarks list
 		getManagedBean().setFinalizationRemars(remarks);
+		
+		// Retrieve finalization remarks for Itemized
+		List<ScQtFinalizationRemarks> itemizedRemarks = initializeRemarks(
+				scQtFinalization, getManagedBean().getScQt()
+						.getCurrentWorkFlowStatus(),
+						getManagedBean().getFinalizationItemizedRemarks(),
+				ScQtFinalizationRemarks.class);
+		if (null != itemizedRemarks && itemizedRemarks.size() > 0) {
+			for (ScQtFinalizationRemarks remark : itemizedRemarks) {
+				remark.setSourceName(CommonConstants.ITEMIZED);
+			}
+		}
+		//scQtFinalization.getScQtFinalizationRemarks().addAll(itemizedRemarks);
+		getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+		// #18685 - End
 	}
 
 	private void finalizeRemarks() {

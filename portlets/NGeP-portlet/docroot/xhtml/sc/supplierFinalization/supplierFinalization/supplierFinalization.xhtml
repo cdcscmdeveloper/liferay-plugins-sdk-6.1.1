@@ -137,7 +137,7 @@
 																(suppFinalizationBackingBean.managedBean.finalizationMethod eq 
 																	ParameterConst.recommendByOnlineBidding)) ) or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
-									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=recommendSupplierPanel])" 
+									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=recommendSupplierPanel], [id$=remarksPanel])" 
 										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					   			</p:selectOneRadio>
@@ -436,10 +436,12 @@
 	
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/commonSupplierPopup.xhtml" />
 	
-	<ac:scRemarkAndAttachment
-		remarkList="#{suppFinalizationBackingBean.managedBean.finalizationRemarks}"
-		showAttachment="false" 
-		readonly="#{suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+	<p:outputPanel id="remarksPanel">
+		<ac:scRemarkAndAttachment
+			remarkList="#{suppFinalizationBackingBean.managedBean.finalizationRemarks}"
+			showAttachment="false" 
+			readonly="#{suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+	</p:outputPanel>
 	
 	<p:panel id="justify20kId" header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
 		rendered="#{expectTotalIndPriceBelowThreshold}">

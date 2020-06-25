@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -580,6 +581,11 @@ public class SupplierFinalizationBackingBean extends
 		validateFCByDataTypeRule();
 		checkSFHasQualifiedSupplier();
 		//#26169 #38 - END
+		
+		// #18685 - Start
+		populatePendingRecRemarks(getManagedBean().getScQtFinalization());
+		// #18685 - End
+		
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
 		finalizationMethodEvent(null);
@@ -611,6 +617,27 @@ public class SupplierFinalizationBackingBean extends
 		}		
 
 	}
+	
+	// #18685 - Start
+	/**
+	 * @param scQtFinalization
+	 */
+	private void populatePendingRecRemarks(ScQtFinalization scQtFinalization) {
+		if (null != scQtFinalization && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationRemarks())) {
+			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
+			while (iterator.hasNext()) {
+				ScQtFinalizationRemarks remark = iterator.next();
+				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
+					getManagedBean().setPendingRecItemizedRemark(remark);
+					iterator.remove();
+				} else if (CommonConstants.PACKAGE_WISE.equals(remark.getSourceName())) {
+					getManagedBean().setPendingRecPackageRemark(remark);
+					iterator.remove();
+				}
+			}
+		}
+	}
+	// #18685 - End
 	
 	private void loadRecommededSuppliersIntoCachedData(boolean isItemized) {
 		log.info("loadRecommededSuppliersIntoCachedData");
@@ -5136,6 +5163,9 @@ public class SupplierFinalizationBackingBean extends
 						scQtFinalization.getScQtRecommends());
 			}
 			setSelectedSupplierCodesByItem();
+			// #18685 - Start
+			manageRemarks(scQtFinalization, getManagedBean().getPendingRecItemizedRemark(), CommonConstants.PACKAGE_WISE);
+			// #18685 - End
 		} else {
 			if (triggeredFromEvent) {
 				List<ScQtRecommend> scQtRecommendList = 
@@ -5144,13 +5174,37 @@ public class SupplierFinalizationBackingBean extends
 					item.setCancelled(false);
 				}
 			}
-			
+			// #18685 - Start
+			manageRemarks(scQtFinalization, getManagedBean().getPendingRecPackageRemark(), CommonConstants.ITEMIZED);
+			// #18685 - End
 			createShortlistedSuppliersDataModel();
 		}
 		//#26169 #38 #25729#142 - Start 
 		checkSupplierOfferPriceByItemIsExceedCommitteeAuthority();
 		//#26169 #38 #25729#142 - End
 	}
+
+	// #18685 - Start
+	/**
+	 * @param scQtFinalization
+	 * @param packageWise 
+	 * @param scQtFinalizationRemarks 
+	 */
+	private void manageRemarks(ScQtFinalization scQtFinalization, ScQtFinalizationRemarks scQtFinalizationRemarks, String removeSourceName) {
+		if (null != scQtFinalization) {
+			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
+			while (iterator.hasNext()) {
+				ScQtFinalizationRemarks remark = iterator.next();
+				if (removeSourceName.equals(remark.getSourceName())) {
+					iterator.remove();
+				}
+			}
+			if (null != scQtFinalizationRemarks) {
+				scQtFinalization.getScQtFinalizationRemarks().add(scQtFinalizationRemarks);
+			} 
+		}
+	}
+	// #18685 - End
 	
 	private void setSelectedSupplierCodesByItem() {
 		log.info("setSelectedSupplierCodesByItem");
