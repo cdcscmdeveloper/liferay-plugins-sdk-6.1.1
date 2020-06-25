@@ -1593,6 +1593,8 @@ public class EvaluationBackingBean extends
 			
 			return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithZone.xhtml";
 		} else {
+			this.getManagedBean().getFinSpecSupplierListDM().reloadData();//#25138 -Ahmaa
+			
 			return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
 		}
 
@@ -8746,17 +8748,7 @@ private void retriveCommitteeRemarksList(){
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				List<ScQtProposalChecklist> financialSpes = this
 						.getManagedBean().getFinSpecSupplierListDM().getList();
-//				List<ScQtProposalAmount> listAmount = new ArrayList<ScQtProposalAmount>();
-//				for(ScQtProposalChecklist list : financialSpes){
-//					List<ScQtProposalAmount> amounts = list.getScQtProposal().getScQtProposalAmounts();
-//					for(ScQtProposalAmount score : amounts){
-//						score.setTotalScore(new BigDecimal(90));
-//						listAmount.add(score);
-//					}
-//					
-//				}
-//				int scoreindex = listAmount.indexOf(this.getManagedBean()
-//						.getQtProposalAmount());
+
 				int finindex = financialSpes.indexOf(this.getManagedBean()
 						.getQtProposalChecklist());
 				financialSupplierEvaluate(evalResDTO.getProposalChecklist(),
