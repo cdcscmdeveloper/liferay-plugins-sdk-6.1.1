@@ -864,7 +864,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setCtAttachmentDelete(null);
 			}
 			reqDTO.setCtContractVer(ctContractVer);
+			// Start - #28292/#26475
 			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
