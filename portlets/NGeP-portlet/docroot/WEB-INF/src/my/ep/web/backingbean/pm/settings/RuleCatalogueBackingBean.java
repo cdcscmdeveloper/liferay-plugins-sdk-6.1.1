@@ -440,6 +440,9 @@ public class RuleCatalogueBackingBean extends
 			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
 			getManagedBean().setConfigRuleDescList(list);
 			getManagedBean().setSelectedRuleDescType(list.get(0));
+			/* 27827 - START */
+			retrievePmZoneList();
+			/* 27827 - END */
 			// List<PmConfigRule> list = retriveConfigRuleFromDB();
 			// this.getManagedBean().setConfigRuleList(list);
 			// this.getManagedBean().setSelectedRuleType(list.get(0));
@@ -1548,6 +1551,12 @@ public class RuleCatalogueBackingBean extends
 											new String[] {
 													ruleTypeDesc.getRuleDesc(),
 													value.getCategoryDisplayValue() });
+								}/* 27827 - START */
+								  else if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("pc")) {
+									throw new EpException(
+											MessageConst.ERROR_770199, new String[] {
+													ruleTypeDesc.getRuleDesc(), value.getRuleValue()});
+								/* 27827 - END */
 								} else {
 									throw new EpException(
 											MessageConst.ERROR_770110,
@@ -5382,20 +5391,19 @@ public class RuleCatalogueBackingBean extends
 	public void addPTJCRValues(){
 		log.info("addPTJCRValues");
 		
-		retrievePmZoneList();
 		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
-		PmPtjSpecialApproval approval = null;
 		PmConfigRuleValue newRuleValue  = null;
 		int index = 0;
 		
 		for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
 			if(orgProfile.isSelected()){
-				approval = new PmPtjSpecialApproval();
 				newRuleValue = new PmConfigRuleValue();
-				approval.setPmOrgProfile(orgProfile);	
+				newRuleValue.setPmOrgProfile(orgProfile);
+				newRuleValue.setRuleType(configRuleType);
 				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
-				newRuleValue.setRuleValue(approval.getPmOrgProfile().getOrgCode());
-				newRuleValue.setRuleDescription(approval.getPmOrgProfile().getOrgName());
+				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
+				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
+				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
 				index = configRuleType.getConfigRuleValues().size();
 				configRuleType.getConfigRuleValues().add(index, newRuleValue);
 			}
