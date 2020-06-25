@@ -74,42 +74,37 @@
 								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
-										update="divisionPrnlSharLabelPanelId,divisionPrnlSharDropdownPanelId,prsShrPermDist,prsShrPermCity" />
+										update="prsShrPermDist,prsShrPermCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
 						
 						<!-- 13320 -->
-						<tr>
-							<td  class="tdTitle">
-				<p:outputPanel id="divisionPrnlSharLabelPanelId" >
-					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+						<tr id="divTrShId">
+				<td class="tdTitle">
+					<h:panelGroup id="divisionPrnlSharLabelPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-						</ui:fragment>
-					</p:outputPanel>
-					</td>
-					<td>
-				<p:outputPanel id="divisionPrnlSharDropdownPanelId">
-				<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId}"
-									id="prsShrPermDivision">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems var="prsShrPermDivision"
-										value="#{backingBean.managedBean.shrHldrPermDivisions}"
-										itemValue="#{prsShrPermDivision.divisionId}"
-										itemLabel="#{prsShrPermDivision.divisionName}" />
-									<p:ajax event="change"
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionPrnlSharDropdownPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:selectOneMenu id="prsShrPermDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="division"
+							value="#{backingBean.managedBean.shrHldrPermDivisions}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+						<p:ajax event="change"
 									listener="#{backingBean.populateDivisionsByState}"
 										update="prsShrPermDist,prsShrPermCity" />
-
-								</p:selectOneMenu></td>
-								</ui:fragment>
-								</p:outputPanel>
-								</td>
-						</tr>
+					</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
 						
 
 						<tr>
@@ -229,29 +224,37 @@
 								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
-										update="prsShrMailDivision,prsShrMailDist,prsShrMailCity" />
-
-								</p:selectOneMenu></td>
-						</tr>
-						<!-- 13320 -->
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId}"
-									disabled="#{backingBean.managedBean.divisionBox}"
-									id="prsShrMailDivision">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems var="prsShrMailDivision"
-										value="#{backingBean.managedBean.shrHldrMailDivisions}"
-										itemValue="#{prsShrMailDivision.divisionId}"
-										itemLabel="#{prsShrMailDivision.divisionName}" />
-									<p:ajax event="change"
-										listener="#{backingBean.populateDivisionByState}"
 										update="prsShrMailDist,prsShrMailCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
+						<!-- 13320 -->
+						<tr id="divShrmID">
+				<td class="tdTitle">
+				<h:outputText value=#{backingBean.managedBean.divisionBox}/>
+					<h:panelGroup id="divisionMailLabelPanelId" rendered="#{backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionMailDropdownPanelId" rendered="#{backingBean.managedBean.divisionBox}">
+						<p:selectOneMenu id="prsShrMailDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="division"
+							value="#{backingBean.managedBean.shrHldrMailDivisions}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+							<p:ajax event="change"
+							listener="#{backingBean.populateDivisionByState}"
+							update="prsShrMailDist,prsShrMailCity" />
+							</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
@@ -309,7 +312,7 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.resiAddr*4']} : " /></b></u></td>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.resiAddr']} : " /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
 										<td width="10px"><p:selectBooleanCheckbox /></td>
@@ -361,7 +364,7 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.state*find']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}"
@@ -376,29 +379,37 @@
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
-										update="prsShrResDivision,prsShrResDist,prsShrResCity" />
-
-								</p:selectOneMenu></td>
-						</tr>
-						<!-- 13320 -->
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId}"
-									disabled="#{backingBean.managedBean.divisionBox}"
-									id="prsShrResDivision">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems var="prsShrResDivision"
-										value="#{backingBean.managedBean.shrHldrResdDivisions}"
-										itemValue="#{prsShrResDivision.divisionId}"
-										itemLabel="#{prsShrResDivision.divisionName}" />
-									<p:ajax event="change"
-										listener="#{backingBean.populateDivisionsByState}"
 										update="prsShrResDist,prsShrResCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
+						<!-- 13320 -->
+						<tr id="">
+				<td class="tdTitle">
+					<h:panelGroup id="divisionShrhLabelPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionShrhDropdownPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:selectOneMenu id="prsShrResDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="division"
+							value="#{backingBean.managedBean.shrHldrResdDivisions}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+						<p:ajax event="change"
+										listener="#{backingBean.populateDivisionsByState}"
+										update="prsShrResDist,prsShrResCity" />
+
+					</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
@@ -516,33 +527,38 @@
 										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
-										update="prsShrOffDivision,prsShrOffDist,prsShrOffCity" />
+										update="prsShrOffDist,prsShrOffCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
 						
 						<!-- 13320 -->
-						
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:selectOneMenu
-									style="width: 207px;margin-bottom: 5px;"
-									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId}"
-									disabled="#{backingBean.managedBean.divisionBox}"
-									id="prsShrOffDivision">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems var="prsShrOffDivision"
-										value="#{backingBean.managedBean.shrHldrOffDivisions}"
-										itemValue="#{prsShrOffDivision.divisionId}"
-										itemLabel="#{prsShrOffDivision.divisionName}" />
-									<p:ajax event="change"
-										listener="#{backingBean.populateDivisionsByState}"
-										update="prsShrOffDist,prsShrOffCity" />
-
-								</p:selectOneMenu></td>
-						</tr>
+						<tr id="divTrOffId">
+				<td class="tdTitle">
+					<h:panelGroup id="divisionOffLabelPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionOffDropdownPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+						<p:selectOneMenu id="prsShrOffDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="division"
+							value="#{backingBean.managedBean.shrHldrOffDivisions}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+							<p:ajax event="change"
+							listener="#{backingBean.populateDivisionsByState}"
+							update="prsShrOffDist,prsShrOffCity" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
