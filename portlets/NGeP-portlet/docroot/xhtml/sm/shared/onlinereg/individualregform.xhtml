@@ -131,7 +131,7 @@
 					</p:tooltip> <p:message id="txtPermAdd1Msg" for="txtPermAdd1" display="icon" /></td>
 
 				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+					<p:outputLabel value="#{lbl['lbl.sm.state*individual']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermState" style="width:80%"
@@ -149,39 +149,33 @@
 			</tr>
 			
 			<!-- 13320 -->
-			
-				<tr>
+			<tr id="divTrId">
 				<td></td>
 				<td></td>
-
-				<td  class="tdTitle">
-				<p:outputPanel id="divisionIndiLabelPanelId" >
-					<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
+				<td class="tdTitle">
+					<h:panelGroup id="divisionIndiLabelPanelId" rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-						</ui:fragment>
-					</p:outputPanel>
-					</td>
-					<td>
-				<p:outputPanel id="divisionIndiDropdownPanelId">
-				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
-				<td class="tdContent"><p:selectOneMenu id="cmbPermDivision" style="width:80%"
-						 label="#{lbl['lbl.sm.division']}"
-						value="#{registrationBackingBean.managedBean.divisionId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionIndiDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+						<p:selectOneMenu id="cmbPermDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
-							itemValue="#{divsion.divisionId}" itemLabel="#{division.divisionName}" />
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',false)}"
 							update="cmbPermDistrict,cmbPermCity" />
-					</p:selectOneMenu></td>
-					</ui:fragment>
-					</p:outputPanel>
-					</td>
-			</tr>
-			
-			
+					</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
 			
 			
 			

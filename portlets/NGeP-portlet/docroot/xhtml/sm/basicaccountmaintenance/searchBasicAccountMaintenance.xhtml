@@ -575,14 +575,14 @@
 					</td>
 						<td class="tdContent"><p:selectOneMenu id="busDivision"
 						        label="#{lbl['lbl.sm.division']}"
-								value="#{supplierDataMaintenanceBackingBean.managedBean.divisionId}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
 								style="width:80%">
 								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 								<f:selectItems var="division"
 									value="#{supplierDataMaintenanceBackingBean.managedBean.businessDivisionLs}"
 									itemValue="#{division.divisionId}" itemLabel="#{division.divisionName}" />
 								<p:ajax event="change" process="@this"
-									listener="#{supplierDataMaintenanceBackingBean.populateDivisionByAddType}"
+									listener="#{supplierDataMaintenanceBackingBean.populateDivisionByAddType('business', true)}"
 									update="busDistrict,busCity" />
 							</p:selectOneMenu></td>
 							</ui:fragment>
