@@ -837,7 +837,7 @@ public class SmPersonnelBackingBean extends
 		//13320-Start
 		PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId()));
 		if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
-			this.getManagedBean().setDivisionId(null);
+			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision().setDivisionId(null);
 			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().setDistrictId(null);
 			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCity().setCityId(null);
 			
@@ -902,7 +902,7 @@ public class SmPersonnelBackingBean extends
 		//13320-Start
 		PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId()));
 		if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
-			this.getManagedBean().setDivisionId(null);
+			this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDivision().setDivisionId(null);
 			this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDistrict().setDistrictId(null);
 			this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCity().setCityId(null);
 			
