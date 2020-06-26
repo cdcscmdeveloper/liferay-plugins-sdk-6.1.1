@@ -19,7 +19,7 @@
 	</cc:interface>
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{cc.attrs.dialogHeader}" closable="true"
-		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="#{cc.attrs.dialogHeight}"
+		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="auto"
 		resizable="true" style="display: block;">		
 		<p:outputPanel id="disciplinaryActionMsgOP" rendered="#{not empty cc.attrs.dialogMessage}">     
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
