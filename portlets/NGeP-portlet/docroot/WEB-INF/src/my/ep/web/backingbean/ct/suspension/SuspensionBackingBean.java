@@ -431,7 +431,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		//for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
 		for (CtContractItem ctItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {
 			if(ctItem != null && item != null) {
-				if(ctItem.getContractItemId() != null && ctItem.getContractItemId().equals(item.getContractItemId())) {
+				// #28367
+				if(ctItem.equals(item)) {
 					CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
 					Date effDate = null;
 					Date expDate = null;
@@ -538,6 +539,13 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setUpdateAgencyMap(ctBB.getManagedBean().getUpdateAgencyMap());
+			// #28367 - start
+			if(getManagedBean().getTaskId() == null) {
+				for(CtContractItem ctContractItem : ctBB.getManagedBean().getUpdateItemMap().values()) {
+					ctContractItem.setContractItemId(null);
+				}
+			}
+			// #28367 - end
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
 
 			if(this.getManagedBean().getPmDigiSign() !=null){
