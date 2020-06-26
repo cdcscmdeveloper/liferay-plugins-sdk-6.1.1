@@ -32,6 +32,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -104,8 +105,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	private static final long serialVersionUID = 3781591594455061750L;
 	//26238 - start
 	private static Map<Long, Object> identityType; 
-	private boolean gmapDisabled; 
+	private boolean gmapDisabled;
 	//26238 - end
+	//26238 -  Disciplonary action - 28146
+	private boolean searchBlacklisted = true;
 	/**
 	 * Pre-render and redirect to Search Page
 	 */
@@ -305,7 +308,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
 	
 		this.getManagedBean().setApproverRemark(null);
-		
+		//26238 -  Disciplonary action - 28146
+		getManagedBean().setFlagBlacklistCancel(false);
 		
 	}
 
@@ -729,6 +733,56 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			} 
 			//26238 - end
+			
+			//26238 -  Disciplonary action - 28146 - start
+			if (getManagedBean().getOwnerAndDirectorList() != null && getManagedBean().getOwnerAndDirectorList().size() > 0 
+					&& getManagedBean().isBlacklistOwnerOrDirector() && reqDTO.getSelectedOwnerAndDirector() != null){
+				
+				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getSelectedOwnerAndDirectorList());
+				
+				if(searchBlacklisted){
+					
+					Long smApplId =  getManagedBean().getSmAppl().getApplId();
+					SmDisciplinaryAction smDisciplinaryAction =  cloneSmDisciplinaryActionEditableValue(
+							new SmDisciplinaryAction(), getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
+					
+					for(SmPersonnel personnel : reqDTO.getSelectedOwnerAndDirector()){
+						MofRegistrationReqDTO reqDTO2 = new MofRegistrationReqDTO();
+						MofRegistrationResDTO resDTO2 = new MofRegistrationResDTO();
+						reqDTO2.setPersonnel(personnel);
+						resDTO2 =  SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByPersonnel(reqDTO2);
+						if(resDTO2.getApplList() != null && resDTO2.getApplList().size() > 1){
+							
+							for(SmAppl smAppl : resDTO2.getApplList()){
+								if(!smAppl.getApplId().equals(smApplId)){
+									searchBlacklisted = false;
+									navigateToMaintenance(smAppl);
+									if(getManagedBean().getOwnerAndDirectorList().size() > 1){
+										for (Iterator<SmPersonnel> iter = getManagedBean().getOwnerAndDirectorList().listIterator(); iter.hasNext(); ) {
+											SmPersonnel person = iter.next();
+										    if (!person.getIdentificationNo().equals(personnel.getIdentificationNo())) {
+										        iter.remove();
+										    }
+										}
+									}
+									getManagedBean().getSelectedOwnerAndDirectorList().clear();
+									getManagedBean().getSelectedOwnerAndDirectorList().addAll(getManagedBean().getOwnerAndDirectorList());
+									getManagedBean().setBlacklistOwnerOrDirector(true);
+									getManagedBean().setEditDisciplinaryAction(true);
+									onTickPunishmentType();
+									if (EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())){
+										cloneSmDisciplinaryActionEditableValue(getManagedBean().getDisciplineVO().getSmDiscplinaryAction(), smDisciplinaryAction);
+									}
+									
+									submitSupplierDataMaintenance();
+								}
+							}
+						}
+					}
+				}
+				
+			}
+			//26238 -  Disciplonary action - 28146 - end
 			
 			//Untick after save
 			getManagedBean().setEditDisciplinaryAction(false);
@@ -1393,12 +1447,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel()) {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
-				
+				//26238 -  Disciplonary action - 28146 - start
+				getManagedBean().setCancelRegistration(true);
+				getManagedBean().setFlagBlacklistCancel(true);
+				//26238 -  Disciplonary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+				
+				//26238 -  Disciplonary action - 28146 - start
+				if(getManagedBean().isFlagBlacklistCancel()){
+					getManagedBean().setCancelRegistration(false);
+					getManagedBean().setFlagBlacklistCancel(false);
+				}
+				//26238 -  Disciplonary action - 28146 - end
 			}
-			
-			
+
 			//28281 - start (bumi code)
 			if(getManagedBean().isBumiputeraStatusCancel())
 				autoTickBumiCode();
@@ -1692,6 +1755,13 @@ public class SupplierDataMaintenanceBackingBean extends
 						if(disc.isBlacklistOwner()){
 							getManagedBean().setBlacklistOwnerOrDirector(true);
 							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
+							
+							//26238 -  Disciplonary action - 28146 - start
+							if(disc.isCancelRegistration()){
+								getManagedBean().setCancelRegistration(true);
+								getManagedBean().setCancelRegistrationExist(true);
+							}
+							//26238 -  Disciplonary action - 28146 - end
 						}
 						if(disc.isCancelCategory()){
 							getManagedBean().setCancelCategoryCode(true);

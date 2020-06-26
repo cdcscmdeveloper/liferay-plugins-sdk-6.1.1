@@ -302,6 +302,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean disciplinaryAction;
 	//28281 - end 
 	
+	//26238 -  Disciplonary action - 28146
+	private boolean flagBlacklistCancel;
+	
 	// 28342 : Disciplinary Action - start
 	private boolean disableDownloadButtonDAHistory;
 	// 28342 : Disciplinary Action - end
@@ -2174,4 +2177,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	
 	//28281 - end
+	
+	public boolean isFlagBlacklistCancel() {
+		return flagBlacklistCancel;
+	}
+
+	public void setFlagBlacklistCancel(boolean flagBlacklistCancel) {
+		this.flagBlacklistCancel = flagBlacklistCancel;
+	}
 }
