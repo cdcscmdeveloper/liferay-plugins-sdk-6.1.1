@@ -122,7 +122,8 @@
 					<p:spacer width="5" />
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelRegistration}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist 
+						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
