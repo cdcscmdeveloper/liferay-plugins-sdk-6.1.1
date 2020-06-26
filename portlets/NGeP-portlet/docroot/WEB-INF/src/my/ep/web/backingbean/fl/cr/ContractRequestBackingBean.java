@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -816,36 +817,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
-	/**
-	 * Navigate to CR UI
-	 * 
-	 */
-	public void procureContract() throws PortalException, SystemException {
-		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("contractId"));
-		String scheduleNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("scheduleNo");
-		FacesScopes facesScope = new FacesScopes();
-		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
-		
-		if(themeDisplay!=null) {
-			if(themeDisplay.getLayout()!=null) {
-				if(themeDisplay.getLayout().getGroup().getFriendlyURL()!=null) {
-				}
-			}
-		}
-		
-		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url = "contract-request-from-crlist";
-
-		try {
-			externalContext.redirect(commonUrl+"/" + url+"?contractId="+contractId+"&scheduleNo="+scheduleNo);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	/* 13984 Construct phase/ schedule table */
 	public List<ScheduleInfo> initSchPhaseTable(Long contractId){
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
