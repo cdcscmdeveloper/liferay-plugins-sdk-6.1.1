@@ -4502,7 +4502,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					reqDTO.setScheduleNo(flRequest.getScheduleNo());
 					reqDTO.setContractId(flRequest.getCtContract().getContractId());
 					if(flRequest.getFulfilmentReqId() == null){
-						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 					}
 					if(haveFlRecord){
 						throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.schedule.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
