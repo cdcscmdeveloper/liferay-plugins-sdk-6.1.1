@@ -862,6 +862,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setCtAttachmentDelete(null);
 			}
 			reqDTO.setCtContractVer(ctContractVer);
+			// Start - #28292/#26475
+			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -1158,8 +1161,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						setTabCentralValue("IT");
 					}
 					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
-				} 
-
+				}
+				
+				// Start - 28292
+				log.info("--min quantity validation--");
+				if (!item.getCtItemMaxQties().isEmpty()) {
+					log.info("--inside validation--");
+					Double maxValue = new Double(0);							
+					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+						maxValue = maxQty.getMaxQuantity().doubleValue();				
+					}
+					log.info("max :"+maxValue);
+					log.info("min :"+item.getMinimumOrderQty());
+					if (item.getMinimumOrderQty() > maxValue) {
+						if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+							setTabValue("IT");
+						} else {
+							setTabCentralValue("IT");
+						}
+						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+					}
+					
+				}
+				// End - 28292
+				
 				// Validation for ceiling quantity
 				double totalCeilingQuantity = 0.0;
 				if (item.getCtItemMaxQties().size() != 0) {						
