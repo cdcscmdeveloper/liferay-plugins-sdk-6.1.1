@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import my.ep.persistence.logging.LogKey;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -203,6 +204,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
@@ -264,6 +266,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private boolean selectAllCheckbox;
 	/*#17087 zonal flag*/
 	private boolean zonalTest;
+	/*13984 Schedule/ Phase Information*/
+    private static List<ScheduleInfo> schInfo;
+    /*13984 navigation & schedule number Information*/
+    private static String navi;
+    private static String schno;
+    
+    /*Start- 13984 - CrList - Back Button*/
+    private static Long CrListSearchContractListDD;
+    private static String CrListSearchContractCriteria;
+    private static String CrListSearchTypesDD;
+    /*End- 13984 - CrList - Back Button*/
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -832,6 +845,130 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			e.printStackTrace();
 		}
 	}
+	
+	/* 13984 Construct phase/ schedule table */
+	public List<ScheduleInfo> initSchPhaseTable(Long contractId){
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+	
+	
+		
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+
+			flReqDTO.setContractId(contractId);
+			reqDTO.setContractId(contractId);
+
+			ContractResDTO resDTO;
+			FulfilmentResDTO resfDTO;
+			
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			if (facesScopes.getUserSessionBean().getUserId() == null) {
+				throw new IllegalArgumentException("userId cannot be null");
+			}
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+			flReqDTO.setOrgProfileId(orgProfileId);
+			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+			
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
+			
+			if (resDTO.getAvailableNoList() != null) {
+				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
+			}
+			schInfo = new ArrayList<ScheduleInfo>();
+
+			for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
+				int j = i + 1;
+				if (j > resfDTO.getDocNos().size()) {
+
+					resfDTO.getDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNos().size()) {
+
+					resfDTO.getFlOrderDocNos().add("");
+				}
+				if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+					resfDTO.getFlOrderDocNoStatus().add("");
+				}
+				if (j > resfDTO.getDocNoStatus().size()) {
+					resfDTO.getDocNoStatus().add("");
+				}
+				if (j > resfDTO.getFlSchNos().size()) {
+					resfDTO.getFlSchNos().add("");
+				}
+
+				schInfo.add(new ScheduleInfo(resfDTO.getFlSchNos().get(i), resfDTO.getDocNos().get(i), resfDTO
+						.getDocNoStatus().get(i), resfDTO.getFlOrderDocNos().get(i), resfDTO.getFlOrderDocNoStatus()
+						.get(i)));
+			}
+		
+
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, 1L);
+		}
+	
+		setSchInfo(schInfo);
+		return schInfo;
+
+	}
+
+	
+	/**
+	 * Navigate to CR UI
+	 * 
+	 */
+	public void procureContract() throws PortalException, SystemException {
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("contractId"));
+		String scheduleNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("scheduleNo");
+		FacesScopes facesScope = new FacesScopes();
+		ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+		
+		if(themeDisplay!=null) {
+			if(themeDisplay.getLayout()!=null) {
+				if(themeDisplay.getLayout().getGroup().getFriendlyURL()!=null) {
+				}
+			}
+		}
+		
+		/*13984 BEGINNING navigation sets and current schedule number Information*/
+		if(scheduleNo !=null && scheduleNo.length() > 0) {
+			initSchPhaseTable(contractId);
+		}
+		
+		List<ScheduleInfo> schInfoo = getSchInfo();
+		log.info("schInfoo is : "+schInfoo);
+		log.info("schInfo is : "+schInfo);
+	
+		String nav = "crlist";
+		setNavi(nav);
+		
+		String schNoSelected =scheduleNo;
+		setschno(schNoSelected);
+		/*13984 ENDING navigation sets and current schedule number Information*/
+
+		
+		
+		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		String url = "contract-request-from-crlist";
+
+		try {
+			externalContext.redirect(commonUrl+"/" + url+"?contractId="+contractId+"&scheduleNo="+scheduleNo);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * retrieve Contract items pagination.
@@ -963,7 +1100,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String taskId = originalServletRequest.getParameter("taskId");
 		String contractId = originalServletRequest.getParameter("contractId");
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
-		
+		//start-13984
+		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
+ 
+		if(catalogueFlag != null){
+			getManagedBean().setCatalogueFlag(catalogueFlag);
+		}
+		//end-13984
+	
 		if (taskId != null) {
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -1122,8 +1266,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
 			}
 			//end - #17087
+			
+			//13984-start
+			if(getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
+				initSchPhaseTable(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
+			}else{
+				schInfo = new ArrayList<ScheduleInfo>();
+			}
+			//13984-end
 		}else if(contractId != null){
-			renewSesionObject();
+			/*Start- 13984 - CrList - Back Button*/
+			if(getManagedBean().getBackFlag()!= 1){
+				renewSesionObject();
+			}
+			/*end- 13984 - CrList - Back Button*/
 			new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
@@ -1149,6 +1305,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				getManagedBean().setFactored(false);
 			}
+			
+			//13984-start
+			if(!getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
+				scheduleNo = null;
+			}
+			//13984-end
+			
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
 			getManagedBean().getFlRequest().setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
@@ -1239,7 +1402,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}
 					}
@@ -1247,7 +1410,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtProgressivePayment ctProgressivePayment : contractResDTO.getContract().getLatestContractVer().getCtProgressivePayments()) {
 						scheduleNo = ctProgressivePayment.getPhaseNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}						
 					}
@@ -1273,6 +1436,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			checkMofAccountExpDate(getManagedBean().getFlRequest());
 			
 			getManagedBean().setButtonVal(FulfilmentConst.CONTRACT_REQUEST);
+				
 			//start - #17087
 			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
@@ -1283,8 +1447,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
 			}
 			//end - #17087
+			
+			//13984-start
+			if(scheduleNo!=null && scheduleNo!=""){
+				initSchPhaseTable(Long.parseLong(contractId));
+			}else{
+				schInfo = new ArrayList<ScheduleInfo>();
+			}
+			//13984-end
 		}
-		
+			
 		//Default procurement type category to Supply of Goods in case of null
 		if(getManagedBean().getFlRequest().getProcurementTypeCategory()==null) {
 			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
@@ -3724,8 +3896,42 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/**
 	 * Page navigation to FLDoc search page in CR
 	 */
-	public void backToCrList() {
-		preRenderContractList();
+	public String backToCrList() {
+		
+		//start-13984 - CrList - Back Button
+		getManagedBean().setBackFlag(1);
+		if(getCrListSearchContractListDD()!=null){
+			getManagedBean().setSearchContractListDD(getCrListSearchContractListDD());
+			/**getCrListSearchContractListDD() == 7 is Fulfillment Type 
+			 * getCrListSearchContractListDD() == 8 is Contract Type**/
+			if(getCrListSearchContractListDD() == 7 || getCrListSearchContractListDD() == 8){
+				 getManagedBean().setTypes(true);
+			 }
+			 if(getCrListSearchContractListDD() == 7){
+				 getManagedBean().setFulfilmentTypes(true);
+			 }
+			 if(getCrListSearchContractListDD() == 8){
+				 getManagedBean().setFulfilmentTypes(false);
+			 }
+		}
+		if(getCrListSearchContractCriteria()!=null){
+			getManagedBean().setSearchContractCriteria(getCrListSearchContractCriteria());
+			getManagedBean().setTypes(false);
+		}
+		if(getCrListSearchTypesDD()!=null){
+			getManagedBean().setSearchTypesDD(getCrListSearchTypesDD());
+			getManagedBean().setTypes(true);
+		}
+		
+		String url ="crList?faces-redirect=true";
+		
+		if(getManagedBean().getCatalogueFlag().equalsIgnoreCase("true")){
+			getManagedBean().setCatalogueFlag("false");
+			url ="/xhtml/cm/catalogue/contractRequestView?faces-redirect=true";
+		}
+		return url;
+		//preRenderContractList();
+		//end-13984 - CrList - Back Button
 
 	}
 
@@ -4277,7 +4483,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(flRequest.getCtContract().getContractId());
 			if(flRequest.getFulfilmentReqId() == null){
-				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 			}
 			if(haveFlRecord){
 				throw new EpException(MessageConst.ERROR_740030);
@@ -4307,7 +4513,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setScheduleNo(flRequest.getScheduleNo());
 				reqDTO.setContractId(flRequest.getCtContract().getContractId());
 				if(flRequest.getFulfilmentReqId() == null){
-					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 				}
 				/* Close for #21489
 				if(haveFlRecord == true){
@@ -5607,7 +5813,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			getManagedBean().setSearchContractCriteria(null);
+			//start-13984 - CrList - Back Button
+			if(getManagedBean().getBackFlag() !=1){
+				getManagedBean().setSearchContractCriteria(null);
+				getManagedBean().setSearchTypesDD(null);				
+			}else{
+				getManagedBean().setBackFlag(0);
+			}
+			//end-13984 - CrList - Back Button
 			List<String> contractCriteriaList = new ArrayList<String>();
 			contractCriteriaList.add(ResourceBundleUtils.getMessage(
 					"lbl.fl.physical.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -5727,6 +5940,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setTypes(false);
 		getManagedBean().setSearchTypesDD(null);
 		if(getManagedBean().getSearchContractListDD() != null){
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
 			 if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
 				 getManagedBean().setTypes(true);
 			 }
@@ -5744,6 +5959,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * 
 	 */
 	public void searchContract(){
+		//start-13984 - CrList - Back Button
+		if(getManagedBean().getSearchContractListDD()!=null){
+			setCrListSearchContractListDD(getManagedBean().getSearchContractListDD());
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
+			if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
+				if(getManagedBean().getSearchTypesDD()!=null){
+					setCrListSearchTypesDD(getManagedBean().getSearchTypesDD());
+					setCrListSearchContractCriteria(null);
+				}
+			 }else{
+				 if(getManagedBean().getSearchContractCriteria()!=null){
+						setCrListSearchContractCriteria(getManagedBean().getSearchContractCriteria());
+						setCrListSearchTypesDD(null);
+					}
+			 } 
+		}else{
+			setCrListSearchContractListDD(null);
+			setCrListSearchContractCriteria(null);
+			setCrListSearchTypesDD(null);
+			
+		}
+		//end-13984 - CrList - Back Button
 		getManagedBean().getActiveContractDataModel().reloadData();
 	}
 	
@@ -6252,6 +6490,63 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}
 	} /*END*/
+	
+
+	
+	/*13984 Schedule/ Phase Information*/
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<ScheduleInfo>();
+		
+        log.info("schInfo is,ln5983 : "+schInfo);
+		return schInfo;
+	}
+	@SuppressWarnings("static-access")
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	/*13984 navigation & scheduleNo Information sets and gets*/
+	public String getNavi() {
+		return navi;
+	}
+	@SuppressWarnings("static-access")
+	public void setNavi(String navi) {
+		this.navi = navi;
+	}
+	
+	public String getschno() {
+		return schno;
+	}
+	@SuppressWarnings("static-access")
+	public void setschno(String schNo) {
+		this.schno = schNo;
+	}
+	
+	//start-13984 - CrList - Back Button
+	public Long getCrListSearchContractListDD() {
+		return CrListSearchContractListDD;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchContractListDD(Long CrListSearchContractListDD) {
+		this.CrListSearchContractListDD = CrListSearchContractListDD;
+	}
+	
+	public String getCrListSearchContractCriteria() {
+		return CrListSearchContractCriteria;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchContractCriteria(String CrListSearchContractCriteria) {
+		this.CrListSearchContractCriteria = CrListSearchContractCriteria;
+	}
+	
+	public String getCrListSearchTypesDD() {
+		return CrListSearchTypesDD;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchTypesDD(String CrListSearchTypesDD) {
+		this.CrListSearchTypesDD = CrListSearchTypesDD;
+	}
+	//end-13984 - CrList - Back Button
 	
 	//17087 - start
 	/**
