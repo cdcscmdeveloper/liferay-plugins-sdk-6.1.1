@@ -2732,6 +2732,18 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//End 17906
 	
+	//26238 -  Disciplonary action - 28146 - start
+	private SmDisciplinaryAction cloneSmDisciplinaryActionEditableValue(SmDisciplinaryAction newSmDisciplinaryAction, SmDisciplinaryAction smDisciplinaryAction){
+		
+		newSmDisciplinaryAction.setStartDate(smDisciplinaryAction.getStartDate());
+		newSmDisciplinaryAction.setEndDate(smDisciplinaryAction.getEndDate());
+		newSmDisciplinaryAction.setRemark(smDisciplinaryAction.getRemark());
+		
+		return newSmDisciplinaryAction;
+		
+	}
+	//26238 -  Disciplonary action - 28146 - end
+	
 	
 	//28281: auto-tick bumi code when bumi status DA is ticked
 	private void autoTickBumiCode(){
