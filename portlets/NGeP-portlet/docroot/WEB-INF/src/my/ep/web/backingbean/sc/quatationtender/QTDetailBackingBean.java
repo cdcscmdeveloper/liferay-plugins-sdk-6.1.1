@@ -5983,11 +5983,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// Filter By - supplierId
 			if (args.containsKey(MapKeyEnum.supplierIds) 
 					&& CollectionUtils.isNotEmpty((List<Long>)args.get(MapKeyEnum.supplierIds))) {
-				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				/*
+				 * Bug #27412 26/6/2020 #63
+				 * CANNOT SPECIFIC BY NORMAL QT SINCE THIS SHARING WITH DIRECT
+				 * DIRECT DONT HAVE SC_QT_SUPPLIER 
+				 */
+				/*searchBean.getDataFilterBeans().add(new SearchFilterBean(
 						qtAccessPrefix+"scQtSuppliers.smSupplier.supplierId",
 						SearchOperator.OPERATOR_IN.value(), 
-						args.get(MapKeyEnum.supplierIds)));
+						args.get(MapKeyEnum.supplierIds)));*/
 				
 			}
 
