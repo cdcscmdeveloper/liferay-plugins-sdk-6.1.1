@@ -1329,6 +1329,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}else{
 					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 				}
+
+				for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
+					itemPrice.setChangePrice(false);
+				}
+				for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+					itemMaxQty.setChangeQuantity(false);
+				}
 				
 				
 			}		
@@ -3222,10 +3229,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		//#20997--Start
-		if(getManagedBean().getSelectedItem() != null){			
+		if(getManagedBean().getSelectedItem() != null){	
 			for(CtContractItem itemProduct : ctBackingBean.getManagedBean().getCtItemList()){
 					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
-			if(itemPrice.isBrandNew() && itemProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+			if(itemPrice.isChangePrice() && itemProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
 				itemProduct.getCtItemPrices().remove(itemPrice);
 				itemProduct.getCtItemPrices().add(itemPrice);
 				
@@ -3536,7 +3543,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(getManagedBean().getSelectedItem() != null){			
 			for(CtContractItem itemQtyProduct : ctBackingBean.getManagedBean().getCtItemList()){
 					for(CtItemMaxQty itemQtyPrice : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
-			if(itemQtyPrice.isBrandNew() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+			if(itemQtyPrice.isChangeQuantity() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
 				itemQtyProduct.getCtItemMaxQties().remove(itemQtyPrice);
 				itemQtyProduct.getCtItemMaxQties().add(itemQtyPrice);
 				
