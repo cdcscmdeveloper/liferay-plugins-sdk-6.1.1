@@ -2268,6 +2268,11 @@ public class TemplateSpecBackingBean extends
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
+				if (userScore != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+						&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)  {
+					totalMaxScore = totalMaxScore.add(specAnswer
+							.getTplSpecQuestion().getMaxScore());
+				}
 				if (userScore != null && userScore.compareTo(BigDecimal.ZERO) == 0 ) {
 					totalScore = totalScore.add(userScore);
 					specAnswer.setUserScore(BigDecimal.valueOf(0));
