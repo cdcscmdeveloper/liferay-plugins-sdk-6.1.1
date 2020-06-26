@@ -18,12 +18,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -107,6 +110,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract selectedContract;
 	private CtContract ctContract = new CtContract();
 	private GlAccountSearchBean glAccountSearchBean;
+	private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
@@ -295,10 +299,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean oldGstRateFlg = false;
 	//17087 -- radio button
 	private boolean radioCheckDeliveryDate;
+	/*13984 Current schedule number Information*/
+	private static String scheduleNo;
 	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
-	
+	private List<String> availableNoList;
+	//13984-start
+	private static String orgCode;
+    private static String orgName;
+    private static int backFlag;
+    private static String catalogueFlag;
+    //13984-end
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -429,11 +441,78 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				contractReqDTO.setOrgProfileId(orgProfileId);
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
+				//13984-start
+				String orgCode = "";
+				String orgName = "";
+	    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+	    		if(orgResDTO != null && orgResDTO.getPmOrgProfile() !=null){
+	    			orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+					orgName = orgResDTO.getPmOrgProfile().getOrgName();
+	    		}
+				//13984-end
+				
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resfDTO;
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
 						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
-							vCtActiveContract.setActiveContractSubList(contractSO.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList());
+							flReqDTO.setContractId(vCtActiveContract.getContractId());
+
+							flReqDTO.setOrgProfileId(orgProfileId);
+							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+
+							List<VCtActiveContract> InfoActiveContractList = contractSO
+									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();
+									
+							List<VCtActiveContract> activeContractScheduleList = contractSO
+									.retrieveScheduleInfoForContractByOrgProfileId(contractReqDTO).getActiveContractList();		
+						
+							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
+
+								int j = i + 1;
+								if (j > resfDTO.getDocNos().size()) {
+
+									resfDTO.getDocNos().add("");
+								}
+								if (j > resfDTO.getFlOrderDocNos().size()) {
+
+									resfDTO.getFlOrderDocNos().add("");
+								}
+								if (j > resfDTO.getFlOrderDocNoStatus().size()) {
+
+									resfDTO.getFlOrderDocNoStatus().add("");
+								}
+								if (j > resfDTO.getDocNoStatus().size()) {
+
+									resfDTO.getDocNoStatus().add("");
+								}
+								
+								InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								
+								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
+								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								activeContractScheduleList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								activeContractScheduleList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								
+							}
+							
+							vCtActiveContract.setActiveContractSubList(InfoActiveContractList);
+							
+							if(resfDTO.getDocNos().size()>0){
+								vCtActiveContract.setActiveContractScheduleList(activeContractScheduleList);
+							}
+							
+							setOrgCode(orgCode);
+							setOrgName(orgName);
+							/*13984 Schedule/ Phase info List ENDING*/
 						}
 					}
 					return resDTO.getActiveContractResultBean();
@@ -2954,6 +3033,31 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
 		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
 	}
+	
+	/**
+	 * @return the availableNoList
+	 */
+	public List<String> getAvailableNoList() {
+		return availableNoList;
+	}
+
+	/**
+	 * @param availableNoList the availableNoList to set
+	 */
+	public void setAvailableNoList(List<String> availableNoList) {
+		this.availableNoList = availableNoList;
+	}
+	
+	public String getScheduleNo() {
+		return scheduleNo;
+	}
+
+	/**
+	 * @param scheduleNo the scheduleNo to set
+	 */
+	public void setScheduleNo(String scheduleNo) {
+		this.scheduleNo = scheduleNo;
+	}
 
 	// start #17087
 		/**
@@ -2984,4 +3088,31 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		}
 		// End #17087
 		
+		//13984-start
+		public String getOrgCode() {
+			return orgCode;
+		}
+
+		public void setOrgCode(String orgCode) {
+			this.orgCode = orgCode;
+		}
+		
+		public String getOrgName() {
+			return orgName;
+		}
+
+		public void setOrgName(String orgName) {
+			this.orgName = orgName;
+		}
+		//13984-end
+
+		//start-13984 - CrList - Back Button
+		public int getBackFlag() {
+			return backFlag;
+		}
+
+		public void setBackFlag(int backFlag) {
+			this.backFlag = backFlag;
+		}
+		//start-13984 - CrList - Back Button
 }
