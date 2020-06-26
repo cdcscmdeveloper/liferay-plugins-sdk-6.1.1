@@ -217,6 +217,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
     private static List<ScheduleInfo> schInfo;
     private static String orgCode;
     private static String orgName;
+    private static List<VCmSupplierItem> ctRequestListCR;
+    private static List<String> availableNoListCR;
+    private static IPagingDataModel<VCmSupplierItem> searchDataModelCR;
+    private static Object itemNameFilterBeanCR;
+    private static Object itemCodeFilterBeanCR;
+    private static Object supplierNameFilterBeanCR;
+	private static Object bizRegNoFilterBeanCR;
+	private static Object epNoFilterBeanCR;
+	private static Object mofNoFilterBeanCR;
+	private static Object contractNoFilterBeanCR;
+	private static Object contractTitleFilterBeanCR;
+	private static Object loaNoFilterBeanCR;
+	private static Object loaPhysicalNoFilterBeanCR;
+	private static Object physicalContractNoFilterBeanCR;
+	private static Object circularNoFilterBeanCR;
+	private static Boolean g2gFlagCR;
+	private static TreeNode stateTreeCR;
+	private static TreeNode[] selectedNodesCR;
+	private static int resultTabActiveIndexCR = 3;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
@@ -250,11 +269,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * Instantiates a new CatalogueBackingBean.
 	 */
 	public CatalogueBackingBean() {
-
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
 		initSchPhaseTable();
+		
+
 	}
 
 	/* 13984 Construct phase/ schedule table */
@@ -290,13 +307,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
 			
 			reqDTO.setOrgProfileId(orgProfileId);
-			resDTO = contractSO.retrieveAvailableSchedulePhaseNoByOrgProfileId(reqDTO);
+			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
 			
 			if (resDTO.getAvailableNoList() != null) {
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
+				setAvailableNoListCR(getManagedBean().getAvailableNoList());
 			}
 			schInfo = new ArrayList<ScheduleInfo>();
 
+			if (null != getManagedBean().getAvailableNoList()) {
 			for (int i = 0; i < resfDTO.getDocNos().size() ; i++) {
 				int j = i + 1;
 				if (j > resfDTO.getDocNos().size()) {
@@ -329,15 +348,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
             OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
     		orgReqDTO.setOrgProfileId(orgProfileId);
     		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(orgReqDTO);
+    		
+    		String orgCode = "";
+			String orgName = "";
+			if(orgResDTO != null && orgResDTO.getPmOrgProfile() !=null){
+    			orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+				orgName = orgResDTO.getPmOrgProfile().getOrgName();
+    		}
             
-            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
 			setOrgCode(orgCode);
-			
-			String orgName = orgResDTO.getPmOrgProfile().getOrgName();
 			setOrgName(orgName);
 		   
 		    getManagedBean().setFlRequest(resfDTO.getFlFulfilmentRequest());
 		
+		}
 		}
 
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -9069,6 +9093,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 
 		if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
+			if(getManagedBean().getSearchDataModel() != null){
+				setCtRequestListCR(this.getManagedBean().getCtRequestList());
+				setSearchDataModelCR(getManagedBean().getSearchDataModel());
+				setItemNameFilterBeanCR(getManagedBean().getItemNameFilterBean().getSearchValue());
+				setItemCodeFilterBeanCR(getManagedBean().getItemCodeFilterBean().getSearchValue());
+				setSupplierNameFilterBeanCR(getManagedBean().getSupplierNameFilterBean().getSearchValue());
+				setBizRegNoFilterBeanCR(getManagedBean().getBizRegNoFilterBean().getSearchValue());
+				setEpNoFilterBeanCR(getManagedBean().getEpNoFilterBean().getSearchValue());
+				setMofNoFilterBeanCR(getManagedBean().getMofNoFilterBean().getSearchValue());
+				setContractNoFilterBeanCR(getManagedBean().getContractNoFilterBean().getSearchValue());
+				setContractTitleFilterBeanCR(getManagedBean().getContractTitleFilterBean().getSearchValue());
+				setLoaNoFilterBeanCR(getManagedBean().getLoaNoFilterBean().getSearchValue());
+				setLoaPhysicalNoFilterBeanCR(getManagedBean().getLoaPhysicalNoFilterBean().getSearchValue());
+				setPhysicalContractNoFilterBeanCR(getManagedBean().getPhysicalContractNoFilterBean().getSearchValue());
+				setCircularNoFilterBeanCR(getManagedBean().getCircularNoFilterBean().getSearchValue());
+				setG2gFlagCR(getManagedBean().isG2gFlag());
+				setStateTreeCR(getManagedBean().getStateTree());
+				setSelectedNodesCR(getManagedBean().getSelectedNodes());
+				setResultTabActiveIndexCR(getManagedBean().getResultTabActiveIndex());
+				
+			}
 			VCmSupplierItem supplierItemView = this.getManagedBean().getCtRequestList().get(0);
 			ContractReqDTO reqDTO = new ContractReqDTO();
 
@@ -9093,6 +9138,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			resDTO = contractSO.retrieveAvailableSchedulePhaseNo(reqDTO);
 			if(resDTO.getAvailableNoList() != null){
 				getManagedBean().setAvailableNoList(resDTO.getAvailableNoList());
+				setAvailableNoListCR(getManagedBean().getAvailableNoList());
 			}
 
 		}
@@ -9106,7 +9152,63 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @return String(supplierItemView?faces-redirect=true)
 	 */
 	public String backTocatalogueSearch() {
-
+		
+		if(null !=availableNoListCR){
+			getManagedBean().setAvailableNoList(availableNoListCR);
+		}
+		if(null !=ctRequestListCR){
+			getManagedBean().setCtRequestList(ctRequestListCR);
+		}
+		if(null !=searchDataModelCR){
+			getManagedBean().setSearchDataModel(searchDataModelCR);
+		}
+		if(null !=itemNameFilterBeanCR){
+			getManagedBean().getItemNameFilterBean().setSearchValue(itemNameFilterBeanCR);
+		}
+		if(null !=itemCodeFilterBeanCR){
+			getManagedBean().getItemCodeFilterBean().setSearchValue(itemCodeFilterBeanCR);
+		}
+		if(null !=supplierNameFilterBeanCR){
+			getManagedBean().getSupplierNameFilterBean().setSearchValue(supplierNameFilterBeanCR);
+		}
+		if(null !=bizRegNoFilterBeanCR){
+			getManagedBean().getBizRegNoFilterBean().setSearchValue(bizRegNoFilterBeanCR);
+		}
+		if(null !=epNoFilterBeanCR){
+			getManagedBean().getEpNoFilterBean().setSearchValue(epNoFilterBeanCR);
+		}
+		if(null !=mofNoFilterBeanCR){
+			getManagedBean().getMofNoFilterBean().setSearchValue(mofNoFilterBeanCR);
+		}
+		if(null !=contractNoFilterBeanCR){
+			getManagedBean().getContractNoFilterBean().setSearchValue(contractNoFilterBeanCR);
+		}
+		if(null !=contractTitleFilterBeanCR){
+			getManagedBean().getContractTitleFilterBean().setSearchValue(contractTitleFilterBeanCR);
+		}
+		if(null !=loaNoFilterBeanCR){
+			getManagedBean().getLoaNoFilterBean().setSearchValue(loaNoFilterBeanCR);
+		}
+		if(null !=loaPhysicalNoFilterBeanCR){
+			getManagedBean().getLoaPhysicalNoFilterBean().setSearchValue(loaPhysicalNoFilterBeanCR);
+		}
+		if(null !=physicalContractNoFilterBeanCR){
+			getManagedBean().getPhysicalContractNoFilterBean().setSearchValue(physicalContractNoFilterBeanCR);
+		}
+		if(null !=circularNoFilterBeanCR){
+			getManagedBean().getCircularNoFilterBean().setSearchValue(circularNoFilterBeanCR);
+		}
+		if(null !=g2gFlagCR){
+			getManagedBean().setG2gFlag(g2gFlagCR);
+		}
+		if(null !=stateTreeCR){
+			getManagedBean().setStateTree(stateTreeCR);
+		}
+		if(null !=stateTreeCR){
+			getManagedBean().setSelectedNodes(selectedNodesCR);
+		}
+		getManagedBean().setResultTabActiveIndex(resultTabActiveIndexCR);
+		
 		return "supplierItemView?faces-redirect=true";
 	}
 
@@ -9161,14 +9263,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						+ this.getManagedBean().getCtRequestList().get(0)
 						.getContractId()
 						+ "&scheduleNo="
-						+ this.getManagedBean().getScheduleNo());
+						+ this.getManagedBean().getScheduleNo()
+						+ "&catalogueFlag=true");
 			}else{
 				externalContext.redirect(commonUrl
 						+ "/"
 						+ url
 						+ "?contractId="
 						+ this.getManagedBean().getCtRequestList().get(0)
-						.getContractId());
+						.getContractId()
+						+ "&catalogueFlag=true");
 			}
 
 
@@ -9193,6 +9297,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void resetCatalogueSearch() {
 
 		renewSesionObject();
+		setAvailableNoListCR(null);
+		setCtRequestListCR(null);
+		setSearchDataModelCR(null);
+		setItemNameFilterBeanCR(null);
+		setItemCodeFilterBeanCR(null);
+		setSupplierNameFilterBeanCR(null);
+		setBizRegNoFilterBeanCR(null);
+		setEpNoFilterBeanCR(null);
+		setMofNoFilterBeanCR(null);
+		setContractNoFilterBeanCR(null);
+		setContractTitleFilterBeanCR(null);
+		setLoaNoFilterBeanCR(null);
+		setLoaPhysicalNoFilterBeanCR(null);
+		setPhysicalContractNoFilterBeanCR(null);
+		setCircularNoFilterBeanCR(null);
+		setG2gFlagCR(false);
+		setStateTreeCR(null);
+		setSelectedNodesCR(null);
+		setResultTabActiveIndexCR(3);
 
 		this.getManagedBean().setAdvanceSearchList(
 				new ArrayList<AdvanceSearchVO>());
@@ -10512,7 +10635,179 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void setSchInfo(List<ScheduleInfo> schInfo) {
 		this.schInfo = schInfo;
 	}
+	
 	/*13984 Schedule No. instance variables for table*/
+	
+	//bazlin 13984 back catalogue
+	public List<VCmSupplierItem> getCtRequestListCR() {
+		if (ctRequestListCR == null)
+			ctRequestListCR = new ArrayList<VCmSupplierItem>();
+		
+		
+        System.out.println("ctRequestListCR 13984 is: "+ctRequestListCR);
+		return ctRequestListCR;
+	}
+
+	public void setCtRequestListCR(List<VCmSupplierItem> ctRequestListCR) {
+		this.ctRequestListCR = ctRequestListCR;
+		
+		
+	}
+	public List<String> getAvailableNoListCR() {
+		if (availableNoListCR == null)
+			availableNoListCR = new ArrayList<String>();
+		
+		
+        System.out.println("availableNoListCR 13984 is: "+availableNoListCR);
+		return availableNoListCR;
+	}
+
+	public void setAvailableNoListCR(List<String> availableNoListCR) {
+		this.availableNoListCR = availableNoListCR;
+	}
+	
+	public IPagingDataModel<VCmSupplierItem> getSearchDataModelCR() {
+		if (searchDataModelCR == null)
+			searchDataModelCR = (IPagingDataModel<VCmSupplierItem>) new ArrayList<VCmSupplierItem>();
+		
+		
+        System.out.println("searchDataModelCR 13984 is: "+searchDataModelCR);
+		return searchDataModelCR;
+	}
+
+	public void setSearchDataModelCR(IPagingDataModel<VCmSupplierItem> searchDataModelCR) {
+		this.searchDataModelCR = searchDataModelCR;
+		
+		 
+	}
+	
+	public Object getItemNameFilterBeanCR() {
+		return itemNameFilterBeanCR;
+	}
+
+	public void setItemNameFilterBeanCR(Object itemNameFilterBeanCR) {
+		this.itemNameFilterBeanCR = itemNameFilterBeanCR;
+	}
+	public Object getItemCodeFilterBeanCR() {
+		return itemCodeFilterBeanCR;
+	}
+
+	public void setItemCodeFilterBeanCR(Object itemCodeFilterBeanCR) {
+		this.itemCodeFilterBeanCR = itemCodeFilterBeanCR;
+	}
+	public Object getSupplierNameFilterBeanCR() {
+		return supplierNameFilterBeanCR;
+	}
+
+	public void setSupplierNameFilterBeanCR(Object supplierNameFilterBeanCR) {
+		this.supplierNameFilterBeanCR = supplierNameFilterBeanCR;
+	}
+	
+	public Object getBizRegNoFilterBeanCR() {
+		return bizRegNoFilterBeanCR;
+	}
+
+	public void setBizRegNoFilterBeanCR(Object bizRegNoFilterBeanCR) {
+		this.bizRegNoFilterBeanCR = bizRegNoFilterBeanCR;
+	}
+	
+	public Object getEpNoFilterBeanCR() {
+		return epNoFilterBeanCR;
+	}
+
+	public void setEpNoFilterBeanCR(Object epNoFilterBeanCR) {
+		this.epNoFilterBeanCR = epNoFilterBeanCR;
+	}
+	
+	public Object getMofNoFilterBeanCR() {
+		return mofNoFilterBeanCR;
+	}
+
+	public void setMofNoFilterBeanCR(Object mofNoFilterBeanCR) {
+		this.mofNoFilterBeanCR = mofNoFilterBeanCR;
+	}
+	
+	public Object getContractNoFilterBeanCR() {
+		return contractNoFilterBeanCR;
+	}
+
+	public void setContractNoFilterBeanCR(Object contractNoFilterBeanCR) {
+		this.contractNoFilterBeanCR = contractNoFilterBeanCR;
+	}
+	
+	public Object getContractTitleFilterBeanCR() {
+		return contractTitleFilterBeanCR;
+	}
+
+	public void setContractTitleFilterBeanCR(Object contractTitleFilterBeanCR) {
+		this.contractTitleFilterBeanCR = contractTitleFilterBeanCR;
+	}
+	
+	public Object getLoaNoFilterBeanCR() {
+		return loaNoFilterBeanCR;
+	}
+
+	public void setLoaNoFilterBeanCR(Object loaNoFilterBeanCR) {
+		this.loaNoFilterBeanCR = loaNoFilterBeanCR;
+	}
+	
+	public Object getLoaPhysicalNoFilterBeanCR() {
+		return loaPhysicalNoFilterBeanCR;
+	}
+
+	public void setLoaPhysicalNoFilterBeanCR(Object loaPhysicalNoFilterBeanCR) {
+		this.loaPhysicalNoFilterBeanCR = loaPhysicalNoFilterBeanCR;
+	}
+	
+	public Object getPhysicalContractNoFilterBeanCR() {
+		return physicalContractNoFilterBeanCR;
+	}
+
+	public void setPhysicalContractNoFilterBeanCR(Object physicalContractNoFilterBeanCR) {
+		this.physicalContractNoFilterBeanCR = physicalContractNoFilterBeanCR;
+	}
+	
+	public Object getCircularNoFilterBeanCR() {
+		return circularNoFilterBeanCR;
+	}
+
+	public void setCircularNoFilterBeanCR(Object circularNoFilterBeanCR) {
+		this.circularNoFilterBeanCR = circularNoFilterBeanCR;
+	}
+	
+	public boolean isG2gFlagCR() {
+		return g2gFlagCR;
+	}
+
+	public void setG2gFlagCR(boolean g2gFlagCR) {
+		this.g2gFlagCR = g2gFlagCR;
+	}
+	
+	public TreeNode getStateTreeCR() {
+		return stateTreeCR;
+	}
+
+	public void setStateTreeCR(TreeNode stateTreeCR) {
+		this.stateTreeCR = stateTreeCR;
+	}
+	
+	public TreeNode[] getSelectedNodesCR() {
+		return selectedNodesCR;
+	}
+
+	public void setSelectedNodesCR(TreeNode[] selectedNodesCR) {
+		this.selectedNodesCR = selectedNodesCR;
+	}
+	
+	public int getResultTabActiveIndexCR() {
+		return resultTabActiveIndexCR;
+	}
+
+	public void setResultTabActiveIndexCR(int resultTabActiveIndexCR) {
+		this.resultTabActiveIndexCR = resultTabActiveIndexCR;
+	}
+	
+	//end
 	public String getschno() {
 		
 		String schNoSelected= "";
