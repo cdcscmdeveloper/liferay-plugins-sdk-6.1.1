@@ -446,6 +446,14 @@ public class ViewSuppProfileBackingBean extends
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
 		}
+		
+		// 28342 : Disciplinary Action - start
+		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())){
+			getManagedBean().setDisableDownloadButtonDAHistory(true);
+		}
+		
 		//27876: Disciplinary Action - start - <27876>
 		currSupp.setFlagSupplier(true);
 		//27876: Disciplinary Action - start - <27876>
