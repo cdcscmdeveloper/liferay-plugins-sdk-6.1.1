@@ -5439,6 +5439,13 @@ public class SmApplicationUtil {
 					srcAddr.getPmState().getStateId()));
 			desAddr.setStateId(srcAddr.getStateId());
 		}
+		//13320-AddressInfo
+		if (srcAddr.getDivisionId() != null) {
+			desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+					srcAddr.getDivisionId()));
+			desAddr.setDivisionId(srcAddr.getDivisionId());
+		}
+		
 		if (srcAddr.getPmDistrict() != null
 				&& srcAddr.getPmDistrict().getDistrictId() != null) {
 			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
@@ -9246,6 +9253,11 @@ public class SmApplicationUtil {
 		if (addr.getPmDistrict() != null) {
 			addr.setDistrictId(addr.getPmDistrict().getDistrictId());
 		}
+		//13320-Address
+		SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId());
+		if (addr.getPmDivision() != null) {
+			addr.setDivisionId(addr.getDivisionId());
+		}
 		getInstance().populateCitiesByDistrict(addr, panelName, bean);
 		if (addr.getPmCity() != null) {
 			addr.setCityId(addr.getPmCity().getCityId());
@@ -9346,6 +9358,10 @@ public class SmApplicationUtil {
 					&& addr.getPmState().getStateId() != null) {
 				addr.setStateId(addr.getPmState().getStateId());
 			}
+			if (addr.getPmDivision()!= null
+					&& addr.getPmDivision().getDivisionId() != null) {
+				addr.setDivisionId(addr.getPmDivision().getDivisionId());//13320-For Address
+			}
 			if (addr.getPmDistrict() != null
 					&& addr.getPmDistrict().getDistrictId() != null) {
 				addr.setDistrictId(addr.getPmDistrict().getDistrictId());
@@ -9366,6 +9382,10 @@ public class SmApplicationUtil {
 			if (addr.getStateId() != null) {
 				addr.setPmState(SmCommonUtil.getInstance().getStateById(
 						addr.getStateId()));
+			}
+			if (addr.getDivisionId() != null) {
+				addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+						addr.getDivisionId()));//13320-For Address
 			}
 			if (addr.getDistrictId() != null) {
 				addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
@@ -13524,7 +13544,6 @@ public class SmApplicationUtil {
 						addr.setPmState(SmCommonUtil.getInstance()
 								.getStateById(stateId));
 					}
-					bean.setDivisionBox(false);		
 					DivisionReqDTO reqDTO = new DivisionReqDTO();
 					reqDTO.setStateId(stateId);
 					IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
@@ -13533,6 +13552,7 @@ public class SmApplicationUtil {
 					addr.setDivisionId(null);
 					List<PmDivision> divLs = resDTO.getDivisionList();
 					List<SelectItem> divItems = SmCommonUtil.getDivisionList(stateId);
+					addr.getPmState().setAdoptDivision(true);
 					switch (panelName) {
 					case SupplierManagementConst.SM_BASIC_INFO_PANEL:
 						bean.setBasicCompanyDivisions(divItems);
