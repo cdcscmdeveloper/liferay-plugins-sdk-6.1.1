@@ -458,6 +458,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// selected old admin not exist
 		if (getManagedBean().getOldAdmin() == null) {
 			throw new EpException(MessageConst.ERROR_722594);
+		} else {
+			// [#26050] check if selected old admin does have any pending task - start
+			if (getManagedBean().getOldAdmin() != null) {
+				//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
+				if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
+						&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
+					throw new EpException(MessageConst.ERROR_770167);
+				}				
+			}
+			// [#26050] check if selected old admin does have any pending task - end
 		}
 
 		// selected old admin does not hold role as supplier admin
@@ -475,14 +485,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 		
-		// [#26050] check if selected old admin does have any pending task
-		if (getManagedBean().getOldAdmin() != null) {
-			//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
-			if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
-					&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
-				throw new EpException(MessageConst.ERROR_770167);
-			}				
-		}
 		listenerChangeRole();
 	}
 
