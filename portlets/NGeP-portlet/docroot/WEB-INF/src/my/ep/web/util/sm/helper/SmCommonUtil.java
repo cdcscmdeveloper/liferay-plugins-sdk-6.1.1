@@ -5941,5 +5941,15 @@ public class SmCommonUtil {
 		}
 		return districtList;
 	}
-		
+	//13320
+		public PmDivision getDivisionByUsingId(Long divisionId) {
+			if (divisionId != null) {
+				DivisionReqDTO reqDTO = new DivisionReqDTO();
+				reqDTO.setDivisionId(divisionId);
+				return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
+						.getPmDivision();
+			} else {
+				return null;
+			}
+		}
 }
