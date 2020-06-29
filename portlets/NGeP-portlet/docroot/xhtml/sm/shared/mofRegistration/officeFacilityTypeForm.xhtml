@@ -302,13 +302,13 @@
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionOfficeLabelPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+					<h:panelGroup id="divisionOfficeLabelPanelId" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</h:panelGroup>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionOfficeDropdownPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+					<h:panelGroup id="divisionOfficeDropdownPanelId" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}">
 						<p:selectOneMenu id="basicOffFacDivision" required="true"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
@@ -332,12 +332,12 @@
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionOfficeWIPLabelPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+					<h:panelGroup id="divisionOfficeWIPLabelPanelId" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 					</h:panelGroup>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionOfficeWIPDropdownPanelId" rendered="#{!backingBean.managedBean.divisionBox}">
+					<h:panelGroup id="divisionOfficeWIPDropdownPanelId" rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}">
 						<p:selectOneMenu id="basicWIPOffFacDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
