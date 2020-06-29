@@ -19,6 +19,7 @@
 		<cc:attribute name="countryId" required="true"/>
 		<cc:attribute name="stateId" required="true"/>
 		<cc:attribute name="districtId" required="true"/>
+		<cc:attribute name="divisionId" required="true"/>
 		<cc:attribute name="cityId" required="true"/>
 		<cc:attribute name="postCodeId" required="true"/>
 		<cc:attribute name="addressType" required="true"/>
@@ -150,7 +151,7 @@
 							<f:selectItems value="#{cc.attrs.stateItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,divisionWIPSharLabelPanelId,divisionWIPSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
@@ -162,6 +163,72 @@
 						<p:message id="#{cc.attrs.stateId}Msg" for="#{cc.attrs.stateId}"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- 13320-AddressInfo -->
+				
+					<tr>
+					<td  class="tdTitle">
+				<p:outputPanel id="divisionSharLabelPanelId" >
+					<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+					<p:outputPanel id="divisionSharDropdownPanelId">
+				<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
+					<p:selectOneMenu
+							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"
+							disabled="#{cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.divisionId}"
+							value="#{cc.attrs.addrObj.smAddress.divisionId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="" />
+							<f:selectItems value="#{cc.attrs.divisionItems}" />
+							<p:ajax event="change" process="@this"
+							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
+								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+						</p:selectOneMenu> 
+					</ui:fragment>
+					</p:outputPanel></td>
+					
+				</tr>
+				
+				<!-- 13320-WorkInProgress -->
+				<p:outputPanel rendered="#{cc.attrs.bBean.managedBean.poUser or cc.attrs.bBean.managedBean.approverUser}">
+				
+					<tr>
+					<td  class="tdTitle">
+				<p:outputPanel id="divisionWIPSharLabelPanelId" >
+					<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+					<p:outputPanel id="divisionWIPSharDropdownPanelId">
+				<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
+					<p:selectOneMenu
+							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"
+							disabled="#{cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							style="width: 207px;margin-bottom: 5px;" id="divisionWipId"
+							value="#{cc.attrs.addrObj.smAddress.divisionId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="" />
+							<f:selectItems value="#{cc.attrs.divisionItems}" />
+							<p:ajax event="change" process="@this"
+							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
+								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+						</p:selectOneMenu> 
+					</ui:fragment>
+					</p:outputPanel></td>
+					
+				</tr>
+				
+				</p:outputPanel>
+
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>

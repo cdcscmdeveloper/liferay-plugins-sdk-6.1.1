@@ -216,7 +216,7 @@
 
 								<td class="tdTitle"><h:panelGroup
 										id="divisionCompInfoLabelPanelId"
-										rendered="#{!backingBean.managedBean.divisionBox}">
+										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
 										<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 										<p:outputLabel value="*" styleClass="mandatory" />
 									</h:panelGroup></td>
@@ -226,9 +226,8 @@
 							<tr>
 								<td class="tdTitle"><h:panelGroup
 										id="divisionWIPCompInfoLabelPanelId"
-										rendered="#{!backingBean.managedBean.divisionBox}">
+										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
 										<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-										<p:outputLabel value="*" styleClass="mandatory" />
 									</h:panelGroup></td>
 							</tr>
 							</p:outputPanel>
@@ -307,7 +306,7 @@
 							<tr>
 								<td class="tdContent"><h:panelGroup
 										id="divisionCompInfoDropdownPanelId"
-										rendered="#{!backingBean.managedBean.divisionBox}">
+										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
 										<p:selectOneMenu id="basicComDivision"
 											label="#{lbl['lbl.sm.division']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
