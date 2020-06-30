@@ -816,17 +816,17 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 						int checkBasic = 0; 
 
 						List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
-						for (SmSupplierCategory cat : currSupp.getSmAppl()
-								.getSmSupplierCategories()) {
-							 if (cat.getRecordStatusFlg().compareTo(
-										SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(
-												SupplierManagementConst.PENDING_ACT_STATUS) == 0){
-								cat.setEntryMode(cat.getOtherDesc()); 
-								if(!cat.isCancelCategory()){
-									apprvList.add(cat);
-								}
+						
+						for (SmSupplierCategory cat : currSupp.getSmAppl().getSmSupplierCategories()) {
+							if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
+									|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+								cat.setEntryMode(cat.getOtherDesc());
+								// 28327: Disciplinary Action - start - <28327>
+								apprvList.add(cat);
+								// 28327: Disciplinary Action - start - <28327>
 							}
 						}  
+						
 						SmApplicationUtil.sortSupplierCategory(apprvList);
 						getManagedBean().setApprovedCategoryList(apprvList); 
 						
