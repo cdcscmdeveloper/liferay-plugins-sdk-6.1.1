@@ -135,7 +135,7 @@
 			<tr>
 			<td  class="tdTitle">
 				<p:outputPanel id="divisionBranchTbleLabelPanelId" >
-					<ui:fragment rendered="#{!backingBean.managedBean.divisionBox}">
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 						</ui:fragment>
@@ -143,8 +143,8 @@
 					</td>
 					<td>
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
-				<ui:fragment rendered="#{!registrationBackingBean.managedBean.divisionBox}">
-			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<ui:fragment rendered="#{registrationBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
+			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
 					id="branchDivision">
@@ -154,7 +154,7 @@
 					<p:ajax event="change" process="@this"
 					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
 				</ui:fragment>
 				</p:outputPanel>
 				</td>
