@@ -2959,7 +2959,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
-					//#26475					scLoa.setContractAdmin(null);	
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
@@ -2974,23 +2973,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
-					//#26475 - start
-//					validateContractDetails(scLoa);
-					List<PmUser> pmUserList = getUsersByAgency();
-					if(CollectionUtils.isEmpty(pmUserList)){
-						throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-					}else{
-						scLoa.setContractAdmin(pmUserList.get(0));
-					}
-					//#26475 - end
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
 		
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setPayLoad(getManagedBean().getPayLoad());
-					scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 					reqDTO.setScLoa(scLoa);
 					reqDTO.setOutcome(outcome);
 					reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
@@ -2998,19 +2986,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 					reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 					reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-					
-					//#26475 - start
-					if (StringUtils.equals(outcome, BpmOutcomeConst.BPM_VERIFY)){
-						String ministryParamSescCodeName = SmCommonUtil.getParamDescByParameterIdAndLanguage(scLoa
-								.getContractType().getParameterId(), getManagedBean().getScLoa().getContractAdmin()
-								.getPreferredLanguage());
-						if(StringUtils.isNotBlank(ministryParamSescCodeName)){
-							reqDTO.setSpec(ministryParamSescCodeName);
-						}else {
-							reqDTO.setSpec(this.getManagedBean().getMinistryOrgProfile().getPmOrgValidity().getOrgName());
-						}
-					}
-					//#26475 - end
 					
 					AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 		
@@ -3068,16 +3043,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				parseLOADetails(scLoa, outcome);
 				validateLOADetails(scLoa, outcome);
 				updateContractDetails(scLoa);
-				//#26475 - start
-//				validateContractDetails(scLoa);
-				List<PmUser> pmUserList = getUsersByAgency();
-				if(CollectionUtils.isEmpty(pmUserList)){
-					throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				}else{
-					scLoa.setContractAdmin(pmUserList.get(0));
-				}
-				//#26475 - end
+				validateContractDetails(scLoa);
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
 				if (scLoa.isBrandNew()) {
@@ -3090,7 +3056,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 	
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 				reqDTO.setScLoa(scLoa);
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
 				reqDTO.setOutcome(outcome);
@@ -3101,18 +3066,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-				//#26475 - start
-				if (StringUtils.equals(outcome, BpmOutcomeConst.BPM_VERIFY)){
-					String ministryParamSescCodeName = SmCommonUtil.getParamDescByParameterIdAndLanguage(scLoa
-							.getContractType().getParameterId(), getManagedBean().getScLoa().getContractAdmin()
-							.getPreferredLanguage());
-					if(StringUtils.isNotBlank(ministryParamSescCodeName)){
-						reqDTO.setSpec(ministryParamSescCodeName);
-					}else {
-						reqDTO.setSpec(this.getManagedBean().getMinistryOrgProfile().getPmOrgValidity().getOrgName());
-					}
-				}
-				//#26475 - end
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 	
 				if (resDTO.isSuccessful()) {
@@ -3268,18 +3221,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-			//#26475 - start
-			if (StringUtils.equals(outcome, BpmOutcomeConst.BPM_VERIFY)){
-				String ministryParamSescCodeName = SmCommonUtil.getParamDescByParameterIdAndLanguage(scLoa
-						.getContractType().getParameterId(), getManagedBean().getScLoa().getContractAdmin()
-						.getPreferredLanguage());
-				if(StringUtils.isNotBlank(ministryParamSescCodeName)){
-					reqDTO.setSpec(ministryParamSescCodeName);
-				}else {
-					reqDTO.setSpec(this.getManagedBean().getMinistryOrgProfile().getPmOrgValidity().getOrgName());
-				}
-			}
-			//#26475 - end
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -3418,20 +3359,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
-		//#26475 - start
-		ScLoa scLoa = this.getManagedBean().getScLoa();
-		List<PmUser> pmUserList = getUsersByAgency();
-		if(CollectionUtils.isEmpty(pmUserList)){
-			throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		}else{
-			scLoa.setContractAdmin(pmUserList.get(0));
-		}
-		//#26475 - end
+		
 		this.getManagedBean().setAction(outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-			RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
@@ -3461,31 +3392,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		/*******************
 		 * INITIATE BPM REVISE
 		 */
-//		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
-		PmParameter procurementMode = this.getManagedBean().getScQt() != null ? this.getManagedBean().getScQt()
-				.getProcurementMode() : this.getManagedBean().getScLoa().getProcurementMode();
-				this.getManagedBean().setScQt(new ScQt());
-				this.getManagedBean().getScQt().setFinalization(new ScQtFinalization());
-				this.getManagedBean().getScQt().getFinalization().setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
-				this.getManagedBean().getScQt().setCreatedBy(this.getManagedBean().getScLoa().getCreatedBy());
+		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
 		IScActorSO actorSO;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
-		reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
 		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-//		reqDTO.setScQt(this.getManagedBean().getScQt());
-		reqDTO.setScQt(this.getManagedBean().getScLoa().getScQt());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setQuotation(null!=procurementMode && procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)?true:false);
 		
-//		actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
-		actorReqDTO.setDocId(this.getManagedBean().getScQt().getCreatedBy());
+		actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 		actorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
 		switch(this.getManagedBean().getScQt().getFinalization().getLoiLoaBy()){
 			case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
@@ -3545,16 +3467,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-		//#26475 - start
-		ScLoa scLoa = this.getManagedBean().getScLoa();
-		List<PmUser> pmUserList = getUsersByAgency();
-		if(CollectionUtils.isEmpty(pmUserList)){
-			throw new EpException(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.admin",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		}else{
-			scLoa.setContractAdmin(pmUserList.get(0));
-		}
-		//#26475 - end
+		
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
@@ -3643,6 +3556,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+		validateContractDetails(scLoa);	//#26475
 
 		if(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
@@ -6802,14 +6716,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		Locale locale = new FacesScopes().getUserLocale();
-
-		if (StringUtils.isBlank(
-				scLoa.getContractAdmin().getUserName())) {
-			throw new EpException(MessageConst.ERROR_760400,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}	
+//		Locale locale = new FacesScopes().getUserLocale();
+//
+//		if (StringUtils.isBlank(
+//				scLoa.getContractAdmin().getUserName())) {
+//			throw new EpException(MessageConst.ERROR_760400,
+//					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
+//				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+//		}	
+		
+		//#26475 - start
+		List<PmUser> pmUserList = getUsersByAgency();
+		if(CollectionUtils.isEmpty(pmUserList)){
+			throw new EpException(MessageConst.ERROR_760512);
+		}else{
+			scLoa.setContractAdmin(pmUserList.get(0));
+		}
+		//#26475 - end
 	}
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
