@@ -5914,7 +5914,7 @@ public class SmCommonUtil {
 		}
 	}
 	
-//13220
+//13220-Start
 	public static List<SelectItem> getDistrictListByID(Long divisionId) {
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -5931,7 +5931,6 @@ public class SmCommonUtil {
 		}
 		return districtList;
 	}
-	//13320
 		public PmDivision getDivisionByUsingId(Long divisionId) {
 			if (divisionId != null) {
 				DivisionReqDTO reqDTO = new DivisionReqDTO();
@@ -5942,4 +5941,5 @@ public class SmCommonUtil {
 				return null;
 			}
 		}
+		//13320-End
 }
