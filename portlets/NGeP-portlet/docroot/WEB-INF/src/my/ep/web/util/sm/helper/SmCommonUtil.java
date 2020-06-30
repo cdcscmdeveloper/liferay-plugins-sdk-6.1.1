@@ -454,16 +454,6 @@ public class SmCommonUtil {
 				.retrieveParameterById(reqDTO);
 		return resDTO.getPmParameter();
 	}
-
-	//#26475 - start
-	public static String getParamDescByParameterIdAndLanguage(Long parameterId, String language) {
-		String retVal = StringUtils.EMPTY;
-		List<PmParameterDesc> pdList = retrieveParameterById(parameterId).getPmParameterDescs();
-		PmParameterDesc pd = (PmParameterDesc) EntityHelper.getEntityBySinglePropertyFromList(language, pdList,
-				"languageCode");
-		return pd != null ? pd.getCodeName() : retVal;
-	}
-	//#26475 - end
 	
 	/**
 	 * Get parameter description by parameter ID
