@@ -108,12 +108,12 @@ public class ViewSuppProfileManagedBean extends
 	private List<SelectItem> permenantDistrictLs;
 
 	//13320-Start
-		private List<SelectItem> businessDivisionLs;
-		private List<SelectItem> residentialDivisionLs;
-		private List<SelectItem> permenantDivisionLs;
-		private Long divisionId;
-		private boolean divisionBox=true;
-		//13320-End
+	private List<SelectItem> businessDivisionLs;
+	private List<SelectItem> residentialDivisionLs;
+	private List<SelectItem> permenantDivisionLs;
+	private Long divisionId;
+	private boolean divisionBox = true;
+	//13320-End
 	private List<SelectItem> businessCityLs;
 	private List<SelectItem> residentialCityLs;
 	private List<SelectItem> permenantCityLs;
