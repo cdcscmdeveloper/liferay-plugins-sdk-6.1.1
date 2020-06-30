@@ -3713,7 +3713,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		BigDecimal totalAccountReceivable = assetLiability
 				.getTotalAccountReceivable();
 
-		if (liabilities == null || liabilities.intValue() <= 0) {
+		if (liabilities == null || liabilities.compareTo(BigDecimal.ZERO) <= 0) { //#28473
 			// #26339 - Start
 			assetLiability.setAcidRatio(new BigDecimal(0));
 			assetLiability.setCurrentRatio(new BigDecimal(0));
