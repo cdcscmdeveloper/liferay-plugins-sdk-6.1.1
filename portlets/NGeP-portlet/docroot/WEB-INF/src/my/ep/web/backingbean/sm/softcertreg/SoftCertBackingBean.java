@@ -1474,10 +1474,18 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						count++;
 					}
 				}
-				if (count != 4){
-					throw new EpException(MessageConst.ERROR_722614,
-							new String[] { personnel.getName() });
-				} else if(personnel.getEmail() == null || personnel.getEmail().isEmpty()
+				if (personnel.getSmAppl().getSupplierType().equals(SupplierManagementConst.ACC_BASIC)){
+					if (count != 2){
+						throw new EpException(MessageConst.ERROR_722614,
+								new String[] { personnel.getName() });
+					}
+				} else if (personnel.getSmAppl().getSupplierType().equals(SupplierManagementConst.ACC_MOF)){
+					if (count != 4){
+						throw new EpException(MessageConst.ERROR_722614,
+								new String[] { personnel.getName() });
+					}
+				}
+				if(personnel.getEmail() == null || personnel.getEmail().isEmpty()
 						|| (personnel.getMobileNo() == null && personnel.getPhoneNo() == null)){
 					throw new EpException(MessageConst.ERROR_722682,
 							new String[] { personnel.getName() });
