@@ -147,16 +147,9 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
-import my.ep.persistence.entity.sc.loaloi.ScLoaReverseAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScLoaReverseRemark;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoiReverseAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCloseQTAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCloseQTRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -183,7 +176,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -1681,25 +1673,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return country;
 	}
 	
-	/**
-	 * Enhancement #21694
-	 * Find Loi Based on ReqDTO
-	 * 
-	 * @param QuationTenderReqDTO
-	 * @return	ScLoi
-	 */
-	public ScLoi findScLoiForQtByReqDTO(QuationTenderReqDTO reqDTO) {
-		IQTDetailSO qtDetailSO;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			return qtDetailSO.findScLoiForQt(reqDTO).getScLoi();			
-		} finally {
-			qtDetailSO = null;
-		}
-	}
-	
-	
 	
 	private void populateQTLOISearchCriteria(QuationTenderReqDTO reqDTO,
 			QtnTenderSearchBean qtnTenderSearchBean,
@@ -1752,59 +1725,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
-	/**
-	 * Enhancement #21694
-	 * Find ScQtReverse Based on ReqDTO
-	 * 
-	 * @param QuationTenderReqDTO
-	 * @return	ScQtReverse
-	 */
-	public List<ScLoiReverseRemark> findScQtReverseLoiRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
-		IQTDetailSO qtDetailSO;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			return qtDetailSO.findScReverseLoiLoaRemarks(reqDTO).getScLoiReverseRemarks();			
-		} finally {
-			qtDetailSO = null;
-		}
-	}
-	
-	/**
-	 * Enhancement #21694
-	 * Find Loa Based on ReqDTO
-	 * 
-	 * @param QuationTenderReqDTO
-	 * @return	ScLoa
-	 */
-	public ScLoa findScLoaForQtByReqDTO(QuationTenderReqDTO reqDTO) {
-		IQTDetailSO qtDetailSO;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			return qtDetailSO.findScLoaForQt(reqDTO).getScLoa();			
-		} finally {
-			qtDetailSO = null;
-		}
-	}
-	
-	/**
-	 * Enhancement #21694
-	 * Find ScQtReverse Based on ReqDTO
-	 * 
-	 * @param QuationTenderReqDTO
-	 * @return	ScQtReverse
-	 */
-	public List<ScLoaReverseRemark> findScQtReverseLoaRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
-		IQTDetailSO qtDetailSO;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			return qtDetailSO.findScReverseLoiLoaRemarks(reqDTO).getScLoaReverseRemarks();			
-		} finally {
-			qtDetailSO = null;
-		}
-	}
 	
 	private void populateLoaForQtSearchCriteria(QuationTenderReqDTO reqDTO,
 			QtnTenderSearchBean qtnTenderSearchBean,
