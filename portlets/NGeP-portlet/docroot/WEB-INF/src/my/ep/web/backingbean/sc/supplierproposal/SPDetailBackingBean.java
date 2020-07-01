@@ -1208,12 +1208,14 @@ public class SPDetailBackingBean extends
 				}
 
 				for (TplSpecAnswer answer : answers) {
+					//20200701@asyrafhaziq - Bug #28464 - Start
 					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
-							answers.get(0).getTplSpecQuestion(),
-							answer.getRatePerUom(), quantity);
-					if (totalPrice.compareTo(compareTotalAmount) == 1) {
+							answer.getTplSpecQuestion(),
+							answer.getRatePerUom(), quantity);	
+					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
 						throw new EpException(MessageConst.ERROR_760437);
 					}
+					//20200701@asyrafhaziq - Bug #28464 - End
 				}
 
 			} else {
