@@ -3207,7 +3207,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
+			//scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); //#26475
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
