@@ -3653,20 +3653,28 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					if(disciplinaryAction.isBlacklistOwner())
 						retVal.setBlacklistOwnerDirector(true);
 					
-					if(disciplinaryAction.isCancelCategory()){
+					
+					//28281 (bumi cat code) start
+					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()
+							|| disciplinaryAction.isBumiputeraCancel()){
 						List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
 						//28281
 						List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
 						
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
+							List<String> catCodeList = new ArrayList<String>();
 							for(Object[] arr : catList){
 								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
 									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
 									String catCode = StringUtils.EMPTY;
 									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-									catVo.setCategoryCode(catCode);	
-									catVoList.add(catVo);
+									catVo.setCategoryCode(catCode);
+									if(!catCodeList.contains(catCode)){
+										catVoList.add(catVo);
+										catCodeList.add(catCode);
+									}
+									//28281 (bumi cat code) end
 								}
 							}						
 							retVal.setCategoryCodeList(catVoList);
