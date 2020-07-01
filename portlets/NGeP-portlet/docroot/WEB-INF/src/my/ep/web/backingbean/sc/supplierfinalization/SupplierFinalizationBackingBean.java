@@ -579,7 +579,7 @@ public class SupplierFinalizationBackingBean extends
 		decisionEvent(null);
 		//#26169 #38 - START Added by Haidah
 		validateFCByDataTypeRule();
-		checkSFHasQualifiedSupplier();
+		//checkSFHasQualifiedSupplier();
 		//#26169 #38 - END
 		
 		// #18685 - Start
@@ -4407,6 +4407,7 @@ public class SupplierFinalizationBackingBean extends
 				
 				reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),reasonDesc.getReasonDesc());
 			}
+			changeReasonEvent(null);
 			//#25729#142 End				
 		} finally {
 			reasonSO = null;
@@ -5149,7 +5150,7 @@ public class SupplierFinalizationBackingBean extends
 		itemized = ParameterConst.RECOMMEND_TYPE_ITEM
 						.equals(recommendType) ? true : false;
 		this.getManagedBean().setItemize(itemized);
-		
+		checkSFHasQualifiedSupplier();
 		setSelectionMode(finalizationMethod);
 		if (!triggeredFromEvent) {
 			loadRecommededSuppliersIntoCachedData(itemized);	
@@ -8247,6 +8248,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		
 		public void checkSFHasQualifiedSupplier(){
+			String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
+			log.info("RECOMMEND TYPE ID == "+recommendType);
+			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			ScQt scQt = getManagedBean().getScQt();
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
