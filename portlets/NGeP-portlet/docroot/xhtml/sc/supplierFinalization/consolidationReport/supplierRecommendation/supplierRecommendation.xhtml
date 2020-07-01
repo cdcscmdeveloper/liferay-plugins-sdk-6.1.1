@@ -54,8 +54,17 @@
 		</table>	
 	</p:outputPanel>
 	
-	<ac:scRemarkAndAttachment
-		remarkList="#{consolidationReportBackingBean.managedBean.finalizationRemars}"
-		showAttachment="false" />
+	<c:choose>
+		<c:when test="#{consolidationReportBackingBean.managedBean.itemized}">
+			<ac:scRemarkAndAttachment
+			remarkList="#{consolidationReportBackingBean.managedBean.finalizationItemizedRemarks}"
+			showAttachment="false" />
+		</c:when>
+		<c:otherwise>
+			<ac:scRemarkAndAttachment
+			remarkList="#{consolidationReportBackingBean.managedBean.finalizationRemars}"
+			showAttachment="false" />
+		</c:otherwise>
+	</c:choose>
 	
 </ui:composition>

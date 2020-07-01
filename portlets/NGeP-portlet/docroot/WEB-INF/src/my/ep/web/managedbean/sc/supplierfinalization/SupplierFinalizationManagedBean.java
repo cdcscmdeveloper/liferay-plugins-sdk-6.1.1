@@ -244,6 +244,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		private BigDecimal maxAmountCommitteeAuthority;
 		//#25729#142 & #26169 - End
 		
+		// #18685 - Start
+		private ScQtFinalizationRemarks pendingRecItemizedRemark;
+		private ScQtFinalizationRemarks pendingRecPackageRemark;
+		// #18685 - End
 		
 	/**
 	 * @return the activeIndex
@@ -2176,6 +2180,38 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	
 	//#25729#142 & #26169 - End
+	
+	// #18685 - Start
+	/**
+	 * @return the pendingRecItemizedRemark
+	 */
+	public ScQtFinalizationRemarks getPendingRecItemizedRemark() {
+		return pendingRecItemizedRemark;
+	}
+
+	/**
+	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
+	 */
+	public void setPendingRecItemizedRemark(
+			ScQtFinalizationRemarks pendingRecItemizedRemark) {
+		this.pendingRecItemizedRemark = pendingRecItemizedRemark;
+	}
+
+	/**
+	 * @return the pendingRecPackageRemark
+	 */
+	public ScQtFinalizationRemarks getPendingRecPackageRemark() {
+		return pendingRecPackageRemark;
+	}
+
+	/**
+	 * @param pendingRecPackageRemark the pendingRecPackageRemark to set
+	 */
+	public void setPendingRecPackageRemark(
+			ScQtFinalizationRemarks pendingRecPackageRemark) {
+		this.pendingRecPackageRemark = pendingRecPackageRemark;
+	}
+	// #18685 - End
 }
 
 
