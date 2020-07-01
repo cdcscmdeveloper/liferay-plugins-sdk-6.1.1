@@ -462,16 +462,17 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
+							contractReqDTO.setOrgProfileId(orgProfileId);//28469
 							flReqDTO.setContractId(vCtActiveContract.getContractId());
 
 							flReqDTO.setOrgProfileId(orgProfileId);
-							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);//all CR under this contract filter by contractId,profile id -#28469
 
 							List<VCtActiveContract> InfoActiveContractList = contractSO
-									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();
+									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();//all schedule list under this contract
 									
-							List<VCtActiveContract> activeContractScheduleList = contractSO
-									.retrieveScheduleInfoForContractByOrgProfileId(contractReqDTO).getActiveContractList();		
+							List<VCtActiveContract> activeContractScheduleList = requestSO
+									.retrieveTotalFulfilmentRequestForThisContract(flReqDTO).getActiveContractList();//total CR under this contract filter by contractId,profile id -#28469	
 						
 							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
 
@@ -493,11 +494,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 									resfDTO.getDocNoStatus().add("");
 								}
 								
-								InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
-								InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
-								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
-								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
-								
+							
 								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
 								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
 								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
