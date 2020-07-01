@@ -135,7 +135,7 @@
 			<tr>
 			<td  class="tdTitle">
 				<p:outputPanel id="divisionBranchTbleLabelPanelId" >
-					<ui:fragment rendered="#{registrationBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
+					<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 						</ui:fragment>
@@ -143,7 +143,7 @@
 					</td>
 					<td>
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
-				<ui:fragment rendered="#{registrationBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
+				<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
 			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
