@@ -725,8 +725,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			currSupp.setSmAppl(srcAppl);
 			
 			if(resultList != null && resultList.size() > 0){
+				//26238: Disciplinary Action - start - 28433 TSCN_DASM_087 - Cancel Bumiputera Status (The option to choose Bumi category code not dimmed)
 				for(SmDisciplinaryAction disciplinaryAction: resultList){
-					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){
+					if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel() || disciplinaryAction.isBumiputeraCancel()){
 
 						int checkBasic = 0; 
 
@@ -788,8 +789,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 									}
 								}
 								if(pmCategoryL3.getCategoryL3Code() != null
-										&& pmCategoryL3.getCategoryL3Code()
-										.equalsIgnoreCase("09")){
+										&& pmCategoryL3.getCategoryL3Id()== 347){
 									log.info("MTO Code exist"); 
 									if( checkBasic != 3 ){
 
@@ -797,10 +797,14 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 										log.info("Disciplinary Action - disabled by basic category");
 									}
 								} 
+							} else if(disciplinaryAction.isBumiputeraCancel()){	 
+								if (pmCategoryL3.getBumiPercentage() > 50 ){ 
+										item.setDisabled(true);
+										log.info("Disciplinary Action - disabled by bumiputera"); 
+								} 
 							} else { 
 								if(pmCategoryL3.getCategoryL3Code() != null
-										&& pmCategoryL3.getCategoryL3Code()
-										.equalsIgnoreCase("09")){
+										&& pmCategoryL3.getCategoryL3Id() == 347){
 									log.info("MTO Code exist"); 
 									if( checkBasic != 3 ){
 
@@ -812,7 +816,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							selectItems.add(item);
 						}
 						checkBasic = 0;
-					} else {  //26238: Disciplinary Action - start - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
+					} else {  
+						//26238: Disciplinary Action - start - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
 						int checkBasic = 0; 
 
 						List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
@@ -873,8 +878,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 									}
 								}
 								if(pmCategoryL3.getCategoryL3Code() != null
-										&& pmCategoryL3.getCategoryL3Code()
-										.equalsIgnoreCase("09")){
+										&& pmCategoryL3.getCategoryL3Id()== 347){
 									log.info("MTO Code exist"); 
 									if( checkBasic != 3 ){
 
@@ -884,8 +888,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 								} 
 							} else { 
 								if(pmCategoryL3.getCategoryL3Code() != null
-										&& pmCategoryL3.getCategoryL3Code()
-										.equalsIgnoreCase("09")){
+										&& pmCategoryL3.getCategoryL3Id()== 347){
 									log.info("MTO Code exist"); 
 									if( checkBasic != 3 ){
 
@@ -897,9 +900,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							selectItems.add(item);
 						}
 						checkBasic = 0; 
-					}
-					  //26238: Disciplinary Action - END - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
+					}	
+					//26238: Disciplinary Action - END - 28344 Cancel Bumiputera Status (Dropdown stuck at Sub Category Division)
 				}
+				//26238: Disciplinary Action - End - 28433 TSCN_DASM_087 - Cancel Bumiputera Status (The option to choose Bumi category code not dimmed)
 			} else {   
 				int checkBasic = 0; 
 
@@ -955,8 +959,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
 							
 					if(pmCategoryL3.getCategoryL3Code() != null
-							&& pmCategoryL3.getCategoryL3Code()
-							.equalsIgnoreCase("09")){
+							&& pmCategoryL3.getCategoryL3Id()== 347){
 						log.info("MTO Code exist"); 
 						if( checkBasic != 3 ){
 
