@@ -3207,10 +3207,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			//#26475
+			//#26475 - start
 			if (this.getManagedBean().getSelectedPtj() != null){
 				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 			}
+			//#26475 - end
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -3472,10 +3473,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		
-		ScLoa scLoa = this.getManagedBean().getScLoa();
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
-		updateContractDetails(scLoa);	//#26475
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value()) || isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
