@@ -23,6 +23,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -523,13 +524,34 @@ public class SelfRequestSupplierAdminBackingBean extends
 				.getStateId() : addr.getStateId();
 		addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
 		addr.setStateId(stateId);
-
+		//13320-Start
+		PmState states = (SmCommonUtil.getInstance().getStateById(stateId));
+		if(states !=null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			addr.setDivisionId(null);
+			addr.setDistrictId(null);
+			addr.setCityId(null);
+			
+			List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(stateId);
+			this.getManagedBean().setDivisionItems(divisionLs);
+			
+			getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
+			getManagedBean().setCityItems(null);
+			addr.getPmState().setAdoptDivision(true);
+		}else{
+			addr.getPmState().setAdoptDivision(false);
+		} 
+		if(states !=null && states.getAdoptDivision()) {
+			getManagedBean().setDivisionBox(false);	
+		}else {
+			getManagedBean().setDivisionBox(true);//13320-End
+		
 		List<SelectItem> districtItems = SmCommonUtil.getDistrictList(stateId);
 		getManagedBean().setDistrictItems(districtItems);
 		getManagedBean().setCityItems(new ArrayList<SelectItem>());
 
 		addr.setDistrictId(null);
 		addr.setCityId(null);
+		}
 	}
 
 	public void onChangeDistrict(SmAddress addr) {
@@ -544,6 +566,22 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 		addr.setCityId(null);
 	}
+	
+	//13320-Start
+	public void onChangeDivision(SmAddress addr) {
+		Long divisionId = addr.getDivisionId() == null ? addr.getPmDivision()
+				.getDivisionId() : addr.getDivisionId();
+		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionById(
+				divisionId));
+		addr.setDivisionId(divisionId);
+
+		List<SelectItem> districtItems = SmCommonUtil.getDistrictListByID(divisionId);
+		getManagedBean().setDistrictItems(districtItems);
+		getManagedBean().setCityItems(new ArrayList<SelectItem>());
+		addr.setDistrictId(null);
+		addr.setCityId(null);
+	}
+	//13320-End
 
 	public void onChangeCity(SmAddress addr) {
 		Long cityId = addr.getCityId() == null ? addr.getPmCity().getCityId()
