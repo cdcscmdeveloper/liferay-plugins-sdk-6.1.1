@@ -4029,9 +4029,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		String url ="crList?faces-redirect=true";
 		
-		if(getManagedBean().getCatalogueFlag().equalsIgnoreCase("true")){
-			getManagedBean().setCatalogueFlag("false");
-			url ="/xhtml/cm/catalogue/contractRequestView?faces-redirect=true";
+		if(null != getManagedBean().getCatalogueFlag()){//#28469
+			if(getManagedBean().getCatalogueFlag().equalsIgnoreCase("true")){
+				getManagedBean().setCatalogueFlag("false");
+				url ="/xhtml/cm/catalogue/contractRequestView?faces-redirect=true";
+			}			
 		}
 		return url;
 		//preRenderContractList();
