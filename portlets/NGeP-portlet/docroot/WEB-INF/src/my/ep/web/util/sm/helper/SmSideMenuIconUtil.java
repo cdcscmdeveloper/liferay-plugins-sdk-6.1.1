@@ -44,10 +44,8 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
-					
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil
-							.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()); 
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
 							if(disc.isSuspendRegistration()){
@@ -106,8 +104,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil
-							.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()); 
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
@@ -165,8 +162,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil
-							.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()); 
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
 					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
@@ -228,9 +224,8 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil
-							.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
 							if(disc.isSuspendRegistration()){
@@ -287,9 +282,8 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil 
-							.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()); 
-
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
 							if(disc.isSuspendRegistration()){
@@ -348,9 +342,8 @@ public class SmSideMenuIconUtil {
 				
 				//27641, 27736 : Disciplinary Action - #26238 - start 
 				if(bean.getSmSupplier() != null){
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil 
-							.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+					
 					if(activeDisc != null && activeDisc.size() > 0){
 						for(SmDisciplinaryAction disc : activeDisc){
 							if(disc.isSuspendRegistration()){
