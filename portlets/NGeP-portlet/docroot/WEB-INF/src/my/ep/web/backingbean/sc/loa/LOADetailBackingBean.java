@@ -3469,6 +3469,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
 		
+		ScLoa scLoa = this.getManagedBean().getScLoa();
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		updateContractDetails(scLoa);	//#26475
