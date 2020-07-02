@@ -32,17 +32,18 @@
 				<c:forEach var="reasonGroup" items="#{evaluationBackingBean.managedBean.getDetachedPaginator().getModel()}">
 					<c:forEach var="financialEval" items="#{reasonGroup}" varStatus="st">
 						<p:row rendered="#{st.index lt reasonGroup.size()}">
-							<p:column>
+							<p:column style="width:55%;white-space: normal;">
 								<h:outputText value="#{financialEval.title}"></h:outputText>
 							</p:column>
-							<p:column>
+							<p:column style="width:20%;white-space: normal;">
 								<h:outputText value="#{evaluationBackingBean.getParameterDesc(financialEval.definationType)}">
 								</h:outputText>
 							</p:column>
-							<p:column>
+							<p:column style="width:15%;white-space: normal;">
 								<h:outputText value="#{evaluationBackingBean.getStatusDescById(financialEval.pmEvalStatus.statusId)}"></h:outputText>
 							</p:column>
-							<p:column rowspan="#{reasonGroup.size()}" rendered="#{st.index==0}">		
+							<p:column style="width:10%;text-align: center;"
+								rowspan="#{reasonGroup.size()}" rendered="#{st.index==0}">		
 								<ui:fragment rendered="#{technicalEval.scoringReq ne false}"
 								align="center">
 									<p:commandButton value="#{lbl['lbl.btn.view']}"
@@ -61,19 +62,19 @@
 					</c:forEach>
 					<c:forEach var="financialEvaluate" items="#{evaluationBackingBean.managedBean.getDetachedPaginatorTest().getModel()}" rowIndexVar="index">
 						<p:row>
-							<p:column>
+							<p:column style="width:55%;white-space: normal;">
 								<h:outputText value="#{financialEvaluate.title}"></h:outputText>
 							</p:column>
-							<p:column>
+							<p:column style="width:20%;white-space: normal;">
 								<h:outputText value="#{evaluationBackingBean.getParameterDesc(financialEvaluate.definationType)}">
 								</h:outputText>
 							</p:column>
-							<p:column>
+							<p:column style="width:15%;white-space: normal;">
 								<h:outputText value="#{evaluationBackingBean.getStatusDescById(financialEvaluate.pmEvalStatus.statusId)}"></h:outputText>
 							</p:column>
-							<p:column>		
+							<p:column style="width:10%;text-align: center;" >		
 								<ui:fragment rendered="#{technicalEval.scoringReq ne 'false'}">
-									<p:commandButton value="#{lbl['lbl.btn.view']}" align="center"
+									<p:commandButton value="#{lbl['lbl.btn.view']}"
 										process="@this" partialSubmit="true"
 										action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEvaluate,index,'EF')}" />
 								</ui:fragment>
