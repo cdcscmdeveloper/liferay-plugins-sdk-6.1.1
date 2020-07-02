@@ -126,9 +126,12 @@
 							</tr>
 							<tr>
 								<td
-									style="border: none !important; white-space: normal; word-wrap: break-word !important;"><h:outputText
-										value="#{aprvdCatBean.poRemarks}"
-										rendered="#{not empty aprvdCatBean.poRemarks}" /></td>
+									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+									<p:scrollPanel mode="native" style="height:100px; width:auto;">
+										<h:outputText value="#{catBean.poRemarks}"
+											rendered="#{not empty catBean.poRemarks}" />
+									</p:scrollPanel>
+								</td>
 							</tr>
 						</table>
 					</p:outputPanel>
@@ -148,25 +151,25 @@
 					</p:selectOneRadio>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" >
-					<p:inputTextarea value="#{aprvdCatBean.poRemarks}" maxlength="200"
-						rendered="#{backingBean.managedBean.poUser}" style="width : auto;"
-						rows="5" cols="20"
+					<p:inputTextarea autoResize="false" value="#{aprvdCatBean.poRemarks}" maxlength="2000"
+						rendered="#{backingBean.managedBean.poUser}" style="white-space:normal; width: 95%"
+						rows="6" cols="30"
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{aprvdCatBean.pmCategoryL1.categoryL1Code} 
 						#{aprvdCatBean.pmCategoryL2.categoryL2Code} #{aprvdCatBean.pmCategoryL3.categoryL3Code} "
 						id="poCatRDecisionRmrk">
 						<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
-						<f:validateLength maximum="200" />
+						<f:validateLength maximum="2000" />
 					</p:inputTextarea>
-					<p:inputTextarea value="#{aprvdCatBean.approverRemarks}"
-						id="apprvrCatRDecisionRmrk" style="width : auto;" rows="5" cols="20"
+					<p:inputTextarea autoResize="false" value="#{aprvdCatBean.approverRemarks}"
+						id="apprvrCatRDecisionRmrk" style="white-space:normal;" rows="5" cols="20"
 						rendered="#{backingBean.managedBean.approverUser and (aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS 
 						or aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS 
 						or aprvdCatBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}"
 						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{aprvdCatBean.pmCategoryL1.categoryL1Code} 
 						#{aprvdCatBean.pmCategoryL2.categoryL2Code} #{aprvdCatBean.pmCategoryL3.categoryL3Code} "
-						maxlength="200">
+						maxlength="2000">
 						<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
-						<f:validateLength maximum="200" />
+						<f:validateLength maximum="2000" />
 					</p:inputTextarea>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" rendered="#{backingBean.managedBean.smAppl.resubmit}">
