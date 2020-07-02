@@ -22,11 +22,15 @@
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
 					immediate="true"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
-
-				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
-					styleClass="BtnSpacing" ajax="false" rendered="#{empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}"
-					action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
-
+				<ui:remove>
+					Bug #27412 #75 : START
+				</ui:remove>	
+				<c:if test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
+					<p:commandButton value="#{lbl['lbl.sc.print.proposal']}" styleClass="BtnSpacing" ajax="false" action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
+				</c:if>
+				<ui:remove>
+					Bug #27412 #75 : END
+				</ui:remove>				
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
