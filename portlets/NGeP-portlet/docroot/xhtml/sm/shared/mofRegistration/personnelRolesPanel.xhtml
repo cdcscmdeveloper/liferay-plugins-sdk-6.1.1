@@ -17,12 +17,13 @@
 							<tr>
 								<c:if test="#{backingBean.managedBean.validEquityLimit or (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.selectedShareHolder.ssmData)}">
 									<!-- SSM INTEGRATION -->
+									<!-- bug #28173 & #28315-->
 									<td style="width: 20px"><p:selectBooleanCheckbox 
 									        disabled="#{(backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY) 
 									        or (backingBean.managedBean.selectedShareHolder.ssmData and backingBean.managedBean.selectedShareHolder.equityOwnerSsm) 
 									        or (backingBean.managedBean.smAppl.applValidWithSsm 
-									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-									        		)}"
+									        	and (backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG))
+									        	or (backingBean.managedBean.selectedShareHolder.disableEquityOwner)}"
 									        rendered="#{backingBean.showEquity(backingBean.managedBean)}"
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog]),:#{p:component('equiShrHldrJbFnc')}"
@@ -79,7 +80,9 @@
 							<c:if
 								test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
 								<tr>
+								<!-- bug #28173 & #28315-->
 									<td style="width: 20px"><p:selectBooleanCheckbox
+									        disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}"
 											value="#{backingBean.managedBean.selectedShareHolder.management}">
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
