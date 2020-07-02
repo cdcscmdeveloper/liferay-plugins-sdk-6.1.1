@@ -96,6 +96,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -116,6 +117,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.GSFType;
 import my.ep.type.pm.OrganizationType;
@@ -238,11 +240,32 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			//start 21229
-			if(getManagedBean().isQueryDisplay() ){
-				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);				
+			
+			//START 28246 NEW implementation: IF SentIddCre = 1 , ACTION CODE CRE already sent and next action must ADJ
+			if(getManagedBean().getPaymentAdvice().getFlInvoice() !=null){				
+				if( getManagedBean().getPaymentAdvice().getFlInvoice().getSentIddCre()!=null 
+						&& getManagedBean().getPaymentAdvice().getFlInvoice().getSentIddCre() == 1 ){
+					
+					reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);
+					
+				}else{
+					reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
+				}
 			}else{
 				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
 			}
+
+			//To cater WIP action code: IF column SentIddCre is null
+			if(reqDTO.getActionCode().equals(FulfilmentConst.IDD_ACTION_CODE_CREATE)){
+				if(getManagedBean().isQueryDisplay() ){
+					reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_ADJUSTMENT);				
+				}else{
+					reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE);
+				}
+			}
+			
+			log.info("paymentAdviceNo ["+ paymentAdvice.getPaymentAdviceNo() +"] actionCode[" + reqDTO.getActionCode()+"] ");
+			//END 28246
 			
 			if(getManagedBean().getRemarkReviseList()!=null && getManagedBean().getRemarkReviseList().size() > 0){
 					reqDTO.setFlRemarkRevise(getManagedBean().getRemarkReviseList().get(0));
