@@ -1329,16 +1329,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}else{
 					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 				}
+				
+				// for Fixing Enhancement #20997 - Start
+				//#Bug #28339 - Failed to Update Max QTY & price
+				if(getManagedBean().getSelectedItem() != null){
+				if(getManagedBean().getSelectedItem().getCtItemPrices() != null){
+					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
+						itemPrice.setChangePrice(false);
+					}	
+				}
 
-				for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
-					itemPrice.setChangePrice(false);
+				if(getManagedBean().getSelectedItem().getCtItemMaxQties() != null){
+					for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+						itemMaxQty.setChangeQuantity(false);
+					}
 				}
-				for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
-					itemMaxQty.setChangeQuantity(false);
-				}
-				
-				
-			}		
+			}				
+		}
+		// for Fixing Enhancement #20997 and #Bug #28339 - End	
 		log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
 
 			// Change Code #20997 End
