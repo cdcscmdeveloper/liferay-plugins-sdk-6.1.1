@@ -303,6 +303,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
+		//28494
+		getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 		getManagedBean().setDeleteApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
@@ -1065,9 +1067,10 @@ public class SupplierDataMaintenanceBackingBean extends
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
 		}
-		//#28147 - start
+		//#28147 - start - #28494
 		if (getManagedBean().isBlacklistOwnerOrDirector()
-				&& getManagedBean().getSelectedOwnerAndDirectorList().isEmpty()) {
+				&& (getManagedBean().getSelectedOwnerAndDirectorList() == null
+				|| getManagedBean().getSelectedOwnerAndDirectorList().isEmpty())) {
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
 		}
 		//#28147 - end
@@ -1440,6 +1443,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setSelected(false);
 			}
 			getManagedBean().setApprovedCategoryList(catList);
+			//28494
+			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 			//28281 - end
 			onTickDiscipline();
 		} else {
