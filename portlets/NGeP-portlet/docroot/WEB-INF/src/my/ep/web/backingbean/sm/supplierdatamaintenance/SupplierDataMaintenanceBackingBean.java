@@ -1444,7 +1444,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			onTickDiscipline();
 		} else {
 			// 27815: Disciplinary Action - start - checking condition
-			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel()) {
+			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel() 
+					|| getManagedBean().isBumiputeraStatusCancel()) {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
 				//26238 -  Disciplonary action - 28146 - start
