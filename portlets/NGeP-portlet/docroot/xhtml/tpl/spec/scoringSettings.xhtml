@@ -158,6 +158,7 @@
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}" />
+					<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to.tooltip']}" />
 				</f:facet>
 				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:80%; text-align:right;" 
 					required="#{rowIndex lt templateSpecBean.selectedSpecQuestion.tplSpecScorings.size()-1}" maxlength="19"
