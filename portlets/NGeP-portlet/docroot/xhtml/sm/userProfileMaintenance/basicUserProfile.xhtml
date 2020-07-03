@@ -377,8 +377,7 @@
 					<td>
 				<p:outputPanel id="divisionBasicProDropdownPanelId">
 				<ui:fragment rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
-					
-									<td ><p:selectOneMenu required="true"
+					<p:selectOneMenu required="true"
 											label="#{lbl['lbl.sm.division']}" id="basicPermAddDivisionList"
 											value="#{smPersonnelBackingBean.managedBean.divisionId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -387,7 +386,7 @@
 												value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
 											<p:ajax event="change"
 												update="basicPermAddDistrictList, basicPermAddCityList"/>
-										</p:selectOneMenu></td>
+										</p:selectOneMenu>
 										</ui:fragment>
 										</p:outputPanel>
 										</td>
