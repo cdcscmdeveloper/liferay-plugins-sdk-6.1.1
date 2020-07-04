@@ -1406,6 +1406,7 @@ public class SmSideMenuIconUtil {
 						arrExcludeProps);
 			}
 		}
+		log.info("step6CatCodeHasDifference --retVal="+retVal);
 		return retVal;
 	}
 
