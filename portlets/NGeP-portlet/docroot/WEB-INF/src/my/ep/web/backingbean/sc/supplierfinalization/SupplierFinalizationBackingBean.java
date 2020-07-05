@@ -237,7 +237,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			
 			Long qtId = Long.valueOf(dataType.getQtId());
-			
+			log.info("currentStatusId === "+getManagedBean().getCurrentStatusId());
 			
 			
 			Long loggedInUserId = getFacesScopes().getUserSessionBean()
@@ -2027,6 +2027,7 @@ public class SupplierFinalizationBackingBean extends
 		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 		scQtFinalization.setScQtFinalizationReports(finalizationReports);
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		log.info("currentStatusId === "+currentStatusId);
 		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(currentStatusId) || 
 				QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(currentStatusId)) {
@@ -2044,6 +2045,7 @@ public class SupplierFinalizationBackingBean extends
 					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
 					// #25638 - End
 					) {
+				log.info("committeeList is not empty !!");
 				int totalMembersEndorsed = 0;
 				int totalMembersAttended = 0;
 				boolean isChairperson = false;
@@ -5566,6 +5568,7 @@ public class SupplierFinalizationBackingBean extends
 									 .equals(higherCommitteeType)) {
 					getManagedBean().setForwardToBpk(true);
 				} else if (getManagedBean().isSecretaryUser()) {
+					log.info("Inside issecretaryuser ==");
 					if (getManagedBean().getScQtFinalization().getHigherCommitte() == null) {
 						getManagedBean().getScQtFinalization().setHigherCommitte(
 								new PmParameter());
@@ -8226,10 +8229,19 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		public void validateFCByDataTypeRule() {
 			// Checking with Rule for Total Intended Price 
 			// To show/hide option Meeting Decision for Forward To Higher Authority
+			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 			BigDecimal actualIntendedPrice = getManagedBean().getScQt().getEstimatedAmount();
-			if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) < 1){//actualIntendedPrice <= 50,000.00
+			if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) < 1){//actualIntendedPrice <= 50,000.00				
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
 					getManagedBean().setDisableFwdToHighAuthorityOption(true);
+					if(this.getManagedBean().isInitialDecisionFwdHighAuth()){
+						resetDecisionForwardToHigherAuthority(scQtFinalization);
+						this.getManagedBean().setRecommendSupplier(Boolean.TRUE);
+						PmParameter recommendSupplier = getParameterByTypeAndCode(
+								ParameterTypeConst.FINALIZATION_DECISION_TYPE, 
+								ParameterConst.DECISION_RECOMMEND_SUPPLIER);
+						scQtFinalization.setDecision(recommendSupplier);
+					}
 				}
 			}else if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) == 1 &&
 					actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) < 1){
@@ -8249,7 +8261,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		public void checkSFHasQualifiedSupplier(){
 			String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
-			log.info("RECOMMEND TYPE ID == "+recommendType);
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			ScQt scQt = getManagedBean().getScQt();
