@@ -344,9 +344,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT)
 				&& getManagedBean().getScLoa().getPmStatus().getStatusId()
 						.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-			if (this.getManagedBean().isValidatewitness()) { // #17376
-				validateLoaWitnessAndAckBy();
-			} // #17376
+			validateLoaWitnessAndAckBy();
 		}
 		boolean isGenerate = checkDownloadReportStatus(scLoaReport);
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
@@ -644,19 +642,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param bankAccNo
 	 * @return
 	 */
-	private Long getBankByAccountNo(String bankAccNo) {
-		if (StringUtils.isNotEmpty(bankAccNo)) {
-			List<SmSupplierBank> bankAccounts = this.getManagedBean().getBankList();
-			if (CollectionUtils.isNotEmpty(bankAccounts)) {
-				for (SmSupplierBank bank : bankAccounts) {
-					if (bankAccNo.equalsIgnoreCase(bank.getAccountNo())) {
-						return bank.getSupplierBankId();
-					}
-				}
-			}
-		}
-		return null;
-	}
+//	private Long getBankByAccountNo(String bankAccNo) {
+//		if (StringUtils.isNotEmpty(bankAccNo)) {
+//			List<SmSupplierBank> bankAccounts = this.getManagedBean().getBankList();
+//			if (CollectionUtils.isNotEmpty(bankAccounts)) {
+//				for (SmSupplierBank bank : bankAccounts) {
+//					if (bankAccNo.equalsIgnoreCase(bank.getAccountNo())) {
+//						return bank.getSupplierBankId();
+//					}
+//				}
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Pre render page navigation to loa supplier page based on task id
@@ -676,7 +674,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
-			this.getManagedBean().setValidatewitness(Boolean.TRUE); // #17376-144
 
 		} catch (Exception e) {
 			handleException(e);
@@ -1071,7 +1068,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		validateContractDetails(scLoa); // #26474
-
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
@@ -3654,9 +3650,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		for (ScLoaReport scLoaReport : scLoaReports) {
 			if (scLoaReport.getTitle().equalsIgnoreCase(QTConstants.REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT)
 					&& scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-				if (this.getManagedBean().isValidatewitness()) { // #17376
-					validateLoaWitnessAndAckBy();
-				} // #17376
+				validateLoaWitnessAndAckBy();
 			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 
@@ -4493,7 +4487,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			parseLOADetails(scLoa, outcome, reqDTO);
 			validateLOADetails(scLoa, outcome);
-			
 			validateContractAmount(scLoa.getLoaAmt(), outcome);
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -4536,7 +4529,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj()); // #26474
-			
+
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -7864,7 +7857,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *            the scLoa
 	 */
 	private void validateContractDetails(ScLoa scLoa) {
-
 		// #26474 - start
 		List<PmUser> pmUserList = getUsersByAgency();
 		if (CollectionUtils.isEmpty(pmUserList)) {
@@ -7873,7 +7865,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.setContractAdmin(pmUserList.get(0));
 		}
 		// #26474 - end
-
+		
 		// Redmine Bug #21137
 		if (scLoa.getContractDuration() != null && (scLoa.getContractDuration().compareTo(new BigDecimal(1)) < 0)) {
 			throw new EpException(MessageConst.ERROR_760473);
