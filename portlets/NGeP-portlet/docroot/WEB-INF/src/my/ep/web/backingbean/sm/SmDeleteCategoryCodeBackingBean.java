@@ -334,8 +334,12 @@ public class SmDeleteCategoryCodeBackingBean extends
 									.equals(delCat.getPmCategoryL2().getCategoryL2Code())
 							&& cat.getPmCategoryL3().getCategoryL3Code()
 									.equals(delCat.getPmCategoryL3().getCategoryL3Code())) {
+						/*#28404 - Start*/
+						PmUser pmUser = new FacesScopes().getUserSessionBean();
 						cat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 						cat.setCancelledDate(new Date());
+						cat.setChangedBy(pmUser.getUserId());
+						/*#28404 - End*/
 					}
 			}
 			updateSmAppl(latestRejectedAppl);
