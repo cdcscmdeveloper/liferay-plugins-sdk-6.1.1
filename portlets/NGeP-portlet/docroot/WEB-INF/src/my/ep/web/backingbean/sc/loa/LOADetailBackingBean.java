@@ -6734,6 +6734,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<PmUser> pmUserList = getUsersByAgency();
 		if(CollectionUtils.isEmpty(pmUserList)){
 			throw new EpException(MessageConst.ERROR_760512);
+		}else{
+			scLoa.setContractAdmin(pmUserList.get(0));
 		}
 		//#26475 - end
 	}
