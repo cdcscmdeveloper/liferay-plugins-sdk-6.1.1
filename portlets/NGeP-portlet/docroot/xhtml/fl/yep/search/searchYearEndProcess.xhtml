@@ -381,8 +381,10 @@
 					<h:outputText value="#{yearEndProcessBackingBean.getStatusDescById(flYep.statusId)}" />
 				</p:column> 
 				<p:column headerText="#{lbl['lbl.fl.yep.category']}" style="white-space:normal;" >
-					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : 
-						(flYep.isCarryFoward eq 1 ? lbl['lbl.fl.yep.isCarryForward'] : '')}" /><!-- #28373 added by vinod -->
+					<!-- #28373 added by vinod start -->
+					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{flYep.carryForward}"/>
+					<!-- #28373 added by vinod End -->
 				</p:column> 
 				
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
