@@ -206,7 +206,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmBusinessAdd().setPmState(new PmState());
 			this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
-			this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());//13320
+			//this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());//13320
 
 			this.getManagedBean().setSmResAdd(new SmAddress());
 			this.getManagedBean().getSmResAdd().setPmCountry(new PmCountry());
@@ -215,7 +215,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmResAdd().setPmState(new PmState());
 			this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
-			this.getManagedBean().getSmResAdd().setPmDivision(new PmDivision());//13320
+			//this.getManagedBean().getSmResAdd().setPmDivision(new PmDivision());//13320
 
 
 			this.getManagedBean().setSmPermenantAdd(new SmAddress());
@@ -225,7 +225,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
 			this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
-			this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());//13320
+			//this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());//13320
 
 
 			this.getManagedBean().setSameAddress(false);
@@ -1999,10 +1999,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				////#16052019 - SSM INTEGRATION CR
 				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
-				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());//13320
+				//this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());//13320
 				getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
-				getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);//13320
+				//getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);//13320
 				getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
 				getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 			}
@@ -2017,7 +2017,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (typeAdd.equals("business")) {
 			//13320
 			if(reset){
-				getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 			}
@@ -2025,6 +2024,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(false);
 			if(state != null){
 				if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+					getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 					List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 					this.getManagedBean().setBusinessDivisionLs(divisionLs);
 					getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
@@ -2042,7 +2042,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("------------residential----------------");
 			//13320
 			if(reset){
-				getManagedBean().getSmResAdd().setPmDivision(new PmDivision());
 				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
 			}
@@ -2050,6 +2049,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
 			if(state != null){
 			if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				getManagedBean().getSmResAdd().setPmDivision(new PmDivision());
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
 				this.getManagedBean().setResidentialDivisionLs(divisionLs);
 				getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());
@@ -2070,7 +2070,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			//13320
 			if(reset){
-				getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
 			}
@@ -2078,6 +2077,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
 			if(state !=null){
 			if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
 				this.getManagedBean().setPermenantDivisionLs(divisionLs);
 				getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
@@ -3091,7 +3091,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				
 				
 				if(this.getManagedBean().getSmBusinessAdd().isBrandNew()){
-					this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
+					//this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 					this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 					this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 				}
@@ -3106,6 +3106,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						state = sarawakLs.get(0);
 						this.getManagedBean().getSmBusinessAdd().setPmState(state); //13320-only sarawak
 							if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+								this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 								this.getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
 								 getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 								getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
