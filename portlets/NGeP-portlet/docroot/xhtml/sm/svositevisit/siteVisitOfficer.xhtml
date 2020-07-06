@@ -5,6 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<p:panel header="#{lbl['lbl.sm.site.visit.officer']}" toggleable="true" id="pnlSiteVisitOffer">
@@ -28,7 +29,11 @@
 					<p:spacer width="5" />
 					<p:graphicImage rendered="#{fn:length(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name) > 1}" value="/css/images/design/ico-edit.png" title="#{lbl['lbl.sm.edit']}" />
 					<p:spacer width="5" />
-					<p:graphicImage rendered="#{fn:length(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name) > 1}" value="/css/images/design/icon_alert.png" />					
+					<ac:smFieldChangeAlert 
+							isShow="#{svoSiteVisitBackingBean.showEditAssistant(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer)}"
+							oriValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.nameEnterBySvo}" 
+							currValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name}" 
+							alertValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.nameEnterBySvo}"/>							
 				</td>
 			</tr>
 			

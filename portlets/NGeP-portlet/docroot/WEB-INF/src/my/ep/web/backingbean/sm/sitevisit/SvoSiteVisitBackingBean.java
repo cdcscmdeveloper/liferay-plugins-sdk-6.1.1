@@ -2064,8 +2064,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//validate assistant officer
 		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
 			svTask.setSmSvAssistantOfficer(null);
+		}//START 24964
+		else{
+			svTask.getSmSvAssistantOfficer().setNameEnterBySvo(svTask.getSmSvAssistantOfficer().getName());
 		}
-		
+		//END 24964
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
@@ -2766,5 +2769,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		retrieveSiteVisitInfo("V");
 		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
 	} 
+	
+	public boolean showEditAssistant(SmSvAssistantOfficer assistantOfficer){
+		boolean edit = false;
+		if(assistantOfficer.getName() != null && assistantOfficer.getNameEnterBySvo() != null){
+			if(!assistantOfficer.getName().equalsIgnoreCase(assistantOfficer.getNameEnterBySvo())){
+				edit = true;
+			}
+		}else{
+			edit = false;
+		}
+		return edit;
+	}
+	
 	// #24964 - end
 }
