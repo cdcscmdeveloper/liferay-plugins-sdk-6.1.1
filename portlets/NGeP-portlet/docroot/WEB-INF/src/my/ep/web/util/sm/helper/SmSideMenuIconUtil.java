@@ -1349,17 +1349,12 @@ public class SmSideMenuIconUtil {
 	private static boolean step6CatCodeHasDifference(boolean isSupplier,
 			SmAppl applPrev, SmAppl applCurr) {
 		boolean retVal = false;
-		log.info("step6CatCodeHasDifference check isSupplier ="+isSupplier);
-		log.info("step6CatCodeHasDifference applPrev="+applPrev);
-		log.info("step6CatCodeHasDifference applCurr="+applCurr);
-		if(applPrev != null){
-			log.info("step6CatCodeHasDifference --applPrev--"+applPrev.getApplId());
-		}
-		if(applCurr != null){
-			log.info("step6CatCodeHasDifference --applCurr--"+applCurr.getApplId());
-		}
-		if (applPrev != null && applCurr != null) {
 
+		if (applPrev != null && applCurr != null) {
+			//24964 - if equal means no changes
+			if(applPrev.getApplId() == applCurr.getApplId()){
+				return false;
+			}
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
@@ -1406,7 +1401,6 @@ public class SmSideMenuIconUtil {
 						arrExcludeProps);
 			}
 		}
-		log.info("step6CatCodeHasDifference --retVal="+retVal);
 		return retVal;
 	}
 
