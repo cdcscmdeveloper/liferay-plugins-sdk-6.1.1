@@ -1351,7 +1351,10 @@ public class SmSideMenuIconUtil {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
-
+			//24964 - if equal means no changes
+			if(applPrev.getApplId() == applCurr.getApplId()){
+				return false;
+			}
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
