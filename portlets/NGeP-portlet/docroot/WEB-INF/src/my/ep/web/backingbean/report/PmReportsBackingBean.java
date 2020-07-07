@@ -277,24 +277,55 @@ public class PmReportsBackingBean extends
 
 	// User Profile List
 	private void constructPm003Map(LinkedHashMap<String, String> map) {
-		if (getManagedBean().getSelectedPmUser() != null) {
+		
+		if (getManagedBean().getSelectedPmUser() != null) {			
 			map.put(PmReportConst.PARAM_PM_USERNAME, getManagedBean()
 					.getSelectedPmUser().getUserName());
 			map.put(PmReportConst.PARAM_PM_IDENTIFICATION_NO, getManagedBean()
 					.getSelectedPmUser().getIdentificationNo());
 		}
 		
-		if (getManagedBean().getSelectedOrgType() != null) {
+		if (getManagedBean().getSelectedOrgType() != null) {			
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PARAM_ID, getManagedBean()
 					.getSelectedOrgType().getParameterId().toString());
 		}
+		
+		// 28239 - start
+		
+		log.info("ParameterCode" + this.getManagedBean().getSelectedOrgType().getParameterCode());
+	
+	if (this.getManagedBean().getSelectedOrgType().getParameterCode().equals("FFC")){
+		log.info("ORG_TYPE_FACTORING");
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getPmFinancialOrg() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getPmFinancialOrg()
+					.getFinOrgName());
+		}
 
-		if (getManagedBean().getSelectedOrgProfile() != null) {
+	}else
+		
+	if (this.getManagedBean().getSelectedOrgType().getParameterCode().equals("SUP")){
+		log.info("ORG_TYPE_SUPPLIER");
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
+					.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+		}
+		
+	}else{	
+		    log.info("PARAM_PM_ORG_NAME");
+		    
+		if (getManagedBean().getSelectedOrgProfile() != null
+				&& getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgName() != null) { 
 			map.put(PmReportConst.PARAM_PM_ORG_NAME, getManagedBean()
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgName());
 			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
-		}
+		}	
+	}
+	
+	// 28239 - end
 
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())) {
 			map.put(PmReportConst.PARAM_PM_ROLE_CODE, getManagedBean()
