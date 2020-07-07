@@ -2859,7 +2859,7 @@ public class SmApplicationUtil {
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
-		addr.setPmDivision(new PmDivision());//13320
+		//addr.setPmDivision(new PmDivision());//13320 //addr.setPmDivision(new PmDivision());//13320 -- comment temp because showstopper
 		addr.setPmDistrict(new PmDistrict());
 		SmCommonUtil.getInstance().setUserDetails(addr);
 		return addr;
