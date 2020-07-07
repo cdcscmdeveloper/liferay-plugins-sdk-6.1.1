@@ -27,7 +27,7 @@
 				<td class="tdContent">
 					<p:inputText id="test" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name}" />
 					<p:spacer width="5" />
-					<p:graphicImage rendered="#{fn:length(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name) > 1}" value="/css/images/design/ico-edit.png" title="#{lbl['lbl.sm.edit']}" />
+					<p:graphicImage style="vertical-align:top !important;" rendered="#{fn:length(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name) > 1}" value="/css/images/design/ico-edit.png" title="#{lbl['lbl.sm.edit']}" />
 					<p:spacer width="5" />
 					<ac:smFieldChangeAlert 
 							isShow="#{svoSiteVisitBackingBean.showEditAssistant(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer)}"
