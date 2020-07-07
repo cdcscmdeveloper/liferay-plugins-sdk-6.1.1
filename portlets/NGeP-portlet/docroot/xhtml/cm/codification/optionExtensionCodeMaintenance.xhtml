@@ -1,0 +1,208 @@
+<ui:composition		
+   template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	
+   <ui:define name="contentSection">
+		
+		<h:panelGroup id="optionExtensionCodeID">
+				
+	    <table width="100%">
+			<tr>
+				<td style="text-align: left"><p:commandButton style="width: 100px;"
+						value="#{lbl['lbl.btn.back']}"
+						action="#{codificationMaintenanceBackingBean.backToPrevPortal}">
+						</p:commandButton></td>
+			   <td style="text-align: right"><p:commandButton style="width: 100px;"
+						 value="#{lbl['lbl.cm.save']}"
+						 id="btnSelect"
+						 disabled="#{codificationMaintenanceBackingBean.managedBean.disableSelectBtn}"
+						 onclick="updateData.show()">
+					   </p:commandButton></td>
+				</tr>
+		</table>
+	<br/>
+		
+		<p:panel id="extensionAttributeID" header="#{lbl['lbl.cm.item.code.information']}" toggleable="true">
+		
+		<table width="100%;">
+		
+			<tr>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"  
+						value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
+				<td width="30%"><h:outputText
+						value="#{codificationMaintenanceBackingBean.managedBean.segmentCode}"/></td>
+
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
+				<td><h:outputText
+						value="#{codificationMaintenanceBackingBean.managedBean.segmentTitle}"
+						style="white-space:normal!important;" /></td>
+			</tr>
+			<tr>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
+				<td width="30%"><h:outputText id="familyCode"
+						value="#{codificationMaintenanceBackingBean.managedBean.familyCode}"/></td>
+
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
+				<td><h:outputText
+						value="#{codificationMaintenanceBackingBean.managedBean.familyTitle}"
+						style="white-space:normal!important;" /></td>
+			</tr>
+			<tr>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
+				<td width="30%"><h:outputText id="classCode"
+						value="#{codificationMaintenanceBackingBean.managedBean.classCode}" /></td>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
+				<td><h:outputText
+						value="#{codificationMaintenanceBackingBean.managedBean.classTitle}"
+						style="white-space:normal!important;" /></td>
+			</tr>
+			<tr>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.commodity.code']} "></p:outputLabel></td>
+				<td width="30%"><h:outputText id="commodityCode"
+						value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
+				<td><h:outputText
+						value="#{codificationMaintenanceBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+						style="white-space:normal!important;"/></td>
+		   </tr>
+		    <tr>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.extension.attr']} "></p:outputLabel></td>
+				<td width="30%">			
+				<p:selectOneMenu styleClass="custom-filter"
+				     style="width:200px" value="#{codificationMaintenanceBackingBean.managedBean.data}">
+                     <f:selectItems value="#{codificationMaintenanceBackingBean.getExtensionOptions()}" /> 
+				 <p:ajax event="valueChange" process="@this" update=":form:typeTableID,:form:extensionAttributeID,:form:btnSelect"  listener="#{codificationMaintenanceBackingBean.extensionCodeSearch}"/>
+                </p:selectOneMenu></td>
+		   </tr>
+		    <tr>
+				<td width="15%" >
+				<c:choose>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
+							<h:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.type']}"/>
+					</c:when>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'b'}">
+							<h:outputLabel  style="font-weight: bold;" value="#{lbl['lbl.cm.brand']}"/>
+				    </c:when>
+				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
+							<h:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.measurement']}"/>
+				    </c:when>
+				     <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'c'}">
+							<h:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.color']}"/>
+				    </c:when>
+					<c:otherwise>
+				</c:otherwise>
+				</c:choose></td>
+				<td width="30%">
+				<c:choose>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
+					  <p:inputText id="extensionName" style="width:190px;"
+						 value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>
+					</c:when>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'b'}">
+					   <p:inputText id="extensionName" style="width:190px;"
+					      value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>				
+				    </c:when>
+				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
+					   <p:inputText id="extensionName" style="width:190px;"
+					      value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>				
+				    </c:when>
+				     <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'c'}">
+						<p:inputText id="extensionName" style="width:190px;"
+					       value="#{codificationMaintenanceBackingBean.managedBean.extension}"></p:inputText>	
+				    </c:when>
+					<c:otherwise>
+				</c:otherwise>
+				</c:choose></td>			
+		     </tr>
+		     <tr>
+				<td width="15%"><p:outputLabel style="font-weight: bold;"
+						value="#{lbl['lbl.cm.status.name']} "></p:outputLabel></td>
+				<td width="30%"><p:selectOneMenu value="#{codificationMaintenanceBackingBean.managedBean.status}" style="width: 200px;margin-bottom: 5px;">
+							   <f:selectItems value="#{codificationMaintenanceBackingBean.getStatusOptions()}"/>
+						       </p:selectOneMenu></td>
+			 </tr>
+		</table>
+		
+			<div style="text-align: right;">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					 action="#{codificationMaintenanceBackingBean.extensionCodeSearch}"
+					 update="typeTableID,:form:btnSelect" />
+				 <p:commandButton value="#{lbl['lbl.btn.reset']}" 
+				    action="#{codificationMaintenanceBackingBean.resetExtension}" 
+			        update="extensionAttributeID,typeTableID,:form:btnSelect"/>
+			</div>
+
+		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+		<p:dataTable id="typeTableID" tableStyleClass = "fixedTable"   emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"  lazy="true"
+		   value="#{codificationMaintenanceBackingBean.extensionAttributeSearchData}" var="cmunspsc"
+		   selection="#{codificationMaintenanceBackingBean.managedBean.updatedStatus}" rowSelectMode="checkbox"  rowKey="#{cmunspsc[2]}" 
+		   rows="10" style="width: 50%">
+		   			
+				<ac:paginator for="extensionAttributeTableID"></ac:paginator>
+
+		        <p:column
+		         selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%;text-align:center;"/>	
+			    <p:column  style="width : 45% !important; vertical-align:top;white-space: normal;">
+					<f:facet name="header">
+					<c:choose>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 't'}">
+						#{lbl['lbl.cm.type']}
+					</c:when>
+					<c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'b'}">
+						#{lbl['lbl.cm.brand']}
+				    </c:when>
+				    <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'm'}">
+						#{lbl['lbl.cm.measurement']}
+				    </c:when>
+				     <c:when test="#{codificationMaintenanceBackingBean.managedBean.data eq 'c'}">
+						#{lbl['lbl.cm.color']}
+				    </c:when>
+					<c:otherwise>
+					   #{lbl['lbl.cm.extension.attr']}
+					</c:otherwise>
+				</c:choose>
+				</f:facet>
+				   #{cmunspsc[3]}
+				</p:column>
+				<p:column style="width : 3% !important;">
+					<f:facet name="header">
+					#{lbl['lbl.cm.code']}
+				</f:facet>
+				#{cmunspsc[4]}
+			</p:column>
+				<p:column headerText="#{lbl['lbl.cm.status.name']}" style="width : 5% !important;">
+                    <p:selectOneMenu style="width : 150px;"  value="#{cmunspsc[5]}">
+						<f:selectItems value="#{codificationMaintenanceBackingBean.getStatusExtensionOptions()}"/>
+					</p:selectOneMenu>
+				</p:column>					
+			</p:dataTable>
+		</p:panel>
+		
+		<ac:confirmationPopup id="updateData" widget="updateData"
+				okAction="codificationMaintenanceBackingBean.SubmitUpdateStatusExtension()"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{lbl['lbl.cm.dialog.message.item.code.maintenance']}"
+				update=":form:optionExtensionCodeID,:form:typeTableID"/>
+		
+		</h:panelGroup>
+		
+  </ui:define> 
+ </ui:composition>
