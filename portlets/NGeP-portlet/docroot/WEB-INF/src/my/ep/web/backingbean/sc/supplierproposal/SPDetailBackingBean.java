@@ -3580,11 +3580,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		BigDecimal totalAccountReceivable = assetLiability
 				.getTotalAccountReceivable();
 
-		if (liabilities == null || liabilities.intValue() <= 0) {
-			// #26339 - Start
-			assetLiability.setAcidRatio(new BigDecimal(0));
-			assetLiability.setCurrentRatio(new BigDecimal(0));
-			// #26339 - End
+		if (liabilities == null || liabilities.compareTo(BigDecimal.ZERO) <= 0) { //#28473
+			assetLiability.setAcidRatio(null);
+			assetLiability.setCurrentRatio(null);
 		} else {
 			BigDecimal totalAmount;
 			if (null != totalCashInHand && null != totalAccountReceivable) {
