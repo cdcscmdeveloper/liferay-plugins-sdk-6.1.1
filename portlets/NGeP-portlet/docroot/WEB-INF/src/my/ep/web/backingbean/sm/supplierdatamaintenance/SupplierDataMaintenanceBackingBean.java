@@ -303,8 +303,12 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
-		//28494
-		getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
+		
+		//28146
+		if(searchBlacklisted){
+			//28494
+			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
+		}
 		getManagedBean().setDeleteApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
