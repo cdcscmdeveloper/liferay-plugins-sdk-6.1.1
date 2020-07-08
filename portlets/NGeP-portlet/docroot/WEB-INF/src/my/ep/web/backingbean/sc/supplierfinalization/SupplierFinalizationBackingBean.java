@@ -614,8 +614,10 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().getResetSupplierList() == null) {
 			this.getManagedBean().setResetSupplierList(
 					new HashSet<ScQtEvaluationResultDtl>());
-		}		
-
+		}	
+		// #25638 - Start
+		displayReviseInstrn();
+		// #25638 - End
 	}
 	
 	// #18685 - Start
@@ -2017,6 +2019,9 @@ public class SupplierFinalizationBackingBean extends
 
 		//25638 - Start
 		if (revise.length == 0 && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			// #25638 - Start
+			validateRemarks();
+			// #25638 - End
 			RequestContext.getCurrentInstance().execute("reviseSuppFinalizationDlgs.show()");
 		} else {
 		//25638 - End
@@ -2079,30 +2084,9 @@ public class SupplierFinalizationBackingBean extends
 			// #25638 - Start
 			PmUser secretaryUser = null;
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-				
-				if (null != getManagedBean().getCurrentStatusId() 
-						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
-					boolean remarksNotFound = true;
-					if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
-						for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
-							if (StringUtils.isNotEmpty(finalizationRemark.getRemark()) && (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()
-									&& finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue())) {
-								remarksNotFound = false;
-								break;
-							}
-						}
-					// #25638 - Start.
-					} else {
-						initializeFinalizationRemarks();
-					}
-					// #25638 - End.
-					
-					if (remarksNotFound) {
-						throw new EpException(MessageConst.ERR_775152);
-					}
-				}
-				
+				// #25638 - Start
+				validateRemarks();
+				// #25638 - End
 				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
 					 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 							 && null != committeeActivity.getScCommitteeMember().getMemberRole()
@@ -2137,6 +2121,36 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//25638 - End
 	}
+
+	// #25638 - Start
+	/**
+	 * 
+	 */
+	private void validateRemarks() {
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
+				|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+			boolean remarksNotFound = true;
+			if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+				for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+					if (StringUtils.isNotEmpty(finalizationRemark.getRemark()) && (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()
+							&& finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue())) {
+						remarksNotFound = false;
+						break;
+					}
+				}
+			// #25638 - Start.
+			} else {
+				initializeFinalizationRemarks();
+			}
+			// #25638 - End.
+			
+			if (remarksNotFound) {
+				throw new EpException(MessageConst.ERR_775152);
+			}
+		}
+	}
+	// #25638 - End	
 	
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
@@ -8384,6 +8398,29 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		
 		//#26169 #38- END
+		
+		// #25638 - Start
+		/**
+		 * @return
+		 */
+		public void displayReviseInstrn() {
+			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
+			if ((currentStatus == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue())
+					|| (currentStatus == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+					 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+							 && null != committeeActivity.getScCommitteeMember().getMemberRole()
+							 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+						 PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
+						 if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
+							 getManagedBean().setDisplayReviseInstrn(true);
+						 }
+						 break;
+					 }
+				 }
+			}
+		}
+		// #25638 - End
 
 }
 // ***19336
