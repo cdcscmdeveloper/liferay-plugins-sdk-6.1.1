@@ -44,6 +44,8 @@ import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -3602,9 +3604,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
-		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		//26238 -  Disciplonary action - 28146 - start
+		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+		BlacklistDirectorResDTO resDTO = new BlacklistDirectorResDTO();
 		
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		perReqDTO.setRecordStatus(null);
+		
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
+		//26238 -  Disciplonary action - 28146 - end
 		
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (resultList != null
@@ -3696,7 +3704,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}						
 					}
 					
-					if(disciplinaryAction.isCancelRegistration()){
+					if(disciplinaryAction.isCancelRegistration() 
+							&& !disciplinaryAction.isBlacklistOwner()){
 						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
 						if(personnelResDTO != null 
 								&& personnelResDTO.getSmPersonnelList().size() > 0){
@@ -3717,10 +3726,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								&& personnelResDTO.getSmPersonnelList().size() > 0){
 							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isBlacklisted()){
+								//26238 -  Disciplonary action - 28146 - start
+								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+								// Get blacklist by identification no
+								resDTO = SmServiceLookup.getBlacklistDirectorSO()
+										.retrievePersonBlacklistByIdentificationNO(reqDTO);
+								if(resDTO != null && 
+										resDTO.getPersonBlacklist() != null){
 									blacklistOwner.setIcNo(personnel.getIdentificationNo());
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
+								//26238 -  Disciplonary action - 28146 - end
 							}
 							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
 						}
