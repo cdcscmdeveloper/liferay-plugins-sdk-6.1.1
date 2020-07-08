@@ -700,7 +700,12 @@
 						selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedOwnerAndDirectorList}"
 						rowKey="#{person}" rowIndexVar="index" id="personDt">
 						<ac:paginator for="personDt" />
-						
+						<!-- 28494 start-->
+						<p:column selectionMode="multiple"
+						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
+						and !(supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist)}">
+						</p:column>
+						<!--
 						<p:column>
 							<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png" 
 								rendered="#{!supplierDataMaintenanceBackingBean.managedBean.suspendRegistration and
@@ -711,6 +716,8 @@
 								supplierDataMaintenanceBackingBean.managedBean.cancelRegistration or 
 								supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}"/>
 						</p:column>
+						-->
+						<!-- 28494 end-->
 						
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 							<h:outputText value="#{person.name}" />
