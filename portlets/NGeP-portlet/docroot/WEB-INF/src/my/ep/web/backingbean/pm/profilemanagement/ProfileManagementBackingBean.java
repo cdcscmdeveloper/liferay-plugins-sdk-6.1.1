@@ -524,6 +524,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("pmUserOrg=" + pmUserOrg);
 			pmUserOrg.setPMP(pmUserOrg.isPMP() ? true : false);
 			PmUser pmUser = pmUserOrg.getPmUser();
+			logger.info("#26766 loadUserProfile - fetched pmUser.CHANGED_BY ID: " + pmUser.getChangedBy());
 			pmUser.setIdentificationCode(
 					pmUser.getIdentificationCode() == null ? new PmParameter() : pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(
@@ -3554,7 +3555,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("..............saveUserProfile.................isNewUser=" + isNewUser);
 
 		try {
-
 			user = this.getManagedBean().getSelectedUser();
 			userOrg = this.getManagedBean().getSelectedUserOrg();
 			// Validation
@@ -3607,7 +3607,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 																		// for
 																		// each
 																		// user
-			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			
+			// Bug #26766 - START
+			Long loginSessionUserId = 1L;
+			userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+			if (pmUser == null) {
+				loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			}
+			else{
+				loginSessionUserId = pmUser.getUserId();
+			}
+			new LogKey(loginSessionUserId);
+			// Bug #26766 - END
+			
 			if (!userOrg.isBrandNew()) {
 				userOrg.setChangedBy(loginSessionUserId);
 			} else {
@@ -3676,8 +3693,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
 						getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
 			}
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IUserSO.class);
 			reqDTO.setPmUser(user);
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 
@@ -3688,7 +3703,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (ParameterConst.ORG_TYPE_SUPPLIER.equals(user.getOrgTypeCode().getParameterCode())) {
 				reqDTO.setSupplierUser(true);
 			}
-			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
