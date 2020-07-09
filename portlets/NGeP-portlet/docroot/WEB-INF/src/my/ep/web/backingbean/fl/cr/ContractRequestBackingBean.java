@@ -299,6 +299,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			//24893 - start
+			//to handle WIP task
+			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+					if(null == itemAddr.getChargePTJOrg()) {
+						if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
+								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
+							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						}
+					}
+				}
+			}
+			//24893 - end
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -2785,12 +2801,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
-			Long jabatanOrgProfileId = -1l;
-			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
-			if(jabatan!=null) {
-				jabatanOrgProfileId = jabatan.getOrgProfileId();
-			}					
-			getVotFundList(jabatanOrgProfileId);
+			//Long jabatanOrgProfileId = -1l;
+			//PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+			//if(jabatan!=null) {
+				//jabatanOrgProfileId = jabatan.getOrgProfileId();
+			//}					
+			//getVotFundList(jabatanOrgProfileId);
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -2958,6 +2974,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(childData.getPmSubSetia()!=null) {
 					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 				}
+				//24893 - start
+				if(null != childData.getChargePTJOrg()) {
+					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+					System.out.println("Item Charge PTJ");
+				} else {
+					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						System.out.println("PTJ Pembayar");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						System.out.println("FL Request Charge PTJ");
+					}					
+				}
+				//24893 - end
 			}
 		}
 	
@@ -2984,7 +3018,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
-		getManagedBean().setFinancingTypeCode("");		
+		getManagedBean().setFinancingTypeCode("");	
+		//24893 - start
+		getManagedBean().setChargePTJOrg(new PmOrgProfile());
+		//24893 - end
 	}
 	
 	/**
@@ -3043,6 +3080,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					childItemAddress.setPmPrgActivity(pmPrgActivity);
 					childItemAddress.setPmSubSetia(pmSubSetia);
 					childItemAddress.setVotFundDisplay(getManagedBean().isVotFundDisplay());
+					//24893 - start
+					childItemAddress.setChargePTJOrg(getManagedBean().getChargePTJOrg());
+					//24893 - end
 				}
 				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
 				
@@ -3055,6 +3095,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							itemDelAddress.setPmGlAccount(pmGlAccount);
 							itemDelAddress.setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.setPmSubSetia(pmSubSetia);
+							itemDelAddress.setChargePTJOrg(getManagedBean().getChargePTJOrg());//24893
 						}
 					}
 				}
@@ -3739,8 +3780,30 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 					getManagedBean().setProjectLov(true);
 				}
+				//24893 - start
+				if(null != childData.getChargePTJOrg()) {
+					getManagedBean().setChargePTJOrg(childData.getChargePTJOrg());
+					System.out.println("Item Charge PTJ");
+				} else {
+					if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
+							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						System.out.println("PTJ Pembayar");
+					} else {
+						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						System.out.println("FL Request Charge PTJ");
+					}					
+				}
+				//24893 - end
 			}
-		}	 
+		}//24893 - start 
+		else if(null != selectedNodes && selectedNodes.length > 1) {
+			getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+		}
+		//24893 - end	 
 	}
 	
 	/**
@@ -3751,6 +3814,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectChargeLineRow(false);
 		if(getManagedBean().getChargeLineItemRoot().getChildren().size() > 1){
 			onNodeUnSelect();
+			getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());//24893
 		}
 		
 		getManagedBean().setProgramLov(false);
@@ -5627,6 +5691,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	public void addChargedPtjDetails() {
 		getManagedBean().getFlRequest().setChargeOrgProfile(selectedPmOrgProfile);
+		//24893 - start
+		getManagedBean().setChargePTJOrg(selectedPmOrgProfile);
+		Long jabatanOrgProfileId = -1l;
+		PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getChargePTJOrg().getOrgProfileId());
+		if(jabatan!=null) {
+			jabatanOrgProfileId = jabatan.getOrgProfileId();
+		}					
+		getVotFundList(jabatanOrgProfileId);
+		getManagedBean().setVotFundCode(null);
+		getManagedBean().setVotFundId(null);
+		//24893 - end
 		selectedPmOrgProfile = null;
 	}
 	
@@ -6520,6 +6595,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.CrListSearchTypesDD = CrListSearchTypesDD;
 	}
 	//end-13984 - CrList - Back Button
+	
+	//24893 - start
+	/**
+	 * check role user is requisitioner
+	 */
+	public boolean isRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	//24893 - end
 	
 	//17087 - start
 	/**
