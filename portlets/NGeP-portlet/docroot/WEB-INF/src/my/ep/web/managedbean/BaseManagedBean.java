@@ -62,7 +62,9 @@ public abstract class BaseManagedBean implements Serializable {
 	//#24540 - start -
 	private boolean disableFields;
 	//#24540 - end -
-	
+	//27951
+	private boolean preRegistration=false;
+	private SsmResDTO ssmResDTO;
 	private boolean checkRoleSSM=false;
 	//27239
 	private boolean dontGetSsmData = false;
@@ -370,6 +372,23 @@ public abstract class BaseManagedBean implements Serializable {
 		this.personnelsRole = personnelsRole;
 	}
 	
+	//27951
+		public boolean isPreRegistration() {
+			return preRegistration;
+		}
+
+		public void setPreRegistration(boolean preRegistration) {
+			this.preRegistration = preRegistration;
+		}
+
+		public SsmResDTO getSsmResDTO() {
+			return ssmResDTO;
+		}
+
+		public void setSsmResDTO(SsmResDTO ssmResDTO) {
+			this.ssmResDTO = ssmResDTO;
+		}
+
 	public boolean isCheckRoleSSM() {
 		return checkRoleSSM;
 	}
