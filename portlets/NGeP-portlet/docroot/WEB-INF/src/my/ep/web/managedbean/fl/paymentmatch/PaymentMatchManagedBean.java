@@ -153,6 +153,10 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean queryDisplay = false;
 	private String queryPaymentDesc;
 	//end 21229
+	
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
 	/**
 	 * Gets the doc type.
 	 *
@@ -1565,5 +1569,15 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 	
 	//end 21229
+	
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end
 
 }
