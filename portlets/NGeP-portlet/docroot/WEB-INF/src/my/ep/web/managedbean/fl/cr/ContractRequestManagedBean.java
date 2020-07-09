@@ -313,6 +313,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static int backFlag;
     private static String catalogueFlag;
     //13984-end
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3057,6 +3060,16 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setScheduleNo(String scheduleNo) {
 		this.scheduleNo = scheduleNo;
 	}
+	
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end	
 
 	// start #17087
 		/**
