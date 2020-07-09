@@ -2412,31 +2412,30 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void changeRoleAndProceed() {
-		SmPersonnel personnel = this.getManagedBean().getSmPersonnelSsm();
-		personnel.setEquityOwner(false);
+		//start loop list #27239
+				for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
+						//27951
+						if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
+							this.getManagedBean().getPersonnelsRole().clear();
+							this.getManagedBean().setCheckRoleSSM(false);
+							throw new EpException(MessageConst.ERROR_722535); 
+						}else{
+							//27951
+							personnel.setEquityOwner(false);
+							personnel.setDirector(false);
+							this.getManagedBean().setCheckRoleSSM(true);
+						}
+				}
 		
-		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		//get latest personnel by supplier id
-		reqDTO.setSmSupplierId(this.getManagedBean().getSmSupplierSsm().getSupplierId());
-		PersonnelResDTO resDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(reqDTO);
-		//find supplier admin
-		SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-				personnel.getIdentificationNo(), resDTO.getSmPersonnelList(), "identificationNo");
-		if(personnelActive != null){
-			//copy latest data to supplier admin
-			String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
-			EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
-			reqDTO.setSmPersonnel(personnelActive);
-			//update latest data to active supplier admin
-			resDTO = personnelSO.savePersonnelRecord(reqDTO);
-			if(!resDTO.isSuccessful()){
-				throw new EpException(MessageConst.ERROR_776106);
-			}else{
-				//close popup
-			}
+	}
+	public void listenerRolePopup(SmPersonnel smPersonnelSSm){
+		//27951 & 27239
+		if(smPersonnelSSm.isClerical()){
+			smPersonnelSSm.setHigherManagement(false);
+			smPersonnelSSm.setManagement(false);
+		}else{
+			smPersonnelSSm.setClerical(false);
 		}
-		
 	}
 	//SSM #27264
 		public void checkSSMValid(SmSupplier smSupplier){
@@ -2544,4 +2543,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return mandatory;
 	}
 	// #27398 11/03/2020 END
+	//START 27239
+	public void resetRoleValue() {
+		if(this.getManagedBean().getPersonnelsRole() != null){
+			this.getManagedBean().getPersonnelsRole().clear();
+		}
+		
+	}
+	//END 27239
 }
