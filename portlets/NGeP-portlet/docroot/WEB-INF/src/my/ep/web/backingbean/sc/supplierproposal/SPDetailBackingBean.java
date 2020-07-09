@@ -5224,6 +5224,31 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		});
 	}
+	
+    //Bug #28326 start
+	private void validateProposalCloseTimeForUpdateButton(ScQt qt){
+		Calendar closeTime = Calendar.getInstance();
+		closeTime.setTime(qt.getClosingDate());
+		closeTime.set(Calendar.SECOND,0);
+		closeTime.set(Calendar.MILLISECOND,0);
+		if (DateUtils.getCurrentDate().after(closeTime.getTime())) {
+			
+			this.getManagedBean().setQtClosed(true);
+			
+			StringBuilder qtSB = new StringBuilder();
+			qtSB.append(getParameterDesc(qt.getProcurementMode()
+					.getParameterType(), qt.getProcurementMode()
+					.getParameterCode()));
+			qtSB.append(" - ");
+			qtSB.append(qt.getQtNo());
+			SimpleDateFormat closeDateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATETIME_FORMAT);
+			throw new EpException(MessageConst.ERROR_760461, new String[] {
+					qtSB.toString(),
+					closeDateFormat.format(qt.getClosingDate()).toString() });
+		}
+	}
+	//Bug #28326 end	
 
 	/**
 	 * validation method for proposal close time
@@ -5255,6 +5280,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 */
 	public void updateProposal() {
 		debugLogger("updateProposal supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+		//Bug #28326 start
+		validateProposalCloseTimeForUpdateButton(this.getManagedBean().getQt());
+		//Bug #28326 end
 		getManagedBean().setReadOnly(false);
 		ScQtProposal proposal = this.getManagedBean().getQtProposal();
 		proposal.setSubmitted(false);
