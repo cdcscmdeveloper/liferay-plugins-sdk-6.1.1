@@ -1133,6 +1133,7 @@
 	<portlet>
 		<portlet-name>codification</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
 		<instanceable>true</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
@@ -3262,6 +3263,7 @@
 	<portlet>
 		<portlet-name>FirstTimeMessage</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>false</use-default-template>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
@@ -3272,6 +3274,7 @@
 	<portlet>
 		<portlet-name>codificationMaintenance</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
@@ -3284,6 +3287,7 @@
 	<portlet>
 		<portlet-name>itemCodeCreation</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
@@ -3296,13 +3300,14 @@
 	<portlet>
 		<portlet-name>extensionCodeCreation</portlet-name>
 		<icon>/icon.png</icon>
+		<use-default-template>true</use-default-template>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>extensionCodeCreation-portlet</css-class-wrapper>
-	</portlet>
+	</portlet>	
 	<!-- Enhancement 25627-start- -->
 	<portlet>
 		<portlet-name>deskOfficerMaintenance</portlet-name>
