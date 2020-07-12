@@ -1552,10 +1552,9 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().getSmAppl().setApplValidWithSsm(true);
 						//set establish date
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
-						
-						//POPUP USER NOT SSM OWNER #26734 START
+						//START #27239
+						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						FacesScopes facesScope = new FacesScopes();
-						PmUser userSession = facesScope.getUserSessionBean();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							boolean checkWithSSM = true;
 							SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
@@ -1571,14 +1570,24 @@ public class SmApplicationBackingBean extends
 								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 								if(personnelSSM == null) {	
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-									getManagedBean().setSmPersonnelSsm(personnelOld);
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
+									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
+								}
+							}else{
+								//set latest role to personnel
+								for(SmPersonnel personnel :  personnelsRole){
+									SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
+									if(personnelActive != null){
+										//copy latest data to supplier admin
+										String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
+										EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
+									}
 								}
 							}
+							
 						}
 						// #26734 END
-						
+						//END #27239
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
 						int i = 0;
 						for(SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
@@ -1631,10 +1640,8 @@ public class SmApplicationBackingBean extends
 									
 								}
 							}else{
-								if(personnel.isEquityOwner() ||personnel.isDirector()){
-									log.info("Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
-									personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-								}
+								//27239
+								setDeletePersonnel(personnel);
 							}
 							this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
 							i++;
@@ -12858,10 +12865,8 @@ public class SmApplicationBackingBean extends
 							
 						}
 					}else{
-						if(personnel.isEquityOwner() ||personnel.isDirector()){
-							log.info("Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
-							personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						}
+						//27239
+						setDeletePersonnel(personnel);
 					}
 					this.getManagedBean().getSmAppl().getSmPersonnels().set(i, personnel);
 					i++;
@@ -13042,9 +13047,17 @@ public class SmApplicationBackingBean extends
 			}
 		
 		}
-		//#27232 - END SSM CHANGES FOR RESUBMIT
 		
-
+	//#27232 - END SSM CHANGES FOR RESUBMIT
+	
+	//START : #27239 
+	public void setDeletePersonnel(SmPersonnel personnel){
+		if(personnel.getEpRole() == null && (personnel.isEquityOwner() ||personnel.isDirector())){
+			log.info(personnel.getEpRole()+"eprol-----Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
+			personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		}
+	}
+	//END : #27239 
 		
 //		17906	
 		public void checkActiveAndPendingTransaction(){

@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -150,6 +151,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		} else {
 			validate();
+			//START 27239
+			if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
+				if (!getManagedBean().isExistingUser()) {
+					throw new EpException(MessageConst.ERROR_721087);
+				}
+			}
+			
+			//END 27239
 			executeDecision();
 			
 			// redirectToNonExistNewAdminPage();
@@ -203,13 +212,25 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.getSupplierId());
 		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
+		//#27300
+		SmAppl latestRejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(this
+				.getManagedBean().getSmSupplier().getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		
 		
 		if (!getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-
-			if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
-				throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
-			}
-
+			
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				//#27300
+				if (activeAppl != null) {
+					throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
+				}else if (latestRejectedAppl != null) {
+					throw new EpException(MessageConst.ERROR_722669, new String[] { latestRejectedAppl.getApplNo() });
+				}else {
+					throw new EpException(MessageConst.ERROR_722676);
+				}
+			} 
+			
 			SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
 					RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),
 					"epRole");
@@ -217,7 +238,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if (admin != null) {
 				if (admin.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
 						|| admin.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
-					throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
+					//#27300
+					if (activeAppl != null) {
+						throw new EpException(MessageConst.ERROR_722669, new String[] { activeAppl.getApplNo() });
+					}else if (latestRejectedAppl != null) {
+						throw new EpException(MessageConst.ERROR_722669, new String[] { latestRejectedAppl.getApplNo() });
+					}else {
+						throw new EpException(MessageConst.ERROR_722676);
+					}
 				}
 			}
 

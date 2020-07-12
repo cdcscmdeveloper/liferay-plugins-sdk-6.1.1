@@ -39,7 +39,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="renCmdBtn"
 					action="#{backingBean.proceedToApplication('R')}"
-					update="renewMoFApplMsgs"
+					update="renewMoFApplMsgs,@form"
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>

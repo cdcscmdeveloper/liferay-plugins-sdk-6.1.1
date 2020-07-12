@@ -4,6 +4,7 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -12,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -53,13 +55,20 @@ public abstract class BaseManagedBean implements Serializable {
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
 		
+	private List<SmPersonnel> personnelsRole  = new ArrayList();
+	
 	// For sub title displayed in screen.
 	private String title;
 	
 	//#24540 - start -
 	private boolean disableFields;
 	//#24540 - end -
-	
+	//27951
+	private boolean preRegistration=false;
+	private SsmResDTO ssmResDTO;
+	private boolean checkRoleSSM=false;
+	//27239
+	private boolean dontGetSsmData = false;
 	/**
 	 * @return the token
 	 */
@@ -355,5 +364,46 @@ public abstract class BaseManagedBean implements Serializable {
 		this.disableFields = disableFields;
 	}
 	//#24540 - end -	
+	
+	public List<SmPersonnel> getPersonnelsRole() {
+		return personnelsRole;
+	}
+
+	public void setPersonnelsRole(List<SmPersonnel> personnelsRole) {
+		this.personnelsRole = personnelsRole;
+	}
+	
+	//27951
+		public boolean isPreRegistration() {
+			return preRegistration;
+		}
+
+		public void setPreRegistration(boolean preRegistration) {
+			this.preRegistration = preRegistration;
+		}
+
+		public SsmResDTO getSsmResDTO() {
+			return ssmResDTO;
+		}
+
+		public void setSsmResDTO(SsmResDTO ssmResDTO) {
+			this.ssmResDTO = ssmResDTO;
+		}
+
+	public boolean isCheckRoleSSM() {
+		return checkRoleSSM;
+	}
+
+	public void setCheckRoleSSM(boolean checkRoleSSM) {
+		this.checkRoleSSM = checkRoleSSM;
+	}
+
+	public boolean isDontGetSsmData() {
+		return dontGetSsmData;
+	}
+
+	public void setDontGetSsmData(boolean dontGetSsmData) {
+		this.dontGetSsmData = dontGetSsmData;
+	}
 	
 }
