@@ -1566,9 +1566,23 @@ public class SmApplicationBackingBean extends
 								checkWithSSM = false;
 							}
 							
-							if(userSession != null && checkWithSSM){
-								SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(userSession.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
-								if(personnelSSM == null) {	
+							//START NEW CHANGES POPUP OWNER UPDATE ROLE							
+							List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+							if(personnelsRole != null && personnelsRole.size() <=0){
+								for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
+									if (personnel.isEquityOwner() || personnel.isDirector()) {
+										if(personnel.getEpRole() != null){
+											SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+											SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+											if(personnelDirectorSSM == null && personnelSSM == null){
+												personnelsRole.add(personnel);
+											}
+										}
+									}
+								}
+								
+								if(personnelsRole != null && personnelsRole.size() > 0) {
+									this.getManagedBean().setDontGetSsmData(dontGetSsmData);
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
