@@ -70,6 +70,8 @@ public class gpkiBackingBean implements Serializable {
 	}
 
 	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
+		long startTime = System.currentTimeMillis();
+		log.info("gpkiBackingBean.gpkiSignAction(): startTime in milli seconds is: " + startTime);
 		System.out.println("ContextualCompositeMethodExpression");
 		
 		String textBeforeSign = FacesContext.getCurrentInstance()
@@ -84,6 +86,7 @@ public class gpkiBackingBean implements Serializable {
 				.getExternalContext().getRequestParameterMap().get("subjectDN");
 		FacesScopes facesScope = new FacesScopes();
 		Long userId = facesScope.getUserSessionBean().getUserId();
+		log.info("gpkiBackingBean.gpkiSignAction(): userId is: " + userId);
 		// Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		System.out.println("getUserSessionBean().getUserId();=====================================: "
@@ -202,7 +205,7 @@ public class gpkiBackingBean implements Serializable {
 		}
 		
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
-
+		log.info("gpkiBackingBean.gpkiSignAction(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime));
 		if (returnObj != null) {
 			return returnObj.toString();
 		} else {
