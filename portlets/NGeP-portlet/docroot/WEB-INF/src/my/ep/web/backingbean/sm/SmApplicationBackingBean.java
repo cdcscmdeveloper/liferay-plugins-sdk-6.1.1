@@ -1556,15 +1556,6 @@ public class SmApplicationBackingBean extends
 						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						FacesScopes facesScope = new FacesScopes();
 						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-							boolean checkWithSSM = true;
-							SmPersonnel personnelOld = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
-									userSession.getIdentificationNo(), this.getManagedBean().getSmAppl()
-											.getSmPersonnels(), "identificationNo");
-							if (personnelOld.isEquityOwner()) {
-								checkWithSSM = true;
-							} else {
-								checkWithSSM = false;
-							}
 							
 							//START NEW CHANGES POPUP OWNER UPDATE ROLE							
 							List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
