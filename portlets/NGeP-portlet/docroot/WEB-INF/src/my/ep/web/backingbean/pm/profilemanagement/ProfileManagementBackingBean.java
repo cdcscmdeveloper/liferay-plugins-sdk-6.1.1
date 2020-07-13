@@ -2252,6 +2252,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						selectedRolesToExclude.add(obj.getPmRole().getRoleCode());
 					}
 				}
+				/* 27827 - START */
+				PmOrgProfile orgProfileDetailById = PmCommonUtil.retrievePmOrgProfileDtl(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId());
+				Long zone = orgProfileDetailById.getPmZone().getZoneId();
+				
+				if(zone != 1) {
+					selectedRolesToExclude.add(RoleCode.MOF_DESK_OFFICER.value());
+				}
+				/* 27827 - END */
 			}
 		} else {
 			SearchFilterBean statusBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
