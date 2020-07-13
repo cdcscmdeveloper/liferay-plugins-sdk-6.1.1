@@ -2201,8 +2201,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
-		
-		reqDTO.setContractVerId(contractVerId);
+// Fixing Bug #28550 - Start		
+//		reqDTO.setContractVerId(contractVerId);
+		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+		if (latestContractVer != null) {
+			reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		} else {
+			reqDTO.setContractVerId(contractVerId);
+		}
+		// Fixing Bug #28550 - End		
 			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
