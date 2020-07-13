@@ -6736,7 +6736,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(CollectionUtils.isEmpty(pmUserList)){
 			throw new EpException(MessageConst.ERROR_760512);
 		}else{
-			if(scLoa != null){
+			if(scLoa.getContractAdmin() != null){
+				scLoa.setContractAdmin(scLoa.getContractAdmin());
+			}
+			else{
 				scLoa.setContractAdmin(pmUserNull);
 			}
 		}
