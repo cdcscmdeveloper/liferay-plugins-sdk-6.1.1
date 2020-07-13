@@ -26,7 +26,12 @@
 	
 		<table>
 			<tr>
-				<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register']}" /></td>
+				<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register.basic']}" 
+				rendered="#{cancelRegistrationBackingBean.managedBean.accType == SupplierManagementConst.STYPE_BASIC}"/>
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register.MofContractor']}" 
+				rendered="#{cancelRegistrationBackingBean.managedBean.accType == SupplierManagementConst.STYPE_CONTRACTOR}"/>
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register.MofConsultent']}" 
+				rendered="#{cancelRegistrationBackingBean.managedBean.accType == SupplierManagementConst.STYPE_CONSULTANT}"/></td>
 			</tr>
 			
 			<tr><td colspan="2" height="15">&#160;</td></tr>
@@ -93,7 +98,7 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.cancel.preRegistration']}" 
 				action="#{cancelRegistrationBackingBean.cancelPreRegistraction}"
-				update=":form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				update="@all" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 		</div>
 		
 		
