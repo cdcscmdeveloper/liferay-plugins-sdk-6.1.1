@@ -1724,7 +1724,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		this.getManagedBean().setSmSupplier(currSupp);
 		if(currSupp != null){
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-			logger.info(resultList);
+			//logger.info(resultList);
 			if(resultList != null && resultList.size() > 0){
 				for(SmDisciplinaryAction disciplinaryAction: resultList){
 					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
