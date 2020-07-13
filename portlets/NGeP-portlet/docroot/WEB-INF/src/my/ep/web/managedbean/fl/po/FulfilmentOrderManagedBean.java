@@ -91,6 +91,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private boolean contractRequest;
 	
+	/*#28375 Logan*/
+	private String carryForwardTest = "";
 	private String buttonVal;
 	private String backToPrevious;
 	private List<FlRemark> previousRemarkList;
@@ -1487,5 +1489,16 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setYep(boolean yep) {
 		this.yep = yep;
 	}
+    /*#28375 - Beginning Logan*/
+	public String getCarryForwardTest() {
+		return carryForwardTest;
+	}
+
+	public void setCarryForwardTest(String carryForwardTest) {
+		this.carryForwardTest = carryForwardTest;
+	}
+	/*#28375 - Ending Logan*/
+	
+	
 
 }
