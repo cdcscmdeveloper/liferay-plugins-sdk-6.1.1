@@ -1146,6 +1146,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @return QuationTenderResDTO (boolean successful,ScQtCommittee committee)
 	 */
 	private QuationTenderResDTO updateBpmTask(String outcome, PmDigiSign digiSign) {
+		long startTime = System.currentTimeMillis();
+		log.info("ApprovalBackingBean.updateBpmTask(): startTime in milli seconds is: " + startTime + " : QT No. is: " + this.getManagedBean().getQt().getQtNo());
 		FacesScopes facesScopes = new FacesScopes();
 		String taskName = this.getManagedBean().getTaskName();
 		QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
@@ -1393,6 +1395,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}	
 				}
 			}
+			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
 		} finally {
 		}
 		return tenderResDTO;
