@@ -62,6 +62,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
@@ -1645,6 +1646,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
+		long startTime = System.currentTimeMillis();
 		try {
 			PmUser sUsers = facesScopes.getUserSessionBean();
 			Locale locale = new FacesScopes().getUserLocale();
@@ -1676,6 +1678,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 			}
+			SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			fc.addMessage(
@@ -1708,6 +1711,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	
 	private void loadSupplierCommonDetails(Long id) {
 		logger.info("loadSupplierCommonDetails");
+		long startTime = System.currentTimeMillis();
 		try {
 			if (id != null) {
 				// load user
@@ -1726,6 +1730,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 					}
 				}
+			SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.loadSupplierCommonDetails", startTime);
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
