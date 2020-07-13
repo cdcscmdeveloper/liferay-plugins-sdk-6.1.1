@@ -110,50 +110,85 @@ public class CancelRegistrationBackingBean extends
 								});
 						
 					}
-
+					
 					if (selectedPersonnel.getIdentificationNo().equals(
-							getManagedBean().getSuppAdminIdentificationNo())
-							&& selectedPersonnel.getRecordStatusFlg().equals(
-									DbValueConst.RECORD_STATUS_ACTIVE)) {
+							getManagedBean().getSuppAdminIdentificationNo().trim())
+							&& selectedPersonnel.getRecordStatusFlg().equals(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) {
+						//#25474------13072020
+						if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID))){//PM_STATTUS_ID=20199
+							if (getManagedBean()
+									.getAccType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.STYPE_CONTRACTOR)) {
+								accTypeStr = SmCommonUtil
+										.getMessage(
+												"lbl.sm.basic.account.mof.contractor",
+												null);
+								String msg = SmCommonUtil.getMessage(
+										"lbl.sm.req.cancel.confirmation.msg.ApplStatus.Contractor",
+										new String[] { accTypeStr });
+								getManagedBean().setConfirmationMsg(msg);
 
-						if (getManagedBean().getAccType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_BASIC)) {
-							accTypeStr = SmCommonUtil.getMessage(
-									"lbl.sm.basic.account.basic", null);
+								RequestContext.getCurrentInstance().execute(
+										"confirmDialog.show();");
 
-						} else if (getManagedBean()
-								.getAccType()
-								.equalsIgnoreCase(
-										SupplierManagementConst.STYPE_CONTRACTOR)) {
-							accTypeStr = SmCommonUtil
-									.getMessage(
-											"lbl.sm.basic.account.mof.contractor",
-											null);
+							} else if (getManagedBean()
+									.getAccType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.STYPE_CONSULTANT)) {
+								accTypeStr = SmCommonUtil
+										.getMessage(
+												"lbl.sm.basic.account.mof.consultant",
+												null);
+								String msg = SmCommonUtil.getMessage(
+										"lbl.sm.req.cancel.confirmation.msg.ApplStatus.Consulutent",
+										new String[] { accTypeStr });
+								getManagedBean().setConfirmationMsg(msg);
 
-						} else if (getManagedBean()
-								.getAccType()
-								.equalsIgnoreCase(
-										SupplierManagementConst.STYPE_CONSULTANT)) {
-							accTypeStr = SmCommonUtil
-									.getMessage(
-											"lbl.sm.basic.account.mof.consultant",
-											null);
+								RequestContext.getCurrentInstance().execute(
+										"confirmDialog.show();");
+							}
+						}else{
+							//#25474------13072020
+							if (getManagedBean().getAccType().equalsIgnoreCase(
+									SupplierManagementConst.STYPE_BASIC)) {
+								accTypeStr = SmCommonUtil.getMessage(
+										"lbl.sm.basic.account.basic", null);
 
-						} else {
-							getManagedBean().getAccType().equalsIgnoreCase(
-									SupplierManagementConst.STYPE_GOVT_SELLER);
-							accTypeStr = SmCommonUtil.getMessage(
-									"lbl.sm.basic.account.govt", null);
+							} else if (getManagedBean()
+									.getAccType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.STYPE_CONTRACTOR)) {
+								accTypeStr = SmCommonUtil
+										.getMessage(
+												"lbl.sm.basic.account.mof.contractor",
+												null);
 
+							} else if (getManagedBean()
+									.getAccType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.STYPE_CONSULTANT)) {
+								accTypeStr = SmCommonUtil
+										.getMessage(
+												"lbl.sm.basic.account.mof.consultant",
+												null);
+
+							} else {
+								getManagedBean().getAccType().equalsIgnoreCase(
+										SupplierManagementConst.STYPE_GOVT_SELLER);
+								accTypeStr = SmCommonUtil.getMessage(
+										"lbl.sm.basic.account.govt", null);
+
+							}
+
+							String msg = SmCommonUtil.getMessage(
+									"lbl.sm.req.cancel.confirmation.msg",
+									new String[] { accTypeStr });
+							getManagedBean().setConfirmationMsg(msg);
+
+							RequestContext.getCurrentInstance().execute(
+									"confirmDialog.show();");
 						}
-
-						String msg = SmCommonUtil.getMessage(
-								"lbl.sm.req.cancel.confirmation.msg",
-								new String[] { accTypeStr });
-						getManagedBean().setConfirmationMsg(msg);
-
-						RequestContext.getCurrentInstance().execute(
-								"confirmDialog.show();");
 					}else {
 						throw new EpException(MessageConst.ERROR_721090);
 					}
