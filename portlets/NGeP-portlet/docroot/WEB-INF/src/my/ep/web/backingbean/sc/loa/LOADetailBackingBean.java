@@ -3561,7 +3561,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-		validateContractDetails(scLoa);	//#26475
 
 		if(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
@@ -3581,6 +3580,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
 				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+			
+			validateContractDetails(scLoa);	//#26475
 
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				if(scLoa.isApprovalReq()){
@@ -6736,12 +6737,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(CollectionUtils.isEmpty(pmUserList)){
 			throw new EpException(MessageConst.ERROR_760512);
 		}else{
-			if(scLoa.getContractAdmin() != null){
-				scLoa.setContractAdmin(scLoa.getContractAdmin());
-			}
-			else{
-				scLoa.setContractAdmin(pmUserNull);
-			}
+			scLoa.setContractAdmin(pmUserNull);
 		}
 		//#26475 - end
 	}
