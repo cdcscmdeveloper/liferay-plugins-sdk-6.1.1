@@ -2973,6 +2973,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
+					validateContractDetails(scLoa);
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
@@ -2986,7 +2987,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 					reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 					reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-					
 					AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 		
 					if (resDTO.isSuccessful()) {
@@ -3044,6 +3044,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				validateLOADetails(scLoa, outcome);
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
+	
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
 				if (scLoa.isBrandNew()) {
@@ -3226,7 +3227,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
-			
+
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
 				String messageCode = null;
@@ -3363,11 +3364,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
-		
 		this.getManagedBean().setAction(outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-			RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
+				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
@@ -3472,7 +3472,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-		
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
@@ -3580,8 +3579,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
 				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
-			
-			validateContractDetails(scLoa);	//#26475
 
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 				if(scLoa.isApprovalReq()){
