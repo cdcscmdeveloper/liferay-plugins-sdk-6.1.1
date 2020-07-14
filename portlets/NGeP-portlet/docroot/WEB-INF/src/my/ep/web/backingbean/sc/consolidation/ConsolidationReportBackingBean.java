@@ -64,6 +64,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -648,6 +649,12 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			
+			//#27502 -- Start
+			ScQt scQt = this.getManagedBean().getScQt();			
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+			//#27502 -- Start
 
 			// BPM Params
 			FacesScopes facesScopes = new FacesScopes();
@@ -658,6 +665,11 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			// reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			
+			//#27502 -- Start
+			reqDTO.setScQt(qtBackingBean.getManagedBean().getQt());
+			//#27502 -- End
+			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.submitConsolidationReport(reqDTO);
 			if (resDTO.isSuccessful()) {
