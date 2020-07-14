@@ -2889,51 +2889,56 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.getParameterDesc(parameterType, tabType), tabType,
 							fecCommitte));
 				}
-				// FC tab
-				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
-				tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
-				StringBuilder fcTitleLabel = new StringBuilder(
-						"lbl.sc.finalization.committee.secretary.");
-				String fcTitleName = ResourceBundleUtils
-						.getMessage(fcTitleLabel.toString()
-									+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale());
-				if (fcSecretaryCode == null
-						|| fcSecretaryCode.getParameterId() == null) {
-					SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
-					if (fcSecretaries != null && fcSecretaries.length > 0) {
-						fcSecretaryCode = retrieveParameterById(Long
-								.valueOf(fcSecretaries[0].getValue().toString()));
-						;
-					} else {
-						fcSecretaryCode = null;
-					}
-				}
+				
+				//#27502 -Start
+				if (scQt.getPmOrgProfile().getBpk() && 
+						scQt.getContractType().getParameterCode().equalsIgnoreCase(SourcingConstants.CENTRAL_CONTRACT)) {
+					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+					ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);				
+					committeTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
 
-				// Displaying the Secretary Details
-				if (fcSecretaryCode != null) {
-					
-					String fcSecretary = fcSecretaryCode.getParameterCode();
-
-					if (fcSecretary != null) {
-						if (fcSecretary
-								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
-							fcTitleLabel
-									.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+				} else {
+					// FC tab
+					PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+					tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+					StringBuilder fcTitleLabel = new StringBuilder(
+							"lbl.sc.finalization.committee.secretary.");
+					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString()
+							+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					if (fcSecretaryCode == null || fcSecretaryCode.getParameterId() == null) {
+						SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
+						if (fcSecretaries != null && fcSecretaries.length > 0) {
+							fcSecretaryCode = retrieveParameterById(Long
+									.valueOf(fcSecretaries[0].getValue().toString()));
+							;
 						} else {
-							fcTitleLabel
-									.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+							fcSecretaryCode = null;
 						}
-						fcTitleName = ResourceBundleUtils.getMessage(
-								fcTitleLabel.toString().toLowerCase(),
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale());
 					}
-				}
 
-				committeTabs.add(new TabBean(fcTitleName, tabType, null));
-			}
+					// Displaying the Secretary Details
+					if (fcSecretaryCode != null) {
+
+						String fcSecretary = fcSecretaryCode.getParameterCode();
+
+						if (fcSecretary != null) {
+							if (fcSecretary.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+								fcTitleLabel.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+							} else {
+								fcTitleLabel.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+							}
+							fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString().toLowerCase(),
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+						}
+					}
+
+					committeTabs.add(new TabBean(fcTitleName, tabType, null));
+				}
+			}// //#27502 - End
 		} 
 
 		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
@@ -4834,6 +4839,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					parameterReqDTO
 							.setParameterCode(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
 
+				} else if (ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCE.equalsIgnoreCase(commType)) {
+					parameterReqDTO = new ParameterReqDTO();
+					parameterReqDTO
+							.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+					parameterReqDTO
+							.setParameterCode(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCE);
 				}
 
 				parameterResDTO = parameterSO
