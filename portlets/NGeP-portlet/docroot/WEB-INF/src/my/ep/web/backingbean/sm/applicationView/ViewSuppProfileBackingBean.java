@@ -181,7 +181,7 @@ public class ViewSuppProfileBackingBean extends
 		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())){
 			getManagedBean().setDisableDownloadButtonDAHistory(true);
 		}
 		//	28342 : Disciplinary Action - end
@@ -453,7 +453,7 @@ public class ViewSuppProfileBackingBean extends
 		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())){
 			getManagedBean().setDisableDownloadButtonDAHistory(true);
 		}
 		
