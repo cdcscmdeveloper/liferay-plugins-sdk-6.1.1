@@ -275,6 +275,12 @@ public class SupplierFinalizationBackingBean extends
 		retrieveBriefingPaper();
 		//#17376-start
 		if(isQTMaintenanceScreen()){
+			if(null==dataType.getCommitteeType() || StringUtils.isEmpty(dataType.getCommitteeType()) || StringUtils.isBlank(dataType.getCommitteeType())){ //17376-165
+				dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+				this.getManagedBean().setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+				loadPreparationTabDetails();
+				
+			} //17376-165
 			if(getManagedBean().isInitialDecisionFwdToBPK()){
 			getManagedBean().setInitialDecisionFwdToBPK(Boolean.FALSE);
 			getManagedBean().setCommitteeType(dataType.getCommitteeType());
@@ -7051,7 +7057,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		loadInitialData(scQt.getQtId());
 		
 		if(isQTMaintenanceScreen()){
-			if(QTStatusConst.SF_PENDING_SIGN_OFF.equals(getManagedBean().getCurrentStatusId()) || getManagedBean().getCurrentStatusId() == null){
+			//if(QTStatusConst.SF_PENDING_SIGN_OFF.equals(getManagedBean().getCurrentStatusId()) || getManagedBean().getCurrentStatusId() == null){//17376-165
 				IQTSuppFinalizationSO qtSuppFinalizationSO = getQTSuppFinalizationSO();
 				sfReqDTO = new SuppFinalizationReqDTO();
 				sfReqDTO.setQtId(scQt.getQtId());
@@ -7059,7 +7065,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				if(sfResDTO.isSuccessful() && sfResDTO.getCurrentStatus() != null){
 					getManagedBean().setCurrentStatusId(sfResDTO.getCurrentStatus().getPmStatus().getStatusId());
 				}
-			}
+			//} //17376-165
 		}
 		
 		return QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
