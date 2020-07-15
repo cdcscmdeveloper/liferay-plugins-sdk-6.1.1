@@ -219,7 +219,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			<p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">			    
 			    <p:commandLink oncomplete="dlUpdateReasonWv.show();" action="#{pPlanBackingBean.retrievePpUpdateReasons(ppItem)}"
 			    	update=":form:dlUpdateReason" immediate="true" id="UpdateReason" 
-			    	disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}">
+			    	rendered="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !ppItem.reasonForUpdateEnabled}"/>
 				</p:commandLink>
