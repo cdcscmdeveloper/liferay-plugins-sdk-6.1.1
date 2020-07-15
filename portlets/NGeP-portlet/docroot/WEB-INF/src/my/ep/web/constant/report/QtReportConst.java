@@ -61,6 +61,7 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_PROCURE_PTJ_EQ = "ORGPROFILEID";
 	public static final String PARAM_SUBMIT_FR_DT = "SUBMITFRDT";
 	public static final String PARAM_SUBMIT_TO_DT = "SUBMITTODT";
+	public static final String PARAM_LOGIN = "LOGIN";
 
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
