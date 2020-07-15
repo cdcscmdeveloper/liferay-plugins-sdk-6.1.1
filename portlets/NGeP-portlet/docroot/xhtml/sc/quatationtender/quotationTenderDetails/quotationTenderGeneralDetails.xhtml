@@ -914,7 +914,8 @@
 				oncomplete="panelApprovalDlgs.hide();" />
 		</div>
 	</p:dialog>
-
+												
+<!-- #25729 #174 START - Ruzaimah comment below	
 	<p:dialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
 		header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
 		resizable="false" closable="false">
@@ -936,5 +937,22 @@
 				actionListener="#{createQtBB.enableJustificationProValue(false)}"
 				oncomplete="proceedBelowQtValueDlgs.hide();" />
 		</div>
-	</p:dialog>
+	</p:dialog> -->
+<!-- #25729 #174 Ruzaimah replace above to below -->
+ 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form"
+				action="#{createQtBB.enableJustificationProValue(true)}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
+				actionListener="#{createQtBB.enableJustificationProValue(false)}"
+				oncomplete="proceedBelowQtValueDlgs.hide();" />
+		</div>
+	</p:confirmDialog> 	
+<!-- #25729 #174 END -->
+	
 </ui:composition>
