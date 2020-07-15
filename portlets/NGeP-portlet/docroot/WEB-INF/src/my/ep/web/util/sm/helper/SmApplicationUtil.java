@@ -5121,13 +5121,13 @@ public class SmApplicationUtil {
 					appl = resDTO.getSmAppl();
 				}				
 			}
-			//START 24964
+			//START 24964 & 28534
 			if(appl == null && managedBean.getSmAppl().getSmSupplier() != null){
 				reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
 				appl = revisionSO
 						.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
 			}
-			//END 24964
+			//END 24964 & 28534
 		} finally {
 			revisionSO = null;
 		}
@@ -6937,12 +6937,12 @@ public class SmApplicationUtil {
 										.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
 										.contains(mac.getCategoryType()
 												.getParameterCode()))
-							//24964 - start
+							//24964 & 28534 - start
 								&& !appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 							if(!isMachineExistInLatest(mac, bean
 									.getLatestAppl().getSmMachineDtls())){
 								macIt.remove();
-							} //24964 - end						
+							} //24964 & 28534 - end						
 						}
 					}
 				}
@@ -11865,9 +11865,9 @@ public class SmApplicationUtil {
 							|| bean.getSelectedShareHolder().isDirector()
 							|| bean.getSelectedShareHolder()
 									.isHigherManagement() || bean
-							.getSelectedShareHolder().isManagement())) {				
+							.getSelectedShareHolder().isManagement())) {
 				bean.getSelectedShareHolder().setClerical(false);
-				bean.getSelectedShareHolder().setDisableStaff(true);				
+				bean.getSelectedShareHolder().setDisableStaff(true);
 			} else {
 				  if (bean.getSmSupplier().getBusinessType()
 						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
@@ -13424,7 +13424,7 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	//24964 - start 
+	//24964 & 28534 - start 
 	public static void rejectSmMofCertForSupplier(SmSupplier supplier){
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());
@@ -13451,7 +13451,7 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	//24964 - end
+	//24964 & 28534 - end
 	
 	//27796: Disciplinary Action - start - 26238
 	public static List<SmDisciplinaryAction> retrieveDisciplinaryActionHistoryBySupplier(SmSupplier supplier) {
