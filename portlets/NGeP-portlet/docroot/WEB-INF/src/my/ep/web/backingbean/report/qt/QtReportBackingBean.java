@@ -189,6 +189,13 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes()
 				.getUserSessionBean().getUserId().toString());
 
+		//Bug #28440 start
+		String userRoleLogin = getUserRoleLogin();
+		if(userRoleLogin != null){
+			params.put(QtReportConst.PARAM_LOGIN, userRoleLogin);
+		}
+		//Bug #28440 end
+		
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
 		reqDTO.setDefaultOutputType(this.getManagedBean()
 				.getDefaultOutputType());
@@ -204,6 +211,29 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			e.printStackTrace();
 		}
 	}
+	
+	//Bug #28440 start
+	public String getUserRoleLogin(){
+		
+		String userRoleLogin = ReportConst.EMPTY_VAL;
+		
+		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
+		List<String> authoriztionList = retriveUserrloeByUserId();
+		
+		if (approverNayakTarafList.size() > 0) {
+			userRoleLogin = ReportConst.APPROVERNT;
+		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
+				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
+				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
+				|| authoriztionList .contains(ReportConst.PUBLICATION_APPROVER)) {
+			userRoleLogin = ReportConst.APPROVER;
+		} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
+			userRoleLogin = ReportConst.DESKOFFR;
+		} 
+		
+		return userRoleLogin;
+	}	
+	//Bug #28440 end
 
 	public FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
