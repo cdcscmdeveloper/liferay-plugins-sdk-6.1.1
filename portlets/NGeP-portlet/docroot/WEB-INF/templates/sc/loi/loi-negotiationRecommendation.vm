@@ -109,7 +109,7 @@
 											<table width="100%" border="0" cellpadding="0" cellspacing="0">
 												<tbody>
 													<tr>
-												  #if ($evalResultDtl.awareded) 
+												##  #if ($evalResultDtl.awareded) 
 															<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 															<td width="12%" class="standard left">
 																#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
@@ -123,9 +123,9 @@
 															<td width="11%" class="standard left">$numberFormatter.format($evalResultDtl.scQtRecommendDtl.get(0).scQtProposalItem.finalPrice)</td>
 															<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.get(0).awardQty</td>
 															<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
-														#else 
-															#set ($count = $count + 1)
-														#end														
+													##	#else 
+													##		#set ($count = $count + 1)
+													##	#end														
 													</tr>
 												</tbody>
 											</table>
@@ -256,7 +256,7 @@
 									<table width="100%" border="0" cellpadding="0" cellspacing="0">
 										<tbody>
 											<tr>
-											#if ($evalResultDtl.awareded) 
+										##	#if ($evalResultDtl.awareded) 
 													<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
 													<td width="12%" class="standard left">
 														#if ($evalResultDtl.qtEvaluationResult.scQtProposal.bumi == "true")
@@ -270,9 +270,9 @@
 													<td width="11%" class="standard left">$numberFormatter.format($evalResultDtl.scQtRecommendDtl.get(0).scQtProposalItem.finalPrice)</td>											
 													<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.get(0).awardQty</td>
 													<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>											
-												#else 
-													#set ($count = $count + 1)
-										 #end 
+											##	#else 
+												##	#set ($count = $count + 1)
+									##	 #end 
 											</tr>
 										</tbody>
 									</table>
