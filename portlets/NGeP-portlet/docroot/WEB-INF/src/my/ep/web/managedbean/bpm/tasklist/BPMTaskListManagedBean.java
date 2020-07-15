@@ -263,17 +263,23 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			log.info(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
 			IBpmSO bpmSO = null;
 			try {
-				log.info(">>>>>>>>>>>>>>>>>>getAssignment()=" + getAssignment());
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+				/*log.info(">>>>>>>>>>>>>>>>>>getAssignment()=" + getAssignment());
 				log.info(">>>>>>>.pageNo()=" + getPageNo());
-				log.info(">>>>>>>.pageSize()=" + getPageSize());
+				log.info(">>>>>>>.pageSize()=" + getPageSize());*/
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
-
-				log.info("testing BPM auth******" + token);
+				
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+				/*log.info("testing BPM auth******" + token);*/
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -289,8 +295,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
+					/*
+					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+					 */
+					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
 
 					// setTaskList(responseDTO.getWorklistVO().getWorklistItem());
 
@@ -301,12 +310,18 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							}
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+								/*log.info("Doc number = " + worklistItemVO.getDocNumber());*/
 								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
 								if (scPrInquiry != null) {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-											+ scPrInquiry.getTitle());
+									/*
+									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+									 */
+									/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+											+ scPrInquiry.getTitle());*/
 								}
 							} else if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -319,8 +334,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 								// sm module
 								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-								log.info("***** The document Id for the workflow is ****** "
-										+ worklistItemVO.getDocId());
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+								/*log.info("***** The document Id for the workflow is ****** "
+										+ worklistItemVO.getDocId());*/
 								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 								StringBuilder sb = new StringBuilder();
 								sb.append(ResourceBundleUtils.getMessage(
@@ -447,13 +465,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
-
-				log.info("testing BPM auth******" + token);
+				
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+				/*log.info("testing BPM auth******" + token);*/
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
-				log.info("getDocType()"+getDocType());
+				
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+				/*log.info("getDocType()"+getDocType());*/
 				reqDTO.setDocType(getDocType());
 	
 				reqDTO.setViewBy(getViewBy());
@@ -469,7 +494,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				/*if(getSelectedOrgProfile()!=null){
 					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
 				}*/
-				log.info("getDocStatus()" + getDocStatus());
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+//				log.info("getDocStatus()" + getDocStatus());
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
@@ -480,8 +508,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
+					/*
+					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+					 */
+					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 
@@ -494,13 +525,19 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 							// s1 module
 							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								log.info("Doc number = " + worklistItemVO.getDocNumber());
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+//								log.info("Doc number = " + worklistItemVO.getDocNumber());
 								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 										.getDocNumber());
 								if (scPrInquiry != null) {
 									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-											+ scPrInquiry.getTitle());
+									/*
+									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+									 */									
+									/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+											+ scPrInquiry.getTitle());*/
 								}
 							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -513,7 +550,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 								//sm module
 								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-								log.info("***** The document Id for the workflow is ****** "+ worklistItemVO.getDocId());
+								
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+//								log.info("***** The document Id for the workflow is ****** "+ worklistItemVO.getDocId());
 								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -814,7 +855,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       // 12177 - End
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
-								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+//								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 					}
@@ -891,7 +935,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-				log.info("testing BPM auth******" + token);
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+//				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -903,7 +950,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDescGroup());
 				}
 				
-				log.info("getDocNoGroup():" + getDocNoGroup());
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */				
+//				log.info("getDocNoGroup():" + getDocNoGroup());
 				if(getDocNoGroup()!=null && getDocNoGroup().trim().length()>0){
 					reqDTO.setDocNumber(getDocNoGroup());
 				}
@@ -913,7 +963,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}*/
 				
 				if(getDocStatusGroup()>0){
-					log.info("getDocStatusGroup" + getDocStatusGroup());
+					/*
+					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+					 */
+//					log.info("getDocStatusGroup" + getDocStatusGroup());
 					reqDTO.setStatus(getDocStatusGroup());
 				}
 				
@@ -933,8 +986,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
+					/*
+					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+					 */
+//					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+//					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
@@ -945,13 +1001,19 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								}
 
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									log.info("Doc number = " + worklistItemVO.getDocNumber());
+									/*
+									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+									 */
+//									log.info("Doc number = " + worklistItemVO.getDocNumber());
 									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 											.getDocNumber());
 									if (scPrInquiry != null) {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
-										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-												+ scPrInquiry.getTitle());
+										/*
+										 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+										 */
+										/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+												+ scPrInquiry.getTitle());*/
 									}
 								}
 								// s1 module
@@ -972,8 +1034,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-									log.info("***** The document Id for the workflow is ****** "
-											+ worklistItemVO.getDocId());
+						    		/*
+									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+									 */
+						    		/*log.info("***** The document Id for the workflow is ****** "
+											+ worklistItemVO.getDocId());*/
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -1071,7 +1136,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       //end added for #24968
 							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
-								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+//								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 					}
@@ -1122,7 +1190,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-				log.info("testing BPM auth******" + token);
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+//				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -1134,14 +1205,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc());
 				}
 				
-				log.info("getDocNoGroup():"+getDocNo());
+				/*
+				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+				 */
+//				log.info("getDocNoGroup():"+getDocNo());
 				
 				if(getDocNo()!= null && getDocNo().trim().length() > 0){
 					reqDTO.setDocNumber(getDocNo());
 				}
 			
 				if(getDocStatus() > 0){
-					log.info("getDocStatus"+getDocStatus());
+					/*
+					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+					 */
+//					log.info("getDocStatus"+getDocStatus());
 					reqDTO.setStatus(getDocStatus());
 				}
 				
@@ -1157,8 +1234,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());
+					/*
+					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+					 */
+					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
+					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
 						boolean viewGlpFlag = viewGlpFlag();
@@ -1169,13 +1249,19 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 								}
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									log.info("Doc number = " + worklistItemVO.getDocNumber());
+									/*
+									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+									 */
+//									log.info("Doc number = " + worklistItemVO.getDocNumber());
 									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
 											.getDocNumber());
 									if (scPrInquiry != null) {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
-										log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-												+ scPrInquiry.getTitle());
+										/*
+										 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+										 */
+										/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
+												+ scPrInquiry.getTitle());*/
 									}
 								}
 							// s1 module
@@ -1194,7 +1280,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							//sm module
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-						    		log.info("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
+						    		/*
+									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+									 */
+//						    		log.info("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -1471,11 +1560,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       // 12177 - End
 						       
 								// Identify if it is a group or individual task
-								log.info("getTaskType: " + worklistItemVO.getTaskType());
+						       /*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+//						       log.info("getTaskType: " + worklistItemVO.getTaskType());
 								worklistItemVO.getTaskType();
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
-								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
+								/*
+								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
+								 */
+//								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 					}
