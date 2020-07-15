@@ -8404,20 +8404,22 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		 * @return
 		 */
 		public void displayReviseInstrn() {
-			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
-			if ((currentStatus == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue())
-					|| (currentStatus == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
-				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
-					 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
-							 && null != committeeActivity.getScCommitteeMember().getMemberRole()
-							 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-						 PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
-						 if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
-							 getManagedBean().setDisplayReviseInstrn(true);
-						 }
-						 break;
-					 }
-				 }
+			if (null != getManagedBean().getCurrentStatusId()) {
+				long currentStatus = getManagedBean().getCurrentStatusId().longValue();
+				if ((currentStatus == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue())
+						|| (currentStatus == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+					for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+						if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+								&& null != committeeActivity.getScCommitteeMember().getMemberRole()
+								&& "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+							PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
+							if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
+								getManagedBean().setDisplayReviseInstrn(true);
+							}
+							break;
+						}
+					}
+				}
 			}
 		}
 		// #25638 - End
