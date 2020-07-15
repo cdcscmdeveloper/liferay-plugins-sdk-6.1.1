@@ -5147,6 +5147,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				&& (ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
 						//25549 - start
 						|| ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
 						//25549 - end
 						|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId())
 						|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))
