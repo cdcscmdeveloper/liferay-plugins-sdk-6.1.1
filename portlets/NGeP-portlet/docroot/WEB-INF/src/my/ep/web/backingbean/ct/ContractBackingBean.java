@@ -3009,13 +3009,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param ctContractItem   object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
+		//Bug #28356 - Start
 		if (ctContractItem.getMinimumOrderQty() <= 0) {
-			ctContractItem.setMinimumOrderQty(1);
+			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				if(ctContractItem.getContractItemId().equals(item.getContractItemId())){
+					item.setMinimumOrderQty(1);
+					ctContractItem.setMinimumOrderQty(1);
+				}
+			}
 			throw new EpException(MessageConst.ERROR_100033,
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} 
+		if (ctContractItem.getMinimumOrderQty() > 0) {
+			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				if(ctContractItem.getContractItemId().equals(item.getContractItemId()))
+				item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+			}
+			
+		} 
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
+		
+//		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
+//		reqDTO.setCtContactItem(ctContractItem);
+//		
+//		
+//		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+//		
+//		contractItemSO.updateItemSearchService(reqDTO);
+//Bug #28356 - End		
+		
+		
 	}
 
 	/**
@@ -3774,9 +3798,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to retreive the factoring attachment from the list.
 	 */
+	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{
-		return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	{	//#28505 start
+		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
+				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+			}
+			else{
+				return null;
+			}
+		}
+		else {
+			return null;
+		}
+		//#28505 end
 	}
 	
 	public String newProcurement(){
