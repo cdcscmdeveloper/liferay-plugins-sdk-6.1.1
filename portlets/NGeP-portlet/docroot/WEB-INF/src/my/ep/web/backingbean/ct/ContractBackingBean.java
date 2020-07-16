@@ -2997,13 +2997,35 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param ctContractItem   object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
+		//Bug #28356 - Start
 		if (ctContractItem.getMinimumOrderQty() <= 0) {
-			ctContractItem.setMinimumOrderQty(1);
+			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				if(ctContractItem.getContractItemId().equals(item.getContractItemId())){
+					item.setMinimumOrderQty(1);
+					ctContractItem.setMinimumOrderQty(1);
+				}
+			}
 			throw new EpException(MessageConst.ERROR_100033,
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} 
+		if (ctContractItem.getMinimumOrderQty() > 0) {
+			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				if(ctContractItem.getContractItemId().equals(item.getContractItemId()))
+				item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+			}
+		} 
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
+		
+//		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
+//		reqDTO.setCtContactItem(ctContractItem);
+//		
+//		
+//		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+//		
+//		contractItemSO.updateItemSearchService(reqDTO);
+//Bug #28356 - End		
+		
 	}
 
 	/**
