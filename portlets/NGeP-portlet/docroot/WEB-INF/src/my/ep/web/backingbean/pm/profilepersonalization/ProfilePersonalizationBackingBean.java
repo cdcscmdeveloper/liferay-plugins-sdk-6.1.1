@@ -1745,8 +1745,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		try {
 			if (id != null) {
 				// load user
-				PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
-				this.getManagedBean().setSelectedUser(pmUser);
+				//PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
+				//this.getManagedBean().setSelectedUser(pmUser);
 				// retrieve current active org
 				List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
 				this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
