@@ -692,11 +692,15 @@
            		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.min.order.qty']}"/>
            	</f:facet>	               	
            	<p:inputText value="#{srItemVar.minimumOrderQty}" styleClass="ppRightBtn" style="float:right;width:100px;" label="#{lbl['lbl.ct.min.order.qty']}"
-        		maxlength="#{srItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" >
+        		maxlength="#{srItemVar.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
 				<f:converter converterId="dynamicNumberConverter" />
 				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, srItemVar.scRequestItem.uom.uomCode)}" />
 				<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeMinimumQty(srItemVar)}"/>
 	        </p:inputText>
+	        <h:outputText value="#{srItemVar.minimumOrderQty}"  style="float:right;" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+               	<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, srItemVar.scRequestItem.uom.uomCode)}" />
+	         </h:outputText>
          </p:column>  
 	      	      
 	      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:8%; white-space:normal;" styleClass="column-align-center">
