@@ -14,8 +14,9 @@
 
 
 
-
-
+  <!--2020717@azza - Enhancement27627 - Start -->		
+   <p:outputPanel id="normalpromotionPageID">
+  <!--2020717@azza - Enhancement27627 - End -->	
 	<p:panelGrid styleClass="tablePanel" style="width:100%;">
 		<f:facet name="header">
 			<p:row>
@@ -96,30 +97,37 @@
 
 	<!--20200520@akmal - Enhancement27627 - Start -->
 	<div align="right">
+	     <!--2020717@azza - Enhancement27627 - Start -->		
 			<p:commandButton id="addPromoButton" 
 				value="#{lbl['lbl.cm.add']}"
 				action="#{catalogueBackingBean.addNewPromotionPricing()}"
 				disabled="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem) or
 					unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
-				update=":form" 
+				update="normalpromotionPageID" 
 				process="@this"></p:commandButton>
+		<!--2020717@azza - Enhancement27627 - End -->		
 	</div>
 	
 	<p:confirmDialog id="confirmDeleteId"
 			message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
 			header="#{lbl['lbl.cm.dialog.cofirm.header']}"
 			widgetVar="confirmationDelete">
-
+             <!--2020717@azza - Enhancement27627 - Start -->
 			<p:commandButton id="confirmID"
 				value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 				actionListener="#{catalogueBackingBean.deletePromotionPrice()}"
-				update=":form" oncomplete="confirmationDelete.hide()" />
+				update="normalpromotionPageID" oncomplete="confirmationDelete.hide()" />
+			  <!--2020717@azza - Enhancement27627 - Start -->
 			<p:commandButton id="declineID"
 				value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 				onclick="confirmationDelete.hide()" />
 
 	</p:confirmDialog>
 	<!--20200520@akmal - Enhancement27627 - End -->
+	
+	<!--2020717@azza - Enhancement27627 - Start -->		
+	</p:outputPanel>
+	<!--2020717@azza - Enhancement27627 - End -->		
 
 
 </ui:composition>
