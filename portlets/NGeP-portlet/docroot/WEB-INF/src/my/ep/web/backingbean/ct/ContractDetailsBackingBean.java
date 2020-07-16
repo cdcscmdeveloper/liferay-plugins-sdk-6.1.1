@@ -303,6 +303,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		/*#26083 start - basri*/
 		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
 			ctBB.getManagedBean().setNotificationSetting(true);
+		} else {
+			ctBB.getManagedBean().setNotificationSetting(false); //#28320 - related to #26083
 		}
 		setValidateContractField(reqDTO);
 		
@@ -1072,7 +1074,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		//Validation for contract item details
-		if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null) {
+		//#28320 - During Notification Setting, no need to validate
+		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
