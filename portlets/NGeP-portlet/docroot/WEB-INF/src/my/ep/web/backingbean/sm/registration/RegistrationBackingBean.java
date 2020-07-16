@@ -1209,7 +1209,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		
-		if(SmCommonUtil.getInstance().ssmActive()){
+		if(SmCommonUtil.getInstance().ssmActive() 
+				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType())){
 			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
 			getManagedBean().getSmSupp().getSmSupplierOwners().clear();
 			getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
