@@ -3358,7 +3358,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
-		
+
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
 			ppItem.setInvitationDate(new Date());
@@ -5145,6 +5145,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List <PpRejectReason> rejectReasons = new ArrayList<PpRejectReason>();
 		if (ppPlan.getStatus() != null 
 				&& (ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
+						//25549 - start
+						|| ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
+						|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
+						//25549 - end
 						|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId())
 						|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))
 						|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
@@ -5493,7 +5497,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("getProcItemSearchBeanData - End");
 		return searchBean;
 	}
-	
+
 	//[Bug#27032]
 	public String constuctConditionFieldsForPTJGroup() {
 
@@ -6775,7 +6779,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				   throw new EpException(MessageConst.ERROR_730035);
 			   }
 			   
-
+			   CheckDuplicatePpExpenditureItems(epItems);
 			 //25479 - end
 	    	
 			
@@ -6861,9 +6865,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					   Always disable Reason For Update for original ppItem*/
 					if (ppItem.isOriginal()) {
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
-							
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
-							
 							
 							ppItem.setCloneEnabled(true);
 							ppItem.setDisableForPindaan(true);
