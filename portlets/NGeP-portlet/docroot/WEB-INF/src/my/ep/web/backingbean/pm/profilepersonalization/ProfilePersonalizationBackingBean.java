@@ -65,6 +65,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
@@ -1656,6 +1657,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		long startTime = System.currentTimeMillis();
 		try {
 			if(docNo != null && !"".equalsIgnoreCase(docNo) && !"null".equalsIgnoreCase(docNo)){
 				MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
@@ -1703,6 +1705,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			if(this.getManagedBean().getSmSupplier() == null){
 				this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
 			}
+			SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
 			fc.addMessage(
@@ -1744,6 +1747,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		logger.info("loadSupplierCommonDetails");
 		try {
 			if (id != null) {
+				long startTime = System.currentTimeMillis();
 				// load user
 				//PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
 				//this.getManagedBean().setSelectedUser(pmUser);
@@ -1760,6 +1764,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 					}
 				}
+				SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.loadSupplierCommonDetails", startTime);
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
