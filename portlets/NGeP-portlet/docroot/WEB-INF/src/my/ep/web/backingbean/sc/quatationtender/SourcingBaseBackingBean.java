@@ -3482,11 +3482,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							//+ "|" + answer.getTplSpecZoneQty()
 							//+ "|" + answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId()
 							);
-					if(answer.getTplSpecZoneDtls()!=null)
-					{
-						log.info("Size of the Zone Dtls" +answer.getTplSpecZoneDtls().size());
-						log.info("Size of the Zone Qty" +answer.getTplSpecZoneQty());
-					}
+					//if(answer.getTplSpecZoneDtls()!=null)
+					//{
+					//	log.info("Size of the Zone Dtls" +answer.getTplSpecZoneDtls().size());
+					//	log.info("Size of the Zone Qty" +answer.getTplSpecZoneQty());
+					//}
 					//log.info("TplSpecQuestion for Delivery Term:-------> "+answer.getTplSpecQuestion().getClDeliveryTerm());
 					log.info("TplSpecQuestion for days:-------> "+days);
 					if(answer.getAnswerRemark()!=null)
@@ -4593,7 +4593,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice.doubleValue: "+ actualIntendedPrice.doubleValue() +" :::");
 
-				if (SourcingConstants.QT_BELOW_20K >= actualIntendedPrice.doubleValue()) {
+				// #25729 #174
+				if ((SourcingConstants.QT_BELOW_20K > actualIntendedPrice.doubleValue())
+						|| (SourcingConstants.QT_BELOW_20K == actualIntendedPrice.doubleValue()))
+				{
 					return Boolean.TRUE;
 				}
 			}
