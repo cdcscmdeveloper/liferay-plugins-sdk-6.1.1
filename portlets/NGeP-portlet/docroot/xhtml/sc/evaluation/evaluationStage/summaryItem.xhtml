@@ -149,4 +149,17 @@
 
 
 	</h:panelGroup>
+	
+	
+	<h:panelGroup id="summaryItemNotOfferSuplier">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.item.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.item.stage.tooltip']}" />
+		   </f:facet>		
+				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
+		</p:panel>
+	</h:panelGroup>
 </ui:composition>
