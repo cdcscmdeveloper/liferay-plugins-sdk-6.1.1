@@ -187,8 +187,15 @@
 		</table>
 
 	</p:panel>
-
-
-
-
+	
+	
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.package.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.package.stage.tooltip']}" />
+		   </f:facet>		
+				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
+		</p:panel>
 </ui:composition>

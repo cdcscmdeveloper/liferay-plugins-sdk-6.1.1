@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+		
+			<p:dataTable var="notOfferSupplier"
+			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="evaluationCommitteeSummaryNotOfferSupplier" rows="10"
+				value="#{evaluationBackingBean.managedBean.notOfferSupplierDM}"
+				lazy="true" editable="true" rowIndexVar="index"
+				rowKey="#{notOfferSupplier}">
+
+				<ac:paginator for="evaluationCommitteeSummaryNotOfferSupplier"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.not.offer.supplier.number']}"
+					style="width:30%; text-align:center;">
+					<h:outputText
+						value="#{index + 1}"></h:outputText>
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="text-align:center;">
+					<h:outputText
+						value="#{notOfferSupplier[1]}"></h:outputText>
+
+				</p:column>
+
+			
+			</p:dataTable>
+			<p:spacer height="10px" />
+			<table>
+
+				<tr>
+					<td style="width: 230px;"><h:outputLabel
+							value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
+							value="#{evaluationBackingBean.managedBean.notOfferSupplierDM.rowCount}"></p:inputText></td>
+				</tr>
+
+			</table>
+
+		
+</ui:composition>

@@ -123,9 +123,32 @@
 
 
 	</p:panel>
-
-
-
-
-
+	
+	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryNotOfferSuplier">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.tec.evaluation.package.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.tec.evaluation.package.stage.tooltip']}" />
+		   </f:facet>
+           <c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+				<p:accordionPanel dynamic="true"
+					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
+					var="zonePnlList">
+					<p:ajax event="tabChange"
+						listener="#{evaluationBackingBean.evaluationNotOfferSupplierZoneSummaryTabChange}"
+						update="@(.evaluationStageSummaryItemtab)" />
+					<p:tab title="#{zonePnlList.zoneName}">
+						<h:panelGroup styleClass="evaluationStageSummaryItemtab">
+							<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
+						</h:panelGroup>
+					</p:tab>
+				</p:accordionPanel>
+			</c:if>
+			<c:if test 	="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">				
+				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
+			</c:if>    
+		</p:panel>
+	</h:panelGroup>
 </ui:composition>
