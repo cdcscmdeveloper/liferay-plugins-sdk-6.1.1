@@ -4637,7 +4637,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice.doubleValue: "+ actualIntendedPrice.doubleValue() +" :::");
 
-				if (SourcingConstants.QT_BELOW_20K >= actualIntendedPrice.doubleValue()) {
+				// #25729 #174
+				if ((SourcingConstants.QT_BELOW_20K > actualIntendedPrice.doubleValue())
+						|| (SourcingConstants.QT_BELOW_20K == actualIntendedPrice.doubleValue()))
+				{
 					return Boolean.TRUE;
 				}
 			}
