@@ -74,16 +74,19 @@
 					<!-- <p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" />
 					</p:column> -->
-					<!--#28273 -START 110620-->                                                        
-					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :15%;white-space : normal">
+					<!--#28273 -START 110620-->
+					<p:column headerText="#{lbl['lbl.sm.accountstatus']}"
+						style="width :15%;white-space : normal">
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
-							rendered="#{smSupplier.recordStatusFlg eq 0}" />
-					    <h:outputText value="#{lbl['lbl.sm.status.deleted1']}"
-							rendered="#{smSupplier.recordStatusFlg eq 9
-							or(smSupplier.recordStatusFlg eq 2)}" /> 
-					</p:column> 
+							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}}" />
+						<!-- bug #28278 -START -->
+						<h:outputText
+							value="#{lbl['lbl.sm.status.deleted1']} #{smSupplier.typeDisciplinaryAction}"
+							rendered="#{smSupplier.recordStatusFlg eq 9" />
+						<!-- bug #28278 -START -->
+					</p:column>
 					<!--#28273 -END 110620-->   
 					<!--#28273 & #28278 -end -->
 					
