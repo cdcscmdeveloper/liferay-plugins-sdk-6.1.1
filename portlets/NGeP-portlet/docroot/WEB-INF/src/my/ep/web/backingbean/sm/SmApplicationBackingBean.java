@@ -4759,9 +4759,7 @@ public class SmApplicationBackingBean extends
 		
 		//#27308 - 13/03/2020 START
 		if(businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType())  
-				&& getManagedBean().getSelectedEquityCompany().isSsmData() 
-				&& getManagedBean().getSelectedEquityCompany().getShareAmt() != null 
-				&& getManagedBean().getSelectedEquityCompany().getShareAmt().compareTo(BigDecimal.ZERO) == 0){
+				&& getManagedBean().getSelectedEquityCompany().isSsmData()){
 			throw new EpException(MessageConst.ERROR_722680);
 		}
 		//#27308 - 13/03/2020 END
