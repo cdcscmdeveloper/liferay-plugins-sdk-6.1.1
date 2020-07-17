@@ -3314,27 +3314,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//#20997--Start
 		if(getManagedBean().getSelectedItem() != null){	
-			for(CtContractItem itemProduct : ctBackingBean.getManagedBean().getCtItemList()){
-					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
-			if(itemPrice.isChangePrice() && itemProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
-				itemProduct.getCtItemPrices().remove(itemPrice);
-				itemProduct.getCtItemPrices().add(itemPrice);
-				
-				}
-			}		
-		}
-	}
-		if(getManagedBean().getSelectedServiceItem() != null){
-			for(CtContractItem itemService : ctBackingBean.getManagedBean().getCtItemServiceList()){
-		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices() ){
-			if(itemPrice.isBrandNew() && itemService.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedServiceItem().getContractItemId())){
-				itemService.getCtItemPrices().remove(itemPrice);
-				itemService.getCtItemPrices().add(itemPrice);
+				//Bug #28339 for Fixing #20997--Start
+						for(CtItemPrice itemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()){
+							if(itemPrice.isChangePrice() && ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+								ctBackingBean.getManagedBean().getCtItemList().remove(0);
+								ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+							}else if(itemPrice.isChangePrice() && !ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+								ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+							}							
+						}			
+					}
+		
+			if(getManagedBean().getSelectedServiceItem() != null){
+					for(CtItemPrice servicePrice : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
+						if(servicePrice.isChangePrice() && ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+							ctBackingBean.getManagedBean().getCtItemServiceList().remove(0);
+							ctBackingBean.getManagedBean().getCtItemServiceList().add(getManagedBean().getSelectedServiceItem());
+						}else if(servicePrice.isChangePrice() && !ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+							ctBackingBean.getManagedBean().getCtItemServiceList().add(getManagedBean().getSelectedServiceItem());
+						}							
+					}
 					}
 				}
-			}		
-		}
-	}
+			//Bug #28339 for Fixing #20997--End
 	//#20997 -- End
 	/**
 	 * The method used to edit the product item price.
@@ -3376,11 +3378,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctItemPrice.setChkIndexOfRow(true);
 					ctItemPrice.setExpDate(previousDate.getTime());
 					ctItemPriceList.add(addDupObj);
+					log.info("totalsize itemprices "+addDupObj.getItemPriceId());
+					log.info("totalsize itemprices "+ctItemPriceList.size());
 				}
 			}
 		}
 		this.getManagedBean().getSelectedItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedItem().getCtItemPrices().addAll(ctItemPriceList);
+		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
+			log.info("totalsize itemprices "+itemPrice.getItemPriceId());
+		}
+		
+
 		newItemPrice(getManagedBean().getSelectedItem());
 		ctItemPriceList.clear();
 
@@ -3625,17 +3634,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//#20997--Start
 		if(getManagedBean().getSelectedItem() != null){			
-			for(CtContractItem itemQtyProduct : ctBackingBean.getManagedBean().getCtItemList()){
-					for(CtItemMaxQty itemQtyPrice : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
-			if(itemQtyPrice.isChangeQuantity() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
-				itemQtyProduct.getCtItemMaxQties().remove(itemQtyPrice);
-				itemQtyProduct.getCtItemMaxQties().add(itemQtyPrice);
-				
-				}
+			//Bug #28339 for Fixing #20997--Start
+			for(CtItemMaxQty itemQtyProduct : this.getManagedBean().getSelectedItem().getCtItemMaxQties()){
+				if(itemQtyProduct.isChangeQuantity() && ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemList().remove(0);
+					ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+				}else if(itemQtyProduct.isChangeQuantity() && !ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+				}							
+			}
+			//Bug #28339 for Fixing #20997-- End
 			}		
 		}
-	}
-}
+//	}
+
 	//#20997--End
 	/**
 	 * The method used to retrieve the item ceiling quantity which in active status
@@ -3662,6 +3674,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onSelectProductItem() {
 
 		if (getManagedBean().getSelectedItem() != null) {
+			log.info("Cek Putra VerId :"+getManagedBean().getSelectedItem().getContractItemId().toString());
 			//getManagedBean().setItemServiceExist(false); #20997
 			if (ctBackingBean.getManagedBean().getShowItem() != null 
 					&& ctBackingBean.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
