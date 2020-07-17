@@ -243,7 +243,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The evaluation summary dis qual suppliers. */
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM;
-
+	
+	/** The evaluation summary not offer suppliers. */
+	private IPagingDataModel<Object[]> notOfferSupplierDM;
+	
+	
 	/** The summary item list. */
 	private List<ScRequestItem> summaryItemList;
 
@@ -3692,4 +3696,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25037-end
 
 	//#25138-Ahmaa-End
+	
+	public IPagingDataModel<Object[]> getNotOfferSupplierDM() {
+		return notOfferSupplierDM;
+	}
+
+	public void setNotOfferSupplierDM(
+			IPagingDataModel<Object[]> notOfferSupplierDM) {
+		this.notOfferSupplierDM = notOfferSupplierDM;
+	}
 }
