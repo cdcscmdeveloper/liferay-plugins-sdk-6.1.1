@@ -3452,7 +3452,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						log.info("original reasonDesc for ppItemId "
 								+ppItem.getProcurementItemId()+" = "+reasonDesc);
 						
-						if (reasonDesc == null) {
+						if (!ppItem.isCloned() && reasonDesc == null) {
 							throw new EpException(MessageConst.ERROR_730035);
 						}
 					}
@@ -5167,7 +5167,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							updateReasons.add(updateReason);
 							log.info("Current reason docId= "+updateReason.getDocId()+", " +
-									"reasonDesc= "+updateReason.getReasonDesc());
+									"isCloned= "+ppProcurementItem.isCloned()+", reasonDesc= "+updateReason.getReasonDesc());
 						}
 					}
 				}
