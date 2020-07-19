@@ -33,6 +33,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -309,8 +310,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//13984-start
 	private static String orgCode;
     private static String orgName;
+    private static int backFlag;
+    private static String catalogueFlag;
     //13984-end
-	
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -442,9 +447,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
 				
 				//13984-start
+				String orgCode = "";
+				String orgName = "";
 	    		OrgProfileResDTO orgResDTO = profileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
-	            String orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
-				String orgName = orgResDTO.getPmOrgProfile().getOrgName();
+	    		if(orgResDTO != null && orgResDTO.getPmOrgProfile() !=null){
+	    			orgCode = orgResDTO.getPmOrgProfile().getOrgCode();
+					orgName = orgResDTO.getPmOrgProfile().getOrgName();
+	    		}
 				//13984-end
 				
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
@@ -456,16 +465,17 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
+							contractReqDTO.setOrgProfileId(orgProfileId);//28469
 							flReqDTO.setContractId(vCtActiveContract.getContractId());
 
 							flReqDTO.setOrgProfileId(orgProfileId);
-							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);
+							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);//all CR under this contract filter by contractId,profile id -#28469
 
 							List<VCtActiveContract> InfoActiveContractList = contractSO
-									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();
+									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();//all schedule list under this contract
 									
-							List<VCtActiveContract> activeContractScheduleList = contractSO
-									.retrieveScheduleInfoForContractByOrgProfileId(contractReqDTO).getActiveContractList();		
+							List<VCtActiveContract> activeContractScheduleList = requestSO
+									.retrieveTotalFulfilmentRequestForThisContract(flReqDTO).getActiveContractList();//total CR under this contract filter by contractId,profile id -#28469	
 						
 							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
 
@@ -3021,7 +3031,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.searchDistrictList = searchDistrictList;
 	}
 	//end added for #24353
-
+	
 	public boolean isRadioCheckDeliveryDate() {
 		return radioCheckDeliveryDate;
 	}
@@ -3047,7 +3057,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setAvailableNoList(List<String> availableNoList) {
 		this.availableNoList = availableNoList;
 	}
-
+	
 	public String getScheduleNo() {
 		return scheduleNo;
 	}
