@@ -3076,6 +3076,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return minContractDate;
 	}
 	
+	//24893 - start
+		public PmOrgProfile getChargePTJOrg() {
+			return chargePTJOrg;
+		}
+		
 	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
 		this.chargePTJOrg = chargePTJOrg;
 	}
