@@ -284,6 +284,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//17087 -- radio button
 	private boolean radioCheckDeliveryDate;
 	
+	//24893 - start
+	private PmOrgProfile chargePTJOrg;
+	//24893 - end
+	
 	// 12177 - Start
 	/** The flag of SQ expired */
 	private boolean sqExpiredStatus = Boolean.FALSE;
@@ -3263,6 +3267,16 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
 		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
 	}
+	
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end
 
 	// 12177 - Start
 	/**

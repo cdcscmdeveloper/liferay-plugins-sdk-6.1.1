@@ -134,11 +134,25 @@
 		<br />
 		<br />
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
+			<!-- 24893 start--><table style="width: 100%">
+			<tr style="margin-left: 29.5px; float: left;">
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td><p:inputTextarea id="chargeOrgProfile" rows="2" cols="108"
+						readonly="true" autoResize="false" style="resize:none;background-color:#f4f4f4;"
+						value="#{paymentMatchBackingBean.managedBean.chargePTJOrg.orgCode} #{paymentMatchBackingBean.managedBean.chargePTJOrg.orgName}" />
+					<p:commandLink disabled="true"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
+			</tr>
+			</table><!-- 24893 end -->
 			<table style="width: 100%">
-				<tr>
+				<!-- 24893 start--><tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
 					<td><p:inputText size="17" disabled="true" 
 							value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
+				</tr>
+				<tr><!-- 24893 end-->
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.votFundType == ParameterConst.votAmanah? '':(paymentMatchBackingBean.managedBean.votFundCode)}" 
@@ -150,13 +164,13 @@
 					</td>					
 				</tr>
 				<tr>
-					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
 					<td ><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.prgActivityCode}"
 							size="9" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
+					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.projectCode}"
 							size="9" disabled="true" /></td>
@@ -172,7 +186,7 @@
 					</td>		
 				</tr>
 				<tr>
-					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
+					<td><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
 					<td><p:inputText
 							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>

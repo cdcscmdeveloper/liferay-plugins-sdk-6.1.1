@@ -41,7 +41,7 @@
 						lovId="PM_ORG_PROFILE_FL" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or contractRequestBackingBean.isApprover() or !bpmTasklistBackingBean.managedBean.claim}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or contractRequestBackingBean.isApprover() or !bpmTasklistBackingBean.managedBean.claim or contractRequestBackingBean.isRequisitioner()}"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgProfile,:form:controlOff,:form:ptjGroup,:form:agOffice,:form:espkbCommNo" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
@@ -56,21 +56,6 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}" />										
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
 				</td>
-			</tr>
-			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td>
-					<p:inputTextarea id="chargeOrgProfile" rows="2" cols="63" readonly="true" autoResize="false" style="resize:none;" 
-						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgCode} #{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" />										
-					<p:commandLink
-						oncomplete="dlgChargedPtj.show();"
-						action="#{contractRequestBackingBean.resetChargedPtjDetails}"
-						update=":form:chargeOrgProfile,chargeResultPanel,dialogChargedPtj"
-						disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
-						style="padding-left:10px">
-						<p:graphicImage value="/css/images/design/search.png" />
-					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
@@ -570,73 +555,4 @@
 			</tr>
 		</table>
 	</p:panel>
-	
-	<p:dialog id="dialogChargedPtj"  header="#{lbl['lbl.fl.add.charge.ptj']}" widgetVar="dlgChargedPtj" 
-			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
-			<p:messages id="chargePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
-		   <h:panelGroup  id="chargedPtj">
-		   	<p:panel id="chargePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-              <h:panelGrid columns="3">
-                 <p:selectOneMenu for="chargeMinistry"  style="width:150px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="chargeMinistry" style="width:300px"
-                      value="#{contractRequestBackingBean.managedBean.ministryProfileId}" >
-            	   <f:selectItems value="#{contractRequestBackingBean.getMinistryDropdown()}"/>
-            	   <p:ajax event="change" update=":form:jabatan" />
-                 </p:selectOneMenu>
-                 <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
-            	    <f:selectItem itemLabel="#{lbl['lbl.fl.jabatan']}" itemValue=""/>
-                 </p:selectOneMenu>
-                 <p:spacer height="1"/>
-                 <p:selectOneMenu id="jabatan" style="width:300px"
-                      value="#{contractRequestBackingBean.managedBean.jabatanProfileId}" >
-            	   <f:selectItems value="#{contractRequestBackingBean.getJabatanDropdown()}"/>
-            	    <p:ajax event="change" update=":form:jabatan"/>
-                 </p:selectOneMenu>
-                 <p:selectOneMenu for="ptjcodename" 
-                    value="#{contractRequestBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
-                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
-            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
-            	      <p:ajax process="@this"/>
-                 </p:selectOneMenu>
-				 <p:spacer height="1"/>
-                 <p:inputText id="ptjCodeVaue"  style="width:300px;" 
-                     value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
-                     <p:ajax process="@this"/></p:inputText>
-			  </h:panelGrid>
-			  </p:panel>
-			  	<div class="ppRightBtn">
-       		         
-       		         <p:commandButton id="chargePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableChargePtj"  
-       		            action="#{contractRequestBackingBean.searchChargedPtjDetails}" process="@this" /> 
-			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
-			            action="#{contractRequestBackingBean.resetChargedPtjDetails}" update=":form:chargedPtj"   />
-		       </div>
-			  <p:panel id="chargeResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
-              <p:dataTable id="tableChargePtj" var="pmVar" value="#{contractRequestBackingBean.chargedPtjDataModel}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-                 rowIndexVar="rowIndex" selection="#{contractRequestBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true" rows="10">
-               <p:ajax event="rowSelectRadio" update=":form:chargePtjSelectBtn" ></p:ajax>
-                  <ac:paginator for="tableChargePtj"/>
-                    <p:column selectionMode="single" style="width:18px;"> 
-                         <f:facet name="header">
-		               </f:facet>
-                    </p:column>       
-                    <p:column headerText="#{lbl['lbl.fl.ptj.code']}" >
-                       	#{pmVar.orgCode}
-					</p:column>
-                    <p:column headerText="#{lbl['lbl.fl.ptj.name']}" >
-                      	#{pmVar.orgName}
-					</p:column>
-			 </p:dataTable>
-			 </p:panel>           
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"  update=":form:chargeOrgProfile" id="chargePtjSelectBtn"
-					disabled="#{fn:length(contractRequestBackingBean.chargedPtjDataModel.list) == 0 }"
-				    action="#{contractRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
-				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
-           </div>
-           </h:panelGroup>
-	</p:dialog>
 </ui:composition>

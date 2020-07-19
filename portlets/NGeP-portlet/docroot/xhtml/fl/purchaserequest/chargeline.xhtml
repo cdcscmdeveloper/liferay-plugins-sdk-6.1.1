@@ -188,19 +188,34 @@
 		</p:treeTable>
 		<p:remoteCommand action="#{purchaseRequestBackingBean.selectAllCheckboxes}"
 				name="goToSelectAll" update="chargeLineTbl,@(.chargeLineSection)"/>
-		
-		<br />
-		<br />
 		<br />
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
+			<tr>
+				<td valign="top" style="width: 137px !important;"><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputTextarea id="chargeOrgProfile" rows="2" cols="108"
+						readonly="true" autoResize="false" style="resize:none;"
+						value="#{purchaseRequestBackingBean.managedBean.chargePTJOrg.orgCode} #{purchaseRequestBackingBean.managedBean.chargePTJOrg.orgName}" />
+					<p:commandLink oncomplete="dlgChargedPtj.show();"
+						action="#{purchaseRequestBackingBean.resetChargedPtjDetails}"
+						update=":form:chargeOrgProfile,chargeResultPanel,dialogChargedPtj"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !purchaseRequestBackingBean.managedBean.chargeLinePanel}"
+						style="padding-left:10px">
+						<p:graphicImage value="/css/images/design/search.png" />
+					</p:commandLink> <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
+			</tr>
+			</table>
+			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
+					<td style="width: 137px !important;"><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 150px; margin-bottom:5px;" value="#{purchaseRequestBackingBean.managedBean.assetIndId}" disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}">
 						<p:ajax update="@this"></p:ajax>
 						<f:selectItems value="#{purchaseRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
 					</p:selectOneMenu></td>
+				</tr>
+				<tr>
 					<td style="width:95px;"><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td>
 					<h:panelGroup styleClass="votCode2" id="votCode2">
@@ -211,7 +226,7 @@
 						readonly="true"	size="7"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="purchaseRequestBackingBean.checkVotLov" 
-						conditionField="pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.retrieveJabatanOrgProfile(purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgProfileId).orgProfileId}"
+						conditionField="pmOrgProfile.orgProfileId^#{purchaseRequestBackingBean.retrieveJabatanOrgProfile(purchaseRequestBackingBean.managedBean.chargePTJOrg.orgProfileId).orgProfileId}"
 						value="#{purchaseRequestBackingBean.managedBean.votFundCode}"	
 						tooltip="#{lbl['lbl.fl.tooltip.vot.code']}" >
 					</ac:lov>
@@ -228,10 +243,9 @@
 						postUpdateListener="purchaseRequestBackingBean.checkVotFundLov" 
 						value="#{purchaseRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
-					<td></td>
 				</tr>
 				<tr>
-					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
 					<td ><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
 						lovId="PM_PRG_ACTIVITY" headerText="#{lbl['lbl.fl.program.activiti']}"
 						saveObject="purchaseRequestBackingBean.managedBean.pmPrgActivity"
@@ -243,7 +257,7 @@
 					</ac:lov></h:panelGroup></td>
 				</tr>
 				<tr>
-					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
+					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td> 
 					<td><h:panelGroup styleClass="projectLov" id="projectLov"><ac:lov id="pmProject"
 						lovId="PM_PROJECT" headerText="#{lbl['lbl.fl.project']}"
 						saveObject="purchaseRequestBackingBean.managedBean.pmSubSetia"
@@ -271,8 +285,8 @@
 					</td>		
 				</tr>
 				<tr>
-					<td colspan="3"><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
-					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov">
+					<td><p:outputLabel value="#{lbl['lbl.fl.gosodo']}" /></td> 
+					<td colspan="3"><h:panelGroup styleClass="gosodoLov" id="gosodoLov">
 					<p:inputText 
 						size="7"
 						id="itSelectedGlAccount" 
@@ -470,5 +484,77 @@
 				styleClass="BtnSpacing" oncomplete="accountCode.hide();">
 			</p:commandButton>
 		</div>
+	</p:dialog>
+	<p:dialog id="dialogChargedPtj"  header="#{lbl['lbl.fl.add.charge.ptj']}" widgetVar="dlgChargedPtj" 
+			styleClass="pop_up_top" modal="true" width="700" resizable="false" position="top">
+			<p:messages id="chargePtjMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
+		   <h:panelGroup  id="chargedPtj">
+		   	 <p:panel id="chargePtjSearchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+              <h:panelGrid columns="3">
+                 <p:selectOneMenu for="chargeMinistry"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.ministry']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="chargeMinistry" style="width:300px"
+                      value="#{purchaseRequestBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{purchaseRequestBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax event="change" update=":form:jabatan" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.fl.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="jabatan" style="width:300px"
+                      value="#{purchaseRequestBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{purchaseRequestBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" update=":form:jabatan"/>
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="ptjcodename" 
+                    value="#{purchaseRequestBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
+                       <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.fl.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	      <p:ajax process="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                     value="#{purchaseRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax process="@this"/></p:inputText>
+			  </h:panelGrid>
+			  </p:panel>
+			  	<div class="ppRightBtn">
+       		         
+       		         <p:commandButton id="chargePtjSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableChargePtj"  
+       		            action="#{purchaseRequestBackingBean.searchChargedPtjDetails}" process="@this" /> 
+			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}" process="@this"
+			            action="#{purchaseRequestBackingBean.resetChargedPtjDetails}" update=":form:chargedPtj"   />
+		       </div>
+			  <p:panel id="chargeResultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+				<p:dataTable id="tableChargePtj" var="pmVar"
+					value="#{purchaseRequestBackingBean.chargedPtjDataModel}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rowIndexVar="rowIndex"
+					selection="#{purchaseRequestBackingBean.selectedPmOrgProfile}"
+					rowKey="#{pmVar}" lazy="true" rows="10">
+					 <p:ajax event="rowSelectRadio" update=":form:chargePtjSelectBtn" ></p:ajax>
+					<ac:paginator for="tableChargePtj" />
+					<p:column selectionMode="single" style="width:18px;">
+						<f:facet name="header">
+						</f:facet>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.ptj.code']}">
+                       	#{pmVar.orgCode}
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.ptj.name']}">
+                      	#{pmVar.orgName}
+					</p:column>
+				</p:dataTable>
+			</p:panel>           
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form"   update=":form:chargeOrgProfile,:form:votCode2"  id="chargePtjSelectBtn"
+					disabled="#{fn:length(purchaseRequestBackingBean.chargedPtjDataModel.list) == 0 }"
+				    action="#{purchaseRequestBackingBean.addChargedPtjDetails()}" onclick="dlgChargedPtj.hide();"/>
+				    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="dlgChargedPtj.hide();" />
+           </div>
+           </h:panelGroup>
 	</p:dialog>
 </ui:composition>
