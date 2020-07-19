@@ -3075,13 +3075,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public Date getMinContractDate() {
 		return minContractDate;
 	}
-
+	
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
 	/**
 	 * @param minContractDate to set
 	 */
 	public void setMinContractDate(Date minContractDate) {
 		this.minContractDate = minContractDate;
 	}
+	//24893 - end	
+	
 	/**
 	 * @return the maxContractDate
 	 */
