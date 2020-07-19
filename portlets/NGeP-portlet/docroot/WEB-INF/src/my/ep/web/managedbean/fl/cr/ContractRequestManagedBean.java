@@ -497,10 +497,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 									resfDTO.getDocNoStatus().add("");
 								}
 								
-								InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
-								InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
-								InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
-								InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
+								//InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
+								//InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
+								//InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
+								//InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
 								
 								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
 								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
@@ -3039,11 +3039,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
 		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
 	}
-	//13984-start
-	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
-		this.fulfilmentRequest = fulfilmentRequest;
-	}
-
+	
 	/**
 	 * @return the availableNoList
 	 */
@@ -3124,4 +3120,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.orgName = orgName;
 	}
 	//13984-end
+	
+	//start-13984 - CrList - Back Button
+	public int getBackFlag() {
+		return backFlag;
+	}
+
+	public void setBackFlag(int backFlag) {
+		this.backFlag = backFlag;
+	}
+
+	public String getCatalogueFlag() {
+		return catalogueFlag;
+	}
+
+	public void setCatalogueFlag(String catalogueFlag) {
+		this.catalogueFlag = catalogueFlag;
+	}
+	//end-13984 - CrList - Back Button
 }

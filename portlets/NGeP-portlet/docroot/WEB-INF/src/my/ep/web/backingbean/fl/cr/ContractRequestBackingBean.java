@@ -272,6 +272,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
     /*13984 navigation & schedule number Information*/
     private static String navi;
     private static String schno;
+    
+    /*Start- 13984 - CrList - Back Button*/
+    private static Long CrListSearchContractListDD;
+    private static String CrListSearchContractCriteria;
+    private static String CrListSearchTypesDD;
+    /*End- 13984 - CrList - Back Button*/
 	
 	/**
 	 * Instantiates a new fulfilment backing bean.
@@ -893,6 +899,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		
 
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, 1L);
+		}
+	
 		setSchInfo(schInfo);
 		return schInfo;
 
@@ -919,7 +929,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		
 		/*13984 BEGINNING navigation sets and current schedule number Information*/
-		initSchPhaseTable(contractId);
+		if(scheduleNo !=null && scheduleNo.length() > 0) {
+			initSchPhaseTable(contractId);
+		}
+		
 		List<ScheduleInfo> schInfoo = getSchInfo();
 		log.info("schInfoo is : "+schInfoo);
 		log.info("schInfo is : "+schInfo);
@@ -1074,7 +1087,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String taskId = originalServletRequest.getParameter("taskId");
 		String contractId = originalServletRequest.getParameter("contractId");
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
-		
+		//start-13984
+		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
+ 
+		if(catalogueFlag != null){
+			getManagedBean().setCatalogueFlag(catalogueFlag);
+		}
+		//end-13984
+	
 		if (taskId != null) {
 			renewSesionObject();
 			new ContractRequestBackingBean();
@@ -1222,7 +1242,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				setFulfilmentItemAddr(getManagedBean().getFlRequest());
 			}
-			
 			//start - #17087
 			if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -1243,7 +1262,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//13984-end
 		}else if(contractId != null){
-			renewSesionObject();
+			/*Start- 13984 - CrList - Back Button*/
+			if(getManagedBean().getBackFlag()!= 1){
+				renewSesionObject();
+			}
+			/*end- 13984 - CrList - Back Button*/
 			new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
@@ -1269,6 +1292,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}else{
 				getManagedBean().setFactored(false);
 			}
+			
+			//13984-start
+			if(!getManagedBean().getFlRequest().getCtContract().isFrequencySchedule()){
+				scheduleNo = null;
+			}
+			//13984-end
+			
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
 			getManagedBean().getFlRequest().setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
@@ -1359,7 +1389,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtSchedule ctSchedule : contractResDTO.getContract().getLatestContractVer().getCtSchedules()) {
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}
 					}
@@ -1367,7 +1397,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					for(CtProgressivePayment ctProgressivePayment : contractResDTO.getContract().getLatestContractVer().getCtProgressivePayments()) {
 						scheduleNo = ctProgressivePayment.getPhaseNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
-						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO)) {
+						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
 							break;
 						}						
 					}
@@ -2771,12 +2801,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
-			Long jabatanOrgProfileId = -1l;
-			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
-			if(jabatan!=null) {
-				jabatanOrgProfileId = jabatan.getOrgProfileId();
-			}					
-			getVotFundList(jabatanOrgProfileId);
+			//Long jabatanOrgProfileId = -1l;
+			//PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+			//if(jabatan!=null) {
+				//jabatanOrgProfileId = jabatan.getOrgProfileId();
+			//}					
+			//getVotFundList(jabatanOrgProfileId);
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -3901,8 +3931,44 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/**
 	 * Page navigation to FLDoc search page in CR
 	 */
-	public void backToCrList() {
-		preRenderContractList();
+	public String backToCrList() {
+		
+		//start-13984 - CrList - Back Button
+		getManagedBean().setBackFlag(1);
+		if(getCrListSearchContractListDD()!=null){
+			getManagedBean().setSearchContractListDD(getCrListSearchContractListDD());
+			/**getCrListSearchContractListDD() == 7 is Fulfillment Type 
+			 * getCrListSearchContractListDD() == 8 is Contract Type**/
+			if(getCrListSearchContractListDD() == 7 || getCrListSearchContractListDD() == 8){
+				 getManagedBean().setTypes(true);
+			 }
+			 if(getCrListSearchContractListDD() == 7){
+				 getManagedBean().setFulfilmentTypes(true);
+			 }
+			 if(getCrListSearchContractListDD() == 8){
+				 getManagedBean().setFulfilmentTypes(false);
+			 }
+		}
+		if(getCrListSearchContractCriteria()!=null){
+			getManagedBean().setSearchContractCriteria(getCrListSearchContractCriteria());
+			getManagedBean().setTypes(false);
+		}
+		if(getCrListSearchTypesDD()!=null){
+			getManagedBean().setSearchTypesDD(getCrListSearchTypesDD());
+			getManagedBean().setTypes(true);
+		}
+		
+		String url ="crList?faces-redirect=true";
+		
+		if(null != getManagedBean().getCatalogueFlag()){//#28469
+			if(getManagedBean().getCatalogueFlag().equalsIgnoreCase("true")){
+				getManagedBean().setCatalogueFlag("false");
+				url ="/xhtml/cm/catalogue/contractRequestView?faces-redirect=true";
+			}			
+		}
+		return url;
+		//preRenderContractList();
+		//end-13984 - CrList - Back Button
 
 	}
 
@@ -4454,7 +4520,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(flRequest.getCtContract().getContractId());
 			if(flRequest.getFulfilmentReqId() == null){
-				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+				haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 			}
 			if(haveFlRecord){
 				throw new EpException(MessageConst.ERROR_740030);
@@ -4473,7 +4539,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					reqDTO.setScheduleNo(flRequest.getScheduleNo());
 					reqDTO.setContractId(flRequest.getCtContract().getContractId());
 					if(flRequest.getFulfilmentReqId() == null){
-						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+						haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 					}
 					if(haveFlRecord){
 						throw new EpException(MessageConst.ERROR_740031, new String[]{ResourceBundleUtils.getMessage("lbl.ct.schedule.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+flRequest.getScheduleNo()});
@@ -4484,7 +4550,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				reqDTO.setScheduleNo(flRequest.getScheduleNo());
 				reqDTO.setContractId(flRequest.getCtContract().getContractId());
 				if(flRequest.getFulfilmentReqId() == null){
-					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO);
+					haveFlRecord = fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord();//13984
 				}
 				/* Close for #21489
 				if(haveFlRecord == true){
@@ -5795,7 +5861,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			getManagedBean().setSearchContractCriteria(null);
+			//start-13984 - CrList - Back Button
+			if(getManagedBean().getBackFlag() !=1){
+				getManagedBean().setSearchContractCriteria(null);
+				getManagedBean().setSearchTypesDD(null);				
+			}else{
+				getManagedBean().setBackFlag(0);
+			}
+			//end-13984 - CrList - Back Button
 			List<String> contractCriteriaList = new ArrayList<String>();
 			contractCriteriaList.add(ResourceBundleUtils.getMessage(
 					"lbl.fl.physical.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -5915,6 +5988,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setTypes(false);
 		getManagedBean().setSearchTypesDD(null);
 		if(getManagedBean().getSearchContractListDD() != null){
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
 			 if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
 				 getManagedBean().setTypes(true);
 			 }
@@ -5932,6 +6007,29 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * 
 	 */
 	public void searchContract(){
+		//start-13984 - CrList - Back Button
+		if(getManagedBean().getSearchContractListDD()!=null){
+			setCrListSearchContractListDD(getManagedBean().getSearchContractListDD());
+			/**getSearchContractListDD() == 7 is Fulfillment Type 
+			 * getSearchContractListDD() == 8 is Contract Type**/
+			if(getManagedBean().getSearchContractListDD() == 7 || getManagedBean().getSearchContractListDD() == 8){
+				if(getManagedBean().getSearchTypesDD()!=null){
+					setCrListSearchTypesDD(getManagedBean().getSearchTypesDD());
+					setCrListSearchContractCriteria(null);
+				}
+			 }else{
+				 if(getManagedBean().getSearchContractCriteria()!=null){
+						setCrListSearchContractCriteria(getManagedBean().getSearchContractCriteria());
+						setCrListSearchTypesDD(null);
+					}
+			 } 
+		}else{
+			setCrListSearchContractListDD(null);
+			setCrListSearchContractCriteria(null);
+			setCrListSearchTypesDD(null);
+			
+		}
+		//end-13984 - CrList - Back Button
 		getManagedBean().getActiveContractDataModel().reloadData();
 	}
 	
@@ -6470,15 +6568,41 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		this.schno = schNo;
 	}
 	
+	//start-13984 - CrList - Back Button
+	public Long getCrListSearchContractListDD() {
+		return CrListSearchContractListDD;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchContractListDD(Long CrListSearchContractListDD) {
+		this.CrListSearchContractListDD = CrListSearchContractListDD;
+	}
+	
+	public String getCrListSearchContractCriteria() {
+		return CrListSearchContractCriteria;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchContractCriteria(String CrListSearchContractCriteria) {
+		this.CrListSearchContractCriteria = CrListSearchContractCriteria;
+	}
+	
+	public String getCrListSearchTypesDD() {
+		return CrListSearchTypesDD;
+	}
+	@SuppressWarnings("static-access")
+	public void setCrListSearchTypesDD(String CrListSearchTypesDD) {
+		this.CrListSearchTypesDD = CrListSearchTypesDD;
+	}
+	//end-13984 - CrList - Back Button
+	
 	//24893 - start
-		/**
-		 * check role user is requisitioner
-		 */
-		public boolean isRequisitioner() {
-			return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
-		}
-		//24893 - end
-		
+	/**
+	 * check role user is requisitioner
+	 */
+	public boolean isRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	//24893 - end
+	
 	//17087 - start
 	/**
 	 * Update delivery date based on delivery Term and uomCode.
