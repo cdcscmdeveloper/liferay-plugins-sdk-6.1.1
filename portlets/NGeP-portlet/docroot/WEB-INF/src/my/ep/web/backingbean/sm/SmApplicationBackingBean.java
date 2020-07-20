@@ -4758,8 +4758,10 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
 		
 		//#27308 - 13/03/2020 START
-		if(businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType())  
-				&& getManagedBean().getSelectedEquityCompany().isSsmData()){
+		if(getManagedBean().getSelectedEquityCompany().isSsmData()  
+				&& (businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType()) 
+				|| getManagedBean().getSelectedEquityCompany().getShareAmt() != null 
+				|| getManagedBean().getSelectedEquityCompany().getShareAmt().compareTo(BigDecimal.ZERO) == 0)){
 			throw new EpException(MessageConst.ERROR_722680);
 		}
 		//#27308 - 13/03/2020 END
