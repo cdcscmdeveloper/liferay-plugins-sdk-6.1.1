@@ -435,8 +435,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
 					
 					//start -26559
-					totalRecalledQty = chargeLineItem.getFlFulfilmentItem().getSumOrderedQty().subtract(chargeLineItem.getFlFulfilmentItem().getSumReceivedQty());
-					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(totalRecalledQty);
+					if(null !=chargeLineItem.getFlFulfilmentItem().getSumOrderedQty() && null !=chargeLineItem.getFlFulfilmentItem().getSumReceivedQty()){//28620
+						totalRecalledQty = chargeLineItem.getFlFulfilmentItem().getSumOrderedQty().subtract(chargeLineItem.getFlFulfilmentItem().getSumReceivedQty());
+						chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(totalRecalledQty);
+					}else{
+						chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty()); //28620
+					}
 					//end -26559
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
 				}
