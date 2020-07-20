@@ -4703,7 +4703,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	//24893 - end
-}
 	
 	/**
 	 * Add/display only cancel/reject button if SQ not valid 
