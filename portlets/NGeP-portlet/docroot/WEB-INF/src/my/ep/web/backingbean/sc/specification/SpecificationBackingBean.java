@@ -657,6 +657,56 @@ public class SpecificationBackingBean extends
 		}
 
 	}
+	
+	//Bug_28291
+	/**
+	 * Check financial and technical document mechanism validation
+	 
+	 * @param scqt
+	 *            (ScQt scqt).
+	 */
+	private void checkTechnicalAndFinancialSpec(ScQt scqt) {
+		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		if (null == technicalCheckList || technicalCheckList.isEmpty()) {
+			retriveTechnicalCheckList();
+		}
+
+		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+			for (ScQtCheckList checkList : technicalCheckList) {
+				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode()) && ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
+								.equalsIgnoreCase(checkList.getAction().getParameterCode()) &&
+								checkList.isScoringReq()) {
+						this.getManagedBean().setActiveIndex(2);
+						throw new EpException(MessageConst.ERROR_722661);
+				}
+			}
+
+		}
+		
+		List<ScQtCheckList> financialCheckList = this.getManagedBean()
+				.getScQtCheckSt2financeProposalList();
+		if (null == financialCheckList || financialCheckList.isEmpty()) {
+			retriveFinancialCheckList();
+		}
+
+		if (null != financialCheckList && !financialCheckList.isEmpty()) {
+			for (ScQtCheckList checkList : financialCheckList) {
+				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode()) && ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW
+								.equalsIgnoreCase(checkList.getAction().getParameterCode()) &&
+								checkList.isScoringReq()) {
+						this.getManagedBean().setActiveIndex(3);
+						throw new EpException(MessageConst.ERROR_722661);
+				}
+			}
+
+		}
+
+	}
 
 	/**
 	 * Checks if is financial spec.Check Financial Specs is Existing or not.
@@ -10803,6 +10853,9 @@ public class SpecificationBackingBean extends
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					//Bug_28291
+					checkTechnicalAndFinancialSpec(this.getManagedBean().getQt());
+					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
 						boolean technical = validateTechnicalStandardCheckListSubmit();
