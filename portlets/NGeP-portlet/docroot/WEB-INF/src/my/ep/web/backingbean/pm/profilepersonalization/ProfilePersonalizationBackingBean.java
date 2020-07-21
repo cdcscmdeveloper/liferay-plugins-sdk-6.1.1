@@ -1647,16 +1647,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	
 	//26238 - start
 	public void preRenderDisciplinaryAction() {
-		//26238 -  START Disciplinary Action - 28111
+		//26238 -  START Disciplinary Action - 28111,28496
 		logger.info("preRenderDisciplinaryAction");
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
 		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		renewSesionObject();
-		FacesScopes facesScopes = new FacesScopes();
-		FacesContext fc = FacesContext.getCurrentInstance();
+
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(this.getManagedBean().getSmSupplier());
+		renewSesionObject(); 
+		FacesScopes facesScopes = new FacesScopes();
+		FacesContext fc = FacesContext.getCurrentInstance();  
 		long startTime = System.currentTimeMillis();
 		try {
 			if(docNo != null && !"".equalsIgnoreCase(docNo) && !"null".equalsIgnoreCase(docNo)){
@@ -1671,6 +1673,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				this.getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
 				reqDTO.setSupplier(srcAppl.getSmSupplier());
 				
+			} else if(reqDTO.getSupplier() != null){ 
+				logger.info("----------------------preRenderDisciplinaryAction from site visit----------------"); 
+
+				retrieveDisciplinaryAction(reqDTO.getSupplier());
+				this.getManagedBean().setSmSupplier(reqDTO.getSupplier()); 
 			}else{
 				PmUser sUsers = facesScopes.getUserSessionBean();						
 				if (sUsers != null){
@@ -1690,9 +1697,12 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				}
 				
 				if(getManagedBean().getCurrentProfile() != null){
-					if(getManagedBean().getCurrentProfile().getSmSupplier() != null)
+					if(reqDTO.getSupplier() != null){ 
+						this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
+					}else if(getManagedBean().getCurrentProfile().getSmSupplier() != null){
 						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
-					this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+						this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
+					}
 				}
 				
 				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
@@ -1711,7 +1721,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
-							.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+							.getMsgFromMsgUtils(MessageConst.ERROR_770045, 	null)));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
 		//26238 -  End Disciplinary Action - 28111
