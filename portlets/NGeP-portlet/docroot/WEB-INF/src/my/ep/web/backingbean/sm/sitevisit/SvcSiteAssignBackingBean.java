@@ -23,10 +23,12 @@ import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
@@ -42,7 +44,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.SmSvcAssignmentVO;
+import my.ep.web.vo.SmSvcAssignmentVO; 
+import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.pm.profilepersonalization.ProfilePersonalizationBackingBean;
 
 @ManagedBean(name = "svcSiteAssignBackingBean")
 @RequestScoped
@@ -68,6 +72,8 @@ public class SvcSiteAssignBackingBean extends
 	 */
 	public void retrieveSiteAssignInfo(Long applId) {
 		this.getManagedBean().setAppId(applId);
+		
+		
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
@@ -75,7 +81,12 @@ public class SvcSiteAssignBackingBean extends
 		log.info("----------------------retrieveSiteAssignInfo----------------" + this.getManagedBean().getAppId());
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
-		
+		//26238 -  Start Disciplinary Action - 28496
+		log.info("----------------------preRenderDisciplinaryAction----------------"); 
+		ProfilePersonalizationBackingBean profilepersonalization = new  ProfilePersonalizationBackingBean();
+		profilepersonalization.getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
+		profilepersonalization.preRenderDisciplinaryAction(); 
+		//26238 -  End Disciplinary Action - 28496
 		constructSvTaskWithSVOList(resDTO.getSmAppl());	
 		/*if(resDTO.getSmAppl().getSmApplSectionReviews() != null){
 			setPoRemarkToSVC(resDTO.getSmAppl().getSmApplSectionReviews());
