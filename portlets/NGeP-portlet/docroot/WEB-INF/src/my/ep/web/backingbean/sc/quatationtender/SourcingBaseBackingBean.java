@@ -4592,8 +4592,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 
-				// #25729 #174
-				if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0))
+				// #25729 #174			 
+				if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0))
 				{
 					return Boolean.TRUE;
 				}
