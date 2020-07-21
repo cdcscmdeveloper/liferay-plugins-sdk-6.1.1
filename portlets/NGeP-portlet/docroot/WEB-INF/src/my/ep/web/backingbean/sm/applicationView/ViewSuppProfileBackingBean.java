@@ -177,11 +177,13 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setMofSupplier(true);
 		}
 		
-		// 28342 : Disciplinary Action - start
+		// 28342 : Disciplinary Action - start, 28630 : Add additional role - start
 		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+			// 28630 : Add additional role - end
 			getManagedBean().setDisableDownloadButtonDAHistory(true);
 		}
 		//	28342 : Disciplinary Action - end
@@ -449,11 +451,13 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setMofSupplier(true);
 		}
 		
-		// 28342 : Disciplinary Action - start
+		// 28342 : Disciplinary Action - start, 28630 : Add additional role
 		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+			// 28630 : Add additional role - end
 			getManagedBean().setDisableDownloadButtonDAHistory(true);
 		}
 		
