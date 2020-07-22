@@ -742,7 +742,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					smDisciplinaryAction.getEndDate()));
 			disciplinaryActionVO.setRemarks(smDisciplinaryAction.getRemark());
 			
-			if(smDisciplinaryAction.isCancelCategory()){
+			if(smDisciplinaryAction.isCancelCategory()
+					|| smDisciplinaryAction.isManufacturerCancel() 
+						|| smDisciplinaryAction.isBumiputeraCancel())/*28640 (add if new condition)*/{
 				List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
 				
 				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
@@ -790,6 +792,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
 				}
 			}
+			//28640 - start
+			List<DisciplinaryActionVO> remarkList = new ArrayList<DisciplinaryActionVO>();
+			DisciplinaryActionVO remark = new DisciplinaryActionVO();
+			remark.setRemarks(disciplinaryActionVO.getRemarks());
+			remarkList.add(remark);
+			disciplinaryActionVO.setRemarksList(remarkList);
+			//28640 - end
 			disciplinaryActionVOs.add(disciplinaryActionVO);
 		}
 		
