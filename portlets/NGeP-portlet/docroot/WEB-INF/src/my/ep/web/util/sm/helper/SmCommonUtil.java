@@ -4106,7 +4106,10 @@ public class SmCommonUtil {
 		if (appl.getSupplierType().equals("J")) {
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setApplId(appl.getApplId());
-			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+			//START 24964
+			reqDTO.setCategoryCode(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);		
+			reqDTO.setActiveAppl(appl.isActiveAppl());
+			//END 24964
 			int count = SmServiceLookup.getMofRegistrationSO()
 					.countSuppCatByApplIdAndCatCode(reqDTO).getCount();
 			if (count > 0) {
