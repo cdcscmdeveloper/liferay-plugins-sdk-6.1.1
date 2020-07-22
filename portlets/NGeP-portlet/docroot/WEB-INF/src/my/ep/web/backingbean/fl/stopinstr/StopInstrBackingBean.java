@@ -375,11 +375,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				flStopInstrItemList = new ArrayList<FlStopInstrItem>();
 			}
 			flStopInstrItemList.add(flStopInstrItem);
-			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId()+flStopInstrItem.getFlFulfilmentItem().getFulfilmentItemId(), flStopInstrItemList); //#26559
+			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId(), flStopInstrItemList);
 		}
 		
 		BigDecimal totalRecalledAmt = new BigDecimal(0);
-		BigDecimal totalRecalledQty = new BigDecimal(0); //26559
 		List<String> flFulfilmentItemIds = null;
 		
 		for(Entry<String, List<FlStopInstrItem>> itemEntry : siItemsMap.entrySet()){
@@ -387,11 +386,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FlStopInstrItem flsiItem = (FlStopInstrItem) stopInstrItems.get(0).cloneEntity(); 
 			flsiItem.setFlFulfilmentItem((FlFulfilmentItem)flsiItem.getFlFulfilmentItem().cloneEntity());
 			flsiItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode()+flsiItem.getFlFulfilmentItem().getFulfilmentItemId(), flsiItem, getManagedBean().getChargeLineItemRoot()); //26559
+			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode(), flsiItem, getManagedBean().getChargeLineItemRoot());
 			
 			totalRecalledAmt = new BigDecimal(0);
-			totalRecalledQty = new BigDecimal(0);//26559
-			
 			flFulfilmentItemIds = new ArrayList<String>();
 			
 			for(FlStopInstrItem chargeLineItem : stopInstrItems) {
@@ -401,11 +398,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				} else {
 					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+""+chargeLineItem.getFlFulfilmentItem().getPmUomId());
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-					
-					//start -26559
-					totalRecalledQty = chargeLineItem.getFlFulfilmentItem().getSumOrderedQty().subtract(chargeLineItem.getFlFulfilmentItem().getSumReceivedQty());
-					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(totalRecalledQty);
-					//end -26559
+					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty());
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
 				}
 				
