@@ -433,15 +433,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				} else {
 					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+""+chargeLineItem.getFlFulfilmentItem().getPmUomId());
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-					
+
 					//start -26559
-					if(null !=chargeLineItem.getFlFulfilmentItem().getSumOrderedQty() && null !=chargeLineItem.getFlFulfilmentItem().getSumReceivedQty()){//28620
-						totalRecalledQty = chargeLineItem.getFlFulfilmentItem().getSumOrderedQty().subtract(chargeLineItem.getFlFulfilmentItem().getSumReceivedQty());
-						chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(totalRecalledQty);
-					}else{
-						chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty()); //28620
-					}
+					totalRecalledQty = (chargeLineItem.getFlFulfilmentItem().getSumOrderedQty()!=null? chargeLineItem.getFlFulfilmentItem().getSumOrderedQty(): BigDecimal.ZERO).subtract((chargeLineItem.getFlFulfilmentItem().getSumReceivedQty()!=null? chargeLineItem.getFlFulfilmentItem().getSumReceivedQty(): BigDecimal.ZERO));//28620
+					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(totalRecalledQty);
 					//end -26559
+					
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
 				}
 				
