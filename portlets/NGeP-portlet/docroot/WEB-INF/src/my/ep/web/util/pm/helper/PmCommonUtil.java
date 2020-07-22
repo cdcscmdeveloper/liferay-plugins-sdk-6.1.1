@@ -2838,5 +2838,15 @@ public class PmCommonUtil implements Serializable{
 		UserResDTO resDTO = userSO.findUserRoleByUserRoleId(reqDTO);
 		return resDTO.getUserRole();
 	}
+	
+	/* 27827 - START */
+	public static PmOrgProfile retrieveOrgProfileDtlByName(String name) {
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgName(name);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileByName(reqDTO);
+		return orgResDTO.getPmOrgProfile();
+	}
+	/* 27827 - END */
 
 }

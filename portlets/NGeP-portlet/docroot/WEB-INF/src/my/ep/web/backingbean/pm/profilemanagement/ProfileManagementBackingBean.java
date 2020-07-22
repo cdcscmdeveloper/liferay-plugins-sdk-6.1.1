@@ -2253,10 +2253,29 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 				/* 27827 - START */
-				PmOrgProfile orgProfileDetailById = PmCommonUtil.retrievePmOrgProfileDtl(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId());
-				Long zone = orgProfileDetailById.getPmZone().getZoneId();
+				Long zone = null;
 				
-				if(zone != 1) {
+				if(getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null) {
+					PmOrgProfile orgProfileDetailById = PmCommonUtil.retrievePmOrgProfileDtl(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId());
+					
+					if(orgProfileDetailById != null){
+						if(orgProfileDetailById.getOrgTypeCode().getParameterId() == 5){
+							if (orgProfileDetailById.getPmZone() != null) {
+								zone = orgProfileDetailById.getPmZone().getZoneId();
+							} else {
+								zone = null;
+							}
+							
+							logger.info("getRoleBeanData zone : " + zone);
+							
+							if(zone==null || zone==2 || zone==3) {
+								selectedRolesToExclude.add(RoleCode.MOF_DESK_OFFICER.value());
+							}
+						}
+					} else {
+						selectedRolesToExclude.add(RoleCode.MOF_DESK_OFFICER.value());
+					}
+				} else {
 					selectedRolesToExclude.add(RoleCode.MOF_DESK_OFFICER.value());
 				}
 				/* 27827 - END */
@@ -4746,13 +4765,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public String retrieveOrgName(PmOrgProfile orgProfile) {
 		String orgName = null;
 		if (orgProfile != null) {
-			if (ParameterConst.ORG_TYPE_SUPPLIER.equals(orgProfile.getOrgTypeCode().getParameterCode())) {
-				orgName = orgProfile.getSmSupplier().getCompanyName();
-			} else if (ParameterConst.ORG_TYPE_FACTORING.equals(orgProfile.getOrgTypeCode().getParameterCode())) {
-				orgName = orgProfile.getPmFinancialOrg().getFinOrgName();
+			/* 27827 - START */
+			if (orgProfile.getOrgTypeCode() != null) {
+				if (ParameterConst.ORG_TYPE_SUPPLIER.equals(orgProfile.getOrgTypeCode().getParameterCode())) {
+					orgName = orgProfile.getSmSupplier().getCompanyName();
+				} else if (ParameterConst.ORG_TYPE_FACTORING.equals(orgProfile.getOrgTypeCode().getParameterCode())) {
+					orgName = orgProfile.getPmFinancialOrg().getFinOrgName();
+				} else {
+					orgName = orgProfile.getPmOrgValidity().getOrgName();
+				}
 			} else {
-				orgName = orgProfile.getPmOrgValidity().getOrgName();
+				orgName = "";
 			}
+			/* 27827 - END */
 		}
 
 		return orgName;
@@ -4888,6 +4913,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void searchRoleMatrix() {
 		IRoleSO roleSO = null;
 		UserProfilesSearchBean searchBean = getManagedBean().getUserProfileSearchBean();
+		/* 27827 - START */
+		List<String> selectedRolesToExclude = new ArrayList<String>();
+		/* 27827 - END */
 		if (searchBean.getSelectedRoleOptionSearch() == null
 				&& StringUtils.isNotBlank(searchBean.getUserRoleNameSearch())) {
 			throw new EpException(MessageConst.ERROR_100060);
@@ -4900,6 +4928,43 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				searchBeanData.getDataFilterBeans().add(new SearchFilterBean("roleName",
 						SearchOperator.OPERATOR_LIKE.value(), searchBean.getUserRoleNameSearch(), true));
 			}
+			
+			/* 27827 - START */
+			Long zone = null;
+			String orgName = retrieveOrgName(getManagedBean().getSelectedOrgProfile());
+			
+			if (StringUtils.isNotBlank(orgName)) {
+				PmOrgProfile orgProfileDetailByName = PmCommonUtil.retrieveOrgProfileDtlByName(orgName);
+				
+				if(orgProfileDetailByName != null) {
+					PmOrgProfile orgProfileDetailById = PmCommonUtil.retrievePmOrgProfileDtl(orgProfileDetailByName.getOrgProfileId());
+					
+					if(orgProfileDetailById.getOrgTypeCode().getParameterId() == 5){
+						if (orgProfileDetailById.getPmZone() != null) {
+							zone = orgProfileDetailById.getPmZone().getZoneId();
+						} else {
+							zone = null;
+						}
+						
+						logger.info("searchRoleMatrix zone : " + zone);
+						
+						if(zone==null || zone==2 || zone==3) {
+							selectedRolesToExclude.add(RoleCode.MOF_DESK_OFFICER.value());
+						}
+					}
+				} else {
+					selectedRolesToExclude.add(RoleCode.MOF_DESK_OFFICER.value());
+				}
+			}
+			
+			if (!selectedRolesToExclude.isEmpty()) {
+				logger.info("remove selected roles");
+				SearchFilterBean selectedRole = new SearchFilterBean(SearchOperator.OPERATOR_NOT_IN.value());
+				selectedRole.setSearchField("pmRole.roleCode");
+				selectedRole.setSearchValue(selectedRolesToExclude);
+				searchBeanData.getDataFilterBeans().add(selectedRole);
+			}
+			/* 27827 - END */
 
 			RoleReqDTO roleReqDTO = new RoleReqDTO();
 			roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
