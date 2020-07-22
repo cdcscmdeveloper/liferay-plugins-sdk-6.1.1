@@ -91,6 +91,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put("MOF Registration Cancellation", "mof-application");
 			temp.put("MOF Application Cancellation", "mof-application");
 			temp.put("User Add Additional", "soft-cert-payment");
+			temp.put("User Add Additional", "soft-cert-payment");
 
 			// s1 module
 			temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE,
@@ -449,6 +450,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 					+ SCProcessNameConst.FINALISE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
+			
+			// #27502 - Start 
+			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+					+ SCProcessNameConst.MOF_FINALIZATION,
+					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
+			// #27502 - End 
+			
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 					+ SCProcessNameConst.FINALISE_BPK,
 					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
