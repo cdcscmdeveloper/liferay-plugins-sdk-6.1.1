@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+    
+    
 	<p:panel id="agencyId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.agency']}" />
@@ -25,6 +26,8 @@
 
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
 			widgetVar="tableAgencyWidget"
+			editable="true" 
+			editMode="cell"
 			value="#{ctBackingBean.managedBean.contractVer.ctAgencies}"
 			selectionMode="single" rowKey="#{agencyData}"
 			selection="#{ctBackingBean.managedBean.selectedAgency}"
@@ -88,61 +91,69 @@
 				<h:outputText  value="#{agencyData.orgProfile.orgCode}" style="float:left;text-align:left;"/>
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
-
-			<p:column style="width:10%;white-space:normal;">
-				<f:facet name="header" styleClass="column-align-center">
+			
+			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages" />			
+			 <p:column style="width:10%;white-space:normal;">
+			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}" />
-				</f:facet>
-				<p:inputText value="#{agencyData.ceilingAmount}" required="true"
-					label="#{lbl['lbl.ct.ceiling.amount']}"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails
-           		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
-					style="width:80px;" maxlength="23" styleClass="ppRightBtn"
-					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					<p:ajax event="change"
-						update=":form:tableAgencyDetails,:form:messages"
-						listener="#{ctBackingBean.validateCeilingAmount(agencyData)}"
-						process="@all" partialSubmit="true" />
-				</p:inputText>
-				<h:outputText value="#{agencyData.ceilingAmount}"
-					style="float:right;text-align:right;"
-					rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>
-
+			 </f:facet>
+               <p:cellEditor>           
+                 
+                    <f:facet name="input"><p:inputText id="modelInput" value="#{agencyData.ceilingAmount}" style="width:80px" maxlength="23" label="#{lbl['lbl.ct.ceiling.amount']}"			
+				     disabled="#{ctBackingBean.managedBean.disableAmendDetails
+           		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}" 
+					 styleClass="ppRightBtn"
+					 rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/></f:facet>
+					
+					 <f:facet name="output"><h:outputText value="#{agencyData.ceilingAmount}">
+                     <f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
+					   </h:outputText></f:facet>
+               </p:cellEditor>
+                    <h:outputText value="#{agencyData.ceilingAmount}" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+                       <f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
+					</h:outputText>
+              <p:commandButton value="" icon="ui-icon-edit"  style="background-color:transparent !important; border:0px none;"/>
+           </p:column>
+			
 			<p:column rowspan="2" style="width:8%;"
 				styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.effective.date']}"
 						styleClass="required" />
 				</f:facet>
-				<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"
-					navigator="true" size="6" readonlyInput="true"
-					mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}"
-					maxdate="#{agencyData.expDate}"
-					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
-					showOn="button"
-					disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<p:ajax event="dateSelect" update="agenyStatus"
-						listener="#{ctBackingBean.checkAgencyStatus(agencyData)}" />
-				</p:calendar>
-
-				<h:outputText value="#{agencyData.effDate}"
-					rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
+				     
+		           <p:cellEditor>
+                       <f:facet name="input">
+				            <p:calendar id="agencyDateActive" value="#{agencyData.effDate}"
+					           navigator="true" size="6" readonlyInput="true"
+					           mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}"
+					           maxdate="#{agencyData.expDate}"
+					           rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
+				               showOn="button"
+					           disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
+					           pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					           <p:ajax event="dateSelect" update="agenyStatus"
+						       listener="#{ctBackingBean.checkAgencyStatus(agencyData)}" />
+				            </p:calendar>
+				        </f:facet>
+				     <f:facet name="output">				    
+				     <h:outputText value="#{agencyData.effDate}">				  					
+					          <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					           </h:outputText>				             
+			        </f:facet>
+				   </p:cellEditor>
+				    <h:outputText value="#{agencyData.effDate}" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">				  					
+					          <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+					           </h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"
 				styleClass="column-align-center">
 				<h:outputText value="#{agencyData.expDate}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 
@@ -165,7 +176,7 @@
 					style="float:none" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.ct.status.org.validity']}"
+			  <p:column headerText="#{lbl['lbl.ct.status.org.validity']}"
 				style="width:6%;white-space:normal;"
 				styleClass="column-align-center">
 				<h:outputText id="agencyPmOrgValidityStatus"
@@ -200,15 +211,14 @@
 		</div>
 		<br />
 		<br />
+		
 		<h:panelGroup id="panelCtSharingAttach">
 			<p:outputPanel id="uploadSharingDoc" >
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.ct.instruction.add.agency.doc']}" escape="false"
 					rendered="#{!ctBackingBean.managedBean.disableAgent}" />
 				<br />
-				<br />			
-				
-				
+				<br />							
 				<table style="width: 100%">
 					<tr>
 						<td class="TableFieldLeft" width="15%">
@@ -272,7 +282,6 @@
 
 			</p:outputPanel>
 		</h:panelGroup>
-		
 		
 		
 		<p:confirmDialog id="dlgDelid" widgetVar="dlgAgenyDel"
