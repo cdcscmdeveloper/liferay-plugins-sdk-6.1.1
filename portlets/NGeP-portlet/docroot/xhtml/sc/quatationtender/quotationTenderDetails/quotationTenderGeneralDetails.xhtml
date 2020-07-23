@@ -835,6 +835,27 @@
 				</tr>
 		</table>
 	</p:panel>
+<!-- #25729 #174 START -->	
+ 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="conf20k" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.enableJustificationProValue(true)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="decline20k" 
+				value="#{lbl['lbl.btn.no']}" 
+				action="#{createQtBB.enableJustificationProValue(false)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				process="@this"
+				update="@form"/>
+		</div>
+	</p:confirmDialog> 	
+<!-- #25729 #174 END -->
 	
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
@@ -863,26 +884,29 @@
 				oncomplete="panelApprovalDlgs.hide();" />
 		</div>
 	</p:dialog>
-												
- 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
- 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+	<ui:remove> - #25729 #174 START - Ruzaimah comment below	
+	<p:dialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
+		header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
 		resizable="false" closable="false">
-		<div align="right">
-			<p:commandButton id="conf20k" 
-				value="#{lbl['lbl.btn.yes']}" 
-				actionListener="#{createQtBB.enableJustificationProValue(true)}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				update="@form"
-				process="@this"/>
-			<p:commandButton id="decline20k" 
-				value="#{lbl['lbl.btn.no']}" 
+		<table>
+			<tr>
+				<td align="center">
+					<h:graphicImage value="/css/images/design/exclamation.png" /> 
+					<p:outputLabel value="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}" />
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+				partialSubmit="true" update="@form"
+				action="#{createQtBB.enableJustificationProValue(true)}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
+				partialSubmit="true" update="@form"
 				actionListener="#{createQtBB.enableJustificationProValue(false)}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				process="@this"
-				update="@form"/>
+				oncomplete="proceedBelowQtValueDlgs.hide();" />
 		</div>
-	</p:confirmDialog> 	
-<!-- #25729 #174 END -->
-	
+	</p:dialog>
+ </ui:remove>
+ 	
 </ui:composition>
