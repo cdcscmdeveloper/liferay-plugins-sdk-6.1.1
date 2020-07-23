@@ -106,16 +106,18 @@
 					 styleClass="ppRightBtn"
 					 rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/></f:facet>
 					
-					 <f:facet name="output"><h:outputText value="#{agencyData.ceilingAmount}">
+					 <f:facet name="output"><h:outputText value="#{agencyData.ceilingAmount}" style="float:right;text-align:right;">
                      <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
 					   </h:outputText></f:facet>
                </p:cellEditor>
-                    <h:outputText value="#{agencyData.ceilingAmount}" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+                    <h:outputText value="#{agencyData.ceilingAmount}" 
+                     style="float:right;text-align:right;"
+                     rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
                        <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
 					</h:outputText>
-              <p:commandButton value="" icon="ui-icon-edit"  style="background-color:transparent !important; border:0px none;"/>
+              <p:commandButton value="" icon="ui-icon-edit"  style="background-color:transparent !important; border:0px none; float:right;text-align:right;"/>
            </p:column>
 			
 			<p:column rowspan="2" style="width:8%;"
