@@ -144,6 +144,10 @@ import org.primefaces.model.TreeNode;
 public class QTCloneBackingbean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * test only
+	 */
+	
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCloneBackingbean.class);

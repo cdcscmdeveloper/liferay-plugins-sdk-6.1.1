@@ -106,6 +106,10 @@ import org.springframework.beans.BeanWrapperImpl;
 public class QtSpecCloneBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * test only
+	 */
+	
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCloneBackingbean.class);
