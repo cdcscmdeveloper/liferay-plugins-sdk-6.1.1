@@ -2200,19 +2200,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//getAllUpdateReasons(ppPlan);
 							
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)) {
+					//24975 - Start
+				  if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+					//24975 - End
 					updateReasons = getAllUpdateReasons(ppPlan);
 					if (updateReasons != null && 
 							!updateReasons.isEmpty()) {
 						log.info("size of allUpdateReasons= "+updateReasons.size());
 						reqDTO.setUpdateReasonList(updateReasons);
-					}
-					
-					else {
+					}else{
 					   throw new EpException(MessageConst.ERROR_730035);
 				    }
-					
-					
+					//24975 - Start
+				}else{
+					//Expenditure..
 				}
+				//24975 - End
+			  }
 			}
 
 			
@@ -5172,20 +5176,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 			}
-			else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
-				for (PpExpenditureItem ppExpenditureItem : ppPlan.getPpExpenditureItems()){
-					if (ppExpenditureItem.getPpUpdateReason() != null && 
-							!ppExpenditureItem.getPpUpdateReason().isEmpty()) {
-						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
-						if (rejectReason != null &&
-								!StringUtils.isBlank(rejectReason.getReasonDesc())) { //&& rejectReason.isBrandNew() add this for phase 2
-							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
-							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
-							rejectReasons.add(rejectReason);
-						}
-					}
-				}
-			}
+//			else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+//				for (PpExpenditureItem ppExpenditureItem : ppPlan.getPpExpenditureItems()){
+//					if (ppExpenditureItem.getPpUpdateReason() != null && 
+//							!ppExpenditureItem.getPpUpdateReason().isEmpty()) {
+//						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
+//						if (rejectReason != null &&
+//								!StringUtils.isBlank(rejectReason.getReasonDesc())) { //&& rejectReason.isBrandNew() add this for phase 2
+//							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
+//							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+//						rejectReasons.add(rejectReason);
+//					}
+//				}
+//				}
+//			}
 		}
 		log.info("updateReasons:"+updateReasons);
 		return updateReasons;
