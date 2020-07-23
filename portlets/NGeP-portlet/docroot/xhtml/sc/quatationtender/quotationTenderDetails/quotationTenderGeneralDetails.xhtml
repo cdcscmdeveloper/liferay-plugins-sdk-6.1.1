@@ -864,42 +864,23 @@
 		</div>
 	</p:dialog>
 												
-<ui:remove> - #25729 #174 START - Ruzaimah comment below	
-	<p:dialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
-		header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
-		resizable="false" closable="false">
-		<table>
-			<tr>
-				<td align="center">
-					<h:graphicImage value="/css/images/design/exclamation.png" /> 
-					<p:outputLabel value="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}" />
-				</td>
-			</tr>
-		</table>
-		<p:spacer height="1" />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-				partialSubmit="true" update="@form"
-				action="#{createQtBB.enableJustificationProValue(true)}" />
-			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
-				partialSubmit="true" update="@form"
-				actionListener="#{createQtBB.enableJustificationProValue(false)}"
-				oncomplete="proceedBelowQtValueDlgs.hide();" />
-		</div>
-	</p:dialog>
- #25729 #174 Ruzaimah replace above to below </ui:remove>
  	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
  		header="#{lbl['lbl.sc.confirmation']}"
 		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
 		resizable="false" closable="false">
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-				partialSubmit="true" update="@form"
-				action="#{createQtBB.enableJustificationProValue(true)}" />
-			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
-				partialSubmit="true" update="@form"
+			<p:commandButton id="conf20k" 
+				value="#{lbl['lbl.btn.yes']}" 
+				actionListener="#{createQtBB.enableJustificationProValue(true)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="decline20k" 
+				value="#{lbl['lbl.btn.no']}" 
 				actionListener="#{createQtBB.enableJustificationProValue(false)}"
-				oncomplete="proceedBelowQtValueDlgs.hide();" />
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				process="@this"
+				update="@form"/>
 		</div>
 	</p:confirmDialog> 	
 <!-- #25729 #174 END -->
