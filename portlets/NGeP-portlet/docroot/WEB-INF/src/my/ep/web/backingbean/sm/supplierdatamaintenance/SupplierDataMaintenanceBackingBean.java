@@ -170,6 +170,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSmAppl(SmServiceLookup.getSupplierSearchSO().retrieveSmApplWithChildByApplID(supplierSearchReqDTO).getSmAppl());
 		}
 		log.info("Appl ID : " + getManagedBean().getSmAppl().getApplId());
+		//28623 - start
+		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == 5){
+			throw new EpException(MessageConst.ERROR_775154);
+		}
+		//28623 - end
+		
 		//27437 : Disciplinary Action - end
 		initStep0BaseInfo(getManagedBean().getSmAppl());
 		initStep1CompanyInfo();
