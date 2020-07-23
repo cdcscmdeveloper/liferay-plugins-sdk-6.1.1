@@ -57,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -2062,7 +2063,12 @@ public class SupportDocumentBackingBean extends
 		// #26666 - start
 		PmUser user = new FacesScopes().getUserSessionBean();
 		log.info("userId == " + user.getUserId() + "| userName == " + user.getUserName());
+
+		if (user != null) {
+			new LogKey(user.getUserId());
+		}
 		// #26666 - end
+
 		DocumentReqDTO reqDTO = null;
 		DocumentResDTO resDTO = null;
 		IDocumentSO reqSO = null;
@@ -2085,14 +2091,15 @@ public class SupportDocumentBackingBean extends
 
 			// #26666 - start
 			if (createAction) {
-				System.out.println("1. getUserId = " + user.getUserId());
+				System.out.println("1. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				pmDocument.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
 			} else {
-				System.out.println("2. getUserId = " + user.getUserId());
+				System.out.println("2. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				messageId = MessageConst.TD_80801;
 			}
-			pmDocument.setChangedBy(user.getUserId());
+			log.info("setChangedBy|| userId == " + user.getUserId() + "| userName == " + user.getUserName());
+			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
 			// #26666 - end
 
 			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg()
