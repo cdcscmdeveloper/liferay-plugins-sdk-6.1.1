@@ -1464,17 +1464,17 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
 				//26238 -  Disciplonary action - 28146 - start
-				getManagedBean().setCancelRegistration(true);
-				getManagedBean().setFlagBlacklistCancel(true);
+				/*getManagedBean().setCancelRegistration(true);
+				getManagedBean().setFlagBlacklistCancel(true);*/
 				//26238 -  Disciplonary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 				
 				//26238 -  Disciplonary action - 28146 - start
-				if(getManagedBean().isFlagBlacklistCancel()){
+				/*if(getManagedBean().isFlagBlacklistCancel()){
 					getManagedBean().setCancelRegistration(false);
 					getManagedBean().setFlagBlacklistCancel(false);
-				}
+				}*/
 				//26238 -  Disciplonary action - 28146 - end
 			}
 
