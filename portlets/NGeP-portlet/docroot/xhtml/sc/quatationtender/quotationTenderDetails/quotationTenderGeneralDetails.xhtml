@@ -886,6 +886,27 @@
 				</tr>
 		</table>
 	</p:panel>
+<!-- #25729 #174 START -->	
+ 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
+ 		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		resizable="false" closable="false">
+		<div align="right">
+			<p:commandButton id="conf20k" 
+				value="#{lbl['lbl.btn.yes']}" 
+				action="#{createQtBB.enableJustificationProValue(true)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="decline20k" 
+				value="#{lbl['lbl.btn.no']}" 
+				action="#{createQtBB.enableJustificationProValue(false)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				process="@this"
+				update="@form"/>
+		</div>
+	</p:confirmDialog> 	
+<!-- #25729 #174 END -->
 	
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
@@ -938,26 +959,6 @@
 				oncomplete="proceedBelowQtValueDlgs.hide();" />
 		</div>
 	</p:dialog>
- #25729 #174 Ruzaimah replace above to below </ui:remove>
- 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
- 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
-		resizable="false" closable="false">
-		<div align="right">
-			<p:commandButton id="conf20k" 
-				value="#{lbl['lbl.btn.yes']}" 
-				actionListener="#{createQtBB.enableJustificationProValue(true)}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				update="@form"
-				process="@this"/>
-			<p:commandButton id="decline20k" 
-				value="#{lbl['lbl.btn.no']}" 
-				actionListener="#{createQtBB.enableJustificationProValue(false)}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				process="@this"
-				update="@form"/>
-		</div>
-	</p:confirmDialog> 	
-<!-- #25729 #174 END -->
-	
+ </ui:remove>
+ 	
 </ui:composition>
