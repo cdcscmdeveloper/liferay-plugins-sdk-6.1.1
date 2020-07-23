@@ -944,13 +944,18 @@
 		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
 		resizable="false" closable="false">
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-				partialSubmit="true" update="@form"
-				action="#{createQtBB.enableJustificationProValue(true)}" />
-			<p:commandButton value="#{lbl['lbl.btn.no']}" process="@this"
-				partialSubmit="true" update="@form"
+			<p:commandButton id="conf20k" 
+				value="#{lbl['lbl.btn.yes']}" 
+				actionListener="#{createQtBB.enableJustificationProValue(true)}"
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				update="@form"
+				process="@this"/>
+			<p:commandButton id="decline20k" 
+				value="#{lbl['lbl.btn.no']}" 
 				actionListener="#{createQtBB.enableJustificationProValue(false)}"
-				oncomplete="proceedBelowQtValueDlgs.hide();" />
+				oncomplete="proceedBelowQtValueDlgs.hide()"
+				process="@this"
+				update="@form"/>
 		</div>
 	</p:confirmDialog> 	
 <!-- #25729 #174 END -->
