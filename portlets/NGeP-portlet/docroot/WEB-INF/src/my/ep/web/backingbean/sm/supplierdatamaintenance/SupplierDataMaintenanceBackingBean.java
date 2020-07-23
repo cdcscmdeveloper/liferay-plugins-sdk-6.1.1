@@ -171,7 +171,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		log.info("Appl ID : " + getManagedBean().getSmAppl().getApplId());
 		//28623 - start
-		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == 5){
+		if(getManagedBean().getSmAppl().getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS){
 			throw new EpException(MessageConst.ERROR_775154);
 		}
 		//28623 - end
