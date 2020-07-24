@@ -57,7 +57,10 @@
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
-						<h:outputText value="#{scQt.qtNo}" />
+						<p:commandLink process="@this" partialSubmit="true"
+							action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+							<h:outputText value="#{scQt.qtNo}" />
+						</p:commandLink>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.title']}">
@@ -93,6 +96,9 @@
 
 					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
 						<h:outputText value="#{DOMaintenanceBackingBean.getStatusDescById(scQt.qtStatus.statusId)}"/>
+					</p:column>
+						<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.committeeapprover']}" style="width:200px;white-space: normal;word-wrap: break-word;">
+						<h:outputText value="#{scQt.doMaintenanceApprover}"/>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.newDO']}" style="width:200px;">
