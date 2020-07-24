@@ -2559,7 +2559,9 @@ public class QTDocumentsBackingBean extends
 		String locationLevel = null;
 		boolean isLocLevel = false;
 		boolean isSubLocLevel = false;
-		if (qt.getZoneLocationLevel() != null) {
+		//20200724@asyrafhaziq - Bug #28645 - Start
+		if (qt.getZoneLocationLevel() != null &&  qt.isZonal()) {
+		//20200724@asyrafhaziq - Bug #28645 - End
 			if (ParameterConst.LOCATION_LEVEL_STATE.equals(qt
 					.getZoneLocationLevel().getParameterCode())) {
 				isLocLevel = true;
