@@ -98,6 +98,7 @@
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}" />
 			 </f:facet>
+			   
                <p:cellEditor>           
                  
                     <f:facet name="input"><p:inputText id="modelInput" value="#{agencyData.ceilingAmount}" style="width:80px" maxlength="23" label="#{lbl['lbl.ct.ceiling.amount']}"			
@@ -111,13 +112,15 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
 					   </h:outputText></f:facet>
                </p:cellEditor>
+             
                     <h:outputText value="#{agencyData.ceilingAmount}" 
                      style="float:right;text-align:right;"
                      rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
                        <f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					 					  
 					</h:outputText>
-              <p:commandButton value="" icon="ui-icon-edit"  style="background-color:transparent !important; border:0px none; float:right;text-align:right;"/>
+				    <p:commandButton value="" icon="ui-icon-edit"/>		
+                         
            </p:column>
 			
 			<p:column rowspan="2" style="width:8%;"
