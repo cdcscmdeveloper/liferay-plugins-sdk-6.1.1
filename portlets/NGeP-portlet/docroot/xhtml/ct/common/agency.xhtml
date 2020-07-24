@@ -111,6 +111,7 @@
                      <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					  
 					   </h:outputText></f:facet>
+					  
                </p:cellEditor>
              
                     <h:outputText value="#{agencyData.ceilingAmount}" 
@@ -119,7 +120,9 @@
                        <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />					 					  
 					</h:outputText>
-				    <p:commandButton value="" icon="ui-icon-edit"/>		
+					
+				    <p:commandButton value="" icon="ui-icon-edit"  style="background-color:transparent !important; border:0px none; float:right;"/>
+				    		
                          
            </p:column>
 			
