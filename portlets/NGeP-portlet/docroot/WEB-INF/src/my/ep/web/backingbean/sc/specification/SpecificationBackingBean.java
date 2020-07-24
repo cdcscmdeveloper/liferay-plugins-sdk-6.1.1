@@ -680,7 +680,7 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(checkList.getAction().getParameterCode()) &&
 								checkList.isScoringReq()) {
 						this.getManagedBean().setActiveIndex(2);
-						throw new EpException(MessageConst.ERROR_722661);
+						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
 			}
 
@@ -700,7 +700,7 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(checkList.getAction().getParameterCode()) &&
 								checkList.isScoringReq()) {
 						this.getManagedBean().setActiveIndex(3);
-						throw new EpException(MessageConst.ERROR_722661);
+						throw new EpException(MessageConst.ERROR_760513, new String[]{checkList.getTitle()});
 				}
 			}
 
