@@ -81,11 +81,17 @@
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
-							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}}" />
+							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}" />
 						<!-- bug #28278 -START -->
 						<h:outputText
-							value="#{lbl['lbl.sm.status.deleted1']} #{smSupplier.typeDisciplinaryAction}"
-							rendered="#{smSupplier.recordStatusFlg eq 9}" />
+							value="#{lbl['lbl.sm.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'C'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'B'}" />
+						<!-- <h:outputText
+							value="#{lbl['lbl.sm.status.deleted']}"
+							rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" /> --> 
 						<!-- bug #28278 -START -->
 					</p:column>
 					<!--#28273 -END 110620-->   
