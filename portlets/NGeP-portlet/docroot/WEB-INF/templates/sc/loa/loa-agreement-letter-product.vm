@@ -1455,14 +1455,45 @@ u {
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 								#end
-								#if ($tplspecQuestion.clAnswerRequired)
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">Yes</td>
-								#else
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">No</td>
-								#end
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clReviewRemark</td>
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+								
+									
 							#end
+							
+							<td bgcolor="#d0eaee">
+								#if ($tplspecQuestion.questionType == "S")
+									#if ($specType == "Techincal" || $specType == "Teknikal")
+										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%">
+												<tbody>
+												<tr>
+												#if ($tplSpecAnswer.feedback) 
+													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.feedback</td>
+												#end
+												</tr>
+												</tbody>
+											</table>
+										#end
+									#end
+								#end
+								</td>
+								
+								<td bgcolor="#d0eaee" >
+										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%">
+												<tbody>
+												<tr>
+													#if ($tplSpecAnswer.answerRemark) 
+														<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.answerRemark</td>
+													#else
+														<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
+												</tr>
+												</tbody>
+											</table>
+										#end
+								</td>
+							
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">$serviceScope</td>
 							</tr>
 							#end
 						
@@ -1812,14 +1843,44 @@ u {
 										<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clQuantity</td>
 									#end
 																		
-									#if ($tplspecQuestion.clAnswerRequired)
-										<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">Yes</td>
-									#else
-										<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">No</td>
+											
+							#end
+							
+							<td bgcolor="#d0eaee">
+								#if ($tplspecQuestion.questionType == "S")
+									#if ($specType == "Techincal" || $specType == "Teknikal")
+										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%">
+												<tbody>
+												<tr>
+												#if ($tplSpecAnswer.feedback) 
+													<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.feedback</td>
+												#end
+												</tr>
+												</tbody>
+											</table>
+										#end
 									#end
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clReviewRemark</td>
-									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px;">$serviceScope</td>
 								#end
+								</td>
+								
+								<td bgcolor="#d0eaee" >
+										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
+											<table width="100%">
+												<tbody>
+												<tr>
+													#if ($tplSpecAnswer.answerRemark) 
+														<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplSpecAnswer.answerRemark</td>
+													#else
+														<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+													#end
+												</tr>
+												</tbody>
+											</table>
+										#end
+								</td>
+							
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left"  style="text-align: left; padding-left: 5px;">$serviceScope</td>
 								</tr>
 								#end
 							
