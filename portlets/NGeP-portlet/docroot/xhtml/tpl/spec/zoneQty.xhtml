@@ -5,8 +5,19 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-	
-	<p:dataTable id="specZoneQtyTbl" 
+ <!-- START #21695 farid-->	
+<table style="width: 425px;">
+<tr>
+	<td>
+		<h:outputText style="float: left;" styleClass="instruction" escape="false" value="#{lbl['lbl.tpl.qty.instruction.tooltip']}" />
+		<h:outputText></h:outputText>
+	</td>
+</tr>
+
+<tr>
+	<td>
+<!-- END #21695 farid-->	
+		<p:dataTable id="specZoneQtyTbl" 
 		var="tplSpecZoneQty"
 		rowIndexVar="rowIndex"
 		value="#{templateSpecBean.selectedSpecQuestion.tplSpecZoneQties}"
@@ -30,11 +41,18 @@
 				<p:ajax partialSubmit="true" process="@this" 
 				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
 					update="@this, zoneQtyMsg, @(.calcAmount)" />
-				<ac:validateNumber
-					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
-					maxIntegerDigits="10" />
+ <!-- START #21695 farid-->	
+	  			<c:if test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
+	  				<ac:validateNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
+						maxIntegerDigits="10"/>
+				</c:if>
 			</p:inputText>
-			<p:message id="zoneQtyMsg" for="zoneQty" display="icon" />
-		</p:column>
-	</p:dataTable>
+				<p:message id="zoneQtyMsg" for="zoneQty" display="icon" />
+			</p:column>
+		</p:dataTable>
+	</td>
+</tr>
+</table>
+<!-- END #21695 farid-->
 </ui:composition>

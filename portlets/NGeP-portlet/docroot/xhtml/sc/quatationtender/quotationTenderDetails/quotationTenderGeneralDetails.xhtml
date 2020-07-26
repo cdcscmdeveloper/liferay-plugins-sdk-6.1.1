@@ -415,7 +415,7 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td colspan="3">
+				<td> <!-- START #21695 farid remove colspan="3"-->
 					<table>
 						<tr>
 							<td><c:choose>
@@ -436,12 +436,63 @@
 									</c:otherwise>
 								</c:choose></td>
 							<td style="margin-top: -3px"><ac:iconTooltip
-									value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-						</tr>
+								value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+<!-- START #21695 farid -->
+								</tr>
 					</table>
 				</td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td>
+							<c:choose>
+								<c:when test="#{qtStatusChecklistScoringAndBefore and !isReadOnly and scQt.brandNew}">
+										<p:outputPanel id="partialPop">
+													<p:selectOneRadio  value="#{scQt.partial}">
+														<f:selectItems
+															value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+														<p:ajax event="change" partialSubmit="true"
+															update="generalLocationList" process="@this" 
+															listener="#{createQtBB.partialChange}">
+														</p:ajax>
+														<p:ajax render="confirmDialog" ></p:ajax>
+													</p:selectOneRadio>
+										</p:outputPanel>			
+													<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmDialogWidgetVar">
+													<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+													action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
+													<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+													action="#{createQtBB.partialChangePopUpNo}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
+														<h:inputHidden id="rowIndex"></h:inputHidden>
+												</p:confirmDialog>
+									</c:when>
+									<c:otherwise>
+											<p:selectOneRadio  value="#{scQt.partial}" disabled="true" readonly="true">
+												<f:selectItems
+													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+											</p:selectOneRadio>
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td ><ac:iconTooltip value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
+						</tr>				
+					</table>
+				</td>
+				<tr>
+					<td colspan="3"></td>
+					<td>
+						<table>				
+							<tr>
+								<td style="width: 255px; float: left;">
+									<h:outputLabel styleClass="instruction" value="#{lbl['lbl.sc.spec.partial.info']}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 			</tr>
-
+<!-- END #21695 farid -->
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
