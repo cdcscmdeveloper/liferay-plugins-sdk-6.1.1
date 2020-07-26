@@ -3396,6 +3396,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 					TplSpecMaster master = null;
 					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+					// 26130 - Start
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 						if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
 							Iterator<TplSpecAnswer> iterator =  question.getTplSpecAnswers().iterator();
@@ -3425,6 +3426,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						constructTplSpecQuestion(dafaltValue,
 								newTplSpecQuestionsList, master, question);
 					}
+					// 26130 - End
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
 					masters.add(master);
 				}
