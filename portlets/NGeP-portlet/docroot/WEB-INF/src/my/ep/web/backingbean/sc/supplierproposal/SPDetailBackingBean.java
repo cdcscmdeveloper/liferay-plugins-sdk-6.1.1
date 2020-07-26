@@ -29,15 +29,16 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.EncryptDataBean;
-import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptColumnName;
 import my.ep.biz.bean.sc.EncryptDataBean.EncryptTableName;
+import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -60,6 +61,8 @@ import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -111,7 +114,9 @@ import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -131,6 +136,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -151,6 +157,7 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -1099,17 +1106,43 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
+//#21695 farid IN MONITORING START	
+								
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-								}else{
+								
+								}else if (specAnswer.getRatePerUom() != null
+											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+									answers.add(specAnswer);
+								
+								}else if (specAnswer.getRatePerUom() == null
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								answers.add(specAnswer);
+							
+								}else if (specAnswer.getRatePerUom() == null
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+								answers.add(specAnswer);
+							
+								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+								answers.add(specAnswer);
+							
+								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+								answers.add(specAnswer);
+//#21695 farid IN MONITORING END	
+							}else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
 									.getSpecAnswerList().size())){
-								throw new EpException(MessageConst.ERROR_760464);
+								for(TplSpecAnswer answerNullPrice : toDeleteZoneAnswers){
+										throw new EpException(MessageConst.ERROR_760464);
+								}
+								
 							} else if (!toDeleteZoneAnswers.isEmpty()) {
 								Set<TplSpecSuppAnswer> zoneSpecSuppAnswersSet = new HashSet<TplSpecSuppAnswer>();
 								for(TplSpecAnswer specAnswer :toDeleteZoneAnswers){
@@ -1131,13 +1164,21 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
-            	throw new EpException(MessageConst.ERROR_760463);	
+            	for(TplSpecAnswer answer:answers){
+//farid start #21695 to allow item has 0 qty and 0 price
+            	if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null){
+                	throw new EpException(MessageConst.ERROR_760463);
+            		}
+//farid end #21695            	
+            	}
 			} else {
             	for(TplSpecAnswer answer:answers){
 					if (isCompleted) {
-						if (answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)) {
+//farid start #21695 to allow item has 0 qty and 0 price
+						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null) {
 							throw new EpException(MessageConst.ERROR_760464);
 						}
+//farid end #21695
 					}
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
@@ -1226,7 +1267,7 @@ public class SPDetailBackingBean extends
 		ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 		ProposalResDTO proposalResDTO = new ProposalResDTO();
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean().getTechnicalQtProposalChecklist();
-
+		ScQt scQt = getManagedBean().getQt();
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTProposalSO.class);
@@ -1236,7 +1277,12 @@ public class SPDetailBackingBean extends
 			if (isCompleted) {
 				processResponseException(answers);
 			}
-
+			/** #21695 Farid */				
+			if(scQt != null
+					&& scQt.isZonal()){
+				proposalReqDTO.setTplSpecZoneQties(answers.get(0).getTplSpecQuestion().getTplSpecZoneQties());
+				}	
+			
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
@@ -1263,10 +1309,14 @@ public class SPDetailBackingBean extends
 				TplSpecQuestion tplSpecQuestion = answer.getTplSpecQuestion();
 				PmParameter answerType = tplSpecQuestion.getAnswerTypeCode();
 				String answerTypeCode = answerType != null ? answerType.getParameterCode() : null;
-				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()))
-					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null)) {
+//#21695 Farid allow complete if not offer, respond will be null and disabled			
+				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()) && answer.getOffer() !=null && answer.getOffer() == true 
+						||ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()) && answer.getOffer() == null)
+					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null && answer.getOffer() !=null && answer.getOffer() == true
+							|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null && answer.getOffer() == null))) {
 						throw new EpException(MessageConst.ERROR_760480);
 				}
+//#21695 end				
 			}
 		}
 	}
@@ -2450,7 +2500,8 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setTechnicalQtProposalChecklist(scQtProposalChecklist);
 		this.getManagedBean().setTechnicalQtChecklist(scQtProposalChecklist.getScQtCheckList());
-		
+		this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(definationType)) {
 
 			pageUrl = retrieveTemplateSpecDtls(scQtProposalChecklist);
@@ -2519,14 +2570,22 @@ public class SPDetailBackingBean extends
 		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		SmSupplier smSupplier = new SmSupplier();
+		//#21695 Farid Start
+		ScQt scQT = this.getManagedBean().getQt();
+		//#21695 Farid End
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
-		templateSpecBackingBean.getManagedBean().setScQt(
-				this.getManagedBean().getQt());
+		//#21695 Farid Start
+		templateSpecBackingBean.getManagedBean().setScQt(scQT);
+		//#21695 Farid End
 		templateSpecBackingBean.getManagedBean().setDocType(
 				ParameterConst.DOCTYPE_QUOTATION);
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
-
+		//#21695 Farid Start
+		if (scQT.isZonal()) {
+		populateZoneDetailIntoTreeNode(templateSpecBean);
+		}
+		//#21695 Farid END
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
 	}
 
@@ -2793,6 +2852,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.getDefinationType().getParameterCode();
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
+
 		this.getManagedBean().setFinancialQtChecklist(
 				scQtProposalChecklist.getScQtCheckList());
 
@@ -2877,7 +2937,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
 			ScQt scQt = getManagedBean().getQt();
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQt(scQt);
@@ -2886,7 +2945,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			// To retrieve financial specification details
 			ProposalResDTO resDTO = proposalSO
 					.retrieveFinancialSpecDtls(reqDTO);
-
+			
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zones = resDTO.getZones();
 				if (CollectionUtils.isNotEmpty(zones)) {
@@ -2904,6 +2963,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				populateFinancialSpecDetailsByZone();
 
 			}
+			
 			if (!scQt.isZonal() && scQt.getMaxProposal() == 1) {
 				retrieveTemplateSpecBean();
 			}
@@ -2957,6 +3017,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				templateSpecBean.setContentType(reqDTO.getContentType());
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
+//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
+				this.getManagedBean().getTemplateSpecBackingBean()
+				.calcAllSpecAnswerTotalAmount(templateSpecBean);
+//#21695 Farid end				
 				this.getManagedBean().getTemplateSpecBackingBean()
 						.calcGrandTotalAmount(templateSpecBean);
 				if (getManagedBean().getQt().isZonal()) {
@@ -3262,7 +3326,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 			ScQtPRPAssetLiability assetLiability = resDTO
 					.getScQtPRPAssetLiability();
-
+			
 			if (assetLiability == null) {
 				assetLiability = new ScQtPRPAssetLiability();
 				assetLiability.setScQtProposalChecklist(scQtProposalChecklist);
@@ -5450,4 +5514,62 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		   RequestContext.getCurrentInstance().execute("popUpInfoDlg.show()");
 		}
 	//#25089@hatta - end
+		
+
+		//#21695 farid	start display tree node
+			private void populateZoneDetailIntoTreeNode( TemplateSpecBean templateSpecBean) {
+				
+				TplSpecZone specZone = templateSpecBean.getSpecMaster().getTplSpecZone();
+				List<TplSpecZoneDtl> specZoneDtls = null;
+				List<TreeNode> zoneGeneralTrees = getManagedBean().getZoneGeneralTrees();
+				
+				if (specZone != null) {
+						ISpecZoneLocSO specZoneLocSO;
+						try {
+							specZoneLocSO = BusinessDelegate.getInstance()
+									.getServiceObject(
+											ModuleCodeConst.COMMON_COMPONENT,
+											ISpecZoneLocSO.class);
+
+							SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+							reqDTO.setDocType(specZone.getDocType());
+							reqDTO.setDocId(specZone.getDocId());
+
+							// Get zone details list from db.
+							SpecZoneLocResDTO resDTO = specZoneLocSO
+									.retrieveZoneDtlAndLocByDocIdNType(reqDTO);
+
+							specZoneDtls = resDTO.getZonesList();
+						} finally {
+							specZoneLocSO = null;
+						}
+					}
+				
+				if (zoneGeneralTrees == null) {
+					zoneGeneralTrees = new ArrayList<TreeNode>();
+					getManagedBean().setZoneGeneralTrees(zoneGeneralTrees);
+				} else {
+					zoneGeneralTrees.clear();	
+				}
+				
+				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+					for (TplSpecZoneDtl zone : specZoneDtls) {
+					
+						if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
+							List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
+							
+							for (TplSpecZoneLoc specLoc : zone.getTplSpecZoneLocs()) {
+								if (specLoc.isZonalLocation()) {
+									specZoneLocs.add(specLoc);
+								}
+							}
+								zoneGeneralTrees.add(
+										LocationSingleton.getInstance().constuctTreeNode(
+												zone, specZoneLocs));
+							}
+					}
+				}
+				log.info("habisss");
+			}
+		//#21695 farid end
 }

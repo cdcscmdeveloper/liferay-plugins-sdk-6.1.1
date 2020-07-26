@@ -670,8 +670,47 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+/** #21695 FARID START*/	
+	/**
+	 * Get parameter id select items by parameter type and search bean for
+	 * dropdown disable/hide sample when partial offer true.
+	 * 
+	 * @param parameterType
+	 *            the parameter type
+	 * @param searchBean
+	 *            the search bean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getDropdownValuesBySearchBeanForPartial(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
 
+			items = new SelectItem[parameterDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
 
+		return items;
+	}
+	/** #21695 FARID END*/
+	
 	/**
 	 * Populate values for Reason Drop down base on reason category code
 	 * 
@@ -1061,6 +1100,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
+/** #21695 Farid start */	
+	public SelectItem[] getRadioButtonCodeValuesForPartial(String parameterType,String disabled) {
+		return getRadioButtonCodeValuesBySearchBeanForPartial(parameterType, null, disabled);
+	}
+/** #21695  END*/
 
 	/**
 	 * Gets the radio button code values by search bean.
@@ -1094,6 +1138,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 
+	/** #21695 Farid start */	
+	//disable = TRUE,
+	public SelectItem[] getRadioButtonCodeValuesBySearchBeanForPartial(
+			String parameterType, ISearchBean<PmParameterDesc> searchBean,String disable) {
+		SelectItem[] items = null;
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBean(
+							parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				if("TRUE,".contains(parameterDesc.getPmParameter()
+						.getParameterCode())){
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName(),"",true);
+				}else{
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName(),"",false);
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+	}
+	/** #21695  END*/
+	
+	
 	/**
 	 * Gets the radio button values.
 	 *

@@ -168,6 +168,8 @@ public interface QTConstants {
 	// Evaluation Constants
 	public static final String COMPLIANCE_CHECK = "C";
 	public static final String TECHNICAL_EVALUATION = "T";
+	// **** #21695 farid start
+	public static final String TECHNICAL_EVALUATION_BY_ITEM = "TI"; // **** farid 
 	public static final String PRESENTATION_DEMO_EVALUATION = "P";
 	public static final String FINANCIAL_EVALUATION_BY_PACKAGE = "FP";
 	public static final String FINANCIAL_EVALUATION_BY_ITEM = "FI";
@@ -177,6 +179,8 @@ public interface QTConstants {
 	public static final String AWARD_TYPE_ITEM = "I";
 	public static final String RECOMMENDATION_PREFERENCE_MARGIN = "RPM";
 	public static final String FINANCIAL_PREFERENCE_MARGIN = "FPM";
+	// **** #21695 farid start
+	public static final String TECHNICAL_PREFERENCE_MARGIN = "TPM"; // **** farid 
 	public static final String FINANCIAL_EVALUATION = "F";
 
 	public static final int CHECKLIST_USER_SCORE = 2;
@@ -231,7 +235,10 @@ public interface QTConstants {
 	public static final String FINANCIAL_SUMMARY_ITEM="FI";
 	public static final String RECOMMENDATION_SUMMARY_PACKAGE_MARGIN="RPM";
 	public static final String RECOMMENDATION_SUMMARY_ITEM="RI";
-	
+	// **** #21695 farid start
+	public static final String TECHNICAL_SUMMARY_PACKAGE_MARGIN="TPM";
+	public static final String TECHNICAL_SUMMARY_ITEM="TI";
+	// **** farid end
 	public static final String REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT = "Perakuan Penerimaan Surat Setuju Terima";
 	
 	//kpi code
