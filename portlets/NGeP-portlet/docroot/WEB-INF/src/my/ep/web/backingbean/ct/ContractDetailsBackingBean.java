@@ -1235,8 +1235,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}		
 
 		// Validation for schedule
+		//basri -  #28649 During Notification Setting, no need to validate 
 		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-				&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
+				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 				ctBB.getManagedBean().getContractVer().setCtProgressivePayments(null);
 			} else {
@@ -2078,6 +2080,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return false;
 	}
 
+	
+	
 	/**
 	 * The method used to navigate to contract termination screen
 	 * for termination purpose.
