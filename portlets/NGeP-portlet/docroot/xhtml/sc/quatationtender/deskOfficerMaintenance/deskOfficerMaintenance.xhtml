@@ -68,7 +68,7 @@
 							style="white-space: normal;word-wrap: break-word;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
-						style="width:100px;">
+						style="width:60px;white-space: normal;word-wrap: break-word;">
 						<h:outputText
 							value="#{DOMaintenanceBackingBean.getParameterDesc(scQt.procurementMode)}" />
 					</p:column>
@@ -94,14 +94,14 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:150px;white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{DOMaintenanceBackingBean.getStatusDescById(scQt.qtStatus.statusId)}"/>
 					</p:column>
-						<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.committeeapprover']}" style="width:200px;white-space: normal;word-wrap: break-word;">
+					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.committeeapprover']}" style="width:100px;white-space: normal;word-wrap: break-word;">
 						<h:outputText value="#{scQt.doMaintenanceApprover}"/>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.newDO']}" style="width:200px;">
+					<p:column headerText="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.newDO']}" style="width:100px;white-space: normal;word-wrap: break-word;">
 						<h:outputText rendered="#{scQt.selectable}" value="#{DOMaintenanceBackingBean.getNewDeskOfficer(scQt.qtId)}" />
 						<h:outputText rendered="#{!scQt.selectable}" value="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.notSupported']}" />
 					</p:column>
