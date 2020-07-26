@@ -17,6 +17,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -45,6 +46,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
@@ -454,6 +456,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int passingScore;
 
 	private String financialSummaryView;
+	/** #21695 Farid */
+	private String technicalSummaryView;
 
 	private String roleCode;
 
@@ -494,7 +498,69 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
-	/**
+	
+	//#25138-Ahmaa-Start
+	/** The total user score. */
+	private String totalUserScore;
+	
+	/** The total auto score. */
+	private String totalAutoScore;
+	
+	/** The financial user package score*/
+	private BigDecimal userPackageScore;
+	
+	/** The total score. */
+	private String totalScore;
+	
+	private String maxScore;
+	
+	private ScQtProposalAmount qtProposalAmount; 
+	
+ 	/** The non-scoring compliance active index. */
+    private int nonScoringActiveIndex;
+    
+    private List<ScQtProposalChecklist> scqtProposalChecklist;
+    
+    /** The list check list. */
+    private List<ScQtCheckList> newchecklist;
+    
+    /** The total template score by supplier. */
+	private String totalTemplateScoreBySupplier;
+	
+	private BigDecimal proposalId;
+	
+	/** The spec item list. */
+    private List<TplSpecQuestion> questionItemList;
+    
+    /** The spec item scoring list. */
+    private List<TplSpecMaster> specMasterList;
+    
+    private String scoreOfferType;
+    
+    private IPagingDataModel<Object[]> complianceTechnicalProposalCheckListDMPackage;
+    
+    private Paginator detachedPaginator;
+    
+    private Paginator detachedPaginatorTest;
+    
+    private List<ScQtProposalChecklist> evaluationStgPkgPropCheckList;
+    
+    private List<ScQtCheckList> evaluationStgPkgTechnicalCheckList;
+    
+    private List<TplSpecQuestion> specQuestionList;
+    
+    private Integer supplierNo;
+    
+	private int tabTechnicalIndex;
+	
+	private int tabFinancialIndex;
+	
+	private Boolean finPackageScore;
+
+    //#25138-Ahmaa-End
+	
+	
+	/**tabIndex
 	 * Gets the today.
 	 * 
 	 * @return the today
@@ -2954,6 +3020,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setFinancialSummaryView(String financialSummaryView) {
 		this.financialSummaryView = financialSummaryView;
 	}
+/** #21695 Farid */	
+	/**
+	 * @return the technicalSummaryView
+	 */
+	public String getTechnicalSummaryView() {
+		return technicalSummaryView;
+	}
+
+	/**
+	 * @param technicalSummaryView
+	 *            the technicalSummaryView to set
+	 */
+	public void setTechnicalSummaryView(String technicalSummaryView) {
+		this.technicalSummaryView = technicalSummaryView;
+	}
 
 	/**
 	 * @return the roleCode
@@ -3401,4 +3482,201 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setFP_Compliance(boolean isFP_Compliance) {
 		this.isFP_Compliance = isFP_Compliance;
 	}
+	
+	//#25138-Ahmaa-Start
+	public String getTotalUserScore() {
+		return totalUserScore;
+	}
+
+	public void setTotalUserScore(String totalUserScore) {
+		this.totalUserScore = totalUserScore;
+	}
+
+	public String getTotalAutoScore() {
+		return totalAutoScore;
+	}
+
+	public void setTotalAutoScore(String totalAutoScore) {
+		this.totalAutoScore = totalAutoScore;
+	}
+
+	public String getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(String totalScore) {
+		this.totalScore = totalScore;
+	}
+
+	public ScQtProposalAmount getQtProposalAmount() {
+		return qtProposalAmount;
+	}
+
+	public void setQtProposalAmount(ScQtProposalAmount qtProposalAmount) {
+		this.qtProposalAmount = qtProposalAmount;
+	}
+
+	public int getNonScoringActiveIndex() {
+		return nonScoringActiveIndex;
+	}
+
+	public void setNonScoringActiveIndex(int nonScoringActiveIndex) {
+		this.nonScoringActiveIndex = nonScoringActiveIndex;
+	}
+
+	public List<ScQtProposalChecklist> getScqtProposalChecklist() {
+		return scqtProposalChecklist;
+	}
+
+	public void setScqtProposalChecklist(List<ScQtProposalChecklist> scqtProposalChecklist) {
+		this.scqtProposalChecklist = scqtProposalChecklist;
+	}
+
+	public List<ScQtCheckList> getNewchecklist() {
+		return newchecklist;
+	}
+
+	public void setNewchecklist(List<ScQtCheckList> newchecklist) {
+		this.newchecklist = newchecklist;
+	}
+
+	public String getTotalTemplateScoreBySupplier() {
+		return totalTemplateScoreBySupplier;
+	}
+
+	public void setTotalTemplateScoreBySupplier(String totalTemplateScoreBySupplier) {
+		this.totalTemplateScoreBySupplier = totalTemplateScoreBySupplier;
+	}
+
+	public BigDecimal getProposalId() {
+		return proposalId;
+	}
+
+	public void setProposalId(BigDecimal proposalId) {
+		this.proposalId = proposalId;
+	}
+
+	public List<TplSpecQuestion> getQuestionItemList() {
+		return questionItemList;
+	}
+
+	public void setQuestionItemList(List<TplSpecQuestion> questionItemList) {
+		this.questionItemList = questionItemList;
+	}
+
+	public List<TplSpecMaster> getSpecMasterList() {
+		return specMasterList;
+	}
+
+	public void setSpecMasterList(List<TplSpecMaster> specMasterList) {
+		this.specMasterList = specMasterList;
+	}
+
+	public String getScoreOfferType() {
+		return scoreOfferType;
+	}
+
+	public void setScoreOfferType(String scoreOfferType) {
+		this.scoreOfferType = scoreOfferType;
+	}
+
+	public IPagingDataModel<Object[]> getComplianceTechnicalProposalCheckListDMPackage() {
+		return complianceTechnicalProposalCheckListDMPackage;
+	}
+
+	public void setComplianceTechnicalProposalCheckListDMPackage(
+			IPagingDataModel<Object[]> complianceTechnicalProposalCheckListDMPackage) {
+		this.complianceTechnicalProposalCheckListDMPackage = complianceTechnicalProposalCheckListDMPackage;
+	}
+
+	public Paginator getDetachedPaginator() {
+		return detachedPaginator;
+	}
+
+	public void setDetachedPaginator(Paginator detachedPaginator) {
+		this.detachedPaginator = detachedPaginator;
+	}
+
+	public List<ScQtProposalChecklist> getEvaluationStgPkgPropCheckList() {
+		return evaluationStgPkgPropCheckList;
+	}
+
+	public void setEvaluationStgPkgPropCheckList(List<ScQtProposalChecklist> evaluationStgPkgPropCheckList) {
+		this.evaluationStgPkgPropCheckList = evaluationStgPkgPropCheckList;
+	}
+
+	public List<ScQtCheckList> getEvaluationStgPkgTechnicalCheckList() {
+		return evaluationStgPkgTechnicalCheckList;
+	}
+
+	public void setEvaluationStgPkgTechnicalCheckList(List<ScQtCheckList> evaluationStgPkgTechnicalCheckList) {
+		this.evaluationStgPkgTechnicalCheckList = evaluationStgPkgTechnicalCheckList;
+	}
+
+	public List<TplSpecQuestion> getSpecQuestionList() {
+		return specQuestionList;
+	}
+
+	public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
+		this.specQuestionList = specQuestionList;
+	}
+
+	public String getMaxScore() {
+		return maxScore;
+	}
+
+	public void setMaxScore(String maxScore) {
+		this.maxScore = maxScore;
+	}
+
+	public Paginator getDetachedPaginatorTest() {
+		return detachedPaginatorTest;
+	}
+
+	public void setDetachedPaginatorTest(Paginator detachedPaginatorTest) {
+		this.detachedPaginatorTest = detachedPaginatorTest;
+	}
+
+	public Integer getSupplierNo() {
+		return supplierNo;
+	}
+
+	public void setSupplierNo(Integer supplierNo) {
+		this.supplierNo = supplierNo;
+	}
+
+	public BigDecimal getUserPackageScore() {
+		return userPackageScore;
+	}
+
+	public void setUserPackageScore(BigDecimal userPackageScore) {
+		this.userPackageScore = userPackageScore;
+	}
+
+	public int getTabTechnicalIndex() {
+		return tabTechnicalIndex;
+	}
+
+	public void setTabTechnicalIndex(int tabTechnicalIndex) {
+		this.tabTechnicalIndex = tabTechnicalIndex;
+	}
+
+	public int getTabFinancialIndex() {
+		return tabFinancialIndex;
+	}
+
+	public void setTabFinancialIndex(int tabFinancialIndex) {
+		this.tabFinancialIndex = tabFinancialIndex;
+	}
+
+	public Boolean getFinPackageScore() {
+		return finPackageScore;
+	}
+
+	public void setFinPackageScore(Boolean finPackageScore) {
+		this.finPackageScore = finPackageScore;
+	}
+
+
+	//#25138-Ahmaa-End
 }
