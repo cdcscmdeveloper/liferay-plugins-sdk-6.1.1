@@ -3352,10 +3352,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 					TplSpecMaster master = null;
 					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+					// 26130 - Start
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+						if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
+							Iterator<TplSpecAnswer> iterator =  question.getTplSpecAnswers().iterator();
+							while (iterator.hasNext()) {
+								TplSpecAnswer tplSpecAnswer = iterator.next();
+								if (null != tplSpecAnswer && null != tplSpecAnswer.getTplSpecSuppAnswer()
+										&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
+										&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
+									String feedback = null;
+									if (null != tplSpecAnswer.getAnswerNumeric()) {
+										feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
+									} else if (null != tplSpecAnswer.getAnswerCompliance()) {
+										if (tplSpecAnswer.getAnswerCompliance()) {
+											feedback = "Yes";
+										} else {
+											feedback = "No";
+										}
+									} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
+										feedback = String.valueOf(tplSpecAnswer.getAnswerText());
+									} 
+									tplSpecAnswer.setFeedback(feedback);
+								} else {
+									iterator.remove();
+								}
+							}
+						}
 						constructTplSpecQuestion(dafaltValue,
 								newTplSpecQuestionsList, master, question);
 					}
+					// 26130 - End
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
 					masters.add(master);
 				}
