@@ -271,7 +271,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		
 		getManagedBean().setDisplaySearchPage(false);
-		setLoginUserAllowedToDoMaintenance();
+		//28273: Disciplinary Action  - start - <26238>
+		if(selectedSmAppl.getSmSupplier().getTypeDisciplinaryAction() != null){
+			getManagedBean().setAllowedToDoMaintenance(false);
+		}else {
+			setLoginUserAllowedToDoMaintenance();
+		}
+		//28273: Disciplinary Action  - end - <26238>
 		checkIfSupplierHasActiveTransaction(false);
 		initPOApproverOverlapCategoryRemarkInfo();
 		approvalHistoryRemarklist();
