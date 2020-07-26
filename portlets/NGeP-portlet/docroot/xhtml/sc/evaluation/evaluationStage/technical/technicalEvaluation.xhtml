@@ -16,7 +16,6 @@
 			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.instruction']}" escape="false" />
 
 			<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
-			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				editable="true" rowIndexVar="index"
 				first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
 				rowKey="#{technicalEvaluate}"
@@ -85,7 +84,61 @@
 
 
 		</p:panel>
+		<p:spacer height="15"></p:spacer>
+		<p:panel id="technicalComplianceChecklistmainPageProposalIds" header="#{lbl['lbl.sc.eva.non.scoring.compliance']}"
+		toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
 
+		<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
+			editable="true" rowIndexVar="index"
+			value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
+			first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
+			rowKey="#{complianceTech}">
+			<!-- 	<ac:paginator for="complianceTechnicalProposal" /> -->
+
+
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+				style="width:55%;white-space: normal;">
+
+				<h:outputText value="#{complianceTech.title}"></h:outputText>
+
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.type']}"
+				style="width:20%">
+
+
+				<h:outputText
+					value="#{evaluationBackingBean.getParameterDesc(complianceTech.definationType)}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+				style="width:15%;white-space: normal;">
+
+
+				<h:outputText
+					value="#{evaluationBackingBean.getStatusDescById(complianceTech.pmEvalStatus.statusId)}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+				style="width:10%;text-align: center;">
+					
+				<p:commandButton value="#{lbl['lbl.btn.view']}"
+					rendered="#{(complianceTech.definationType.parameterCode eq 'UP' or complianceTech.definationType.parameterCode eq 'NA') and (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
+					process="@this" partialSubmit="true"
+					action="#{evaluationBackingBean.complianceUploadCheckList(complianceTech,index,'T')}" />
+
+
+			</p:column>
+
+		</p:dataTable>
+
+
+	</p:panel>
+	
 	</h:panelGroup>
 
 </ui:composition>

@@ -18,9 +18,6 @@
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}"
 			id="evaluationStageFinancialSpecsFinancialSupplierListsDatatableIds#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 			toggleable="true">
-			<!-- <h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}"
-				escape="false" /> -->
 				
 				<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.eva.evaluation.financial.spec.offer.price.supplier.list']}"
@@ -33,93 +30,62 @@
 				style="width:100%" rowKey="#{finSpec}">
 
 				<ac:paginator for="financialSpecEvaluationStage"></ac:paginator>
-
-				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-					style="width:10%; text-align:center;">
-
-					<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
-
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
-					style="width:10%">
-					<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-																	  		fn:toUpperCase(finSpec.scQtProposal.bumi))}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.package.offered.price']}"
-					style="width:15%;text-align:right;">
-					<h:outputText
+				<!-- ahmaa-#25138 - start -->
+				 <p:columnGroup type="header">  
+			        <p:row>  
+			            <p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:10%; text-align:center;"/>
+			           	<p:column rowspan="2" headerText="#{lbl['lbl.sc.eva.package.offered.price']}" style="width:15%;text-align:center;"/>    
+			            <p:column colspan="2" headerText="#{lbl['lbl.sc.eva.package.score']}" style="width:10%;text-align:center;"/>  
+			       		
+			        </p:row>  
+			  
+			        <p:row>  
+			            <p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}" style="width:20%;text-align:center;"
+						rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}"/>  
+			            <p:column style="width:20%;text-align:center;">
+				            <f:facet name="header">
+								<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
+							</f:facet>
+			            </p:column>  
+			        </p:row>  
+			  
+			    </p:columnGroup>  
+				
+				<p:column>  
+			        <h:outputText value="#{finSpec.scQtProposal.supplierNo}"/>  
+			    </p:column>
+			    
+			    <p:column>  
+			        <h:outputText
 						value="#{finSpec.scQtProposal.proposalAmount.proposalAmt}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.package.score']}"
-					style="width:10%;text-align:right;">
-					<h:outputText
-						value="#{finSpec.scQtProposal.proposalAmount.totalScore}"></h:outputText>
-				</p:column>
-
-				<p:column style="width:15%;text-align:right;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
-						<ac:iconTooltip id="priceDiff#{index}FECSS"
-							value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
-					</f:facet>
-					<h:outputText
-						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}">
+					</h:outputText> 
+			    </p:column>
+			    
+			    <p:column>  
+			        <h:outputText partialSubmit="true" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1'}" style="text-align:centre;"
+			         value="#{finSpec.scQtProposal.proposalAmount.totalScore}"></h:outputText> 
+			    </p:column>
+			    
+			    <p:column>
+			        <p:inputText partialSubmit="true" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
+			        	id="userScore" label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;" maxlength="16" size="2" required="true"
+			        	value="#{finSpec.scQtProposal.proposalAmount.totalScore}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						<f:attribute name="min" value="0" />
+						<f:attribute name="max" value="#{evaluationBackingBean.managedBean.withInVarieance.toString()}" />
+						<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
+			        </p:inputText>
+			        <h:outputText rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}"
+			        	style="text-align:left; "
+						value="/ #{evaluationBackingBean.managedBean.withInVarieance}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-
-				</p:column>
-
-				<p:column style="width:15%;text-align:right;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
-						<ac:iconTooltip id="prefMargin#{index}FEC"
-							value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
-					</f:facet>
-					<h:outputText
-						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
-					style="width:10%;text-align:right;">
-
-					<h:outputText
-						value="#{finSpec.scQtProposal.proposalAmount.preferenceMargin}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputText>
-
-
-				</p:column>
-
-
-
-				<p:column style="width:15%;text-align: center;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.action']}" />
-						
-					</f:facet>
-
-					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
-						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus eq null or finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61600'}"
-						process="@this"
-						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
-						partialSubmit="true" />
-					<p:commandButton value="#{lbl['lbl.btn.view']}"
-						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus ne null and finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61601'}"
-						process="@this"
-						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
-						partialSubmit="true" />
-				</p:column>
+					<p:message id="userScoreMsg" for="userScore" display="icon" /> 	
+			    </p:column>
+			    
 			</p:dataTable>
 		</p:panel>
 	</h:panelGroup>
