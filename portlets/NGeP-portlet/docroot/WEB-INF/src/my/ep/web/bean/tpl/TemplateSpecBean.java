@@ -43,7 +43,10 @@ public class TemplateSpecBean implements Serializable {
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
 	private TplSpecEstimation specEstimation;  //#25039 
-	
+	private List<TplSpecQuestion> specQuestionList;
+	private List<TplSpecMaster> specMasterList;
+	/** The evaluatio stage active index. */
+	private int evaluatioStageActiveIndex;
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -244,5 +247,29 @@ public class TemplateSpecBean implements Serializable {
 		this.specEstimation = specEstimation;
 	}
 	//#25039 End
+
+	public List<TplSpecQuestion> getSpecQuestionList() {
+		return specQuestionList;
+	}
+
+	public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
+		this.specQuestionList = specQuestionList;
+	}
+
+	public List<TplSpecMaster> getSpecMasterList() {
+		return specMasterList;
+	}
+
+	public void setSpecMasterList(List<TplSpecMaster> specMasterList) {
+		this.specMasterList = specMasterList;
+	}
+
+	public int getEvaluatioStageActiveIndex() {
+		return evaluatioStageActiveIndex;
+	}
+
+	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
+		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
+	}
 	
 }
