@@ -249,6 +249,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		private ScQtFinalizationRemarks pendingRecPackageRemark;
 		// #18685 - End
 		
+	//#26169 #38 - Start
+	private boolean isHasSupplierQualified;
+	//#26169 #38 - End
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2178,7 +2182,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
 		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
 	}
-	
+
 	//#25729#142 & #26169 - End
 	
 	// #18685 - Start
@@ -2188,7 +2192,17 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public ScQtFinalizationRemarks getPendingRecItemizedRemark() {
 		return pendingRecItemizedRemark;
 	}
+	
+	//#26169 #38 - Start
+	public boolean isHasSupplierQualified() {
+		return isHasSupplierQualified;
+	}
 
+	public void setHasSupplierQualified(boolean isHasSupplierQualified) {
+		this.isHasSupplierQualified = isHasSupplierQualified;
+	}
+	//#26169 #38 - End
+		
 	/**
 	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
 	 */
