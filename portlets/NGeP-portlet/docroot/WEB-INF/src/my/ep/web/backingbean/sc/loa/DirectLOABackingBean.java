@@ -275,7 +275,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					updateContractDetails(scLoa);
 				}
 				
-				//validateContractDetails(scLoa); //#26474
+				validateContractDetails(scLoa); //#26474
 				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
 	
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
