@@ -19,15 +19,21 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</ui:fragment></td>
-				<td><p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
-						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
-						<f:selectItems
-							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="technicalWeigtage,addpoints"></p:ajax>
-					</p:selectOneRadio> <p:message id="techScoring" for="techWeightage" display="icon"></p:message></td>
+				<td>
+				<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
+
+							<p:selectOneRadio required="true"
+								disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.qt.partial and specificationBackingBean.managedBean.qt.partial ne null}"
+								label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
+								value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
+								<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+								update="technicalWeigtage,addpoints"></p:ajax>
+							</p:selectOneRadio>
+
+						 <p:message id="techScoring" for="techWeightage" display="icon"></p:message>
+				</td>
 			</tr>
 
 		</table>
@@ -35,6 +41,15 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.max.score.instruction']}" escape="false" />
 
+		
+	</p:panel>
+	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee"
+		toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
+		</f:facet>
 		<p:dataTable id="technicalWeigtage" var="tech"
 			value="#{specificationBackingBean.managedBean.technicalScoring}"
 			rowKey="#{tech}" editable="true" style="width:100%"
@@ -78,7 +93,7 @@
 			</p:column>
 
 			<p:column style="width:20%;text-align:right;"
-				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
+				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false' and !specificationBackingBean.managedBean.qt.partial and specificationBackingBean.managedBean.qt.partial ne null}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
 					<ac:iconTooltip id="technicalScoringWeightageScore#{index}SC"
@@ -101,8 +116,6 @@
 
 		<p:spacer height="15"></p:spacer>
 
-
-
 		<h:panelGroup id="addpoints">
 			<table>
 				<tr>
@@ -115,7 +128,7 @@
 							value="#{lbl['lbl.sc.spec.total.points.tooltip']}" /></td>
 				</tr>
 				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
+					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false' and !specificationBackingBean.managedBean.qt.partial and specificationBackingBean.managedBean.qt.partial ne null}">
 
 					<tr>
 						<td><p:outputLabel
@@ -133,15 +146,7 @@
 			</table>
 
 		</h:panelGroup>
-	</p:panel>
-	<p:panel id="passingScoreForTechnicalAndDemoSpecCommittee"
-		toggleable="true">
-		<f:facet name="header">
-			<h:outputText value="#{lbl['lbl.sc.passing.score']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
-		</f:facet>
-
+		
 		<table>
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.qt.demoRequired eq 'true'}">
@@ -176,10 +181,92 @@
 			</tr>
 		</table>
 
+	</p:panel>
+<!-- #21695 START FARID -->	
+	<p:panel id="technicalScoringItemPanel"
+		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
+			escape="false" />
 
 
+<!-- #21695 START FARID -->
 
+		<p:panelGrid style="margin-top:5px;width:100%;">
+			<f:facet name="header">
+				<p:row>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.items.scoringTech']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.others']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.score']}</p:column>
+				</p:row>
+			</f:facet>
 
+			<p:row>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.overallTechnical}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<f:attribute name="min" value="50"></f:attribute>
+						<f:attribute name="max" value="100"></f:attribute>
+						<p:ajax event="blur" update="technicalScoringItemScore"
+							process="@this,technicalScoringItemPanel" partialSubmit="true"
+							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
+
+					</p:inputText>
+				</p:column>
+
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.overallOtherTechnical}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<f:attribute name="min" value="0"></f:attribute>
+						<p:ajax event="blur" update="technicalScoringItemScore"
+							process="@this,technicalScoringItemPanel" partialSubmit="true"
+							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
+
+					</p:inputText>
+				</p:column>
+				<p:column colspan="1" style="text-align:right">
+					<h:outputText id="technicalScoringItemScore"
+						value="#{specificationBackingBean.managedBean.technicalItemScore}" />
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+		
+
+		<p:spacer height="15"></p:spacer>
+		<table>
+			<tr>
+				<td style="width: 260px;"><p:outputLabel
+						value="#{lbl['lbl.sc.passing.score']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText style="text-align:right" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.passingScore}">
+						<p:ajax event="change" process="@this" partialSubmit="true" />
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+							maxIntegerDigits="3" integerOnly="true" />
+						<f:attribute name="min" value="50"></f:attribute>
+						<f:attribute name="max" value="100"></f:attribute>
+					</p:inputText> <p:spacer width="5"></p:spacer></td>
+			</tr>
+		</table>
+<!-- #21695 END FARID -->
 	</p:panel>
 
 	<p:panel id="sctechnicalScoringUserScoringSchemaIds"
