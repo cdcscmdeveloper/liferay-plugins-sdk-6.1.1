@@ -4124,6 +4124,7 @@ public class SupplierFinalizationBackingBean extends
 	public SelectItem[] getReasonRadioBtn() {
 		log.info("getReasonRadioBtn");
 		SelectItem[] items = null;
+		BigDecimal actualIndicativePrice = this.getManagedBean().getScQt().getEstimatedAmount();//To get QT Actual Total Indicative Price
 		Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 		IReasonSO reasonSO = null;
 		try {
