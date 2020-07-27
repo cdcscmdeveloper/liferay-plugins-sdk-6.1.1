@@ -114,6 +114,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	public String currentStatusAndPath(){
+		log.info("Here Enter Funtion currentStatusAndPath ===>");
 		SmSupplier userSupplier = getSupplierProfileByUserId();
 		String path = null;
 		String desc = null;
@@ -831,10 +832,14 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			mofReqDTO.setLoginId(pmUser.getLoginId());
 			Integer exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
 			
-			if(exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW){
-				basicActionMap.put("RNMOF",RENEW_MOF);
-			}else{
-				basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
+			//start 28564
+			if (exisitingBasicMOFFlg != my.ep.constant.sm.SupplierManagementConst.RECORD_STATUS_DELETED) {
+				//end 28564
+				if (exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
+					basicActionMap.put("RNMOF", RENEW_MOF);
+				} else {
+					basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
+				}
 			}
 
 		}
@@ -884,7 +889,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofUserAction(suppSearchResDTO.getSmSupplier());
 				setMofExpiryMsg(userSupplier);
 
-			}else if(validBasicSupplier()){
+			}else
+				if(validBasicSupplier()){
 				basicSupplierAction(userSupplier.getSupplierId());
 
 			}
@@ -1085,7 +1091,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 		return path;
 	}
-
+	
 	private String basicAccountFlow(SmSupplier supplier){
 		String path = null;
 		
