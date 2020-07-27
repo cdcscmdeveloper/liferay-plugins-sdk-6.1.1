@@ -2312,6 +2312,25 @@ public class SupplierFinalizationBackingBean extends
 											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
 				}
 			}
+			
+			//#26169 #66 -start-
+			if (getManagedBean().isSubmit() && 
+					!getManagedBean().isInitialDecisionFwdToBPK() &&
+						isRecommendByAward() && 					
+							(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+								.equals(decisionTypeCode))) {
+				String reasonType = getManagedBean().getScQtFinalization().getReason().getReasonCode();
+				log.info("Reason Code == "+reasonType);				
+				if("2".equalsIgnoreCase(reasonType)){
+					boolean isOfferPriceExceed = checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority(reqDTO.getScQtFinalization());
+					log.info("== IS SUPPLIER OFFER PRICE == "+isOfferPriceExceed);
+					if(!isOfferPriceExceed){
+						log.info("Selected supplier offer below committee authority !! ");
+						throw new EpException(MessageConst.ERROR_760511);
+					}
+				}
+			}
+			//#26169 #66 -end-
 
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
@@ -4204,7 +4223,11 @@ public class SupplierFinalizationBackingBean extends
 				
 				reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),reasonDesc.getReasonDesc());
 			}
+			
+			//#26169 #66 -start-
 			changeReasonEvent(null);
+			//#26169 #66 -end-
+			
 			//#25729#142 End				
 		} finally {
 			reasonSO = null;
@@ -4922,6 +4945,10 @@ public class SupplierFinalizationBackingBean extends
 						.equals(recommendType) ? true : false;
 		this.getManagedBean().setItemize(itemized);
 		
+		//#26169 #66 -start-
+		checkSFHasQualifiedSupplier();
+		//#26169 #66 -end-
+
 		setSelectionMode(finalizationMethod);
 		if (!triggeredFromEvent) {
 			loadRecommededSuppliersIntoCachedData(itemized);	
@@ -7975,11 +8002,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		public void validateFCByDataTypeRule() {
 			// Checking with Rule for Total Intended Price 
 			// To show/hide option Meeting Decision for Forward To Higher Authority
+			//#26169 #66 -start-
 			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+			//#26169 #66 -end-
+
 			BigDecimal actualIntendedPrice = getManagedBean().getScQt().getEstimatedAmount();
 			if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) < 1){//actualIntendedPrice <= 50,000.00				
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
 					getManagedBean().setDisableFwdToHighAuthorityOption(true);
+					
+					//#26169 #66 -start-
 					if(this.getManagedBean().isInitialDecisionFwdHighAuth()){
 						resetDecisionForwardToHigherAuthority(scQtFinalization);
 						this.getManagedBean().setRecommendSupplier(Boolean.TRUE);
@@ -7988,6 +8020,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 								ParameterConst.DECISION_RECOMMEND_SUPPLIER);
 						scQtFinalization.setDecision(recommendSupplier);
 					}
+					//#26169 #66 -end-
 				}
 			}else if(actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50K)) == 1 &&
 					actualIntendedPrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_500K)) < 1){
@@ -8006,7 +8039,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		
 		public void checkSFHasQualifiedSupplier(){
+			//#26169 #66 -start-
 			String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
+			//#26169 #66 -end-
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			ScQt scQt = getManagedBean().getScQt();
