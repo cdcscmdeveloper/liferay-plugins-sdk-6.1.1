@@ -80,25 +80,42 @@
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
-							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}}" />
+							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}" />
 						<!-- bug #28278 -START -->
 						<h:outputText
-							value="#{lbl['lbl.sm.status.deleted1']} #{smSupplier.typeDisciplinaryAction}"
-							rendered="#{smSupplier.recordStatusFlg eq 9}" />
+							value="#{lbl['lbl.sm.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'C'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'B'}" />
+						<!-- <h:outputText
+							value="#{lbl['lbl.sm.status.deleted']}"
+							rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" /> --> 
 						<!-- bug #28278 -START -->
 					</p:column>
 					<!--#28273 -END 110620-->   
 					<!--#28273 & #28278 -end -->
 					
-					<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<!--#28273 -START -->
+					<p:column headerText="#{lbl['lbl.sm.label.action']}" >
 						<p:commandLink onstart="blockWidget.show()"
+							rendered="#{empty smSupplier.typeDisciplinaryAction}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
 							process="@this" partialSubmit="true" update="@form"
 							style="padding-right:5px;">
 							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 						</p:commandLink>
+						<p:commandLink onstart="blockWidget.show()"
+							rendered="#{not empty smSupplier.typeDisciplinaryAction}"
+							oncomplete="blockWidget.hide()"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							process="@this" partialSubmit="true" update="@form"
+							style="padding-right:5px;">
+							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+						</p:commandLink>
 					</p:column>
+					<!--#28273 -START -->
 					
 				</p:dataTable>
 				
