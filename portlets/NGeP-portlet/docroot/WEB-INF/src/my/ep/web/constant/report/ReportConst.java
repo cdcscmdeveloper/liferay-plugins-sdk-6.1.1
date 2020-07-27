@@ -1014,7 +1014,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_QUOTE_NO = "QUOTENO";
 	public static final String PARAM_LOA_NO = "LOANUM";
 	public static final String PARAM_QUOTE_GROUP = "SIMPLE QUOTE NO";
-	public static final String PARAM_PID_GROUP = "CONTRACT+PKP+NO";
+	public static final String PARAM_PID_GROUP = "CONTRACT PKP NO";
 
 	// Supplier Management
 	public static final String DOTJSP = ".jsp";
@@ -1109,6 +1109,10 @@ public class ReportConst implements Serializable{
 	//26238 : Disciplinary Action
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY_ENG = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY_MALAY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	
+	// YEP
+	public static final String FL_DOCTYPE_CO = "Contract Order";
+	public static final String FL_DOCTYPE_PO = "Purchase Order";
 	
 	public ReportConst(){}
 	
