@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -155,6 +156,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private static final int SEARCH_PTJ_CODE = 2;
 	private static final int SEARCH_PTJ_NAME = 3;
 	private static final String CAP_CHAR = "^"; //[Bug#27032]
+	
+	private static Map<List<PpProcurementItem>,List<PpProcurementItem>> ppItemMap = 
+    		new HashMap<List<PpProcurementItem>,List<PpProcurementItem>>();
 	
 	/**
 	 * 
@@ -712,7 +716,64 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				                itr.remove(); 
 				            }
 				        }
-						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());						
+						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());
+				        
+				        // Attempting to reorder the PpItems only if clones exist
+				        List<PpProcurementItem> tempOriginalPpItemList = new ArrayList<PpProcurementItem>();
+						List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
+						
+				        for (PpProcurementItem ppItem : ppPlan.getPpProcurementItems()) {
+
+							if (ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
+								tempClonedPpItemList.add(ppItem);
+							} else {
+								tempOriginalPpItemList.add(ppItem);
+							}
+				        }
+				        
+				        // Debugging..
+				        log.info("tempOriginalPpItemList (reorderedList)..");
+				        for (PpProcurementItem ppit : tempOriginalPpItemList) {
+				        	log.info("tempOriginalPpItemList.title= "+
+				        			ppit.getProcurementTitle());
+				        }
+				        
+						if (tempClonedPpItemList.size() > 0) {
+							ppItemMap.put(tempClonedPpItemList, tempOriginalPpItemList);
+						}
+				        
+				        List<PpProcurementItem> clones = new ArrayList<PpProcurementItem>();
+			        	List<PpProcurementItem> reorderedList = new LinkedList<PpProcurementItem>();
+			        	
+			        	log.info("Size ppItemMap= "+ppItemMap.size());
+			        	
+			        	if (ppItemMap.size() > 0) {
+			        		
+					        for (Map.Entry<List<PpProcurementItem>, List<PpProcurementItem>> ppItemList : 
+					        	ppItemMap.entrySet()) {
+					        	
+					        	clones = ppItemList.getKey();
+					        	reorderedList = ppItemList.getValue();
+					        	
+					        	for (int i = 0; i < reorderedList.size(); i++) {
+						        	for (PpProcurementItem clone : clones) {
+					        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
+					        				reorderedList.add(i+1,clone);
+					        			}
+					        		}
+						        }
+					        }
+					        log.info("Size getPpProcurementItems= "+ppPlan.getPpProcurementItems().size()+
+					        		", size reorderedList= "+reorderedList.size());
+					        
+					        for (PpProcurementItem reorder : reorderedList) {
+					        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
+					        }
+					        
+					        ppPlan.getPpProcurementItems().clear();
+					        ppPlan.getPpProcurementItems().addAll(reorderedList);
+				        }
+
 					}
 					//[SIR#12802] - end
 
@@ -4982,6 +5043,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	log.info("Original index= "+index);
 	    	
 	    	List<PpProcurementItem> procurementList = null;
+	    	List<PpProcurementItem> procurementLinkedList = new LinkedList<PpProcurementItem>();
 	    	PpProcurementItem newPpItem = new PpProcurementItem();
 	    	
 	    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
@@ -4993,7 +5055,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		
 	    		procurementList = this.getManagedBean().getSelectedPlan().getPpProcurementItems();
 	    		
-	    		PpProcurementItem clonedPpItem =  procurementList.get(index);
+	    		for (PpProcurementItem procItem : procurementList ) {
+	    			procurementLinkedList.add(procItem);
+	    		}
+	    		
+	    		//PpProcurementItem clonedPpItem =  procurementList.get(index);
+	    		PpProcurementItem clonedPpItem =  procurementLinkedList.get(index);
 	    		
 	    		//validatePpItem(); //Disabled this if no validation required at this stage
 	    		
@@ -5028,17 +5095,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setPpUpdateReasons(clonedPpItem.getPpUpdateReasons());
 	    		newPpItem.setStatusEnabled(true);
 	    		
-	    		if (newPpItem.getPpUpdateReasons() != null && 
+    			if (newPpItem.getPpUpdateReasons() != null && 
 						!newPpItem.getPpUpdateReasons().isEmpty()) {
 	    			log.info("newPpItem reasonDesc= "+newPpItem.getPpUpdateReasons()
 	    					.get(0).getReasonDesc());
 	    		} else {
 	    			throw new EpException(MessageConst.ERROR_730035);
 	    		}
-	    		index += 1;
-	    		procurementList.add(index,newPpItem);
+	    			
+	    		procurementLinkedList.listIterator(index+1).add(newPpItem);
 	    		
-	    		disableEnablePpItemFields(procurementList,index);
+	    		disableEnablePpItemFields(procurementLinkedList,index);
 	    		
 	    	} else {
 	    		throw new EpException(MessageConst.ERROR_730015);
@@ -5047,6 +5114,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	 
 	public void disableEnablePpItemFields(List<PpProcurementItem> items, Integer idx) {
+		
+		log.info("disableEnablePpItemFields");
+		
+		/*for (int i = 0; i < items.size(); i++) {
+			log.info("index= "+i+" (ppItemId= "+items.get(i).getProcurementItemId()+
+					") - "+items.get(i).getProcurementTitle());
+		}*/
 		
 		 PpProcurementItem cloned = items.get(idx);
 		 
