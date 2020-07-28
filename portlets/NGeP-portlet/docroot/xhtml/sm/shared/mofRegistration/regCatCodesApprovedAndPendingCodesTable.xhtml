@@ -76,14 +76,14 @@
 				disabledSelection="#{backingBean.managedBean.supplierUser and 
 					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or 
 					(not empty catBean.approvedDate and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS))
-					or catBean.cancelCategory}" />
+					or (catBean.cancelCategory and catBean.disciplinaryActionId!=null)}" />
 			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<p:column style="width :350px;white-space : normal"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
-					or catBean.cancelCategory}">
+					or (catBean.cancelCategory and catBean.disciplinaryActionId!=null)}">
 				<h:outputText
 					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 				<br />
@@ -92,7 +92,7 @@
 				<br />
 				<h:outputText
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
-				<p:outputLabel rendered="#{catBean.cancelCategory}" styleClass="warning" style="color:red;text-align:left;">
+				<p:outputLabel rendered="#{catBean.cancelCategory and catBean.disciplinaryActionId!=null}" styleClass="warning" style="color:red;text-align:left;">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 			</p:column>
