@@ -856,10 +856,16 @@ public class CreateQtBackingBean extends
 			}
 			//Start - 25729
 			log.info(":::setProcurementMode() amount.doubleValue: "+ amount.doubleValue());
-			// 25729#174 Change 1 line code below
+			// 25729#174 start
 			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
+			else if(amount.intValue()==20000){
+				log.info("============intvalueCodesExecuted======");
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			}
+			// 25729#174 end
+		
 			//End - 25729
 		} finally {
 			parameterSo = null;
