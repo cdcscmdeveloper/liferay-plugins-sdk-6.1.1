@@ -53,9 +53,11 @@
 	<h:panelGroup id="techspecificationid">	
 
 	 <br/>
-	 <ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+	 <ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" /><br/>
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.prop.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />	
 		<ac:templateSpec
 			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"/>
 	</h:panelGroup>
