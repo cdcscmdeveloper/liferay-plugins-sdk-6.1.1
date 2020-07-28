@@ -856,7 +856,8 @@ public class CreateQtBackingBean extends
 			}
 			//Start - 25729
 			log.info(":::setProcurementMode() amount.doubleValue: "+ amount.doubleValue());
-			if (!isPanel && enable.length > 0 && amount.doubleValue() <= SourcingConstants.QT_BELOW_20K) {
+				
+			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
 			//End - 25729
