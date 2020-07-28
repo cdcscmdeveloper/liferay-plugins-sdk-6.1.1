@@ -54,6 +54,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.evaluation.EvaluationMeetingBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -242,7 +243,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The evaluation summary dis qual suppliers. */
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM;
-
+	
+	/** The evaluation summary not offer suppliers. */
+	private IPagingDataModel<Object[]> notOfferSupplierDM;
+	
+	
 	/** The summary item list. */
 	private List<ScRequestItem> summaryItemList;
 
@@ -3679,4 +3684,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 
 	//#25138-Ahmaa-End
+	
+	public IPagingDataModel<Object[]> getNotOfferSupplierDM() {
+		return notOfferSupplierDM;
+	}
+
+	public void setNotOfferSupplierDM(
+			IPagingDataModel<Object[]> notOfferSupplierDM) {
+		this.notOfferSupplierDM = notOfferSupplierDM;
+	}
 }

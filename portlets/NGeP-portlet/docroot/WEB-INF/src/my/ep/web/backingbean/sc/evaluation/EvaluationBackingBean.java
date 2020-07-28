@@ -58,6 +58,7 @@ import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -88,6 +89,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -172,6 +174,7 @@ import org.apache.batik.apps.svgbrowser.StatusBar;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.docx4j.docProps.variantTypes.Array;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -412,7 +415,13 @@ public class EvaluationBackingBean extends
 											false, scQt.isZonal(),
 											summaryReqDTO.getAwardBy(),
 											summaryReqDTO.getResultStages()));
-
+				//20200717@asyrafhaziq - Display not offer supplier - Start
+					this.getManagedBean()
+					.setNotOfferSupplierDM(
+							new SummaryNotOfferSupplierPagingDataModel(
+									"evaluationCommitteeSummaryNotOfferSupplier",
+									scQt.isZonal(), summaryReqDTO.getAwardBy()));
+				//20200717@asyrafhaziq - Display not offer supplier - End
 				} else {
 					this.getManagedBean()
 							.setQualifiedSuppliersDM(
@@ -426,6 +435,13 @@ public class EvaluationBackingBean extends
 											"evaluationSummaryPreferencemarginDisQualifiedSuppliers",
 											false, scQt.isZonal(), null,
 											summaryReqDTO.getResultStages()));
+					//20200717@asyrafhaziq - Display not offer supplier - Start
+					this.getManagedBean()
+							.setNotOfferSupplierDM(
+									new SummaryNotOfferSupplierPagingDataModel(
+											"evaluationCommitteeSummaryNotOfferSupplier",
+											scQt.isZonal(), null));
+					//20200717@asyrafhaziq - Display not offer supplier - End
 				}
 
 			}
@@ -572,9 +588,25 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setSummaryViewBy("");
 				this.getManagedBean().setSummaryItemList(
 						null);
-				this.getManagedBean().setEvaluationStageZonesSummary(
-						null);
+				//20200717@asyrafhaziq - Display not offer supplier - Start
+				//this.getManagedBean().setEvaluationStageZonesSummary(
+				//		null);
 				EvaluationReqDTO summaryReqDTO = setSummaryPrepareData(view);
+				evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
+				this.getManagedBean().setEvaluationStageZonesSummary(
+						new ArrayList<TplSpecZoneDtl>());
+				if (null != evalResDTO.getZones()
+						&& !evalResDTO.getZones().isEmpty()) {
+					this.getManagedBean().setEvaluationStageZonesSummary(
+							evalResDTO.getZones());
+					summaryReqDTO.setSpeZoneId(this.getManagedBean()
+							.getEvaluationStageZonesSummary().get(0)
+							.getSpecZoneId());
+					getManagedBean().setSelectedZone(
+							this.getManagedBean()
+									.getEvaluationStageZonesSummary().get(0));
+				}
+				//20200717@asyrafhaziq - Display not offer supplier - End
 				if(QTConstants.TECHNICAL_SUMMARY_ITEM.equalsIgnoreCase(view)){
 					EvaluationStageZoneSummary(summaryReqDTO);
 					this.getManagedBean().setQualifiedSuppliersDM(
@@ -590,6 +622,13 @@ public class EvaluationBackingBean extends
 											false, false,
 											summaryReqDTO.getAwardBy(),
 											summaryReqDTO.getResultStages()));
+					//20200717@asyrafhaziq - Display not offer supplier - Start
+					this.getManagedBean()
+					.setNotOfferSupplierDM(
+							new SummaryNotOfferSupplierPagingDataModel(
+									"evaluationCommitteeSummaryNotOfferSupplier",
+									scQt.isZonal(), summaryReqDTO.getAwardBy()));
+					//20200717@asyrafhaziq - Display not offer supplier - End	
 				}else{
 					this.getManagedBean().setQualifiedSuppliersDM(
 							new SummarySupplierPagingDataModel(
@@ -599,6 +638,13 @@ public class EvaluationBackingBean extends
 							new SummarySupplierPagingDataModel(
 									"oneTierDisQualifiedSupplier", false,
 									false, null, summaryReqDTO.getResultStages()));
+					//20200717@asyrafhaziq - Display not offer supplier - End
+					this.getManagedBean()
+					.setNotOfferSupplierDM(
+							new SummaryNotOfferSupplierPagingDataModel(
+									"evaluationCommitteeSummaryNotOfferSupplier",
+									scQt.isZonal(), null));
+					//20200717@asyrafhaziq - Display not offer supplier - End
 				}
 
 			/*	evalResDTO = evaluationSO.retrieveSummaryDetails(summaryReqDTO);
@@ -806,11 +852,25 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 			this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
+			//20200717@asyrafhaziq - Display not offer supplier - Start
+			this.getManagedBean().getNotOfferSupplierDM().reloadData();
+			//20200717@asyrafhaziq - Display not offer supplier - End
 		} finally {
 
 		}
 	}
-
+	//20200717@asyrafhaziq - Display not offer supplier - Start
+	public void evaluationNotOfferSupplierZoneSummaryTabChange(
+			TabChangeEvent event) {
+		try {
+			
+			TplSpecZoneDtl specZoneDtl = (TplSpecZoneDtl) event.getData();
+			getManagedBean().setSelectedZone(specZoneDtl);
+			this.getManagedBean().getNotOfferSupplierDM().reloadData();
+		} finally {
+		}
+	}
+	//20200717@asyrafhaziq - Display not offer supplier - End
 	/**
 	 * Evaluation zonessummary tab change.when you change zones in evaluation
 	 * stage Financial summary based on zonal to get all qualified and
@@ -842,6 +902,9 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 			this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
+			//20200717@asyrafhaziq - Display not offer supplier - Start
+			this.getManagedBean().getNotOfferSupplierDM().reloadData();
+			//20200717@asyrafhaziq - Display not offer supplier - End
 		} finally {
 
 		}
@@ -879,6 +942,8 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 			this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
+			//haziq
+			this.getManagedBean().getNotOfferSupplierDM().reloadData();
 		} finally {
 
 		}
@@ -896,6 +961,9 @@ public class EvaluationBackingBean extends
 	public void recommendationSummaryItemSelect(SelectEvent event) {
 		this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 		this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
+		//20200717@asyrafhaziq - Display not offer supplier - Start
+		this.getManagedBean().getNotOfferSupplierDM().reloadData();
+		//20200717@asyrafhaziq - Display not offer supplier - End
 	}
 
 	
@@ -11422,7 +11490,80 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 	}
-
+//20200717@asyrafhaziq - Display not offer supplier - Start
+	private class SummaryNotOfferSupplierPagingDataModel extends
+			PagingDataModel<Object[]> {
+		private static final long serialVersionUID = 1L;
+		
+		private boolean isZonal;
+		private String awardBy;
+		/**
+		 * Constructor for Summary Not Offer Supplier Paging Data Model
+		 */
+		public SummaryNotOfferSupplierPagingDataModel(String componentId,
+				boolean isZonal, String awardBy) {
+			super(componentId);
+			this.isZonal = isZonal;
+			this.awardBy = awardBy;
+		}
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+         System.out.println("SummaryNotOfferSupplierPagingDataModel");
+			IQTEvaluationSO evaluationSO = null;
+			try {
+				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTEvaluationSO.class);
+				System.out.println("masuk gila 1");
+				ScQt scQt = getManagedBean().getScQt();
+				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setZonal(isZonal);
+				reqDTO.setNotOfferSupplierSearchBean(searchBean);
+				if (getManagedBean().getSelectedZone() != null && isZonal) {
+					System.out.println("masuk gila zonal");
+					reqDTO.setSpeZoneId(getManagedBean().getSelectedZone()
+							.getSpecZoneId());
+				}
+				if (SourcingConstants.AWARD_BY_ITEM.equals(awardBy)) {
+					if (getManagedBean().getSinglesummaryItemList() != null) {
+						
+						RequestItemReqDTO reqRequestItemDTO = new RequestItemReqDTO();
+						reqRequestItemDTO.setRequestItemId(getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
+						
+						ScRequestItem freshRequestItem = getRequestItemSO().retrieveItemByRequestItemId(reqRequestItemDTO).getRequestItem();	
+						if (freshRequestItem.getTplSpecQuestion().getParentSpecQuestion() != null ){
+							reqDTO.setSpecQuestionId(freshRequestItem.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId());
+						}
+								
+					} else {
+						return new SearchResultBean<Object[]>();
+					}
+				}
+				return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
+						.getNotOfferSupplierResultBean();
+			} finally {
+				evaluationSO = null;
+			}
+		}
+	}
+			
+	private IRequestItemSO getRequestItemSO() {
+				return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+			}
+			
+	//20200717@asyrafhaziq - Display not offer supplier - End
 	/**
 	 * Compliance Supplier Paging Data Model
 	 * 
@@ -12674,6 +12815,9 @@ private void retriveCommitteeRemarksList(){
 	public void technicalSummaryItemSelect(SelectEvent event) {
 		this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 		this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
+		//20200717@asyrafhaziq - Display not offer supplier - Start
+		this.getManagedBean().getNotOfferSupplierDM().reloadData();
+		//20200717@asyrafhaziq - Display not offer supplier - End
 	}
 	
 	/*#25138-Ahmaa-Start*/
