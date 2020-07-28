@@ -150,7 +150,8 @@
 
 	</h:panelGroup>
 	
-	
+<!-- #21695 Start Farid -->	
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne 'false'}">		
 	<h:panelGroup id="summaryItemNotOfferSuplier">
 		<p:panel toggleable="true">
 			<f:facet name="header">
@@ -162,4 +163,6 @@
 				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
 		</p:panel>
 	</h:panelGroup>
+</c:if>	
+<!-- #21695 End Farid -->		
 </ui:composition>
