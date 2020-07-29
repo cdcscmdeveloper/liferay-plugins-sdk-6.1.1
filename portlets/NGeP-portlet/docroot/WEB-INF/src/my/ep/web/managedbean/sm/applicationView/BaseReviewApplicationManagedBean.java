@@ -309,6 +309,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean disableDownloadButtonDAHistory;
 	// 28342 : Disciplinary Action - end
 	
+	//28637
+	private boolean viewCatCode;
+	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2184,5 +2187,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setFlagBlacklistCancel(boolean flagBlacklistCancel) {
 		this.flagBlacklistCancel = flagBlacklistCancel;
+	}
+
+	public boolean isViewCatCode() {
+		return viewCatCode;
+	}
+
+	public void setViewCatCode(boolean viewCatCode) {
+		this.viewCatCode = viewCatCode;
 	}
 }
