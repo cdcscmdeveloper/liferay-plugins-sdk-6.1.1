@@ -189,7 +189,7 @@
 	</p:panel>
 	
 <!-- #21695 Start Farid -->
-<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne 'false'}">			
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">			
 		<p:panel toggleable="true">
 			<f:facet name="header">
 			<h:outputText
