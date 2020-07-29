@@ -124,7 +124,7 @@
 
 	</p:panel>
 <!-- 21695 FARID START-->
-<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne 'false'}">	
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">	
 	<h:panelGroup id="TechnicalOrEvaluationCommitteesummaryNotOfferSuplier">
 		<p:panel toggleable="true">
 			<f:facet name="header">
