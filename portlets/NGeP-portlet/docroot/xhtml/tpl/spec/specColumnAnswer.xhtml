@@ -112,7 +112,7 @@
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec)}" />
 		</f:facet>
-
+<!-- FARID START #28673 fix bug #21695 -->
 		<!-- FARID START  add disable tplSpecAnswer.tplSpecZoneQty.qty eq 0-->
 		<p:inputText id="ratePerUom" style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
 			value="#{tplSpecAnswer.ratePerUom}" required="false"
