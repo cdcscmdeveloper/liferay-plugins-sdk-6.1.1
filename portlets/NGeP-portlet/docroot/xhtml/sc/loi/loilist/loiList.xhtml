@@ -57,7 +57,24 @@
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
-
+				
+				<p:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+					</f:facet>
+					
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{loiLoa.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(loiLoa.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					
+					<h:outputText rendered="#{!loiLoa.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+				</p:column>
+						
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" style="width:15%" rendered="#{!isMultipleLoi}">
 					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
 					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa) or readOnly}"
