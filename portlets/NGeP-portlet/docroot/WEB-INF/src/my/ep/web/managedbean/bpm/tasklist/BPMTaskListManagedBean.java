@@ -1243,6 +1243,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
 						boolean viewGlpFlag = viewGlpFlag();
 						
+						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), 
+								new java.util.Comparator<WorklistItemVO>() {
+						  @Override
+						  public int compare(WorklistItemVO w1, WorklistItemVO w2) {
+							  return w1.getTaskType().compareTo(w2.getTaskType());
+						  }
+						});
+						
 						for( WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try {
 								if (worklistItemVO.getTitle().matches("<")) {
@@ -1573,24 +1581,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 //								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
+						
+						resultBean.setTotalRecord(responseDTO.getWorklistVO()
+								.getTotal());
+						resultBean.setResultList(responseDTO.getWorklistVO()
+								.getWorklistItem());
 					}
 					
-					resultBean.setTotalRecord(responseDTO.getWorklistVO()
-							.getTotal());
-					resultBean.setResultList(responseDTO.getWorklistVO()
-							.getWorklistItem());
-					//#24714
-					// Sort worklistItem with Group tasks preceeding the My tasks
-					if (resultBean.getResultList() != null) {
-						List<WorklistItemVO> getResultList = resultBean.getResultList();
-						java.util.Collections.sort(getResultList, 
-								new java.util.Comparator<WorklistItemVO>() {
-						  @Override
-						  public int compare(WorklistItemVO w1, WorklistItemVO w2) {
-							  return w1.getTaskType().compareTo(w2.getTaskType());
-						  }
-						});
-					}
 				} else {
 					resultBean.setTotalRecord(0);
 					resultBean.setResultList(null);
