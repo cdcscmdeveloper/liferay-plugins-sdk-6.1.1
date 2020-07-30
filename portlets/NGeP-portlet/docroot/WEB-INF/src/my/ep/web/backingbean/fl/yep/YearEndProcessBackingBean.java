@@ -515,7 +515,10 @@ public class YearEndProcessBackingBean extends
 				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
-				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)){
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+				||statusId.equals(FulfilmentStatusConst.PENDING_SUPPLIER_ACK)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)){
 				
 				return true;
 			}
@@ -535,6 +538,8 @@ public class YearEndProcessBackingBean extends
 		String flDocId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
 		String buttonVal = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("buttonVal");
 		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String orderN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderN");
 		
 		
 		
@@ -548,6 +553,9 @@ public class YearEndProcessBackingBean extends
 				
 				flOrderBB.renewSesionObject();
 				flOrderBB.getManagedBean().setButtonVal(buttonVal);
+				/*#28375 - Logan - Beginning*/
+				flOrderBB.getManagedBean().setTaskId(taskId);
+				/*Ending*/
 				String[] outcome = new String[1];
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(buttonVal)){
 					outcome[0] = BpmOutcomeConst.BPM_CANCEL;
@@ -589,6 +597,9 @@ public class YearEndProcessBackingBean extends
 				flOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
 				flOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 				flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+				/*#28375 - Logan - Beginning*/
+				flOrderBB.getManagedBean().setTaskId(taskId);
+				/*Ending*/
 				flOrderBB.getManagedBean().setBackToPrevious("searchYearEndProcess");
 				
 				if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
