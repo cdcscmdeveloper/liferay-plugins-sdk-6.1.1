@@ -737,7 +737,7 @@ public class QTCloneBackingbean extends
 		}
 		try {
 			if(isCreation(nodes)){
-				//refreshQT();
+				refreshQT();
 			}
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
