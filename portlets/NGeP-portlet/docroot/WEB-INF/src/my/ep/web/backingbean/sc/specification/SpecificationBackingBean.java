@@ -7534,7 +7534,8 @@ public class SpecificationBackingBean extends
 					new BigDecimal(local + financialScore));
 			if ((null != this.getManagedBean().getTotalScore())
 					&& this.getManagedBean().getTotalScore().intValue() > 100) {
-				throw new EpException(MessageConst.ERROR_760257);
+//#21695 Farid 30/7/2020 Start
+				throw new EpException(MessageConst.ERROR_7602571);
 
 			}
 
@@ -16474,14 +16475,16 @@ public class SpecificationBackingBean extends
 		try {
 			if (null != technicalItem) {
 				if (null == technicalItem.getOverallTechnical()) {
-					throw new EpException(MessageConst.ERROR_760256);
+//#21695 Farid 30/7/2020 Start
+					throw new EpException(MessageConst.ERROR_7602561);
 				}
 				if (technicalItem.getOverallTechnical().intValue() <= 0) {
-					throw new EpException(MessageConst.ERROR_760269);
+					throw new EpException(MessageConst.ERROR_7602691);
 				}
 				if (null == technicalItem.getOverallOtherTechnical()) {
-					throw new EpException(MessageConst.ERROR_760256);
+					throw new EpException(MessageConst.ERROR_7602561);
 				}
+//#21695 Farid 30/7/2020 End
 				int value1 = technicalItem.getOverallTechnical() != null ? technicalItem
 						.getOverallTechnical().intValue() : 0;
 				int value2 = technicalItem.getOverallOtherTechnical() != null ? technicalItem
@@ -16493,8 +16496,9 @@ public class SpecificationBackingBean extends
 						&& (this.getManagedBean().getTechnicalItemScore()
 								.intValue() < 100 || this.getManagedBean()
 								.getTechnicalItemScore().intValue() > 100)) {
-					throw new EpException(MessageConst.ERROR_760257);
-
+//#21695 Farid 30/7/2020 Start					
+					throw new EpException(MessageConst.ERROR_7602571);
+//#21695 Farid 30/7/2020 End
 				}
 			}
 
