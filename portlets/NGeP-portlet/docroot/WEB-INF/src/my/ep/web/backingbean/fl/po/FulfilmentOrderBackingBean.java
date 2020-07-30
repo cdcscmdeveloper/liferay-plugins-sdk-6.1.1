@@ -8,14 +8,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -37,12 +41,14 @@ import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentYepSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -67,6 +73,9 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
+import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
@@ -86,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
@@ -215,12 +225,36 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
    	public String fulfillmentOrderAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
-		IFulfilmentOrderSO fulfilmentOrderSO = null;		
+		
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		/*#28375 - Logan - Beginning*/
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+	    
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setFlDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+		reqDTO.setYep(getManagedBean().getFulfilmentOrder().isYep());
+		reqDTO.setStartDate(getManagedBean().getFlRequest().getStartDate());
+		log.info("getFacesScopes().getUserSessionBean()"+getFacesScopes().getUserSessionBean());
+		log.info("getUserRole("+getUserRole());
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+		reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+		reqDTO.setSmSupplier(getManagedBean().getFlRequest().getSmSupplier());
+		if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+		}
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());				
+		}
+		reqDTO.setTaskId(getManagedBean().getTaskId());
+		reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+	
+		/*Ending*/
 		try {
 			validateFulfillmentOrder(action);			
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			FlFulfilmentOrder flOrder = null;
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
@@ -237,6 +271,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}			
 			}
 			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD) &&
+					getManagedBean().getFulfilmentOrder()!=null && getManagedBean().getFulfilmentOrder().getSapOrderNo() != null){
+				String sapOrderNo = checkSapOrderNo(getManagedBean().getFulfilmentOrder().getDocNo());
+
+				if(sapOrderNo!=null){
+					getManagedBean().getFulfilmentOrder().setSapOrderNo(sapOrderNo);
+				}			
+			}
+			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 
@@ -245,13 +288,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}else{
 				reqDTO.setContractRequest(false);
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
 				Map<String, String> paramMap = new HashMap<String, String>();
 				paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getFulfilmentOrder().getDocNo());
 				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 				reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_PURCHASE_ORDER,paramMap)+ "'>"+getManagedBean().getFulfilmentOrder().getDocNo()+"</a>");
 			}
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setTaskName(this.getManagedBean().getTaskName());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
@@ -279,7 +323,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && !hasFactoringUserRole()){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
-			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
+			/*#28375 - Logan - Beginning*/
+			}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
+				
+				resDTO = fulfilmentOrderSO.acknowledgeForCarryForward(reqDTO);
+			
+     		}
+			/*Ending*/
+			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 				reqDTO.setStopIns(getManagedBean().getStopIns());
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
@@ -304,7 +355,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					messageId = MessageConst.INFO_700011;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				}
+				/*#28375 - Logan - Beginning*/
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
+					messageId = MessageConst.INFO_700033;
+				}/*Ending*/
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)) {
 					documentType = ParameterConst.DOCTYPE_STOP_DELIVERY;
@@ -352,9 +408,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 	}
    	
- 
-	
-	/**
+ 	/**
 	 * Validate fulfillment order before submit or save action.
 	 *
 	 * @param action the action
@@ -369,7 +423,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
 			if("true".equalsIgnoreCase(getManagedBean().getFactoringCheck())){
 				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrgId()){
 					throw new EpException(MessageConst.ERROR_745062);
@@ -902,7 +956,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	private String getUserRole() {
 		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
 			return RoleCode.FL_APPROVER.value();	
-		} else if(hasSupplierRole()) {
+		} else if(getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+			return RoleCode.FL_APPROVER.value();
+		}else if(hasSupplierRole()) {
 			return getUserSupplierRole();
 		} else if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
 			return RoleCode.FACTORING_ADMIN.value();	
@@ -992,6 +1048,85 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				return null;
 			}
 		}
+
+	/* #28375 - Beginning - Logan */
+	public void carryForward(String action) throws PortalException, SystemException, IOException {
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FeeExemptionReqDTO reqFeeDTO = new FeeExemptionReqDTO();
+		FulfilmentResDTO resDTO = null;
+		FeeExemptionResDTO resFeeDTO = null;
+
+		IFeeExemptionSO feeExemptionsSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		IFulfilmentYepSO FulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
+		
+		reqFeeDTO.setOrgProfileId((long) 1955);
+		resFeeDTO = feeExemptionsSO.getFeeExemptionsYepProcessing(reqFeeDTO);
+
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		Calendar currTime = Calendar.getInstance();
+
+		try {
+			Date d1 = df.parse(df.format(currTime.getTime()));
+			Date d2 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getEffDate()));
+			Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
+
+			if (getManagedBean().getCarryForward() != null) {
+			
+				if (d1.compareTo(d3) < 0 && d1.compareTo(d2) > 0)  {
+					reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+				}else{
+					throw new EpException(MessageConst.ERROR_776107);
+				}
+
+				signingAction(action);
+				String messageCode = "";
+
+				messageCode = MessageConst.INFO_700033;
+
+				successMessage(messageCode, "", "", Boolean.TRUE);
+
+			}
+
+			else {
+				FacesContext
+						.getCurrentInstance()
+						.getExternalContext()
+						.redirect(
+								EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+										+ "notifications");
+
+			}
+
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+					
+				
+		
+		}
+		
+		public static String getMessageCommon(String name) {
+			return ResourceBundleUtils.getMessage(name,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}
+		
+		public void successMessage(String messageCode, String messageCommon, String docNo, boolean isAcknowledgeRequired) {
+			
+			if (isAcknowledgeRequired) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+			}
+		}
+		
+		/*#28375 - Ending*/
 		
 		/**
 		 * Gets the contract request factoring company  details based on financial OrgId nad address type.
@@ -1026,7 +1161,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole()) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)|| hasFactoringUserRole()) {
 			if(hasFactoringUserRole()) {
 				validateFulfillmentOrder(outcome);
 			}
