@@ -1790,6 +1790,15 @@ public class SpecificationBackingBean extends
 								.getTechnicalScoreSetting()) {
 							this.getManagedBean().setTechnicalScoreSetting(
 									recommnendationSetting);
+							//set scoring item to default to 50
+// #21695 START FARID 30/7/2020
+							if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+								if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+									this.getManagedBean().setTechnicalItemScoreSetting(
+											recommnendationSetting);
+								}
+// #21695 START FARID END 30/7/2020			
+							}
 						}
 					}
 
