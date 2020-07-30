@@ -66,6 +66,8 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 	private Boolean checkPaDocType;
 	private Boolean checkDocNo;
 	private Long statusDescId;
+	/*#28375 - Logan*/
+	private Long yepTaskId;
 
 	private PmOrgProfile ptj;
 	private PmOrgProfile ministry;
@@ -222,6 +224,20 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 	public void setStatusDescId(Long statusDescId) {
 		this.statusDescId = statusDescId;
 	}
+	
+	/*#28375 - Logan - Beginning*/
+	public Long getYepTaskId() {
+		return yepTaskId;
+	}
+
+	public void setYepTaskId(Long yepTaskId) {
+		this.yepTaskId = yepTaskId;
+	}
+	
+	
+
+	
+	/*Ending*/
 
 	/**
 	 * Gets the search contract to duration.
@@ -690,6 +706,12 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 					reqDTO.setStatusId(getStatusDescId());
 				}
 				
+				/*#28375 Logan - Beginning*/
+				if(getYepTaskId()!=null){
+					reqDTO.setTaskId(String.valueOf(getYepTaskId()));
+				}
+				/*Ending*/
+				
 				/*ap 58*/
 				if(getSearchAp58() != null && getSearchAp58() == true){
 					reqDTO.setAp58(1);
@@ -699,7 +721,7 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 				if(getSearchCarryFoward() != null){
 					reqDTO.setCarryFoward(getSearchCarryFoward());
 				}
-				
+
 				/*close manual*/
 				if(getSearchCloseMnualPay() != null){
 					reqDTO.setCloseMnualPay(getSearchCloseMnualPay());
@@ -800,8 +822,6 @@ public class YearEndProcessManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
-	
 
 
 }
