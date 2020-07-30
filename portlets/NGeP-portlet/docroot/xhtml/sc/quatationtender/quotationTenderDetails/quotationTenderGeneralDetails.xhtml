@@ -447,7 +447,9 @@
 						<tr>
 							<td>
 							<c:choose>
-								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+							<!-- #21695 farid -->
+				<!-- #21695 farid 30/7/2020 -->
+								<c:when test="#{qTDetailBB.managedBean.secretaryValidate or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 										<p:outputPanel id="partialPop">
 													<p:selectOneRadio  value="#{scQt.partial}">
 														<f:selectItems
@@ -458,8 +460,10 @@
 														</p:ajax>
 														<p:ajax render="confirmDialog" ></p:ajax>
 													</p:selectOneRadio>
-										</p:outputPanel>			
-													<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmDialogWidgetVar">
+										</p:outputPanel>
+				<!-- #21695 Add Closable & resizable 30/7/2020 -->									
+													<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
+													widgetVar="confirmDialogWidgetVar" resizable="false" closable="false">
 													<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 													action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
 													<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
@@ -468,10 +472,10 @@
 												</p:confirmDialog>
 									</c:when>
 									<c:otherwise>
-											<p:selectOneRadio  value="#{scQt.partial}" disabled="true" readonly="true">
-												<f:selectItems
-													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-											</p:selectOneRadio>
+				<!-- #21695 Add inputext 30/7/2020 -->						
+										<p:inputText id="partialTxt"
+											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
+											style="width:195px;" disabled="true" />
 									</c:otherwise>
 								</c:choose>
 							</td>
@@ -492,7 +496,7 @@
 					</td>
 				</tr>
 			</tr>
-<!-- END #21695 farid -->
+<!-- END #21695 farid End-->
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
