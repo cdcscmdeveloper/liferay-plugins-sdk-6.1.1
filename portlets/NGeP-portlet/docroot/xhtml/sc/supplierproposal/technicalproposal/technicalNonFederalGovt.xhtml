@@ -318,18 +318,35 @@
 						</ui:fragment></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
-							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-							id="technicalNonGovernmentContractsUserScoreId"
-							label="#{lbl['lbl.tpl.spec.content.user.score']}"
-							value="#{noOfContracts.userScore}" required="true" maxlength="18"
-							disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}" style="text-align:right"
-							rendered="#{checklistScoreType eq '2'}">
-							<ac:validateNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-								maxIntegerDigits="14" integerOnly="true" />
-							<f:attribute name="min" value="0" />
-							<f:attribute name="max" value="#{contractUserScore}" />
-						</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <c:if
+							test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}"><!-- #25138-start -->
+							<p:inputText id="technicalNonGovernmentContractsUserScoreId"
+								label="#{lbl['lbl.tpl.spec.content.user.score']}"
+								value="#{noOfContracts.userScore}" required="true"
+								maxlength="18"
+								disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
+								style="text-align:right" rendered="#{checklistScoreType eq '2'}">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+									maxIntegerDigits="14" integerOnly="true" />
+								<f:attribute name="min" value="0" />
+								<f:attribute name="max" value="#{contractUserScore}" />
+							</p:inputText>
+						</c:if> <c:if
+							test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+							<p:inputText id="technicalNonGovernmentContractsUserScoreId"
+								readonly="true" disabled="true"
+								label="#{lbl['lbl.tpl.spec.content.user.score']}"
+								value="#{noOfContracts.userScore}" required="true"
+								maxlength="18" style="text-align:right"
+								rendered="#{checklistScoreType eq '2'}">
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+									maxIntegerDigits="14" integerOnly="true" />
+								<f:attribute name="min" value="0" />
+								<f:attribute name="max" value="#{contractUserScore}" />
+							</p:inputText><!-- #25138-end -->
+						</c:if> <p:spacer width="5"></p:spacer> <h:outputText
 							value="/#{contractUserScore}"
 							rendered="#{ checklistScoreType eq '2'}" /> <p:message
 							id="technicalNonGovernmentContractsUserScoreMessage"
