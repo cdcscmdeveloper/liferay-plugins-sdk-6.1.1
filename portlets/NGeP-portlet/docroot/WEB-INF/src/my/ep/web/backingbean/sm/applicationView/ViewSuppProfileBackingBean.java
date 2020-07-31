@@ -460,6 +460,10 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setDisableDownloadButtonDAHistory(true);
 		}
 		
+		//28637 - start
+		if(currSupp.getSmAppl().getSupplierType().equals("K") || getManagedBean().isMofSupplier())
+			getManagedBean().setViewCatCode(true);
+
 		//27876: Disciplinary Action - start - <27876>
 		currSupp.setFlagSupplier(true);
 		//27876: Disciplinary Action - start - <27876>

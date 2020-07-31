@@ -95,8 +95,9 @@
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.remarksList}"/>
 			</p:column>
 			<!-- 27796: Disciplinary Action - end - 26238 -->
-			<!-- 28613 -->
+			<!-- 28613, 28637 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.mofView}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
