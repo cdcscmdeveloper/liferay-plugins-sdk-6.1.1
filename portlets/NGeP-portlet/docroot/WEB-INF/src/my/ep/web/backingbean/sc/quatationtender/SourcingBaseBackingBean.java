@@ -267,6 +267,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	/** 
+	* get faces scopes
+	* 
+	* @return FacesScopes
+	*/
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// end of 25396
+		
 	/**
 	 * To populate details into ScAttachment instance.
 	 * 
@@ -3885,5 +3897,54 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		context.put("bean", this);
 	}
 	//Enhancement #26130 -end-
+	
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
+	public boolean hasSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	/**
+	 * Check is it login user is Government User
+	 * 
+	 * @return true, if user is Government User
+	 */
+	protected boolean hasGovernmentUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// end of 25396
 	
 }
