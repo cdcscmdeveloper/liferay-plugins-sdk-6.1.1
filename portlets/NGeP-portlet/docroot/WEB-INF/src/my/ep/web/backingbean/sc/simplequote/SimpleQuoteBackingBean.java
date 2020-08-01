@@ -3728,6 +3728,16 @@ public class SimpleQuoteBackingBean extends
 	/**
 	 * Page navigation to catalogue search page from simpleQuote.
 	 */
+	
+	/**
+	 * Page navigation to Direct Purchase Search.
+	 */
+	// additional back menu
+	public String backMenuToPrevious() {
+		log.info("backMenuToPrevious");
+		return "directPurchaseSearch";
+	}
+	
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -4937,6 +4947,10 @@ public class SimpleQuoteBackingBean extends
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5110,6 +5124,10 @@ public class SimpleQuoteBackingBean extends
 				// quoteSO = null;
 			}
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -5129,7 +5147,11 @@ public class SimpleQuoteBackingBean extends
 				.getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
-
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5302,6 +5324,10 @@ public class SimpleQuoteBackingBean extends
 			} finally {
 				// quoteSO = null;
 			}
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
