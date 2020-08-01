@@ -162,6 +162,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
 	}
 	
+	//Enhancement #25396
+	/**
+	 *  Get document types based on View As selected.
+	 */
+	public void getDocTypesByViewAs() {
+		getManagedBean().setSearchDocumentType(null);
+		if(isGovernment()){
+			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
+			if (!getManagedBean().isG2G()) {
+				getManagedBean().setGovernment(Boolean.TRUE);
+			}
+		} else if(isSupplier()){
+			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
+			getManagedBean().setGovernment(Boolean.FALSE);
+		}
+	}
 	
 	/**
 	 * Checks if is government.
@@ -200,9 +216,31 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
 
+			// #25396 - start
+			PmParameter pmParameter = null;
+			if (StringUtils.isNotEmpty(getManagedBean().getSearchFunctionType())) {
+				try {
+					pmParameter = retrieveParameterById(Long.valueOf(getManagedBean().getSearchFunctionType()));
+					getManagedBean().setG2G(false);
+					//pmParameter = retrieveParameterByTypeAndCode(parameterType, parameterCode)
+				 } catch (NumberFormatException  e) {
+					 log.info("-->getSearchFunctionType() is null ");
+				}
+			}
+			// #25396 - end
+			
 			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			} else {
+			}
+			// #25396 - start
+			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
+				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+				getManagedBean().setG2G(Boolean.TRUE);
+				getManagedBean().setGovernment(Boolean.FALSE);
+			}
+			// #25396 - end
+			else {
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				if (isGovernament) {
@@ -499,7 +537,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-
+			reset(false); //#25396
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.viewPurchaseInDefault(docId);
@@ -547,6 +585,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		sqBackingBean.getManagedBean().setDpObj(dpObj);
 		sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 	}
+	
+	// Enhancement #25396 - start
+	/**
+	 * @param dpObj
+	 */
+	public void performViewDoc(Object[] dpObj) {
+		if (getManagedBean().isG2G() || (isSupplier() && !isGovernment() && getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE))) { 
+			this.viewDocSupplierSQ(dpObj);
+		} else {
+			this.viewDoc(dpObj);
+		}
+	}
+	// Enhancement #25396 - end
 	
 	/**
 	 * Generate report.
@@ -606,17 +657,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * Reset direct purchase search.
 	 */
 	public void reset(boolean isMaintenance){
+		this.getManagedBean().setSearchFunctionType(null); // #25396
 		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
-		if (!isMaintenance) {
+		/*if (!isMaintenance) { // #25396
 			getManagedBean().setSearchMinistryProfile(null);
 			getManagedBean().setSearchPtjGroupProfile(null);
 			getManagedBean().setSearchPtjProfile(null);
-		}
+		}*/
 		this.getManagedBean().resetDocumentDataModel();
 	}
 
@@ -1210,5 +1262,48 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		
 		//12183 - end
+
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	public SelectItem[] getFunctionType() {
+
+		List<String> typeList = new ArrayList<String>();
+		typeList.add(ParameterConst.ORG_TYPE_PTJ);
+		typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), typeList));
+
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+	}
+
+	/**
+	 * Return boolean TRUE for dual role only, else FALSE
+	 * 
+	 * @return boolean
+	 */
+	public boolean showFunctionType() {
+		if (hasSupplierRole() && hasGovernmentUserRole()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Return boolean TRUE for dual role and PTJ, else FALSE
+	 * 
+	 * @return boolean
+	 */
+	public boolean showRoleType() {
+		if (hasGovernmentUserRole()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// end 25396
 }
 
