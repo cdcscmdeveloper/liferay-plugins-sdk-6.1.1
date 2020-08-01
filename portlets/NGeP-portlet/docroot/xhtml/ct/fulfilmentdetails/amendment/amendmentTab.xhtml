@@ -304,5 +304,19 @@
 					onclick="cancelConfirmDlg.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
+		
+			<p:confirmDialog message="#{lbl['lbl.msg.confirm.reject.amendment']}"
+			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					partialSubmit="true" process="@this"
+					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
+					onstart="rejectConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="rejectConfirmDlg.hide()" type="button" />
+			</div>
+		</p:confirmDialog>
 	</ui:define>  
 </ui:composition>
