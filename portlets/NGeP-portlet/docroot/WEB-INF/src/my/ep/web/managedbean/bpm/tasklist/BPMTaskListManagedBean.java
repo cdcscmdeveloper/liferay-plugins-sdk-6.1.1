@@ -652,7 +652,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getDocType().equals("SQ")){
 								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-											    currentStatusId, worklistItemVO.getDocType());	
+											    currentStatusId, worklistItemVO.getDocType(), true);	
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						    			   
 						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -745,7 +745,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 								    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
 									       quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-														 currentStatusId, worklistItemVO.getDocType());	
+														 currentStatusId, worklistItemVO.getDocType(), true);	
 									       if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());							    		   
@@ -794,7 +794,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
 										   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-													 currentStatusId, worklistItemVO.getDocType());	
+													 currentStatusId, worklistItemVO.getDocType(), true);	
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
@@ -814,7 +814,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    		  || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
 							    		  || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 							    		  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-													 currentStatusId, worklistItemVO.getDocType());	
+													 currentStatusId, worklistItemVO.getDocType(), true);	
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
@@ -1311,7 +1311,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getDocType().equals("SQ")){
 								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-											    currentStatusId, worklistItemVO.getDocType());	
+											    currentStatusId, worklistItemVO.getDocType(), true);	
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
 									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
@@ -1369,7 +1369,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 								      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
 									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-												currentStatusId, worklistItemVO.getDocType());	
+												currentStatusId, worklistItemVO.getDocType(), true);	
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
@@ -1417,7 +1417,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
 									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-												 currentStatusId, worklistItemVO.getDocType());	
+												 currentStatusId, worklistItemVO.getDocType(), true);	
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
@@ -1466,7 +1466,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
 								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 								      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-													currentStatusId, worklistItemVO.getDocType());	
+													currentStatusId, worklistItemVO.getDocType(), true);	
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 										  if(!isSqStillValid(quoteResDTO.getEndDate())){
 											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
