@@ -830,18 +830,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Enhancement #26186 end - retrieve disciplinary info
 			
 			//#25956 - Start Button Cancel If not isDisciplinaryAction
-			String[] outcomecancel = new String[getManagedBean().getOutComes().length];
-			int a = 0; 
-			if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.longValue()
-					&& !getManagedBean().isDisciplinaryAction()){
-				
-				outcomecancel = new String[getManagedBean().getOutComes().length+1];
-				outcomecancel[a++] = BpmOutcomeConst.BPM_CANCEL;
-			}
-			for (String action : getManagedBean().getOutComes()) {
-				outcomecancel[a++] = action;
-			}
-				getManagedBean().setOutComes(outcomecancel);
+//			String[] outcomecancel = new String[getManagedBean().getOutComes().length];
+//			int a = 0; 
+//			if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.longValue()
+//					&& !getManagedBean().isDisciplinaryAction()){
+//				
+//				outcomecancel = new String[getManagedBean().getOutComes().length+1];
+//				outcomecancel[a++] = BpmOutcomeConst.BPM_CANCEL;
+//			}
+//			for (String action : getManagedBean().getOutComes()) {
+//				outcomecancel[a++] = action;
+//			}
+//				getManagedBean().setOutComes(outcomecancel);
 				//#25956 - Start Button End If not isDisciplinaryAction	
 
 
@@ -2411,8 +2411,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)
-				|| (BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !isSupplierRole()) {
+			
 			setSecretary();
 			validateContractAmendment(outcome);
 			// Temp setTextBeforeSign : DocNo+Type
@@ -2442,9 +2442,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)
 				&& isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+			preRejectContractAmendment(outcome);
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -2460,7 +2461,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		} else {
+		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			validateContractAmendment(outcome);
+			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			return null;
+		}else {
 			return saveContractAmendment(outcome);
 		}
 	}
@@ -6651,5 +6656,70 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return filteredCommitteeMembers;
 		}
 		//26753 - end
+		
+	//#25956 - Start
+		/**
+		 * The method used to authenticate user during reject for approval the contract amendment.
+		 * This method will invoke a confirmation dialog for user authentication.
+		 * 
+		 * @param  outcome  the user action on this contract
+		 * @return result of the saveContractAmendment process
+		 * @throws Exception   if an exception occurred
+		 * @see    Exception
+		 */
+		public String preRejectContractAmendment(String outcome) throws Exception {
+			if ((BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+				
+				setSecretary();
+				validateContractAmendment(outcome);
+				// Temp setTextBeforeSign : DocNo+Type
+				StringBuilder sb = new StringBuilder();
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+				sb.append(ContractConst.SEPRATE_LINE);
+				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+					sb.append(ContractConst.SEPRATE_LINE);
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+				}else {
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					sb.append(ContractConst.SEPRATE_LINE);
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				}
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(newOverallContractAmount());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(outcome);		
+				sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());	
+				sb.append(outcome);
+				getManagedBean().setTextBeforeSign(sb.toString());
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)
+					&& isSupplierRole()
+					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+				preRejectContractAmendment(outcome);
+				validateContractAmendment(outcome);	
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				if(hasGovtSellerRole()) {
+					getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+					preRejectContractAmendment(outcome);
+					RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				} else {			
+					preRejectContractAmendment(outcome);
+					getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				}
+				return null;
+			} else {
+				return saveContractAmendment(outcome);
+			}
+		}
+		//#25956 - End
 
 	}
