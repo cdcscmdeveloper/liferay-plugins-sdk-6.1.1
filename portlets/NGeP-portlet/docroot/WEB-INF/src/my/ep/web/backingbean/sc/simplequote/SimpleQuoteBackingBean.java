@@ -6959,7 +6959,7 @@ public class SimpleQuoteBackingBean extends
 			Locale locale = new FacesScopes().getUserLocale();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
 							.getMessage(
 									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
@@ -7376,53 +7376,95 @@ public class SimpleQuoteBackingBean extends
 	}
 	
 	//12177 - Start	
-		/**
-		 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
-		 */
-		public boolean isSqStillValid(){		
+	/**
+	* Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	*/
+	public boolean isSqStillValid(){
 			
-			Boolean validDate = true;	
-			Integer sqTimeValidity = null;
-			Long currentStatusId = null;
-			ScQuote scQuote = getManagedBean().getScQuote();
-			
-			if(scQuote != null){
-				if(scQuote.getCurrentStatus() != null){
-					currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
-				}				
+		Boolean validDate = true;
+		Integer sqTimeValidity = null;
+		Long currentStatusId = null;
+		ScQuote scQuote = getManagedBean().getScQuote();
+		
+		if(scQuote != null){
+			if(scQuote.getCurrentStatus() != null){
+				currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
 			}
-			
-			// by default days
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-			List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-			if (ruleValueList != null && ruleValueList.size() > 0) {
-				PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-				sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-			} else {
-				throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-			}		
-			
-			if(scQuote != null && currentStatusId != null && scQuote.getEndDate() != null){
-				if(scQuote.getPurchaseInDefault() == null){
-					Date currentDate = new Date();
-					Date closingDate = scQuote.getEndDate();
-					
-					Calendar cal = Calendar.getInstance();
-					cal.clear(); 
-					cal.setTime(closingDate);
-					cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-					
-					if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
-						if(currentDate.compareTo(cal.getTime()) >= 0){
-							validDate = false;
-						}
-					}					
-				}				
-			}			
-			return validDate;	
 		}
-		//12177 - End
+			
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+			
+		if(scQuote != null && currentStatusId != null && scQuote.getEndDate() != null){
+			if(scQuote.getPurchaseInDefault() == null){
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+					
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+					
+				if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+					}
+				}
+			}
+		}
+		return validDate;
+	}
+	//12177 - End
+		
+	//12183 - Start
+	public String getDocStatus(){
+		
+		if(checkStatusPidExpired()){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(!isSqStillValid()){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}else{
+			return getStatusDescById(getManagedBean().getSimpleQuoteStatus().getStatusId());
+		}
+	}
+	
+	public boolean checkStatusPidExpired(){
+			
+		Boolean valid = false;
+		Long currentStatusId = null;
+		ScPurchaseInDefault scPID = null;
+		ScQuote scQuote = getManagedBean().getScQuote();
+
+		if(scQuote != null){
+			if(scQuote.getCurrentStatus() != null){
+				currentStatusId = scQuote.getCurrentStatus().getPmStatus().getStatusId();
+			}		
+			scPID = getManagedBean().getScQuote().getPurchaseInDefault();
+		}
+			
+		if(scPID != null){
+			if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
+				|| currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+		
+				Date today  = DateUtils.getCurrentDate();
+				Date ExpDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
+					
+				if(today.after(ExpDate)){
+					valid = true;
+				}
+			}
+		}
+		return valid;
+	}
+	//12183 - End
 }
