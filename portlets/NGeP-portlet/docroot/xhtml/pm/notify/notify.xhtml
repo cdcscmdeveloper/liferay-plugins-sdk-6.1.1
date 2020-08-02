@@ -106,7 +106,7 @@
 											update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable">
 
 											<h:outputText
-												value="#{notify.pmNotifyDashboard.subject.length() gt 50 ? notify.pmNotifyDashboard.subject.substring(0,47).concat('...') : notify.pmNotifyDashboard.subject}"></h:outputText>
+											     value="#{notifyBackingBean.getNotifyDashboardSubject(notify).length() gt 50 ? notifyBackingBean.getNotifyDashboardSubject(notify).substring(0,47).concat('...') : notifyBackingBean.getNotifyDashboardSubject(notify)}"></h:outputText>
 
 											<f:setPropertyActionListener value="#{notify}"
 												target="#{notifyBackingBean.managedBean.selectedNotify}" />
@@ -232,7 +232,7 @@
 												
 													<td colspan="3"><h:outputText readonly="true"
 															style="width:545px"
-															value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.subject}"></h:outputText>
+															value="#{notifyBackingBean.getNotifyDashboardSubject(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
 													</td>
 													
 												</tr>
@@ -248,7 +248,7 @@
 																			<p>
 																				<h:outputText escape="false"
 																						style="text-align:left;width:98%;height:220px;overflow: auto;"
-																						value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></h:outputText>
+																						value="#{notifyBackingBean.getNotifyDashboardContent(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
 																			</p>
 																		</p:outputPanel>
 																	</td>
