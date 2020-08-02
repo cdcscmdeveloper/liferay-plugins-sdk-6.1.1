@@ -176,6 +176,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	private long progressStatus;//#28374	Vinod Start
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1498,7 +1499,14 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.carryForward = carryForward;
 	}
 	/*#28375 - Ending Logan*/
-	
+	//#28374	Vinod Start
+	public long getProgressStatus() {
+		return progressStatus;
+	}
+	public void setProgressStatus(long progressStatus) {
+		this.progressStatus = progressStatus;
+	}
+	//#28374	Vinod End
 	
 
 }

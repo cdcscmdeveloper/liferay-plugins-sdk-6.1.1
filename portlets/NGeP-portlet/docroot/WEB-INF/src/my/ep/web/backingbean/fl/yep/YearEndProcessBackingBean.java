@@ -540,6 +540,7 @@ public class YearEndProcessBackingBean extends
 		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		String orderN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderN");
+		String progressStatus = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("progressStatus");
 		
 		
 		
@@ -556,6 +557,10 @@ public class YearEndProcessBackingBean extends
 				/*#28375 - Logan - Beginning*/
 				flOrderBB.getManagedBean().setTaskId(taskId);
 				/*Ending*/
+				//#28374	Vinod Start
+				flOrderBB.getManagedBean().setProgressStatus(Long.valueOf(progressStatus));
+				//#28374	Vinod End
+				
 				String[] outcome = new String[1];
 				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(buttonVal)){
 					outcome[0] = BpmOutcomeConst.BPM_CANCEL;
@@ -600,6 +605,9 @@ public class YearEndProcessBackingBean extends
 				/*#28375 - Logan - Beginning*/
 				flOrderBB.getManagedBean().setTaskId(taskId);
 				/*Ending*/
+				//#28374	Vinod Start
+				flOrderBB.getManagedBean().setProgressStatus(Long.valueOf(progressStatus));
+				//#28374	Vinod End
 				flOrderBB.getManagedBean().setBackToPrevious("searchYearEndProcess");
 				
 				if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
