@@ -95,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -112,6 +113,7 @@ import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -2045,4 +2047,115 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
+	//#28374	Vinod Start
+	public String cancelCarryForwardAction(String action) throws IOException {
+		log.debug("FulfilmentOrderBackingBean.cancelCarryForwardAction()");
+		IFulfilmentOrderSO fulfilmentOrderSO = null;
+		IFeeExemptionSO feeSO = null;
+		try {
+			validateFulfillmentOrder(action);			
+			
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) &&
+					getManagedBean().getFulfilmentOrder()!=null && getManagedBean().getFulfilmentOrder().getSapOrderNo() == null){
+				String sapOrderNo = checkSapOrderNo(getManagedBean().getFulfilmentOrder().getDocNo());
+
+				if(sapOrderNo!=null){
+					getManagedBean().getFulfilmentOrder().setSapOrderNo(sapOrderNo);
+				}			
+			}
+			
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFeeExemptionSO.class);
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			reqDTO.setFlFulfilmentRequest(flRequest);
+
+			if(getManagedBean().isContractRequest() == Boolean.TRUE){
+				reqDTO.setContractRequest(getManagedBean().isContractRequest());
+			}else{
+				reqDTO.setContractRequest(false);
+			}
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+				Map<String, String> paramMap = new HashMap<String, String>();
+				paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getFulfilmentOrder().getDocNo());
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_PURCHASE_ORDER,paramMap)+ "'>"+getManagedBean().getFulfilmentOrder().getDocNo()+"</a>");
+			}
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setOutcome(action);
+			reqDTO.setToken(token);
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
+			reqDTO.setContractOrder(getManagedBean().isContractRequest());
+			if(reqDTO.isContractRequest() == Boolean.FALSE){
+				if(getManagedBean().getFactoringCheck().equalsIgnoreCase("true")) {
+					getManagedBean().getFulfilmentOrder().setFactored(true);
+				}
+			}
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(getUserRole());
+			reqDTO.setTaskName(getManagedBean().getTaskName());
+			reqDTO.setApproverUserList(getManagedBean().getApproverList());
+			
+			String messagePrefix = "";
+			String messageSuffix = "";
+			FulfilmentResDTO resDTO = null;
+			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
+			FeeExemptionResDTO resFDTO = null;
+			Date systemDate = DateUtils.getCurrentDate();
+			if(getManagedBean().getPmDigiSign() != null){
+				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+			}
+			if(reqDTO != null && action.equals(BpmOutcomeConst.BPM_CANCEL_YEP)){
+				//retrieve pm_fee_exemption records
+				resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
+				Date dtEff = null;
+				Date dtExp = null;
+				if(resFDTO.getResultBean() != null && resFDTO.getResultBean().getResultList().size() > 0){
+					
+					for (PmFeeExemption feeExemption : resFDTO.getResultBean().getResultList()) {
+						dtEff = feeExemption.getEffDate();
+						dtExp = feeExemption.getExpDate();
+							
+						if(feeExemption.getOrgTypeId().getParameterId().equals(new Long(1955)))
+							break;
+					}
+					
+					if(systemDate.after(dtEff) && systemDate.before(dtExp)){
+						resDTO = fulfilmentOrderSO.cancelCarryForwardAction(reqDTO);
+					}else{
+						resDTO = new FulfilmentResDTO();
+						resDTO.setSuccessful(false);
+					}
+				}
+			}
+			
+			if(resDTO.isSuccessful()) {
+				String messageId = MessageConst.INFO_700005;
+				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messageId = MessageConst.INFO_745016;
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}finally {
+				fulfilmentOrderSO = null;
+		}
+			
+		}
+	//#28374	Vinod End
 }
