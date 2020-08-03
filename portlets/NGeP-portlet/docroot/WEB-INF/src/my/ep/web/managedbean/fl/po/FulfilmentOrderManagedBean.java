@@ -176,6 +176,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	//28377 - start
+	private String FileDirectory;
+	private FlAttachment attachment;
+	//28377 - end
+	
 	//#28374	Vinod Start
 	private String progressStatus;
 	private String iscarryForward="";
@@ -1502,6 +1507,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.carryForward = carryForward;
 	}
 	/*#28375 - Ending Logan*/
+	
 	//#28374	Vinod Start
 	public String getProgressStatus() {
 		return progressStatus;
@@ -1517,5 +1523,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 	//#28374	Vinod End
 	
+	public String getFileDirectory() {
+		return FileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		FileDirectory = fileDirectory;
+	}
+
+	public FlAttachment getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(FlAttachment attachment) {
+		this.attachment = attachment;
+	}
 
 }
