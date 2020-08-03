@@ -1466,7 +1466,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					overallContractAmount = contractAmt.getContractAmount().doubleValue();					
 					
 					if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
-						
+						//28203
 					    try {
 						     overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
 			                }
