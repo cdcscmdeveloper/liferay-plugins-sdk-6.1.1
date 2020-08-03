@@ -13049,7 +13049,10 @@ public class SmApplicationBackingBean extends
 		if(personnel.getEpRole() == null && (personnel.isEquityOwner() ||personnel.isDirector())){
 			log.info(personnel.getEpRole()+"eprol-----Personnel Id = "+personnel.getPersonnelId()+"=APPL ID="+personnel.getSmAppl().getApplId()+"--Deleted : "+personnel.getName());									
 			personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		}else{//Start 28651
+			personnel.setSsmData(false);
 		}
+		//end 28651
 	}
 	//END : #27239 
 }
