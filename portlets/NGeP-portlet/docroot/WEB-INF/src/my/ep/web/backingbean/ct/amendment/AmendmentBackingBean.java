@@ -1220,8 +1220,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 				}
 				
-				
-			}
+				// for Fixing Enhancement #20997 - Start
+				//#Bug #28339 - Failed to Update Max QTY & price
+				if(getManagedBean().getSelectedItem() != null){
+				if(getManagedBean().getSelectedItem().getCtItemPrices() != null){
+					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
+						itemPrice.setChangePrice(false);
+					}	
+				}
+
+				if(getManagedBean().getSelectedItem().getCtItemMaxQties() != null){
+					for(CtItemMaxQty itemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+						itemMaxQty.setChangeQuantity(false);
+					}
+				}
+			}				
+		}
+		// for Fixing Enhancement #20997 and #Bug #28339 - End	
+
 			// Change Code #20997 End
 			
 			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
@@ -2862,28 +2878,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		//#20997--Start
-		if(getManagedBean().getSelectedItem() != null){			
-			for(CtContractItem itemProduct : ctBackingBean.getManagedBean().getCtItemList()){
-					for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices() ){
-			if(itemPrice.isBrandNew() && itemProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
-				itemProduct.getCtItemPrices().remove(itemPrice);
-				itemProduct.getCtItemPrices().add(itemPrice);
-				
-				}
-			}
-		}
-	}
-		if(getManagedBean().getSelectedServiceItem() != null){
-			for(CtContractItem itemService : ctBackingBean.getManagedBean().getCtItemServiceList()){
-		for(CtItemPrice itemPrice : getManagedBean().getSelectedServiceItem().getCtItemPrices() ){
-			if(itemPrice.isBrandNew() && itemService.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedServiceItem().getContractItemId())){
-				itemService.getCtItemPrices().remove(itemPrice);
-				itemService.getCtItemPrices().add(itemPrice);
+		if(getManagedBean().getSelectedItem() != null){	
+				//Bug #28339 for Fixing #20997--Start
+						for(CtItemPrice itemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()){
+							if(itemPrice.isChangePrice() && ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+								ctBackingBean.getManagedBean().getCtItemList().remove(0);
+								ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+							}else if(itemPrice.isChangePrice() && !ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+								ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+							}							
+						}			
+					}
+		
+			if(getManagedBean().getSelectedServiceItem() != null){
+					for(CtItemPrice servicePrice : getManagedBean().getSelectedServiceItem().getCtItemPrices()){
+						if(servicePrice.isChangePrice() && ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+							ctBackingBean.getManagedBean().getCtItemServiceList().remove(0);
+							ctBackingBean.getManagedBean().getCtItemServiceList().add(getManagedBean().getSelectedServiceItem());
+						}else if(servicePrice.isChangePrice() && !ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+							ctBackingBean.getManagedBean().getCtItemServiceList().add(getManagedBean().getSelectedServiceItem());
+						}							
+					}
 					}
 				}
-			}		
-		}
-	}
+			//Bug #28339 for Fixing #20997--End
 	//#20997 -- End
 	
 	/**
@@ -3175,17 +3193,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//#20997--Start
 		if(getManagedBean().getSelectedItem() != null){			
-			for(CtContractItem itemQtyProduct : ctBackingBean.getManagedBean().getCtItemList()){
-					for(CtItemMaxQty itemQtyPrice : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
-			if(itemQtyPrice.isBrandNew() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
-				itemQtyProduct.getCtItemMaxQties().remove(itemQtyPrice);
-				itemQtyProduct.getCtItemMaxQties().add(itemQtyPrice);
-				
-				}
+			//Bug #28339 for Fixing #20997--Start
+			for(CtItemMaxQty itemQtyProduct : this.getManagedBean().getSelectedItem().getCtItemMaxQties()){
+				if(itemQtyProduct.isChangeQuantity() && ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemList().remove(0);
+					ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+				}else if(itemQtyProduct.isChangeQuantity() && !ctBackingBean.getManagedBean().getContractVer().isBrandNew()){
+					ctBackingBean.getManagedBean().getCtItemList().add(getManagedBean().getSelectedItem());
+				}							
 			}
+			//Bug #28339 for Fixing #20997-- End
+			}		
 		}
-	}
-}
+//	}
 	//#20997--End
 	
 	/**
