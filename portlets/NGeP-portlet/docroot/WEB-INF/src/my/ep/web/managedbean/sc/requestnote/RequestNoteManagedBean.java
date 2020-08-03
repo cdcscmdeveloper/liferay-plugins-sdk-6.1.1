@@ -336,6 +336,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	private	Object[] selectedPrDtls;
 	
+	//12183 - Start
+	private boolean pidValidityExpired = false;
+	//12183 - End
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -1960,4 +1964,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedPrDtls(Object[] selectedPrDtls) {
 		this.selectedPrDtls = selectedPrDtls;
 	}
+	
+	//12183 - Start
+	public boolean isPidValidityExpired() {
+		return pidValidityExpired;
+	}
+
+	public void setPidValidityExpired(boolean pidValidityExpired) {
+		this.pidValidityExpired = pidValidityExpired;
+	}
+	//12183 - End
 }
