@@ -6702,16 +6702,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)
 					&& isSupplierRole()
 					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
-				preRejectContractAmendment(outcome);
+//				preRejectContractAmendment(outcome);
 				validateContractAmendment(outcome);	
 				getManagedBean().setButtonAction(outcome);
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				if(hasGovtSellerRole()) {
 					getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
-					preRejectContractAmendment(outcome);
+//					preRejectContractAmendment(outcome);
 					RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 				} else {			
-					preRejectContractAmendment(outcome);
+//					preRejectContractAmendment(outcome);
 					getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				}
