@@ -1987,6 +1987,11 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
+				// #28472 - Start.
+				if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
+					signOff();
+				}
+				// #28472 - End.
 				updateBPMTask(outcome, null, reqDTO);
 			}
 		} else {
