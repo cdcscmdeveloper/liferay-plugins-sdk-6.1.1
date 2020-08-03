@@ -61,9 +61,11 @@ public class DigiCertHelper {
 	public String generateSecurityToken(String identificationNo, String epNo) {
 		String tok = null;
 		try {
+			log.info(" ENTER generateSecurityToken ");
 			KMCClient client = getClient();
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.generateToken(identificationNo, epNo));
+			log.info(" OUT generateSecurityToken ");
 			log.info("res.getStatusCode()==="+res.getStatusCode());
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -90,6 +92,7 @@ public class DigiCertHelper {
 		String url4 = getRevokeDns() + "/kmc/RequestRevokeCert.aspx?userID="
 				+ identificationNo + "&orgid=" + epNo + "&token="
 				+ encodedtoken;
+		log.info("DG CERT REVOKE URL :"+url4);
 		externalContext.redirect(url4);
 	}
 
@@ -102,6 +105,7 @@ public class DigiCertHelper {
 				.getExternalContext();
 		String url = getDns() + "/kmc/RequestChangePIN.aspx?userID="
 				+ identificationNo + "&token=" + encodedtoken;
+		log.info("DG CERT CHANGE PIN URL :"+url);
 		externalContext.redirect(url);
 	}
 
@@ -114,6 +118,7 @@ public class DigiCertHelper {
 				.getExternalContext();
 		String url = getDns() + "/kmc/RequestChallRespUpdate.aspx?userID="
 				+ identificationNo + "&token=" + encodedtoken;
+		log.info("DG CERT UPDATE CHALL URL :"+url);
 		externalContext.redirect(url);
 	}
 
@@ -271,11 +276,14 @@ public class DigiCertHelper {
 	}
 
 	public static KMCClient getClient() {
+		log.info("getClient=====================================START");
 		if (client == null) {
 			try {
 				client = getInstance().getKMCClient();
+				log.info("getClient====================================="+client);
 			} catch (KMCAPIException e) {
-
+				log.info("getClient=====================================Error");
+				e.printStackTrace();
 			}
 		}
 		return client;
