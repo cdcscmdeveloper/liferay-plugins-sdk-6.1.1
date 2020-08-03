@@ -1104,6 +1104,12 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setBasicCompanyDistricts(
 						SmCommonUtil.getDistrictList(addr.getPmState()
 								.getStateId()));
+				//13320-Start
+				if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setBasicCompanyDivisions(
+							SmCommonUtil.getDivisionList(addr.getPmState()
+									.getStateId()));
+				}//13320-End
 				getManagedBean().setPrevBasicStateId(
 						addr.getPmState().getStateId());
 				this.getManagedBean().setBasicCompanyCities(
