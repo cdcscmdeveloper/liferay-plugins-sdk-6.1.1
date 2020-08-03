@@ -395,7 +395,13 @@
 							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
 							        	icon="ui-icon-fl-cancel"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
-						
+							        	<!-- start 28377 -->
+							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isAP58(flYep.statusId) and flYep.isAp58 == 1 and flpYep.getPhase == 5}"
+							        	icon="ui-icon-amendment"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					                    <!-- end 28377 -->		
 						<!-- #28375- Beginning Logan -->
 						<c:if test="#{flYep.statusId eq '41005' || flYep.statusId eq '41505' || flYep.statusId eq '40050'}"> -->
 						
