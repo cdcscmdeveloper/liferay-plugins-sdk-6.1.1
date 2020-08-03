@@ -540,6 +540,7 @@ public class YearEndProcessBackingBean extends
 		String statusDesc = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusDesc");
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		String orderN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderN");
+		String carryForward = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("carryForward");
 		String progressStatus = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("progressStatus");
 		
 		
@@ -558,7 +559,8 @@ public class YearEndProcessBackingBean extends
 				flOrderBB.getManagedBean().setTaskId(taskId);
 				/*Ending*/
 				//#28374	Vinod Start
-				flOrderBB.getManagedBean().setProgressStatus(Long.valueOf(progressStatus));
+				flOrderBB.getManagedBean().setProgressStatus(progressStatus);
+				flOrderBB.getManagedBean().setIscarryForward(carryForward);
 				//#28374	Vinod End
 				
 				String[] outcome = new String[1];
@@ -606,7 +608,8 @@ public class YearEndProcessBackingBean extends
 				flOrderBB.getManagedBean().setTaskId(taskId);
 				/*Ending*/
 				//#28374	Vinod Start
-				flOrderBB.getManagedBean().setProgressStatus(Long.valueOf(progressStatus));
+				flOrderBB.getManagedBean().setProgressStatus(progressStatus);
+				flOrderBB.getManagedBean().setIscarryForward(carryForward);
 				//#28374	Vinod End
 				flOrderBB.getManagedBean().setBackToPrevious("searchYearEndProcess");
 				

@@ -102,15 +102,17 @@
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
-					<!-- #28374	Vinod Start -->
-					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
-					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
-					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
-					<!-- #28374	Vinod End -->
 			</c:if>
 					
 					
 					<!-- #28375- Ending -->
+					<!-- #28374	Vinod Start -->
+					<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
+					</c:if>
+					<!-- #28374	Vinod End -->
 					
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
