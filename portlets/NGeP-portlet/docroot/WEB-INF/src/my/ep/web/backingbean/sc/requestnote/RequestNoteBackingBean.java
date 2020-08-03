@@ -1455,6 +1455,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
+			//12183 - Start
+			requestNoteReqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
+			//12183 - End
+			
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
@@ -4311,7 +4315,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Locale locale = new FacesScopes().getUserLocale();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
 							.getMessage(
 									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
@@ -4331,7 +4335,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Locale locale = new FacesScopes().getUserLocale();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
 							.getMessage(
 									ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.exp.msg2",
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
@@ -4853,6 +4857,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			log.info("pID validity begin");
 			
 			if(today.after(ExpDate)){
+				getManagedBean().setPidValidityExpired(true);
 				valid = true;
 			}
 			log.info("pID validity end");
