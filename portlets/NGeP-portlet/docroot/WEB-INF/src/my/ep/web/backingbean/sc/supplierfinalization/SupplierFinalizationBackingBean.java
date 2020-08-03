@@ -2117,7 +2117,7 @@ public class SupplierFinalizationBackingBean extends
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
 				// #28472 - Start.
-				if (QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
+				if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
 					signOff();
 				}
 				// #28472 - End.
