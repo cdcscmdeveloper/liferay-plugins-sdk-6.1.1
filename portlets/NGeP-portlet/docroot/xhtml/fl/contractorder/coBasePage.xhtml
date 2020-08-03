@@ -118,7 +118,22 @@
 			<td colspan="4" style="text-align: right">
 			<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
-					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/></td>
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- 28377 -->
+					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
+					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- edit render -->
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.submitAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 28377 -->
+			</td>
 				<h:panelGroup id="printButtonCo">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
