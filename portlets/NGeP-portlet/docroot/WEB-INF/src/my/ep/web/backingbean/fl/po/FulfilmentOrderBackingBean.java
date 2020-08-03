@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.fl.po;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -34,6 +36,8 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -85,6 +89,7 @@ import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -112,8 +117,11 @@ import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -140,6 +148,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 	
 	FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+	FlAttachment attachment = new FlAttachment();
 	
 	/**
 	 * Instantiates a new fulfilment order backing bean.
@@ -316,6 +325,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setTaskName(getManagedBean().getTaskName());
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
+			//28377
+			reqDTO.setAttachment(getManagedBean().getAttachment());
+			//28377
 			
 			String messagePrefix = "";
 			String messageSuffix = "";
@@ -348,7 +360,22 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
 				messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.rfc.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 			}
-			
+			//28377: add new save
+			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				reqDTO.setAttachment(this.getManagedBean().getAttachment());
+				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
+				reqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
+				resDTO = fulfilmentOrderSO.saveAP58AL(reqDTO);
+			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				//add more for submit button
+				reqDTO.setAttachment(this.getManagedBean().getAttachment());
+				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
+				reqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
+				resDTO = fulfilmentOrderSO.saveAP58AL(reqDTO);
+			}
+			//end 28377			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
@@ -403,7 +430,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}	
 			else {
-				throw new EpException("Failed.");
+				//throw new EpException("Failed.");
+				//28377
+				return null;
+				// end 28377
 			}
 		} finally {
 			fulfilmentOrderSO = null;
@@ -2158,4 +2188,76 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			
 		}
 	//#28374	Vinod End
+//	28377 - start
+	
+	  public void UploadApprovalLetterAP(FileUploadEvent event) throws Exception {
+			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+			UploadedFile item = event.getFile();
+			
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+					ModuleCodeConst.ORDER_FULFILLMENT, getManagedBean().getFulfilmentOrder().getDocType(), getManagedBean().getFulfilmentOrder().getDocNo() ));
+			String filePath = getManagedBean().getFileDirectory();
+			File file = new File(filePath);
+			if (!file.exists()) {
+				file.mkdirs();
+			}			
+
+			String fileFormat= attachmentFormat.format(item.getFileName(), null);
+			filePath = filePath + "/" + fileFormat;
+			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+			fileOuputStream.write(item.getContents());
+			fileOuputStream.close();
+			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			attachment.setFileName(item.getFileName());
+			attachment.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
+			attachment.setDocId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+			attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			attachment.setSecId(FulfilmentConst.AP58_AL);
+			attachment.setBrandNew(this.getManagedBean().getAttachment().isBrandNew());
+			
+			this.getManagedBean().setAttachment(attachment);			
+			//add section id and document id
+		}
+	  public void downloadAPLetter() {
+			try {
+				commonDownload(this.getManagedBean().getAttachment().getFilePath(),this.getManagedBean().getAttachment().getFileName());
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	  public void DeleteApprovalLetterAP() {
+		  boolean temp = this.getManagedBean().getAttachment().isBrandNew();
+		  this.getManagedBean().setAttachment(new FlAttachment());
+		  this.getManagedBean().getAttachment().setBrandNew(temp);
+		}
+	  public void saveAP58() throws Exception{
+			  if(this.getManagedBean().getAttachment().getFileName() != null){
+				  try {
+					  signingAction(BpmOutcomeConst.BPM_SAVE);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			  }else{
+				  validateApprovalLetter();
+			  }
+	  }
+	  public void submitAP58(){
+			  if(this.getManagedBean().getAttachment().getFileName() != null){
+				  try {
+					signingAction(BpmOutcomeConst.BPM_ACKNOWLEDGE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			  }else{
+				  validateApprovalLetter();
+			  }
+	  }
+	  
+	  private void validateApprovalLetter() {
+		throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.ap58letter",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+	}
+	
+//	28377 - end
 }

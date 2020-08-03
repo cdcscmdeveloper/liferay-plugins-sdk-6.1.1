@@ -91,6 +91,7 @@
 							</ui:define>
 						</ui:decorate>
 					</c:if>
+					<!-- 28377 -->
 					<!-- #28375- Beginning - Logan-->
 					
 				
@@ -113,10 +114,25 @@
 					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
 					</c:if>
 					<!-- #28374	Vinod End -->
+			</c:if>
+					
+					
+					<!-- #28375- Ending -->
 					
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
-					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
+					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- edit render -->
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.submitAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 28377 -->
+					
 				</td>
 				</c:if>
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>

@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.fl.yep;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -18,6 +25,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -624,8 +632,38 @@ public class YearEndProcessBackingBean extends
 				
 				navgPage=NAV_TO_MAINTAIN_CO;
 			}
+		// 28377 razin
+				 reqDTO.setAttachment(new FlAttachment());
+				 reqDTO.getAttachment().setDocId(flOrderBB.getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+				 reqDTO.getAttachment().setSecId(FulfilmentConst.AP58_AL);
+				 reqDTO.getAttachment().setDocType(flOrderBB.getManagedBean().getFulfilmentOrder().getDocType());
+				 FulfilmentResDTO resDTOattachment = fulfilmentOrderSO.retrieveAttachmentApprovalLetter(reqDTO);
+				 if( resDTOattachment.getAttachmentList().size() > 0 ){
+					 flOrderBB.getManagedBean().setAttachment(resDTOattachment.getAttachmentList().get(0));
+					 flOrderBB.getManagedBean().getAttachment().setBrandNew(false);
+				 }else{
+					 flOrderBB.getManagedBean().setAttachment(new FlAttachment());
+					 flOrderBB.getManagedBean().getAttachment().setBrandNew(true);
+				 }
+				
+				 // end - 28377 razin
 		 flOrderBB.getManagedBean().setYep(true);
 		 return navgPage;
 	}
-
+	
+//	28377 razin
+	
+	//check if ap58
+    public boolean isAP58(Long statusId){
+    	if(statusId.equals(FulfilmentStatusConst.PO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)){
+				
+				return true;
+			}
+		return false;
+	}    
 }
