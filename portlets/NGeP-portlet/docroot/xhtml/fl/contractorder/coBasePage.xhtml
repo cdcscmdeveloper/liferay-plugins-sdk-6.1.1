@@ -87,7 +87,7 @@
 				</ui:decorate>
 				</c:if>
 				<!-- #28374	Vinod Start -->
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
 					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
 					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
 					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
