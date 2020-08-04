@@ -151,7 +151,8 @@
 					value="#{yepRptBB.managedBean.fromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form" /></td>
-
+		</tr>
+		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.to']}" /></td>
 			<td colspan="2"><p:calendar showOn="button" navigator="true"
 					display="inline" readonlyInput="true"
@@ -162,8 +163,10 @@
 		</tr>
 		
 		<tr>
-		<td width="20%">
-			<p:selectBooleanCheckbox  style="float:left;text-align:left " rendered="#{!yepRptBB.managedBean.contractFlag}"
+		<td>
+		</td>
+		<td>
+			<p:selectBooleanCheckbox  rendered="#{!yepRptBB.managedBean.contractFlag}"
 				value="#{yepRptBB.managedBean.checkAP58}" disabled="#{!yepRptBB.managedBean.ap58Flag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeAp58()}"
 				 process="@this" update=":form"></p:ajax>
@@ -172,8 +175,8 @@
 			<h:outputText value="#{lbl['lbl.fl.yep.ap58a']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
 		</td>
 		
-		<td width="30%">
-			<p:selectBooleanCheckbox   style="float:left;text-align:left" rendered="#{!yepRptBB.managedBean.contractFlag}"
+		<td>
+			<p:selectBooleanCheckbox rendered="#{!yepRptBB.managedBean.contractFlag}"
 				value="#{yepRptBB.managedBean.checkCFwd}" disabled="#{!yepRptBB.managedBean.cfwdFlag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeCarryFow()}"
 				 process="@this" update=":form"></p:ajax>
@@ -182,25 +185,25 @@
 				<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{!yepRptBB.managedBean.contractFlag}"></h:outputText>
 		</td>
 		
-		<td width="20%">
-		<p:selectBooleanCheckbox   style="float:left;text-align:left" rendered="#{!yepRptBB.managedBean.contractFlag}"
+		<td>
+		<p:selectBooleanCheckbox rendered="#{!yepRptBB.managedBean.contractFlag}"
 		value="#{yepRptBB.managedBean.checkCMP}" disabled="#{!yepRptBB.managedBean.cmpFlag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeCMPay()}" 
 				 process="@this" update=":form"></p:ajax>
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2"/>
 				<h:outputText value="#{lbl['lbl.fl.yep.closedManPay']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-		</td>
-		
-		<td width="30%">
-		<p:selectBooleanCheckbox   style="float:left;text-align:left" rendered="#{!yepRptBB.managedBean.contractFlag}"
-		value="#{yepRptBB.managedBean.checkNAT}" disabled="#{!yepRptBB.managedBean.natFlag}">
+				<p:spacer width="20"/>
+				
+		<p:selectBooleanCheckbox rendered="#{!yepRptBB.managedBean.contractFlag}"
+				value="#{yepRptBB.managedBean.checkNAT}" disabled="#{!yepRptBB.managedBean.natFlag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeNATransaction()}" 
 				 process="@this" update=":form"></p:ajax>
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2"/>
 				<h:outputText value="#{lbl['lbl.fl.yep.nonActTrans']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-		</td>				
+		</td>	
+				
 		</tr>
 		
 		<tr>	
@@ -298,7 +301,8 @@
 					value="#{yepRptBB.managedBean.contractFromDate}" size="9"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 					partialSubmit="true" process="@form" /></td>
-
+		</tr>
+		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.yep.contract.end.date']}" rendered="#{yepRptBB.managedBean.contractFlag}"/></td>
 			<td colspan="2"><p:calendar showOn="button" navigator="true"
 					rendered="#{yepRptBB.managedBean.contractFlag}"
