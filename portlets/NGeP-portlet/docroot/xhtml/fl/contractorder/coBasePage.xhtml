@@ -86,13 +86,6 @@
 					</ui:define>
 				</ui:decorate>
 				</c:if>
-				<!-- #28374	Vinod Start -->
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
-					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
-					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
-					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
-				</c:if>
-				<!-- #28374	Vinod End -->
 				</td>
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmUpdate}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
@@ -116,6 +109,13 @@
 						immediate="true" /></td>
 			</c:if>
 			<td colspan="4" style="text-align: right">
+				<!-- #28374	Vinod Start -->
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
+				</c:if>
+				<!-- #28374	Vinod End -->
 			<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
