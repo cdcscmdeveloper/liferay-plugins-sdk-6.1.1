@@ -146,8 +146,9 @@
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						process="@this" />				
 
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						rendered="#{!isPidExpired and (requestNoteBackingBean.managedBean.assignedState or empty requestNoteBackingBean.managedBean.taskId)}"
+					<p:commandButton value="#{lbl['lbl.btn.save']}"						
+						rendered="#{!isPidExpired and (requestNoteBackingBean.managedBean.assignedState or empty requestNoteBackingBean.managedBean.taskId)
+									and isSqStillValid}"
 						action="#{requestNoteBackingBean.saveAction('Save')}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						process="@this" />
