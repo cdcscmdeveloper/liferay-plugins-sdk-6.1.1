@@ -10,10 +10,13 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -24,6 +27,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
@@ -322,10 +326,17 @@ public class SmDeleteCategoryCodeBackingBean extends
 	/**
 	 * Update deleted codes in rejected appl, if any
 	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
 	private void updateDeletedCodesInRejAppl() {
 		SmAppl latestRejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(this
 				.getManagedBean().getSmSupplier().getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
 
+		IUserSO userSO = null;
+		
 		if (latestRejectedAppl != null) {
 			for (SmSupplierCategory cat : latestRejectedAppl.getSmSupplierCategories()) {
 				for (SmSupplierCategory delCat : getManagedBean().getSelectedCategories())
@@ -334,11 +345,24 @@ public class SmDeleteCategoryCodeBackingBean extends
 									.equals(delCat.getPmCategoryL2().getCategoryL2Code())
 							&& cat.getPmCategoryL3().getCategoryL3Code()
 									.equals(delCat.getPmCategoryL3().getCategoryL3Code())) {
-						/*#28404 - Start*/
-						PmUser pmUser = new FacesScopes().getUserSessionBean();
 						cat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 						cat.setCancelledDate(new Date());
-						cat.setChangedBy(pmUser.getUserId());
+						/*#28404 - Start*/
+						Long loginSessionUserId = 1L;
+						userSO = (IUserSO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										IUserSO.class);
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+						PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+						if (pmUser == null) {
+							loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+						}
+						else{
+							loginSessionUserId = pmUser.getUserId();
+						}
+						new LogKey(loginSessionUserId);
+						cat.setChangedBy(loginSessionUserId);
 						/*#28404 - End*/
 					}
 			}
