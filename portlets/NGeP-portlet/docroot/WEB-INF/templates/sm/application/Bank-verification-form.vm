@@ -44,6 +44,7 @@ body {margin-top: 0px;margin-left: 0px;}
 .p9{text-align: left;padding-left: 115px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p10{text-align: left;padding-left: 66px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
 .p11{text-align: left;padding-left: 107px;margin-top: 0px;margin-bottom: 0px;white-space: nowrap;}
+.p12{text-align: left;margin-top: 20px;margin-bottom: 0px;overflow: visible;}
 
 .td0{padding: 0px;margin: 0px;width: 225px;vertical-align: bottom;}
 .td1{padding: 0px;margin: 0px;width: 20px;vertical-align: bottom;}
@@ -75,6 +76,8 @@ body {margin-top: 0px;margin-left: 0px;}
 .td37{padding: 0px;margin: 0px;width: 56px;vertical-align: bottom;}
 .td38{border-bottom: #000000 1px solid; padding: 0px;margin: 0px;width: 148px;vertical-align: bottom;}
 .td39{border-bottom: #000000 1px solid; padding: 0px;margin: 0px;width: 750px;vertical-align: bottom;}
+.td40{padding: 0px;margin: 0px;width: 500px;vertical-align: bottom;border-bottom: #000000 1px solid;overflow: visible;white-space: normal;}
+.td41{border-bottom: #000000 1px solid; padding: 0px;margin: 0px;width: 500px;vertical-align: bottom;overflow: visible;white-space: normal;}
 
 .tr0{height: 17px;}
 .tr1{height: 38px;}
@@ -90,7 +93,7 @@ body {margin-top: 0px;margin-left: 0px;}
 .t0{width: 500px;margin-top: 29px;font: bold 15px 'Times New Roman';}
 .t1{width: 613px;margin-top: 13px;font: bold 15px 'Times New Roman';}
 .t2{width: 612px;margin-top: 14px;font: bold 15px 'Times New Roman';}
-.t3{width: 563px;margin-top: 15px;font: 15px 'Times New Roman';}
+.t3{width: 610px;margin-top: 15px;font: 15px 'Times New Roman';}
 
 </style>
 </head>
@@ -142,7 +145,7 @@ body {margin-top: 0px;margin-left: 0px;}
 <tr>
 	<td class="tr3 td2"><p class="p1 ft1">Alamat Bank</p></td>
 	<td class="tr3 td31"><p class="p1 ft3"><span class="ft1">: </span></p></td>
-	<td class="tr3 td30" colspan="4"><p class="p1 ft3">$bankStreetAddress</p></td>
+	<td class="tr3 td41" colspan="4"><p class="p12 ft3">$bankStreetAddress</p></td>
 </tr>
 <tr>
 	<td class="tr2 td2"><p class="p1 ft4"></p></td>
@@ -203,7 +206,7 @@ body {margin-top: 0px;margin-left: 0px;}
 	<td class="tr0 td17"><p class="p1 ft4"></p></td>
 </tr>
 <tr>
-	<td class="tr2 td36"><p class="p1 ft3">$bankTnC</p></td>
+	<td class="tr2 td40" colspan="4"><p class="p12 ft3">$bankTnC</p></td>
 	<td class="tr0 td37"><p class="p1 ft4"></p></td>
 	<td class="tr2 td17"><p class="p1 ft4"></p></td>
 </tr>
