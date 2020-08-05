@@ -110,7 +110,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{directPurchaseBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{directPurchaseBackingBean.reset(false)}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+					action="#{directPurchaseBackingBean.reset}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result']}"
@@ -124,7 +124,7 @@
 				<ac:paginator for="scDocumentTableID"></ac:paginator>
 
 
-				<p:column style="width:350px">
+				<p:column style="width:10%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.ptj']}" />
 					</f:facet>
@@ -132,21 +132,21 @@
 				</p:column>
 
 
-				<p:column width="6%">
+				<p:column width="10%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.document.type']}" />
 					</f:facet>
 					#{directPurchaseBackingBean.managedBean.documentTypeDesc}
 				</p:column>
 
-				<p:column width="6%">
+				<p:column width="10%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.document.no']}" />
 					</f:facet>
 					#{Obj[1]}
 				</p:column>
 
-				<p:column>
+				<p:column width="40%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.document.title']}" />
 					</f:facet>
@@ -155,14 +155,15 @@
 						style="white-space: normal;word-wrap: break-word;" />
 				</p:column>
 
-				<p:column width="12%">
+				<p:column width="20%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.status']}" />
 					</f:facet>
-					#{directPurchaseBackingBean.getStatusDescById(Obj[4])}
+					
+						<h:outputText value="#{directPurchaseBackingBean.getDocStatus(Obj)}"
+							style="white-space: normal;word-wrap: break-word;" />						
 				</p:column>
-
-				<p:column width="5%" style="text-align: center;">
+				<p:column width="10%" style="text-align: center;">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
 					</f:facet>
