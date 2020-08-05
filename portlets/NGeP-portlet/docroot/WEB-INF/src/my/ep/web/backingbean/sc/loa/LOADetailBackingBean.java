@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -63,6 +64,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -89,10 +91,13 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
@@ -190,6 +195,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	/** The flag. */
 	private boolean flag;
+	private boolean sqExpiredMessageFlag = false;
 
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 
@@ -307,7 +313,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(Boolean.TRUE);
-
+			
+			//Enhancement #12177
+			if(!getManagedBean().isTrackingDairyView()){
+				if(scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
+					if(!scLoa.isBrandNew() && !isSqStillValid() && sqExpiredMessageFlag ){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_760481, 
+								null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
+				}
+				else if(!isSqStillValid() && sqExpiredMessageFlag ){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_760481, 
+							null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+			}
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			if(getManagedBean().getBackToPreviousPage() == null || getManagedBean().getBackToPreviousPage().isEmpty()){
 				getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -318,8 +340,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return QTConstants.LOA_PAGE;
 	}
-
-
+	
 	/**
 	 * Get the supplier loa details.
 	 * 
@@ -2853,6 +2874,47 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return null;
 	}
+	
+	//Enhancement #12177
+	/**
+	 * cancel LOA details.
+	 * cancel - update status to cancel for that data in database.
+	 * @param outcome the outcome
+	 * @return the string
+	 * page navigate to acknowledge page.
+	 */
+	public String cancelPrepareLoaAction() {
+		debugLogger("cancelPrepareLoaAction");
+		
+		try{
+			String outcome = BpmOutcomeConst.BPM_CANCEL;
+			ScLoa scLoa = this.getManagedBean().getScLoa();		
+			scLoa.setScLoaRemarks(null); //To skip adding remark
+			
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setScLoa(scLoa);
+			reqDTO.setOutcome(outcome);
+			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				scLoa = resDTO.getScLoa();			
+				RenameTempLoaNoRepoDirByLoaNo(scLoa);
+				renewSesionObject();
+				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+						scLoa.getLoaNo(), Boolean.TRUE);
+			}		
+		} finally {
+			//qtAwardSO = null;
+		}
+		
+		return null;
+	}
 
 	/**
 	 * Update bpm task.
@@ -2961,7 +3023,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						messageCode = MessageConst.INFO_700007;
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(outcome)) {
-						messageCode = MessageConst.INFO_700008;
+						//12177 - Start
+						if(!isSqStillValid()){
+							messageCode = MessageConst.INFO_700035;
+						}else{
+							messageCode = MessageConst.INFO_700008;
+						}
+						//12177 - End
 					} else if (BpmOutcomeConst.BPM_REVISE
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700009;
@@ -6674,5 +6742,58 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		Integer sqTimeValidity = null;
+		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
+
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+
+		if(scQuote != null){
+			
+			Date currentDate = new Date();
+			Date closingDate = scQuote.getEndDate();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+			
+			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+				if(currentDate.compareTo(cal.getTime()) >= 0){
+					validDate = false;
+					sqExpiredMessageFlag = true;
+				}
+			}	
+		}			
+		return validDate;	
+	}
+	
+	public void cancelLoa(String outcome) {
+		debugLogger("cancelLoa");
+		this.getManagedBean().setAction(outcome);
+		
+		updateBPMTask(outcome,null);
 	}
 }
