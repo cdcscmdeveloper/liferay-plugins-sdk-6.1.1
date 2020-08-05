@@ -1132,7 +1132,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public boolean isReqOrApprover() {
 		FacesScopes fc = new FacesScopes();
 		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) || fc.hasRoleUser(RoleCode.RN_APPROVER.value()) || fc
-				.hasRoleUser(RoleCode.BPK_AUDITOR.value()));
+				.hasRoleUser(RoleCode.BPK_AUDITOR.value())|| fc.hasRoleUser(RoleCode.DESK_OFFICER.value()));
 	}
 	// CR 25790 - End
 }
