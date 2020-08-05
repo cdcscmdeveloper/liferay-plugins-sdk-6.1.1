@@ -76,6 +76,7 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -156,7 +157,9 @@ import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
@@ -202,6 +205,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	private boolean checkFlg = false;
+	private boolean sqExpiredMessageFlag = false;
 	private boolean displayItemPnl;
 	private boolean selectedAllChargeItem;
 	private String className="@(.myPrClassName)";
@@ -312,6 +316,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setUserLocale(getFacesScopes().getUserLocale());
 			reqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			reqDTO.setTaskDeadLine(getManagedBean().getTaskDeadLine());
+			// 12177 - Start
+			reqDTO.setSqExpiredStatus(getManagedBean().getSqExpiredStatus());
+			reqDTO.setSqNumber(getManagedBean().getSqNumber());
+			reqDTO.setRequestNoteId(getManagedBean().getRequestNoteId());
+			// 12177 - End
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
@@ -1438,6 +1447,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
+		}
+		
+		//Redmine Enhancement #12177
+	    addButton();
+	    if(sqExpiredMessageFlag){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					MessageUtils.getMessage(MessageConst.ERROR_760481, 
+							null,MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -4640,15 +4657,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	}
 	//end added for #24353
 	
-	public String getSkuDescription(ScRequestItem scRequestItem) {
-		String skuDesc = "";
-			if(scRequestItem.getCmItem().getCmSupplierItems() != null && scRequestItem.getCmItem().getCmSupplierItems().size() > 0){
-				skuDesc = scRequestItem.getCmItem().getCmSupplierItems().get(0).getSkuNumber();	
-			}
-			return skuDesc;
-	}
-	
-	
 	/*
 	 * #17087
 	 * Ya - true - delivery start date remain the same
@@ -4673,6 +4681,103 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		this.zonalTest = zonalTest;
 	}
 	
+	/**
+	 * Add/display only cancel/reject button if SQ not valid 
+	 */
+	public void addButton(){
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		//checking if SQ still valid, if not valid thus cancel/reject button will be added
+		
+		
+		if(getManagedBean().isPidValidityExpired()){
+			//purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId
+			getManagedBean().getFulfilmentRequest().getStatus().setStatusId(60755L);
+			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
+					   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)){
+						String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+						getManagedBean().setOutComes(addReject);	
+						
+					}else if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION) || 
+							   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)){
+						String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+						getManagedBean().setOutComes(addCancel);
+					}
+		}else{
+			if(!isSqStillValid()){
+				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) || 
+				   currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) ){
+					String[] addReject = new String[]{BpmOutcomeConst.BPM_REJECT};    		
+					getManagedBean().setOutComes(addReject);	
+					
+				}else{
+					String[] addCancel = new String[]{BpmOutcomeConst.BPM_CANCEL};    		
+					getManagedBean().setOutComes(addCancel);
+				}
+						
+			}		
+		}
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;		
+		Long currentStatusId = getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId();
+		Integer sqTimeValidity = null;
+		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
+		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
+		
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+				
+		if(scQuote != null){
+			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
+				Date currentDate = new Date();
+				Date closingDate = scQuote.getEndDate();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.clear(); 
+				cal.setTime(closingDate);
+				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				
+				if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL) 
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION) ){
+					if(currentDate.compareTo(cal.getTime()) >= 0){
+						validDate = false;
+						sqExpiredMessageFlag = true;
+						getManagedBean().setSqExpiredStatus(true);
+						getManagedBean().setSqNumber(scQuote.getQuoteNo());
+						getManagedBean().setRequestNoteId(scRequestNote.getRequestNoteId());
+					}
+				}
+			}				
+		}	
+		return validDate;	
+	}
+	
+	public String getSkuDescription(ScRequestItem scRequestItem) {
+		String skuDesc = "";
+			if(scRequestItem.getCmItem().getCmSupplierItems() != null && scRequestItem.getCmItem().getCmSupplierItems().size() > 0){
+				skuDesc = scRequestItem.getCmItem().getCmSupplierItems().get(0).getSkuNumber();	
+			}
+			return skuDesc;
+	}
+
 	//24893 - start
 	/**
 	 * check role user is requisitioner
@@ -4681,4 +4786,53 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	//24893 - end
+	
+	//12183 - Start
+	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
+		
+		if(checkStatusPidExpired(flFulfilmentRequest)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}else if(!isSqStillValid()){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}else{
+			return getStatusDescById(getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId());
+		}
+		
+	}
+	
+	public boolean checkStatusPidExpired(FlFulfilmentRequest flFulfilmentRequest){
+		
+		Long currentStatusId = null;
+	    Boolean pidExpired = false;
+		
+		IFulfilmentRequestSO flRequestSO;
+	 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		
+		if(flFulfilmentRequest != null){
+			
+			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
+			
+			if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+				|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+				
+				 if(flFulfilmentRequest.getScPurchaseInDefault()!=null){
+					 	Date today  = DateUtils.getCurrentDate();
+						Date ExpDate = DateUtils.addDays(flFulfilmentRequest.getScPurchaseInDefault().getChangedDate(), flFulfilmentRequest.getScPurchaseInDefault().getPidValidDays());
+
+						log.info("pID validity begin");
+						
+							if(ExpDate.before(today)){
+								pidExpired = true;
+							}  
+						
+						log.info("pID validity end");
+				 }	
+			}	
+		}	
+		return pidExpired;
+	}
+	//12183 - End
 }
