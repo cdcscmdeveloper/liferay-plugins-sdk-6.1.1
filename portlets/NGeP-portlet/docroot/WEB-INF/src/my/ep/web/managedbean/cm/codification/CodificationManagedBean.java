@@ -244,7 +244,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
 					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
 					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
-				return new SearchResultBean();
+				//20200806@akmal - Enhancement27627 - Start -- remove line below
+//				return new SearchResultBean();
+				//20200806@akmal - Enhancement27627 - End
 			}
 
 			System.out.println("........search extension combination.................");
