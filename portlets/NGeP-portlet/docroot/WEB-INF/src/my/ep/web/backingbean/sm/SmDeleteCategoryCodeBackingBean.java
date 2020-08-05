@@ -362,7 +362,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 							loginSessionUserId = pmUser.getUserId();
 						}
 						new LogKey(loginSessionUserId);
+						log.info("**** User ID for ChangedBy (Delete Category Code) Before *************"+loginSessionUserId);
 						cat.setChangedBy(loginSessionUserId);
+						log.info("**** User ID for ChangedBy (Delete Category Code) After *************"+loginSessionUserId);
 						/*#28404 - End*/
 					}
 			}
