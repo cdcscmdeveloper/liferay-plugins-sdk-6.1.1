@@ -2184,7 +2184,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//16052019 - SSM INTEGRATION CR - Fahmi
 			//businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType()) &&
 			if(!fromtncProceed){
-				if(smSupp.getBusinessType().equals("Q")){
+				if(smSupp.getBusinessType() != null && smSupp.getBusinessType().equals("Q")){
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceG2GTermAndCond.xhtml");
 				}else {
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
@@ -4486,15 +4486,33 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void checkingBeforeRemoveSupplierBank() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<font color='red'>");
+		boolean showErrorPopup = false;
+		boolean showErrorContract = false;//to avoid duplicate message
+		boolean showErrorFl = false;//to avoid duplicate message
 		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
 			this.getManagedBean().setDisplayMessageBank("");
 			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
-				if(suppBank.isHasActiveTransactionContractManagement() || suppBank.isHasActiveTransactionFulfilment()){
-					this.getManagedBean().setDisplayMessageBank(suppBank.getDisplayMessageBank());
-					RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
-					return;
+				if(suppBank.isHasActiveTransactionContractManagement() && !showErrorContract){
+					showErrorPopup = true;
+					showErrorContract = true;
+					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
+					sb.append("<br/>");
 				}
+				if(suppBank.isHasActiveTransactionFulfilment() && !showErrorFl){
+					showErrorPopup = true;
+					showErrorFl = true;
+					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",null));
+					sb.append("<br/>");
+				}				
 			}
+		}
+		sb.append("</font>");
+		this.getManagedBean().setDisplayMessageBank(sb.toString());
+		if(showErrorPopup){
+			RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
+			return;
 		}
 		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 	}
