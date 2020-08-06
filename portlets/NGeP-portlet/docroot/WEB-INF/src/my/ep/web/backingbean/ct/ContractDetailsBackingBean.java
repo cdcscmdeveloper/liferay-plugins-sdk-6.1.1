@@ -1178,11 +1178,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					log.info("max :"+maxValue);
 					log.info("min :"+item.getMinimumOrderQty());
 					if (item.getMinimumOrderQty() > maxValue) {
-						if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							setTabValue("IT");
-						} else {
-							setTabCentralValue("IT");
-						}
 						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
 					}
 					
