@@ -15,13 +15,14 @@
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppOwners}"
 			rowKey="#{varOwner}"
+			rowStyleClass="#{registrationBackingBean.getSupplierOwnerRowStyle(varOwner)}"
 			sortBy="#{varOwner.ownerName}"	>
 			<ac:paginator for="tableOwner" />	
-			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteOwnerBtnId')}" />
-			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteOwnerBtnId')}" />
-			<p:ajax event="rowSelect" update=":#{p:component('deleteOwnerBtnId')}" />   
-			<p:ajax event="rowUnselect" update=":#{p:component('deleteOwnerBtnId')}" />  
-			<p:ajax event="toggleSelect" update=":#{p:component('deleteOwnerBtnId')}" /> 
+			<p:ajax event="rowSelectCheckbox" listener="#{registrationBackingBean.supplierOwnerOnRowSelected}" update=":#{p:component('deleteOwnerBtnId')}" />
+			<p:ajax event="rowUnselectCheckbox" listener="#{registrationBackingBean.supplierOwnerOnRowUnselected}" update=":#{p:component('deleteOwnerBtnId')}" />
+			<p:ajax event="rowSelect" listener="#{registrationBackingBean.supplierOwnerOnRowSelected}" update=":#{p:component('deleteOwnerBtnId')}" />   
+			<p:ajax event="rowUnselect" listener="#{registrationBackingBean.supplierOwnerOnRowUnselected}" update=":#{p:component('deleteOwnerBtnId')}" />  
+			<p:ajax event="toggleSelect" listener="#{registrationBackingBean.supplierOwnerOnCheckboxToggled}" update=":#{p:component('deleteOwnerBtnId')}" /> 
 			
 			<p:column
 				selectionMode="multiple"
@@ -143,6 +144,17 @@
 			</p:column>
 
 		</p:dataTable>
+		<!-- 27691 - start - Add/Delete Supplier Owner -->
+		<script>
+			function unselectSupplierOwner(index) {
+				tableOwnerWidget.unselectRow(index);
+				if (tableOwnerWidget.checkAllToggler.hasClass('ui-state-active')) {
+   					tableOwnerWidget.checkAllToggler.removeClass('ui-state-active');
+   					tableOwnerWidget.checkAllToggler.children().removeClass('ui-icon ui-icon-check');
+   				}
+			}
+		</script>
+		<!-- 27691 - start - Add/Delete Supplier Owner -->
 		
 		<p:dataTable id="tableOwnerbm" var="varOwner" rowIndexVar="index"
 			widgetVar="tableOwnerbmWidget"
