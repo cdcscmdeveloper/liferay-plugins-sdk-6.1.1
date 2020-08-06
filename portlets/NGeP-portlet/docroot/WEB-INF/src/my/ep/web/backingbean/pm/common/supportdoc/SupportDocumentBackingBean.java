@@ -49,6 +49,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -56,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -70,6 +72,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -2055,6 +2059,15 @@ public class SupportDocumentBackingBean extends
 	 */
 	public String saveSupportDoc() {
 		log.info("saveSupportDoc - Start");
+		
+		// #26666 - start
+		PmUser user = new FacesScopes().getUserSessionBean();
+		log.info("userId == " + user.getUserId() + "| userName == " + user.getUserName());
+
+		if (user != null) {
+			new LogKey(user.getUserId());
+		}
+		// #26666 - end
 
 		DocumentReqDTO reqDTO = null;
 		DocumentResDTO resDTO = null;
@@ -2076,13 +2089,18 @@ public class SupportDocumentBackingBean extends
 			reqDTO.setBrandNew(createAction);
 			reqDTO.setTrackDairyVOs((new ArrayList<PmTrackingDairyVO>()));
 
+			// #26666 - start
 			if (createAction) {
+				System.out.println("1. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
+				pmDocument.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
 			} else {
+				System.out.println("2. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				messageId = MessageConst.TD_80801;
 			}
-
-			
+			log.info("setChangedBy|| userId == " + user.getUserId() + "| userName == " + user.getUserName());
+			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
+			// #26666 - end
 
 			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg()
 					.longValue());
