@@ -58,6 +58,7 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_PROCURE_STATUS_EQ = "STATUS";
 	public static final String PARAM_DESK_OFFCR_EQ = "DOUSERID";
 	public static final String PARAM_PROCURE_PTJ_EQ = "ORGPROFILEID";
+	public static final String PARAM_LOGIN = "LOGIN";
 	
 	
 	/**
