@@ -470,10 +470,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
 				System.out.println("getDocType()"+getDocType());
 				reqDTO.setDocType(getDocType());
-
-												
+	
 				reqDTO.setViewBy(getViewBy());
-				
+
 				if(getDocNo()!=null && getDocNo().trim().length()>0){
 					reqDTO.setDocNumber(getDocNo());
 				}
@@ -489,8 +488,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
-				
-				
+
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
@@ -503,10 +501,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					System.out.println("testing BPM******total="
 							+ responseDTO.getWorklistVO().getTotal());
 
-					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-						
-						
+
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
@@ -946,7 +942,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					System.out.println("testing BPM******total="
 							+ responseDTO.getWorklistVO().getTotal());
 
-					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
@@ -1377,7 +1372,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								    		   int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
 												Date changedDate = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate();
 												Date pidExpiredDate = new Date(); 
-												
 												
 													pidExpiredDate = DateUtils.addDays(changedDate, pidValidDays);
 													
