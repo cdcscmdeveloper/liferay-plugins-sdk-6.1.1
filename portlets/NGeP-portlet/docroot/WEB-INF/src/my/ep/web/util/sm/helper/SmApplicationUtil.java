@@ -5033,8 +5033,15 @@ public class SmApplicationUtil {
 						.readApplicationHist(reqDto);
 				if (resDTO != null) {
 					appl = resDTO.getSmAppl();
-				}
+				}				
 			}
+			//START 24964 && #28534
+			if(appl == null && managedBean.getSmAppl().getSmSupplier() != null){
+				reqDto.setSupplierId(managedBean.getSmAppl().getSmSupplier().getSupplierId());
+				appl = revisionSO
+						.retrieveLatestPreviousApproveAppl(reqDto).getSmAppl();
+			}
+			//END 24964 && #28534
 		} finally {
 			revisionSO = null;
 		}
@@ -6837,9 +6844,12 @@ public class SmApplicationUtil {
 										.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
 										.contains(mac.getCategoryType()
 												.getParameterCode()))
-								&& !isMachineExistInLatest(mac, bean
-										.getLatestAppl().getSmMachineDtls())) {
-							macIt.remove();
+							//#28677   //24964 - start
+								&& !appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+							if(!isMachineExistInLatest(mac, bean
+									.getLatestAppl().getSmMachineDtls())){
+								macIt.remove();
+							} //#28677   //24964 - end						
 						}
 					}
 				}
@@ -13194,5 +13204,34 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	//24964 - start 
+	public static void rejectSmMofCertForSupplier(SmSupplier supplier){
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setSupplierId(supplier.getSupplierId());
+				
+		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMOFCertBySupplierId(reqDTO);
+		
+		if(resDTO != null && resDTO.getSmMofCerts() != null){
+			for(SmMofCert cert : resDTO.getSmMofCerts()){
+				if(cert.isBumiCert() 
+						&& cert.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+					VirtualCertReqDTO rejectedMofCert = new VirtualCertReqDTO();
+					MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+					
+					//update sm_supplier: is_bumi to 0
+					supplier.setBumi(false);
+					mofRegistrationReqDTO.setSmSupplier(supplier);
+					SmServiceLookup.getMofRegistrationSO().updateSupplierProfile(mofRegistrationReqDTO);					
+					
+					//update record_status = 4
+					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);					
+					rejectedMofCert.setMofCert(cert);
+					SmServiceLookup.getVirtualCertSO().updateMOFCert(rejectedMofCert);
+				}
+			}
+		}
+	}
+	//24964 - end
 
 }
