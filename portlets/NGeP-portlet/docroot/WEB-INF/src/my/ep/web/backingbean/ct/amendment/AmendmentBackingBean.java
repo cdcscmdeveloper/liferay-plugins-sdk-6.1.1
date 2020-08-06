@@ -2467,8 +2467,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			return null;
 		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateContractAmendment(outcome);
-			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				validateContractAmendment(outcome);
+				RequestContext.getCurrentInstance().execute("supplierrejectConfirmDlg.show()");
+			
+			}else {
+				validateContractAmendment(outcome);
+				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");				
+			}
 			return null;
 		}else {
 			return saveContractAmendment(outcome);
