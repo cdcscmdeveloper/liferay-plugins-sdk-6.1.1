@@ -4891,6 +4891,23 @@ public class SimpleQuoteBackingBean extends
 		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
 		ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 		getManagedBean().setScQuote(scQuote);
+		
+		//#25095 repatch for scquote pid clone
+		
+		if(scQuote.getPurchaseInDefault()!=null && scQuote.getParentQuoteId()!=null){
+			templateSpecBackingBean.getManagedBean().setPidSQ(Boolean.TRUE);
+			ScPurchaseInDefault scpid = scQuote.getPurchaseInDefault();
+			
+			Date today  = DateUtils.getCurrentDateWithoutTime();
+			Date ExpDate = DateUtils.addDays(scQuote.getPurchaseInDefault().getChangedDate(),scQuote.getPurchaseInDefault().getPidValidDays() );
+			
+			 Calendar cal = Calendar.getInstance(); 
+			 cal.setTime(ExpDate);
+			
+			
+			getManagedBean().setPidExpiryDate(ExpDate);	
+			getManagedBean().setTaskExpiryDate(cal);
+		}
 
 		preRenderScQuote(scQuote);
 
