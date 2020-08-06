@@ -1462,12 +1462,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-					overallContractAmount = contractAmt.getContractAmount().doubleValue();
+					overallContractAmount = contractAmt.getContractAmount().doubleValue();					
+					
 					if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
-						overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
+						//28203				   
+						double gstAmt = 0.0;
+					    double StaxAmt = 0.0;
+					     if(contractAmt.getGstAmount() != null){
+					        gstAmt = contractAmt.getGstAmount().doubleValue();
+					       }	 
+					     if(contractAmt.getStaxAmount() != null){
+					    	 StaxAmt = contractAmt.getStaxAmount().doubleValue();
+						   }	 
+					     //overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();					    	 	 
+					     overallContractAmount += gstAmt + StaxAmt;
 					}
 					overallContractAmount = Double.valueOf(df.format(overallContractAmount));
 					break;
+					
 				}
 			}
 			if (ceilingAmt > overallContractAmount) {
@@ -1550,21 +1562,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetMinistryDetails() {
+		
+		System.out.println("<<<======== WE HERE ON resetMinistryDetails() ========>>>");
 		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
 		agencyDataModel.resetData();
+		System.out.println("<<<======== WE DONE resetMinistryDetails() ========>>>");
 	}
 
 	/**
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetJabatanDetails() {
+		
+		System.out.println("<<<======== WE HERE ON resetJabatanDetails() ========>>>");
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
 		agencyDataModel.resetData();
+		System.out.println("<<<======== WE DONE resetJabatanDetails() ========>>>");
 	}
 
 
