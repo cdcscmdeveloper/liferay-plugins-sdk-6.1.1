@@ -265,13 +265,30 @@ public class SmDeleteCategoryCodeBackingBean extends
 			if (invalidRemarks) {
 				throw new EpException(sb.toString());
 			} else {
+				IUserSO userSO = null;
+				
 				for (SmSupplierCategory selCat : getManagedBean()
 						.getSelectedCategories()) {
-					/*#28404 - Start*/
-					PmUser pmUser = new FacesScopes().getUserSessionBean();
 					selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 					selCat.setCancelledDate(new Date());
-					selCat.setChangedBy(pmUser.getUserId());
+					/*#28404 - Start*/
+					Long loginSessionUserId = 1L;
+					userSO = (IUserSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+					PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+					if (pmUser == null) {
+						loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+					}
+					else{
+						loginSessionUserId = pmUser.getUserId();
+					}
+					new LogKey(loginSessionUserId);
+					log.info("**** User ID for ChangedBy (Delete Category Code) Before *************"+loginSessionUserId);
+					selCat.setChangedBy(loginSessionUserId);
+					log.info("**** User ID for ChangedBy (Delete Category Code) After *************"+loginSessionUserId);
 					/*#28404 - End*/
 				}
 				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
@@ -330,10 +347,16 @@ public class SmDeleteCategoryCodeBackingBean extends
 	/**
 	 * Update deleted codes in rejected appl, if any
 	 */
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 	
 	private void updateDeletedCodesInRejAppl() {
 		SmAppl latestRejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(this
 				.getManagedBean().getSmSupplier().getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+
+		IUserSO userSO = null;
 		
 		if (latestRejectedAppl != null) {
 			for (SmSupplierCategory cat : latestRejectedAppl.getSmSupplierCategories()) {
@@ -343,11 +366,26 @@ public class SmDeleteCategoryCodeBackingBean extends
 									.equals(delCat.getPmCategoryL2().getCategoryL2Code())
 							&& cat.getPmCategoryL3().getCategoryL3Code()
 									.equals(delCat.getPmCategoryL3().getCategoryL3Code())) {
-						/*#28404 - Start*/
-						PmUser pmUser = new FacesScopes().getUserSessionBean();
 						cat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
 						cat.setCancelledDate(new Date());
-						cat.setChangedBy(pmUser.getUserId());
+						/*#28404 - Start*/
+						Long loginSessionUserId = 1L;
+						userSO = (IUserSO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										IUserSO.class);
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+						PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+						if (pmUser == null) {
+							loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+						}
+						else{
+							loginSessionUserId = pmUser.getUserId();
+						}
+						new LogKey(loginSessionUserId);
+						log.info("**** User ID for ChangedBy (Delete Category Code) Before *************"+loginSessionUserId);
+						cat.setChangedBy(loginSessionUserId);
+						log.info("**** User ID for ChangedBy (Delete Category Code) After *************"+loginSessionUserId);
 						/*#28404 - End*/
 					}
 			}
