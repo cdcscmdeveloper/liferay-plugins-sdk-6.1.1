@@ -1460,8 +1460,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
 			double overallContractAmount = 0.0;
-			double gstAmt = 0.0;
-		    double StaxAmt = 0.0;
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
@@ -1469,7 +1467,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					
 					if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
 						//28203				   
-					     
+						double gstAmt = 0.0;
+					    double StaxAmt = 0.0;
 					     if(contractAmt.getGstAmount() != null){
 					        gstAmt = contractAmt.getGstAmount().doubleValue();
 					       }	 
