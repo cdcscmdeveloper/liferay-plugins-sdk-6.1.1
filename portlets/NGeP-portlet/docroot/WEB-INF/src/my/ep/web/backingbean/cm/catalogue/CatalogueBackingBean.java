@@ -3604,7 +3604,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				} else {
 					if (this.getManagedBean().getSelectedMaintainItem().getItemDesc() != null
 							&& this.getManagedBean().getSelectedMaintainItem().getItemDesc().trim().length() > 0) {
-						log.info("*************set false***************");
+						//20200806@akmal - Enhancement27627 - Start
+						log.info("*************set true***************");
+						//20200806@akmal - Enhancement27627 - End
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 
 					}else{
@@ -4648,11 +4650,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}else if(this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals("U")){
+				//20200806@akmal - Enhancement27627 - Start
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.ERROR_715059,
+								MessageUtils.getMessage(MessageConst.INFO_710016,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				//20200806@akmal - Enhancement27627 - End
 			}else{
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
