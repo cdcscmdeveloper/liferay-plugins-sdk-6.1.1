@@ -1312,10 +1312,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
 				//#14650 - Alert message if contract incomplete
-				if(resDTOInvoice.isCrComplete()==false)
+				if(resDTOInvoice.isCrComplete()==false )
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
+				if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				}
 			}
 			//#14650 Ending
 			
@@ -1459,6 +1463,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							if(resDTOInvoice.isCrComplete()==false)
 							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+							
+							if(resDTOInvoice.isIdptcontractCompleteCheck()==false)
+								FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+											
 							break;
 						}
 					}
@@ -1515,6 +1524,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		//#14650 - Alert message if contract incomplete - Start
 		if(resDTOInvoice.isCrComplete()==false){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+		}
+		if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
