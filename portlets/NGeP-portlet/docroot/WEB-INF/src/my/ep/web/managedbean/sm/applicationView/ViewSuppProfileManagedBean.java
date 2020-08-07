@@ -107,6 +107,13 @@ public class ViewSuppProfileManagedBean extends
 	private List<SelectItem> residentialDistrictLs;
 	private List<SelectItem> permenantDistrictLs;
 
+	//13320-Start
+	private List<SelectItem> businessDivisionLs;
+	private List<SelectItem> residentialDivisionLs;
+	private List<SelectItem> permenantDivisionLs;
+	private Long divisionId;
+	private boolean divisionBox = true;
+	//13320-End
 	private List<SelectItem> businessCityLs;
 	private List<SelectItem> residentialCityLs;
 	private List<SelectItem> permenantCityLs;
@@ -879,7 +886,47 @@ public class ViewSuppProfileManagedBean extends
 	public void setDisableDeleteButtonAprrovedCategoryCodePanel(boolean disableDeleteButtonAprrovedCategoryCodePanel) {
 		this.disableDeleteButtonAprrovedCategoryCodePanel = disableDeleteButtonAprrovedCategoryCodePanel;
 	}
-	
+
+	public List<SelectItem> getBusinessDivisionLs() {
+		return businessDivisionLs;
+	}
+
+	public void setBusinessDivisionLs(List<SelectItem> businessDivisionLs) {
+		this.businessDivisionLs = businessDivisionLs;
+	}
+
+	public List<SelectItem> getResidentialDivisionLs() {
+		return residentialDivisionLs;
+	}
+
+	public void setResidentialDivisionLs(List<SelectItem> residentialDivisionLs) {
+		this.residentialDivisionLs = residentialDivisionLs;
+	}
+
+	public List<SelectItem> getPermenantDivisionLs() {
+		return permenantDivisionLs;
+	}
+
+	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
+		this.permenantDivisionLs = permenantDivisionLs;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
+	}
+
 	public List<Long> getBumiCodeList() {
 		return bumiCodeList;
 	}

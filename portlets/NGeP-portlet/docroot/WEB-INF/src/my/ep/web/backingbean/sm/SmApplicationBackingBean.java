@@ -1109,6 +1109,12 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setBasicCompanyDistricts(
 						SmCommonUtil.getDistrictList(addr.getPmState()
 								.getStateId()));
+				//13320-Start
+				if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setBasicCompanyDivisions(
+							SmCommonUtil.getDivisionList(addr.getPmState()
+									.getStateId()));
+				}//13320-End
 				getManagedBean().setPrevBasicStateId(
 						addr.getPmState().getStateId());
 				this.getManagedBean().setBasicCompanyCities(
@@ -2402,6 +2408,10 @@ public class SmApplicationBackingBean extends
 	 */
 	public String getStateLabelById(Long stateId) {
 		return SmCommonUtil.getStateLabelById(stateId);
+	}
+	//13320
+	public String getDivisionLabelById(Long divisionId) {
+		return SmCommonUtil.getDivisionLabelById(divisionId);
 	}
 
 	/**
@@ -10262,9 +10272,23 @@ public class SmApplicationBackingBean extends
 	 *            panelName
 	 */
 	public void onChangeState(SmAddress addr, String panelName) {
+		//13320-start
+		Long stateId = addr.getStateId();
+		if (stateId != null) {
+			addr.setPmState(SmCommonUtil.getInstance()
+					.getStateById(stateId));
+		}
+		if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			SmApplicationUtil.getInstance().populateDivisionsByState(addr,
+					panelName, getManagedBean());
+			setRoleStaffAddrReqd();
+			
+		}else{//13320-end
 		SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
+		}
+		
 	}
 
 	/**
@@ -13597,10 +13621,19 @@ public class SmApplicationBackingBean extends
 	}
 	//END : #27239 
 	
-	// BUG #28173 & #28315 -START
-		public void managePersonnelStaff() {
-			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+	//13320-Start
+	
+	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
+		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
+				panelName, getManagedBean());
+		setRoleStaffAddrReqd();
+	}
+	//13320-End	
+	
+// BUG #28173 & #28315 -START
+	public void managePersonnelStaff() {
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 
 			    if (getManagedBean().getSelectedShareHolder().isClerical()
 			    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl())) {

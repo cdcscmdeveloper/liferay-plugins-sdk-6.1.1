@@ -548,7 +548,7 @@
 									itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
 								<p:ajax event="change"
 									listener="#{supplierDataMaintenanceBackingBean.populateStateByAddType('business',true)}"
-									update="busState,busDistrict,busCity,compPostCodePanelId" />
+									update="busState,busDivision,busDistrict,busCity,compPostCodePanelId" />
 							</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 								display="icon" /></td>
 					</tr>
@@ -573,8 +573,40 @@
 									itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 								<p:ajax event="change" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.populateDistrictByAddType('business', true)}"
-									update="busDistrict,busCity" />
+									update="divisionBasicAcntLabelPanelId,divisionBasicAcntDropdownPanelId,busDistrict,busCity" />
 							</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
+					</tr>
+					<!-- 13320 -->
+					
+					<tr>
+						<td></td>
+						<td></td>
+		<td  class="tdTitle">
+				<p:outputPanel id="divisionBasicAcntLabelPanelId" >
+					<ui:fragment rendered="#{!supplierDataMaintenanceBackingBean.managedBean.divisionBox}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment>
+					</p:outputPanel>
+					</td>
+					<td>
+				<p:outputPanel id="divisionBasicAcntDropdownPanelId">
+				<ui:fragment rendered="#{!supplierDataMaintenanceBackingBean.managedBean.divisionBox}">
+					<p:selectOneMenu id="busDivision"
+						        label="#{lbl['lbl.sm.division']}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
+								style="width:80%">
+								<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+								<f:selectItems var="division"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.businessDivisionLs}"
+									itemValue="#{division.divisionId}" itemLabel="#{division.divisionName}" />
+								<p:ajax event="change" process="@this"
+									listener="#{supplierDataMaintenanceBackingBean.populateDivisionByAddType('business', true)}"
+									update="busDistrict,busCity" />
+							</p:selectOneMenu>
+							</ui:fragment>
+							</p:outputPanel>
+							</td>
 					</tr>
 		
 					<tr>

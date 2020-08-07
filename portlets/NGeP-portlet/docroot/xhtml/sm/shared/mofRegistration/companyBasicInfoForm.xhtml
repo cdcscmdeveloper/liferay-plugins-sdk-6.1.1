@@ -211,6 +211,26 @@
 								<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 							</tr>
+							<!-- 13320 -->
+							<tr>
+
+								<td class="tdTitle"><h:panelGroup
+										id="divisionCompInfoLabelPanelId"
+										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+										<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+										<p:outputLabel value="*" styleClass="mandatory" />
+									</h:panelGroup></td>
+							</tr>
+							<!-- 13320-WorkInProgress-->
+							<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
+							<tr>
+								<td class="tdTitle"><h:panelGroup
+										id="divisionWIPCompInfoLabelPanelId"
+										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+										<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+									</h:panelGroup></td>
+							</tr>
+							</p:outputPanel>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
@@ -266,7 +286,7 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-											update="basicCompDist,basicCompCity" />
+											update="basHdPan,divisionWIPCompInfoDropdownPanelId,divisionWIPCompInfoLabelPanelId,divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
 									</p:selectOneMenu> 
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
@@ -282,6 +302,71 @@
 									<p:message id="basicComStateMsg" for="basicComState"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
+							<!-- 13320 -->
+							<tr>
+								<td class="tdContent"><h:panelGroup
+										id="divisionCompInfoDropdownPanelId"
+										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+										<p:selectOneMenu id="basicComDivision"
+											label="#{lbl['lbl.sm.division']}"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
+											style="width:80%">
+											<f:selectItem itemValue=""
+												itemLabel="#{lbl['lbl.txt.select']}" />
+											<f:selectItems var="division"
+												value="#{backingBean.managedBean.basicCompanyDivisions}"
+												itemValue="#{division.divisionId}"
+												itemLabel="#{division.divisionName}" />
+											<p:ajax event="change" process="@this"
+												listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
+											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
+												update="basicCompDist,basicCompCity" />
+										</p:selectOneMenu>
+										<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}" 
+										alertValue="#{(not empty backingBean.managedBean.latestAppl and not empty backingBean.managedBean.latestAppl.smCompanyBasic) ?
+											backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId)
+											: lbl['lbl.txt.na']}"/>
+									<p:message id="basicComDivisonMsg" for="basicComDivision"
+										showSummary="true" showDetail="false" display="icon" />
+									</h:panelGroup></td>
+							</tr>
+							<!-- 13320-WorkInProgress -->
+							<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
+							<tr>
+								<td class="tdContent"><h:panelGroup
+										id="divisionWIPCompInfoDropdownPanelId"
+										rendered="#{!backingBean.managedBean.divisionBox}">
+										<p:selectOneMenu id="basicWIPComDivision"
+											label="#{lbl['lbl.sm.division']}"
+											value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
+											style="width:80%">
+											<f:selectItem itemValue=""
+												itemLabel="#{lbl['lbl.txt.select']}" />
+											<f:selectItems var="division"
+												value="#{backingBean.managedBean.basicCompanyDivisions}"
+												itemValue="#{division.divisionId}"
+												itemLabel="#{division.divisionName}" />
+											<p:ajax event="change" process="@this"
+												listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
+											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
+												update="basicCompDist,basicCompCity" />
+										</p:selectOneMenu>
+										<ac:smFieldChangeAlert 
+										isShow="#{backingBean.managedBean.showFieldChanges}"
+										oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}" 
+										currValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}" 
+										alertValue="#{(not empty backingBean.managedBean.latestAppl and not empty backingBean.managedBean.latestAppl.smCompanyBasic) ?
+											backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId)
+											: lbl['lbl.txt.na']}"/>
+									<p:message id="basicWIPComDivisonMsg" for="basicWIPComDivision"
+										showSummary="true" showDetail="false" display="icon" />
+									</h:panelGroup></td>
+							</tr>
+							</p:outputPanel>
+							
 							<tr>
 								<td><p:selectOneMenu
 										style="width: 250px;margin-bottom: 5px;" id="basicCompDist"

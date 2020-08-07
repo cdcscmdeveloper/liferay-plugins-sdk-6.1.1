@@ -105,7 +105,7 @@
 							value="#{bb.managedBean.countryLs}" />
 						<p:ajax event="change"
 							listener="#{bb.onChangeCountry(registrationBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry,'COMPANY_ADDRESS')}"
-							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
+							update="busState,busDivision,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
 			</tr>
@@ -130,9 +130,39 @@
 							value="#{bb.managedBean.businessStateLs}" />
 						<p:ajax event="change" process="@this"
 							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
-							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="pnlCompInfo,busDistrict,divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
+			<!-- 13320 -->
+			
+			<tr id="dTrId">
+				<td></td>
+				<td></td>
+				<td class="tdTitle">
+					<h:panelGroup id="divisionCompInfoLabelPanelId" rendered="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionCompInfoDropdownPanelId" rendered="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+						<p:selectOneMenu id="busDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="divisionBus"
+							value="#{bb.managedBean.businessDivisionLs}"
+							itemValue="#{divisionBus.divisionId}"
+							itemLabel="#{divisionBus.divisionName}" />
+						<p:ajax event="change" process="@this"
+							listener="#{bb.onChangeDivision(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision,'COMPANY_ADDRESS')}"
+							update="busDistrict,busCity" />
+					</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
+            </tr>
+			
 
 			<tr>
 				<td></td>
