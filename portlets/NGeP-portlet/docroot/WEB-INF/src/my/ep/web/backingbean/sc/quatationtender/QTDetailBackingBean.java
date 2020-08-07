@@ -3240,7 +3240,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("updateBpmTask");
 
 		updateApprovalDetails(scQt);
-		retrieveApprovalTabDtl();
+		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
+			retrieveApprovalTabDtl();
+			} //#28644-End
 
 		// Code will be called if user didn't visit the supplier qualification
 		// tab.
