@@ -90,6 +90,9 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationRemarks> finalizationItemizedRemarks;
 	// #18685 - End
 	private boolean isProcCategoryMedicine;
+	//#21695 Farid start
+	private boolean isOfferAll;
+	//#21695 End
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
@@ -600,5 +603,21 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.finalizationItemizedRemarks = finalizationItemizedRemarks;
 	}
 	// #18685 - End
+	
+	//#21695 Farid
+	/**
+	 * @return the isOfferAll
+	 */
+	public boolean isOfferAll() {
+		return isOfferAll;
+	}
+
+	/**
+	 * @param isOfferAll the isOfferAll to set
+	 */
+	public void setOfferAll(boolean isOfferAll) {
+		this.isOfferAll = isOfferAll;
+	}
+	//#21695 End
 
 }
