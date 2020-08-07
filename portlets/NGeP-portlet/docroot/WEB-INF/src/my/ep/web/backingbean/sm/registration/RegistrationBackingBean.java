@@ -2970,6 +2970,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public String getSupplierOwnerRowStyle(SmSupplierOwner smSuppOwner) {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) return "";
 		return isSmSupplierOwnerIsAdmin(smSuppOwner) ? "ui-state-disabled" : "";
 	}
 	
