@@ -28,9 +28,21 @@
 					<h:outputText value="#{bankBean.accountNo}" />
 				</p:column>		
 				<c:if test="#{viewSmApplBackingBean.managedBean.accountType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
-				<p:column headerText="#{lbl['lbl.sm.bankpayment.for']}">
-					<h:outputText value="#{lbl['lbl.sm.bankDtls.hq']}" rendered="#{bankBean.forHqFlg == 1}" />
-					<h:outputText value="#{bankBean.smSupplierBranchBanks.get(0).smSupplierBranch.branchName}" rendered="#{bankBean.forHqFlg == 0}" />
+				<p:column headerText="#{lbl['lbl.sm.for.hq']}">
+					<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{bankBean.forHqFlg == 1}" />
+					<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{bankBean.forHqFlg == 0}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.for.branch']}">
+				<ui:repeat var="bankBranchBean" value="#{bankBean.smSupplierBranchBanks}" varStatus="status">
+					<h:outputText value="#{status.index+1}) " />
+					<h:outputText value="#{bankBranchBean.smSupplierBranch.branchName}" />
+				</ui:repeat>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.bank.purpose']}">
+					<h:outputText value="#{lbl['lbl.sm.paymentLbl']}"
+						rendered="#{bankBean.accountPurpose eq 'P' or bankBean.accountPurpose eq 'B'}" /><br />
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.registration']}"
+						rendered="#{bankBean.accountPurpose eq 'R' or bankBean.accountPurpose eq 'B'}" />
 				</p:column>
 				</c:if>				
 				<p:column headerText="#{lbl['lbl.sm.bank.status']}">
