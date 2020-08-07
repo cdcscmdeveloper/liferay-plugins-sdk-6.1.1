@@ -35,12 +35,16 @@
 				</f:facet>
 			<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
 			</p:column>
-			<p:column width="15%">
-				<f:facet name="header">
-				#{lbl['lbl.td.view.status']}
-				</f:facet>
-		  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
-			</p:column>
+			<!-- 28727 - START -->
+			<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'RT'}">
+				<p:column width="15%">
+					<f:facet name="header">
+					#{lbl['lbl.td.view.status']}
+					</f:facet>
+			  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				</p:column>
+			</c:if>
+			<!-- 28727 - END -->
 
 		</p:dataTable>
 	</p:panel>
