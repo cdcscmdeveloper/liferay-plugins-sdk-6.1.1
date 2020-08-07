@@ -375,10 +375,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				flStopInstrItemList = new ArrayList<FlStopInstrItem>();
 			}
 			flStopInstrItemList.add(flStopInstrItem);
-			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId(), flStopInstrItemList);
+			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode()+flStopInstrItem.getFlFulfilmentItem().getPmUomId()+flStopInstrItem.getFlFulfilmentItem().getFulfilmentItemId(), flStopInstrItemList); //#26559
 		}
 		
 		BigDecimal totalRecalledAmt = new BigDecimal(0);
+		BigDecimal totalRecalledQty = new BigDecimal(0); //26559
 		List<String> flFulfilmentItemIds = null;
 		
 		for(Entry<String, List<FlStopInstrItem>> itemEntry : siItemsMap.entrySet()){
@@ -386,9 +387,11 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FlStopInstrItem flsiItem = (FlStopInstrItem) stopInstrItems.get(0).cloneEntity(); 
 			flsiItem.setFlFulfilmentItem((FlFulfilmentItem)flsiItem.getFlFulfilmentItem().cloneEntity());
 			flsiItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode(), flsiItem, getManagedBean().getChargeLineItemRoot());
+			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode()+flsiItem.getFlFulfilmentItem().getFulfilmentItemId(), flsiItem, getManagedBean().getChargeLineItemRoot()); //26559
 			
 			totalRecalledAmt = new BigDecimal(0);
+			totalRecalledQty = new BigDecimal(0);//26559
+			
 			flFulfilmentItemIds = new ArrayList<String>();
 			
 			for(FlStopInstrItem chargeLineItem : stopInstrItems) {
@@ -398,7 +401,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				} else {
 					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId()+""+chargeLineItem.getFlFulfilmentItem().getPmUomId());
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty());
+
+					//start -26559
+					totalRecalledQty = (chargeLineItem.getFlFulfilmentItem().getSumOrderedQty()!=null? chargeLineItem.getFlFulfilmentItem().getSumOrderedQty(): BigDecimal.ZERO).subtract((chargeLineItem.getFlFulfilmentItem().getSumReceivedQty()!=null? chargeLineItem.getFlFulfilmentItem().getSumReceivedQty(): BigDecimal.ZERO));//28620
+					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(totalRecalledQty);
+					//end -26559
+					
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
 				}
 				
