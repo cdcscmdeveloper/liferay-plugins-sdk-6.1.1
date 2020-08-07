@@ -2216,11 +2216,11 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRoleCode(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 				       .equals(getManagedBean().getCurrentStatusId()) ? 
 										RoleCode.BPK_APPROVER.value() : getCommitteeRoleCode());
-			// #25638 - Start
-			if (null != reqDTO.getPmUser()) {
+			// #28472 and #25638 - Start.
+			if (null == reqDTO.getPmUser()) {
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			}
-			// #25638 - End
+			// #28472 and #25638 - End.
 			reqDTO.setCurrentFinalizationStatus(
 					getManagedBean().getCurrentStatusId());
 			reqDTO.setInitialDecisionFwdHighAuth(
