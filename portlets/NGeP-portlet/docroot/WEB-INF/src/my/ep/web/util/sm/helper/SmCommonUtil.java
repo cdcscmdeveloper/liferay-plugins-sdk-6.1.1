@@ -63,6 +63,7 @@ import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.pojobtyperatio.IPoJobTypeRatioSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -95,6 +96,8 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.pojobtyperatio.PoJobTypeRatioReqDTO;
@@ -151,6 +154,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -450,7 +454,7 @@ public class SmCommonUtil {
 				.retrieveParameterById(reqDTO);
 		return resDTO.getPmParameter();
 	}
-
+	
 	/**
 	 * Get parameter description by parameter ID
 	 * 
@@ -1887,6 +1891,24 @@ public class SmCommonUtil {
 		return stateList;
 
 	}
+	//13320-4
+	public static List<SelectItem> getDivisionList(Long stateId) {
+		IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+		reqDTO.setStateId(stateId);
+		DivisionResDTO resDTO = divisionSO.retriveDivisionListByState(reqDTO);
+		List<SelectItem> divisionList = new ArrayList<SelectItem>();
+		for (PmDivision division : resDTO.getDivisionList()) {
+			SelectItem si = new SelectItem();
+			si.setLabel(division.getDivisionName());
+			si.setValue(division.getDivisionId());
+			divisionList.add(si);
+		}
+		return divisionList;
+	}
+
 
 	/**
 	 * Get districts based on state id.
@@ -3546,7 +3568,18 @@ public class SmCommonUtil {
 			return null;
 		}
 	}
-
+//13320-5
+	public PmDivision getDivisionById(Long divisionId) {
+		if (divisionId != null) {
+			DivisionReqDTO reqDTO = new DivisionReqDTO();
+			reqDTO.setDivisionId(divisionId);
+			return SmServiceLookup.getDivisionSO().retriveDivisionListByState(reqDTO)
+					.getPmDivision();
+		} else {
+			return null;
+		}
+	}
+	
 	public PmDistrict getDistrictById(Long districtId) {
 		if (districtId != null) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -3586,6 +3619,17 @@ public class SmCommonUtil {
 			PmState state = getInstance().getStateById(stateId);
 			if (state != null) {
 				name = state.getStateName();
+			}
+		}
+		return name;
+	}
+//13320
+	public static String getDivisionLabelById(Long divisionId) {
+		String name = "";
+		if (divisionId != null) {
+			PmDivision division = getInstance().getDivisionById(divisionId);
+			if (division != null) {
+				name = division.getDivisionName();
 			}
 		}
 		return name;
@@ -5872,5 +5916,33 @@ public class SmCommonUtil {
 			
 		}
 	}
-		
+	
+//13220-Start
+	public static List<SelectItem> getDistrictListByID(Long divisionId) {
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDivisionId(divisionId);
+		DistrictResDTO resDTO = districtSO.retriveDistrictListByDivision(reqDTO);
+		List<SelectItem> districtList = new ArrayList<SelectItem>();
+		for (PmDistrict district : resDTO.getDistrictList()) {
+			SelectItem si = new SelectItem();
+			si.setLabel(district.getDistrictName());
+			si.setValue(district.getDistrictId());
+			districtList.add(si);
+		}
+		return districtList;
+	}
+		public PmDivision getDivisionByUsingId(Long divisionId) {
+			if (divisionId != null) {
+				DivisionReqDTO reqDTO = new DivisionReqDTO();
+				reqDTO.setDivisionId(divisionId);
+				return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
+						.getPmDivision();
+			} else {
+				return null;
+			}
+		}
+		//13320-End
 }
