@@ -564,6 +564,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
     //#25138-Ahmaa-End
 	
+	//#21695 Farid-start
+	private Boolean checkTecSpecNotOffer;
+	//#21695 end
+	
 	//#25037-START
 	private EvaluationMeetingBackingBean meetingBB;
 	//#25037-END
@@ -3696,7 +3700,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25037-end
 
 	//#25138-Ahmaa-End
-	
+// #21695 farid	start
 	public IPagingDataModel<Object[]> getNotOfferSupplierDM() {
 		return notOfferSupplierDM;
 	}
@@ -3705,4 +3709,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 			IPagingDataModel<Object[]> notOfferSupplierDM) {
 		this.notOfferSupplierDM = notOfferSupplierDM;
 	}
+
+	public Boolean getCheckTecSpecNotOffer() {
+		return checkTecSpecNotOffer;
+	}
+
+	public void setCheckTecSpecNotOffer(Boolean checkTecSpecNotOffer) {
+		this.checkTecSpecNotOffer = checkTecSpecNotOffer;
+	}
+	// #21695 farid	end		
 }
