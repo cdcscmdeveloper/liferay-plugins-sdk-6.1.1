@@ -55,9 +55,9 @@
 						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
-						<!-- bug #28278 -START -->
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED
-						or(smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED)}" />					
+						<!-- bug #28278 -START @harith -->
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} #{smSupplier.typeDisciplinaryAction}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.cancel']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />				
 					    <!-- bug #28278 -END -->
 					</p:column>
 					
@@ -74,10 +74,15 @@
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, smSupplier.mofStatus)}"
 							process="@this" partialSubmit="true" update="@form"
 							style="padding-right:5px;">
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="#{lbl['lbl.sm.view']}"
+								rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
+							<p:graphicImage value="/css/images/design/edit.png"
+								title="#{lbl['lbl.sm.edit']}"
+								rendered="#{smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" />
 						</p:commandLink>
 					</p:column>
 					
@@ -114,11 +119,16 @@
 							<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@form" process="@this"/>
 						</td>
-						<td style="white-space: nowrap; float: right;">
-						    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@form"
-						    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}" 
-						    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"/>
-						</td>
+						<td style="white-space: nowrap; float: right;"><p:commandButton
+								value="#{lbl['lbl.btn.submit']}" style="float:right;" rendered="#{supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
+								id="submitBtnId" update="@form" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{supplierDataMaintenanceBackingBean.showConfirmDialog}"
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" />
+							<p:commandButton value="#{lbl['lbl.btn.close']}" rendered="#{!supplierDataMaintenanceBackingBean.managedBean.flagShowButtonSubmit}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}"
+								update="@form" process="@this" /></td>
 					</tr>
 				</table>
 				
