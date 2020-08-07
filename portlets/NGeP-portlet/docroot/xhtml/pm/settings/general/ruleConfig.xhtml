@@ -20,6 +20,18 @@
 					</div>
 				</td>
 			</tr>
+			<!-- 28727 - START -->
+			<tr>
+				<td>
+					<div align="right" style="width: 100%">
+						<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+							style="float:right;"
+							immediate="true"
+							action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.ruleConfigParamCode, ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleTypeId, requestNoteBackingBean.isSupplier())}"/>
+					</div>
+				</td>
+			</tr>
+			<!-- 28727 - END -->
 		</table>
 
 		<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"			
@@ -226,7 +238,9 @@
 		       	</f:facet>
 		      	#{typeValueObj.ruleDescription}
 			</p:column>
-			<p:column width="15%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+			<p:column width="15%" style="white-space:normal"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC') and 
+							(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PTJB')}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 	             	#{lbl['lbl.pm.zone']}
@@ -397,7 +411,8 @@
 				<p:commandLink
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode != 'PC') and
-								((ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag))}"
+								((ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)) and
+								 (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'BRBP')}"
 					id="deleteValue" partialSubmit="true" process="@this"
 					oncomplete="ruleValueDeletePopUp.show();"
 					update="@([id$=#{ruleValueDeleteId}])">
@@ -408,7 +423,8 @@
 				<!-- 27827 - START -->
 				<p:commandLink
 					disabled="#{!(typeValueObj.brandNew)}"
-					rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC'}"
+					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC') or
+							    (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'BRBP')}"
 					id="deleteValuePtj" partialSubmit="true" process="@this"
 					oncomplete="ruleValueDeletePopUp.show();"
 					update="@([id$=#{ruleValueDeleteId}])">
