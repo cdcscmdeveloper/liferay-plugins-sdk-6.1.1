@@ -49,7 +49,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
-				<!-- 26339  Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
+				<!-- 26339 and 25138 Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance' and 'or evaluationBackingBean.managedBean.readOnly'-->
 				<p:selectOneMenu
 					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier)}"  
 					value="#{complianceTechnicalSupplier.compliance}">
