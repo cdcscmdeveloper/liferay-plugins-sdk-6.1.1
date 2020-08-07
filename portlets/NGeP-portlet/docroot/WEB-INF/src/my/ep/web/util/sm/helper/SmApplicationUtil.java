@@ -11872,9 +11872,9 @@ public class SmApplicationUtil {
 				  if (bean.getSmSupplier().getBusinessType()
 						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 						&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
-						&& (bean.getSelectedShareHolder().isEquityOwner()
-						// BUG #28173 & #28315 -START
-						|| bean.getSelectedShareHolder().isManagement())) {
+						/* #28256 Missing Role as Staff for ROB Partnership - Remove bean.getSelectedShareHolder().isManagement()*/
+						&& // BUG #28173 & #28315 -START
+						bean.getSelectedShareHolder().isManagement()) {
 					    // BUG #28173 & #28315 -END
 					  bean.getSelectedShareHolder().setClerical(false);
 					bean.getSelectedShareHolder().setDisableStaff(true);
