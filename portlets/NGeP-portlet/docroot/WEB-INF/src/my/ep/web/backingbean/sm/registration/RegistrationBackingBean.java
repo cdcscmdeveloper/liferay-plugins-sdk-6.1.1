@@ -121,6 +121,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -1209,6 +1212,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		
+		// 27691 - added business type validation for SSM
 		if(SmCommonUtil.getInstance().ssmActive() 
 				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType())){
 			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
@@ -2877,6 +2881,44 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		this.getManagedBean().setSelectedSuppOwners(null);
+	}
+	
+	public void supplierOwnerOnRowSelected(SelectEvent event) {
+		unselectSupplierOwnerAdminRow();
+	}
+	
+	public void supplierOwnerOnRowUnselected(UnselectEvent event) {
+	}
+	
+	public void supplierOwnerOnCheckboxToggled(ToggleSelectEvent event) {
+		unselectSupplierOwnerAdminRow();
+	}
+	
+	public void unselectSupplierOwnerAdminRow() {
+		int index = 0;
+	    for (SmSupplierOwner smSuppOwner : this.getManagedBean().getSmSuppOwners()) {
+	    	if (isSmSupplierOwnerIsAdmin(smSuppOwner)) {
+	    		RequestContext.getCurrentInstance().execute("unselectSupplierOwner(" + index + ")");
+	    	}
+	    	index++;
+	    }
+	}
+	
+	public String getSupplierOwnerRowStyle(SmSupplierOwner smSuppOwner) {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) return "";
+		return isSmSupplierOwnerIsAdmin(smSuppOwner) ? "ui-state-disabled" : "";
+	}
+	
+	public boolean isSmSupplierOwnerIsAdmin(SmSupplierOwner smSupplierOwner) {
+		for (SmPersonnel smPersonnel : smSupplierOwner.getSmSupplier().getSmAppl().getSmPersonnels()) {
+			if (smPersonnel.getIdentificationNo().equals(smSupplierOwner.getIdentificationNo())) {
+				boolean isSupplierAdmin = smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ||
+						smPersonnel.getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+				return isSupplierAdmin;
+			}
+		}
+		return false;
 	}
 	// 27691 - end -  Add/Delete Supplier Owner
 	
