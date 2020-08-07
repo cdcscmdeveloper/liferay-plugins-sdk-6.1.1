@@ -9055,7 +9055,7 @@ public class SmApplicationUtil {
 				addr.setPmState(SmCommonUtil.getInstance()
 						.getStateById(stateId));
 			}
-			bean.setDivisionBox(true);
+			bean.setDivisionBox(true); //13320
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(stateId);
 			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
