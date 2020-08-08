@@ -28,6 +28,13 @@
 				</p:column>
 
 
+	<ui:remove>
+		 #21695 Farid 
+		ADDED : disabled="#{evaluationBackingBean.managedBean.scQt ne null and
+							evaluationBackingBean.managedBean.scQt.partial ne null and
+							evaluationBackingBean.managedBean.scQt.partial eq true and
+							!isZonal and evaluationBackingBean.checkTecSpecNotOffer(tplSpecAnswer)}
+	</ui:remove>
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
@@ -36,7 +43,11 @@
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
 				disabled="#{tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer ne null and 
 							tplSpecAnswer.tplSpecZoneQty ne null and 
-							tplSpecAnswer.tplSpecZoneQty.qty eq 0}">
+							tplSpecAnswer.tplSpecZoneQty.qty eq 0 or
+							evaluationBackingBean.managedBean.scQt ne null and
+							evaluationBackingBean.managedBean.scQt.partial ne null and
+							evaluationBackingBean.managedBean.scQt.partial eq true and
+							!isZonal and evaluationBackingBean.checkTecSpecNotOffer(tplSpecAnswer)}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />

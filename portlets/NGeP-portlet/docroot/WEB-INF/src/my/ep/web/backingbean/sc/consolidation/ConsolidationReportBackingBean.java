@@ -22,9 +22,12 @@ import javax.faces.context.FacesContext;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
@@ -36,6 +39,7 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -688,6 +692,9 @@ public class ConsolidationReportBackingBean extends
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
 		initializeFinalizationUlasanRemarks();
+		//#21695 Farid start
+		retrieveSupplierOfferOrNotOffer();
+		//#21695 end
 	}
 
 	private void setZoneAndTabIndexOnException(boolean isItemized,
@@ -795,7 +802,66 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
+//#21695 Farid Start
+	private void retrieveSupplierOfferOrNotOffer() {
+		ScQt scQt = getManagedBean().getScQt();
+		IQTEvaluationSO evaluationSO = null;
 
+		try {
+			
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
+
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>(); 
+			reqDTO.setNotOfferSupplierSearchBean(searchBean);
+			boolean isOfferAll = false;	 
+			
+			
+			if (getManagedBean().getScQt()
+					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
+				isOfferAll = true;	 
+			}
+			else{ // sini boleh letak condition yg bermasatu
+				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
+							.getOfferOrNotOfferSupplierResultBean().getResultList();
+						 
+				 List <Object[]> suppliersNotOffer = evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
+								.getNotOfferSupplierResultBean().getResultList();
+					
+				 log.info("allSuppliers size " +  allSuppliers.size());
+				 log.info("suppliersNotOffer size " +  suppliersNotOffer.size());
+						
+				 if ( allSuppliers.size() == suppliersNotOffer.size() && allSuppliers.size() != 0 && suppliersNotOffer.size() != 0 ){
+						isOfferAll = true;	 
+					}
+			}
+			 
+//             for (  Object[] paramsObjallSupplier : allSuppliers){
+//	              Long supplierId = ((BigDecimal) paramsObjallSupplier[0]).longValue();
+//	              
+//	              for (  Object[] paramsObjsuppliersNotOffer : suppliersNotOffer){
+//	            	  
+//		              Long notOfferSupplierId = ((BigDecimal) paramsObjsuppliersNotOffer[0]).longValue();
+//		              
+//		              if (supplierId == notOfferSupplierId){
+//		            	  
+//		            	  isAllOffer = false;
+//		            	  
+//		              }
+//				 }
+//	         
+//			 }
+			
+			 getManagedBean().setOfferAll(isOfferAll);
+		} finally {
+			evaluationSO = null;
+		}
+	}
+//#21695 Farid end
+	
 	private void retrieveSupplierFinalizationDtls() {
 		ScQt scQt = getManagedBean().getScQt();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;

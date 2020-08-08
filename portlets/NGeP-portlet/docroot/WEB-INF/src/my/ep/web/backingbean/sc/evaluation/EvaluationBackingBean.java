@@ -13563,4 +13563,47 @@ private void retriveCommitteeRemarksList(){
 			return false;
 		}
 		// #25638 - End
+		
+		// FARID #21695 START	
+		public Boolean checkTecSpecNotOffer(TplSpecAnswer tplSpecAnswer) {
+			boolean checkTecSpecNotOffer = false;
+			ITemplateSpecSO templateSpecSO = null;
+			
+			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
+					.getServiceObject("cc", ITemplateSpecSO.class);
+			
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+
+			TplSpecAnswer answerList = tplSpecAnswer;
+			
+			reqDTO.setTplSpecAnswer(answerList);
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			
+			if(answerList != null &&
+					answerList.getTplSpecQuestion().getParentSpecQuestion() != null &&
+					answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId() != null){
+
+				TemplateSpecResDTO resDTO = templateSpecSO.retriveTechSuppAnswerNotOffer(reqDTO);
+				
+			for(TplSpecAnswer specAnswerOffers : resDTO.getSpecAnswerOffer()){
+				if(specAnswerOffers!=null){
+					
+						if (answerList != null && specAnswerOffers !=null) {
+							if(answerList.getTplSpecQuestion().getSpecQuestionId()!=null && 
+									answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specAnswerOffers.getTplSpecQuestion().getSpecQuestionId())
+									&& answerList.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(specAnswerOffers.getTplSpecSuppAnswer().getSmSupplier().getSupplierId())
+									&& specAnswerOffers.getOffer() !=null && specAnswerOffers.getOffer() == false){
+								
+								checkTecSpecNotOffer = true;
+								break;
+							}
+							
+						}
+					}
+				}
+			}		
+				
+			return checkTecSpecNotOffer;
+		}
+		// FARID #21695 END
 }
