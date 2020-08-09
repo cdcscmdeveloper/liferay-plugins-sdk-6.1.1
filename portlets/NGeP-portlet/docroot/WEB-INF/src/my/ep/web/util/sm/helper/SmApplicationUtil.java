@@ -13763,5 +13763,35 @@ public class SmApplicationUtil {
 					e.printStackTrace();
 				}
 			}
-		//13320-end			
+		//13320-end	
+			//STATR 25474
+			public static SmAppl getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+					Long supplierId, String applType) {
+				SmAppl smAppl = null;
+				StringBuilder sb = new StringBuilder();
+				sb.append("(")
+						.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+						.append(",")
+						.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+						.append(",")
+						.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+						.append(")");
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setNotUsedConditionExpired(true);
+				reqDTO.setCurrent(true);
+				reqDTO.setSupplierId(supplierId);
+				reqDTO.setWorkflowStatus(sb.toString());
+				reqDTO.setAppType(applType);
+				Long applId = SmServiceLookup.getMofRegistrationSO()
+						.retriveApplIdForLastRejectedApplicationByApplType(reqDTO)
+						.getApplId();
+				if (applId != null) {
+					reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setApplId(applId);
+					smAppl = SmServiceLookup.getMofRegistrationSO()
+							.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+				}
+				return smAppl;
+			}
+			//END 25474
 }

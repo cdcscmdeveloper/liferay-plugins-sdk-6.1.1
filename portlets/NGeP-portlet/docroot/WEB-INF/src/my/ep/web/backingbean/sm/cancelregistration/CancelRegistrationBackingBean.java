@@ -110,12 +110,14 @@ public class CancelRegistrationBackingBean extends
 								});
 						
 					}
+					//to check active rejected application
+					SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(resDTO.getSmSupplier().getSupplierId(),ParameterConst.NEW_SM_APPLN_FOR_MOF);
 					
 					if (selectedPersonnel.getIdentificationNo().equals(
 							getManagedBean().getSuppAdminIdentificationNo().trim())
 							&& selectedPersonnel.getRecordStatusFlg().equals(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) {
 						//#25474------13072020
-						if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID))){//PM_STATTUS_ID=20199
+						if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) || appl != null){//PM_STATTUS_ID=20199
 							if (getManagedBean()
 									.getAccType()
 									.equalsIgnoreCase(
@@ -148,7 +150,7 @@ public class CancelRegistrationBackingBean extends
 								RequestContext.getCurrentInstance().execute(
 										"confirmDialog.show();");
 							}
-						}else{
+						}else{							
 							//#25474------13072020
 							if (getManagedBean().getAccType().equalsIgnoreCase(
 									SupplierManagementConst.STYPE_BASIC)) {
