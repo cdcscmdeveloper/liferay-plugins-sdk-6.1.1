@@ -312,6 +312,9 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//28637
 	private boolean viewCatCode;
 	
+	// #28278
+	private boolean flagShowButtonSubmit;
+	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -2195,5 +2198,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setViewCatCode(boolean viewCatCode) {
 		this.viewCatCode = viewCatCode;
+	}
+
+	public boolean isFlagShowButtonSubmit() {
+		return flagShowButtonSubmit;
+	}
+
+	public void setFlagShowButtonSubmit(boolean flagShowButtonSubmit) {
+		this.flagShowButtonSubmit = flagShowButtonSubmit;
 	}
 }

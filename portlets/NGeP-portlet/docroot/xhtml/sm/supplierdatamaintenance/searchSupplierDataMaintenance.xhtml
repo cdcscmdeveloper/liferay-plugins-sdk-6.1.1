@@ -74,7 +74,7 @@
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
-							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, smSupplier.mofStatus)}"
 							process="@this" partialSubmit="true" update="@form"
 							style="padding-right:5px;">
 							<p:graphicImage value="/css/images/design/ico-view.png"
