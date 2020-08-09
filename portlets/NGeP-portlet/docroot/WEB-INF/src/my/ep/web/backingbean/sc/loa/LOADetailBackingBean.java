@@ -12,6 +12,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,6 +42,7 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -71,6 +73,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -98,12 +101,13 @@ import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -117,6 +121,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -142,6 +147,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -155,6 +161,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -340,6 +347,63 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			//qtAwardSO = null;
 		}
 		return QTConstants.LOA_PAGE;
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * to be used in Screen From Tasklist Only
+	 * @param obj
+	 * 		instance of ScQt/ScLoiForQt/ScLoaForQt
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public String reverseAction() {
+		
+		debugLogger("viewReverseStatusDetails");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		//String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		ScQt scQt = this.getManagedBean().getScQt();
+		ScLoaForQt scLoaForQt = new ScLoaForQt();
+		
+		/**
+		 * FINDING QT WORKFLOW-> CASE REVERSAL QT
+		 */
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);	
+		scWreqDTO.setDocId(scQt.getQtId());		
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOA)) {
+			throw new EpException(MessageConst.ERROR_760497,new String[]{scQt.getQtNo()});
+		}
+		
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setLoaId(scLoa.getLoaId());
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLoaForQtByLoaId(reqDTO);
+		
+		scLoaForQt = resDTO.getScLoaForQt();
+		
+		qtDtl.getManagedBean().setEditable(Boolean.TRUE);		
+			
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.loiLoaSelected, scLoa);
+		
+		/* FINDING WORKFLOW STATS*/
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		scWreqDTO.setDocId(scLoa.getLoaId());
+		
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		qtDtl.getManagedBean().setPreviousPage(this.getManagedBean().getBackToPreviousPage());
+		qtDtl.getManagedBean().setQt(scQt);
+		qtDtl.getManagedBean().setScLoaForQt(scLoaForQt);
+		qtDtl.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, qtDtl.reverseQtDetails(Boolean.FALSE,Boolean.TRUE,qtDtl));
+		
+		return null;
 	}
 	
 	/**
@@ -3294,12 +3358,102 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-		} 
-		else {
+		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+			// Enhancement #21694 START
+			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION){
+				updateReviseBPMTaskAction(outcome);
+			}else{
+				updateBpmTaskAction(outcome);
+			}
+			//Enhancement #21694 END
+		}else {
 			updateBpmTaskAction(outcome);
 		}
 	}
 	//20190405@asyrafhaziq - CR25062 - End
+	
+	/**
+	 * Enhancement #21694
+	 * Update bpm task action.
+	 * STAGE REVISE (VERIFY) -> LOA Acceptance (Supplier Action)
+	 * STAGE LOA Acceptance(Supplier Action) -> REVISE (VERIFY)
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
+	 */
+	public void updateReviseBPMTaskAction(String outcome){
+		debugLogger("updateReviseBPMTaskAction");
+		
+		/*******************
+		 * INITIATE BPM REVISE
+		 */
+		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
+		IScActorSO actorSO;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
+		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		reqDTO.setPayLoad(getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setQuotation(null!=procurementMode && procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)?true:false);
+		
+		actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+		actorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
+		switch(this.getManagedBean().getScQt().getFinalization().getLoiLoaBy()){
+			case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
+																actorReqDTO.setUserId(this.getManagedBean().getScQt().getCreatedBy());
+																break;
+			case ParameterConst.LOILOA_PREPARED_BY_FC_SECRETARY	:	//SECRETARY
+																if(null!=this.getManagedBean().getScLoa()){
+																	actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+																}else{
+																	actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+																}
+																break;
+		}
+		reqDTO.setScActors(actorSO.retreiveActorByDocTypesDocIdUserId(actorReqDTO).getScActorList());
+		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
+		if(resDTO.isSuccessful()){
+			/*******************
+			 * ACKNOWLEDGE_PAGE
+			 *******************/
+			String[] param = new String[3];
+			
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[1] = this.getManagedBean().getScQt().getQtNo();
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)){
+				if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+					successMessage(MessageConst.INFO_700079,param);
+				} else if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_TENDER)) {
+					successMessage(MessageConst.INFO_700080,param);
+				}
+			}else{
+				if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+					successMessage(MessageConst.INFO_700077,param);
+				} else if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_TENDER)) {
+					successMessage(MessageConst.INFO_700078,param);
+				}
+			}			
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}		
+	}
+	
 	/**
 	 * Update bpm task action.
 	 * update bpm - save data into database and BPM process will route to the next respective user.

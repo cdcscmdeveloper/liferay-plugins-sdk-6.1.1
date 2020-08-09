@@ -53,10 +53,13 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReverseRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -85,6 +88,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
@@ -136,6 +140,44 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The qt. */
 	private ScQt qt;
+	
+	/* Enhancement #21694 */
+	/** The loi. */
+	private ScLoiForQt scLoiForQt;
+	
+	/* Enhancement #21694 */
+	/** The Loi Instance */
+	private ScLoi scLoi;
+	
+	/* Enhancement #21694 */
+	/** The loa For QT Instance. */
+	private ScLoaForQt scLoaForQt;
+	
+	/* Enhancement #21694 */
+	/** The Loa Instance */
+	private ScLoa scLoa;
+	
+	/* Enhancement #21694 */
+	/** The ScQtReverse */
+	private ScQtReverse scQtReverse;
+	
+	/*Enhancement #21694*/
+	private boolean isMeeting = Boolean.FALSE;
+	
+	/*Enhancement #21694*/
+	private boolean isEditable;
+	
+	/*Enhancement #21694*/
+	private boolean isViewFinalization = Boolean.FALSE;
+	
+	/*Enhancement #21694*/
+	private List<ScLoiReverseRemark> scLoiReverseRemarks;
+	
+	/*Enhancement #21694*/
+	private List<ScLoaReverseRemark> scLoaReverseRemarks;
+	
+	/*Enhancement #21694*/
+	private String roleCode;
 
 	/** The circular type. */
 	private String circularType;
@@ -10102,6 +10144,119 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCloned(boolean isCloned) {
 		this.isCloned = isCloned;
 	}	
+
+	public ScLoiForQt getScLoiForQt() {
+		return scLoiForQt;
+	}
+
+	public void setScLoiForQt(ScLoiForQt scLoiForQt) {
+		this.scLoiForQt = scLoiForQt;
+	}
+
+	public ScLoaForQt getScLoaForQt() {
+		return scLoaForQt;
+	}
+
+	public void setScLoaForQt(ScLoaForQt scLoaForQt) {
+		this.scLoaForQt = scLoaForQt;
+	}
+
+	public boolean isMeeting() {
+		return isMeeting;
+	}
+
+	public void setMeeting(boolean isMeeting) {
+		this.isMeeting = isMeeting;
+	}
+
+	public ScQtReverse getScQtReverse() {
+		return scQtReverse;
+	}
+
+	public void setScQtReverse(ScQtReverse scQtReverse) {
+		this.scQtReverse = scQtReverse;
+	}
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
+	}
+
+	public List<ScLoiReverseRemark> getScLoiReverseRemarks() {
+		return scLoiReverseRemarks;
+	}
+
+	public void setScLoiReverseRemarks(List<ScLoiReverseRemark> scLoiReverseRemarks) {
+		this.scLoiReverseRemarks = scLoiReverseRemarks;
+	}
+
+	public List<ScLoaReverseRemark> getScLoaReverseRemarks() {
+		return scLoaReverseRemarks;
+	}
+
+	public void setScLoaReverseRemarks(List<ScLoaReverseRemark> scLoaReverseRemarks) {
+		this.scLoaReverseRemarks = scLoaReverseRemarks;
+	}
+
+	/**
+	 * @return the isViewFinalization
+	 */
+	public boolean isViewFinalization() {
+		return isViewFinalization;
+	}
+
+	/**
+	 * @param isViewFinalization the isViewFinalization to set
+	 */
+	public void setViewFinalization(boolean isViewFinalization) {
+		this.isViewFinalization = isViewFinalization;
+	}
+
+	/**
+	 * @return the scLoi
+	 */
+	public ScLoi getScLoi() {
+		return scLoi;
+	}
+
+	/**
+	 * @param scLoi the scLoi to set
+	 */
+	public void setScLoi(ScLoi scLoi) {
+		this.scLoi = scLoi;
+	}
+
+	/**
+	 * @return the scLoa
+	 */
+	public ScLoa getScLoa() {
+		return scLoa;
+	}
+
+	/**
+	 * @param scLoa the scLoa to set
+	 */
+	public void setScLoa(ScLoa scLoa) {
+		this.scLoa = scLoa;
+	}
+
+	/**
+	 * @return the roleCode
+	 */
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	/**
+	 * @param roleCode the roleCode to set
+	 */
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+	
 	
 	// 26095@hatta - start
 		public Date getCurrentDate() {

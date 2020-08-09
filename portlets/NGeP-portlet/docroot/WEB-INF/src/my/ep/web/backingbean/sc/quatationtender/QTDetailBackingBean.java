@@ -51,9 +51,12 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -92,6 +95,8 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -132,6 +137,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -149,9 +155,19 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaBasic;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReverseAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReverseRemark;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoiReverseAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
+import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCloseQTAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCloseQTRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
@@ -178,6 +194,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
@@ -1200,6 +1217,362 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/**
+	 * Enhancement #21694
+	 * Method to validateReverseRemark
+	 */
+	public void validateReverseRemark(){
+		/*
+		 * VALIDATE REMARKS MUST NOT BE EMPTY
+		 */
+		if(this.getManagedBean().getScQtReverse().getTypeOfRequest().getParameterCode().equalsIgnoreCase(ParameterConst.APPROVAL_REQUEST_REVERSE_LOA_QT)){
+			//IF LOA
+			if(this.getManagedBean().getScLoaReverseRemarks() != null ){
+				for(ScLoaReverseRemark scLoaReverseRemark :this.getManagedBean().getScLoaReverseRemarks()){
+					if(scLoaReverseRemark.getRemark()==null || scLoaReverseRemark.getRemark().equalsIgnoreCase("")){
+						throw new EpException(MessageConst.ERROR_100022,
+								new String[] { 
+									ResourceBundleUtils.getMessage(
+										"lbl.sc.remark", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
+				}					
+			}
+		}else if(this.getManagedBean().getScQtReverse().getTypeOfRequest().getParameterCode().equalsIgnoreCase(ParameterConst.APPROVAL_REQUEST_REVERSE_LOI_QT)){
+			//IF LOI
+			for(ScLoiReverseRemark scLoiReverseRemark :this.getManagedBean().getScLoiReverseRemarks()){
+				if(scLoiReverseRemark.getRemark()==null || ("").equalsIgnoreCase(scLoiReverseRemark.getRemark())){
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { 
+								ResourceBundleUtils.getMessage(
+									"lbl.sc.remark", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) });
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Method to save the Sc_Qt_Reverse
+	 */
+	public void saveReverseLoiLoa() {
+		
+		debugLogger("start of saveScQtReverse");
+		this.getManagedBean().setSaveFlow(true);
+		try {
+			String paramCons;
+			String loiloNo;
+			saveReverseLoiLoaDtl();
+			if(this.getManagedBean().getScQtReverse().getDocType().equalsIgnoreCase("LI")){
+				paramCons = ParameterConst.DOCTYPE_LETTER_OF_INTENT;
+				loiloNo = this.getManagedBean().getScLoiForQt().getLoiNo();
+			}else{
+				paramCons = ParameterConst.DOCTYPE_LETTER_OF_AWARD;
+				loiloNo = this.getManagedBean().getScLoaForQt().getLoaNo();
+			}
+			
+			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+					paramCons, loiloNo, Boolean.FALSE);
+
+			debugLogger("end of saveQtReverseAction");
+		}finally{
+			
+		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * METHOD TO UPDATE REVERSE WORKFLOW STATUS
+	 */
+	public void updateReverseScWorkflowStatus(QuationTenderReqDTO quationTenderReqDTO){
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+		IScWorkFlowStatusSO workFlowStatusSO;
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		
+		
+		if(null==this.getManagedBean().getTaskId() || this.getManagedBean().getTaskId().isEmpty()){
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			if(null!=quationTenderReqDTO.getScLoiForQt()){
+				ScLoiWorkFlowStatus scLoiWorkFlowStatus = new ScLoiWorkFlowStatus();
+				reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+				reqDTO.setDocId(quationTenderReqDTO.getScLoiForQt().getLoiId());	
+				statusReqDTO.setStatusId(QTStatusConst.LOI_REVERSED);
+				scLoiWorkFlowStatus.setDocType(reqDTO.getDocType());
+				scLoiWorkFlowStatus.setDocId(reqDTO.getDocId());
+				scLoiWorkFlowStatus.setScLoi(quationTenderReqDTO.getScLoi());
+				scLoiWorkFlowStatus.setPmStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
+				scLoiWorkFlowStatus.setCurrent(Boolean.TRUE);
+				reqDTO.setScWorkFlowStatus(scLoiWorkFlowStatus);
+			}if(null!=quationTenderReqDTO.getScLoaForQt()){
+				ScLoaWorkFlowStatus scLoaWorkFlowStatus = new ScLoaWorkFlowStatus();
+				reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+				reqDTO.setDocId(quationTenderReqDTO.getScLoaForQt().getLoaId());
+				statusReqDTO.setStatusId(QTStatusConst.LOA_REVERSED);
+				scLoaWorkFlowStatus.setDocType(reqDTO.getDocType());
+				scLoaWorkFlowStatus.setDocId(reqDTO.getDocId());
+				scLoaWorkFlowStatus.setScLoa(quationTenderReqDTO.getScLoa());
+				scLoaWorkFlowStatus.setPmStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
+				scLoaWorkFlowStatus.setCurrent(Boolean.TRUE);
+				reqDTO.setScWorkFlowStatus(scLoaWorkFlowStatus);
+			}
+			
+			workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);				
+		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Method to UPDATE Sc_QT_RecommendDtl (isLoaAwarded/isLoiAwarded)
+	 */
+	public void updateScQtRecommendDtl(){
+		ScLoiForQt scLoiForQt = this.getManagedBean().getScLoiForQt();
+		ScLoaForQt scLoaForQt = this.getManagedBean().getScLoaForQt();
+		Long loiLoaId = null;
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+		
+		/*******************
+		 * UPDATE SC_LOI_LOA
+		 *******************/
+		if(scLoiForQt!=null){
+			loiLoaId = scLoiForQt.getScLoiLoa().getLoiLoaId();
+			
+		}else if(scLoaForQt!=null){
+			loiLoaId = scLoaForQt.getScLoiLoa().getLoiLoaId();
+		}
+		
+		if(loiLoaId!=null){
+			ScLoiLoa loiLoa = new ScLoiLoa();
+			if(null!=scLoiForQt){
+				reqDTO.setLoiLoaId(loiLoaId);
+				loiLoa = detailSO.findScLoiLoaByLoiLoaId(reqDTO).getScLoiLoa();
+				if(loiLoa!=null){
+					loiLoa.setLoiRequired(null);
+					reqDTO.setScLoiLoa(loiLoa);
+					detailSO.saveScLoiLoaByLoiLoa(reqDTO);
+				}
+			}			
+		}
+		
+		/****************************
+		 * UPDATE SC_LOI_LOA_ITEM
+		 *//*
+		if(null!=scLoiForQt){
+			for(ScLoiLoaItem items : scLoiForQt.getScLoiLoaItems()){
+				reqDTO = new QuationTenderReqDTO();
+				reqDTO.setScLoiLoaItem(items);
+				ScLoiLoaItem resLoiLoaItem = detailSO.retrieveScLoiLoaItem(reqDTO).getScLoiLoaItem();
+				resLoiLoaItem.setScLoi(null);
+				detailSO.saveScLoiLoaItem(resLoiLoaItem);
+			}
+		}else if (null!=scLoaForQt){
+			for(ScLoiLoaItem items : scLoaForQt.getScLoiLoaItems()){
+				reqDTO = new QuationTenderReqDTO();
+				reqDTO.setScLoiLoaItem(items);
+				ScLoiLoaItem resLoiLoaItem = detailSO.retrieveScLoiLoaItem(reqDTO).getScLoiLoaItem();
+				resLoiLoaItem.setScLoa(null);
+				detailSO.saveScLoiLoaItem(resLoiLoaItem);
+			}
+		}*/
+		
+		/****************************
+		 * UPDATE SC_QT_RECOMMEND_DTL
+		 ****************************/
+		
+		if(scLoiForQt!=null){
+			for(ScLoiLoaItem items : scLoiForQt.getScLoiLoaItems()){
+				reqDTO = new QuationTenderReqDTO();
+				reqDTO.setScLoiLoaItem(items);
+				ScQtRecommendDtl recDtl = detailSO.retrieveScQtRecommendDtl(reqDTO).getScQtRecommendDtl();
+				recDtl.setLoiAwarded(null);
+				recDtl.setLoaAwarded(null);
+				recDtl.setRecordStatusFlg(QTStatusConst.LOI_STATUS_REVERSED);
+				detailSO.saveScQtRecommendDtl(recDtl);
+			}
+		}		
+		
+		if(scLoaForQt!=null){
+			for(ScLoiLoaItem items : scLoaForQt.getScLoiLoaItems()){
+				reqDTO = new QuationTenderReqDTO();
+				reqDTO.setScLoiLoaItem(items);
+				ScQtRecommendDtl recDtl = detailSO.retrieveScQtRecommendDtl(reqDTO).getScQtRecommendDtl();
+				recDtl.setLoiAwarded(null);
+				recDtl.setLoaAwarded(null);
+				recDtl.setRecordStatusFlg(QTStatusConst.LOA_STATUS_REVERSED);
+				detailSO.saveScQtRecommendDtl(recDtl);
+			}
+		}
+		
+	}
+	
+	public void saveReverseLoiLoaDtl(){
+		ScQtReverse scQtReverse;
+		List<ScLoiReverseRemark> loiRemarks;
+		List<ScLoaReverseRemark> loaRemarks;
+		loiRemarks = this.getManagedBean().getScLoiReverseRemarks();
+		loaRemarks = this.getManagedBean().getScLoaReverseRemarks();
+		scQtReverse = this.getManagedBean().getScQtReverse();
+		if(null!=scQtReverse){
+			scQtReverse.setRecordStatusFlg(Integer.parseInt(ParameterConst.RECORD_STATUS_ACTIVE));
+		}
+		
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+		reqDTO.setScQtReverse(scQtReverse);			
+		
+		/*
+		 * VALIDATE REMARK
+		 */
+		validateReverseRemark();
+		
+		/*
+		 * RESPONSE BACK TO MANAGED BEAN
+		 */
+		scQtReverse = detailSO.saveQtReverse(reqDTO).getScQtReverse();
+		if(loiRemarks!=null && !loiRemarks.isEmpty()){
+			for(ScLoiReverseRemark scLoiRemarks : loiRemarks){
+				scLoiRemarks.setScQtReverse(scQtReverse);	
+				reqDTO.setScLoiReverseRemark(scLoiRemarks);
+				detailSO.saveLoiLoaReverseRemarks(reqDTO).getScLoiReverseRemark();
+			}
+		}
+		
+		if(loaRemarks!=null && !loaRemarks.isEmpty()){
+			for(ScLoaReverseRemark scLoaRemarks : loaRemarks){				
+				scLoaRemarks.setScQtReverse(scQtReverse);
+				reqDTO.setScLoaReverseRemark(scLoaRemarks);
+				detailSO.saveLoiLoaReverseRemarks(reqDTO).getScLoaReverseRemark();
+			}
+		}
+		
+		this.getManagedBean().setScQtReverse(scQtReverse);
+		this.getManagedBean().setScLoiReverseRemarks(loiRemarks);
+		this.getManagedBean().setScLoaReverseRemarks(loaRemarks);
+	}
+	
+	/**
+	 * Enhancement #21694 START 
+	 * Page navigation from reverse screen to qtDetailManageBean.backToPreviousPage
+	 */
+	public void backToPreviousReverse() {
+		debugLogger("backToPreviousReverse");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						getManagedBean().getPreviousPage());
+	}
+	
+	/**
+	 * Enhancement #21694 START (SHAFFUL)
+	 * to be used in QT Maintenance Only
+	 * @param obj
+	 * 		instance of ScQt/ScLoiForQt/ScLoaForQt
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public String viewReverseStatusDetailsGen(Object obj, String previousPageUrl) {
+		
+		debugLogger("viewReverseStatusDetails");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		getManagedBean().setPreviousPage(previousPageUrl); 
+		ScQt scQt;
+		ScLoiForQt scLoiForQt;
+		ScLoaForQt scLoaForQt;
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		this.getManagedBean().setEditable(Boolean.TRUE);
+		if(getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO() || getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO()){
+			
+			if(obj instanceof ScLoiForQt ){
+				scLoiForQt = (ScLoiForQt)obj;
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+					scQt = scLoiForQt.getScLoiLoa()!=null?scLoiForQt.getScLoiLoa().getScQt():null;
+					
+					
+					 /* FINDING WORKFLOW STATS*/
+					 
+					reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+					reqDTO.setDocId(scLoiForQt.getLoiId());					
+					ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+					this.getManagedBean().setQt(scQt);
+					this.getManagedBean().setScLoiForQt(scLoiForQt);
+					this.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, reverseQtDetails(Boolean.TRUE,Boolean.FALSE,null));
+				}
+			}
+			else if(obj instanceof ScLoaForQt){
+				scLoaForQt = (ScLoaForQt)obj;
+				if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)){
+					Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+					otherArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
+					scQt = scLoaForQt.getScLoiLoa()!=null?scLoaForQt.getScLoiLoa().getScQt():null;
+					
+					
+					 /* FINDING WORKFLOW STATS*/
+					 
+					reqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+					reqDTO.setDocId(scLoaForQt.getLoaId());					
+					ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+					this.getManagedBean().setQt(scQt);
+					this.getManagedBean().setScLoaForQt(scLoaForQt);
+					this.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, reverseQtDetails(Boolean.FALSE,Boolean.TRUE,null));
+				}
+			}
+			else;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Show prepared by.
+	 *
+	 * @param createdBy the created by
+	 * @return the string
+	 */
+	public String showPreparedBy(Long createdBy) {
+		String userName = "";
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		if (createdBy != null) {
+			reqDTO.setUserId(createdBy);
+			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+
+			if (resDTO.getPmUser() != null) {
+				userName = resDTO.getPmUser().getUserName();
+			}
+		}
+		return userName;
+	}
+	
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	
+	/*
+	 * Enhancement #21694 END
+	 */
+	
+	/**
 	 * Find Document Id by document type
 	 * 
 	 * @param qtId
@@ -1226,6 +1599,97 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
+	/**
+	 * Enhancement #21694
+	 * Find Loi Based on ReqDTO
+	 * 
+	 * @param QuationTenderReqDTO
+	 * @return	ScLoi
+	 */
+	public ScLoi findScLoiForQtByReqDTO(QuationTenderReqDTO reqDTO) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.findScLoiForQt(reqDTO).getScLoi();			
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Find ScQtReverse Based on ReqDTO
+	 * 
+	 * @param QuationTenderReqDTO
+	 * @return	ScQtReverse
+	 */
+	public ScQtReverse findScQtReverseByReqDTO(QuationTenderReqDTO reqDTO) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.findScReverseQt(reqDTO).getScQtReverse();			
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+		
+	/**
+	 * Enhancement #21694
+	 * Find ScQtReverse Based on ReqDTO
+	 * 
+	 * @param QuationTenderReqDTO
+	 * @return	ScQtReverse
+	 */
+	public List<ScLoiReverseRemark> findScQtReverseLoiRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.findScReverseLoiLoaRemarks(reqDTO).getScLoiReverseRemarks();			
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Find ScQtReverse Based on ReqDTO
+	 * 
+	 * @param QuationTenderReqDTO
+	 * @return	ScQtReverse
+	 */
+	public List<ScLoaReverseRemark> findScQtReverseLoaRemarksByReqDTO(QuationTenderReqDTO reqDTO) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.findScReverseLoiLoaRemarks(reqDTO).getScLoaReverseRemarks();			
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+	
+	
+	/**
+	 * Enhancement #21694
+	 * Find Loa Based on ReqDTO
+	 * 
+	 * @param QuationTenderReqDTO
+	 * @return	ScLoa
+	 */
+	public ScLoa findScLoaForQtByReqDTO(QuationTenderReqDTO reqDTO) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.findScLoaForQt(reqDTO).getScLoa();			
+		} finally {
+			qtDetailSO = null;
+		}
+	}
+
 	/**
 	 * Method to prepare scqt object with all dependent object.
 	 * 
@@ -1360,7 +1824,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+  
 		// Setting the Approval details to Qtdetails
 		List<TabBean> tabList = this.getManagedBean().getTabList();
 
@@ -1571,7 +2035,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		return quationTenderReqDTO;
 	}
-	
+
 	/**
 	 * @param approvals
 	 */
@@ -2080,6 +2544,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	
 	
+
 	/**
 	 * Retrive financial specification.
 	 */
@@ -3836,6 +4301,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							reqDTO.setSupplierIds(supplierIds);
 							reqDTO.putToArgs(MapKeyEnum.supplierIds, supplierIds);
 						}
+						
 						/*Bug #27412*/
 						reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 						reqDTO.putToArgs(MapKeyEnum.userID, new FacesScopes().getUserSessionBean().getUserId());
@@ -5245,7 +5711,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		return false;
 	}
-	
 	/**
 	 * 
 	 * @param activeIndex
@@ -5409,6 +5874,266 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 	}
+	
+	/**
+	 * Enhancement #21694
+	 * will be called in maintance flow only..
+	 * 
+	 * @return the string
+	 */
+	public String reverseQtDetails(Boolean isReverseLOI, Boolean isReverseLOA,QTDetailBackingBean qtDtl ) {
+		debugLogger("reverseQtDetails");
+		IQTDetailSO detailSO;
+		IUserSO userSO;
+		IParameterSO parameterSo = null;
+		QuationTenderReqDTO quaReqDTO = new QuationTenderReqDTO();
+		PmUser currentUser = new FacesScopes().getUserSessionBean();
+		this.getManagedBean().setPmUser(currentUser);
+		ScLoi scLoi = new ScLoi();
+		ScLoa scLoa = new ScLoa();
+		PmUserOrg pmUserOrgs = new PmUserOrg();
+		try {
+			/*
+			 * TASK
+			 * 1- SETUP TABLE SC_QT_REVERSE
+			 */
+			/*
+			 * SETUP FROM TASKLIST
+			 */
+			
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IUserSO.class);
+			ParameterResDTO paramResDTO = new ParameterResDTO();
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO resDTO = new QuationTenderResDTO();
+			ScQt scQt = this.getManagedBean().getQt();
+			ScQtReverse scQtReverse = new ScQtReverse();
+			quationTenderReqDTO.setQtId(scQt.getQtId());
+			quationTenderReqDTO.setReversedLOI(isReverseLOI!=null && isReverseLOI?isReverseLOI:Boolean.FALSE);
+			quationTenderReqDTO.setReversedLOA(isReverseLOA!=null && isReverseLOA?isReverseLOA:Boolean.FALSE);
+			quationTenderReqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+			PmUser finalizationSecretary= detailSO.retrieveFinalizationSecretaryByQtId(quationTenderReqDTO).getFinalizationSecretary();
+			quationTenderReqDTO.setUserId(finalizationSecretary.getUserId());
+			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+			if(isReverseLOI){
+				quationTenderReqDTO.setScLoiForQt(this.getManagedBean().getScLoiForQt());
+			}
+				
+			if(isReverseLOA){
+				quationTenderReqDTO.setScLoaForQt(this.getManagedBean().getScLoaForQt());
+			}
+				
+			resDTO = detailSO.retrieveReversalByQtId(quationTenderReqDTO);
+			this.getManagedBean().setQt(resDTO.getQtDetail());
+			scQt = resDTO.getQtDetail();
+			if(isReverseLOI){
+				/*
+				 * SETTING FINALIZATION SECRETARY LOI
+				 */
+				
+				quaReqDTO.setScLoiForQt(this.getManagedBean().getScLoiForQt());
+				quaReqDTO.setReversedLOI(isReverseLOI);
+				quaReqDTO.setScQtReverse(resDTO.getScQtReverse());
+				scLoi = findScLoiForQtByReqDTO(quaReqDTO);
+				
+				scQtReverse =  resDTO.getScQtReverse();
+				List<ScLoiReverseRemark> loiRemarks = new ArrayList<>();
+				if(scQtReverse != null){
+					loiRemarks = findScQtReverseLoiRemarksByReqDTO(quaReqDTO);
+				}				
+				if(!this.getManagedBean().isViewFinalization()){
+					loiRemarks = initializeRemarks(scQtReverse, scLoi.getScWorkFlowStatus(), loiRemarks.size()>0?loiRemarks: null, ScLoiReverseRemark.class);
+				}
+				if(scQtReverse==null){	
+					scQtReverse = new ScQtReverse();
+				}
+				for(ScRemark loiRemark:loiRemarks){
+					loiRemark.setEditable(false);
+				}
+				
+				this.getManagedBean().setScLoiReverseRemarks(loiRemarks);
+				this.getManagedBean().setScLoi(scLoi);
+				this.getManagedBean().setScQtReverse(scQtReverse);	
+				this.getManagedBean().setScLoaForQt(null);
+				/*
+				 * SETTING FINALIZATION SECRETARY LOI (END)
+				 */
+			}
+			if(isReverseLOA){
+				/*
+				 * SETTING FINALIZATION SECRETARY LOA
+				 */
+				quaReqDTO.setScLoaForQt(this.getManagedBean().getScLoaForQt());
+				quaReqDTO.setReversedLOA(isReverseLOA);
+				quaReqDTO.setScQtReverse(resDTO.getScQtReverse());
+				scLoa = findScLoaForQtByReqDTO(quaReqDTO);
+				scQtReverse =  resDTO.getScQtReverse();
+				List<ScLoaReverseRemark> loaRemarks = new ArrayList<>();	
+				if(scQtReverse != null){
+					loaRemarks = findScQtReverseLoaRemarksByReqDTO(quaReqDTO);
+				}
+				if(!this.getManagedBean().isViewFinalization()){
+					loaRemarks = initializeRemarks(scQtReverse, scLoa.getCurrentStatus(), loaRemarks!=null?loaRemarks:null, ScLoaReverseRemark.class);
+				}
+				if(scQtReverse==null){
+					scQtReverse = new ScQtReverse();
+				}
+				
+				for(ScRemark loaRemark:loaRemarks){
+					loaRemark.setEditable(false);
+				}
+				
+				this.getManagedBean().setScLoa(scLoa);
+				this.getManagedBean().setScLoaReverseRemarks(loaRemarks);
+				this.getManagedBean().setScQtReverse(scQtReverse);
+				this.getManagedBean().setScLoiForQt(null);
+				
+				/*
+				 * SETTING FINALIZATION SECRETARY LOA (END)
+				 */
+			}
+				TabBean tabBean = new TabBean(null, null, null,retrieveFinalizationCommitteeType());
+				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
+				
+				if(resDTO.getScQtReverse()!=null){
+					/*
+					 * CHECKING IF PROFILES DESK OFFICER IS ACTIVE, IF ACTIVE, DISABLE DROPDOWN, ELSE OPEN
+					 * STEP 1: CHECK USER ORG PROFILE
+					 * STEP 2: CROSS CHECK WITH PM USER ROLE WITH PARAMCODE
+					 */
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(scQt.getFinalizationSecratery().getUserId());					
+					userReqDTO.setRoleCode(scQt.getFinalizationCommitte().getParameterCode().concat("_SECRETARY"));					
+					userReqDTO.setUserOrgId(pmUserOrgs.getUserOrgId());
+					
+					PmUserRole pmUserRole = (userSO.retrieveSpecificUserRoleByReqDTO(userReqDTO)).getUserRole();
+					if(scQt!=null){
+						if(scQt.getFinalizationCommitte()!=null){
+							scQtReverse.setFinalizationCommitte(scQt.getFinalizationCommitte());
+						}if(scQt.getFinalizationSecratery()!=null){
+							scQtReverse.setFinalizationSecratery(scQt.getFinalizationSecratery());
+						}
+					}
+					
+					if(pmUserRole!=null){
+						if(pmUserRole.getRecordStatusFlg().equals(1)){
+							
+							this.getManagedBean().setApprovalEditableSection(Boolean.TRUE);
+						}else{
+							this.getManagedBean().setApprovalEditableSection(Boolean.FALSE);
+						}						
+					}else{
+						this.getManagedBean().setApprovalEditableSection(Boolean.FALSE);
+					}
+					
+					this.getManagedBean().setScQtReverse(resDTO.getScQtReverse());
+				}else{
+					/* SETTING NEW 
+					 * DOC_TYPE = DT, PARAM_CODE = LI || LA
+					 * */					
+					parameterSo = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterType(ParameterTypeConst.APPROVAL_REQUEST_TYPES);
+					scQtReverse.setScQt(scQt);
+					
+					
+					scQtReverse.setMeeting(Boolean.FALSE);
+					scQtReverse.setRecordStatusFlg(0);
+					scQtReverse.setChangedBy(1L);
+					scQtReverse.setCreatedBy(1L);
+					if(isReverseLOI){
+						scQtReverse.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+						reqDTO.setParameterCode(ParameterConst.APPROVAL_REQUEST_REVERSE_LOI_QT);
+						scQtReverse.setDocId(this.getManagedBean().getScLoiForQt().getLoiId());
+					}else if(isReverseLOA){
+						scQtReverse.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+						reqDTO.setParameterCode(ParameterConst.APPROVAL_REQUEST_REVERSE_LOA_QT);
+						scQtReverse.setDocId(this.getManagedBean().getScLoaForQt().getLoaId());
+					}
+					paramResDTO = parameterSo.retrieveParameterByTypeAndCode(reqDTO);						
+					scQtReverse.setTypeOfRequest(paramResDTO.getPmParameter());
+					
+					/*
+					 * CHECKING IF PROFILES DESK OFFICER IS ACTIVE, IF ACTIVE, DISABLE DROPDOWN, ELSE OPEN
+					 * STEP 1: CHECK USER ORG PROFILE
+					 * STEP 2: CROSS CHECK WITH PM USER ROLE WITH PARAMCODE
+					 */
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(scQt.getFinalizationSecratery().getUserId());					
+					userReqDTO.setRoleCode(scQt.getFinalizationCommitte().getParameterCode().concat("_SECRETARY"));					
+					userReqDTO.setUserOrgId(pmUserOrgs.getUserOrgId());
+					
+					PmUserRole pmUserRole = (userSO.retrieveSpecificUserRoleByReqDTO(userReqDTO)).getUserRole();
+					if(scQt!=null){
+						if(scQt.getFinalizationCommitte()!=null){
+							scQtReverse.setFinalizationCommitte(scQt.getFinalizationCommitte());
+						}if(scQt.getFinalizationSecratery()!=null){
+							scQtReverse.setFinalizationSecratery(scQt.getFinalizationSecratery());
+						}
+					}
+					
+					if(pmUserRole!=null){
+						if(pmUserRole.getRecordStatusFlg().equals(1)){
+							
+							this.getManagedBean().setApprovalEditableSection(Boolean.TRUE);
+						}else{
+							this.getManagedBean().setApprovalEditableSection(Boolean.FALSE);
+						}						
+					}else{
+						this.getManagedBean().setApprovalEditableSection(Boolean.FALSE);
+					}
+									
+					this.getManagedBean().setScQtReverse(scQtReverse);
+					
+				}	
+			return QTConstants.LOI_LOA_REVERSE_PAGE;
+
+		} finally {
+			detailSO=null;
+		}
+
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Change Reverse Scenario pb secretary comm type.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void changeReversePbSecretaryCommType(ScQtReverse scQtReverse) {
+		debugLogger("changeReversePbSecretaryCommType");
+		
+		Long commTypeId = scQtReverse.getFinalizationCommitte().getParameterId();
+		if (null != commTypeId) {
+			PmParameter commTypeCode = ParameterHelper.getInstance().getPmParameterById(commTypeId);
+			scQtReverse.setFinalizationCommitte(commTypeCode);
+			
+			getManagedBean().setScQtReverse(scQtReverse);
+		}
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * Update user id to settings.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void updateReverseUserIdToSettings(AjaxBehaviorEvent event) {
+		Long id = (Long) event.getComponent().getAttributes().get("value");
+		List<PmUser> userList = this.getManagedBean().getPmUsersList();
+		for (PmUser user : userList) {
+			if (user.getUserId().equals(id)) {
+				this.getManagedBean().getScQtReverse().setFinalizationSecratery(user);
+				break;
+			}
+		}
+	}
 
 	/**
 	 * Change pb secretary comm type.
@@ -5426,6 +6151,148 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
 					.getApproverSettings().get(0).setPmUser(new PmUser());
+		}
+	}
+	
+	/**
+	 * Enhancement #21689
+	 * Submit QT Reverse
+	 */
+	public void submitQtReverse(){
+		IQTDetailSO detailSO;
+		IScActorSO actorSO;
+		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		String[] param = new String[2];
+		try{
+			this.getManagedBean().setSaveFlow(false);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+			PmUser user = new FacesScopes().getUserSessionBean();
+			quationTenderReqDTO.setPmUser(user);
+			quationTenderReqDTO.setScLoiForQt(null!=this.getManagedBean().getScLoiForQt()?this.getManagedBean().getScLoiForQt():null);
+			quationTenderReqDTO.setScLoaForQt(null!=this.getManagedBean().getScLoaForQt()?this.getManagedBean().getScLoaForQt():null);
+			quationTenderReqDTO.setFinalizationMethod(this.getManagedBean().getQt().getFinalization().getFinalizationMethod());
+			quationTenderReqDTO.setScLoi(null!=this.getManagedBean().getScLoi()?this.getManagedBean().getScLoi():null);
+			quationTenderReqDTO.setScLoa(null!=this.getManagedBean().getScLoa()?this.getManagedBean().getScLoa():null);
+			quationTenderReqDTO.setLoiLoaBy(this.getManagedBean().getQt().getFinalization().getLoiLoaBy());
+			quationTenderReqDTO.setQtdetail(this.getManagedBean().getQt());
+			quationTenderReqDTO.setScQtReverse(this.getManagedBean().getScQtReverse());
+			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			
+			/**
+			 * FINDING QT WORKFLOW-> CASE REVERSAL QT
+			 */
+			IScWorkFlowStatusSO workFlowStatusSO;
+			ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);	
+			scWreqDTO.setDocId(this.getManagedBean().getQt().getQtId());		
+			scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+			if(null!=this.getManagedBean().getScLoiForQt()){
+				if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOI)) {
+					throw new EpException(MessageConst.ERROR_760496,new String[]{this.getManagedBean().getQt().getQtNo()}); 
+				}
+			}if(null!=this.getManagedBean().getScLoaForQt()){
+				if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOA)) {
+					throw new EpException(MessageConst.ERROR_760497,new String[]{this.getManagedBean().getQt().getQtNo()});
+				}
+			}
+			
+			
+			boolean isQuotation=true;
+			PmParameter procurementMode = this.getManagedBean().getQt().getProcurementMode();
+			if (procurementMode != null
+					&& procurementMode.getParameterCode().equals(
+							ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+				isQuotation = true;
+			} else if (procurementMode != null
+					&& procurementMode.getParameterCode().equals(
+							ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				isQuotation = false;
+			}
+			
+			actorReqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+			actorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
+			switch(this.getManagedBean().getQt().getFinalization().getLoiLoaBy()){
+				case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
+																	actorReqDTO.setUserId(this.getManagedBean().getQt().getCreatedBy());
+																	break;
+				case ParameterConst.LOILOA_PREPARED_BY_FC_SECRETARY	:	//SECRETARY
+																	if(null!=this.getManagedBean().getScLoiForQt()){
+																		actorReqDTO.setUserId(this.getManagedBean().getScLoiForQt().getCreatedBy());
+																	}else{
+																		actorReqDTO.setUserId(this.getManagedBean().getScLoaForQt().getCreatedBy());
+																	}
+																		break;
+			}
+			
+			quationTenderReqDTO.setScActors(actorSO.retreiveActorByDocTypesDocIdUserId(actorReqDTO).getScActorList());
+			
+			/**************************************
+			 * VALIDATE REVERSE REMARK IS MANDATORY
+			 **************************************/
+			validateReverseRemark();
+			
+			/********************
+			 * SAVING REVERSE QT
+			 * SAVING LOI_LOA_REVERSE_REMARK
+			 ********************/
+			saveReverseLoiLoaDtl();
+			
+			/****************************
+			 * UPDATE LOI_LOA(IS_LOI_REQ)
+			 * UPDATE SC_QT_RECOMMEND_DTL
+			 ****************************/
+			updateScQtRecommendDtl();
+			
+			/****************************
+			 * UPDATE SC_WORKFLOW_STATUS, 
+			 * UPDATE DIRECT WITHOUT USING BPM SINCE THE INSTANCE ARE NOT YET CREATED IN BPM (CASE NOT YET SUBMIT, JUST SAVE LOI/LOA AND REVERSE AND UPDATE 
+			 * WORKFLOW_STATUS MANUALLY)
+			 */
+			updateReverseScWorkflowStatus(quationTenderReqDTO);
+			
+			/********************
+			 * INITIATE BPM (REVERSED LOI/REVERSE LOA)
+			 * INITIATE BPM (REVERSE QT)
+			 * INITIATE TRACKING DIARY
+			 * INITIATE NOTIFICATION
+			 ********************/
+			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
+			quationTenderResDTO = detailSO.reverseQT(quationTenderReqDTO);			
+			
+			/*************************
+			 * ACKNOWLEDGEMENT MESSAGE
+			 *************************/
+			
+			
+			if(this.getManagedBean().getScLoiForQt()!=null){
+				param[0] = this.getManagedBean().getScLoiForQt().getDocNo();
+				param[1] = this.getManagedBean().getScQtReverse().getScQt().getQtNo();
+				if(isQuotation){
+					successMessage(MessageConst.INFO_700073,param);
+				}else{
+					successMessage(MessageConst.INFO_700074,param);
+				}				
+			}else if(this.getManagedBean().getScLoaForQt()!=null){
+				param[0] = this.getManagedBean().getScLoaForQt().getDocNo();
+				param[1] = this.getManagedBean().getScQtReverse().getScQt().getQtNo();
+				if(isQuotation){
+					successMessage(MessageConst.INFO_700075,param);
+				}else{
+					successMessage(MessageConst.INFO_700076,param);
+				}
+			}
+			
+			if (quationTenderResDTO.isSuccessful()) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+				
+			}
+		}finally {
+			detailSO = null;
 		}
 	}
 
@@ -6749,6 +7616,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						SearchOperator.OPERATOR_IN.value(), qtLoaDoctypes));
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+		
 		return items;
 	}
 	
@@ -7037,6 +7905,85 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//log.info("end deleteCommitteemembersData"+this.getManagedBean().getCommittemembers().size());
 		}
 		
+	}
+	
+	/**
+	 * Add attachment to list ScLoiReverseAttachment.
+	 * Enhancement #21694
+	 * @param event
+	 *            File upload event instance
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void handleFileUploadLoiReversal(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		log.debug("qtReversalLoihandleFileUpload - START");
+		if (event.getFile() != null) {
+			log.debug("qtReversalLoihandleFileUpload - START");
+			ScAttachment scAttachment = null;
+			ScLoiReverseAttachment attachment = new ScLoiReverseAttachment();
+			ScQtReverse scQtReverse= this.getManagedBean().getScQtReverse();
+			List<ScLoiReverseAttachment> approvalAttachments = scQtReverse.getScLoiReverseAttachments();			
+			attachment.setScQtReverse(scQtReverse);
+			if(scQtReverse.getDocType().equalsIgnoreCase("LI")){
+				ScLoiForQt scLoiForQt = this.getManagedBean().getScLoiForQt();
+				if(scLoiForQt!=null){
+					attachment.setDocNo(scLoiForQt.getLoiNo());
+				}				
+			}else if(scQtReverse.getDocType().equalsIgnoreCase("LA")){
+				ScLoaForQt scLoaForQt = this.getManagedBean().getScLoaForQt();
+				if(scLoaForQt!=null){
+					attachment.setDocNo(scLoaForQt.getLoaNo());
+				}
+			}
+			if(approvalAttachments==null){
+				approvalAttachments = new ArrayList<>();
+			}
+			approvalAttachments.add(attachment);
+			scQtReverse.setScLoiReverseAttachments(approvalAttachments);
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			this.getManagedBean().setScQtReverse(scQtReverse);
+		}
+		log.debug("qtReversalLoihandleFileUpload - END");
+	}
+	
+	/**
+	 * Add attachment to list.
+	 * Enhancement #21694
+	 * @param event
+	 *            File upload event instance
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void handleFileUploadLoaReversal(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		log.debug("qtReversalLoahandleFileUpload - START");
+		if (event.getFile() != null) {
+			log.debug("qtReversalLoahandleFileUpload - START");
+			ScAttachment scAttachment = null;
+			ScLoaReverseAttachment attachment = new ScLoaReverseAttachment();
+			ScQtReverse scQtReverse= this.getManagedBean().getScQtReverse();
+			List<ScLoaReverseAttachment> approvalAttachments = scQtReverse.getScLoaReverseAttachments();			
+			attachment.setScQtReverse(scQtReverse);
+			ScLoaForQt scLoaForQt = this.getManagedBean().getScLoaForQt();
+			if(scLoaForQt!=null){
+				attachment.setDocNo(scLoaForQt.getLoaNo());
+			}
+			if(approvalAttachments==null){
+				approvalAttachments = new ArrayList<>();
+			}
+			approvalAttachments.add(attachment);
+			scQtReverse.setScLoaReverseAttachments(approvalAttachments);
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			this.getManagedBean().setScQtReverse(scQtReverse);
+		}
+		log.debug("qtReversalLoahandleFileUpload - END");
 	}
 	
 	/**
