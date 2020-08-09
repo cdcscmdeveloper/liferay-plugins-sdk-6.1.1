@@ -1076,6 +1076,44 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Show confirmation dialog
 	 */
 	public void showConfirmDialog() {
+		//26238: Disciplinary Action - start - 28342
+		if (getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
+				&& getManagedBean().isManufacturerStatusCancel()){ 
+			log.info("---showConfirmDialog semua DA---");
+		} else if (!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
+				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
+				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
+				&& getManagedBean().isManufacturerStatusCancel()) {
+			//27919 - start
+				if(getManagedBean().getSelectedApprovedCategories() == null
+						|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
+					boolean manufactureCodeExist = false;
+					for(SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
+						if(cat.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){
+							manufactureCodeExist = true;
+						}
+					}
+					
+					if(!manufactureCodeExist){
+						throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
+					}	
+				}else{
+					boolean checkOtherCodeExist = false;
+					for(SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
+						if(cat.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){ 
+						}else {
+							checkOtherCodeExist = true;
+						}
+					}
+					 if (checkOtherCodeExist){
+							throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.manufacturer.category",null));
+					}
+				} 
+				//27919 - end	
+		} 
+		//26238: Disciplinary Action - end - 28342
 		//27460 : Disciplinary Action
 		if(getManagedBean().isCancelCategoryCode()){			
 			if(getManagedBean().getSelectedApprovedCategories() == null
@@ -1090,35 +1128,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
 		}
 		//#28147 - end
-
-		//27919 - start
-		if(getManagedBean().isManufacturerStatusCancel()){
-			if(getManagedBean().getSelectedApprovedCategories() == null
-					|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
-				boolean manufactureCodeExist = false;
-				for(SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
-					if(cat.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){
-						manufactureCodeExist = true;
-					}
-				}
-				
-				if(!manufactureCodeExist){
-					throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
-				}	
-			}else{
-				boolean checkOtherCodeExist = false;
-				for(SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
-					if(cat.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){ 
-					}else {
-						checkOtherCodeExist = true;
-					}
-				}
-				 if (checkOtherCodeExist){
-						throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.manufacturer.category",null));
-				}
-			} 
-		}		
-		//27919 - end	
+ 	
 		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
@@ -1464,7 +1474,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			//28281 - end
 			onTickDiscipline();
 		} else {
-			// 27815: Disciplinary Action - start - checking condition
+			// 27815: Disciplinary Action - start - checking condition 
 			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel() 
 					|| getManagedBean().isBumiputeraStatusCancel()) {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
@@ -1484,12 +1494,20 @@ public class SupplierDataMaintenanceBackingBean extends
 				//26238 -  Disciplonary action - 28146 - end
 			}
 
+			//26238: Disciplinary Action - start - 28342
 			//28281 - start (bumi code)
-			if(getManagedBean().isBumiputeraStatusCancel())
-				autoTickBumiCode();
+			if(getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+					|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
+					|| getManagedBean().isBlacklistOwnerOrDirector() && getManagedBean().isBumiputeraStatusCancel()
+					|| getManagedBean().isManufacturerStatusCancel()){
+				autoTickBumiCode(); 				 
+			} else if (getManagedBean().isBumiputeraStatusCancel()){
+				autoTickBumiCode();  
+			}
 			//28281 - end
+			//26238: Disciplinary Action - end - 28342
 			
-			//27815: Disciplinary Action - end -checking condition
+			//27815: Disciplinary Action - end -checking condition 
 			getManagedBean().setEditDisciplinaryAction(true);
 			onTickDiscipline();
 		}
@@ -2860,9 +2878,20 @@ public class SupplierDataMaintenanceBackingBean extends
 		}		
 		getManagedBean().setApprovedCategoryList(catList);
 		getManagedBean().setSelectedApprovedCategories(selectList);
-		// Start 27815
-		getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? true : false);
-		// End 27815
+		// Start 27815,28324
+		if (getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel() 
+				&& getManagedBean().isBumiputeraStatusCancel()) {
+			log.info("---do nothing semua DA---");
+			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
+		} else if(!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
+				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
+				&& !getManagedBean().isBlacklistOwnerOrDirector() && getManagedBean().isBumiputeraStatusCancel()
+				&& !getManagedBean().isManufacturerStatusCancel())
+			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? true : false);
+		
+		// End 27815,28324
 	}
 	//28281 end
 	
