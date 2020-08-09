@@ -158,7 +158,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @param SmAppl
 	 *            selectedSmAppl
 	 */
-	public void navigateToMaintenance(SmAppl selectedSmAppl) {
+	public void navigateToMaintenance(SmAppl selectedSmAppl, String mofStatus) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		//27437 : Disciplinary Action - start
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
@@ -328,6 +328,15 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setApproverRemark(null);
 		//26238 -  Disciplonary action - 28146
 		getManagedBean().setFlagBlacklistCancel(false);
+		
+		//#28278 - Disciplonary action - #28278 - Start
+		if(StringUtils.equals(mofStatus, "D")){
+			getManagedBean().setFlagShowButtonSubmit(false);
+		}
+		else {
+			getManagedBean().setFlagShowButtonSubmit(true);
+		}
+		//#28278 - Disciplonary action - #28278 - end
 		
 	}
 
@@ -774,8 +783,7 @@ public class SupplierDataMaintenanceBackingBean extends
 							for(SmAppl smAppl : resDTO2.getApplList()){
 								if(!smAppl.getApplId().equals(smApplId)){
 									searchBlacklisted = false;
-									navigateToMaintenance(smAppl);
-									if(getManagedBean().getOwnerAndDirectorList().size() > 1){
+									navigateToMaintenance(smAppl, StringUtils.EMPTY);							if(getManagedBean().getOwnerAndDirectorList().size() > 1){
 										for (Iterator<SmPersonnel> iter = getManagedBean().getOwnerAndDirectorList().listIterator(); iter.hasNext(); ) {
 											SmPersonnel person = iter.next();
 										    if (!person.getIdentificationNo().equals(personnel.getIdentificationNo())) {
