@@ -111,19 +111,15 @@
                      <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />															  
 					   </h:outputText></f:facet>					  	
-               </p:cellEditor>           
-                    <h:outputText value="#{agencyData.ceilingAmount}" 
-                     style="float:right;text-align:right;"
-                     rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
-                       <f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							 					  
-					</h:outputText>
+               </p:cellEditor> 
+
+                    <ui:fragment rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+                         <div style="text-align:center;">
+                          <i class="fa fa-pencil-square-o"></i>
+                         </div>
+                    </ui:fragment>							 					  
+			
 					
-					<div style="text-align:center;">
-					<i class="fa fa-pencil-square-o"></i>
-				 
-				    </div>		
                          
            </p:column> 
            
