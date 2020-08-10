@@ -8666,7 +8666,12 @@ public class SpecificationBackingBean extends
 							ModuleCodeConst.CONTRACT_MANAGEMENT,
 							ICircularDetailSO.class);
 			if (null != circular) {
-				reqDTO.setCircularVerId(circular.getCircularVerId());
+				if(null!=circular.getCtCircular().getCurrentCircularVerId()&& null!=circular.getCtCircular().getCurrentCircularVerId().getCircularVerId()&& !circular.getCircularVerId().equals(circular.getCtCircular().getCurrentCircularVerId().getCircularVerId())){ //#8485-start
+					reqDTO.setCircularVerId(circular.getCtCircular().getCurrentCircularVerId().getCircularVerId());
+					
+				}else{
+					reqDTO.setCircularVerId(circular.getCircularVerId());	
+				} //#8485-End	
 				// reqDTO.setQuotationTender(true);
 				reqDTO.setPanelItemTypeGroup(true);
 				if (null != this.getManagedBean().getQt().getItemGroup()) {
