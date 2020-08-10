@@ -310,7 +310,25 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				String path1 = currentStatusAndPath();
 				//27214
 				if(path1 != null && (MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION) || path1.contains(CATALOGUE_UPLOAD_PATH) || path1.contains(SOFT_CERT_PATH) || path1.contains(MOF_SOFTCERT_REQUEST) || path1.contains(CATALOGUE_MAINT))){
-					checkSSMValid(supplier);
+					//28454
+					if(path1.contains(RESUBMIT_APPLICATION)){
+						this.getManagedBean().setResubmitAppl(true);
+					}
+					
+					checkSSMValid(supplier,this.getManagedBean());
+					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
+						proceed =false;
+						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+							this.getManagedBean().setPreRegistration(true);
+						}else{
+							this.getManagedBean().setPreRegistration(false);
+						}						
+						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+						SmCommonUtil.redirectToPage(
+								CONTENT_PAGE,
+								"",new String[] {""});
+					}
 				}				
 			}catch(Exception w){
 				log.info("Here done--"+w.getMessage());
