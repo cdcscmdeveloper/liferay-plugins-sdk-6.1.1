@@ -1650,11 +1650,22 @@ public class QTSupplierQulCriteriaBackingBean extends
 		debugLogger("viewCircularAttachments");
 		CtCircularVer ctCircularVer = this.getManagedBean().getQt().getCircularVer();
 		String pageView = "";
+		Long cirVerId=0L; //#8485
 		if (null != ctCircularVer) {
 			PanelBackingBean panelbackingbean = new PanelBackingBean();
 			panelbackingbean.getManagedBean().setDifferentModule(true);
 			panelbackingbean.getManagedBean().setGotoPreviewPage(backUrl);
-			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
+			if(null!=ctCircularVer.getCtCircular().getCurrentCircularVerId()&& null!=ctCircularVer.getCtCircular().getCurrentCircularVerId().getCircularVerId()&& !ctCircularVer.getCircularVerId().equals(ctCircularVer.getCtCircular().getCurrentCircularVerId().getCircularVerId())){  //#8485-start
+				log.debug("=======IFCircularVersionId======="+ctCircularVer.getCircularVerId());
+				//reqDTO.setCircularVerId(ctCircularVer.getCtCircular().getCurrentCircularVerId().getCircularVerId());
+				cirVerId=ctCircularVer.getCtCircular().getCurrentCircularVerId().getCircularVerId();
+				
+			}else{
+				log.debug("=======ELSEQTcircularVersionId======="+ctCircularVer.getCircularVerId());
+				//reqDTO.setCircularVerId(circular.getCircularVerId());	
+				cirVerId=ctCircularVer.getCircularVerId();
+			} //#8485-End	
+			pageView = panelbackingbean.gotoCommonViewPage(cirVerId); //#8485
 		}
 		return pageView;
 	}
