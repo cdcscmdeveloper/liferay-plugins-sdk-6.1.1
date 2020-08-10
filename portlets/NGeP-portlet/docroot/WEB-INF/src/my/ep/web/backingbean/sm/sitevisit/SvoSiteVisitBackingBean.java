@@ -738,7 +738,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmPersonnel personnel : this.getManagedBean().getSmSvTask().getSmAppl().getSmPersonnels()){
 			if(personnel.isDirector()){
 				ttlBOD++;
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){//24964
 					dirBumi++;
 				}else{
 					if(!personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -753,7 +753,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 			if(personnel.isHigherManagement() || personnel.isManagement()){
 				ttlMgmt++;
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){//24964
 					mgmtBumi++;
 				}else{ 
 					if(personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -778,7 +778,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(personnel.isClerical()){
 				ttlWorker++;
 
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null &&  personnel.isBumi()){//24964
 					wrkBumi++;
 				}else {
 					if(personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
