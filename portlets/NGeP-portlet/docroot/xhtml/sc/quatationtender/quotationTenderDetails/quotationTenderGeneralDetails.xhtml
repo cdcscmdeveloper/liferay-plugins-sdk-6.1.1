@@ -462,13 +462,17 @@
 													</p:selectOneRadio>
 										</p:outputPanel>
 				<!-- #21695 Add Closable & resizable 30/7/2020 -->									
-													<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" 
-													widgetVar="confirmDialogWidgetVar" resizable="false" closable="false">
-													<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-													action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
-													<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-													action="#{createQtBB.partialChangePopUpNo}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
-														<h:inputHidden id="rowIndex"></h:inputHidden>
+													<p:confirmDialog message="#{lbl['lbl.sc.spec.partial.confirm']}" header="#{lbl['lbl.btn.dialog.cofirm.header']}" 
+														widgetVar="confirmDialogWidgetVar" resizable="false" closable="false">
+														<div style="width:580px;margin-right:55px;">
+														</div>
+															<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+																action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
+															<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+																action="#{createQtBB.partialChangePopUpNo}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" 
+																style="margin-right:15px; margin-bottom:10px;"/>
+															<h:inputHidden id="rowIndex"></h:inputHidden>
+														
 												</p:confirmDialog>
 									</c:when>
 									<c:otherwise>
@@ -489,7 +493,7 @@
 						<table>				
 							<tr>
 								<td style="width: 255px; float: left;">
-									<h:outputLabel styleClass="instruction" value="#{lbl['lbl.sc.spec.partial.info']}" />
+									<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.spec.partial.info']}" escape="false" /> 
 								</td>
 							</tr>
 						</table>
