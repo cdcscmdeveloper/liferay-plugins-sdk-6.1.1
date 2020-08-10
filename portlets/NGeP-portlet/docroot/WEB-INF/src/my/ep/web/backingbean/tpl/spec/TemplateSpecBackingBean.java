@@ -1185,7 +1185,7 @@ public class TemplateSpecBackingBean extends
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
 		this.getManagedBean().setTemplateSpecBean(templateSpecBean);
 	}
-	// #21695 -END Farid	
+	// #21695 -END Farid
 	/**
 	 * Zone Quantity Popup Action
 	 * 
@@ -1974,10 +1974,10 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void zoneTierPriceCancelAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("zoneTierPriceCancelAction");
-		
+
+		templateSpecBean.setSelectedSpecQuestion(null);
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
 		// #21695 - Farid
-		templateSpecBean.setSelectedSpecQuestion(null);
 	}
 
 	/**
@@ -2177,128 +2177,18 @@ public class TemplateSpecBackingBean extends
 				BigDecimal autoScore = specAnswer.getAutoScore();
 				BigDecimal userScore = specAnswer.getUserScore();
 
-//#21695 Farid Start ...				
-				TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
-						.equals(specMaster.getSpecTypeCode().getParameterCode());
-				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
-				if(!isFinancialSpec && !isPartial || !isFinancialSpec && isPartial || isFinancialSpec && !isPartial){
-					if (autoScore != null) {
-						totalScore = totalScore.add(autoScore);
-					}
+				if (autoScore != null) {
+					totalScore = totalScore.add(autoScore);
+				}
 
-					if (userScore != null) {
-						totalScore = totalScore.add(userScore);
-					}
-
-					if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-							&& (autoScore != null || userScore != null)) {
-						totalMaxScore = totalMaxScore.add(specAnswer
-								.getTplSpecQuestion().getMaxScore());
-					}
-				}
-				
-				
-				if(isFinancialSpec && isPartial){
-
-//Set total score to default amount based on offer, not offer or quantity 0..quantity 0 total max score must exclude									
-				
-				if (autoScore != null && autoScore.compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
-						totalScore = totalScore.add(autoScore);
-						totalMaxScore = totalMaxScore.add(specAnswer
-								.getTplSpecQuestion().getMaxScore());
-				}
-				
-				if (autoScore != null && autoScore.compareTo(BigDecimal.ZERO) == 0 && specAnswer.getTplSpecZoneQty() == null && 
-						specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0  
-						&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
-					specAnswer.setAutoScore(BigDecimal.valueOf(0));
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-				if (autoScore != null && specAnswer.getTplSpecZoneQty() == null && 
-						specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0  
-						&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
-					specAnswer.setAutoScore(BigDecimal.valueOf(0));
-				}
-				if (autoScore != null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0  
-						&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
-					specAnswer.setAutoScore(BigDecimal.valueOf(0));
-				}
-				if (userScore != null && userScore.compareTo(BigDecimal.ZERO) > 0 ) {
+				if (userScore != null) {
 					totalScore = totalScore.add(userScore);
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-				if (userScore != null && specAnswer.getTplSpecZoneQty()!= null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-						&& specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)  {
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-				if (userScore != null && userScore.compareTo(BigDecimal.ZERO) == 0 ) {
-					totalScore = totalScore.add(userScore);
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
 				}
 
-				//non zonal 
-				if(userScore == null && autoScore == null && specAnswer.getTplSpecZoneQty() == null && 
-						specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 &&
-						specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
+				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+						&& (autoScore != null || userScore != null)) {
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
-				}
-				if(userScore == null && autoScore == null && specAnswer.getTplSpecZoneQty() == null && 
-						specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) == 0 &&
-						specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
-				}
-				if(userScore != null && autoScore == null && specAnswer.getTplSpecZoneQty() == null && 
-						specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 &&
-						specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-				if(userScore == null && autoScore != null && specAnswer.getTplSpecZoneQty() == null && 
-						specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 &&
-						specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-				//zonal 
-				if(userScore == null && autoScore == null && specAnswer.getTplSpecZoneQty() != null && 
-						 specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom() != null && 
-						specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-				if(userScore == null && autoScore == null && specAnswer.getTplSpecZoneQty() != null && 
-						 specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && specAnswer.getRatePerUom() != null && 
-						specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
-				}
-				if(userScore != null && autoScore == null && specAnswer.getTplSpecZoneQty() != null && 
-						 specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && specAnswer.getRatePerUom() != null && 
-						specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setUserScore(BigDecimal.valueOf(0));
-				}
-				if(userScore == null && autoScore != null && specAnswer.getTplSpecZoneQty() != null && 
-						 specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && specAnswer.getRatePerUom() != null && 
-						specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setAutoScore(BigDecimal.valueOf(0));
-				}
-				if(userScore == null && autoScore != null && specAnswer.getTplSpecZoneQty() != null && 
-						 specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom() != null && 
-						specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-					specAnswer.setAutoScore(BigDecimal.valueOf(0));
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
-			
-//#21695 End
 				}
 			}
 
@@ -3271,6 +3161,1812 @@ public class TemplateSpecBackingBean extends
 		}
 		return this.getManagedBean().getOffer();
 		
+	}
+/** #21695 FARID END */	
+	
+	/** #25633 START ADDED BY HAIDAH */
+	public StreamedContent getTechnicalTemplateSpecFileToExport() throws Exception {
+		log.info("*** getTechnicalTemplateSpecFileToExport download write ***");
+		String templateFileName = "";		
+		if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode()
+				.getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){//ITEM TYPE - Product
+			templateFileName = "Technical Specification Template Non Zonal (Product).xlsm";
+		}else if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode()
+				.getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){// ITEM TYPE - Service 
+			templateFileName = "Technical Specification Template Non Zonal (Service).xlsm";
+		}
+		
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+		
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		response.setHeader("Content-Disposition", "attachment; filename="+templateFileName);
+		response.flushBuffer();
+
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/excelUpload");	
+		FileInputStream input_document = new FileInputStream(new File(tempDir + "/" + templateFileName));
+		
+		XSSFWorkbook technicalSpecWorkbook = new XSSFWorkbook(input_document);
+		
+		XSSFSheet assumptionSheet = technicalSpecWorkbook.getSheetAt(0);
+		XSSFSheet technicalSpecSheet = technicalSpecWorkbook.getSheetAt(1);
+		XSSFSheet UOMSheet = technicalSpecWorkbook.getSheetAt(2);
+		XSSFRow row;
+		XSSFRow rowUom;
+		
+		CellStyle cellStyleContent = technicalSpecWorkbook.createCellStyle();
+		cellStyleContent.setVerticalAlignment(VerticalAlignment.TOP);
+		cellStyleContent.setWrapText(true);
+		cellStyleContent.setLocked(false);
+		
+		Map<Integer, Object[]> technicalSpecList = new TreeMap<Integer, Object[]>();
+		Map<Integer, Object[]> uomList = new TreeMap<Integer, Object[]>();
+		
+		if((ParameterConst.ITEM_TYPE_PRODUCT).equalsIgnoreCase(this.getManagedBean().getTemplateSpecBean()
+				.getSpecMaster().getItemTypeCode().getParameterCode())){
+			technicalSpecList = exportDataTechnicalSpecForItemTypeProduct(this.getManagedBean().getTemplateSpecBean(),
+					technicalSpecList, false, false);
+		}else if((ParameterConst.ITEM_TYPE_SERVICE).equalsIgnoreCase(this.getManagedBean().getTemplateSpecBean()
+				.getSpecMaster().getItemTypeCode().getParameterCode())){
+			technicalSpecList = exportDataTechnicalSpecForItemTypeService(this.getManagedBean().getTemplateSpecBean(), 
+					technicalSpecList, false, false);
+		}
+		
+		assumptionSheet.enableLocking();
+		Set<Integer> keyid = technicalSpecList.keySet();
+		int rowid = 1;
+		for (Integer key : keyid) {
+			row = technicalSpecSheet.createRow(rowid++);
+			Object[] objectArr = technicalSpecList.get(key);
+			int cellid = 0;
+			for (Object obj : objectArr) {
+				Cell cell = row.createCell(cellid++);
+				cell.setCellValue((String) obj);
+				cell.setCellStyle(cellStyleContent);
+			}
+		}
+
+		// PROTECTED SHEET
+		technicalSpecSheet.lockDeleteColumns(true);
+		technicalSpecSheet.lockInsertColumns(true);
+		technicalSpecSheet.lockDeleteRows(true);
+		technicalSpecSheet.lockInsertRows(false);
+		technicalSpecSheet.lockFormatCells(false);
+		technicalSpecSheet.enableLocking();
+		
+		IUomSO uomSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject("pm", IUomSO.class);
+		UomResDTO resDTO = uomSO.retrieveUomList();
+		List<PmUom> listUOM = resDTO.getPmUomList();
+		int uomNo = 1;
+		for (PmUom obj : listUOM) {
+			uomList.put(uomNo,
+					new Object[] { obj.getUomId().toString(), obj.getUomCode(), obj.getUomName(),
+							obj.getUomId() + " - " + obj.getUomCode() + " - " + obj.getUomName(),
+							obj.getDecimalScale().toString() });
+			uomNo++;
+		}
+
+		Set<Integer> keyIdUom = uomList.keySet();
+		int rowIdUom = 1;
+		for (Integer key : keyIdUom) {
+			rowUom = UOMSheet.createRow(rowIdUom++);
+			Object[] objectArr = uomList.get(key);
+			int cellid = 0;
+			for (Object obj : objectArr) {
+				Cell cell = rowUom.createCell(cellid++);
+				cell.setCellValue((String) obj);
+			}
+		}
+
+		UOMSheet.enableLocking();
+		technicalSpecWorkbook.lockStructure();
+		input_document.close();
+		technicalSpecWorkbook.write(response.getOutputStream());
+		technicalSpecWorkbook.close();
+		
+		return null;
+	}
+	
+	public void getTechnicalTemplateSpecFileToImport(FileUploadEvent event) throws FileNotFoundException, IOException,
+		EncryptedDocumentException, InvalidFormatException {
+		log.info("*** getTechnicalTemplateSpecFileToImport ***");
+		boolean isZonal = false;
+		boolean isWeightage = false;
+		String itemTypeCode = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode();
+		boolean hasDataFlag = true;
+		String invalidDataMsg = MessageUtils.getMessage(MessageConst.ERROR_715034,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())+":\n";
+		
+		List<String> item = new ArrayList<String>();
+		List<String> specification = new ArrayList<String>();
+		List<String> uom = new ArrayList<String>();
+		List<String> freqPerUom = new ArrayList<String>();
+		List<String> uomPerDay = new ArrayList<String>();
+		List<String> uomPerMonth = new ArrayList<String>();
+		List<String> priceType = new ArrayList<String>();
+		List<String> quantity = new ArrayList<String>();
+		List<String> tierQuantityFrom = new ArrayList<String>();
+		List<String> tierQuantityTo = new ArrayList<String>();
+		List<String> score = new ArrayList<String>();
+		List<String> scoreType = new ArrayList<String>();
+		List<String> scoreSchemaFrom = new ArrayList<String>();
+		List<String> scoreSchemaTo = new ArrayList<String>();
+		List<String> scoreMark = new ArrayList<String>();
+		List<String> scoreSchemaYes = new ArrayList<String>();
+		List<String> scoreSchemaNo = new ArrayList<String>();
+		UploadedFile contentFile = event.getFile();
+		
+		FileInputStream file = (FileInputStream) contentFile.getInputstream();
+		XSSFWorkbook workbookxlsx = null;
+		try {
+			workbookxlsx = new XSSFWorkbook(file);
+			workbookxlsx.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
+		} catch (IOException e) {
+			log.info("ERROR LAA ");
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			e.printStackTrace();
+		}
+		
+		//SECTION - Validate/checking File template either it uploaded the right templat
+		//Type of Spec Template : 1] Product Non-Zonal 2] Product Zonal 3] Service Non-Zonal 4] Service Zonal
+		XSSFSheet assumptionSheet = workbookxlsx.getSheetAt(0);
+		Row rowItemType = assumptionSheet.getRow(0);
+		Row rowIsZonal = assumptionSheet.getRow(1);
+		String templateItemTypeCode = "";
+		Boolean proceedProcess = false;
+		Boolean chkCellIsZonal = rowIsZonal.getCell(1).getStringCellValue().equalsIgnoreCase("YES") ? true : false;
+		
+		if((rowItemType.getCell(1).getStringCellValue()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)){
+			templateItemTypeCode = ParameterConst.ITEM_TYPE_PRODUCT;
+		}else if((rowItemType.getCell(1).getStringCellValue()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE_STRING)){
+			templateItemTypeCode = ParameterConst.ITEM_TYPE_SERVICE;
+		}
+		
+		if("".equalsIgnoreCase(templateItemTypeCode) || !templateItemTypeCode.equalsIgnoreCase(itemTypeCode) || chkCellIsZonal != isZonal){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, 
+							MessageUtils.getMessage(
+									MessageConst.ERROR_760503,
+									new String[] {ResourceBundleUtils.getMessage(
+											"lbl.sc.spec.import.technical.template.nonzonal",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()),
+											ResourceBundleUtils.getMessage(
+													itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) ? "lbl.txt.product" : "lbl.txt.service", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale())},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+		}else{
+			proceedProcess=true;
+		}
+		//End Checking Uploaded file Type of template
+		
+		int countIsError = 0;
+		if(proceedProcess){
+			XSSFSheet specSheet = workbookxlsx.getSheetAt(1);
+			Iterator<Row> rowIterator = specSheet.rowIterator();
+			//List<String> uomCodePerDayList = Arrays.asList(new String[]{"H","HUR","HR"});
+			//List<String> uomCodePerMonthList = Arrays.asList(new String[]{"H","HUR","HR","D","DAY","PRS"});
+			//Row prevRowData = null;
+			while (rowIterator.hasNext()) {
+				int countCellError = 0;
+				Row row = rowIterator.next();
+				log.info("ROW NUM === "+((row.getRowNum())+1));
+				if (row.getRowNum() == 0)continue;
+				hasDataFlag = (row != null);
+				
+				//START : VALIDATE
+				/*if(row.getRowNum() == 1){
+					if(StringUtils.isBlank(row.getCell(0).toString())){
+						invalidDataMsg = invalidDataMsg.concat("Row = " + row.getRowNum()+ "Should start with Item record \n");
+						countIsError++;
+						break;
+					}
+				}
+				
+				if(!StringUtils.isBlank(row.getCell(0).toString()) || !StringUtils.isBlank(row.getCell(1).toString())){
+					log.info("CELL ITEM/SPECIFICATION IS NOT NULL/BLANK");
+					
+					if(!StringUtils.isBlank(row.getCell(0).toString())){
+						log.info("START Rule for ITEM !! ");
+						//RULE FOR ITEM
+						//CELL: Specification
+						if(!StringUtils.isBlank(row.getCell(1).toString()))countCellError++;
+						//CELL: UOM
+						if(StringUtils.isBlank(row.getCell(2).toString()))countCellError++;
+						
+						if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){//PRODUCT
+							//CELL: Price Type
+							if(StringUtils.isBlank(row.getCell(3).toString()))countCellError++;
+							
+							if(!isZonal){//SCENARIO: Product Non-Zonal
+								log.info("START CHECKING RULE PRODUCT NON-ZONAL !! ");
+								//CELL: Quantity
+								if(StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+								
+								//Only if Price Type = Tier Standard & Quantity is not null
+								if((!StringUtils.isBlank(row.getCell(3).toString()) && !StringUtils.isBlank(row.getCell(4).toString()))
+										&& "Tier Standard".equalsIgnoreCase(row.getCell(3).toString())){
+									//CELL: Tier Quantity (From)
+									if(StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+									//CELL: Tier Quantity (To)
+									if(StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+									
+									if(!StringUtils.isBlank(row.getCell(5).toString()) && !StringUtils.isBlank(row.getCell(6).toString())){
+										if(new BigDecimal(row.getCell(6).toString()).compareTo(new BigDecimal(row.getCell(5).toString())) < 1){
+											countCellError++;
+										}
+									}
+								}
+								//CELL: Answer Type
+								if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								//CELL: Score Type
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								//CELL: Score Schema (From)
+								if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								//CELL: Score Schema (To)
+								if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								//CELL: Score Schema (Yes)
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								//CELL: Score Schema (No)
+								if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								//CELL: Score/Max Score
+								if(!StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && !StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+							
+							}else{//SCENARIO: Product Zonal
+								log.info("START CHECKING RULE PRODUCT ZONAL !! ");
+								//CELL: Answer Type
+								if(!StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+								//CELL: Score Type
+								if(!StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+								//CELL: Score Schema (From)
+								if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								//CELL: Score Schema (To)
+								if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								//CELL: Score Schema (Yes)
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								//CELL: Score Schema (No)
+								if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								//CELL: Score/Max Score
+								if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && !StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+							}
+							
+						}else if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){//SERVICE
+							//CELL: Freq. per UOM
+							if(StringUtils.isBlank(row.getCell(3).toString()))countCellError++;
+							
+							//CELL: UOM
+							if(!StringUtils.isBlank(row.getCell(2).toString())){
+								String[] uomInfo = row.getCell(2).toString().split("-");
+								//CELL: No. UOM per day
+								if(uomCodePerDayList.contains(uomInfo[1].trim())){//Enable only for UOM_CODE = H/HUR/HR
+									if(StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+								}else{
+									if(!StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+								}
+								//CELL: No. UOM per month
+								if(uomCodePerMonthList.contains(uomInfo[1].trim())){//Enable only for UOM_CODE = H/HUR/HR/D/Day/PRS
+									if(StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+								}else{
+									if(!StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+								}
+							}
+							
+							if(!isZonal){//SCENARIO: Service Non-Zonal
+								//CELL: Quantity
+								if(StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								//CELL: Answer Type
+								if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								//CELL: Score Type
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								//CELL: Score Schema (From)
+								if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								//CELL: Score Schema (To)
+								if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								//CELL: Score Schema (Yes)
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								//CELL: Score Schema (No)
+								if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								//CELL: Score/Max Score
+								if(!StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && !StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+							
+							}else{//SCENARIO: Service Zonal
+								//CELL: Answer Type
+								if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								//CELL: Score Type
+								if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								//CELL: Score Schema (From)
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								//CELL: Score Schema (To)
+								if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								//CELL: Score Schema (Yes)
+								if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								//CELL: Score Schema (No)
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								//CELL: Score/Max Score
+								if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && !StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+							}
+						}
+					}else{
+						log.info("START Rule for SPECIFICATION !! ");
+						//RULE FOR SPECIFICATION
+						//CELL: Item
+						if(!StringUtils.isBlank(row.getCell(0).toString()))countCellError++;
+						//CELL: UOM
+						if(!StringUtils.isBlank(row.getCell(2).toString()))countCellError++;
+						
+						if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){//PRODUCT
+							//CELL: Price Type
+							if(!StringUtils.isBlank(row.getCell(3).toString()))countCellError++;
+							if(!isZonal){//SCENARIO: Product Non-Zonal
+								//CELL: Quantity
+								if(!StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+								//CELL: Tier Quantity (From)
+								if(!StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+								//CELL: Tier Quantity (To)
+								if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								//CELL: Answer Type
+								if(StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								
+								//CELL: Score Type
+								if(StringUtils.isBlank(row.getCell(8).toString())){
+									countCellError++;
+								}else{
+									log.info("IT HAS SCORE TYPE !!!");
+									if("User".equalsIgnoreCase(row.getCell(8).toString())){
+										log.info("SCORE TYPE USER == ");
+										//CELL: Score Schema (From)
+										if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+										//CELL: Score Schema (To)
+										if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+										//CELL: Score Schema (Yes)
+										if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+										//CELL: Score Schema (No)
+										if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+										
+										//CELL: Score/Max Score
+										if(StringUtils.isBlank(row.getCell(13).toString())){
+											countCellError++;
+										}else{
+											if(new BigDecimal(row.getCell(13).toString()).compareTo(BigDecimal.ZERO) == 0){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(13).toString()).compareTo(new BigDecimal(999)) == 1){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(13).toString()).compareTo(BigDecimal.ZERO) < 0){
+												countCellError++;
+											}
+										}
+										
+									}else if("Auto".equalsIgnoreCase(row.getCell(8).toString())){
+										if("Numeric".equalsIgnoreCase(row.getCell(8).toString())){
+											//CELL: Score Schema (From)
+											if(StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+											//CELL: Score Schema (Yes)
+											if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+											//CELL: Score Schema (No)
+											if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+											//CELL: Score/Max Score
+											if(StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+										
+										}else if("Yes/No".equalsIgnoreCase(row.getCell(8).toString())){
+											//CELL: Score Schema (From)
+											if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+											
+											//CELL: Score Schema (Yes)
+											if(StringUtils.isBlank(row.getCell(11).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(11).toString()) < 0 
+													|| Integer.parseInt(row.getCell(11).toString()) > 999)countCellError++;
+											}
+											
+											//CELL: Score Schema (No)
+											if(StringUtils.isBlank(row.getCell(12).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(12).toString()) < 0 
+													|| Integer.parseInt(row.getCell(12).toString()) > 999)countCellError++;
+											}
+											
+											if(!StringUtils.isBlank(row.getCell(11).toString()) && StringUtils.isBlank(row.getCell(12).toString())){
+												if(Integer.parseInt(row.getCell(11).toString())  == 0 && 
+														Integer.parseInt(row.getCell(12).toString()) == 0)countCellError++;
+													
+											}
+											
+											//CELL: Score/Max Score
+											if(!StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+										}
+									}
+								}
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+								
+							}else{//SCENARIO: Product Zonal
+								//CELL: Answer Type
+								if(StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+								//CELL: Score Type
+								if(StringUtils.isBlank(row.getCell(5).toString())){
+									countCellError++;
+								}else{
+									if("User".equalsIgnoreCase(row.getCell(5).toString())){
+										//CELL: Score Schema (From)
+										if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+										//CELL: Score Schema (To)
+										if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+										//CELL: Score Schema (Yes)
+										if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+										//CELL: Score Schema (No)
+										if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+										
+										//CELL: Score/Max Score
+										if(StringUtils.isBlank(row.getCell(10).toString())){
+											countCellError++;
+										}else{
+											if(new BigDecimal(row.getCell(10).toString()).compareTo(BigDecimal.ZERO) == 0){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(10).toString()).compareTo(new BigDecimal(999)) == 1){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(10).toString()).compareTo(BigDecimal.ZERO) < 0){
+												countCellError++;
+											}
+										}
+										
+									}else if("Auto".equalsIgnoreCase(row.getCell(5).toString())){
+										if("Numeric".equalsIgnoreCase(row.getCell(8).toString())){
+											//CELL: Score Schema (From)
+											if(StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+											//CELL: Score Schema (Yes)
+											if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+											//CELL: Score Schema (No)
+											if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											//CELL: Score/Max Score
+											if(StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+										
+										}else if("Yes/No".equalsIgnoreCase(row.getCell(5).toString())){
+											//CELL: Score Schema (From)
+											if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+											
+											//CELL: Score Schema (Yes)
+											if(StringUtils.isBlank(row.getCell(8).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(8).toString()) < 0 
+														|| Integer.parseInt(row.getCell(8).toString()) > 999)countCellError++;
+											}
+											
+											//CELL: Score Schema (No)
+											if(StringUtils.isBlank(row.getCell(9).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(9).toString()) < 0 
+														|| Integer.parseInt(row.getCell(9).toString()) > 999)countCellError++;
+											}
+											
+											if(!StringUtils.isBlank(row.getCell(8).toString()) && StringUtils.isBlank(row.getCell(12).toString())){
+												if(Integer.parseInt(row.getCell(8).toString())  == 0 && 
+														Integer.parseInt(row.getCell(9).toString()) == 0)countCellError++;
+											}
+											
+											//CELL: Score/Max Score
+											if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+										}
+									}
+								}
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+							}
+							
+						}else if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){//SERVICE
+							//CELL: Freq. per UOM
+							if(!StringUtils.isBlank(row.getCell(3).toString()))countCellError++;
+							//CELL: No. UOM per day
+							if(!StringUtils.isBlank(row.getCell(4).toString()))countCellError++;
+							//CELL: No. UOM per month
+							if(!StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+							
+							if(!isZonal){//SCENARIO: Service Non-Zonal
+								//CELL: Quantity
+								if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								//CELL: Answer Type
+								if(StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								
+								//CELL: Score Type
+								if(StringUtils.isBlank(row.getCell(8).toString())){
+									countCellError++;
+								}else{
+									if("User".equalsIgnoreCase(row.getCell(8).toString())){
+										//CELL: Score Schema (From)
+										if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+										//CELL: Score Schema (To)
+										if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+										//CELL: Score Schema (Yes)
+										if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+										//CELL: Score Schema (No)
+										if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+										
+										//CELL: Score/Max Score
+										if(StringUtils.isBlank(row.getCell(13).toString())){
+											countCellError++;
+										}else{
+											if(new BigDecimal(row.getCell(13).toString()).compareTo(BigDecimal.ZERO) == 0){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(13).toString()).compareTo(new BigDecimal(999)) == 1){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(13).toString()).compareTo(BigDecimal.ZERO) < 0){
+												countCellError++;
+											}
+										}
+										
+									}else if("Auto".equalsIgnoreCase(row.getCell(8).toString())){
+										if("Numeric".equalsIgnoreCase(row.getCell(8).toString())){
+											//CELL: Score Schema (From)
+											if(StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+											//CELL: Score Schema (Yes)
+											if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+											//CELL: Score Schema (No)
+											if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+											//CELL: Score/Max Score
+											if(StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+										
+										}else if("Yes/No".equalsIgnoreCase(row.getCell(8).toString())){
+											//CELL: Score Schema (From)
+											if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+											
+											//CELL: Score Schema (Yes)
+											if(StringUtils.isBlank(row.getCell(11).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(11).toString()) < 0 
+														|| Integer.parseInt(row.getCell(11).toString()) > 999)countCellError++;
+											}
+											
+											//CELL: Score Schema (No)
+											if(StringUtils.isBlank(row.getCell(12).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(12).toString()) < 0 
+														|| Integer.parseInt(row.getCell(12).toString()) > 999)countCellError++;
+											}
+											
+											if(!StringUtils.isBlank(row.getCell(11).toString()) && StringUtils.isBlank(row.getCell(12).toString())){
+												if(Integer.parseInt(row.getCell(11).toString())  == 0 && 
+														Integer.parseInt(row.getCell(12).toString()) == 0)countCellError++;
+											}
+											
+											//CELL: Score/Max Score
+											if(!StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+										}
+									}
+								}
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+								
+							}else{//SCENARIO: Service Zonal
+								
+								//CELL: Answer Type
+								if(StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								
+								//CELL: Score Type
+								if(StringUtils.isBlank(row.getCell(7).toString())){
+									countCellError++;
+								}else{
+									if("User".equalsIgnoreCase(row.getCell(7).toString())){
+										//CELL: Score Schema (From)
+										if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+										//CELL: Score Schema (To)
+										if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+										//CELL: Score Schema (Yes)
+										if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+										//CELL: Score Schema (No)
+										if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+										//CELL: Score/Max Score
+										if(StringUtils.isBlank(row.getCell(12).toString())){
+											countCellError++;
+										}else{
+											if(new BigDecimal(row.getCell(12).toString()).compareTo(BigDecimal.ZERO) == 0){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(12).toString()).compareTo(new BigDecimal(999)) == 1){
+												countCellError++;
+											}else if(new BigDecimal(row.getCell(12).toString()).compareTo(BigDecimal.ZERO) < 0){
+												countCellError++;
+											}
+										}
+										
+									}else if("Auto".equalsIgnoreCase(row.getCell(7).toString())){
+										if("Numeric".equalsIgnoreCase(row.getCell(6).toString())){
+											//CELL: Score Schema (From)
+											if(StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											//CELL: Score Schema (Yes)
+											if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+											//CELL: Score Schema (No)
+											if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+											//CELL: Score/Max Score
+											if(StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+										
+										}else if("Yes/No".equalsIgnoreCase(row.getCell(6).toString())){
+											//CELL: Score Schema (From)
+											if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+											//CELL: Score Schema (To)
+											if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+											
+											//CELL: Score Schema (Yes)
+											if(StringUtils.isBlank(row.getCell(10).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(10).toString()) < 0 
+														|| Integer.parseInt(row.getCell(10).toString()) > 999)countCellError++;
+											}
+											
+											//CELL: Score Schema (No)
+											if(StringUtils.isBlank(row.getCell(11).toString())){
+												countCellError++;
+											}else{
+												if(Integer.parseInt(row.getCell(11).toString()) < 0 
+														|| Integer.parseInt(row.getCell(11).toString()) > 999)countCellError++;
+											}
+											
+											if(!StringUtils.isBlank(row.getCell(10).toString()) && StringUtils.isBlank(row.getCell(11).toString())){
+												if(Integer.parseInt(row.getCell(10).toString())  == 0 && 
+														Integer.parseInt(row.getCell(11).toString()) == 0)countCellError++;
+											}
+											
+											//CELL: Score/Max Score										
+											if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+										}
+									}
+								}
+								//CELL: Specification Weightage (Only if Selected Specification Weightage=Weighted Point)
+								if(isWeightage && StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+							}
+						}
+					}
+				}else{
+					log.info("CELL ITEM & SPECIFICATION IS NULL");
+					if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+						if(!isZonal){
+							if(!StringUtils.isBlank(prevRowData.getCell(5).toString()) 
+									&& !StringUtils.isBlank(prevRowData.getCell(6).toString())){
+								
+								if(StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+								if(isWeightage && !StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+								
+							}else if(!StringUtils.isBlank(prevRowData.getCell(9).toString()) && 
+									!StringUtils.isBlank(prevRowData.getCell(10).toString()) &&
+									!StringUtils.isBlank(prevRowData.getCell(13).toString())) {
+								
+								if(!StringUtils.isBlank(row.getCell(5).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+								if(isWeightage && !StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+								
+							}else{
+								countCellError++;
+							}
+							
+						}else{//Product Zonal
+							if(!StringUtils.isBlank(prevRowData.getCell(6).toString()) && 
+									!StringUtils.isBlank(prevRowData.getCell(7).toString()) &&
+									!StringUtils.isBlank(prevRowData.getCell(10).toString())) {
+								
+								if(StringUtils.isBlank(row.getCell(6).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(7).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								if(isWeightage && !StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								
+							}else{
+								countCellError++;
+							}	
+						}	
+					}else if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+						if(!isZonal){
+							if(!StringUtils.isBlank(prevRowData.getCell(9).toString()) && 
+									!StringUtils.isBlank(prevRowData.getCell(10).toString()) &&
+									!StringUtils.isBlank(prevRowData.getCell(13).toString())) {
+								
+								if(StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+								if(isWeightage && !StringUtils.isBlank(row.getCell(14).toString()))countCellError++;
+								
+							}else{
+								countCellError++;
+							}
+						}else{
+							if(!StringUtils.isBlank(prevRowData.getCell(8).toString()) && 
+									!StringUtils.isBlank(prevRowData.getCell(9).toString()) &&
+									!StringUtils.isBlank(prevRowData.getCell(12).toString())) {
+								
+								if(StringUtils.isBlank(row.getCell(8).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(9).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(10).toString()))countCellError++;
+								if(!StringUtils.isBlank(row.getCell(11).toString()))countCellError++;
+								if(StringUtils.isBlank(row.getCell(12).toString()))countCellError++;
+								if(isWeightage && !StringUtils.isBlank(row.getCell(13).toString()))countCellError++;
+								
+							}else{
+								countCellError++;
+							}
+						}
+					}
+				}
+				
+				prevRowData = row;
+				//End Validate each row 
+				*/
+				if(countCellError > 0){
+					int currRowIndex = row.getRowNum();
+					invalidDataMsg = invalidDataMsg.concat("Row = " + (currRowIndex+1) + " has invalid record \n");
+					countIsError++;
+				}else if(countCellError == 0 && countIsError == 0){
+				
+					if (row.getCell(0).toString() != "" || row.getCell(0).toString() != null) {
+						item.add(row.getCell(0).toString());
+					} else {
+						item.add("");
+					}
+					
+					if (row.getCell(1).toString() != "" || row.getCell(1).toString() != null) {
+						specification.add(row.getCell(1).toString());
+					} else {
+						specification.add("");
+					}
+					if (row.getCell(2).toString() != "" || row.getCell(2).toString() != null) {
+						uom.add(row.getCell(2).toString());
+					} else {
+						uom.add("");
+					}
+			
+					if (itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {// product
+						if (row.getCell(3).toString() != "" || row.getCell(3).toString() != null)
+							priceType.add(row.getCell(3).toString());
+						else
+							priceType.add("");
+			
+						if (!isZonal) {
+							if (row.getCell(4).toString() != "" || row.getCell(4).toString() != null)
+								quantity.add(row.getCell(4).toString());
+							else
+								quantity.add("");
+			
+							// SECTION POPUP TIER QUANTITY
+							if (row.getCell(5).toString() != "" || row.getCell(5).toString() != null)
+								tierQuantityFrom.add(row.getCell(5).toString());
+							else
+								tierQuantityFrom.add("");
+			
+							if (row.getCell(6).toString() != "" || row.getCell(6).toString() != null)
+								tierQuantityTo.add(row.getCell(6).toString());
+							else
+								tierQuantityTo.add("");
+							// END SECTION POPUP TIEW QUANTITY
+						}
+			
+					} else if (itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {// service
+						if (row.getCell(3).toString() != "" || row.getCell(3).toString() != null) {
+							freqPerUom.add(row.getCell(3).toString());
+						} else {
+							freqPerUom.add("");
+						}
+			
+						if (row.getCell(4).toString() != "" || row.getCell(4).toString() != null) {
+							uomPerDay.add(row.getCell(4).toString());
+						} else {
+							uomPerDay.add("");
+						}
+			
+						if (row.getCell(5).toString() != "" || row.getCell(5).toString() != null) {
+							uomPerMonth.add(row.getCell(5).toString());
+						} else {
+							uomPerMonth.add("");
+						}
+			
+						if (!isZonal) {
+							if (row.getCell(6).toString() != "" || row.getCell(6).toString() != null) {
+								quantity.add(row.getCell(6).toString());
+							} else {
+								quantity.add("");
+							}
+						}
+					}
+			
+					if (!isZonal) {// Non-Zonal
+						// SECTION POPUP: SCORE SETTING
+						if (row.getCell(7).toString() != "" || row.getCell(7).toString() != null)
+							score.add(row.getCell(7).toString());
+						else
+							score.add("");
+			
+						if (row.getCell(8).toString() != "" || row.getCell(8).toString() != null)
+							scoreType.add(row.getCell(8).toString());
+						else
+							scoreType.add("");
+			
+						if (row.getCell(9).toString() != "" || row.getCell(9).toString() != null)
+							scoreSchemaFrom.add(row.getCell(9).toString());
+						else
+							scoreSchemaFrom.add("");
+			
+						if (row.getCell(10).toString() != "" || row.getCell(10).toString() != null)
+							scoreSchemaTo.add(row.getCell(10).toString());
+						else
+							scoreSchemaTo.add("");
+			
+						if (row.getCell(11).toString() != "" || row.getCell(11).toString() != null)
+							scoreSchemaYes.add(row.getCell(11).toString());
+						else
+							scoreSchemaYes.add("");
+			
+						if (row.getCell(12).toString() != "" || row.getCell(12).toString() != null)
+							scoreSchemaNo.add(row.getCell(12).toString());
+						else
+							scoreSchemaNo.add("");
+			
+						if (row.getCell(13).toString() != "" || row.getCell(13).toString() != null)
+							scoreMark.add(row.getCell(13).toString());
+						else
+							scoreMark.add("");
+						// END POPUP: SCORE SETTING
+			
+					} else {// Zonal
+						if (itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {// Product
+							if (row.getCell(4).toString() != "" || row.getCell(4).toString() != null)
+								score.add(row.getCell(4).toString());
+							else
+								score.add("");
+			
+							if (row.getCell(5).toString() != "" || row.getCell(5).toString() != null)
+								scoreType.add(row.getCell(5).toString());
+							else
+								scoreType.add("");
+			
+							if (row.getCell(6).toString() != "" || row.getCell(6).toString() != null)
+								scoreSchemaFrom.add(row.getCell(6).toString());
+							else
+								scoreSchemaFrom.add("");
+			
+							if (row.getCell(7).toString() != "" || row.getCell(7).toString() != null)
+								scoreSchemaTo.add(row.getCell(7).toString());
+							else
+								scoreSchemaTo.add("");
+			
+							if (row.getCell(8).toString() != "" || row.getCell(8).toString() != null)
+								scoreSchemaYes.add(row.getCell(8).toString());
+							else
+								scoreSchemaYes.add("");
+			
+							if (row.getCell(9).toString() != "" || row.getCell(9).toString() != null)
+								scoreSchemaNo.add(row.getCell(9).toString());
+							else
+								scoreSchemaNo.add("");
+			
+							if (row.getCell(10).toString() != "" || row.getCell(10).toString() != null)
+								scoreMark.add(row.getCell(10).toString());
+							else
+								scoreMark.add("");
+			
+						} else {// Service
+							if (row.getCell(6).toString() != "" || row.getCell(6).toString() != null)
+								score.add(row.getCell(6).toString());
+							else
+								score.add("");
+			
+							if (row.getCell(7).toString() != "" || row.getCell(7).toString() != null)
+								scoreType.add(row.getCell(7).toString());
+							else
+								scoreType.add("");
+			
+							if (row.getCell(8).toString() != "" || row.getCell(8).toString() != null)
+								scoreSchemaFrom.add(row.getCell(8).toString());
+							else
+								scoreSchemaFrom.add("");
+			
+							if (row.getCell(9).toString() != "" || row.getCell(9).toString() != null)
+								scoreSchemaTo.add(row.getCell(9).toString());
+							else
+								scoreSchemaTo.add("");
+			
+							if (row.getCell(10).toString() != "" || row.getCell(10).toString() != null)
+								scoreSchemaYes.add(row.getCell(10).toString());
+							else
+								scoreSchemaYes.add("");
+			
+							if (row.getCell(11).toString() != "" || row.getCell(11).toString() != null)
+								scoreSchemaNo.add(row.getCell(11).toString());
+							else
+								scoreSchemaNo.add("");
+			
+							if (row.getCell(12).toString() != "" || row.getCell(12).toString() != null)
+								scoreMark.add(row.getCell(12).toString());
+							else
+								scoreMark.add("");
+							// END POPUP: SCORE SETTING
+						}
+					}
+				}
+			}
+		}
+		workbookxlsx.close();
+		file.close();
+		
+		if(proceedProcess){
+			if(countIsError > 0){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", invalidDataMsg));	
+			}else{
+				technicalChecklistReloadActionImport(item, specification, uom,priceType, quantity, tierQuantityFrom, tierQuantityTo,
+						score, scoreType,scoreSchemaFrom, scoreSchemaTo,scoreSchemaYes, scoreSchemaNo, scoreMark,
+						freqPerUom, uomPerDay, uomPerMonth,false);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_760502,
+										new String[] {},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+	
+	public String technicalChecklistReloadActionImport(List<String> item, List<String> specification, List<String> uom,
+			List<String> priceType, List<String> quantity, List<String> tierQtyFrom, List<String> tierQtyTo,
+			List<String> score, List<String> scoreType,List<String> scoreSchemaFrom, List<String> scoreSchemaTo, 
+			List<String> scoreSchemaYes, List<String> scoreSchemaNo, List<String> scoreMark,
+			List<String> freqPerUom, List<String> uomPerDay, List<String> uomPerMonth,Boolean isZonal) {
+		
+		log.info("INSIDE HERE ===>>> technicalChecklistReloadActionImport ");
+		//PRICE TYPE
+		PmParameter paramPriceTypeNormal = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD);
+		PmParameter paramPriceTypeTier = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER);
+		PmParameter paramPriceTypeZonal = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+		PmParameter paramPriceTypeZonalTier = getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_ZONAL_TIER);
+		//ANSWER TYPE
+		PmParameter paramAnswerTypeText = getParameterByTypeAndCode(ParameterTypeConst.ANSWER_TYPE,ParameterConst.ANSWER_TYPE_TEXT);
+		PmParameter paramAnswerTypeNumeric = getParameterByTypeAndCode(ParameterTypeConst.ANSWER_TYPE,ParameterConst.ANSWER_TYPE_NUMERIC);
+		PmParameter paramAnswerTypeYesNo = getParameterByTypeAndCode(ParameterTypeConst.ANSWER_TYPE,ParameterConst.ANSWER_TYPE_DROPDOWN);
+		//SCORE TYPE
+		PmParameter paramScoreTypeAuto = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,ParameterConst.SCORE_TYPE_AUTO);
+		PmParameter paramScoreTypeUser = getParameterByTypeAndCode(ParameterTypeConst.SCORE_TYPE,ParameterConst.SCORE_TYPE_USER);
+		//Delivery Item Type Code
+		PmParameter paramDeliveryItemType = getParameterByTypeAndCode(ParameterTypeConst.DELIVERY_TERM,ParameterConst.SQ_DURATION_DAY);
+		PmParameter paramFulfillmentType = getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		
+		TemplateSpecBean templateSpecBean = this.getManagedBean().getTemplateSpecBean();
+		String itemTypeCode = templateSpecBean.getSpecMaster().getItemTypeCode().getParameterCode();
+		templateSpecBean.getSpecMaster().setTplSpecQuestions(null);
+		List<TplSpecQuestion> tplBacker = new ArrayList<TplSpecQuestion>();
+		TplSpecQuestion tpmQuest = new TplSpecQuestion();
+		int rowIndex = 0;
+		BigDecimal maxScore = null;
+		for (int i = 0; i < item.size(); i++) {
+			List<TplSpecTierQty> tplSpecTierStandartQty = new ArrayList<TplSpecTierQty>();
+			List<TplSpecScoring> tplSpecScoring = new ArrayList<TplSpecScoring>();
+			
+			if (!"".equalsIgnoreCase(item.get(i)) || !"".equalsIgnoreCase(specification.get(i))) {
+				tplBacker.add(new TplSpecQuestion());
+				tpmQuest = tplBacker.get(rowIndex);
+				tpmQuest.setTplSpecMaster(templateSpecBean.getSpecMaster());
+				tpmQuest.getTplSpecMaster().setSpecTypeCode(templateSpecBean.getSpecMaster().getSpecTypeCode());
+				
+				if (!"".equalsIgnoreCase(item.get(i))) {
+					tpmQuest.setClItem(item.get(i));
+					tpmQuest.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
+					tpmQuest.setQuestionOrder(rowIndex + 1);
+					tpmQuest.setClDeliveryTermTypeCode(paramDeliveryItemType);
+					tpmQuest.setClFulfilmentTypeCode(paramFulfillmentType);
+				}
+				
+				if (!"".equalsIgnoreCase(specification.get(i))) {
+					tpmQuest.setClSpecDetail(specification.get(i));
+					tpmQuest.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
+					tpmQuest.setQuestionOrder(rowIndex + 1);
+				}
+				
+				if (!"".equalsIgnoreCase(uom.get(i))) {
+					String[] uomDtl = uom.get(i).split("-");
+					PmUom pmUom = new PmUom();
+					pmUom.setUomId(Long.parseLong(uomDtl[0].trim()));
+					pmUom.setUomCode(uomDtl[1].trim());
+					pmUom.setUomName(uomDtl[2].trim());
+					tpmQuest.setClUom(pmUom);
+				}
+				
+				if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+					if (!"".equalsIgnoreCase(priceType.get(i))) {
+						if (priceType.get(i).equals("Normal Standard") || priceType.get(i).equals("Biasa Standard")) {
+							tpmQuest.setClPriceTypeCode(paramPriceTypeNormal);
+						} else if (priceType.get(i).equals("Tier Standard") || priceType.get(i).equals("Berperingkat Standard")) {
+							tpmQuest.setClPriceTypeCode(paramPriceTypeTier);
+						}else if (priceType.get(i).equals("Zonal Standard") || priceType.get(i).equals("Zon Standard")) {
+							tpmQuest.setClPriceTypeCode(paramPriceTypeZonal);
+						}else if (priceType.get(i).equals("Zonal Tier Standard") || priceType.get(i).equals("Zon Dan Berperingkat Standard")) {
+							tpmQuest.setClPriceTypeCode(paramPriceTypeZonalTier);
+						}
+					}
+				}
+				
+				if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+					if(!"".equalsIgnoreCase(freqPerUom.get(i)))tpmQuest.setClUomFrequency(new BigDecimal(freqPerUom.get(i)));
+					if(!"".equalsIgnoreCase(uomPerDay.get(i)))tpmQuest.setClUomPerDay(new BigDecimal(uomPerDay.get(i)));
+					if(!"".equalsIgnoreCase(uomPerMonth.get(i)))tpmQuest.setClUomPerMonth(new BigDecimal(uomPerMonth.get(i)));
+				}
+								
+				if(!isZonal){
+					if (!"".equalsIgnoreCase(quantity.get(i))) {
+						tpmQuest.setClQuantity(new BigDecimal(quantity.get(i)));
+					}
+				}
+				
+				if (!"".equalsIgnoreCase(score.get(i)) && tpmQuest.getClSpecDetail() != null) {
+					if ("Yes/No".equalsIgnoreCase(score.get(i))) {
+						tpmQuest.setAnswerTypeCode(paramAnswerTypeYesNo);
+					} else if ("Numeric".equalsIgnoreCase(score.get(i))) {
+						tpmQuest.setAnswerTypeCode(paramAnswerTypeNumeric);
+					} else if ("Text".equalsIgnoreCase(score.get(i))) {
+						tpmQuest.setAnswerTypeCode(paramAnswerTypeText);
+					}
+				}
+				
+				if(!"".equalsIgnoreCase(scoreType.get(i))){
+					if("Auto".equalsIgnoreCase(scoreType.get(i))){
+						tpmQuest.setScoreTypeCode(paramScoreTypeAuto);
+					}else if("User".equalsIgnoreCase(scoreType.get(i))){
+						tpmQuest.setScoreTypeCode(paramScoreTypeUser);
+					}
+				}
+				tpmQuest.setClAnswerRequired(true);
+				if(rowIndex !=0){
+					if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(tpmQuest.getQuestionType()) 
+							&& rowIndex < tplBacker.size()) {
+						TplSpecQuestion prevSpecQuestion = tplBacker.get(rowIndex-1);
+						String prevQuestionType = prevSpecQuestion.getQuestionType();
+			            
+						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(prevQuestionType)) {
+							tpmQuest.setParentSpecQuestion(prevSpecQuestion);
+						} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
+								.equals(prevQuestionType)) {
+							tpmQuest.setParentSpecQuestion(prevSpecQuestion.getParentSpecQuestion());
+						}
+					}
+				}
+				
+				rowIndex++;
+			}
+			
+			if((!"".equalsIgnoreCase(item.get(i)) || !"".equalsIgnoreCase(specification.get(i))) ||
+					("".equalsIgnoreCase(item.get(i)) && "".equalsIgnoreCase(specification.get(i)))){
+				
+				tplSpecTierStandartQty = tpmQuest.getTplSpecTierQties();
+				if(tplSpecTierStandartQty == null){
+					tplSpecTierStandartQty = new ArrayList<TplSpecTierQty>();
+					tpmQuest.setTplSpecTierQties(tplSpecTierStandartQty);
+				}
+				
+				tplSpecScoring = tpmQuest.getTplSpecScorings();
+				if(tplSpecScoring == null){
+					tplSpecScoring = new ArrayList<TplSpecScoring>();
+					tpmQuest.setTplSpecScorings(tplSpecScoring);
+					maxScore = null;
+				}
+				
+				if(!"".equalsIgnoreCase(scoreType.get(i)) && "User".equalsIgnoreCase(scoreType.get(i))){
+					if(!"".equalsIgnoreCase(scoreMark.get(i)))tpmQuest.setMaxScore(new BigDecimal(scoreMark.get(i)));
+				}
+				
+				templateSpecBean.setSelectedSpecQuestion(tpmQuest);
+				
+				if(itemTypeCode.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) && !isZonal){
+					if(!"".equalsIgnoreCase(tierQtyFrom.get(i))){
+						TplSpecTierQty tierQty = new TplSpecTierQty();
+						tierQty.setFromQty(new BigDecimal(tierQtyFrom.get(i)));
+						tierQty.setToQty(new BigDecimal(tierQtyTo.get(i)));
+						tierQty.setTplSpecQuestion(tpmQuest);
+						tplSpecTierStandartQty.add(tierQty);
+						templateSpecBean.getSelectedSpecQuestion().setTplSpecTierQties(tplSpecTierStandartQty);
+					}
+				}
+				
+				if(!"".equalsIgnoreCase(scoreSchemaFrom.get(i))){
+					TplSpecScoring specScoring = new TplSpecScoring();
+					specScoring.setRangeFrom(new BigDecimal(scoreSchemaFrom.get(i)));
+					if(!"".equalsIgnoreCase(scoreSchemaTo.get(i)))specScoring.setRangeTo(new BigDecimal(scoreSchemaTo.get(i)));
+					if(!"".equalsIgnoreCase(scoreMark.get(i)))specScoring.setScore(new BigDecimal(scoreMark.get(i)));
+					specScoring.setTplSpecQuestion(tpmQuest);
+					tplSpecScoring.add(specScoring);
+					templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
+					if(tplSpecScoring.size() == 1){
+						maxScore = new BigDecimal(scoreMark.get(i));
+					}else{
+						if(maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0){
+							maxScore = new BigDecimal(scoreMark.get(i));
+						}
+					}
+					tpmQuest.setMaxScore(maxScore);
+				}
+				
+				if(!"".equalsIgnoreCase(scoreSchemaYes.get(i)) && !"".equalsIgnoreCase(scoreSchemaNo.get(i))){
+					TplSpecScoring specScoringYes = new TplSpecScoring();
+					specScoringYes.setCompliance(true);
+					specScoringYes.setScore(new BigDecimal(scoreSchemaYes.get(i)));
+					specScoringYes.setTplSpecQuestion(tpmQuest);
+					tplSpecScoring.add(specScoringYes);
+					
+					TplSpecScoring specScoringNo = new TplSpecScoring();
+					specScoringNo.setCompliance(false);
+					specScoringNo.setScore(new BigDecimal(scoreSchemaNo.get(i)));
+					specScoringNo.setTplSpecQuestion(tpmQuest);
+					tplSpecScoring.add(specScoringNo);
+					
+					if((new BigDecimal(scoreSchemaYes.get(i))).compareTo(new BigDecimal(scoreSchemaNo.get(i))) < 0){
+						tpmQuest.setMaxScore(new BigDecimal(scoreSchemaNo.get(i)));
+					}else{
+						tpmQuest.setMaxScore(new BigDecimal(scoreSchemaYes.get(i)));
+					}
+					
+					templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
+				}
+			}
+		}
+		
+		templateSpecBean.getSpecMaster().setTplSpecQuestions(tplBacker);
+		
+		return null;
+	}
+	
+	public void enableImportExportSpec(){
+		log.info("INSIDE enableImportExportSpec ");
+		int countError = 0;
+		if(StringUtils.isBlank(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getSpecName())||
+				"".equalsIgnoreCase(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getSpecName())){
+			countError++;
+		}
+		if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getProcurementCategory() == null || 
+				this.getManagedBean().getTemplateSpecBean().getSpecMaster().getProcurementCategory().getParameterId() == null){
+			countError++;
+		}
+		
+		if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode() == null || 
+				this.getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterId() == null){
+			countError++;
+		}
+		
+		if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTemplateTypeCode() == null || 
+				this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTemplateTypeCode().getParameterId() == null){
+			countError++;
+		}
+		
+		if(countError > 0){
+			this.getManagedBean().setEnableImportExport(false);
+		}else{
+			this.getManagedBean().setEnableImportExport(true);
+		}
+	}
+	
+	/**
+	 * FUNCTION : Populate data technical specification for item type Product
+	 * @param templateSpecBean
+	 * @param technicalSpecInfo
+	 * @param isZonal
+	 * @param isWeightageReq
+	 * @return
+	 */
+	public Map<Integer, Object[]> exportDataTechnicalSpecForItemTypeProduct(TemplateSpecBean templateSpecBean,
+			Map<Integer, Object[]> technicalSpecInfo, Boolean isZonal, Boolean isWeightageReq){
+		
+		//SECTION : Spec Question
+		List<String> item = new ArrayList<String>();
+		List<String> specification = new ArrayList<String>();
+		List<String> uom = new ArrayList<String>();
+		List<String> priceType = new ArrayList<String>();
+		List<String> quantity = new ArrayList<String>();
+		//SECTION : Tier Quantity
+		List<String> tierQuantityFrom = new ArrayList<String>();// Tier Quantity From
+		List<String> tierQuantityTo = new ArrayList<String>();// Tier Quantity To
+		//SECTION : Score Setting
+		List<String> answerType = new ArrayList<String>();//Answer Type
+		List<String> scoreType = new ArrayList<String>();// Score Type
+		List<String> score = new ArrayList<String>();// Max Score/score
+		List<String> rangeFrom = new ArrayList<String>();// Range From
+		List<String> rangeTo = new ArrayList<String>();// Range To
+		List<String> scoreYes = new ArrayList<String>();// Score for YES
+		List<String> scoreNo = new ArrayList<String>();// Score for No
+		List<String> specWeightage = new ArrayList<String>();// Specification Weightage
+		
+		if(templateSpecBean.getSpecMaster().getTplSpecQuestions() != null){
+			for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
+				log.info("Spec Question is not null!!");
+				int j = i + 1;
+				if (j > templateSpecBean.getSpecMaster().getTplSpecQuestions().size()) {
+					item.add("");
+					specification.add("");
+					uom.add("");
+					priceType.add("");
+					if (!isZonal) {
+						quantity.add("");
+						tierQuantityFrom.add("");
+						tierQuantityTo.add("");
+					}
+					answerType.add("");
+					scoreType.add("");
+					rangeFrom.add("");
+					rangeTo.add("");
+					scoreYes.add("");
+					scoreNo.add("");
+					score.add("");
+					if(isWeightageReq)specWeightage.add("");
+	
+				} else {	
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem() != null) {
+						item.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem());
+					} else {
+						item.add("");
+					}
+	
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail() != null) {
+						specification.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail());
+					} else {
+						specification.add("");
+					}
+	
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom() != null) {
+						uom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomId()
+								.toString()
+								+ " - "
+								+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomCode()
+								+ " - "
+								+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomName());
+					} else {
+						uom.add("");
+					}
+	
+					if (!isZonal) {
+						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
+							quantity.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity()
+									.toString());
+						} else {
+							quantity.add("");
+						}
+					}
+					
+					//Populate data Specification Weightage only for Specification Weightage = Weighted Point
+					if(isWeightageReq){
+						if(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getWeightage() != null){
+							specWeightage.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getWeightage().toString());
+						}else{
+							specWeightage.add("");
+						}
+					}
+	
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode() != null) {
+						priceType.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClPriceTypeCode()
+								.getPmParameterDescsSpecCallOnly().get(0).getCodeName());
+						if ("Tier Standard".equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+								.getClPriceTypeCode().getPmParameterDescsSpecCallOnly().get(0).getCodeName())
+								&& !isZonal) {
+							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecTierQties() != null) {
+								for (int y = 0; y < templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+										.getTplSpecTierQties().size(); y++) {
+									if (y != 0) {
+										item.add("");
+										specification.add("");
+										quantity.add("");
+										uom.add("");
+										priceType.add("");
+										answerType.add("");
+										scoreType.add("");
+										rangeFrom.add("");
+										rangeTo.add("");
+										scoreYes.add("");
+										scoreNo.add("");
+										score.add("");
+										if(isWeightageReq)specWeightage.add("");
+									}
+									tierQuantityFrom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+											.getTplSpecTierQties().get(y).getFromQty().toString());
+									tierQuantityTo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+											.getTplSpecTierQties().get(y).getToQty().toString());
+								}
+							} else {
+								tierQuantityFrom.add("");
+								tierQuantityTo.add("");
+							}
+						} else {
+							if (!isZonal) {
+								tierQuantityFrom.add("");
+								tierQuantityTo.add("");
+							}
+						}
+					} else {
+						priceType.add("");
+						if (!isZonal) {
+							tierQuantityFrom.add("");
+							tierQuantityTo.add("");
+						}
+					}
+	
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode() != null) {
+						if ((ParameterConst.ANSWER_TYPE_DROPDOWN).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getAnswerTypeCode().getParameterCode())){
+							answerType.add("Yes/No");
+						} else if ((ParameterConst.ANSWER_TYPE_NUMERIC).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getAnswerTypeCode().getParameterCode())){
+							answerType.add("Numeric");
+						} else if ((ParameterConst.ANSWER_TYPE_TEXT).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getAnswerTypeCode().getParameterCode())){ 
+							answerType.add("Text");
+						}
+					} else {
+						answerType.add("");
+					}
+					
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getScoreTypeCode() != null) {
+						if((ParameterConst.SCORE_TYPE_AUTO.equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getScoreTypeCode().getParameterCode()))){
+							scoreType.add("Auto");
+							if ((ParameterConst.ANSWER_TYPE_DROPDOWN).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+									get(i).getAnswerTypeCode().getParameterCode())) {
+								if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
+									int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+											.getTplSpecScorings().size();
+									for (int m = 0; m < scoringListSize; m++) {
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getRangeFrom() == null
+												&& templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+														.getTplSpecScorings().get(m).getRangeTo() == null) {
+											if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).isCompliance()) {
+												if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+														.getTplSpecScorings().get(m).getScore() != null) {
+													scoreYes.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
+															.get(i).getTplSpecScorings().get(m).getScore().toString());
+												} else {
+													scoreYes.add("");
+												}
+											} else {
+												if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+														.getTplSpecScorings().get(m).getScore() != null) {
+													scoreNo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
+															.get(i).getTplSpecScorings().get(m).getScore().toString());
+												} else {
+													scoreNo.add("");
+												}
+											}
+										} else {
+											scoreYes.add("");
+											scoreNo.add("");
+										}
+									}
+									rangeFrom.add("");
+									rangeTo.add("");
+									score.add("");
+								} else {
+									rangeFrom.add("");
+									rangeTo.add("");
+									scoreYes.add("");
+									scoreNo.add("");
+									score.add("");
+								}
+							} else {
+								if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
+									int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+											.getTplSpecScorings().size();
+									for (int m = 0; m < scoringListSize; m++) {
+										if (m != 0) {
+											item.add("");
+											specification.add("");
+											if (!isZonal) {
+												quantity.add("");
+												tierQuantityFrom.add("");
+												tierQuantityTo.add("");
+											}
+											uom.add("");
+											priceType.add("");
+											answerType.add("");
+											scoreType.add("");
+											if(isWeightageReq)specWeightage.add("");
+										}
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getRangeFrom() != null) {
+											rangeFrom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).getRangeFrom().toString());
+										} else {
+											rangeFrom.add("");
+										}
+	
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getRangeTo() != null) {
+											rangeTo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).getRangeTo().toString());
+										} else {
+											rangeTo.add("");
+										}
+										scoreYes.add("");
+										scoreNo.add("");
+	
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getScore() != null) {
+											score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).getScore().toString());
+										} else {
+											score.add("");
+										}
+									}
+								} else {
+									rangeFrom.add("");
+									rangeTo.add("");
+									scoreYes.add("");
+									scoreNo.add("");
+									score.add("");
+								}
+							}
+	
+						} else if ((ParameterConst.SCORE_TYPE_USER.equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getScoreTypeCode().getParameterCode()))) {
+							scoreType.add("User");
+							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore() != null) {
+								rangeFrom.add("");
+								rangeTo.add("");
+								scoreYes.add("");
+								scoreNo.add("");
+								score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore()
+										.toString());
+							} else {
+								rangeFrom.add("");
+								rangeTo.add("");
+								scoreYes.add("");
+								scoreNo.add("");
+								score.add("");
+							}
+						}
+					} else {
+						scoreType.add("");
+						rangeFrom.add("");
+						rangeTo.add("");
+						scoreYes.add("");
+						scoreNo.add("");
+						score.add("");
+					}
+				}
+			}
+			
+			for (int k = 0; k < item.size(); k++) {
+				if (isZonal) {
+					technicalSpecInfo.put(k, new Object[] {item.get(k), specification.get(k), uom.get(k), priceType.get(k),
+							answerType.get(k), scoreType.get(k), rangeFrom.get(k), rangeTo.get(k), scoreYes.get(k),
+							scoreNo.get(k), score.get(k),
+							isWeightageReq ? specWeightage.get(k) :  ""});
+					
+				} else {
+					technicalSpecInfo.put(
+							k,
+							new Object[] { item.get(k), specification.get(k), uom.get(k), priceType.get(k),
+									quantity.get(k), tierQuantityFrom.get(k), tierQuantityTo.get(k),
+									answerType.get(k), scoreType.get(k), rangeFrom.get(k), rangeTo.get(k),
+									scoreYes.get(k), scoreNo.get(k), score.get(k),
+									isWeightageReq ? specWeightage.get(k) :  ""});
+				}
+			}
+		}
+		
+		return technicalSpecInfo;
+	}
+	
+	/**
+	 * FUNCTION : Populate data technical specification for item type Service
+	 * @param templateSpecBean
+	 * @param technicalSpecInfo
+	 * @param isZonal
+	 * @param isWeightageReq
+	 * @return
+	 */
+	public Map<Integer, Object[]> exportDataTechnicalSpecForItemTypeService(TemplateSpecBean templateSpecBean,
+			Map<Integer, Object[]> technicalSpecInfo, Boolean isZonal, Boolean isWeightageReq){
+		
+		//SECTION : Spec Question
+		List<String> item = new ArrayList<String>();
+		List<String> specification = new ArrayList<String>();
+		List<String> uom = new ArrayList<String>();		
+		List<String> freqPerUOM = new ArrayList<String>();
+		List<String> uomPerDay = new ArrayList<String>();
+		List<String> uomPerMonth = new ArrayList<String>();
+		List<String> quantity = new ArrayList<String>();
+		//SECTION : Score Setting
+		List<String> answerType = new ArrayList<String>();
+		List<String> scoreType = new ArrayList<String>();// Score Type
+		List<String> score = new ArrayList<String>();// Max Score/score
+		List<String> rangeFrom = new ArrayList<String>();// Range From
+		List<String> rangeTo = new ArrayList<String>();// Range To
+		List<String> scoreYes = new ArrayList<String>();// Score for YES
+		List<String> scoreNo = new ArrayList<String>();// Score for No
+		List<String> specWeightage = new ArrayList<String>();// Specification Weightage
+		
+		if(templateSpecBean.getSpecMaster().getTplSpecQuestions() != null){
+			for (int i = 0; i < templateSpecBean.getSpecMaster().getTplSpecQuestions().size(); i++) {
+				int j = i + 1;
+				if (j > templateSpecBean.getSpecMaster().getTplSpecQuestions().size()) {
+					item.add("");
+					specification.add("");
+					if(!isZonal) quantity.add("");
+					uom.add("");
+					freqPerUOM.add("");
+					uomPerDay.add("");
+					uomPerMonth.add("");
+					answerType.add("");
+					scoreType.add("");
+					rangeFrom.add("");
+					rangeTo.add("");
+					scoreYes.add("");
+					scoreNo.add("");
+					score.add("");
+					if(isWeightageReq)specWeightage.add("");
+				} else {
+					// FIELD: Item
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem() != null) {
+						item.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClItem());
+					} else
+						item.add("");
+
+					// FIELD: Specification
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail() != null) {
+						specification.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClSpecDetail());
+					} else
+						specification.add("");
+
+					// FIELD: UOM
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom() != null) {
+						uom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomId()
+								.toString()
+								+ " - "
+								+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomCode()
+								+ " - "
+								+ templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUom().getUomName());
+					} else
+						uom.add("");
+
+					// FIELD: Frequency per UOM
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomFrequency() != null) {
+						freqPerUOM.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomFrequency()
+								.toString());
+					} else
+						freqPerUOM.add("");
+
+					// FIELD: UOM per Day
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerDay() != null) {
+						uomPerDay.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerDay().toString());
+					} else
+						uomPerDay.add("");
+
+					// FIELD: UOM per month
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerMonth() != null) {
+						uomPerMonth.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClUomPerMonth().toString());
+					} else
+						uomPerMonth.add("");
+
+					// FIELD: Quantity
+					if (!isZonal) {
+						if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
+							quantity.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity().toString());
+						} else {
+							quantity.add("");
+						}
+					}
+
+					// FIELD: Score Setting (Answer Type)
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getAnswerTypeCode() != null) {
+						if ((ParameterConst.ANSWER_TYPE_DROPDOWN).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getAnswerTypeCode().getParameterCode())){
+							answerType.add("Yes/No");
+						} else if ((ParameterConst.ANSWER_TYPE_NUMERIC).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getAnswerTypeCode().getParameterCode())){
+							answerType.add("Numeric");
+						} else if ((ParameterConst.ANSWER_TYPE_TEXT).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getAnswerTypeCode().getParameterCode())){ 
+							answerType.add("Text");
+						}
+					} else {
+						answerType.add("");
+					}
+					
+					//Populate data Specification Weightage only for Specification Weightage = Weighted Point
+					if(isWeightageReq){
+						if(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getWeightage() != null){
+							specWeightage.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getWeightage().toString());
+						}else{
+							specWeightage.add("");
+						}
+					}
+
+					if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getScoreTypeCode() != null) {
+						if((ParameterConst.SCORE_TYPE_AUTO.equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getScoreTypeCode().getParameterCode()))){
+							scoreType.add("Auto");
+							if ((ParameterConst.ANSWER_TYPE_DROPDOWN).equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+									get(i).getAnswerTypeCode().getParameterCode())) {// Answer Type = Yes/No
+								if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
+									int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+											.getTplSpecScorings().size();
+									for (int m = 0; m < scoringListSize; m++) {
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getRangeFrom() == null
+												&& templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+														.getTplSpecScorings().get(m).getRangeTo() == null) {
+											if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).isCompliance()) {
+												if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+														.getTplSpecScorings().get(m).getScore() != null) {
+													scoreYes.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
+															.get(i).getTplSpecScorings().get(m).getScore().toString());
+												} else {
+													scoreYes.add("");
+												}
+											} else {
+												if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+														.getTplSpecScorings().get(m).getScore() != null) {
+													scoreNo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions()
+															.get(i).getTplSpecScorings().get(m).getScore().toString());
+												} else {
+													scoreNo.add("");
+												}
+											}
+										} else {
+											scoreYes.add("");
+											scoreNo.add("");
+										}
+									}
+									
+									rangeFrom.add("");
+									rangeTo.add("");
+									score.add("");
+								} else {
+									rangeFrom.add("");
+									rangeTo.add("");
+									scoreYes.add("");
+									scoreNo.add("");
+									score.add("");
+								}
+							} else {
+								if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecScorings() != null) {
+									int scoringListSize = templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+											.getTplSpecScorings().size();
+									for (int m = 0; m < scoringListSize; m++) {
+										if (m != 0) {
+											item.add("");
+											specification.add("");
+											if (!isZonal)
+												quantity.add("");
+											uom.add("");
+											freqPerUOM.add("");
+											uomPerDay.add("");
+											uomPerMonth.add("");
+											answerType.add("");
+											scoreType.add("");
+											if(isWeightageReq)specWeightage.add("");
+										}
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getRangeFrom() != null) {
+											rangeFrom.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).getRangeFrom().toString());
+										} else {
+											rangeFrom.add("");
+										}
+
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getRangeTo() != null) {
+											rangeTo.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).getRangeTo().toString());
+										} else {
+											rangeTo.add("");
+										}
+										scoreYes.add("");
+										scoreNo.add("");
+
+										if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+												.getTplSpecScorings().get(m).getScore() != null) {
+											score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i)
+													.getTplSpecScorings().get(m).getScore().toString());
+										} else {
+											score.add("");
+										}
+									}
+								} else {
+									rangeFrom.add("");
+									rangeTo.add("");
+									scoreYes.add("");
+									scoreNo.add("");
+									score.add("");
+								}
+							}
+						} else if ((ParameterConst.SCORE_TYPE_USER.equalsIgnoreCase(templateSpecBean.getSpecMaster().getTplSpecQuestions().
+								get(i).getScoreTypeCode().getParameterCode()))) {
+							scoreType.add("User");
+							rangeFrom.add("");
+							rangeTo.add("");
+							scoreYes.add("");
+							scoreNo.add("");
+							if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore() != null) {
+								score.add(templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getMaxScore().toString());
+							} else {
+								score.add("");
+							}
+						}
+					} else {
+						scoreType.add("");
+						rangeFrom.add("");
+						rangeTo.add("");
+						scoreYes.add("");
+						scoreNo.add("");
+						score.add("");
+					}
+				}
+				
+				returnSpec.add(tplSpecAnswer);
+			}
+		}
+		
+		for (int k = 0; k < item.size(); k++) {
+			if (isZonal) {
+				technicalSpecInfo.put(
+						k,new Object[] { item.get(k), specification.get(k), uom.get(k), freqPerUOM.get(k),
+								uomPerDay.get(k), uomPerMonth.get(k), answerType.get(k), scoreType.get(k),
+								rangeFrom.get(k), rangeTo.get(k), scoreYes.get(k), scoreNo.get(k), score.get(k),
+								isWeightageReq ? specWeightage.get(k) :  ""});
+			} else {
+				technicalSpecInfo.put(
+						k,new Object[] { item.get(k), specification.get(k), uom.get(k), freqPerUOM.get(k),
+							uomPerDay.get(k), uomPerMonth.get(k), quantity.get(k), answerType.get(k),
+							scoreType.get(k), rangeFrom.get(k), rangeTo.get(k), scoreYes.get(k),
+							scoreNo.get(k), score.get(k),isWeightageReq ? specWeightage.get(k) :  ""});
+			}
+		}
+		
+		return technicalSpecInfo;
 	}
 /** #21695 FARID END */
 	
