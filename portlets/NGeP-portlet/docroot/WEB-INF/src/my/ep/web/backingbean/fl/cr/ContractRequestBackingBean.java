@@ -322,7 +322,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
 								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
 								|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
-							itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+							//start-28659
+							if(null!=getManagedBean().getFlRequest().getChargeOrgProfile()){
+								itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+							}else{
+								itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+							}
+							//end-28659
 						}
 					}
 				}
@@ -3057,7 +3063,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
-						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						//start-28659
+						if(null!=getManagedBean().getFlRequest().getChargeOrgProfile()){
+							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						}else{
+							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						}
+						//End-28659
 						System.out.println("PTJ Pembayar");
 					} else {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
@@ -3859,7 +3871,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
-						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						//Start-28659
+						if(null!=getManagedBean().getFlRequest().getChargeOrgProfile()){
+							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						}else{
+							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						}
+						//End-28659
 						System.out.println("PTJ Pembayar");
 					} else {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
@@ -3870,7 +3888,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 		}//24893 - start 
 		else if(null != selectedNodes && selectedNodes.length > 1) {
-			getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+			//start-28659
+			if(null!=getManagedBean().getFlRequest().getChargeOrgProfile()){
+				getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+			}else{
+				getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+			}
+			//End-28659
 		}
 		//24893 - end	 
 	}
@@ -3883,7 +3907,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setSelectChargeLineRow(false);
 		if(getManagedBean().getChargeLineItemRoot().getChildren().size() > 1){
 			onNodeUnSelect();
-			getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());//24893
+			//start-28659
+			if(null!=getManagedBean().getFlRequest().getChargeOrgProfile()){
+				getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+			}else{
+				getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+			}
+			//End-28659
 		}
 		
 		getManagedBean().setProgramLov(false);
