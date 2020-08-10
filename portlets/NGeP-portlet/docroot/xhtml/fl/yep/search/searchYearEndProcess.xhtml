@@ -403,7 +403,7 @@
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
 					                    <!-- end 28377 -->		
 						<!-- #28375- Beginning Logan -->
-						<c:if test="#{flYep.statusId eq '41005' || flYep.statusId eq '41505' || flYep.statusId eq '40050'}"> -->
+						<c:if test="#{flYep.statusId eq '41005' || flYep.statusId eq '41505' || flYep.statusId eq '40050'}">
 						
 						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
