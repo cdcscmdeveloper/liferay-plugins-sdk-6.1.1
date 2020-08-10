@@ -204,6 +204,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
 		}
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
+		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
+			getManagedBean().setViewOnly(true);
 	}
 
 	/**
@@ -555,7 +559,58 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
+			//#25956 - Start (view Contract Amendment url from notification)
+			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+			log.info("Check Putra Amendment preRenderView taskId*******"+taskId);
+			log.info("Check Putra Amendment preRenderView contractVerId*******"+contractVerId);
+			
+			if(contractVerId!=null) {
+				ctReqDTO = new ContractReqDTO();
+				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
+				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+				ctReqDTO.setUpdateAction(false);
+				setAmendmentContractVer(ctReqDTO);
+				ConstructTabSideMenu();
 
+				/*Start if statement if login user not approver / desk officer*/
+				String roleCode = null;
+				
+			
+				if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+					roleCode = RoleCode.CT_APPROVER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
+					roleCode = RoleCode.BPK_APPROVER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+					roleCode = RoleCode.DESK_OFFICER.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
+					roleCode = RoleCode.QCA_SECRETARY.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
+					roleCode = RoleCode.QCB_SECRETARY.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
+					roleCode = RoleCode.PBB_SECRETARY.value();
+				} else if (getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) {
+					roleCode = RoleCode.PPB_SECRETARY.value();
+				}
+
+				
+				CtActor contractAdminActor = retrieveContractActor(
+						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+						ctBackingBean.getManagedBean().getContractVer().getDocType(),roleCode);
+
+				if (contractAdminActor != null
+						&& !getFacesScopes().getUserSessionBean().getUserId().equals(contractAdminActor.getUser().getUserId())) {
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"", MessageUtils.getMessage(MessageConst.ERROR_700116,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+					return;
+				}/*end if statement*/
+
+				getManagedBean().setViewOnly(true);
+				getManagedBean().setTaskId(taskId);
+				return;
+			}
+			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				ConstructTabSideMenu();
 
@@ -628,6 +683,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setPrepareLOA(false);
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
+			
+//			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -771,6 +828,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 			}
 			//Enhancement #26186 end - retrieve disciplinary info
+			
+			//#25956 - Start Button Cancel If not isDisciplinaryAction
+//			String[] outcomecancel = new String[getManagedBean().getOutComes().length];
+//			int a = 0; 
+//			if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.longValue()
+//					&& !getManagedBean().isDisciplinaryAction()){
+//				
+//				outcomecancel = new String[getManagedBean().getOutComes().length+1];
+//				outcomecancel[a++] = BpmOutcomeConst.BPM_CANCEL;
+//			}
+//			for (String action : getManagedBean().getOutComes()) {
+//				outcomecancel[a++] = action;
+//			}
+//				getManagedBean().setOutComes(outcomecancel);
+				//#25956 - Start Button End If not isDisciplinaryAction	
+
+
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2015,7 +2089,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 
-		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
 							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
@@ -2337,8 +2411,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)
-				|| (BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !isSupplierRole()) {
+			
 			setSecretary();
 			validateContractAmendment(outcome);
 			// Temp setTextBeforeSign : DocNo+Type
@@ -2368,9 +2442,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)
 				&& isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+			preRejectContractAmendment(outcome);
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -2384,9 +2459,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		}
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+				RequestContext.getCurrentInstance().execute("cancelofficerConfirmDlg.show()");				
+			}else{
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");	
+			}			
 			return null;
-		} else {
+		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				validateContractAmendment(outcome);
+				RequestContext.getCurrentInstance().execute("supplierrejectConfirmDlg.show()");
+			
+			}else {
+				validateContractAmendment(outcome);
+				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");				
+			}
+			return null;
+		}else {
 			return saveContractAmendment(outcome);
 		}
 	}
@@ -6577,5 +6667,70 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return filteredCommitteeMembers;
 		}
 		//26753 - end
+		
+	//#25956 - Start
+		/**
+		 * The method used to authenticate user during reject for approval the contract amendment.
+		 * This method will invoke a confirmation dialog for user authentication.
+		 * 
+		 * @param  outcome  the user action on this contract
+		 * @return result of the saveContractAmendment process
+		 * @throws Exception   if an exception occurred
+		 * @see    Exception
+		 */
+		public String preRejectContractAmendment(String outcome) throws Exception {
+			if ((BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+				
+				setSecretary();
+				validateContractAmendment(outcome);
+				// Temp setTextBeforeSign : DocNo+Type
+				StringBuilder sb = new StringBuilder();
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+				sb.append(ContractConst.SEPRATE_LINE);
+				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+					sb.append(ContractConst.SEPRATE_LINE);
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+				}else {
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+					sb.append(ContractConst.SEPRATE_LINE);
+					sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				}
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(newOverallContractAmount());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(outcome);		
+				sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());	
+				sb.append(outcome);
+				getManagedBean().setTextBeforeSign(sb.toString());
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)
+					&& isSupplierRole()
+					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+//				preRejectContractAmendment(outcome);
+				validateContractAmendment(outcome);	
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				if(hasGovtSellerRole()) {
+					getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+//					preRejectContractAmendment(outcome);
+					RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				} else {			
+//					preRejectContractAmendment(outcome);
+					getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				}
+				return null;
+			} else {
+				return saveContractAmendment(outcome);
+			}
+		}
+		//#25956 - End
 
 	}
