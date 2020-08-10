@@ -1111,8 +1111,8 @@ public class ReportConst implements Serializable{
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY_MALAY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
 	
 	// YEP
-	public static final String FL_DOCTYPE_CO = "Contract Order";
-	public static final String FL_DOCTYPE_PO = "Purchase Order";
+	public static final String FL_DOCTYPE_CO = "CR";
+	public static final String FL_DOCTYPE_PO = "PR";
 	
 	public ReportConst(){}
 	
