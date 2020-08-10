@@ -65,12 +65,16 @@
 						<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smSupplier.smAppl.supplierType eq 'K'}"/>
 						<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
-						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}" rendered="#{not empty smSupplier.smAppl.pmRegStatus}"/>
-						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smSupplier.smAppl.pmRegStatus}"/>
+						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus}" />
+						<h:outputText value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{empty smSupplier.smAppl.pmRegStatus}" />
+						<h:outputText value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">
 						<p:commandLink onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()"
