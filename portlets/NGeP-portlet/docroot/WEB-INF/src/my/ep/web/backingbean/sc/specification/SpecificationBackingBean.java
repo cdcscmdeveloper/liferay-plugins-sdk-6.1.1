@@ -1826,6 +1826,21 @@ public class SpecificationBackingBean extends
 									recommnendationSetting);
 						}
 					}
+//to cater WIP data if technicalitemscoresetting null, set new				
+					if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+						technicalItemScoresetting
+								.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
+						this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+						
+						//set scoring item to default to 50
+						this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
+						this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
+
+					}
+					if (this.getManagedBean().getQt().isPartial() == true){
+						this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
+					}
 					// #21695 END FARID
 				}
 			}
