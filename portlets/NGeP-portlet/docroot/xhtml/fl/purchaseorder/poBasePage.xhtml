@@ -103,6 +103,12 @@
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
+					
+									<p:commandButton
+						value="#{lbl['lbl.fl.yep.carryForward']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.Proceed)}" disabled="#{flOrderBB.managedBean.disable}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.Proceed}" />
+					</p:commandButton>
 			</c:if>
 					
 					
