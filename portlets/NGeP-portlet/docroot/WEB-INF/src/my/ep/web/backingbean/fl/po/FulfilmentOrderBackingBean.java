@@ -236,36 +236,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
    	public String fulfillmentOrderAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
-		
-		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		/*#28375 - Logan - Beginning*/
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-	    
-		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-		reqDTO.setFlDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
-		reqDTO.setYep(getManagedBean().getFulfilmentOrder().isYep());
-		reqDTO.setStartDate(getManagedBean().getFlRequest().getStartDate());
-		log.info("getFacesScopes().getUserSessionBean()"+getFacesScopes().getUserSessionBean());
-		log.info("getUserRole("+getUserRole());
-		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		reqDTO.setUserRole(getUserRole());
-		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-		reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-		reqDTO.setSmSupplier(getManagedBean().getFlRequest().getSmSupplier());
-		if(!flBB.getManagedBean().getRemarkList().isEmpty()){
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-		}
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
-			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());				
-		}
-		reqDTO.setTaskId(getManagedBean().getTaskId());
-		reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
-	
-		/*Ending*/
+		IFulfilmentOrderSO fulfilmentOrderSO = null;		
 		try {
 			validateFulfillmentOrder(action);			
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			FlFulfilmentOrder flOrder = null;
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
@@ -282,13 +258,28 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}			
 			}
 			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD) &&
-					getManagedBean().getFulfilmentOrder()!=null && getManagedBean().getFulfilmentOrder().getSapOrderNo() != null){
-				String sapOrderNo = checkSapOrderNo(getManagedBean().getFulfilmentOrder().getDocNo());
-
-				if(sapOrderNo!=null){
-					getManagedBean().getFulfilmentOrder().setSapOrderNo(sapOrderNo);
-				}			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
+				/*#28375 - Logan - Beginning*/				
+			    
+				reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+				reqDTO.setFlDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+				reqDTO.setYep(getManagedBean().getFulfilmentOrder().isYep());
+				reqDTO.setStartDate(getManagedBean().getFlRequest().getStartDate());
+				log.info("getFacesScopes().getUserSessionBean()"+getFacesScopes().getUserSessionBean());
+				log.info("getUserRole("+getUserRole());
+				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				reqDTO.setUserRole(getUserRole());
+				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+				reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+				reqDTO.setSmSupplier(getManagedBean().getFlRequest().getSmSupplier());
+				if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+					reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+				}
+				reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+				reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+				
+				/*Ending*/
+						
 			}
 			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
