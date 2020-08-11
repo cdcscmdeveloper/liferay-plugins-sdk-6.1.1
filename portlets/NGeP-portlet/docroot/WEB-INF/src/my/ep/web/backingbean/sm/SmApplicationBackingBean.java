@@ -5096,10 +5096,15 @@ public class SmApplicationBackingBean extends
 
 			List<SmSupplierCategory> categories = getManagedBean().getDeleteNewApplCategoryList();
 
-			// 28391: Disciplinary Action - start - <28391>
+			// 28391: Disciplinary Action - start - <
+
 			List<SmSupplierCategory> activeCategoryList = getManagedBean().getActiveCategoryList();
 			boolean flagProceedDeleteCategory = true;
-
+		    // 28660: Disciplinary Action - start
+			boolean flagProceedDeleteCategoryAddChecking = true; 
+			// 28660: Disciplinary Action - end
+			
+			
 			for (SmSupplierCategory eachActiveCategory : activeCategoryList) {
 
 				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
@@ -5107,12 +5112,28 @@ public class SmApplicationBackingBean extends
 						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
 					flagProceedDeleteCategory = false;
 				}
+				
+				// 28660: Disciplinary Action - start
+				if (eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+						eachActiveCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+						&& eachActiveCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+						&& eachActiveCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+					flagProceedDeleteCategoryAddChecking = false;
+				}
+				// 28660: Disciplinary Action - end
 			}
 			// 28391: Disciplinary Action - end - <28391>
 
 			// 28391: Disciplinary Action - Start - <28391>
-			if (flagProceedDeleteCategory) {
-
+			// 28660: Disciplinary Action - start
+			if (flagProceedDeleteCategory && flagProceedDeleteCategoryAddChecking || flagProceedDeleteCategory 
+					&& !flagProceedDeleteCategoryAddChecking) {
+				// 28660: Disciplinary Action - end
 				deleteCatCodes(categories);
 
 				// API FOR LIST OF OVERLAPPING CATEGORIES
@@ -5121,17 +5142,40 @@ public class SmApplicationBackingBean extends
 				initPhysicalConsultingCatcode();
 
 			} else {
-
+				// 28660: Disciplinary Action - start
+				boolean flagProceedDeleteCategoryFirstCheck = false;
+				boolean flagProceedDeleteCategorySecondCheck = false;
+				boolean flagProceedDeleteCategoryFinalCheck = false; 
+				
 				for (SmSupplierCategory eachSelectedCategory : categories) {
 					
 					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
 							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
 							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("09")) {
-						flagProceedDeleteCategory = true;
+						flagProceedDeleteCategoryFirstCheck = true;
+					}
+					
+					if (eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04") || 
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05") ||
+							eachSelectedCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")
+							&& eachSelectedCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")
+							&& eachSelectedCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")){
+						flagProceedDeleteCategorySecondCheck = true;
 					}
 				}
+				
+				if(flagProceedDeleteCategorySecondCheck && flagProceedDeleteCategoryFirstCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} else if (!flagProceedDeleteCategorySecondCheck){
+					flagProceedDeleteCategoryFinalCheck = true;
+				} 
 
-				if (flagProceedDeleteCategory) {
+				if (flagProceedDeleteCategoryFinalCheck) {
+					// 28660: Disciplinary Action - end
 					deleteCatCodes(categories);
 
 					// API FOR LIST OF OVERLAPPING CATEGORIES
