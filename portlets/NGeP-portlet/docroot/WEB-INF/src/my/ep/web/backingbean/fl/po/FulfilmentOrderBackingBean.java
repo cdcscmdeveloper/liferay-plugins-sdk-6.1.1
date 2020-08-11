@@ -67,6 +67,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.fl.FlYepReqDTO;
+import my.ep.dto.fl.FlYepResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -234,14 +236,52 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 *  navigate to acknowledge page.
 	 *  @throws IOException 
 	 */
+
    	public String fulfillmentOrderAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
-		IFulfilmentOrderSO fulfilmentOrderSO = null;		
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+
+		/*28375 - Logan - Update YepTaskList*/
+		IFulfilmentYepSO FulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
+		FlYepReqDTO yepReqDTO = new FlYepReqDTO();
+		FlYepResDTO yepResDTO =null;
+
+		/*End Update task list*/
+		/*#28375 - Logan - Beginning*/
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+	    
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+		
+		reqDTO.setFlDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+		reqDTO.setYep(getManagedBean().getFulfilmentOrder().isYep());
+		reqDTO.setStartDate(getManagedBean().getFlRequest().getStartDate());
+		log.info("getFacesScopes().getUserSessionBean()"+getFacesScopes().getUserSessionBean());
+		log.info("getUserRole("+getUserRole());
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(getUserRole());
+		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+		reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+		reqDTO.setSmSupplier(getManagedBean().getFlRequest().getSmSupplier());
+		if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+		}
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+			yepReqDTO.setCarryFoward(true);
+			yepReqDTO.setProgressStatus((long) 4);
+			FulfilmentYepSO.updateFlYepTaskList(yepReqDTO);
+			log.info("Update task list carry forward as true");
+		}
+		reqDTO.setTaskId(getManagedBean().getTaskId());
+		reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+	
+		/*Ending*/
 		try {
 			validateFulfillmentOrder(action);			
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			FlFulfilmentOrder flOrder = null;
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
@@ -258,29 +298,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}			
 			}
 			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
-				/*#28375 - Logan - Beginning*/				
-			    
-				reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-				reqDTO.setFlDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
-				reqDTO.setYep(getManagedBean().getFulfilmentOrder().isYep());
-				reqDTO.setStartDate(getManagedBean().getFlRequest().getStartDate());
-				log.info("getFacesScopes().getUserSessionBean()"+getFacesScopes().getUserSessionBean());
-				log.info("getUserRole("+getUserRole());
-				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-				reqDTO.setUserRole(getUserRole());
-				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-				reqDTO.setSmSupplier(getManagedBean().getFlRequest().getSmSupplier());
-				if(!flBB.getManagedBean().getRemarkList().isEmpty()){
-					reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-				}
-				reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_CARRYFORWARD);
-				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
-				
-				/*Ending*/
-						
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD) &&
+					getManagedBean().getFulfilmentOrder()!=null && getManagedBean().getFulfilmentOrder().getSapOrderNo() != null){
+				String sapOrderNo = checkSapOrderNo(getManagedBean().getFulfilmentOrder().getDocNo());
+
+				if(sapOrderNo!=null){
+					getManagedBean().getFulfilmentOrder().setSapOrderNo(sapOrderNo);
+				}			
 			}
 			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -422,15 +446,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}	
 			else {
-				//throw new EpException("Failed.");
-				//28377
-				return null;
-				// end 28377
+				throw new EpException("Failed.");
 			}
 		} finally {
 			fulfilmentOrderSO = null;
 		}
 	}
+   	
    	
  	/**
 	 * Validate fulfillment order before submit or save action.
@@ -2060,14 +2082,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}*/
 		
 	}
-	
-	//26279 - start
+    //26279 - start
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
 		RequestContext.getCurrentInstance().execute(
 				"disciplinaryActionHistoryDlg.show();");
 	}
+
 	//26279 - end
 	//#28374	Vinod Start
 	public String cancelCarryForwardAction(String action) throws IOException {
