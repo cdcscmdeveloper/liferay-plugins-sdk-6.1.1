@@ -18,4 +18,5 @@ public class BpmOutcomeConst {
 	public static final String BPM_CLOSE_MANUAL = "CLOSE MANUAL";
 	/*#28375 - Logan*/
 	public static final String BPM_CARRY_FORWARD = "CARRY FORWARD";
+	public static final String BPM_PROCEED = "PROCEED";
 }
