@@ -73,6 +73,9 @@ public class CommonApplBackingBean extends
 	public boolean isPoSdoUser = false;
 
 	public void preRenderView() {
+		try{
+			
+		
 		//LOG : 26549 : SLA Monitoring
 		long startTime = System.currentTimeMillis();
 		log.info("-------ComAppl prerender view-------");
@@ -781,6 +784,9 @@ public class CommonApplBackingBean extends
 				SMProcessNameConst.COMPLETE_SV_REPORT)) {
 			siteVisitTask(resDTO, taskId, isClaim);
 		}
+	}catch(Exception e){
+		e.printStackTrace();
+	}
 
 	}
 
