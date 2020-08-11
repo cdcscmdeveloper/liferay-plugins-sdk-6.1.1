@@ -402,15 +402,22 @@
 							        	icon="ui-icon-amendment"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
 					                    <!-- end 28377 -->		
-						<!-- #28375- Beginning Logan -->
-						<c:if test="#{flYep.statusId eq '41005' || flYep.statusId eq '41505' || flYep.statusId eq '40050'}">
-						
-						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
+					                    
+					                    
+					            <p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
 							        	icon="ui-icon-fl-cancel"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
-					</c:if>
+					
+						<!-- #28375- Beginning Logan -->
+					
+						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.getPhase == 3}"
+							        	icon="ui-icon-fl-cancel"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					
 					<!-- #28375- Ending Logan-->
 					<!-- #28374	Vinod Start -->
 						<p:menuitem value="#{lbl['lbl.fl.yep.cancel']}"  
