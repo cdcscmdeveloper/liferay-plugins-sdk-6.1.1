@@ -101,7 +101,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{empty smSupplier.typeDisciplinaryAction}"
 							oncomplete="blockWidget.hide()"
-							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl,'C')}"
 							process="@this" partialSubmit="true" update="@form"
 							style="padding-right:5px;">
 							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
@@ -109,7 +109,7 @@
 						<p:commandLink onstart="blockWidget.show()"
 							rendered="#{not empty smSupplier.typeDisciplinaryAction}"
 							oncomplete="blockWidget.hide()"
-							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, 'D')}"
 							process="@this" partialSubmit="true" update="@form"
 							style="padding-right:5px;">
 							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
