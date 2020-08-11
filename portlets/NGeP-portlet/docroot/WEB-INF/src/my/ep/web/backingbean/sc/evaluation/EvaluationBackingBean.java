@@ -2258,7 +2258,10 @@ public class EvaluationBackingBean extends
 				} else if (this.getManagedBean().getScQt()
 						.isTechEvaluationReq()) {
 					this.getManagedBean().setEvaluatioStageActiveIndex(2);//#25138
-				}
+					//#28685 Bug - Start
+					this.getManagedBean().setTabTechnicalIndex(2);
+					//#28685 Bug - End
+				}	
 
 			}
 
@@ -2269,7 +2272,14 @@ public class EvaluationBackingBean extends
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(2);//#25138
 				this.getManagedBean().setTabFinancialIndex(3);
-			}
+			//#28685 Bug - Start
+				if(!this.getManagedBean().getScQt().isDemoRequired()) {
+				   this.getManagedBean().setTabTechnicalIndex(2);
+				}else if(this.getManagedBean().getScQt().isDemoRequired()){
+					this.getManagedBean().setTabTechnicalIndex(3);
+				}
+			//#28685 Bug - End 
+			}		
 			this.getManagedBean().setSummaryViewBy("");
 			this.getManagedBean().setFinancialSummaryView("");
 			/** #21695 Farid */
@@ -6853,8 +6863,14 @@ public class EvaluationBackingBean extends
 
 						if (this.getManagedBean()
 								.getEvaluatioStageActiveIndex() < 2) {
-							retriveOneTierWithoutTechnicalFinancialSupplierSummary();
-							// this.getManagedBean().setComplianceActiveIndex(2);
+							//#28685 Bug - Start
+							if (!this.getManagedBean().getScQt().isTechEvaluationReq()) {
+								retriveOneTierWithoutTechnicalFinancialSupplierSummary();
+							}
+							else if (this.getManagedBean().getScQt().isTechEvaluationReq()) {
+								retriveSummaryEvaluationStage();
+							}
+							//#28685 Bug - End
 							outputTab = 2;
 
 						}else if(this.getManagedBean()
@@ -12841,7 +12857,9 @@ private void retriveCommitteeRemarksList(){
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 
 		try {
-
+			//#28685 Bug - Start
+			this.getManagedBean().setTabTechnicalIndex(2); 
+			//#28685 Bug - End
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
 					|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
