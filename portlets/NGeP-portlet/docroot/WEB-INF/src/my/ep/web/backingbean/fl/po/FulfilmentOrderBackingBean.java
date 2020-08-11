@@ -276,7 +276,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 				}
 				reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-				reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_CARRYFORWARD);
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
 				
 				/*Ending*/
 						
