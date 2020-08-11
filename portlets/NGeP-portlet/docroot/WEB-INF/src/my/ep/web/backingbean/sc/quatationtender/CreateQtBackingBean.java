@@ -860,10 +860,11 @@ public class CreateQtBackingBean extends
 			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
-			else if(amount.intValue()==20000){
+			/*	ruzaimah comment
+ 			else if(amount.intValue()==20000){
 				log.info("============intvalueCodesExecuted======");
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
-			}
+			}*/
 			// 25729#174 end
 		
 			//End - 25729
