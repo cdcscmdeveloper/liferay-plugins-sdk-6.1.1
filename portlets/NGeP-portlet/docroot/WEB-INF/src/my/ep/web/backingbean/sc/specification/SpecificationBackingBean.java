@@ -1801,15 +1801,6 @@ public class SpecificationBackingBean extends
 								.getTechnicalScoreSetting()) {
 							this.getManagedBean().setTechnicalScoreSetting(
 									recommnendationSetting);
-							//set scoring item to default to 50
-// #21695 START FARID 30/7/2020
-							if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-								if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
-									this.getManagedBean().setTechnicalItemScoreSetting(
-											recommnendationSetting);
-								}
-// #21695 START FARID END 30/7/2020			
-							}
 						}
 					}
 
@@ -1819,29 +1810,40 @@ public class SpecificationBackingBean extends
 									recommnendationSetting);
 						}
 					}
-					// #21695 START FARID
+// #21695 START FARID
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 						if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
 							this.getManagedBean().setTechnicalItemScoreSetting(
 									recommnendationSetting);
 						}
 					}
-//to cater WIP data if technicalitemscoresetting null, set new				
-					if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
-						ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
-						technicalItemScoresetting
-								.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
-						this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+//TO CATER WIP DATA IN TECH SPEC PREPARE SCORING					
+					if(this.getManagedBean().getTechnicalItemScoreSetting() == null){
+						int count = 0;
+						for(ScQtScoreSetting checkWipTech : resDTO
+								.getScoreSettingResultBean().getResultList()){
 						
-						//set scoring item to default to 50
-						this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
-						this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
-
+									if(checkWipTech!=null){
+										count++;
+									}
+							
+						}
+							if(count < 3){
+								ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+								technicalItemScoresetting
+										.setPassingScore(retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE));
+								this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+								
+								//set scoring item to default to 50
+								this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
+								this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
+								//set weightage to false
+								if (this.getManagedBean().getQt().isPartial() == true){
+									this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
+								}	
+							}
 					}
-					if (this.getManagedBean().getQt().isPartial() == true){
-						this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
-					}
-					// #21695 END FARID
+// #21695 END FARID
 				}
 			}
 			settinglist = null;
@@ -10574,7 +10576,13 @@ public class SpecificationBackingBean extends
 				if (demoScoreSetting != null) {
 					specReqDTO.setScoreSetting(demoScoreSetting);
 				}
-
+//#21695 farid Start			
+				ScQtScoreSetting technicalItemScoreSetting = this.getManagedBean()
+						.getTechnicalItemScoreSetting();
+				if (technicalItemScoreSetting != null) {
+					specReqDTO.setScoreSetting(technicalItemScoreSetting);
+				}
+//#21695 End
 				specReqDTO.setCheckLists(technicalScoring);
 				specReqDTO
 						.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
