@@ -123,7 +123,7 @@
 					<h:outputText value="#{tasks.poRecommendation}"/>
 					<br />
 					
-					<h:outputText value="#{tasks.poRemarks}" rendered="#{not empty tasks.poRemarks}"/>
+					<h:outputText value="Remarks :&lt;br/&gt;#{tasks.poRemarks}" escape ="false" rendered="#{not empty tasks.poRemarks}"/>
 					<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{empty tasks.poRemarks}"/>
 				</p:column>
 			</p:dataTable>
