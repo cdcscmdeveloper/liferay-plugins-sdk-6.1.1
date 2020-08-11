@@ -98,6 +98,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -116,6 +117,8 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
+import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -125,6 +128,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.ReasonHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -2681,7 +2685,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void changeRoleAndProceed() {
-		//start loop list #27239
+		//start loop list #28454
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
 				//27951
 				if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
@@ -2693,7 +2699,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					personnel.setEquityOwner(false);
 					personnel.setDirector(false);
 					this.getManagedBean().setCheckRoleSSM(true);
+					//START 28454
+					if(this.getManagedBean().isResubmitAppl()){						
+						reqDTO.setPersonnelId(personnel.getPersonnelId());			
+						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
+						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
+						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
+						//update latest data to active supplier admin
+						resDTO = personnelSO.savePersonnelRecord(reqDTO);
+						if(!resDTO.isSuccessful()){
+							throw new EpException(MessageConst.ERROR_776106);
+						}else{
+							//close popup
+						}
+					}
+					//END 28454
+					
 				}
+				
+				
+
 		}
 	}
 
@@ -2763,8 +2789,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	
-	//SSM #27264
-		public void checkSSMValid(SmSupplier smSupplier){
+	//SSM #28454
+		public void checkSSMValid(SmSupplier smSupplier,PostSupplierRegistrationManagedBean postRegBean){
 			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
 				//checking with ssm
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
@@ -2797,6 +2823,46 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 						this.getManagedBean().setStatusDescFromSSM(sb.toString());
 						throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
+					}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
+						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
+						SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(postRegBean.getSmSupplier().getSupplierId(), "N");
+						if(appl == null){
+							return;
+						}
+						List<SmPersonnel> personnelsRole = postRegBean.getPersonnelsRole();
+						if(personnelsRole != null && personnelsRole.size() <=0){
+							for(SmPersonnel personnel :  appl.getSmPersonnels()){
+								if (personnel.isEquityOwner() || personnel.isDirector()) {
+									if(personnel.getEpRole() != null){
+										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
+										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
+										if(personnelDirectorSSM == null && personnelSSM == null){
+											personnelsRole.add(personnel);
+										}
+									}
+								}
+							}
+							
+							if(personnelsRole != null && personnelsRole.size() > 0) {
+								postRegBean.setDontGetSsmData(false);
+								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());	
+								postRegBean.setShowPopup(true);
+								postRegBean.setPersonnelsRole(personnelsRole);
+								//RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+								//return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
+							}
+						}else{
+							postRegBean.setShowPopup(false);
+							//set latest role to personnel
+							/*for(SmPersonnel personnel :  personnelsRole){
+								SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), postRegBean.getSmAppl().getSmPersonnels(), "identificationNo");
+								if(personnelActive != null){
+									//copy latest data to supplier admin
+									String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management","downgradeRoleSsm"};
+									EntityHelper.copyEntityPropertiesOnly(personnel,personnelActive,copyEquityOwner);
+								}
+							}*/
+						}
 					}
 					//END 27329
 				} else{					

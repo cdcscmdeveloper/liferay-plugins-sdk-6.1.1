@@ -102,6 +102,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean checkRoleSSM=false;
 	//27239
 	private boolean dontGetSsmData = false;
+	//28454
+	private boolean resubmitAppl = false;
+	private boolean showPopup = false;
 
 	/**
 	 * @return the token
@@ -664,6 +667,22 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setDontGetSsmData(boolean dontGetSsmData) {
 		this.dontGetSsmData = dontGetSsmData;
+	}
+
+	public boolean isShowPopup() {
+		return showPopup;
+	}
+
+	public void setShowPopup(boolean showPopup) {
+		this.showPopup = showPopup;
+	}
+
+	public boolean isResubmitAppl() {
+		return resubmitAppl;
+	}
+
+	public void setResubmitAppl(boolean resubmitAppl) {
+		this.resubmitAppl = resubmitAppl;
 	}
 	
 	
