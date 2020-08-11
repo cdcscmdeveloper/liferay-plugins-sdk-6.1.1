@@ -314,8 +314,10 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					if(path1.contains(RESUBMIT_APPLICATION)){
 						this.getManagedBean().setResubmitAppl(true);
 					}
-					
+					log.info("pageNavigate------------"+path1);
 					checkSSMValid(supplier,this.getManagedBean());
+					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
+					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
 						proceed =false;
 						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
