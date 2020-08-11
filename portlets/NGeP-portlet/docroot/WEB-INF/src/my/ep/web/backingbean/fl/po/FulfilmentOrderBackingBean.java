@@ -1109,12 +1109,28 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		IFulfilmentYepSO FulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
+		FlYepReqDTO yepReqDTO = new FlYepReqDTO();
+		FlYepResDTO yepResDTO =null;
 		
 		reqFeeDTO.setOrgProfileId((long) 1955);
 		resFeeDTO = feeExemptionsSO.getFeeExemptionsYepProcessing(reqFeeDTO);
 
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar currTime = Calendar.getInstance();
+		
+		if(action==BpmOutcomeConst.BPM_PROCEED){
+			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+			yepReqDTO.setCarryFoward(true);
+			FulfilmentYepSO.updateFlYepTaskList(yepReqDTO);
+			log.info("Set carry forward as true");
+			
+			String messageCode = "";
+
+			messageCode = MessageConst.INFO_700033;
+
+			successMessage(messageCode, "", "", Boolean.TRUE);
+		}
 
 		try {
 			Date d1 = df.parse(df.format(currTime.getTime()));
