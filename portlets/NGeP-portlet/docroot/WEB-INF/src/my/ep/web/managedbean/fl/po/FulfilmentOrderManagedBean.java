@@ -93,6 +93,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	/*#28375 Logan*/
 	private String carryForward="";
+	private String Proceed="";
+	private boolean disable;
 	private String buttonVal;
 	private String backToPrevious;
 	private List<FlRemark> previousRemarkList;
@@ -1506,6 +1508,23 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setCarryForward(String carryForward) {
 		this.carryForward = carryForward;
 	}
+	
+	public String getProceed() {
+		return Proceed;
+	}
+
+	public void setProceed(String proceed) {
+		Proceed = proceed;
+	}
+	
+	public boolean isDisable() {
+		return disable;
+	}
+
+	public void setDisable(boolean disable) {
+		this.disable = disable;
+	}
+	
 	/*#28375 - Ending Logan*/
 	
 	//#28374	Vinod Start
