@@ -150,9 +150,6 @@
 					           </h:outputText>				             
 			        </f:facet>
 				   </p:cellEditor>
-				    <h:outputText value="#{agencyData.effDate}" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">				  					
-					          <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-					           </h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"
