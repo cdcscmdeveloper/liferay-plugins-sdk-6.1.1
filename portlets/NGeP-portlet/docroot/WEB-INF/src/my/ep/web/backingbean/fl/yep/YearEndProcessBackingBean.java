@@ -561,10 +561,10 @@ public class YearEndProcessBackingBean extends
 		String orderN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderN");
 		String carryForward = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("carryForward");
 		String progressStatus = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("progressStatus");
+		String phase = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("phase");
 		
 		
-		
-		 if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+		if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 				reqDTO.setFlOrderId(Long.valueOf(flDocId));
@@ -574,6 +574,9 @@ public class YearEndProcessBackingBean extends
 				
 				flOrderBB.renewSesionObject();
 				flOrderBB.getManagedBean().setButtonVal(buttonVal);
+				if(BpmOutcomeConst.BPM_CARRY_FORWARD.equalsIgnoreCase(buttonVal)&& phase=="3"){
+					flOrderBB.getManagedBean().setDisable(false);
+				}
 				/*#28375 - Logan - Beginning*/
 				flOrderBB.getManagedBean().setTaskId(taskId);
 				/*Ending*/
