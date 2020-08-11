@@ -2134,7 +2134,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
-			if(reqDTO != null && action.equals(BpmOutcomeConst.BPM_CANCEL_YEP) && getManagedBean().getIscarryForward().equals("true")){
+			
+			if(reqDTO != null && action.equals(BpmOutcomeConst.BPM_CANCEL_YEP)){
 				//retrieve pm_fee_exemption records
 				resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
 				Date dtEff = null;
