@@ -2139,6 +2139,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
 				Date dtEff = null;
 				Date dtExp = null;
+				reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_DELETION);
+				
 				if(resFDTO.getResultBean() != null && resFDTO.getResultBean().getResultList().size() > 0){
 					
 					for (PmFeeExemption feeExemption : resFDTO.getResultBean().getResultList()) {
@@ -2150,12 +2152,10 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}
 					
 					if(systemDate.after(dtEff) && systemDate.before(dtExp)){
-						resDTO = fulfilmentOrderSO.cancelCarryForwardAction(reqDTO);
-					}else{
-						resDTO = new FulfilmentResDTO();
-						resDTO.setSuccessful(false);
+						reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_DELETE_YEP);
 					}
 				}
+				resDTO = fulfilmentOrderSO.cancelCarryForwardAction(reqDTO);
 			}
 			
 			if(resDTO.isSuccessful()) {
