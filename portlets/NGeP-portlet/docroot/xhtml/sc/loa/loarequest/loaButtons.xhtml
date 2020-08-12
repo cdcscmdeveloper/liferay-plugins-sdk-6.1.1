@@ -37,18 +37,12 @@
 					style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOADetailBackingBean.saveAction(false)}"
-					rendered="#{isEditableStatus and !isSaveHideSqExpired}" process="@form" update="@form"
+					rendered="#{isEditableStatus}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
 					action="#{lOADetailBackingBean.submitAction}" process="@form"
-					update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid}"
-					action="#{lOADetailBackingBean.cancelPrepareLoaAction}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 			</c:if>
@@ -58,8 +52,7 @@
 			
 			   <p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOADetailBackingBean.saveAction(false)}"
-					rendered="#{(isPendingApprovalStatus or isPendingRevApprovalStatus or isPendingRevisionStatus) and !isTrackingDairyView
-								 and isSqStillValid}"
+					rendered="#{(isPendingApprovalStatus or isPendingRevApprovalStatus or isPendingRevisionStatus) and !isTrackingDairyView}"
 				    process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					
@@ -71,45 +64,26 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-							
-							<h:panelGroup rendered="#{bpmAction != 'CANCEL'}">
-	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
-								<!-- changes the calling action   -->
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{!isPendingVerification and isSqStillValid}"
-									oncomplete="blockWidget.hide();"
-									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
-	
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{isPendingVerification and isSqStillValid}"
-									oncomplete="blockWidget.hide();"
-									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
-								 <!-- 20190405@asyrafhaziq - CR(25062)- End -->
-							</h:panelGroup>	
-							
-							<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
-								<p:commandButton value="#{lbl['lbl.btn.reject']}"
-								rendered="#{!isSqStillValid}"
-								action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}" process="@form"
-								update="@form" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" />
-							</h:panelGroup>
-							
-							<h:panelGroup rendered="#{bpmAction == 'CANCEL'}">
-								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-								rendered="#{!isSqStillValid}"
-								action="#{lOADetailBackingBean.cancelLoa(bpmAction)}" process="@form"
-								update="@form" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" />
-							</h:panelGroup>					
+                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
+							<!-- changes the calling action   -->
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								rendered="#{!isPendingVerification}"
+								oncomplete="blockWidget.hide();"
+								action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+								update="#{isReject ? '@this' : '@form'}" />
 
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								rendered="#{isPendingVerification}"
+								oncomplete="blockWidget.hide();"
+								disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
+								action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+								update="#{isReject ? '@this' : '@form'}" />
+							 <!-- 20190405@asyrafhaziq - CR(25062)- End -->					
+							
 						</ui:repeat>
 					</ui:define>
 				</ui:decorate>
