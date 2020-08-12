@@ -2483,7 +2483,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 					// Only DO Actor with edit access right. 
 					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if (isQTMaintenanceScreen() || isQTSearchScreen()) {
+					if ((isQTMaintenanceScreen() || isQTSearchScreen()) && !isPbbSecretary()) { //#27668
 						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 					}
 				}
@@ -7005,7 +7005,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	private boolean isPbbSecretary() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value());
+		return  facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value());  //#27668
 	}
 	
 	/* Bug #27412 START - CHANGE PRIVATE TO PUBLIC TO ALLOWED METHOD CALLED FROM FRONT*/
@@ -8822,6 +8822,36 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
     	return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";	
     	} //#17376-End onlineBiddingcodes
+    
+	/** 27668-start
+	 * Get PTJ condition for construct the LOV listing
+	 * 
+	 * @return String
+	 */
+	public String getPTJMaintenaceCondition() {
+		debugLogger("getPTJCondition");
+		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
+		Long MinistryOrgProfileId = qtnTenderSearchBean.getMinistryProfile()
+				.getOrgProfileId();
+		Long PTJGroupOrgProfileId = qtnTenderSearchBean.getPtjGroupProfile()
+				.getOrgProfileId();
+		
+		if (null != MinistryOrgProfileId) {
+			condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+			condition.append(OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + MinistryOrgProfileId);
+		} 
+		 else if (null != PTJGroupOrgProfileId) {
+				condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+				condition.append(OrgProfileUtil
+						.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+						+ SourcingConstants.LOV_CONDITION_SEPARATOR + PTJGroupOrgProfileId);
+			}
+		return condition.toString();
+	} //#27668-End
+
 }
 
 
