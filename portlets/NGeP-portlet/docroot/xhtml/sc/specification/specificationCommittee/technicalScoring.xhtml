@@ -23,7 +23,8 @@
 				<!-- #21695 FARID START DISABLE SCQT PARTIAL-->
 
 							<p:selectOneRadio required="true"
-								disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.qt.partial and specificationBackingBean.managedBean.qt.partial ne null}"
+								disabled="#{specificationBackingBean.managedBean.readOnly or 
+								specificationBackingBean.managedBean.qt.partial ne null and specificationBackingBean.managedBean.qt.partial}"
 								label="#{lbl['lbl.sc.spec.weightage']}" id="techWeightage"
 								value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 								<f:selectItems
@@ -257,12 +258,11 @@
 				<td><p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.technicalItemScoreSetting.passingScore}">
-						<p:ajax event="change" process="@this" partialSubmit="true" />
+						<p:ajax event="change" process="@this" partialSubmit="true" 
+							listener="#{specificationBackingBean.checkTechnicalItemPassingScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"/>
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="3" integerOnly="true" />
-						<f:attribute name="min" value="50"></f:attribute>
-						<f:attribute name="max" value="100"></f:attribute>
 					</p:inputText> <p:spacer width="5"></p:spacer></td>
 			</tr>
 		</table>

@@ -9123,6 +9123,40 @@ public class SpecificationBackingBean extends
 		}
 
 	}
+	
+//#21695 Farid Start 12/8/2020
+		/**
+		 * Check technical Item passing score.check technical Item passing score null or less
+		 * than zero or greater than hundred.
+		 * 
+		 * @param technicalScoreSetting
+		 *            (ScQtScoreSetting technicalItemScoreSetting).
+		 */
+		public void checkTechnicalItemPassingScore(
+				ScQtScoreSetting technicalItemScoreSetting) {
+			if (null != technicalItemScoreSetting) {
+				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE);
+				if (null == technicalItemScoreSetting.getPassingScore()
+						|| technicalItemScoreSetting.getPassingScore().intValue() < 50) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_775155);
+				}
+				if (null != technicalItemScoreSetting.getPassingScore()
+						&& technicalItemScoreSetting.getPassingScore().intValue() > 100) {
+					this.getManagedBean().setActiveIndex(4);
+					throw new EpException(MessageConst.ERROR_760142);
+				}
+				if (null != passingScore
+						&& (technicalItemScoreSetting.getPassingScore().intValue() < passingScore
+								.intValue())) {
+					technicalItemScoreSetting.setPassingScore(new BigDecimal(50));
+					this.getManagedBean().setTechnicalItemScoreSetting(
+							technicalItemScoreSetting);
+					throw new EpException(MessageConst.ERROR_775155,
+							new String[] { String.valueOf(passingScore) });
+				}
+			 }
+		}
 
 	/**
 	 * Check financial passing score.check financial passing score null or less
@@ -10587,6 +10621,9 @@ public class SpecificationBackingBean extends
 						.isTechnicalUserScoringSchema());
 				technicalWeightageCalculate();
 				technicalItemScoreCalculate(this.getManagedBean()
+						.getTechnicalItemScoreSetting());
+	//#21695 farid start 12/8/2020
+				checkTechnicalItemPassingScore(this.getManagedBean()
 						.getTechnicalItemScoreSetting());
 				// #21695 START FARID
 				resDTO = specSO.saveQTDtl(specReqDTO);
@@ -16482,11 +16519,11 @@ public class SpecificationBackingBean extends
 	}
 	
 	/**
-	 * Calculate Financial Item score.calculate Item Financial Scores in
-	 * FinancialScoring Menu.
+	 * Calculate Technical Item score.calculate Item Technical Scores in
+	 * TechnicalScoring Menu.
 	 * 
 	 * @param financial
-	 *            (ScQtScoreSetting financialItem).
+	 *            (ScQtScoreSetting technical item).
 	 */
 	private void technicalItemScoreCalculate(ScQtScoreSetting technicalItem) {
 		try {
