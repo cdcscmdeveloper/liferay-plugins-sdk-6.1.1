@@ -44,14 +44,14 @@
 						<p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" />
 					</td>
 					<td colspan="3">
-						<ac:lov id="searchPtjAuth" lovId="PM_ORG_PROFILE_AUTH_TYPE"
+						<ac:lov id="searchPtjAuth" lovId="PM_ORG_PROFILE_PTJ"
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}" 
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile.orgName}"
 							postUpdateListener="qTDetailBB.postUpdateOrgProfileListener"
 							update="@form"
 							saveObject="qTDetailBB.managedBean.qtnTenderSearchBean.ptjProfile"
-							conditionField="recordStatus^1" />
+							conditionField="#{qTDetailBB.getPTJMaintenaceCondition()}" />
 						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" 
 							size="135" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
