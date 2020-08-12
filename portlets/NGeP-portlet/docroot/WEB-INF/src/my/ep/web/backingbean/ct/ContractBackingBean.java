@@ -1428,12 +1428,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-					overallContractAmount = contractAmt.getContractAmount().doubleValue();
+					overallContractAmount = contractAmt.getContractAmount().doubleValue();					
+					
 					if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
-						overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();
+						//28203				   
+						double gstAmt = 0.0;
+					    double StaxAmt = 0.0;
+					     if(contractAmt.getGstAmount() != null){
+					        gstAmt = contractAmt.getGstAmount().doubleValue();
+					       }	 
+					     if(contractAmt.getStaxAmount() != null){
+					    	 StaxAmt = contractAmt.getStaxAmount().doubleValue();
+						   }	 
+					     //overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();					    	 	 
+					     overallContractAmount += gstAmt + StaxAmt;
 					}
 					overallContractAmount = Double.valueOf(df.format(overallContractAmount));
 					break;
+					
 				}
 			}
 			if (ceilingAmt > overallContractAmount) {
