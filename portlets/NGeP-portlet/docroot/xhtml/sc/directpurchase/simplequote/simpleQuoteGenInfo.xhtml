@@ -187,7 +187,19 @@
 				</td>
 			</tr>
 
-			
+			<ui:fragment
+				rendered="#{!empty simpleQuoteBackingBean.managedBean.pidExpiryDate}">
+				<tr>
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.purchase.in.default.exp.date']}" /></td>
+					<td><p:calendar disabled="true" size="30"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+							value="#{simpleQuoteBackingBean.managedBean.pidExpiryDate}">
+						</p:calendar></td>
+
+				</tr>
+			</ui:fragment>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.start.date']}" /> <p:outputLabel
