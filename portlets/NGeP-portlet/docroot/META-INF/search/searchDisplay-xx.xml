@@ -792,6 +792,12 @@
 					<property name="bundleKey" value="lbl.pm.profiles.search.name" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="identificationNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.userdetails.idno" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="designation" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
