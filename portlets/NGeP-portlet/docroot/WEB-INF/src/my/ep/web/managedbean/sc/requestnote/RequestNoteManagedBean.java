@@ -329,16 +329,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     private boolean cancel = Boolean.FALSE;
 	
-	// 12177 - Start
-	/** The SQ end date */
-	private Calendar sqEndDate;
-	// 12177 - End
-	
 	private	Object[] selectedPrDtls;
-	
-	//12183 - Start
-	private boolean pidValidityExpired = false;
-	//12183 - End
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1934,22 +1925,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCancel(boolean cancel) {
 		this.cancel = cancel;
 	}
-	
-	// 12177 - Start
-	/**
-	 * @return the taskExpiryDate
-	 */
-	public Calendar getSqEndDate() {
-		return sqEndDate;
-	}
-
-	/**
-	 * @param taskExpiryDate the taskExpiryDate to set
-	 */
-	public void setSqEndDate(Calendar sqEndDate) {
-		this.sqEndDate = sqEndDate;
-	}
-	// 12177 - End
 
 	/**
 	 * @return the selectedPrDtls
@@ -1964,14 +1939,4 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedPrDtls(Object[] selectedPrDtls) {
 		this.selectedPrDtls = selectedPrDtls;
 	}
-	
-	//12183 - Start
-	public boolean isPidValidityExpired() {
-		return pidValidityExpired;
-	}
-
-	public void setPidValidityExpired(boolean pidValidityExpired) {
-		this.pidValidityExpired = pidValidityExpired;
-	}
-	//12183 - End
 }
