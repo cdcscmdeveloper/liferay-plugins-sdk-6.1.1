@@ -52,21 +52,7 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
 						action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right">
-			<c:choose>
-			<c:when test="#{purchaseRequestBackingBean.managedBean.isPidValidityExpired()}">
-			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						<ui:fragment rendered="#{(bpmAction eq 'REJECT')or(bpmAction eq 'CANCEL')}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								process="@form"
-								update="@form"
-								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	
-						</ui:fragment>	
-					</ui:repeat>
-			
-			</c:when>
-			<c:otherwise>
+					
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
@@ -75,10 +61,8 @@
 								update="@form"
 								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	
 					</ui:repeat>
-			</c:otherwise>
-			</c:choose>
-				</td>
 				
+				</td>
 				<c:if
 					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !purchaseRequestBackingBean.managedBean.isHyperLinkPage() }'>
 					<td colspan="4" style="text-align: right">	
