@@ -2190,7 +2190,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 							break;
 					}
 					
-					if(systemDate.after(dtEff) && systemDate.before(dtExp)){
+					if(dtEff != null && dtExp != null && systemDate.after(dtEff) && systemDate.before(dtExp)){
 						reqDTO.setActionCode(FulfilmentConst.IDD_ACTION_CODE_DELETE_YEP);
 					}
 				}
