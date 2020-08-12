@@ -2228,8 +2228,71 @@ public class TemplateSpecBackingBean extends
 					totalMaxScore = totalMaxScore.add(specAnswer
 							.getTplSpecQuestion().getMaxScore());
 				}
+				
+//#21695 Farid Start ... 12/8/2020				
+				TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
+						.equals(specMaster.getSpecTypeCode().getParameterCode());
+				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
+				if(!isFinancialSpec && !isPartial || !isFinancialSpec && isPartial || isFinancialSpec && !isPartial
+						 || isFinancialSpec && isPartial){
+					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
+							&& specAnswer.getTplSpecZoneQty()!=null 
+							&& specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
+						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+								ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+							specAnswer.setUserScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}else{
+							specAnswer.setAutoScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}
+						
+					}
+					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
+							&& specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))) {
+						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+								ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+							specAnswer.setUserScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}else{
+							specAnswer.setAutoScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}
+						
+					}
+					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
+							&& specAnswer.getTplSpecZoneQty()!=null 
+							&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 ) {
+						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+								ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+							specAnswer.setUserScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}else{
+							specAnswer.setAutoScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}
+						
+					}
+					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
+							&& specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 ) {
+						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+								ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+							specAnswer.setUserScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}else{
+							specAnswer.setAutoScore(BigDecimal.valueOf(0));
+							specAnswer.getTplSpecQuestion().setMaxScore(BigDecimal.valueOf(0));
+						}
+						
+					}
+				}
 			}
-
+//#21695 Farid END 12/8/2020
 			totalScoreStr = totalScore.toString() + " / "
 					+ totalMaxScore.toString();
 		}
