@@ -1530,18 +1530,20 @@ public class SupplierDataMaintenanceBackingBean extends
 				//26238 -  Disciplonary action - 28146 - end
 			}
 
-			//26238: Disciplinary Action - start - 28342
+			//26238: Disciplinary Action - start - 28342,28779
 			//28281 - start (bumi code)
-			if(getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+			if((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 					|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-					|| getManagedBean().isBlacklistOwnerOrDirector() && getManagedBean().isBumiputeraStatusCancel()
-					|| getManagedBean().isManufacturerStatusCancel()){
-				autoTickBumiCode(); 				 
+					|| getManagedBean().isBlacklistOwnerOrDirector() 
+					|| getManagedBean().isManufacturerStatusCancel() ) && getManagedBean().isBumiputeraStatusCancel()){
+				if (getManagedBean().isBumiputeraStatusCancel()){
+					autoTickBumiCode();  
+				}				 
 			} else if (getManagedBean().isBumiputeraStatusCancel()){
 				autoTickBumiCode();  
 			}
 			//28281 - end
-			//26238: Disciplinary Action - end - 28342
+			//26238: Disciplinary Action - end - 28342,28779
 			
 			//27815: Disciplinary Action - end -checking condition 
 			getManagedBean().setEditDisciplinaryAction(true);
