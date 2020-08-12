@@ -4,15 +4,12 @@
 package my.ep.web.backingbean.sc.loa;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -20,20 +17,12 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
-import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
@@ -55,9 +44,6 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	private static final long serialVersionUID = 1L;
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(DpLOABackingBean.class);
-	
-	/** The Flag */
-	private boolean sqExpiredMessageFlag = false;
 
 	/**
 	 * Instantiates a new dp loa backing bean.
@@ -96,6 +82,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			retrieveLOAList(sourceId);
 
 			// retrieveLOAList(2122L);
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);
@@ -151,11 +138,10 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 								.getStatusId();
 						
 						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							isCancelled = true;							
+							isCancelled = true;
+							
 						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
-								!QTStatusConst.LOA_COMPLETED.equals(statusId) && 
-								!QTStatusConst.LOA_CANCELLED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) &&
-								!QTStatusConst.LOA_REJECTED_DUE_TO_SIMPLE_QUOTE_VALIDITY_EXPIRED.equals(statusId) ) {
+								!QTStatusConst.LOA_COMPLETED.equals(statusId)) {
 							
 							continue;
 						}
@@ -216,49 +202,5 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		}
 
 		return null;
-	}
-	
-	/**
-	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
-	 */
-	public boolean isSqStillValid(Long currentStatusId){		
-		
-		Boolean validDate = true;	
-		Integer sqTimeValidity = null;
-		ScQuote scQuote = getManagedBean().getScRequestNote().getQuote();
-		
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}		
-		
-		if(scQuote != null){			
-			Date currentDate = new Date();
-			Date closingDate = scQuote.getEndDate();
-				
-			Calendar cal = Calendar.getInstance();
-			cal.clear(); 
-			cal.setTime(closingDate);
-			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-				
-			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-					validDate = false;
-					sqExpiredMessageFlag = true;
-				}
-			}					
-		}							
-		return validDate;	
 	}
 }
