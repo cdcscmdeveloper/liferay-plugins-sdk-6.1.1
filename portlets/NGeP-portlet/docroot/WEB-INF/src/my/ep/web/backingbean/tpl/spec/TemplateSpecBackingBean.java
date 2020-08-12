@@ -2251,6 +2251,7 @@ public class TemplateSpecBackingBean extends
 						
 					}
 					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
+							&& specAnswer.getTplSpecQuestion().getClQuantity() != null 
 							&& specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))) {
 						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
@@ -2278,6 +2279,7 @@ public class TemplateSpecBackingBean extends
 						
 					}
 					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
+							&& specAnswer.getTplSpecQuestion().getClQuantity() != null 
 							&& specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 ) {
 						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
