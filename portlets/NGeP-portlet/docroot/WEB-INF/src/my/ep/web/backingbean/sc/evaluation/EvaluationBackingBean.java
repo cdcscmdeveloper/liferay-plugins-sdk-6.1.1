@@ -6611,7 +6611,7 @@ public class EvaluationBackingBean extends
 					}
 					if(outputTab == 2){
 						retriveTechnicalEvaluationStage();
-						retriveComplianceTechnical();
+						retriveNonScoringComplianceTechnical();//#25138 Re-open 
 						this.getManagedBean().setTabFinancialIndex(0);
 						this.getManagedBean().setTabTechnicalIndex(1);
 							
@@ -6880,6 +6880,7 @@ public class EvaluationBackingBean extends
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
 							retriveFinancialEvaluationStage();
+							retriveNonScoringComplianceFinancial(true);
 							outputTab = 3;
 							this.getManagedBean().setTabFinancialIndex(1);
 							
@@ -13653,4 +13654,76 @@ private void retriveCommitteeRemarksList(){
 		return checkTecSpecNotOffer;
 	}
 	// FARID #21695 END
+	
+	//#25138 - Ahmaa Re open - start
+	public void retriveNonScoringComplianceTechnical() {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = null;
+		this.getManagedBean().setComplianceActiveIndex(0);
+		try {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
+			reqDTO.setIsScoring(SourcingConstants.NON_SCORING_COMPLIANCE_CHECKLIST);
+			reqDTO.setCompliance(null);
+			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+
+			resDTO = evaluationSO.retrieveCheckListsNonScoring(reqDTO);
+			
+			this.getManagedBean().setComplianceTechnicalCheckList(
+					resDTO.getCheckListResultBean().getResultList());
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
+			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
+			}
+		} finally {
+			evaluationSO = null;
+		}
+
+	}
+	//#25138 - end
+	
+	//#25138 Re open - start
+	/**
+	 * Retrieve non-scoring compliance financial.display all the financial checklist in
+	 * compliance stage financial checklist tab
+	 * 
+	 * 
+	 */
+	public void retriveNonScoringComplianceFinancial(boolean value) {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = null;
+		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
+		try {
+			if (this.getManagedBean().getScQt().isSampleReq() && value) {
+				this.getManagedBean().setComplianceActiveIndex(2);
+			} else {
+				if(value){
+				this.getManagedBean().setComplianceActiveIndex(1);
+				}
+			}
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			// this.getManagedBean().getScQt().getQtId()
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			reqDTO.setCompliance(null);
+			reqDTO.setIsScoring(SourcingConstants.NON_SCORING_COMPLIANCE_CHECKLIST);
+			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+			resDTO = evaluationSO.retrieveCheckListsNonScoring(reqDTO);
+
+			this.getManagedBean().setCompliancefinancialCheckList(
+					resDTO.getCheckListResultBean().getResultList());
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
+				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
+				}
+
+		} finally {
+			evaluationSO = null;
+		}
+
+	}
+	//#25138 - end
 }
