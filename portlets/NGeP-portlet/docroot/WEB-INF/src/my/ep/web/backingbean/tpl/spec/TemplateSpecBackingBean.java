@@ -2236,8 +2236,7 @@ public class TemplateSpecBackingBean extends
 				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
 				if(!isFinancialSpec && !isPartial || !isFinancialSpec && isPartial || isFinancialSpec && !isPartial
 						 || isFinancialSpec && isPartial){
-					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
-							&& specAnswer.getTplSpecZoneQty()!=null 
+					if (specAnswer.getTplSpecZoneQty()!=null 
 							&& specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
 						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
@@ -2250,8 +2249,7 @@ public class TemplateSpecBackingBean extends
 						}
 						
 					}
-					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
-							&& specAnswer.getTplSpecQuestion().getClQuantity() != null 
+					if (specAnswer.getTplSpecQuestion().getClQuantity() != null 
 							&& specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))) {
 						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
@@ -2264,8 +2262,7 @@ public class TemplateSpecBackingBean extends
 						}
 						
 					}
-					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
-							&& specAnswer.getTplSpecZoneQty()!=null 
+					if (specAnswer.getTplSpecZoneQty()!=null 
 							&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 ) {
 						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
@@ -2278,8 +2275,7 @@ public class TemplateSpecBackingBean extends
 						}
 						
 					}
-					if (specAnswer.getRatePerUom().equals(new BigDecimal(0.00)) 
-							&& specAnswer.getTplSpecQuestion().getClQuantity() != null 
+					if (specAnswer.getTplSpecQuestion().getClQuantity() != null 
 							&& specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 ) {
 						if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
