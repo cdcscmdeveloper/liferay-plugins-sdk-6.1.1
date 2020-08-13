@@ -57,6 +57,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> mailAddCityList;
 	private List<SelectItem> permAddCountryList;
 	private List<SelectItem> permAddStateList;
+	
+	//13320-Start
+	private List<SelectItem> mailAddDivisionList;
+	private List<SelectItem> permAddDivisionList;
+	private List<SelectItem> divisionList;
+	private Long divisionId;
+	private boolean divisionBox=true;
+	//13320-End
 	private List<SelectItem> permAddDistrictList;
 	private List<SelectItem> permAddCityList;
 	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
@@ -678,4 +686,44 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.suppInPunishment = suppInPunishment;
 	}
 	//END 27912 -  Disciplinary Action - 26238
+
+	public List<SelectItem> getMailAddDivisionList() {
+		return mailAddDivisionList;
+	}
+
+	public void setMailAddDivisionList(List<SelectItem> mailAddDivisionList) {
+		this.mailAddDivisionList = mailAddDivisionList;
+	}
+
+	public List<SelectItem> getPermAddDivisionList() {
+		return permAddDivisionList;
+	}
+
+	public void setPermAddDivisionList(List<SelectItem> permAddDivisionList) {
+		this.permAddDivisionList = permAddDivisionList;
+	}
+
+	public List<SelectItem> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<SelectItem> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
+	}
 }
