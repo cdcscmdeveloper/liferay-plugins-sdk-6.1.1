@@ -3376,7 +3376,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
 			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION
 			//22111 - START
-					|| getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION){
+					|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
+							.getStatusId().longValue())) {
 			//22211 - END	
 				log.info("(1)--->> " + outcome);
 				updateReviseBPMTaskAction(outcome);
