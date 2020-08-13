@@ -3365,6 +3365,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
+		log.info("outcome--->> " + outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
@@ -3440,7 +3441,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			param[0] = this.getManagedBean().getScLoa().getLoaNo();
 			param[1] = this.getManagedBean().getScQt().getQtNo();
 			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
-			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)){
+			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)
+				//#22211 - start
+					|| reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)){
+				//#22211 - end
 				if (procurementMode != null
 						&& procurementMode.getParameterCode().equals(
 								ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
