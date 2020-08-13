@@ -3365,9 +3365,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
-		log.info("outcome--->> " + outcome);
-		log.info("outcome 1--->> " + this.getManagedBean().getScLoa().getPmStatus().getStatusId());
-		log.info("outcome 2--->> " + getManagedBean().getScLoa().getPmStatus().getStatusId());
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
@@ -3375,19 +3372,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
 			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION
-			//22111 - START
+					//22111 - START
 					|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
-							.getStatusId().longValue())) {
-			//22211 - END	
-				log.info("(1)--->> " + outcome);
-				updateReviseBPMTaskAction(outcome);
+							.getStatusId().longValue())) {				
+				if (this.getManagedBean().getScQt() != null){
+					//22211 - END
+					updateReviseBPMTaskAction(outcome);				
+				//22111 - START
+				}else{
+					updateReviseBPMTaskActionWithoutQt(outcome);
+				}//22211 - END
 			}else{
-				log.info("(2)--->> " + outcome);
 				updateBpmTaskAction(outcome);
 			}
 			//Enhancement #21694 END
 		}else {
-			log.info("(3)--->> " + outcome);
 			updateBpmTaskAction(outcome);
 		}
 	}
@@ -3413,9 +3412,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
-		//#22211 - start
-		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
-		//#22211 - end
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -3450,10 +3446,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			param[0] = this.getManagedBean().getScLoa().getLoaNo();
 			param[1] = this.getManagedBean().getScQt().getQtNo();
 			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
-			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)
-				//#22211 - start
-					|| reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)){
-				//#22211 - end
+			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)){
 				if (procurementMode != null
 						&& procurementMode.getParameterCode().equals(
 								ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
@@ -3473,18 +3466,55 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								ParameterConst.PROCUREMENT_MODE_TENDER)) {
 					successMessage(MessageConst.INFO_700078,param);
 				}
-				// 22211 - start
-				else{
-					param[1] = reqDTO.getRequestNoteNo();
-					successMessage(MessageConst.INFO_700084,param);
-				}
-				// 22211 - end
 			}			
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}		
 	}
+		
+	//#22211 - Start
+	public void updateReviseBPMTaskActionWithoutQt(String outcome){
+		debugLogger("updateReviseBPMTaskActionWithoutQt");
+		
+		/*******************
+		 * INITIATE BPM REVISE
+		 */
+		
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		reqDTO.setPayLoad(getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setRoleCode(getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
+		if(resDTO.isSuccessful()){
+			/*******************
+			 * ACKNOWLEDGE_PAGE
+			 *******************/
+			String[] param = new String[3];
+			
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[1] = reqDTO.getRequestNoteNo();
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)){
+				successMessage(MessageConst.INFO_700085, param);
+			} else {
+				successMessage(MessageConst.INFO_700084, param);
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}		
+	}
+	//#22211 - End
 	
 	/**
 	 * Update bpm task action.
