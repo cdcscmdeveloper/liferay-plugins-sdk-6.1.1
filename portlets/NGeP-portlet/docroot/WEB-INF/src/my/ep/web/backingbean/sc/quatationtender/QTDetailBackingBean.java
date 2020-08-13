@@ -8506,52 +8506,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				ScQt scQt = this.getManagedBean().getQt();
 				Long statusId = scQt.getQtStatus().getStatusId();
 				boolean isBiddingCloseQT = false; 
-				
-				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true &&
-						statusId.equals(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT)){ 
-					isCloseQT = true; // 60033
-				}
-				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true &&
-						statusId.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH)){ 
-					isCloseQT = true; // 60034
-				}
-				if(scQt.getProposalValidityEndDate() == null && this.getManagedBean().isMaintanceFlow() == true && 
-						statusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)){
-					IQTDetailSO detailSO = BusinessDelegate.getInstance()
-				    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-					quationTenderReqDTO.setQtId(scQt.getQtId());
-					QuationTenderResDTO resDTOCMT = detailSO.closeQTstatusForCMT(quationTenderReqDTO);
-					if(resDTOCMT.isCloseQT() == true){
-						isCloseQT = true; 
-					}
-				}		
+						
 				if (scQt.getProposalValidityEndDate() != null && this.getManagedBean().getCurrentDate() != null 
 						 && this.getManagedBean().getCurrentDate().after(scQt.getProposalValidityEndDate())
 						 && this.getManagedBean().isMaintanceFlow() == true ) {
 					
 						if(statusId.equals(QTStatusConst.QT_CLOSE_PERMANENTLY)){
 							  isCloseQT = true; 
-						}
-						if(statusId.equals(QTStatusConst.QT_PROPOSAL_PREPARATION) || statusId.equals(QTStatusConst.QT_CLOSED) || statusId.equals(QTStatusConst.QT_BRIEFING_SITE_VISIT)){
-							IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-							quationTenderReqDTO.setQtId(scQt.getQtId());
-							QuationTenderResDTO resDTOCMT = detailSO.closeQTstatusForCMT(quationTenderReqDTO);
-							if(resDTOCMT.isCloseQT() == true){
-								isCloseQT = true; 
-							}
-						}
-						if(statusId.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)){
-							IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-							quationTenderReqDTO.setQtId(scQt.getQtId());
-							QuationTenderResDTO resDTOCMT = detailSO.closeQTstatusForCMT(quationTenderReqDTO);
-							if(resDTOCMT.isCloseQT() == true){
-								isCloseQT = true; 
-							}
 						}
 						if(statusId.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION) || statusId.equals(QTStatusConst.QT_RE_FINALIZATION)){
 							IQTDetailSO detailSO = BusinessDelegate.getInstance()
