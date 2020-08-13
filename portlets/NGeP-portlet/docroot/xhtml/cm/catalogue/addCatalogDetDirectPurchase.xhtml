@@ -42,9 +42,10 @@
 
 			</h:panelGroup>
 
-
+			<!-- # 2020/05/27 - 27626 - Start -->
 			<h:panelGroup
-				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
+				rendered="#{unspscCodeBackingBean.allSupplierandRequisitioner}">
+			<!-- # 2020/05/27 - 27626 - End -->
 				<p:commandButton value="#{lbl['lbl.cm.publish']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
@@ -112,8 +113,10 @@
 						</h:panelGroup></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.item.code']}" /></td>
+					<!-- # 2020/05/22 - 27626 - Start -->
 					<td><p:outputLabel styleClass="outputLabel-view"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode.charAt(0) != '0' ? catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode : null }"></p:outputLabel></td>
+					<!-- # 2020/05/22 - 27626 - End -->				
 				</tr>
 
 				<tr style="height: 30px;">
