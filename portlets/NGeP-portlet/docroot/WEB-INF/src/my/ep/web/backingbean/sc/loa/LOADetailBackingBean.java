@@ -3366,19 +3366,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		debugLogger("approveBeforeupdateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
 		log.info("outcome--->> " + outcome);
+		log.info("outcome 1--->> " + this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+		log.info("outcome 2--->> " + getManagedBean().getScLoa().getPmStatus().getStatusId());
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
-			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION){
+			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION
+			//22111 - START
+					|| getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION){
+			//22211 - END	
+				log.info("(1)--->> " + outcome);
 				updateReviseBPMTaskAction(outcome);
 			}else{
+				log.info("(2)--->> " + outcome);
 				updateBpmTaskAction(outcome);
 			}
 			//Enhancement #21694 END
 		}else {
+			log.info("(3)--->> " + outcome);
 			updateBpmTaskAction(outcome);
 		}
 	}
