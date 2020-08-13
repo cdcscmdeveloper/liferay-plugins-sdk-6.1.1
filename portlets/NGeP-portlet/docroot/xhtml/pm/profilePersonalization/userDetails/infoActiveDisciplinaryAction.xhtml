@@ -63,7 +63,7 @@
 						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
 							update=":form" process="@this"
-							onclick="blockWidget.show()" onsuccess="blockWidget.hide()">
+							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
 								<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
 						</p:commandLink>
 						<p:spacer width="2"/>
