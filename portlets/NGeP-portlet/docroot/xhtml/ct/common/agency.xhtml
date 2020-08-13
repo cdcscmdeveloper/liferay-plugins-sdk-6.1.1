@@ -18,6 +18,8 @@
 	  		 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
 	  		 
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
+       					editable="true" 
+						editMode="cell"
        					value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   						selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
   						rowIndexVar="indexVar" >
@@ -67,28 +69,39 @@
 							          <h:outputText  value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;"/>
 							   </p:column>
 							   
+							    <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/> 	
 							    <p:column  style="width:10%;white-space:normal;">
 						   			   <f:facet name="header" styleClass="column-align-center">
 					           				    <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		             				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+													<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"></link>
                	            		  </f:facet>
-               	            		     <p:inputText value="#{agencyData.ceilingAmount}"  required="true" 
-               	            		          label="#{lbl['lbl.ct.ceiling.amount']}" disabled="#{ctBackingBean.managedBean.disableAmendDetails
+               <p:cellEditor>
+               	            		     
+					     <f:facet name="input"><p:inputText id="modelInput" value="#{agencyData.ceilingAmount}"  required="true" style="width:80px" maxlength="23" label="#{lbl['lbl.ct.ceiling.amount']}"
+               	            		          disabled="#{ctBackingBean.managedBean.disableAmendDetails
            		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}"
-           		      							  style="width:80px;" maxlength="23"  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
-			 									    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			 		  							  <p:ajax event="change" update=":form:tableAgencyDetails,:form:messages" 
-			 		  							    listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@all" partialSubmit="true"/> 
-				 					    </p:inputText>
-				   								  <h:outputText value="#{agencyData.ceilingAmount}"  style="float:right;text-align:right;" rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
-				     						   	 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							     				 </h:outputText>
+           		      							  styleClass="ppRightBtn" rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/></f:facet>
+					 <f:facet name="output"><h:outputText value="#{agencyData.ceilingAmount}" style="float:right;text-align:right;">
+                     <f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />															  
+					   </h:outputText></f:facet>					  	
+               </p:cellEditor> 
+
+                    <ui:fragment rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+                         <div style="text-align:center;">
+                          <i class="fa fa-pencil-square-o"></i>
+                         </div>
+                    </ui:fragment>
+
 							  </p:column>
 							  
 							   <p:column rowspan="2" style="width:8%;" styleClass="column-align-center">
 							  		    <f:facet name="header">
 							       				 <h:outputText value="#{lbl['lbl.ct.effective.date']}" styleClass="required"/>
 							    		  </f:facet>
+	           <p:cellEditor>
+                       <f:facet name="input">
 							            <p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="6"
 		               							readonlyInput="true"  
 		          							    mindate="#{(ctBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? ctBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
@@ -97,10 +110,13 @@
 		              						 	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		           	  								 <p:ajax event="dateSelect" update="agenyStatus" listener="#{ctBackingBean.checkAgencyStatus(agencyData)}"  /> 
 		          						 </p:calendar>
-		           
-		            					 <h:outputText value="#{agencyData.effDate}"  rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+		           					</f:facet>
+				     				<f:facet name="output">
+		            					 <h:outputText value="#{agencyData.effDate}">
 				         						  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				         				</h:outputText>
+		        </f:facet>
+				   </p:cellEditor>
 							    </p:column>
 							    
 							    <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;" styleClass="column-align-center">
