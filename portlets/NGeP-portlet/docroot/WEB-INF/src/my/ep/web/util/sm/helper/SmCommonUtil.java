@@ -4500,6 +4500,7 @@ public class SmCommonUtil {
 					if (pers.getSmAppl() != null && pers.getSmAppl().getApplType() != null
 							&& pers.getSmAppl().getApplType().equals(SupplierManagementConst.ACC_MOF)) {
 						pers.setPmCountry(retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_UNKNOWN_CODE));
+						break;
 					} else {
 						throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 					}
