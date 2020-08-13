@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -72,6 +73,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
@@ -424,35 +426,72 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		try {
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
 			
-			reqDTO.setScLoa(scLoa);
-			reqDTO.setPayLoad(getManagedBean().getPayLoad());
-			reqDTO.setOutcome(outcome);
-			reqDTO.setSourceId(getManagedBean().getSourceId());
-			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
-			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
-			updateToBeDeleteSpecAnswersTOReq(reqDTO);
-			reqDTO.setTobeDeleteProPayments(this.getManagedBean()
-					.getToBeRemoveProgPayments());
-			reqDTO.setToBeDeleteschedules(this.getManagedBean()
-					.getToBeRemoveSchedules());
-			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
-					.getToBedeletedSupplierZone());
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			DirectAwardResDTO resDTO = getQtDirectAwardSO()
-					.submitDirectAwardDetails(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				scLoa = resDTO.getLoa();
-				RenameTempLoaNoRepoDirByLoaNo(scLoa);
-				successMessage(MessageConst.INFO_700026,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.TRUE);
-			}
+			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())) {
+				throw new EpException(MessageConst.ERROR_760485);
+			} else {
+				DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
+				//#26474 -end-
+				String outcome = BpmOutcomeConst.BPM_SUBMIT;
+				ScLoa scLoa = this.getManagedBean().getScLoa();
+	
+				parseLOADetails(scLoa, outcome, reqDTO);
+	
+				validateSupplierDetails(scLoa);
+				//20200325@asyrafhaziq _ Bug #27740 - Start
+				validateLoaAmount(scLoa);
+				//20200325@asyrafhaziq _ Bug #27740 - End
+				validateLOAReportAttachments(scLoa);
+				validateLOADetails(scLoa, outcome);
+	
+				validateContractAmount(scLoa.getLoaAmt(), outcome);
+				validateContractNGovtSignDate(scLoa);
+				updateContractDetails(scLoa);
+				validateContractDetails(scLoa);
+	
+				log.info("submitAction loop executed");
+				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
+				scLoa.setScLoaWorkFlowStatuses(null);
+				// To avoid insert workflow status when direct submit without save.
+				if (scLoa.isBrandNew()) {
+					List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
+					if (CollectionUtils.isNotEmpty(remarks)) {
+						for (ScLoaRemark remark : remarks) {
+							remark.setScWorkFlowStatus(null);
+						}
+					}	
+				}
+				
+				reqDTO.setScLoa(scLoa);
+				reqDTO.setPayLoad(getManagedBean().getPayLoad());
+				reqDTO.setOutcome(outcome);
+				reqDTO.setSourceId(getManagedBean().getSourceId());
+				reqDTO.setRoleCode(getUserRoleCode());
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+				reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+				reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+				reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
+				updateToBeDeleteSpecAnswersTOReq(reqDTO);
+				reqDTO.setTobeDeleteProPayments(this.getManagedBean()
+						.getToBeRemoveProgPayments());
+				reqDTO.setToBeDeleteschedules(this.getManagedBean()
+						.getToBeRemoveSchedules());
+				reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
+						.getToBedeletedSupplierZone());
+				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				DirectAwardResDTO resDTO = getQtDirectAwardSO()
+						.submitDirectAwardDetails(reqDTO);
+	
+				if (resDTO.isSuccessful()) {
+					scLoa = resDTO.getLoa();
+					RenameTempLoaNoRepoDirByLoaNo(scLoa);
+					successMessage(MessageConst.INFO_700026,
+							ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+							scLoa.getLoaNo(), Boolean.TRUE);
+				}
+			} //#26474
 		} finally {
 			// qtAwardSO = null;
 		}
