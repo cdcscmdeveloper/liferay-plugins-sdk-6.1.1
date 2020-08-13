@@ -2143,7 +2143,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 				reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_PURCHASE_ORDER,paramMap)+ "'>"+getManagedBean().getFulfilmentOrder().getDocNo()+"</a>");
 			}
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
