@@ -59,7 +59,7 @@
 		</h:outputText>
 		<br />
 		<!-- #22211 Start -->
-		<h:outputText styleClass="instruction" rendered="#{isPendingVerification and isSqStillValid}"
+		<h:outputText styleClass="instruction" rendered="#{isPendingVerification and isSqStillValid and (bpmAction =='REVISE')}"
 			value="#{lbl['lbl.sc.loa.supplier.reviseDocument.instruction']}">
 		</h:outputText>
 		<!-- #22211 End -->

@@ -3403,6 +3403,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		//#22211 - start
+		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		//#22211 - end
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -3457,6 +3460,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								ParameterConst.PROCUREMENT_MODE_TENDER)) {
 					successMessage(MessageConst.INFO_700078,param);
 				}
+				// 22211 - start
+				else{
+					param[1] = reqDTO.getRequestNoteNo();
+					successMessage(MessageConst.INFO_700084,param);
+				}
+				// 22211 - end
 			}			
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
