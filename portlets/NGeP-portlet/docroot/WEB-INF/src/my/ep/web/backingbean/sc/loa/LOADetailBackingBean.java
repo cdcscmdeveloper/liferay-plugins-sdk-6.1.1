@@ -3494,6 +3494,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setRoleCode(getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
+		log.info("**"+"--log info values--");
+		log.info("**"+this.getManagedBean().getScLoa());
+		log.info("**"+getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		log.info("**"+getManagedBean().getPayLoad());
+		log.info("**"+outcome);
+		log.info("**"+getManagedBean().getSourceId());
+		log.info("**"+new FacesScopes().getUserSessionBean());
+		log.info("**"+this.getManagedBean().getTaskId());
+		log.info("**"+this.getManagedBean().getScQt());
+		log.info("**"+new FacesScopes().getBPMAuthenticationCtxToken());
+		log.info("**"+getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
+		log.info("**"+new FacesScopes().getUserLocale());
+
 		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
 		if(resDTO.isSuccessful()){
 			/*******************
