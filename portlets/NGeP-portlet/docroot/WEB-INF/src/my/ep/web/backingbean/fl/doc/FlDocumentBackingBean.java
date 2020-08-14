@@ -1421,23 +1421,19 @@ public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docT
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
 				 ffReqDTO.setFlDocNo(docNo);
-				 ffResDTO= flRequestSO.retrieveFulfilmentRequestByDocNo(ffReqDTO);
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177
 
-	    		if (ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-
+	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
 	    			//start search fulfilmenrequest based on doctype is PR
+	    			Date today  = DateUtils.getCurrentDate();
+					Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getPidValidDays());//12177
+					log.info("pID validity begin");
 					
-						 if(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-							 	Date today  = DateUtils.getCurrentDate();
-								Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
-								log.info("pID validity begin");
-								
-									if(ExpDate.before(today)){
-										pidExpired = true;
-									}  
-								
-								log.info("pID validity end");
-						 }	
+						if(ExpDate.before(today)){
+							pidExpired = true;
+						}  
+					
+					log.info("pID validity end");
 	    		}
 	    	}
 	    }    
