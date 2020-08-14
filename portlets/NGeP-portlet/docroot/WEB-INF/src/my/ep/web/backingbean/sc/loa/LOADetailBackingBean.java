@@ -3499,9 +3499,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 		
-		log.info("**"+"--will go to revise doc---");
+		log.info("**"+"--will revise doc---");
 
-		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
+		AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);		
 		if(resDTO.isSuccessful()){
 			/*******************
 			 * ACKNOWLEDGE_PAGE
