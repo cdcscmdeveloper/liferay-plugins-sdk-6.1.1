@@ -3481,7 +3481,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 * INITIATE BPM REVISE
 		 */
 		
+
+		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
+		IScActorSO actorSO;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
+		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 		PmDigiSign digiSign = null;
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
@@ -3497,6 +3502,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setDigiSignData(digiSign);
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+		reqDTO.setQuotation(false);
 
 		log.info("**"+"--log info values---");
 		log.info("**"+this.getManagedBean().getScLoa());
@@ -3521,9 +3527,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			 *******************/
 			String[] param = new String[3];
 			
-			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[0] = "param[0]";
 			param[1] = reqDTO.getRequestNoteNo();
-			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			param[2] = "param[2]";
 			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)){
 				successMessage(MessageConst.INFO_700085, param);
 			} else {
