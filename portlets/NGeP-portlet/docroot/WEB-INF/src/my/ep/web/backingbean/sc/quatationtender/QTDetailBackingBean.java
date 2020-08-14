@@ -3617,10 +3617,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveSuppQualificationTabDtl");
 		
-		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
-			retrieveApprovalTabDtl();
-			} //#28644-End
-		
 		if (!scQt.isBrandNew() && scQt.isZonal() && scQt.isPanel()) {
 			retrieveQuationTenderDetails(scQt.getQtId());
 		}
