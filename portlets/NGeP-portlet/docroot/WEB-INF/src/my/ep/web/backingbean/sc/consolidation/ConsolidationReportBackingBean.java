@@ -837,6 +837,12 @@ public class ConsolidationReportBackingBean extends
 					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
 				isOfferAll = true;	 
 			}
+//#21695 Farid Start 14/8/2020			
+			else if (getManagedBean().getScQt()
+					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)){
+				isOfferAll = true;	 
+			}
+//#21695 Farid End 14/8/2020	
 			else{ // sini boleh letak condition yg bermasatu
 				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
 							.getOfferOrNotOfferSupplierResultBean().getResultList();
