@@ -83,9 +83,9 @@
 				<td><p:inputText size="30" disabled="true"
 						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.getParameterDesc(flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory)}" /></td>
 				<!-- 28377 -->
-				<td><p:outputLabel styleClass="highlight-mark"
+				<td><p:outputLabel styleClass="highlight-mark"  rendered="#{ flOrderBB.managedBean.getFulfilmentOrder().isYep() }" 
 						value="#{lbl['lbl.fl.ap58letter']} " /></td>
-				<td><h:panelGroup id="uploadAP58AL">
+				<td><h:panelGroup id="uploadAP58AL"  rendered="#{ flOrderBB.managedBean.getFulfilmentOrder().isYep() }" >
 					<p:commandButton icon="ui-icon-upload"
 						rendered="#{ flOrderBB.managedBean.attachment.getFileName() == null }"
 						process="@this" partialSubmit="true"
