@@ -355,11 +355,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			/*#28375 - Logan - Beginning*/
 			}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
-				
 				resDTO = fulfilmentOrderSO.acknowledgeForCarryForward(reqDTO);
-			
      		}
 			/*Ending*/
+			//#28377 razin
+			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
+				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+				resDTO = fulfilmentOrderSO.proceedAP58(reqDTO);
+     		}
+			//#28377 razin end
 			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 				reqDTO.setStopIns(getManagedBean().getStopIns());
@@ -377,19 +381,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				messagePrefix = ResourceBundleUtils.getMessage("lbl.fl.rfc.for",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 			}
 			//28377: add new save
-			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				reqDTO.setAttachment(this.getManagedBean().getAttachment());
-				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
-				reqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
-				resDTO = fulfilmentOrderSO.saveAP58AL(reqDTO);
-			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-				//add more for submit button
-				reqDTO.setAttachment(this.getManagedBean().getAttachment());
-				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
-				reqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
-				resDTO = fulfilmentOrderSO.saveAP58AL(reqDTO);
+			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
+				FulfilmentReqDTO AttachreqDTO = new FulfilmentReqDTO();
+				AttachreqDTO.setAttachment(this.getManagedBean().getAttachment());
+				AttachreqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+				AttachreqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
+				AttachreqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
+				resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
 			}
 			//end 28377			
 			if(resDTO.isSuccessful()) {
@@ -405,6 +403,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
 					messageId = MessageConst.INFO_700033;
 				}/*Ending*/
+				//#28377 - razin
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
+					messageId = MessageConst.INFO_700005;
+				}
+				//#28377 - end razin
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)) {
@@ -1242,7 +1245,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			return null;
 		} else {
 			validateFulfillmentOrder(outcome);
-			setTextBeforeSign(outcome);
+			//setTextBeforeSign(outcome);
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -1275,7 +1278,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if((hasSupplierRole() && !hasGovtSellerRole())) {
+			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
@@ -1560,7 +1563,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			sb.append(outcome+"|");
 			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
-			getManagedBean().setTextBeforeSign(sb.toString());		
+			log.info("test:inside setTextBeforeSign: "+sb.toString());
+			getManagedBean().setTextBeforeSign(sb.toString());
+			log.info("test:inside after setTextBeforeSign: "+getManagedBean().getTextBeforeSign());
 		}
 	
 	/**
@@ -2276,7 +2281,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	  public void submitAP58(){
 			  if(this.getManagedBean().getAttachment().getFileName() != null){
 				  try {
-					signingAction(BpmOutcomeConst.BPM_ACKNOWLEDGE);
+					signingAction(BpmOutcomeConst.BPM_AP58_PROCEED);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
