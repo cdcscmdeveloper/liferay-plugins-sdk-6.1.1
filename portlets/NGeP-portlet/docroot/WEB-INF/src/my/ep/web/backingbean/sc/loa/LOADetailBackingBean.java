@@ -3481,42 +3481,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 * INITIATE BPM REVISE
 		 */
 		
-		IScActorSO actorSO;
+		parseLOADetails(this.getManagedBean().getScLoa(), outcome);	
+		
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
-		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 		PmDigiSign digiSign = null;
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
-		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		reqDTO.setSourceId(getManagedBean().getSourceId());
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
-		reqDTO.setSourceId(getManagedBean().getSourceId());
-		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setScQt(this.getManagedBean().getScQt());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-		reqDTO.setRoleCode(getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
-		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setDigiSignData(digiSign);
+		reqDTO.setRoleCode(getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-		reqDTO.setQuotation(false);
-
-		log.info("**"+"--log info values---");
-		log.info("**"+this.getManagedBean().getScLoa());
-		log.info("**"+getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
-		log.info("**"+getManagedBean().getPayLoad());
-		log.info("**"+outcome);
-		log.info("**"+getManagedBean().getSourceId());
-		log.info("**"+new FacesScopes().getUserSessionBean());
-		log.info("**"+this.getManagedBean().getTaskId());
-		log.info("**"+this.getManagedBean().getScQt());
-		log.info("**"+new FacesScopes().getBPMAuthenticationCtxToken());
-		log.info("**"+getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
-		log.info("**"+new FacesScopes().getUserLocale());
-		log.info("**"+digiSign);
-		log.info("**"+this.getManagedBean().getToBeRemoveFreqSchedules());
-		log.info("**"+this.getManagedBean().getToBeRemoveProgressivePayments());
+		
+		log.info("**"+"--will go to revise doc---");
 
 		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
 		if(resDTO.isSuccessful()){
