@@ -3481,8 +3481,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 * INITIATE BPM REVISE
 		 */
 		
-
-		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
 		IScActorSO actorSO;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
