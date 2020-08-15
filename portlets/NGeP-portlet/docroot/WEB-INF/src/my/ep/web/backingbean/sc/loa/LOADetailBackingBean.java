@@ -3480,9 +3480,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		/*******************
 		 * INITIATE BPM REVISE
 		 */
-		
-		parseLOADetails(this.getManagedBean().getScLoa(), outcome);	
-		
+
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		PmDigiSign digiSign = null;
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
