@@ -1177,6 +1177,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return validDate;	
 	}
 	
+	/**
+	 * Triggered from: directPurchaseSearch.xhtml - dataTable id="scDocumentTableID".
+	 * 
+	 * Code performance risk: Executed inside loop - records from search result. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param dpObj
+	 * @return String
+	 */
 	public String getDocStatus(Object[] dpObj){
 		
 		if(dpObj == null){
