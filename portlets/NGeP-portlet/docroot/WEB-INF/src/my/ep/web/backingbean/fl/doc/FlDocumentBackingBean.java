@@ -1475,7 +1475,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	/**
 	 * Triggered from: flDocSearch.xhtml - dataTable id="flDocListDt".
 	 * 
-	 * Code performance risk: Loop records from search result. 
+	 * Code performance risk: Executed inside loop - records from search result. 
 	 * 
 	 * Mitigation: 
 	 * 1. Make sure logic and service calls is optimized. 
