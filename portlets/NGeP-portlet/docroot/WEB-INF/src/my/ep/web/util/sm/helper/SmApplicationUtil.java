@@ -1229,8 +1229,6 @@ public class SmApplicationUtil {
 				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 						.getSmAddress().getPmState() != null
 				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-						.getSmAddress().getPmDivision() != null //13320
-				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 						.getSmAddress().getPmDistrict() != null) {
 			PmState state = retrievePmStateById(appl.getSmCompanyBasic()
 					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
@@ -2859,7 +2857,6 @@ public class SmApplicationUtil {
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
-		//addr.setPmDivision(new PmDivision());//13320 //addr.setPmDivision(new PmDivision());//13320 -- comment temp because showstopper
 		addr.setPmDistrict(new PmDistrict());
 		SmCommonUtil.getInstance().setUserDetails(addr);
 		return addr;
@@ -2912,7 +2909,13 @@ public class SmApplicationUtil {
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
 		addr.setPmDistrict(new PmDistrict());
-		addr.setPmDivision(new PmDivision());//13320
+		//13320-Start
+		PmState state = (SmCommonUtil.getInstance().getStateById(addr.getPmState().getStateId()));
+		if(state != null){
+		if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+		addr.setPmDivision(new PmDivision());
+		}
+		}//13320-End
 		addr.setAddress1("");
 		addr.setAddress2("");
 		addr.setAddress3("");
@@ -2951,10 +2954,12 @@ public class SmApplicationUtil {
 			facAddr.setPmState(new PmState());
 		}
 		//13320-Start
+		if(facAddr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
 		if (baseOffAddr.getPmDivision() != null) {
 			facAddr.setPmDivision(baseOffAddr.getPmDivision());
 		} else {
 			facAddr.setPmState(new PmState());
+		}
 		}
 		//13320-End
 		if (baseOffAddr.getPmDistrict() != null) {
@@ -5439,13 +5444,14 @@ public class SmApplicationUtil {
 					srcAddr.getPmState().getStateId()));
 			desAddr.setStateId(srcAddr.getStateId());
 		}
-		//13320-AddressInfo
-		if (srcAddr.getDivisionId() != null) {
-			desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
-					srcAddr.getDivisionId()));
-			desAddr.setDivisionId(srcAddr.getDivisionId());
+		//START-13320
+		if (srcAddr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			if (srcAddr.getDivisionId() != null) {
+				desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(srcAddr.getDivisionId()));
+				desAddr.setDivisionId(srcAddr.getDivisionId());
+			}
 		}
-		
+		//END-13320
 		if (srcAddr.getPmDistrict() != null
 				&& srcAddr.getPmDistrict().getDistrictId() != null) {
 			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
@@ -9055,7 +9061,7 @@ public class SmApplicationUtil {
 				addr.setPmState(SmCommonUtil.getInstance()
 						.getStateById(stateId));
 			}
-			bean.setDivisionBox(true); //13320
+			bean.setDivisionBox(true);
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(stateId);
 			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
@@ -9249,14 +9255,18 @@ public class SmApplicationUtil {
 		if (addr.getPmState() != null) {
 			addr.setStateId(addr.getPmState().getStateId());
 		}
+		//13320-Address
+		PmState state = (SmCommonUtil.getInstance().getStateById(addr.getPmState().getStateId()));
+		if(state != null){
+		if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE))
+		getInstance().populateDivisionsByState(addr, panelName, bean);
+		if (addr.getPmDivision()!= null) {
+		addr.setDivisionId(addr.getPmDivision().getDivisionId());
+			}
+		}
 		getInstance().populateDistrictsByState(addr, panelName, bean);
 		if (addr.getPmDistrict() != null) {
 			addr.setDistrictId(addr.getPmDistrict().getDistrictId());
-		}
-		//13320-Address
-		SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId());
-		if (addr.getPmDivision() != null) {
-			addr.setDivisionId(addr.getDivisionId());
 		}
 		getInstance().populateCitiesByDistrict(addr, panelName, bean);
 		if (addr.getPmCity() != null) {
@@ -9358,10 +9368,12 @@ public class SmApplicationUtil {
 					&& addr.getPmState().getStateId() != null) {
 				addr.setStateId(addr.getPmState().getStateId());
 			}
+			if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
 			if (addr.getPmDivision()!= null
 					&& addr.getPmDivision().getDivisionId() != null) {
 				addr.setDivisionId(addr.getPmDivision().getDivisionId());//13320-For Address
 			}
+		}
 			if (addr.getPmDistrict() != null
 					&& addr.getPmDistrict().getDistrictId() != null) {
 				addr.setDistrictId(addr.getPmDistrict().getDistrictId());
@@ -9383,9 +9395,11 @@ public class SmApplicationUtil {
 				addr.setPmState(SmCommonUtil.getInstance().getStateById(
 						addr.getStateId()));
 			}
+			if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
 			if (addr.getDivisionId() != null) {
 				addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
 						addr.getDivisionId()));//13320-For Address
+			}
 			}
 			if (addr.getDistrictId() != null) {
 				addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
