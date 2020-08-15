@@ -1177,6 +1177,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			return validDate;	
 	}
 	
+	/**
+	 * Triggered from: directPurchaseSearch.xhtml - dataTable id="scDocumentTableID".
+	 * 
+	 * Code performance risk: Executed inside loop - records from search result. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param dpObj
+	 * @return String
+	 */
 	public String getDocStatus(Object[] dpObj){
 		
 		if(dpObj == null){
@@ -1210,8 +1223,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	//12183 - Start
 		
 	public boolean checkStatusPidExpired(Object[] dpObj){
-		
-		
 		
 		String docNo = null;
 		Long docStatusId = null;
@@ -1262,9 +1273,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    		
 	    		reqDTO.setRequestNoteId((Long)dpObj[0]);
 	    		reqDTO.setRequestNoteNo(docNo);
-	    		
-	    		resDTO = reqSO.getRequestNote(reqDTO);
-	    		
+	    		// Refactor #20 - Start.
+	    		resDTO = reqSO.getRequestNoteByIdAndNo(reqDTO);
+	    		// Refactor #20 - End.
 	    		if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
 	    			scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
 	    		}
