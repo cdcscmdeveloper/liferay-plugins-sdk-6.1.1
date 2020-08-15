@@ -692,18 +692,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   }else if (quoteResDTO.getPid() != null){
 						    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
 										   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+										   // 12177 - start
 										   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
 										  // if(quoteResDTO.getQuoteBidDtl() != null){
 											   Calendar cal = Calendar.getInstance();
 												cal.clear(); 
 												if(null!=quoteResDTO.getChangeddate()){
-												cal.setTime(quoteResDTO.getChangeddate());
+													cal.setTime(quoteResDTO.getChangeddate());
 												}
 												if(null!=quoteResDTO.getPidValiddays()){
-												cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
+													cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
 												}
 											   worklistItemVO.setExpirationDate(cal);
 										  // }
+											// 12177 - end
 
 						    			   
 						    		   }
