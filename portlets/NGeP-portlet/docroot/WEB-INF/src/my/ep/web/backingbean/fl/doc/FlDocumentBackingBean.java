@@ -1397,14 +1397,24 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return sqExpired;
 	}
 	
+	/**
+	 * Called from: flDocSearch.xhtml - inside datatable.
+	 * 
+	 * Code performance risk: Looping in datatable. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return
+	 */
+	public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docType ){		
 	
-public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docType ){		
-	
-//		IQuoteSO quoteSO;
-// 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-// 	    QuoteResDTO quoteResDTO = null;
- 	    
  	   IFulfilmentRequestSO flRequestSO;
  	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
  	    
@@ -1421,23 +1431,19 @@ public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docT
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
 				 ffReqDTO.setFlDocNo(docNo);
-				 ffResDTO= flRequestSO.retrieveFulfilmentRequestByDocNo(ffReqDTO);
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177
 
-	    		if (ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-
+	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
 	    			//start search fulfilmenrequest based on doctype is PR
+	    			Date today  = DateUtils.getCurrentDate();
+					Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getPidValidDays());//12177
+					//log.info("pID validity begin");
 					
-						 if(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-							 	Date today  = DateUtils.getCurrentDate();
-								Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
-								log.info("pID validity begin");
-								
-									if(ExpDate.before(today)){
-										pidExpired = true;
-									}  
-								
-								log.info("pID validity end");
-						 }	
+						if(ExpDate.before(today)){
+							pidExpired = true;
+						}  
+					
+					//log.info("pID validity end");
 	    		}
 	    	}
 	    }    
