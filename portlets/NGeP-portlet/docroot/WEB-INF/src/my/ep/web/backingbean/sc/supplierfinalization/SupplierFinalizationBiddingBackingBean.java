@@ -173,6 +173,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 			getManagedBean().setPayLoad(dataType);
 			
 			retrieveOnlineBiddingEndorsement(qtId);
+			// #25638 - Start
+			displayReviseInstrn(getManagedBean().getCommitteeList());
+			// #25638 - End
 			
 			fc.getApplication()
 					.getNavigationHandler()

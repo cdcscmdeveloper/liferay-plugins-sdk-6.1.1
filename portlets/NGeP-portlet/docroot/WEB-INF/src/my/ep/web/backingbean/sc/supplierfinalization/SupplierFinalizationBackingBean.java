@@ -622,7 +622,7 @@ public class SupplierFinalizationBackingBean extends
 					new HashSet<ScQtEvaluationResultDtl>());
 		}	
 		// #25638 - Start
-		displayReviseInstrn();
+		displayReviseInstrn(getManagedBean().getCommitteeList());
 		// #25638 - End
 	}
 	
@@ -8412,30 +8412,5 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		//#26169 #38- END
 		
-		// #25638 - Start
-		/**
-		 * @return
-		 */
-		public void displayReviseInstrn() {
-			if (null != getManagedBean().getCurrentStatusId()) {
-				long currentStatus = getManagedBean().getCurrentStatusId().longValue();
-				if ((currentStatus == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue())
-						|| (currentStatus == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
-					for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
-						if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
-								&& null != committeeActivity.getScCommitteeMember().getMemberRole()
-								&& "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-							PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
-							if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
-								getManagedBean().setDisplayReviseInstrn(true);
-							}
-							break;
-						}
-					}
-				}
-			}
-		}
-		// #25638 - End
-
 }
 // ***19336

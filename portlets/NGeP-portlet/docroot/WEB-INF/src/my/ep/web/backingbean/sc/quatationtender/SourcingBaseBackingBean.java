@@ -4756,4 +4756,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return Boolean.FALSE;
 		}
 		//#25729 #142 end
+		
+		// #25638 - Start
+		public void displayReviseInstrn(List<ScQtCommitteeActivity> committeeList) {
+			if (null != getManagedBean().getCurrentStatusId()) {
+				long currentStatus = getManagedBean().getCurrentStatusId().longValue();
+				if ((currentStatus == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue())
+						|| (currentStatus == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+					for (ScQtCommitteeActivity committeeActivity : committeeList) {
+						if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+								&& null != committeeActivity.getScCommitteeMember().getMemberRole()
+								&& "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+							PmUser secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
+							if (secretaryUser.getUserId().longValue() != new FacesScopes().getUserSessionBean().getUserId()) {
+								getManagedBean().setDisplayReviseInstrn(true);
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		// #25638 - End
 }

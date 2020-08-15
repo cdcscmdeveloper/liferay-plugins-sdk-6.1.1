@@ -268,10 +268,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtFinalizationRemarks pendingRecPackageRemark;
 	// #18685 - End
 	
-	// #25638 - Start		
-	private boolean displayReviseInstrn;
-	// #25638 - End
-	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2312,21 +2308,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// #18685 - End
 
-	// #25638 - Start
-	/**
-	 * @return the displayReviseInstrn
-	 */
-	public boolean isDisplayReviseInstrn() {
-		return displayReviseInstrn;
-	}
-
-	/**
-	 * @param displayReviseInstrn the displayReviseInstrn to set
-	 */
-	public void setDisplayReviseInstrn(boolean displayReviseInstrn) {
-		this.displayReviseInstrn = displayReviseInstrn;
-	}
-	// #25638 - End
 }
 
 

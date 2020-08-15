@@ -20,6 +20,9 @@
 	<!-- Supplier Details PopUp -->
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 	
+	<h:outputText styleClass="instruction" escape="false" rendered="#{lOIDetailBackingBean.managedBean.displayReviseInstrn}"
+			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
+			
 	<p:outputPanel id="itemSupplierPanel">
 
 		<p:panel header="#{lbl['lbl.sc.multipleloi.recommendation.title']}" toggleable="true">
