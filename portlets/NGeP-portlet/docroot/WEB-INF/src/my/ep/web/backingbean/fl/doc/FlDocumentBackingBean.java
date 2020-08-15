@@ -1397,22 +1397,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return sqExpired;
 	}
 	
-	/**
-	 * Called from: flDocSearch.xhtml - inside datatable.
-	 * 
-	 * Code performance risk: Looping in datatable. 
-	 * 
-	 * Mitigation: 
-	 * 1. Make sure logic and service calls is optimized. 
-	 * 2. Create new service to execute and return specific value. Fast execution time.
-	 * 3. Disable logging
-	 * 
-	 * 
-	 * @param docNo
-	 * @param docStatusId
-	 * @param docType
-	 * @return
-	 */
 	public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docType ){		
 	
  	   IFulfilmentRequestSO flRequestSO;
@@ -1488,6 +1472,22 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return validDate;	
 	}
 	
+	/**
+	 * Triggered from: flDocSearch.xhtml - inside datatable.
+	 * 
+	 * Code performance risk: Looping in datatable. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */
 	public String getDocStatus(String docNo, Long docStatusId, String docType ){
 		
 		if(docNo == null || docStatusId == null || docType == null){
