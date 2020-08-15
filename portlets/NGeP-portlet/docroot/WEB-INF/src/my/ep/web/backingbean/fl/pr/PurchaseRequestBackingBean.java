@@ -4846,6 +4846,21 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	//24893 - end
 	
 	//12183 - Start
+	/**
+	 * Triggered from: prReviewHeaderPage.xhtml.
+	 * 
+	 * Code performance risk: triggered everytime page loads.
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */
 	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
 		
 		if(checkStatusPidExpired(flFulfilmentRequest)){
@@ -4880,13 +4895,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					 	Date today  = DateUtils.getCurrentDate();
 						Date ExpDate = DateUtils.addDays(flFulfilmentRequest.getScPurchaseInDefault().getChangedDate(), flFulfilmentRequest.getScPurchaseInDefault().getPidValidDays());
 
-						log.info("pID validity begin");
+						//log.info("pID validity begin");
 						
 							if(ExpDate.before(today)){
 								pidExpired = true;
 							}  
 						
-						log.info("pID validity end");
+						//log.info("pID validity end");
 				 }	
 			}	
 		}	
