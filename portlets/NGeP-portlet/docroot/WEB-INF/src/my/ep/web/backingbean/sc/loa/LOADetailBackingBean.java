@@ -3487,6 +3487,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		PmDigiSign digiSign = null;
 		reqDTO.setScLoa(this.getManagedBean().getScLoa());
 		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
 		reqDTO.setOutcome(outcome);
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
@@ -3499,18 +3500,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 		
-		log.info("**"+"--will revise doc---");
-
-		AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);		
+		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);		
 		if(resDTO.isSuccessful()){
 			/*******************
 			 * ACKNOWLEDGE_PAGE
 			 *******************/
 			String[] param = new String[3];
 			
-			param[0] = "param[0]";
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
 			param[1] = reqDTO.getRequestNoteNo();
-			param[2] = "param[2]";
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
 			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)){
 				successMessage(MessageConst.INFO_700085, param);
 			} else {
