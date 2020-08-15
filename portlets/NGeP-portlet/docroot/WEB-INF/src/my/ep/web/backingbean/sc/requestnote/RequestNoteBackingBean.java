@@ -1309,6 +1309,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		if(requestNote != null){
+			// Refactor #18 - Start.
+			getManagedBean().setDocStatus("");
+			if(CollectionUtils.isNotEmpty(requestNote.getRequestNoteDtls())
+	    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem()
+	    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()){
+	    		ScPurchaseInDefault scPID = requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
+	    		if (null != scPID) {
+	    			getManagedBean().setDocStatus(getDocStatus(scPID));
+	    		}
+	    	} 	
+			// Refactor #18 - End.
+			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
 			} else {
@@ -5256,9 +5268,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	//26284 - End
 	
 	//12183 - Start
-	public String getDocStatus(ScRequestNote requestNote){
+	
+	// Refactor #18 - Start.
+	public String getDocStatus(ScPurchaseInDefault scPID){
 			
-		if(checkStatusPidExpired(requestNote)){
+		if(checkStatusPidExpired(scPID)){
 			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
 		}else if(!isSqStillValid()){
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
@@ -5266,14 +5280,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			return getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId());
 		}
 	}
+	// Refactor #18 - End.
 	
-	public boolean checkStatusPidExpired(ScRequestNote requestNote){
+	// Refactor #18 - Start.
+	public boolean checkStatusPidExpired(ScPurchaseInDefault scPID){
 		
-		String docNo = null;
-		Long currentStatusId = null;
-		ScPurchaseInDefault scPID = null;
+		//String docNo = null;
+		//Long currentStatusId = null;
 		
-		if(requestNote != null){
+		/*if(requestNote != null){
 			docNo = requestNote.getRequestNoteNo();
 			
 			if(requestNote.getCurrentStatus() != null){
@@ -5301,16 +5316,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
 		    	reqDTO.setRequestNoteNo(docNo);
 		    	
-		    	resDTO = reqSO.getRequestNote(reqDTO);
+		    	resDTO = reqSO.getRequestNoteByIdAndNo(reqDTO);
 		    		
-		    	if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
+		    	if(null != resDTO.getRequestNoteDetail() && CollectionUtils.isNotEmpty(resDTO.getRequestNoteDetail().getRequestNoteDtls())
+		    			&& null != resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem()
+		    			&& null != resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()){
 		    		scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
 		    	} 		
 		    }  
-		}
+		}*/
 		
 		return pidValidityBoolean(scPID);
 	}
+	// Refactor #18 - End.
 	
 	private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault){
 		boolean valid = false;
