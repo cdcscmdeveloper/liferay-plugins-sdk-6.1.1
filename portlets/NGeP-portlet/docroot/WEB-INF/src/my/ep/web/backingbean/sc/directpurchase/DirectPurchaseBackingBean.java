@@ -1224,8 +1224,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 	public boolean checkStatusPidExpired(Object[] dpObj){
 		
-		
-		
 		String docNo = null;
 		Long docStatusId = null;
 		String docType = null;
