@@ -91,6 +91,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -1431,7 +1432,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
 				 ffReqDTO.setFlDocNo(docNo);
-				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177 - code refactoring: performance
 
 	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
 	    			//start search fulfilmenrequest based on doctype is PR
@@ -1456,20 +1457,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean isSqStillValid(Date endDate){		
 		
 		Boolean validDate = true;	
-		Integer sqTimeValidity = null;
 
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));
 
 		if(endDate != null){
 			
@@ -1488,6 +1478,21 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return validDate;	
 	}
 	
+	/**
+	 * Triggered from: flDocSearch.xhtml - dataTable id="flDocListDt".
+	 * 
+	 * Code performance risk: Executed inside loop - records from search result. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */
 	public String getDocStatus(String docNo, Long docStatusId, String docType ){
 		
 		if(docNo == null || docStatusId == null || docType == null){

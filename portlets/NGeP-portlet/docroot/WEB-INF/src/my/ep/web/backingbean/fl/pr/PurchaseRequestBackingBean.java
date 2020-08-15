@@ -4776,22 +4776,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		Boolean validDate = true;		
 		Long currentStatusId = getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId();
-		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
 		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
 		
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));
 				
 		if(scQuote != null){
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
@@ -4846,6 +4835,21 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	//24893 - end
 	
 	//12183 - Start
+	/**
+	 * Triggered from: prReviewHeaderPage.xhtml.
+	 * 
+	 * Code performance risk: triggered everytime page loads.
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */
 	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
 		
 		if(checkStatusPidExpired(flFulfilmentRequest)){
@@ -4863,9 +4867,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		Long currentStatusId = null;
 	    Boolean pidExpired = false;
 		
-		IFulfilmentRequestSO flRequestSO;
-	 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-		
 		if(flFulfilmentRequest != null){
 			
 			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
@@ -4880,13 +4881,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					 	Date today  = DateUtils.getCurrentDate();
 						Date ExpDate = DateUtils.addDays(flFulfilmentRequest.getScPurchaseInDefault().getChangedDate(), flFulfilmentRequest.getScPurchaseInDefault().getPidValidDays());
 
-						log.info("pID validity begin");
+						//log.info("pID validity begin");
 						
 							if(ExpDate.before(today)){
 								pidExpired = true;
 							}  
 						
-						log.info("pID validity end");
+						//log.info("pID validity end");
 				 }	
 			}	
 		}	
