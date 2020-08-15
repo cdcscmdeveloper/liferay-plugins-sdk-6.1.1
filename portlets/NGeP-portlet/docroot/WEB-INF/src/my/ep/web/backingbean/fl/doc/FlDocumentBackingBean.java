@@ -1415,7 +1415,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
 				 ffReqDTO.setFlDocNo(docNo);
-				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177 - code refactoring: performance
 
 	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
 	    			//start search fulfilmenrequest based on doctype is PR
