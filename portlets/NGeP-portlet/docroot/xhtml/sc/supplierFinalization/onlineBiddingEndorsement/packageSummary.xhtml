@@ -7,6 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
+	<h:outputText styleClass="instruction" escape="false" rendered="#{suppFinalBiddingBackingBean.managedBean.displayReviseInstrn}"
+			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
+			
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true"> 
 		
 		<p:outputLabel value="#{lbl['lbl.sc.bidding.schedule.status']} : " 
@@ -17,7 +20,7 @@
 					  styleClass="leftMargin"/>
 		<br/>	
 		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
+			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} : 456"
 			escape="false" />
 		<h:outputText styleClass="instruction"
 			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">

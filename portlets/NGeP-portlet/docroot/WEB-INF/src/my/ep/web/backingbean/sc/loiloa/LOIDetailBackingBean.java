@@ -679,6 +679,10 @@ public class LOIDetailBackingBean extends
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
+			// #25638 - Start
+			displayReviseInstrn(getManagedBean().getFcActivityList());
+			// #25638 - End
+			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
