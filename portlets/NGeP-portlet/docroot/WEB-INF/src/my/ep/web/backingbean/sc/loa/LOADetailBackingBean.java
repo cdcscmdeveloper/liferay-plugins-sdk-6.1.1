@@ -3482,8 +3482,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 */
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		PmDigiSign digiSign = null;
-		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		PmDigiSign digiSign = null;		
+		ScLoa scLoa = this.getManagedBean().getScLoa();		
+		scLoa.setScLoaRemarks(null); //To skip adding remark
+		
+		reqDTO.setScLoa(scLoa);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
 		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
 		reqDTO.setPayLoad(getManagedBean().getPayLoad());
