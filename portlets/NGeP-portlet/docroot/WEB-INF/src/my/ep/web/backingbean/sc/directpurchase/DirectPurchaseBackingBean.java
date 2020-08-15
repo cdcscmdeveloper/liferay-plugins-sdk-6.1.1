@@ -1262,9 +1262,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    		
 	    		reqDTO.setRequestNoteId((Long)dpObj[0]);
 	    		reqDTO.setRequestNoteNo(docNo);
-	    		
-	    		resDTO = reqSO.getRequestNote(reqDTO);
-	    		
+	    		// Refactor #20 - Start.
+	    		resDTO = reqSO.getRequestNoteByIdAndNo(reqDTO);
+	    		// Refactor #20 - End.
 	    		if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
 	    			scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
 	    		}
