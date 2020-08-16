@@ -3483,6 +3483,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		parseLOADetails(scLoa, outcome);
 
 		validateLOADetails(scLoa, outcome);
+		scLoa.setScLoaRemarks(null); //To skip adding remark
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
@@ -3502,7 +3503,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-		resDTO = getQtAwardSO().saveLOADtl(reqDTO);
+		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			/*******************
@@ -3530,7 +3531,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public boolean isLoaReviseStatus() {
 
 		Boolean loaReviseStatus = false;
-		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		Long currentStatusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
 
 		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
 				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
