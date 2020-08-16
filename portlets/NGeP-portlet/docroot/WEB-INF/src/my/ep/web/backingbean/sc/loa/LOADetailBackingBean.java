@@ -3486,6 +3486,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();		
 		parseLOADetails(scLoa, outcome);
 		validateLOADetails(scLoa, outcome);
+		scLoa.setScLoaRemarks(null); //To skip adding remark
 		
 		reqDTO.setScLoa(scLoa);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
