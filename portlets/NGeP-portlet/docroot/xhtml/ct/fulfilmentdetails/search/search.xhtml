@@ -249,7 +249,7 @@
 					     		icon="ui-icon-edit"
 					     		process="@this" partialSubmit="true"
 					     		rendered="#{(contractDetailsBackingBean.isContractAdmin() or ctBackingBean.isApprover()) and (data.ctStatus == 1) 
-					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId)}"
+					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId,(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.ct.admin'] : lbl['lbl.ct.remove.ct.admin'])}"
 					     		onStart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					     </p:menuitem>  
                        </p:menuButton>
