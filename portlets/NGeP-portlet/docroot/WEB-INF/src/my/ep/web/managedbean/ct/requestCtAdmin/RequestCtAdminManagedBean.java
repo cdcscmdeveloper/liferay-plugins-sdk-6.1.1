@@ -14,9 +14,6 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.dtl.CtAgency;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -41,6 +38,7 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	private String ptjCodeName;
 	private String noticeTypelbl;
 	private String ptjCodeNameSearchValue;
+	private String docType;
 
 	
 	private boolean remedy;
@@ -49,6 +47,7 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	private boolean  buttonHideActive = true;
 	private boolean  selectAll;
 	private boolean  disableField;
+	private boolean removeRequestAdmin;
 
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -363,5 +362,22 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	public void setDisableField(boolean disableField) {
 		this.disableField = disableField;
 	}
+
+	public boolean isRemoveRequestAdmin() {
+		return removeRequestAdmin;
+	}
+
+	public void setRemoveRequestAdmin(boolean removeRequestAdmin) {
+		this.removeRequestAdmin = removeRequestAdmin;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+	
 
 }
