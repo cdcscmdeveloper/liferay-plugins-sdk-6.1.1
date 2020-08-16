@@ -39,10 +39,12 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.requestctadmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -220,7 +222,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);
+			/*this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);*/
 
 			reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(getManagedBean().getContractVer());
@@ -282,8 +284,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}
-				else {	
+				}else {	
 					ContractReqDTO ctReqDTO = new ContractReqDTO();
 					ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 					ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
@@ -300,6 +301,34 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		return null;
 	} 
 	
+	/*
+	 * Method to set user role as per user login
+	 * User role used in BPM to identify the task
+	 */
+	private String getUserROLE() {
+		String userRole = null;		
+		
+		/*contract admin submit*/
+		
+				
+			if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				userRole = RoleCode.BPK_CCA.value();
+			}else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			}
+		
+	
+		if (userRole == null) {
+			throw new EpException(MessageConst.ERROR_750040);
+		} else {
+			return userRole;
+		}
+	}
+	
 	/**
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
@@ -312,12 +341,14 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		}
 
 		try{
+			
+			reqDTO.setUserRole(getUserROLE());
 			reqCtAdminSO = (IRequestContractAdminSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IRequestContractAdminSO.class);
 			resDTO = reqCtAdminSO.retrieveReqCtAdminContractVerDtls(reqDTO);
 			getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-					ParameterConst.DOCTYPE_REQUEST_CT_ADMIN, getManagedBean().getCtContract().getContractNo()));
+					reqDTO.getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
 
 			//CT_CHANGE_LOG
@@ -327,17 +358,20 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
 			
+			
 			/*initialize value for assignedCtAdmin*/
 			if(getManagedBean().getContractVer().getCtContract().getAssignedCtAdmin() == null){
 				getManagedBean().getContractVer().getCtContract().setAssignedCtAdmin(new PmUser());
 				
 			}
-			if (BpmOutcomeConst.BPM_REJECT.equals(reqDTO.getOutcome())
-					&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL))){
-				getManagedBean().getContractVer().getCtContract().setAssignedCtAdminFlag(false);
-			}else if(BpmOutcomeConst.BPM_APPROVE.equals(reqDTO.getOutcome())
-					&& (getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_APPROVAL))){
-				getManagedBean().getContractVer().getCtContract().setAssignedCtAdminFlag(true);
+			if(getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.RA_APPROVED){
+				log.debug("remove request contract admin");
+				getManagedBean().setRemoveRequestAdmin(true);
+				getManagedBean().setDocType(reqDTO.getDocType());
+				
+			}else{
+				getManagedBean().setRemoveRequestAdmin(false);
+				getManagedBean().setDocType(reqDTO.getDocType());
 			}
 			
 
@@ -513,7 +547,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		ctReqDTO.setUpdateAction(false);
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
-		ctReqDTO.setDocType(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);
+		ctReqDTO.setDocType(dataType.getDocType());
 		setRequestCtAdminContractVer(ctReqDTO);
 		/*End*/
 	}
@@ -553,15 +587,28 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 */
 	private String getUserRole() {
 		String userRole = null;		
+		
+		/*contract admin submit*/
 		if (getManagedBean().getTaskName() == null
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_RA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_RA_HT_NAME)) {
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_RA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_APPROVER_RA_HT_NAME)) {
 			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
 			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_CENTRAL)&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 				userRole = RoleCode.BPK_CCA.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY) && getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)&& getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
 		} else if (getManagedBean().getTaskName() != null
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_RA_HT_NAME)) {
@@ -573,7 +620,8 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
 		}
-
+		
+	
 		if (userRole == null) {
 			throw new EpException(MessageConst.ERROR_750040);
 		} else {
