@@ -755,9 +755,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					        	clones = ppItemList.getKey();
 					        	reorderedList = ppItemList.getValue();
 					        	
+					        	log.info("Initially, size of reorderedList is "
+					        			+reorderedList.size());
+					        	
 					        	for (int i = 0; i < reorderedList.size(); i++) {
 						        	for (PpProcurementItem clone : clones) {
 					        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
+					        				log.info("cloned is= "+clone.getProcurementTitle());
 					        				reorderedList.add(i+1,clone);
 					        			}
 					        		}
@@ -5044,7 +5048,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	
 	    	List<PpProcurementItem> procurementList = null;
 	    	List<PpProcurementItem> procurementLinkedList = new LinkedList<PpProcurementItem>();
+	    	List<PpProcurementItem> newProcurementList = new ArrayList<PpProcurementItem>();
 	    	PpProcurementItem newPpItem = new PpProcurementItem();
+	    	List<PpUpdateReason> clonedPpUpdateReasons = new ArrayList<PpUpdateReason>();
+	    	PpUpdateReason clonedUpdateReason = new PpUpdateReason();
 	    	
 	    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
 	    		throw new EpException(MessageConst.ERROR_730028);
@@ -5077,6 +5084,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpItem.setInvitationDate(date.getTime());
 		    	}
 	    		
+	    		if (clonedPpItem.getPpUpdateReasons().isEmpty()) {
+	    			clonedUpdateReason.setReasonDesc("\u200B");
+	    			clonedPpUpdateReasons.add(clonedUpdateReason);
+	    		} else {
+	    			for (PpUpdateReason cR : clonedPpItem.getPpUpdateReasons()) {
+	    				if (cR.getReasonDesc() != null) {
+	    					clonedUpdateReason.setReasonDesc(cR.getReasonDesc());
+		    				clonedPpUpdateReasons.add(clonedUpdateReason);
+		    				break;
+	    				}
+	    			}
+	    		}
+	    		
 	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
@@ -5092,20 +5112,38 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setDisableForPindaan(true);
 	    		newPpItem.setFromPpItem(clonedPpItem.getProcurementItemId());
 	    		newPpItem.setReasonForUpdateEnabled(false);
-	    		newPpItem.setPpUpdateReasons(clonedPpItem.getPpUpdateReasons());
+	    		newPpItem.setPpUpdateReasons(clonedPpUpdateReasons);
 	    		newPpItem.setStatusEnabled(true);
 	    		
     			if (newPpItem.getPpUpdateReasons() != null && 
 						!newPpItem.getPpUpdateReasons().isEmpty()) {
 	    			log.info("newPpItem reasonDesc= "+newPpItem.getPpUpdateReasons()
 	    					.get(0).getReasonDesc());
+	    			for (PpUpdateReason updateReason: newPpItem.getPpUpdateReasons()){
+	    				if (updateReason.getRoleCode() == null) {
+	    					PmRole roleCode = new PmRole();
+	    					roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
+	    					updateReason.setRoleCode(roleCode);
+	    				}
+	    				log.info("newPpItem getRole= "+updateReason.getRoleCode());
+	    			}
 	    		} else {
 	    			throw new EpException(MessageConst.ERROR_730035);
 	    		}
 	    			
 	    		procurementLinkedList.listIterator(index+1).add(newPpItem);
 	    		
-	    		disableEnablePpItemFields(procurementLinkedList,index);
+	    		this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
+	    		
+	    		for (PpProcurementItem linkedPpItem : procurementLinkedList) {
+	    			newProcurementList.add(linkedPpItem);
+	    		}
+	    		
+	    		this.getManagedBean().getSelectedPlan().setPpProcurementItems(newProcurementList);
+	    		
+	    		log.info("Size of procurementList= "+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size());
+	    		
+	    		disableEnablePpItemFields(this.getManagedBean().getSelectedPlan().getPpProcurementItems(),index+1);
 	    		
 	    	} else {
 	    		throw new EpException(MessageConst.ERROR_730015);
