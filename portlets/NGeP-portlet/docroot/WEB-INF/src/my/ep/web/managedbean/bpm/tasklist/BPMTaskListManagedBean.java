@@ -671,14 +671,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						    // 12177 - Start
-						       IQuoteSO quoteSO;
-					    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 					    	   QuoteResDTO quoteResDTO = null;
 						       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
 						       
 						       if(worklistItemVO.getDocType().equals("SQ")){
 								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+									   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 											    currentStatusId, worklistItemVO.getDocType(), true);	
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -710,9 +710,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 						    			   
 						    		   }
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+								   }else if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+									   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
 									   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
 									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
@@ -727,9 +728,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 											}
 										   worklistItemVO.setExpirationDate(cal);
 									   //}
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
+								   }else if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
+									   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 									   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
 									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);	
@@ -743,12 +745,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										}						  
 									   worklistItemVO.setExpirationDate(cal);								   
 								   }
-						       }
-						       // 12177 - End
-						       
-						       //pid validity
-						       
-						       if(worklistItemVO.getDocType().equals("RN")){
+						       }else if(worklistItemVO.getDocType().equals("RN")){
 						    	   System.out.println("Begin PID validity process");
 						    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 						    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
@@ -784,6 +781,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 								    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+											IQuoteSO quoteSO;
+									    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+														ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									       quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 														 currentStatusId, worklistItemVO.getDocType(), true);	
 									       if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -797,8 +797,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								        }
 									}
 						    	   // 12177 - End
-						       }
-						       else  if(worklistItemVO.getDocType().equals("PR")){
+						       }else  if(worklistItemVO.getDocType().equals("PR")){
 						    	   System.out.println("Begin PID validity process");
 						    	  // IPurchaseRequestSO requestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
 						    	   IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
@@ -828,11 +827,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 											//System.out.println("Lets overide the status! here");
 										}
 										
-								   }else{ // 12177 - Start
+								   }else{
 									   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+										   IQuoteSO quoteSO;
+								    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+													ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 										   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 													 currentStatusId, worklistItemVO.getDocType(), true);	
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -845,14 +847,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										   }
 									   }
 								   }
-						    	   // 12177 - End
-						       }
-						       // 12177 - Start
-						       else if(worklistItemVO.getDocType().equals("LA")){
+						       }else if(worklistItemVO.getDocType().equals("LA")){
 							    	  if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
 										  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
 							    		  || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
 							    		  || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+							    		  IQuoteSO quoteSO;
+								    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+													ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 							    		  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 													 currentStatusId, worklistItemVO.getDocType(), true);	
 										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1400,15 +1402,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 								// end added for #24968
 						       
-						       // 12177 - Start
-						       IQuoteSO quoteSO;
-					    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+						       // 12177 - Start			       
 					    	   QuoteResDTO quoteResDTO = null;
 						       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
 						       
 						       if(worklistItemVO.getDocType().equals("SQ")){
 								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+									   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 											    currentStatusId, worklistItemVO.getDocType(), true);	
 						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1436,9 +1438,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 						    			   
 						    		   }
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+								   }else if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+									   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
 									   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
 									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
@@ -1453,9 +1456,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 											}
 										   worklistItemVO.setExpirationDate(cal);
 									  // }
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
+								   }else if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
+									   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 									   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
 									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);
@@ -1470,16 +1474,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									   worklistItemVO.setExpirationDate(cal);
 									   
 								   }
-						       }
-
-						       if(worklistItemVO.getDocType().equals("RN")){ 
+						       }else if(worklistItemVO.getDocType().equals("RN")){ 
 
 						    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
 						    		  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
 								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 								      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-
+						    		   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 												currentStatusId, worklistItemVO.getDocType(), true);	
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1521,13 +1525,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									  }
 								   }
 						    	   }
-						       }
-						       
-						       if(worklistItemVO.getDocType().equals("PR")){
+						       }else if(worklistItemVO.getDocType().equals("PR")){
 						    	   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 						    		  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+						    		   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 												 currentStatusId, worklistItemVO.getDocType(), true);	
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1570,13 +1575,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 										   }
 									  }
 								   }
-						       }
-						       
-						       if(worklistItemVO.getDocType().equals("LA")){
+						       }else if(worklistItemVO.getDocType().equals("LA")){
 						    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
 									  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
 								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
 								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+						    		   IQuoteSO quoteSO;
+							    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 								      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 													currentStatusId, worklistItemVO.getDocType(), true);	
 									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
