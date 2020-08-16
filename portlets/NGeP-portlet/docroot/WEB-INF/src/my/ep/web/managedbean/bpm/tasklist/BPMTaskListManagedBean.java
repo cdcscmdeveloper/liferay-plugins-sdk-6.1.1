@@ -467,19 +467,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 				
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-				/*log.info("testing BPM auth******" + token);*/
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
-				
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-				/*log.info("getDocType()"+getDocType());*/
 				reqDTO.setDocType(getDocType());
 	
 				reqDTO.setViewBy(getViewBy());
@@ -492,13 +483,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc().replaceAll("<", "&#60;"));
 				}
 				
-				/*if(getSelectedOrgProfile()!=null){
-					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
-				}*/
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-//				log.info("getDocStatus()" + getDocStatus());
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
@@ -509,105 +493,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					/*
-					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-					 */
-					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
-
+					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
-								if (worklistItemVO.getTitle().contains("<")) {
-									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-								}
-
-							// s1 module
-							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								/*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//								log.info("Doc number = " + worklistItemVO.getDocNumber());
-								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
-										.getDocNumber());
-								if (scPrInquiry != null) {
-									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									/*
-									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-									 */									
-									/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-											+ scPrInquiry.getTitle());*/
-								}
-							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							} else if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
-								//sm module
-								//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
-								//sm module
-								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+								processWorklistItemByTitle(worklistItemVO, face);
 								
-								/*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//								log.info("***** The document Id for the workflow is ****** "+ worklistItemVO.getDocId());
-								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
-						    	   StringBuilder sb = new StringBuilder();
-						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						    	   if(mofResDto.getCompanyName() != null){
-						    		   	   sb.append(" ( ");
-								    	   sb.append(mofResDto.getCompanyName());
-								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
-								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
-						    	   }
-						    	   
-								worklistItemVO.setTitle(sb.toString());
-							} else if (worklistItemVO.getTitle().startsWith("lbl.cd")) {
-
-								StringBuilder sb = new StringBuilder();
-								sb.append(ResourceBundleUtils.getMessage(
-										worklistItemVO.getTitle(),
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										face.getUserLocale()));
-
-								worklistItemVO.setTitle(sb.toString());
-							} else if (worklistItemVO.getTitle().startsWith("lbl.pm")) {
-								AccessApplResDTO accessApplResDTO = retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
-								if (accessApplResDTO.isSuccessful() && 
-										accessApplResDTO.getAccessAppl() != null) {
-
-									StringBuilder sb = new StringBuilder();
-									if (ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())) {
-										sb.append(ResourceBundleUtils.getMessage(
-														"lbl.pm.access.app.tasklist.mr.title",
-														new String[] {
-																accessApplResDTO.getAccessAppl().getApplicantName(),
-																accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName() },
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														face.getUserLocale()));
-										worklistItemVO.setTitle(sb.toString());
-									} else if (ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO
-													.getDocType())) {
-										sb.append(ResourceBundleUtils.getMessage(
-														"lbl.pm.access.app.tasklist.cp.title",
-														new String[] {
-																accessApplResDTO.getAccessAppl().getApplicantName(),
-																accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName() },
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														face.getUserLocale()));
-										worklistItemVO.setTitle(sb.toString());
-									}
-								}
-								} else {
-									processTitleWithDocStatus(worklistItemVO, face);
-								}
 							 if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
 						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 						       }
@@ -746,7 +639,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									   worklistItemVO.setExpirationDate(cal);								   
 								   }
 						       }else if(worklistItemVO.getDocType().equals("RN")){
-						    	   System.out.println("Begin PID validity process");
 						    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 						    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 						    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
