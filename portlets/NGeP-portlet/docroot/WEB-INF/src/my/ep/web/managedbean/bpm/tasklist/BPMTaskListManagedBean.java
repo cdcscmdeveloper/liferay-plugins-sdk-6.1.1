@@ -45,6 +45,7 @@ import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
@@ -1705,6 +1706,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	    	worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 	    	retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
 	    }
+    	//# start 25627  - 
+		else if (worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_DO_REASSIGNMENT)) {
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.quotation.tender.deskofficermaintenance.approveTaskListTitle", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		}
+	     //# end 25627
 		  
 	}
  	// end #24968 
