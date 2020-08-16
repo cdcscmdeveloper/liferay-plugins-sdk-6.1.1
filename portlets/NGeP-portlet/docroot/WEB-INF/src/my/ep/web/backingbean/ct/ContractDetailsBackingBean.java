@@ -2112,34 +2112,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		return PROCESS_TERMINATE_PAGE;
 	} 
-	
-	/**
-	 * The method ised to navigate to request or remove contract admin
-	 * @param contractId
-	 * @return the navigate URL
-	 */
-	
-	/*#21387-basri start*/
-	 public String goToRequestCtAdmin(Long contractId){
-		 
-		 	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractId(contractId);
-			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-			
-			reqDTO.setContractVerId(contractVerId);
-			reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN);
-			reqDTO.setUpdateAction(true);
-			ctBB.getManagedBean().setNotificationSetting(false);
-			RequestCtAdminBackingBean	rcaBB = new RequestCtAdminBackingBean();
-			rcaBB.getManagedBean().setViewOnly(false);
-			rcaBB.getManagedBean().setExternalPageUrl(null);
-			rcaBB.setRequestCtAdminContractVer(reqDTO);
-			return REQUEST_CONTRACT_ADMIN;
-		
-		
-	 }
-	 /*#21387-basri end*/
 
 	/**
 	 * The method used to navigate to contract suspension screen
@@ -2155,7 +2127,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 		reqDTO.setUpdateAction(true);
-
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
 		suspBB.getManagedBean().setViewOnly(false);
@@ -2401,6 +2372,37 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return CHANGE_BANK_ACCOUNT_PAGE;
 	}
 
+	/**
+	 * The method ised to navigate to request or remove contract admin
+	 * @param contractId
+	 * @return the navigate URL
+	 */
+	
+	/*#21387-basri start*/
+	 public String goToRequestCtAdmin(Long contractId,String doctype){
+		 
+		 	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);
+			CtContractVer contractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+			
+			reqDTO.setContractVerId(contractVer.getContractVerId());
+			reqDTO.setDocType(doctype);
+			reqDTO.setUpdateAction(true);
+			ctBB.getManagedBean().setNotificationSetting(false);
+			RequestCtAdminBackingBean	rcaBB = new RequestCtAdminBackingBean();
+			rcaBB.getManagedBean().setViewOnly(false);
+			rcaBB.getManagedBean().setExternalPageUrl(null);
+			rcaBB.setRequestCtAdminContractVer(reqDTO);
+			
+			/*if(rcaBB.getManagedBean().getContractVer())*/
+			
+			return REQUEST_CONTRACT_ADMIN;
+		
+		
+	 }
+	 /*#21387-basri end*/
+	
 	/**
 	 * The method used to navigate to request factoring screen
 	 * for request or remove factoring company purpose.
