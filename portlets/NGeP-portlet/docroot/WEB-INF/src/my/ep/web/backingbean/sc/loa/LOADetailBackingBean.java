@@ -3503,7 +3503,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 		
-		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);		
+		resDTO = getQtAwardSO().saveLOADtl(reqDTO);		
 		if(resDTO.isSuccessful()){
 			/*******************
 			 * ACKNOWLEDGE_PAGE
@@ -3524,6 +3524,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}		
 	}
 	//#22211 - End
+	
+	// #22211 - start
+	public boolean isLoaReviseStatus() {
+
+		Boolean loaReviseStatus = false;
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+
+		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
+				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+			loaReviseStatus = true;
+		}
+
+		return loaReviseStatus;
+	}
+
+	// #22211 - end
 	
 	/**
 	 * Update bpm task action.
