@@ -1097,10 +1097,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-//				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -1112,20 +1108,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc());
 				}
 				
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-//				log.info("getDocNoGroup():"+getDocNo());
-				
 				if(getDocNo()!= null && getDocNo().trim().length() > 0){
 					reqDTO.setDocNumber(getDocNo());
 				}
 			
 				if(getDocStatus() > 0){
-					/*
-					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-					 */
-//					log.info("getDocStatus"+getDocStatus());
 					reqDTO.setStatus(getDocStatus());
 				}
 				
@@ -1141,11 +1128,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					/*
-					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-					 */
-					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
 						boolean viewGlpFlag = viewGlpFlag();
@@ -1400,17 +1382,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       // 12177 - End
 						       
 								// Identify if it is a group or individual task
-						       /*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//						       log.info("getTaskType: " + worklistItemVO.getTaskType());
 								worklistItemVO.getTaskType();
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
-								/*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
+								
+								log.error("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 						
