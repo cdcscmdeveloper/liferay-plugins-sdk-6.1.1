@@ -3480,11 +3480,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		/*******************
 		 * INITIATE BPM REVISE
 		 */
-
+		AwardSupplierResDTO resDTO = null;
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		PmDigiSign digiSign = null;		
 		ScLoa scLoa = this.getManagedBean().getScLoa();		
-		scLoa.setScLoaRemarks(null); //To skip adding remark
+		parseLOADetails(scLoa, outcome);
+		validateLOADetails(scLoa, outcome);
 		
 		reqDTO.setScLoa(scLoa);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -3494,14 +3495,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setDigiSignData(digiSign);
-		reqDTO.setRoleCode(getUserRoleCode(this.getManagedBean().getScLoa().getScLoiLoa().getDocType()));
+		reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 		
-		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);		
+		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);		
 		if(resDTO.isSuccessful()){
 			/*******************
 			 * ACKNOWLEDGE_PAGE
