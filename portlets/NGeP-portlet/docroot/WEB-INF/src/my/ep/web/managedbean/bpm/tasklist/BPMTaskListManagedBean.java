@@ -1919,7 +1919,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	// 12177 - End
     
-    // refactor: code readibility, maintenance
+    /**
+     * This method was refactored for code readibility and maintenance. To filter worklistItemVO
+     * by title.
+     * 
+     * Performance risk: call service to retrieve from DB.
+     * 
+     * Mitigation: service only select selected field.
+     * 
+     * @param worklistItemVO
+     * @param face
+     */
     private void processWorklistItemByTitle(WorklistItemVO worklistItemVO, FacesScopes face) {
 		String title = worklistItemVO.getTitle();
 		
