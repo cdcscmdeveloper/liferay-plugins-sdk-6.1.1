@@ -116,9 +116,6 @@
 					disabled="#{flOrderBB.managedBean.progressStatus eq 4}"/>
 				</c:if>
 				<!-- #28374	Vinod End -->
-			<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
-					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
-					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- 28377 -->
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")}'
