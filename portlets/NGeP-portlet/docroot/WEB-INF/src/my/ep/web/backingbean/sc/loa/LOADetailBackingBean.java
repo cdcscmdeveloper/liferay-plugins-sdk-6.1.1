@@ -3473,21 +3473,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}		
 	}
 		
-	//#22211 - Start
-	public void updateReviseBPMTaskActionWithoutQt(String outcome){
+	// #22211 - Start
+	public void updateReviseBPMTaskActionWithoutQt(String outcome) {
 		debugLogger("updateReviseBPMTaskActionWithoutQt");
-		
-		/*******************
-		 * INITIATE BPM REVISE
-		 */
+
 		AwardSupplierResDTO resDTO = null;
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		PmDigiSign digiSign = null;		
-		ScLoa scLoa = this.getManagedBean().getScLoa();		
+
+		ScLoa scLoa = this.getManagedBean().getScLoa();
 		parseLOADetails(scLoa, outcome);
+
 		validateLOADetails(scLoa, outcome);
-		scLoa.setScLoaRemarks(null); //To skip adding remark
-		
+
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+		if (this.getManagedBean().getSelectedPtj() != null) {
+			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+		}
 		reqDTO.setScLoa(scLoa);
 		reqDTO.setSourceId(getManagedBean().getSourceId());
 		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
@@ -3495,25 +3496,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setOutcome(outcome);
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setDigiSignData(digiSign);
 		reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-		
-		resDTO = getQtAwardSO().saveLOADtl(reqDTO);		
-		if(resDTO.isSuccessful()){
+		resDTO = getQtAwardSO().saveLOADtl(reqDTO);
+
+		if (resDTO.isSuccessful()) {
 			/*******************
 			 * ACKNOWLEDGE_PAGE
 			 *******************/
 			String[] param = new String[3];
-			
+
 			param[0] = this.getManagedBean().getScLoa().getLoaNo();
 			param[1] = reqDTO.getRequestNoteNo();
 			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
-			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)){
+			if (reqDTO.getScLoa().getPmStatus().getStatusId()
+					.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
 				successMessage(MessageConst.INFO_700085, param);
 			} else {
 				successMessage(MessageConst.INFO_700084, param);
@@ -3521,10 +3522,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-		}		
+		}
 	}
-	//#22211 - End
-	
+	// #22211 - End
+
 	// #22211 - start
 	public boolean isLoaReviseStatus() {
 
