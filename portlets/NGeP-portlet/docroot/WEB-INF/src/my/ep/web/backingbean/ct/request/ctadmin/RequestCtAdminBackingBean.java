@@ -577,7 +577,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		/*Approver is mandatory for document submission. Please select at least one approver. */
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 				&& getManagedBean().getCtContract().getAssignedCtAdmin().getUserId() == null) {
-			throw new EpException(MessageConst.ERROR_750053); 
+			throw new EpException(MessageConst.ERROR_750054); 
 		}
 	}
 	
