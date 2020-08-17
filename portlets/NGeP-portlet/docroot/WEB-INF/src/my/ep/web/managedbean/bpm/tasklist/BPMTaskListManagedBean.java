@@ -1472,7 +1472,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
  	   QuoteResDTO quoteResDTO = null;
 	       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
 	       
-	       if(worklistItemVO.getDocType().equals("SQ")){
+	       if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
@@ -1537,7 +1537,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				   worklistItemVO.setExpirationDate(cal);
 				   
 			   }
-	       }else if(worklistItemVO.getDocType().equals("RN")){ 
+	       }else if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){ 
 
 	    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
 	    		  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
@@ -1588,7 +1588,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				  }
 			   }
 	    	   }
-	       }else if(worklistItemVO.getDocType().equals("PR")){
+	       }else if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 	    	   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	    		  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
@@ -1636,7 +1636,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					   }
 				  }
 			   }
-	       }else if(worklistItemVO.getDocType().equals("LA")){
+	       }else if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
 	    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
 				  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
 			      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
