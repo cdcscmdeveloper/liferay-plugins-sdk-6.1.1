@@ -75,6 +75,8 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 
 	private boolean autoUpdate;
 	
+	private boolean disableAssign = true;
+	
 	public DeskOfficerMaintenanceManagedBean() {
 		this.doMaintenanceSearchBean = new DeskOfficerMaintenanceSearchBean();
 	}
@@ -216,11 +218,7 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 	 * @param selectedUser the selectedUser to set
 	 */
 	public void setSelectedUser(PmUser selectedUser) {
-		if (this.selectedUser == null) {
-			this.selectedUser = selectedUser;
-		} else if (null != selectedUser && this.selectedUser.getLoginId() != selectedUser.getLoginId()) {
-			this.selectedUser = selectedUser;
-		}
+		this.selectedUser = selectedUser;
 	}
 
 	/**
@@ -347,6 +345,20 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the disableAssign
+	 */
+	public boolean isDisableAssign() {
+		return disableAssign;
+	}
+
+	/**
+	 * @param disableAssign the disableAssign to set
+	 */
+	public void setDisableAssign(boolean disableAssign) {
+		this.disableAssign = disableAssign;
 	}
 
 }

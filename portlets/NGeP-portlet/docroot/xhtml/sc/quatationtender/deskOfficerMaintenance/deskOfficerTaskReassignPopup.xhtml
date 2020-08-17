@@ -15,7 +15,7 @@
 		}
 	</style>
 	<p:dialog id="dlTaskReassignment" 
-		header="#{lbl['lbl.pm.ta.task.reassignment']}" modal="true"
+		header="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.assignment']}" modal="true"
 		widgetVar="dlTaskReassignment" dynamic="true" 
 		styleClass="doReassignUserDialog">
 		<!-- Validation Message -->
@@ -81,7 +81,7 @@
 					selection="#{DOMaintenanceBackingBean.managedBean.selectedUser}"
 					rowIndexVar="rowIndex" rowKey="#{user.userId}" selectionMode="single" lazy="true" rows="5">
 					<ac:paginator for="dtTaskReassign" />
-					<p:ajax event="rowSelect" />
+					<p:ajax event="rowSelect" listener="#{DOMaintenanceBackingBean.enableDisableAssign()}" update=":#{p:component('assignBtn')}"/>
 					<p:column headerText="#{lbl['lbl.pm.ta.name']}">  
 			    		#{user.userName}
 		        	</p:column>
@@ -92,10 +92,11 @@
 			</h:panelGroup>	 
 		</p:panel>
 		<p:panel  style="text-align: right;">
-			<p:commandButton
+			<p:commandButton id="assignBtn"
 				value="#{lbl['lbl.pm.ta.btn.assign']}"
 				action="#{DOMaintenanceBackingBean.assignUser()}"
 				onclick="taskReassignPopupBlockWidget.show()" oncomplete="taskReassignPopupBlockWidget.hide()" 
+				disabled="#{DOMaintenanceBackingBean.managedBean.disableAssign}"
 				update="@form" >
 			</p:commandButton>
 			 <p:commandButton id="cbCancel"
