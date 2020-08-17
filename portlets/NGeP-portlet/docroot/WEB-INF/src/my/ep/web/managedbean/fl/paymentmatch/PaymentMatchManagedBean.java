@@ -13,8 +13,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.TreeNode;
-
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -33,6 +31,8 @@ import my.ep.web.bean.pm.VotSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import org.primefaces.model.TreeNode;
 
 /**
  * Payment Match Managed Bean.
@@ -163,6 +163,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	//28221 - start
+	private PmUser user;
+	private boolean userActive = false;
+	private Long newSupplierId;
+	//28221 - end
 	/**
 	 * Gets the doc type.
 	 *
@@ -1609,4 +1614,31 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 		this.chargePTJOrg = chargePTJOrg;
 	}
 	//24893 - end
+	//28221 - start
+	public PmUser getUser() {
+		return user;
+	}
+
+	public void setUser(PmUser user) {
+		this.user = user;
+	}
+
+	public boolean isUserActive() {
+		return userActive;
+	}
+
+	public void setUserActive(boolean userActive) {
+		this.userActive = userActive;
+	}
+
+	public Long getNewSupplierId() {
+		return newSupplierId;
+	}
+
+	public void setNewSupplierId(Long newSupplierId) {
+		this.newSupplierId = newSupplierId;
+	}
+
+	//28221 - end
+
 }
