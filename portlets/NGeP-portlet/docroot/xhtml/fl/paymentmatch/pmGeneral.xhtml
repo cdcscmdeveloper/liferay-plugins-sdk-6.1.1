@@ -58,6 +58,21 @@
 				<td><p:inputText size="66" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.procurementTypeCategory)}" /></td>		
 			</tr>
+			<tr>
+				<td><p:outputLabel value="Pegawai Yang Menyerah Invoice" /></td>
+				<td><p:inputText size="66" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.user ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.user.userName}" /></td>		
+			</tr>
+			<tr>
+				<td><h:outputText value="&#160;" /> </td>
+				<td><p:selectOneMenu rendered="#{paymentMatchBackingBean.managedBean.userActive}" style="width: 300px;margin-bottom: 5px;"
+						label="S" required="true"
+						id="newSuppInvoice"
+						value="#{paymentMatchBackingBean.managedBean.newSupplierId}">
+						<f:selectItems value="#{paymentMatchBackingBean.showSupplierList()}" />
+					</p:selectOneMenu>
+			 	</td>
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.support.info.doc']}" toggleable="true">

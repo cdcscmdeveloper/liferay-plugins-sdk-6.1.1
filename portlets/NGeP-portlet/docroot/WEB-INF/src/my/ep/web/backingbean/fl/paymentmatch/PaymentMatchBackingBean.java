@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,14 +24,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -58,6 +49,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -69,13 +61,14 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.fund.FundReqDTO;
 import my.ep.dto.pm.common.fund.FundResDTO;
@@ -89,6 +82,8 @@ import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -96,7 +91,6 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -118,6 +112,7 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -149,6 +144,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Payment Match Backing Bean.
@@ -280,6 +283,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+			
+			//28221 - start
+			if(getManagedBean().getNewSupplierId() != null){
+				reqDTO.setSupplierSubmittedItd(getManagedBean().getNewSupplierId());
+				reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
+			}
+			//28221 - end
 			
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -491,6 +501,28 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			getManagedBean().setTaxInvoice(resDTO.isTaxable());
 		}
 		
+		//28221 start
+		if (getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId() != null) {
+			IUserSO userSO;
+			try {
+				userSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+
+				UserResDTO userResDTO = userSO.retrieveUserDtlById(userReqDTO);
+				getManagedBean().setUser(userResDTO.getPmUser());
+				getSupplierStatus();
+					
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			} finally {
+				userSO = null;
+			}
+		}		
+		//28221 end
 	}
 	
 	/**
@@ -2559,6 +2591,44 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
-	
+	//28221 -start
+		public void getSupplierStatus(){
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IPersonnelSO.class);
+			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			personnelReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+			PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByUserId(personnelReqDTO);
+			SmPersonnel currentPersonnel = personnelResDTO.getSmPersonnel();
+			
+			personnelReqDTO.setSmSupplierId(personnelResDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+			for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+				if(personnel.getPersonnelId() == currentPersonnel.getPersonnelId()){
+					//Commented for testing purposes only
+					getManagedBean().setUserActive(true);
+				}
+			}
+		}
+		
+		public SelectItem[] showSupplierList(){
+			SelectItem[] items = null;
+			int i = 1;
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+			
+			personnelReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+			personnelResDTO = personnelSO.retrievePersonnelByUserId(personnelReqDTO);
+			
+			personnelReqDTO.setSmSupplierId(personnelResDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+			
+			items = new SelectItem[personnelResDTO.getSmPersonnelList().size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {
+			  items[i++] = new SelectItem(smPersonnel.getPmUser().getUserId(), smPersonnel.getPmUser().getUserName());
+			}
+			return items;
+		}
 	
 }
