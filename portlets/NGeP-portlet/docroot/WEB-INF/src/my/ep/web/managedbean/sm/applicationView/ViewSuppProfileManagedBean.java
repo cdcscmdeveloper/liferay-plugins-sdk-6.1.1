@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -279,6 +280,12 @@ public class ViewSuppProfileManagedBean extends
 				reqDTO.getSmSupplier().setRegNo(getSearchSupplier().getRegNo());
 			if(getSearchSupplier().getEpNo() != null)
 				reqDTO.getSmSupplier().setEpNo(getSearchSupplier().getEpNo());
+			
+			// 28273: Disciplinary Action - start - 26238
+			SmAppl smAppl = new SmAppl();
+			smAppl.setApplType("O");
+			reqDTO.setSmAppl(smAppl);
+			// 28273: Disciplinary Action - end - 26238
 			
 			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
 					.retrieveBasicSupplierForMaintenance(reqDTO)
