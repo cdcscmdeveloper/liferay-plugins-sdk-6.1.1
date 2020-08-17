@@ -85,6 +85,12 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	
+	// Refactor: To make sqTimeValidity to read only once - Start.
+	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));
+	// Refactor: To make sqTimeValidity to read only once - End.
+	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
 	private static Map bpmMap = null;
@@ -1338,9 +1344,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public boolean isSqStillValid(Date sqEndDate){		
 		
 		Boolean validDate = true;	
-			
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
+		
+		// Refactor: To make sqTimeValidity to read only once - Start.
+		/*Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));*/
+		// Refactor: To make sqTimeValidity to read only once - End.
 		
 		if(sqEndDate != null){
 				Date currentDate = new Date();
@@ -1349,7 +1357,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				// Refactor: To make sqTimeValidity to read only once - Start.
+				cal.add(Calendar.DATE, SQ_TIME_VALIDITY); //add 60days to closing/end date
+				// Refactor: To make sqTimeValidity to read only once - Start.
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){
