@@ -1664,14 +1664,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void validateContractAmendment(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);	
 		// Validation for remark
-		//#25956 - Add new Cancel Button for Amendment process
+		//#25956 - Start Add validate remark for cancel and Reject Button Amendment
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
-						&& (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value()) 
-								|| (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+						&& (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
+								|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+								|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+								|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+								|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+								|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 									|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 									|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-									|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()))))) {
+									|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())))) {
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
 			String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
 			String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
@@ -1684,6 +1688,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}/*Remark validation end*/
+		//#25956 - End Add validate remark for cancel and Reject Button Amendment
 
 		/*validation for other  selection*/
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
