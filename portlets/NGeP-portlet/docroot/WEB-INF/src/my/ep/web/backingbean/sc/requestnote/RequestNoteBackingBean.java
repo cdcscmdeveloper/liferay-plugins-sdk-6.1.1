@@ -265,27 +265,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
-			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
-			
+			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);	
 			if(requestNote.getCurrentStatus() != null) {
-				if(requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL)
-				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION) 
-				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-					//12183 - start
-					if(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault() != null) {
-						Date today  = DateUtils.getCurrentDateWithoutTime();
-						Date ExpDate = DateUtils.addDays(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate(),requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays() );
-						
-						if(ExpDate.before(today)){
-							requestNote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
-						}
-					}
-					//12183 - end
-				}
-			
 				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
+			}	
+			
+			//12177,12183 - Start
+			if(requestNote != null){
+				getDocStatus(requestNote);
 			}
+			//12177,12183 - End
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -1308,18 +1297,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote = requestNoteResDTO.getRequestNoteDetail();
 		}
 
-		if(requestNote != null){
-			// Refactor #18 - Start.
-			getManagedBean().setDocStatus("");
-			if(CollectionUtils.isNotEmpty(requestNote.getRequestNoteDtls())
-	    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem()
-	    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()){
-	    		ScPurchaseInDefault scPID = requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
-	    		if (null != scPID) {
-	    			getManagedBean().setDocStatus(getDocStatus(scPID));
-	    		}
-	    	} 	
-			// Refactor #18 - End.
+		if(requestNote != null){	
 			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
@@ -1329,6 +1307,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
 			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
+			//12177,12183 - Start
+			getDocStatus(requestNote);
+			//12177,12183 - End
 		}
 		
 		//Redmine Enhancement #12177
@@ -4928,7 +4909,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}	 
 		
 		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));	
+				.getProperty("sqTimeValidity"));
 		
 		if(scQuote != null && currentStatusId != null){
 			if(getManagedBean().getPurchaseInDefaultId() == null){
@@ -5259,26 +5240,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	//12183 - Start
 	
 	// Refactor #18 - Start.
-	public String getDocStatus(ScPurchaseInDefault scPID){
-			
-		if(checkStatusPidExpired(scPID)){
-			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+	public void getDocStatus(ScRequestNote requestNote){
+
+		if(checkStatusPidExpired(requestNote)){
+			getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.PID_EXPIRED)); 
 		}else if(!isSqStillValid()){
-			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+			getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.SQ_EXPIRED));
 		}else{
-			return getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId());
+			getManagedBean().setDocStatus(getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId()));
 		}
 	}
 	// Refactor #18 - End.
 	
 	// Refactor #18 - Start.
-	public boolean checkStatusPidExpired(ScPurchaseInDefault scPID){
+	public boolean checkStatusPidExpired(ScRequestNote requestNote){
 		
-		//String docNo = null;
-		//Long currentStatusId = null;
+		Long currentStatusId = null;
+		ScPurchaseInDefault scPID = null;
 		
-		/*if(requestNote != null){
-			docNo = requestNote.getRequestNoteNo();
+		if(requestNote != null){
 			
 			if(requestNote.getCurrentStatus() != null){
 				currentStatusId = requestNote.getCurrentStatus().getPmStatus().getStatusId();		
@@ -5295,25 +5275,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 		    	  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-		    		
-		    	RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-		    	RequestNoteResDTO resDTO = new RequestNoteResDTO();
-		    	IRequestNoteSO reqSO = null;
-		    	reqSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-		    		
-		    	reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
-		    	reqDTO.setRequestNoteNo(docNo);
 		    	
-		    	resDTO = reqSO.getRequestNoteByIdAndNo(reqDTO);
-		    		
-		    	if(null != resDTO.getRequestNoteDetail() && CollectionUtils.isNotEmpty(resDTO.getRequestNoteDetail().getRequestNoteDtls())
-		    			&& null != resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem()
-		    			&& null != resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()){
-		    		scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
+				if(CollectionUtils.isNotEmpty(requestNote.getRequestNoteDtls())
+		    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem()
+		    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()){
+					
+		    		scPID = requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
 		    	} 		
 		    }  
-		}*/
+		}
 		
 		return pidValidityBoolean(scPID);
 	}
