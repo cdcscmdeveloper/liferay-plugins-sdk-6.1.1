@@ -3483,6 +3483,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		parseLOADetails(scLoa, outcome);
 
 		validateLOADetails(scLoa, outcome);
+		scLoa.setScLoaRemarks(null); //To skip adding remark
 
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
