@@ -127,7 +127,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	// 12177 - Start
 	private Calendar expirationDateSq;
 	// 12177 - End
-
+ 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
