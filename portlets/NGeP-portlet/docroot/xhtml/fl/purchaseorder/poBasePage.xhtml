@@ -74,7 +74,7 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 					action="#{flOrderBB.backToPervious}"
-					rendered="#{flOrderBB.managedBean.taskId==null}" />
+					rendered="#{flOrderBB.managedBean.taskId==null || flOrderBB.managedBean.taskId!=null}" />
 				</td>
 				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
 				<td colspan="4" style="text-align: right">
@@ -91,9 +91,53 @@
 							</ui:define>
 						</ui:decorate>
 					</c:if>
+					<!-- 28377 -->
+					<!-- #28375- Beginning - Logan-->
+					
+				
+					
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+		
+				<p:commandButton
+						value="#{lbl['lbl.fl.yep.proceed']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
+					</p:commandButton>
+					
+									<p:commandButton
+						value="#{lbl['lbl.fl.yep.carryForward']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.Proceed)}" disabled="#{flOrderBB.managedBean.disable}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.Proceed}" />
+					</p:commandButton>
+			</c:if>
+					
+					
+					<!-- #28375- Ending -->
+					<!-- #28374	Vinod Start -->
+					<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
+					</c:if>
+					<!-- #28374	Vinod End -->
+					
+					
+					<!-- #28375- Ending -->
+					
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
-					process="@form" partialSubmit="true" rendered="#{flOrderBB.managedBean.yep}"
+					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- edit render -->
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.submitAP58}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 28377 -->
+					
 				</td>
 				</c:if>
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>

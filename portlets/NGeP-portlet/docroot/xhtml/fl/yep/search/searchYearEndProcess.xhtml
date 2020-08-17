@@ -220,7 +220,8 @@
 							<p:spacer width="2"/>
 						<h:outputText value="#{lbl['lbl.fl.yep.ap58a']}"></h:outputText></td>
 					</tr>
-					<!-- <tr>
+					<!-- #28373 added by vinod -->
+					<tr>
 						<td width="20%"></td>
 						<td width="30%"></td>
 						<td width="20%"></td>
@@ -228,7 +229,7 @@
 							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
 							<p:spacer width="2"/>
 						<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}"></h:outputText></td>
-					</tr> -->
+					</tr>
 					<!-- <tr>
 						<td width="20%"></td>
 						<td width="30%"></td>
@@ -237,8 +238,8 @@
 							<p:ajax process="@this"></p:ajax></p:selectBooleanCheckbox>
 							<p:spacer width="2"/>
 						<h:outputText value="#{lbl['lbl.fl.yep.closedManPay']}"></h:outputText></td>
-					</tr> -->
-					<!-- <tr>
+					</tr>
+					<tr>
 						<td width="20%"></td>
 						<td width="30%"></td>
 						<td width="20%"></td>
@@ -380,7 +381,10 @@
 					<h:outputText value="#{yearEndProcessBackingBean.getStatusDescById(flYep.statusId)}" />
 				</p:column> 
 				<p:column headerText="#{lbl['lbl.fl.yep.category']}" style="white-space:normal;" >
-					<h:outputText value="#{(yearEndProcessBackingBean.managedBean.searchAp58 eq true) ? 'Ap58a' : ''}" />
+					<!-- #28373 added by vinod start -->
+					<h:outputText value="#{(flYep.isAp58 eq 1) ? 'Ap58a' : ''}" rendered="#{flYep.isAp58 eq 1}"/>
+					<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{flYep.carryForward}"/>
+					<!-- #28373 added by vinod End -->
 				</p:column> 
 				
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
@@ -391,6 +395,37 @@
 							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
 							        	icon="ui-icon-fl-cancel"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	<!-- start 28377 -->
+							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isAP58(flYep.statusId) and flYep.isAp58 == 1 and flYep.phase == 5}"
+							        	icon="ui-icon-amendment"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					                    <!-- end 28377 -->		
+					                    
+					                    
+					            <p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
+							        	icon="ui-icon-fl-cancel"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					
+						<!-- #28375- Beginning Logan -->
+					
+						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.phase eq '3'}"
+							        	icon="ui-icon-fl-cancel"
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+					
+					<!-- #28375- Ending Logan-->
+					<!-- #28374	Vinod Start -->
+						<p:menuitem value="#{lbl['lbl.fl.yep.cancel']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	rendered="#{flYep.phase eq '3'}"
+							        	icon="ui-icon-fl-cancel" 
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCancelYEP}'}, {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
+					<!-- #28374	Vinod End -->
 					</p:menuButton>
 				</p:column>
 			</p:dataTable>
