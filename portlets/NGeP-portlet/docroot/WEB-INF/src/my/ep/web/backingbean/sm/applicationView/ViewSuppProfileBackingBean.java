@@ -11,8 +11,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.helper.EntityHelper;
@@ -460,9 +459,13 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setDisableDownloadButtonDAHistory(true);
 		}
 		
-		//28637 - start
-		if(currSupp.getSmAppl().getSupplierType().equals("K") || getManagedBean().isMofSupplier())
+		//28637 - start, 28806
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setSupplierId(currSupp.getSupplierId());
+		SmAppl smAppl = SmServiceLookup.getSupplierSearchSO().retriveLatestApplBySupplierId(reqDTO).getSmAppl();
+		if(smAppl.getSupplierType().equals("K") || getManagedBean().isMofSupplier())
 			getManagedBean().setViewCatCode(true);
+		//28637 - end, 28806
 
 		//27876: Disciplinary Action - start - <27876>
 		currSupp.setFlagSupplier(true);
