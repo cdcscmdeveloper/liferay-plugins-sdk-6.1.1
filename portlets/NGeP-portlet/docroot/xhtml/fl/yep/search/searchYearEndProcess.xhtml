@@ -404,12 +404,7 @@
 					                    <!-- end 28377 -->		
 					                    
 					                    
-					            <p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
-							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
-							        	icon="ui-icon-fl-cancel"
-							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
-					
+				
 						<!-- #28375- Beginning Logan -->
 					
 						<p:menuitem value="#{lbl['lbl.fl.yep.carryForward']}"  
