@@ -556,7 +556,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					   Always disable Reason For Update for original ppItem*/
 					if (ppItem.isOriginal()) {
 						if (ppItem.getFromPpItem().equals(commonProcurementItemId)) {
-							ppItem.setCloneEnabled(true);
+							ppItem.setCloneEnabled(false);
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
 							ppItem.setBrandNew(true);
@@ -577,6 +577,70 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 	    }
+		
+		// Attempting to reorder the PpItems only if clones exist
+        List<PpProcurementItem> tempOriginalPpItemList = new ArrayList<PpProcurementItem>();
+		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
+		
+        for (PpProcurementItem ppItem : ppItems) {
+			if (ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
+				tempClonedPpItemList.add(ppItem);
+			} else {
+				tempOriginalPpItemList.add(ppItem);
+			}
+        }
+        
+        // Debugging..
+        log.info("tempOriginalPpItemList (reorderedList)..");
+        for (PpProcurementItem ppit : tempOriginalPpItemList) {
+        	log.info("tempOriginalPpItemList.title= "+
+        			ppit.getProcurementTitle());
+        }
+        
+		if (tempClonedPpItemList.size() > 0) {
+			ppItemMap.put(tempClonedPpItemList, tempOriginalPpItemList);
+		}
+        
+        List<PpProcurementItem> clones = new ArrayList<PpProcurementItem>();
+    	List<PpProcurementItem> reorderedList = new LinkedList<PpProcurementItem>();
+    	
+    	log.info("Size ppItemMap= "+ppItemMap.size());
+    	
+    	if (ppItemMap.size() > 0) {
+    		
+	        for (Map.Entry<List<PpProcurementItem>, List<PpProcurementItem>> ppItemList : 
+	        	ppItemMap.entrySet()) {
+	        	
+	        	clones = ppItemList.getKey();
+	        	reorderedList = ppItemList.getValue();
+	        	
+	        	log.info("Initially, size of reorderedList is "
+	        			+reorderedList.size());
+	        	
+	        	for (int i = 0; i < reorderedList.size(); i++) {
+		        	for (PpProcurementItem clone : clones) {
+	        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
+	        				log.info("cloned is= "+clone.getProcurementTitle());
+	        				reorderedList.add(i+1,clone);
+	        			}
+	        		}
+		        }
+	        }
+	        log.info("Size getPpProcurementItems= "+ppItems.size()+
+	        		", size reorderedList= "+reorderedList.size());
+	        
+	        for (PpProcurementItem reorder : reorderedList) {
+	        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
+	        }
+	        
+	        ppItems.clear();
+	        
+	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
+	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
+	        }
+	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(reorderedList);
+        }
+		
     }
 	
 	private void resetPpProcurementItemFields(List<PpProcurementItem> ppItems) {
@@ -716,68 +780,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				                itr.remove(); 
 				            }
 				        }
-						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());
-				        
-				        // Attempting to reorder the PpItems only if clones exist
-				        List<PpProcurementItem> tempOriginalPpItemList = new ArrayList<PpProcurementItem>();
-						List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
-						
-				        for (PpProcurementItem ppItem : ppPlan.getPpProcurementItems()) {
-
-							if (ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
-								tempClonedPpItemList.add(ppItem);
-							} else {
-								tempOriginalPpItemList.add(ppItem);
-							}
-				        }
-				        
-				        // Debugging..
-				        log.info("tempOriginalPpItemList (reorderedList)..");
-				        for (PpProcurementItem ppit : tempOriginalPpItemList) {
-				        	log.info("tempOriginalPpItemList.title= "+
-				        			ppit.getProcurementTitle());
-				        }
-				        
-						if (tempClonedPpItemList.size() > 0) {
-							ppItemMap.put(tempClonedPpItemList, tempOriginalPpItemList);
-						}
-				        
-				        List<PpProcurementItem> clones = new ArrayList<PpProcurementItem>();
-			        	List<PpProcurementItem> reorderedList = new LinkedList<PpProcurementItem>();
-			        	
-			        	log.info("Size ppItemMap= "+ppItemMap.size());
-			        	
-			        	if (ppItemMap.size() > 0) {
-			        		
-					        for (Map.Entry<List<PpProcurementItem>, List<PpProcurementItem>> ppItemList : 
-					        	ppItemMap.entrySet()) {
-					        	
-					        	clones = ppItemList.getKey();
-					        	reorderedList = ppItemList.getValue();
-					        	
-					        	log.info("Initially, size of reorderedList is "
-					        			+reorderedList.size());
-					        	
-					        	for (int i = 0; i < reorderedList.size(); i++) {
-						        	for (PpProcurementItem clone : clones) {
-					        			if (clone.getFromPpItem().equals(reorderedList.get(i).getProcurementItemId())) {
-					        				log.info("cloned is= "+clone.getProcurementTitle());
-					        				reorderedList.add(i+1,clone);
-					        			}
-					        		}
-						        }
-					        }
-					        log.info("Size getPpProcurementItems= "+ppPlan.getPpProcurementItems().size()+
-					        		", size reorderedList= "+reorderedList.size());
-					        
-					        for (PpProcurementItem reorder : reorderedList) {
-					        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
-					        }
-					        
-					        ppPlan.getPpProcurementItems().clear();
-					        ppPlan.getPpProcurementItems().addAll(reorderedList);
-				        }
-
+						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());						
 					}
 					//[SIR#12802] - end
 
