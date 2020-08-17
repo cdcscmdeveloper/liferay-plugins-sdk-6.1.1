@@ -12751,6 +12751,15 @@ public class SpecificationBackingBean extends
 							if(this.getManagedBean().getTemplateSpecBean() != null){
 								if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
 									this.getManagedBean().getTemplateSpecBean().getSpecMaster().setWeightageReq(false);
+									this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
+									if(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
+										for(TplSpecQuestion specQuestWeightage : this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+											if(specQuestWeightage!=null){
+												specQuestWeightage.setWeightageReq(false);
+											}
+										}
+									}
+									
 								}
 							}
 						}
