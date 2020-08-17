@@ -65,7 +65,7 @@
 			</tr>
 			<tr>
 				<td><h:outputText value="&#160;" /> </td>
-				<td><p:selectOneMenu rendered="#{paymentMatchBackingBean.managedBean.userActive}" style="width: 300px;margin-bottom: 5px;"
+				<td><p:selectOneMenu rendered="#{!paymentMatchBackingBean.managedBean.userActive}" style="width: 300px;margin-bottom: 5px;"
 						label="S" required="true"
 						id="newSuppInvoice"
 						value="#{paymentMatchBackingBean.managedBean.newSupplierId}">
