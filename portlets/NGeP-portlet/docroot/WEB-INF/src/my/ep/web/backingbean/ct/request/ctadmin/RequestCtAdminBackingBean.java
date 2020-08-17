@@ -262,7 +262,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					messageId = MessageConst.INFO_700010;
+					messageId = MessageConst.INFO_700042;
 				}
 
 				if(StringUtils.isNotBlank(nextRole)){
