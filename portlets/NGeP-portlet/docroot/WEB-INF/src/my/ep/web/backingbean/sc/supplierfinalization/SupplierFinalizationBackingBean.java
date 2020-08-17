@@ -3971,7 +3971,8 @@ public class SupplierFinalizationBackingBean extends
 		/*#25729#142 Start
 		 	If Desk Officer QCA & indicative price 20-50k
 				hide forward to higher authority
-		*/		
+		*/	
+		/* Comment for CR:#26169 , BUG:#28682 START 
 		boolean expectTotalIndPriceBetweenThreshold = expectTotalIndPriceBetweenThreshold(getManagedBean().getScQt());																				
 		String CommType = getManagedBean().getCommitteeType();
 		if (expectTotalIndPriceBetweenThreshold==true && 
@@ -3982,6 +3983,7 @@ public class SupplierFinalizationBackingBean extends
 			excludedDecisionList.add(
 					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
 		}
+		Comment for CR:#26169 , BUG:#28682 END  */
 		//#25729#142 End
 		
 		if (CollectionUtils.isNotEmpty(
