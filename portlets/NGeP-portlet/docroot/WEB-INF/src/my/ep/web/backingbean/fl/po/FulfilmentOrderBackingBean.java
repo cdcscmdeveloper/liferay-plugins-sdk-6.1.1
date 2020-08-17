@@ -97,6 +97,8 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.yep.FlYepTasklist;
+import my.ep.persistence.entity.fl.yep.FlYepTasklist_;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -1004,7 +1006,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 */
 	private String getUserRole() {
 		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			return RoleCode.FL_APPROVER.value();	
+			return RoleCode.FL_APPROVER.value();
 		} else if(getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
 			return RoleCode.FL_APPROVER.value();
 		}else if(hasSupplierRole()) {
@@ -1098,84 +1100,91 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 		}
 
-	/* #28375 - Beginning - Logan */
-	public void carryForward(String action) throws PortalException, SystemException, IOException {
+		/* #28375 - Beginning - Logan */
+		public void carryForward(String action) throws PortalException, SystemException, IOException {
 
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FeeExemptionReqDTO reqFeeDTO = new FeeExemptionReqDTO();
-		FulfilmentResDTO resDTO = null;
-		FeeExemptionResDTO resFeeDTO = null;
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FeeExemptionReqDTO reqFeeDTO = new FeeExemptionReqDTO();
+			FulfilmentResDTO resDTO = null;
+			FeeExemptionResDTO resFeeDTO = null;
 
-		IFeeExemptionSO feeExemptionsSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
-		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		IFulfilmentYepSO FulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
-		FlYepReqDTO yepReqDTO = new FlYepReqDTO();
-		FlYepResDTO yepResDTO =null;
-		
-		reqFeeDTO.setOrgProfileId((long) 1955);
-		resFeeDTO = feeExemptionsSO.getFeeExemptionsYepProcessing(reqFeeDTO);
-
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		Calendar currTime = Calendar.getInstance();
-		
-		if(action==BpmOutcomeConst.BPM_PROCEED){
-			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-			yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
-			yepReqDTO.setCarryFoward(true);
-			FulfilmentYepSO.updateFlYepTaskList(yepReqDTO);
-			log.info("Set carry forward as true");
+			IFeeExemptionSO feeExemptionsSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+			IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			IFulfilmentYepSO fulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
+			FlYepReqDTO yepReqDTO = new FlYepReqDTO();
+			FlYepResDTO yepResDTO =null;
 			
-			String messageCode = "";
+			reqFeeDTO.setOrgProfileId((long) 1955);
+			resFeeDTO = feeExemptionsSO.getFeeExemptionsYepProcessing(reqFeeDTO);
 
-			messageCode = MessageConst.INFO_700033;
-
-			successMessage(messageCode, "", "", Boolean.TRUE);
-		}
-
-		try {
-			Date d1 = df.parse(df.format(currTime.getTime()));
-			Date d2 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getEffDate()));
-			Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
-
-			if (getManagedBean().getCarryForward() != null) {
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			Calendar currTime = Calendar.getInstance();
 			
-				if (d1.compareTo(d3) < 0 && d1.compareTo(d2) > 0)  {
-					reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
-				}else{
-					throw new EpException(MessageConst.ERROR_776107);
-				}
-
-				signingAction(action);
+			if(action==BpmOutcomeConst.BPM_PROCEED){
+				yepReqDTO.setFlOrder(getManagedBean().getFulfilmentOrder());
+				reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+				yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+				yepReqDTO.setCarryFoward(true);
+				yepReqDTO.setUserRole(getUserRole());
+				log.info("User role is : " +getUserRole());
+		
+				fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
+				log.info("Carry Forward set to true");
+				
 				String messageCode = "";
 
-				messageCode = MessageConst.INFO_700033;
+				messageCode = MessageConst.INFO_776108;
 
-				successMessage(messageCode, "", "", Boolean.TRUE);
-
+				successMessage(messageCode, "", yepReqDTO.getDocNo(), Boolean.TRUE);
 			}
 
-			else {
-				FacesContext
-						.getCurrentInstance()
-						.getExternalContext()
-						.redirect(
-								EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
-										+ "notifications");
+			try {
+				Date d1 = df.parse(df.format(currTime.getTime()));
+				Date d2 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getEffDate()));
+				Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
+				log.info("d2 is : " +d2);
+				log.info("d3 is : " +d3);
 
-			}
-
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-					
+				if (getManagedBean().getCarryForward() != null) {
 				
-		
-		}
+					if (d1.compareTo(d3) < 0 && d1.compareTo(d2) > 0)  {
+						reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+					}else{
+						throw new EpException(MessageConst.ERROR_776107);
+					}
+
+					signingAction(action);
+					String messageCode = "";
+
+					messageCode = MessageConst.INFO_700033;
+
+					successMessage(messageCode, "", "", Boolean.TRUE);
+
+				}
+
+				else {
+					FacesContext
+							.getCurrentInstance()
+							.getExternalContext()
+							.redirect(
+									EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+											+ "notifications");
+
+				}
+
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			} catch (Exception e) {
+				throw new EpException(MessageConst.ERROR_776107);
+				
+			}	
+						
+					
+			
+			}
 		
 		public static String getMessageCommon(String name) {
 			return ResourceBundleUtils.getMessage(name,
