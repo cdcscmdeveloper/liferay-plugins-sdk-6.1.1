@@ -1101,7 +1101,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 
 		/* #28375 - Beginning - Logan */
-		public void carryForward(String action) throws PortalException, SystemException, IOException {
+		public String carryForward(String action) throws PortalException, SystemException, IOException {
 
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FeeExemptionReqDTO reqFeeDTO = new FeeExemptionReqDTO();
@@ -1114,6 +1114,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			IFulfilmentYepSO fulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
+			String messagePrefix = "";
+			String messageSuffix = "";
 			FlYepReqDTO yepReqDTO = new FlYepReqDTO();
 			FlYepResDTO yepResDTO =null;
 			
@@ -1131,14 +1133,27 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				yepReqDTO.setUserRole(getUserRole());
 				log.info("User role is : " +getUserRole());
 		
-				fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
-				log.info("Carry Forward set to true");
+				yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
+				log.info("Carry Forwarded");
 				
-				String messageCode = "";
-
-				messageCode = MessageConst.INFO_776108;
-
-				successMessage(messageCode, "", yepReqDTO.getDocNo(), Boolean.TRUE);
+				if(yepResDTO.isSuccessful()) {
+					String messageId = MessageConst.INFO_700005;
+					String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+					String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)) {
+						messageId = MessageConst.INFO_745022;
+					}
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					throw new EpException(MessageConst.ERROR_700020);
+				}
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			
+			
 			}
 
 			try {
@@ -1180,7 +1195,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (Exception e) {
 				throw new EpException(MessageConst.ERROR_776107);
 				
-			}	
+			}
+			return messageSuffix;	
 						
 					
 			
