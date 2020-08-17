@@ -1270,7 +1270,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			return null;
 		} else {
 			validateFulfillmentOrder(outcome);
-			//setTextBeforeSign(outcome);
+			setTextBeforeSign(outcome);
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -1588,9 +1588,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			sb.append(outcome+"|");
 			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
-			log.info("test:inside setTextBeforeSign: "+sb.toString());
 			getManagedBean().setTextBeforeSign(sb.toString());
-			log.info("test:inside after setTextBeforeSign: "+getManagedBean().getTextBeforeSign());
 		}
 	
 	/**
