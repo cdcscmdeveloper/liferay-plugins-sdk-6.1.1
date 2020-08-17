@@ -91,6 +91,10 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private boolean contractRequest;
 	
+	/*#28375 Logan*/
+	private String carryForward="";
+	private String Proceed="";
+	private boolean disable;
 	private String buttonVal;
 	private String backToPrevious;
 	private List<FlRemark> previousRemarkList;
@@ -174,6 +178,15 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<DisciplinaryActionVO> disciplineVOs;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
+	//28377 - start
+	private String FileDirectory;
+	private FlAttachment attachment;
+	//28377 - end
+	
+	//#28374	Vinod Start
+	private String progressStatus;
+	private String iscarryForward="";
+	//#28374	Vinod End
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1486,6 +1499,63 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setYep(boolean yep) {
 		this.yep = yep;
+	}
+    /*#28375 - Beginning Logan*/
+	public String getCarryForward() {
+		return carryForward;
+	}
+
+	public void setCarryForward(String carryForward) {
+		this.carryForward = carryForward;
+	}
+	
+	public String getProceed() {
+		return Proceed;
+	}
+
+	public void setProceed(String proceed) {
+		Proceed = proceed;
+	}
+	
+	public boolean isDisable() {
+		return disable;
+	}
+
+	public void setDisable(boolean disable) {
+		this.disable = disable;
+	}
+	
+	/*#28375 - Ending Logan*/
+	
+	//#28374	Vinod Start
+	public String getProgressStatus() {
+		return progressStatus;
+	}
+	public void setProgressStatus(String progressStatus) {
+		this.progressStatus = progressStatus;
+	}
+	public String getIscarryForward() {
+		return iscarryForward;
+	}
+	public void setIscarryForward(String iscarryForward) {
+		this.iscarryForward = iscarryForward;
+	}
+	//#28374	Vinod End
+	
+	public String getFileDirectory() {
+		return FileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		FileDirectory = fileDirectory;
+	}
+
+	public FlAttachment getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(FlAttachment attachment) {
+		this.attachment = attachment;
 	}
 
 }
