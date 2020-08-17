@@ -45,6 +45,7 @@ import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
@@ -2110,5 +2111,61 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return calendar;
 	}
 	// 12177 - End
+}
+//#24968-start - performance
+/**
+* This method was refactored for code readibility and maintenance. To filter worklistItemVO
+* by Task Name.
+* 
+* Performance risk: call service to retrieve from DB.
+* 
+* Mitigation: service only select selected field.
+* 
+* @param worklistItemVO
+* @param face
+*/
+private void processWorklistItemByTaskName(WorklistItemVO worklistItemVO, FacesScopes face) {
+	if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
+  	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+  }     
+	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
+  	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
+  	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+  	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+  }
+	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+  	retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+	}	       
+	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+  	retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+  }	       
+	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+  	retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+  }	       
+	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+  	|| worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+  	retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+  }	       
+	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+  	retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+  }	       
+	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+  	retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+  }	       
+	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+  	 retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+  }     
+	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
+  	worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+  	retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+  }
+	//# start 25627  - 
+	else if (worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_DO_REASSIGNMENT)) {
+		worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.quotation.tender.deskofficermaintenance.approveTaskListTitle", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+	}
+     //# end 25627
+
+	}
+ 	// end #24968 
 	
 }
