@@ -127,7 +127,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	// 12177 - Start
 	private Calendar expirationDateSq;
 	// 12177 - End
- 
+
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
 	}
@@ -468,19 +468,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 				
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-				/*log.info("testing BPM auth******" + token);*/
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
-				
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-				/*log.info("getDocType()"+getDocType());*/
 				reqDTO.setDocType(getDocType());
 	
 				reqDTO.setViewBy(getViewBy());
@@ -493,13 +484,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc().replaceAll("<", "&#60;"));
 				}
 				
-				/*if(getSelectedOrgProfile()!=null){
-					System.out.println("getSelectedOrgProfile()"+getSelectedOrgProfile().getOrgProfileId());
-				}*/
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-//				log.info("getDocStatus()" + getDocStatus());
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
@@ -510,153 +494,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					/*
-					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-					 */
-					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
-
+					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 
 						boolean viewGlpFlag = viewGlpFlag();
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
-								if (worklistItemVO.getTitle().contains("<")) {
-									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-								}
-
-							// s1 module
-							if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-								/*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//								log.info("Doc number = " + worklistItemVO.getDocNumber());
-								ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
-										.getDocNumber());
-								if (scPrInquiry != null) {
-									worklistItemVO.setTitle(scPrInquiry.getTitle());
-									/*
-									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-									 */									
-									/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-											+ scPrInquiry.getTitle());*/
-								}
-							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							} else if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							} else if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
-								//sm module
-								//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
-								//sm module
-								MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+								processWorklistItemByTitle(worklistItemVO, face);
 								
-								/*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//								log.info("***** The document Id for the workflow is ****** "+ worklistItemVO.getDocId());
-								mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
-						    	   StringBuilder sb = new StringBuilder();
-						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						    	   if(mofResDto.getCompanyName() != null){
-						    		   	   sb.append(" ( ");
-								    	   sb.append(mofResDto.getCompanyName());
-								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
-								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
-						    	   }
-						    	   
-								worklistItemVO.setTitle(sb.toString());
-							} else if (worklistItemVO.getTitle().startsWith("lbl.cd")) {
-
-								StringBuilder sb = new StringBuilder();
-								sb.append(ResourceBundleUtils.getMessage(
-										worklistItemVO.getTitle(),
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										face.getUserLocale()));
-
-								worklistItemVO.setTitle(sb.toString());
-							} else if (worklistItemVO.getTitle().startsWith("lbl.pm")) {
-								AccessApplResDTO accessApplResDTO = retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
-								if (accessApplResDTO.isSuccessful() && 
-										accessApplResDTO.getAccessAppl() != null) {
-
-									StringBuilder sb = new StringBuilder();
-									if (ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())) {
-										sb.append(ResourceBundleUtils.getMessage(
-														"lbl.pm.access.app.tasklist.mr.title",
-														new String[] {
-																accessApplResDTO.getAccessAppl().getApplicantName(),
-																accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName() },
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														face.getUserLocale()));
-										worklistItemVO.setTitle(sb.toString());
-									} else if (ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO
-													.getDocType())) {
-										sb.append(ResourceBundleUtils.getMessage(
-														"lbl.pm.access.app.tasklist.cp.title",
-														new String[] {
-																accessApplResDTO.getAccessAppl().getApplicantName(),
-																accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName() },
-														ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-														face.getUserLocale()));
-										worklistItemVO.setTitle(sb.toString());
-									}
-								}
-								} else {
-									processTitleWithDocStatus(worklistItemVO, face);
-								}
-							 if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							       //start added for #24968
-						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
-						    	   //end added for #24968
-						       }
-						       //start added for #24968
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
-							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
-							       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
-						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
-						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
-						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
-						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
-						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
-						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
-						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-
-						       //end added for #24968
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							       //start added for #24968
-						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
-						    	   //end added for #24968
-						       }
+								processWorklistItemByTaskName(worklistItemVO, face);
+								
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
 						    	   if (worklistItemVO.getDocStatus() != null
 											&& (ContractStatusConst.CR_PENDING_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() || 
@@ -671,202 +518,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   }
 						       }
 						       
-						    // 12177 - Start
-						       IQuoteSO quoteSO;
-					    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-					    	   QuoteResDTO quoteResDTO = null;
-						       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
+						       processWorklistItemByDocType(worklistItemVO);
 						       
-						       if(worklistItemVO.getDocType().equals("SQ")){
-								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
-									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-											    currentStatusId, worklistItemVO.getDocType(), true);	
-						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-						    			   
-						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
-									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									       }
-						    			   if(getExpirationDate() != null){
-								    		   worklistItemVO.setExpirationDate(getExpirationDate());
-								    	   }
-
-						    		   }else if (quoteResDTO.getPid() != null){
-						    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
-										   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-										   // 12177 - start
-										   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
-										  // if(quoteResDTO.getQuoteBidDtl() != null){
-											   Calendar cal = Calendar.getInstance();
-												cal.clear(); 
-												if(null!=quoteResDTO.getChangeddate()){
-													cal.setTime(quoteResDTO.getChangeddate());
-												}
-												if(null!=quoteResDTO.getPidValiddays()){
-													cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
-												}
-											   worklistItemVO.setExpirationDate(cal);
-										  // }
-											// 12177 - end
-
-						    			   
-						    		   }
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
-									   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
-									   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
-									   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
-										   Calendar cal = Calendar.getInstance();
-											cal.clear(); 
-											if(null!=quoteResDTO.getChangeddate()){
-												cal.setTime(quoteResDTO.getChangeddate());
-											}
-											if(null!=quoteResDTO.getPidValiddays()){
-												cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
-											}
-										   worklistItemVO.setExpirationDate(cal);
-									   //}
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
-									   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-									   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);	
-									   Calendar cal = Calendar.getInstance();
-										cal.clear(); 
-										if(null!=quoteResDTO.getChangeddate()){
-											cal.setTime(quoteResDTO.getChangeddate());
-										}
-										if(null!=quoteResDTO.getPidValiddays()){
-											cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
-										}						  
-									   worklistItemVO.setExpirationDate(cal);								   
-								   }
-						       }
-						       // 12177 - End
-						       
-						       //pid validity
-						       
-						       if(worklistItemVO.getDocType().equals("RN")){
-						    	   System.out.println("Begin PID validity process");
-						    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-						    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-						    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
-						    	   RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
-						    	   
-						    	   reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
-						    	   resRNDTO = requestSO.getRequestNote(reqRNDTO);
-						    	   
-						    	   if(resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null) {
-										int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
-										Date changedDate = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate();
-										Date pidExpiredDate = new Date(); 
-										
-										
-											pidExpiredDate = DateUtils.addDays(changedDate, pidValidDays);
-										
-											Calendar pidExpiredDateCL = Calendar.getInstance();
-											   pidExpiredDateCL.setTime(pidExpiredDate);
-											   worklistItemVO.setExpirationDate(pidExpiredDateCL);
-										
-										if(DateUtils.getCurrentDate().after(pidExpiredDate))  {
-											//set overide status here 
-											//taskListMyTaskDataModel.getRowKey(worklistItemVO).
-											worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
-											
-											
-											//System.out.println("Lets overide the status! here");
-										}
-									}else{ // 12177 - Start
-										if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
-										   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
-								    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-								    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-									       quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-														 currentStatusId, worklistItemVO.getDocType(), true);	
-									       if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
-									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());							    		   
-											   }
-									    	   if(getExpirationDate() != null){
-									    		   worklistItemVO.setExpirationDate(getExpirationDate());
-									    	   }							    	   
-									       }   	   
-								        }
-									}
-						    	   // 12177 - End
-						       }
-						       else  if(worklistItemVO.getDocType().equals("PR")){
-						    	   System.out.println("Begin PID validity process");
-						    	  // IPurchaseRequestSO requestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-						    	   IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-						    	   //IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-						    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
-						    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
-						    	   
-						    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
-						    	   resFLDTO = fulfilmentSO.retrieveFulfilmentRequestByDocNo(reqFLDTO);
-						    	   
-						    	   if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null) {
-										int pidValidDays = resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
-										Date pidExpiredDate = new Date(); 
-										
-										if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate()!=null) {
-											pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), pidValidDays);
-										}
-										
-										Calendar pidExpiredDateCL = Calendar.getInstance();
-										pidExpiredDateCL.setTime(pidExpiredDate);
-										worklistItemVO.setExpirationDate(pidExpiredDateCL);
-										
-										if(DateUtils.getCurrentDate().after(pidExpiredDate)) {
-											//set overide status here 
-											//taskListMyTaskDataModel.getRowKey(worklistItemVO).
-											worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());						   
-											//System.out.println("Lets overide the status! here");
-										}
-										
-								   }else{ // 12177 - Start
-									   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
-										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
-										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-										  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-										   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-													 currentStatusId, worklistItemVO.getDocType(), true);	
-										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
-									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-											   }
-									    	   if(getExpirationDate() != null){
-									    		   worklistItemVO.setExpirationDate(getExpirationDate());
-									    	   }
-										   }
-									   }
-								   }
-						    	   // 12177 - End
-						       }
-						       // 12177 - Start
-						       else if(worklistItemVO.getDocType().equals("LA")){
-							    	  if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-										  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-							    		  || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-							    		  || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-							    		  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-													 currentStatusId, worklistItemVO.getDocType(), true);	
-										   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-									    	   if(!isSqStillValid(quoteResDTO.getEndDate())){
-									    		   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-											   }
-									    	   if(getExpirationDate() != null){
-									    		   worklistItemVO.setExpirationDate(getExpirationDate());
-									    	   }
-										   }  			   
-							    	   }
-							    }
-						       // 12177 - End
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
 								/*
@@ -1100,54 +753,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    	   }
 						    	   }
 						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							       //start added for #24968
-						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
-						    	   //end added for #24968
-						       }
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							       //start added for #24968
-						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
-						    	   //end added for #24968
-						       }
-							   //start added for #24968
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
-							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
-							       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
-						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
-						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
-						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
-						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
-						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
-						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
-						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       //end added for #24968
+						       processWorklistItemByTaskName(worklistItemVO, face); //#24968  - performance
 							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
 								/*
@@ -1204,10 +810,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				FacesScopes face = new FacesScopes();
 				Object token = face.getBPMAuthenticationCtxToken();
 
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-//				log.info("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
@@ -1219,20 +821,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setTaskTitle(getTaskDesc());
 				}
 				
-				/*
-				 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-				 */
-//				log.info("getDocNoGroup():"+getDocNo());
-				
 				if(getDocNo()!= null && getDocNo().trim().length() > 0){
 					reqDTO.setDocNumber(getDocNo());
 				}
 			
 				if(getDocStatus() > 0){
-					/*
-					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-					 */
-//					log.info("getDocStatus"+getDocStatus());
 					reqDTO.setStatus(getDocStatus());
 				}
 				
@@ -1248,11 +841,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
-					/*
-					 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-					 */
-					/*log.info("testing BPM******size=" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("testing BPM******total=" + responseDTO.getWorklistVO().getTotal());*/
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
 						boolean viewGlpFlag = viewGlpFlag();
@@ -1267,343 +855,18 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						
 						for( WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try {
-								if (worklistItemVO.getTitle().matches("<")) {
-									worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-								}
-								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									/*
-									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-									 */
-//									log.info("Doc number = " + worklistItemVO.getDocNumber());
-									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
-											.getDocNumber());
-									if (scPrInquiry != null) {
-										worklistItemVO.setTitle(scPrInquiry.getTitle());
-										/*
-										 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-										 */
-										/*log.info("prno = " + scPrInquiry.getPrInquiryNo() + "title = "
-												+ scPrInquiry.getTitle());*/
-									}
-								}
-							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							}
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							}
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							}
-							
-							//sm module
-							//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
-							//sm module
-						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
-						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-						    		/*
-									 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-									 */
-//						    		log.info("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
-									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
-						    	   StringBuilder sb = new StringBuilder();
-						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						    	   if(mofResDto.getCompanyName() != null){
-						    		   	   sb.append(" ( ");
-								    	   sb.append(mofResDto.getCompanyName());
-								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
-								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
-						    	   }
-						    	   
-						        worklistItemVO.setTitle(sb.toString());
-						       }
-
-						       if(worklistItemVO.getTitle().startsWith("lbl.cd")) {
-						    	
-						    	   StringBuilder sb = new StringBuilder();
-						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-						    	   
-						    	   
-						        worklistItemVO.setTitle(sb.toString());
-						       }
+								processWorklistItemByTitle(worklistItemVO, face);
+								
+								processWorklistItemByTaskName(worklistItemVO, face);
 						       
-						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
-						    	   AccessApplResDTO accessApplResDTO = 
-						    			   retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
-						    	   if(accessApplResDTO.isSuccessful() && 
-						    			   accessApplResDTO.getAccessAppl() != null){
-						    		  
-							    	   StringBuilder sb = new StringBuilder();
-							    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
-							    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.mr.title", 
-								    			   new String[]{ accessApplResDTO.getAccessAppl().getApplicantName(),
-							    				   		accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName()},
-								    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							    		   worklistItemVO.setTitle(sb.toString());
-							    	   }else if(ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO.getDocType())){
-							    		   sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.cp.title", 
-								    			   new String[]{accessApplResDTO.getAccessAppl().getApplicantName(),
-							    				   		accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName()},
-								    			   ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-							    		   worklistItemVO.setTitle(sb.toString());
-							    	   }
-						    	   }
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-						    		   || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							       //start added for #24968
-						    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
-						    	   //end added for #24968
-						       }
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-						    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-							       //start added for #24968
-						    	   retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
-						    	   //end added for #24968
-						       }
-							   //start added for #24968
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
-							    	   retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
-							       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
-						    	   retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
-						    	   retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
-						    		   || worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
-						    	   retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
-						    	   retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
-						    	   retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-						       
-						       if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
-						    	   retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
-						       }
-								// end added for #24968
-						       
-						       // 12177 - Start
-						       IQuoteSO quoteSO;
-					    	   quoteSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-					    	   QuoteResDTO quoteResDTO = null;
-						       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
-						       
-						       if(worklistItemVO.getDocType().equals("SQ")){
-								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
-									   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-											    currentStatusId, worklistItemVO.getDocType(), true);	
-						    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-						    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
-									    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-									       }
-						    			   if(getExpirationDate() != null){
-								    		   worklistItemVO.setExpirationDate(getExpirationDate());
-								    	   }
-						    		   }else if (quoteResDTO.getPid() != null){
-						    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
-										   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-										   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
-										   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
-										    Calendar cal = Calendar.getInstance();
-											cal.clear(); 
-											if(null!=quoteResDTO.getChangeddate()){
-												cal.setTime(quoteResDTO.getChangeddate());
-											}
-											if(null!=quoteResDTO.getPidValiddays()){
-												cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
-											}
-											worklistItemVO.setExpirationDate(cal);
-										   //}
-
-						    			   
-						    		   }
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
-									   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
-									   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
-									   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
-										   Calendar cal = Calendar.getInstance();
-											cal.clear(); 
-											if(null!=quoteResDTO.getChangeddate()){
-												cal.setTime(quoteResDTO.getChangeddate());
-											}
-											if(null!=quoteResDTO.getPidValiddays()){
-												cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
-											}
-										   worklistItemVO.setExpirationDate(cal);
-									  // }
-								   }
-								   
-								   if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
-									   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-									   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-									   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);
-									   Calendar cal = Calendar.getInstance();
-										cal.clear(); 
-										if(null!=quoteResDTO.getChangeddate()){
-											cal.setTime(quoteResDTO.getChangeddate());
-										}
-										if(null!=quoteResDTO.getPidValiddays()){
-											cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
-										}			
-									   worklistItemVO.setExpirationDate(cal);
-									   
-								   }
-						       }
-
-						       if(worklistItemVO.getDocType().equals("RN")){ 
-
-						    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
-						    		  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
-								      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-								      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-
-									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-												currentStatusId, worklistItemVO.getDocType(), true);	
-									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-										  if(!isSqStillValid(quoteResDTO.getEndDate())){
-											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-										  }
-										  if(getExpirationDate() != null){
-								    		  worklistItemVO.setExpirationDate(getExpirationDate());
-								    	  }
-									  }else{
-										  System.out.println("Begin PID validity process");
-								    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-								    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-								    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
-								    	   RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
-								    	   
-								    	   reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
-								    	   resRNDTO = requestSO.getRequestNote(reqRNDTO);
-
-								    	   if(resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null) {
-
-								    		   int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
-												Date changedDate = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate();
-												Date pidExpiredDate = new Date(); 
-												
-													pidExpiredDate = DateUtils.addDays(changedDate, pidValidDays);
-													
-													Calendar pidExpiredDateCL = Calendar.getInstance();
-													   pidExpiredDateCL.setTime(pidExpiredDate);
-													   worklistItemVO.setExpirationDate(pidExpiredDateCL);
-												
-												if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
-													//set overide status here 
-													//taskListMyTaskDataModel.getRowKey(worklistItemVO).
-													worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
-													
-													//System.out.println("Lets overide the status! here");
-												}
-									  }
-								   }
-						    	   }
-						       }
-						       
-						       if(worklistItemVO.getDocType().equals("PR")){
-						    	   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
-						    		  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
-									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-									  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-									  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-												 currentStatusId, worklistItemVO.getDocType(), true);	
-									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-										  if(!isSqStillValid(quoteResDTO.getEndDate())){
-											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-										  }
-										  if(getExpirationDate() != null){
-								    		  worklistItemVO.setExpirationDate(getExpirationDate());
-								    	  }
-									  }else if(quoteResDTO.getPid() != null){
-										  System.out.println("Begin PID validity process");
-								    	  // IPurchaseRequestSO requestSO = (IPurchaseRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-								    	   IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-								    	   //IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-								    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
-								    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
-								    	   
-								    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
-								    	   resFLDTO = fulfilmentSO.retrieveFulfilmentRequestByDocNo(reqFLDTO);
-								    	   
-								    	   if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null) {
-												int pidValidDays = resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
-												Date pidExpiredDate = new Date(); 
-												
-												if(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate()!=null) {
-													pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), pidValidDays);
-												}
-												
-												Calendar pidExpiredDateCL = Calendar.getInstance();
-												   pidExpiredDateCL.setTime(pidExpiredDate);
-												   worklistItemVO.setExpirationDate(pidExpiredDateCL);
-												   
-												if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
-													//set overide status here 
-													//taskListMyTaskDataModel.getRowKey(worklistItemVO).
-													worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
-													
-													//System.out.println("Lets overide the status! here");
-												}
-										   }
-									  }
-								   }
-						       }
-						       
-						       if(worklistItemVO.getDocType().equals("LA")){
-						    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-									  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-								      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-								      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
-													currentStatusId, worklistItemVO.getDocType(), true);	
-									  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-										  if(!isSqStillValid(quoteResDTO.getEndDate())){
-											  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
-										  }
-										  if(getExpirationDate() != null){
-								    		  worklistItemVO.setExpirationDate(getExpirationDate());
-								    	  }
-									  }  			   
-								   }
-						       }
-						       // 12177 - End
-						       
+								processWorklistItemByDocType(worklistItemVO);
+						     
 								// Identify if it is a group or individual task
-						       /*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//						       log.info("getTaskType: " + worklistItemVO.getTaskType());
 								worklistItemVO.getTaskType();
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
-								/*
-								 * COMMEND ON 15/7/2020 TO TEST SIT SLOW
-								 */
-//								log.info("worklistItemVO.setTitle error:" + ex.getMessage());
+								
+								log.error("worklistItemVO.setTitle error:" + ex.getMessage());
 							}
 						}
 						
@@ -1902,7 +1165,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.fulfilmentNote = fulfilmentNote;
 	}
 	
-	public void retrievePoCoNoForCreateFRN(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForCreateFRN(WorklistItemVO worklistItemVO,String taskId) {
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -1918,7 +1181,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForAckModifyDo(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForAckModifyDo(WorklistItemVO worklistItemVO,String taskId) {
 		
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1935,7 +1198,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForReviewCancelDo(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForReviewCancelDo(WorklistItemVO worklistItemVO,String taskId) {
 		
 		IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1952,7 +1215,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForApproveFRN(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForApproveFRN(WorklistItemVO worklistItemVO,String taskId) {
 		
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1969,7 +1232,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForReviewDan(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForReviewDan(WorklistItemVO worklistItemVO,String taskId) {
 		
 		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -1986,7 +1249,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForStopFulFilment(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForStopFulFilment(WorklistItemVO worklistItemVO,String taskId) {
 		
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -2004,7 +1267,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForSubmitFailedCancelFRN(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForSubmitFailedCancelFRN(WorklistItemVO worklistItemVO,String taskId) {
 		
 		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -2021,7 +1284,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 	}
 	
-	public void retrievePoCoNoForAckModifiedInvoice(WorklistItemVO worklistItemVO,String taskId) {
+	private void retrievePoCoNoForAckModifiedInvoice(WorklistItemVO worklistItemVO,String taskId) {
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -2037,7 +1300,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}		
 	}
 	
-	public void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {		
+	private void retrievePoCoNoForCancelInvoice(WorklistItemVO worklistItemVO,String taskId) {		
 		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -2111,60 +1374,344 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return calendar;
 	}
 	// 12177 - End
+    
+    /**
+     * This method was refactored for code readibility and maintenance. To filter worklistItemVO
+     * by title.
+     * 
+     * Performance risk: call service to retrieve from DB.
+     * 
+     * Mitigation: service only select selected field.
+     * 
+     * @param worklistItemVO
+     * @param face
+     */
+    private void processWorklistItemByTitle(WorklistItemVO worklistItemVO, FacesScopes face) {
+		String title = worklistItemVO.getTitle();
+		
+		if (title.contains("<")) {
+			worklistItemVO.setTitle(worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+		}
 
-//#24968-start - performance
-/**
-* This method was refactored for code readibility and maintenance. To filter worklistItemVO
-* by Task Name.
-* 
-* Performance risk: call service to retrieve from DB.
-* 
-* Mitigation: service only select selected field.
-* 
-* @param worklistItemVO
-* @param face
-*/
-private void processWorklistItemByTaskName(WorklistItemVO worklistItemVO, FacesScopes face) {
-	if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
-  	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-  }     
-	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-  	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-  	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-  	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
-  }
-	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
-  	retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
-	}	       
-	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
-  	retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
-  }	       
-	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
-  	retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
-  }	       
-	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
-  	|| worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
-  	retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
-  }	       
-	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
-  	retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
-  }	       
-	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
-  	retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
-  }	       
-	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
-  	 retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
-  }     
-	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
-  	worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
-  	retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
-  }
-	//# start 25627  - 
-	else if (worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_DO_REASSIGNMENT)) {
-		worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.quotation.tender.deskofficermaintenance.approveTaskListTitle", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		// s1 module
+		if (title.equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
+			ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
+			if (scPrInquiry != null) {
+				worklistItemVO.setTitle(scPrInquiry.getTitle());
+			}
+		} else if (title.equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		} else if (title.equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		} else if (title.equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		} else if (title.startsWith("lbl.sm")) {
+			// sm module
+			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
+			// sm module
+			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
+			StringBuilder sb = new StringBuilder();
+			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			if (mofResDto.getCompanyName() != null) {
+				sb.append(" ( ");
+				sb.append(mofResDto.getCompanyName());
+				sb.append(" ) ");
+				if (viewGlpFlag() && mofResDto.isGlp()) {
+					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+				}
+			}
+
+			worklistItemVO.setTitle(sb.toString());
+		} else if (title.startsWith("lbl.cd")) {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			worklistItemVO.setTitle(sb.toString());
+		} else if (title.startsWith("lbl.pm")) {
+			AccessApplResDTO accessApplResDTO = retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
+			if (accessApplResDTO.isSuccessful() && accessApplResDTO.getAccessAppl() != null) {
+
+				StringBuilder sb = new StringBuilder();
+				if (ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())) {
+					sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.mr.title", new String[] {
+							accessApplResDTO.getAccessAppl().getApplicantName(),
+							accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName() },
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+					worklistItemVO.setTitle(sb.toString());
+				} else if (ParameterConst.DOCTYPE_COMPANY_PROFILE.equalsIgnoreCase(worklistItemVO.getDocType())) {
+					sb.append(ResourceBundleUtils.getMessage("lbl.pm.access.app.tasklist.cp.title", new String[] {
+							accessApplResDTO.getAccessAppl().getApplicantName(),
+							accessApplResDTO.getAccessAppl().getOrgProfile().getPmOrgValidity().getOrgName() },
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+					worklistItemVO.setTitle(sb.toString());
+				}
+			}
+		} else {
+			processTitleWithDocStatus(worklistItemVO, face);
+		}
 	}
-     //# end 25627
+    
+    /**
+     * This method was refactored for code readibility and maintenance. To filter worklistItemVO
+     * by document type.
+     * 
+     * Performance risk: call service to retrieve from DB.
+     * 
+     * Mitigation: service only select selected field.
+     * 
+     * @param worklistItemVO
+     */
+	private void processWorklistItemByDocType(WorklistItemVO worklistItemVO) {
+		  // 12177 - Start			       
+ 	   QuoteResDTO quoteResDTO = null;
+	       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());
+	       
+	       if(worklistItemVO.getDocType().equals("SQ")){
+			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+				   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+						    currentStatusId, worklistItemVO.getDocType(), true);	
+	    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
+				    	   worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+				       }
+	    			   if(getExpirationDate() != null){
+			    		   worklistItemVO.setExpirationDate(getExpirationDate());
+			    	   }
+	    		   }else if (quoteResDTO.getPid() != null){
+	    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+					   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+					   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
+					   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
+					    Calendar cal = Calendar.getInstance();
+						cal.clear(); 
+						if(null!=quoteResDTO.getChangeddate()){
+							cal.setTime(quoteResDTO.getChangeddate());
+						}
+						if(null!=quoteResDTO.getPidValiddays()){
+							cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
+						}
+						worklistItemVO.setExpirationDate(cal);
+					   //}
 
+	    			   
+	    		   }
+			   }else if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)){
+				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+				   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+				   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+				   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
+				   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
+					   Calendar cal = Calendar.getInstance();
+						cal.clear(); 
+						if(null!=quoteResDTO.getChangeddate()){
+							cal.setTime(quoteResDTO.getChangeddate());
+						}
+						if(null!=quoteResDTO.getPidValiddays()){
+							cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
+						}
+					   worklistItemVO.setExpirationDate(cal);
+				  // }
+			   }else if(currentStatusId.equals(DPStatusConstants.PID_EXPIRED)){
+				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+				   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+				   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);
+				   Calendar cal = Calendar.getInstance();
+					cal.clear(); 
+					if(null!=quoteResDTO.getChangeddate()){
+						cal.setTime(quoteResDTO.getChangeddate());
+					}
+					if(null!=quoteResDTO.getPidValiddays()){
+						cal.add(Calendar.DATE, quoteResDTO.getPidValiddays());
+					}			
+				   worklistItemVO.setExpirationDate(cal);
+				   
+			   }
+	       }else if(worklistItemVO.getDocType().equals("RN")){ 
+
+	    	   if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
+	    		  || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
+			      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
+			      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
+			      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+	    	
+	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+							currentStatusId, worklistItemVO.getDocType(), true);	
+				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+					  if(!isSqStillValid(quoteResDTO.getEndDate())){
+						  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+					  }
+					  if(getExpirationDate() != null){
+			    		  worklistItemVO.setExpirationDate(getExpirationDate());
+			    	  }
+				  }else{
+					  
+			    	   IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+			    	   IRequestItemSO requestItemSO = (IRequestItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+			    	   RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
+			    	   RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
+			    	   
+			    	   reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+			    	   resRNDTO = requestSO.getRequestNote(reqRNDTO);
+
+			    	   if(resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null) {
+
+			    		   int pidValidDays = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays();
+							Date changedDate = resRNDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate();
+							Date pidExpiredDate = new Date(); 
+							
+								pidExpiredDate = DateUtils.addDays(changedDate, pidValidDays);
+								
+								Calendar pidExpiredDateCL = Calendar.getInstance();
+								   pidExpiredDateCL.setTime(pidExpiredDate);
+								   worklistItemVO.setExpirationDate(pidExpiredDateCL);
+							
+							if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+								//set overide status here 
+								//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+								worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+								
+								//System.out.println("Lets overide the status! here");
+							}
+				  }
+			   }
+	    	   }
+	       }else if(worklistItemVO.getDocType().equals("PR")){
+	    	   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	    		  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+				  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+
+	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+							 currentStatusId, worklistItemVO.getDocType(), true);	
+				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+					  if(!isSqStillValid(quoteResDTO.getEndDate())){
+						  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+					  }
+					  if(getExpirationDate() != null){
+			    		  worklistItemVO.setExpirationDate(getExpirationDate());
+			    	  }
+				  }else if(quoteResDTO.getPid() != null){
+			
+			    	   IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
+			    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
+			    	   
+			    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
+			    	   resFLDTO = fulfilmentSO.retrievePIDbyFLDocNo(reqFLDTO);
+			    	   
+			    	   if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null && resFLDTO.getFlFulfilmentRequest().getPidValidDays()!=null) {
+							int pidValidDays = resFLDTO.getFlFulfilmentRequest().getPidValidDays();
+							Date pidExpiredDate = new Date(); 
+							
+							if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null) {
+								pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getChangedDate(), pidValidDays);
+							}
+							
+							Calendar pidExpiredDateCL = Calendar.getInstance();
+							   pidExpiredDateCL.setTime(pidExpiredDate);
+							   worklistItemVO.setExpirationDate(pidExpiredDateCL);
+							   
+							if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+								//set overide status here 
+								//taskListMyTaskDataModel.getRowKey(worklistItemVO).
+								worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+								
+								//System.out.println("Lets overide the status! here");
+							}
+					   }
+				  }
+			   }
+	       }else if(worklistItemVO.getDocType().equals("LA")){
+	    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+				  || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+			      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+			      || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+
+	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+			      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+								currentStatusId, worklistItemVO.getDocType(), true);	
+				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+					  if(!isSqStillValid(quoteResDTO.getEndDate())){
+						  worklistItemVO.setDocStatus(DPStatusConstants.SQ_EXPIRED.intValue());
+					  }
+					  if(getExpirationDate() != null){
+			    		  worklistItemVO.setExpirationDate(getExpirationDate());
+			    	  }
+				  }  			   
+			   }
+	       }
+	       // 12177 - End
+		
+	}
+	  //#24968-start - performance
+	/**
+     * This method was refactored for code readibility and maintenance. To filter worklistItemVO
+     * by Task Name.
+     * 
+     * Performance risk: call service to retrieve from DB.
+     * 
+     * Mitigation: service only select selected field.
+     * 
+     * @param worklistItemVO
+     * @param face
+     */
+    private void processWorklistItemByTaskName(WorklistItemVO worklistItemVO, FacesScopes face) {
+    	if(worklistItemVO.getTaskName().equals(FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT)){
+	    	   worklistItemVO.setTitle(retreiveSupplierInvoiceNo(worklistItemVO.getDocId()) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+	    }     
+    	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
+	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
+	    	   worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),false) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+	    	   retrievePoCoNoForCreateFRN(worklistItemVO,worklistItemVO.getTaskId());
+	    }
+    	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.ACK_MODIFIED_DO_HT)){
+	    	retrievePoCoNoForAckModifyDo(worklistItemVO,worklistItemVO.getTaskId());
+		}	       
+    	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_CANCEL_DO_HT)){
+	    	retrievePoCoNoForReviewCancelDo(worklistItemVO,worklistItemVO.getTaskId());
+	    }	       
+    	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.REVIEW_DAN_HT)){
+	    	retrievePoCoNoForReviewDan(worklistItemVO,worklistItemVO.getTaskId());
+	    }	       
+    	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_STOP_FULFILMENT_REQ_HT)
+	    	|| worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_STOP_FULFILMENT_REQ_HT)){
+	    	retrievePoCoNoForStopFulFilment(worklistItemVO,worklistItemVO.getTaskId());
+	    }	       
+    	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_FAILED_CANCEL_FRN_HT)){
+	    	retrievePoCoNoForSubmitFailedCancelFRN(worklistItemVO,worklistItemVO.getTaskId());
+	    }	       
+    	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT)){
+	    	retrievePoCoNoForAckModifiedInvoice(worklistItemVO,worklistItemVO.getTaskId());
+	    }	       
+    	else if(worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT)){
+	    	 retrievePoCoNoForCancelInvoice(worklistItemVO,worklistItemVO.getTaskId());
+	    }     
+    	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
+	    	worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
+	    	retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
+	    }
+    	//# start 25627  - 
+		else if (worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_DO_REASSIGNMENT)) {
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.quotation.tender.deskofficermaintenance.approveTaskListTitle", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		}
+	     //# end 25627
+		  
 	}
  	// end #24968 
 	
