@@ -2111,7 +2111,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return calendar;
 	}
 	// 12177 - End
-}
+
 //#24968-start - performance
 /**
 * This method was refactored for code readibility and maintenance. To filter worklistItemVO
