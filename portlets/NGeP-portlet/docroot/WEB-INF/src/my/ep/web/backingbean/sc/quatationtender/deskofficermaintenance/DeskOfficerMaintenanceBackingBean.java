@@ -844,6 +844,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	}
 	
 	public void selectedQtId(Long qtId) {
+		this.getManagedBean().setSelectedUser(null);
+		getManagedBean().setDisableAssign(true);
 		if (null == getManagedBean().getSelectedQtIds()) {
 			getManagedBean().setSelectedQtIds(new ArrayList<Long>());
 		}
@@ -1370,5 +1372,16 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		String page = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
+	}
+	
+	/**
+	 * 
+	 */
+	public void enableDisableAssign() {
+		if (getManagedBean().getSelectedUser() != null) {
+			getManagedBean().setDisableAssign(false);
+		} else {
+			getManagedBean().setDisableAssign(true);
+		}
 	}
 }
