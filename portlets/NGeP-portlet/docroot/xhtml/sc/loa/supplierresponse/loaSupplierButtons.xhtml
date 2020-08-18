@@ -59,7 +59,21 @@
 									value="#{lOADetailBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT'}">
+									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_REVISE_DOC}">
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
+											styleClass="ui-button" update="@form"
+											partialSubmit="true" process="@all"
+											action="#{lOADetailBackingBean.updateReviseBPMTaskAction(bpmAction)}"
+											onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+											<f:setPropertyActionListener value="#{bpmAction}"
+												target="#{lOADetailBackingBean.managedBean.action}" />
+											<f:setPropertyActionListener value="false"
+												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
+										</p:commandButton>
+									</h:panelGroup>
+									<!-- Start #22211 -->
+									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
@@ -72,8 +86,9 @@
 												target="#{lOADetailBackingBean.managedBean.autoUpdate}" />										
 										</p:commandButton>
 									</h:panelGroup>
+									<!-- End #22211 -->
 									<!-- Enhancement #21573 -->
-									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and !isLoaReviseStatus}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
@@ -87,7 +102,7 @@
 										</p:commandButton>
 									</h:panelGroup>
 		
-									<h:panelGroup rendered="#{bpmAction == 'REJECT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
+									<h:panelGroup rendered="#{bpmAction == 'REJECT' and !isLoaReviseStatus}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!isMultipleLOI}"
 											styleClass="ui-button" onstart="blockWidget.show();"
@@ -96,7 +111,7 @@
 											partialSubmit="true" process="@all" update="@form" />
 									</h:panelGroup>
 								</ui:repeat>
-								<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
+								<h:panelGroup rendered="#{!isLoaReviseStatus}">
 									<ac:spkiPopup id="spkiPopup"
 									password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
 									challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
