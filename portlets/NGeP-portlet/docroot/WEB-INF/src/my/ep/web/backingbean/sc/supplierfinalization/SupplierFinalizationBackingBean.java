@@ -4404,7 +4404,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			for (PmReasonDesc reasonDesc : reasonList) {
 				//Include checking/control for #26169 #38 based on SF Decision, Forward To Higher Authority
-				if(reasonDesc.getReasonDescId() == ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY){
+				if(reasonDesc.getPmReason().getReasonCode().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY)){
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Enable & Auto Checked radio button option reason 'Awarded Price Exceeded Committee Authority'
@@ -4429,7 +4429,7 @@ public class SupplierFinalizationBackingBean extends
 							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 						}						
 					}
-				}else if(reasonDesc.getReasonDescId() ==ParameterConst.FINALIZATION_REASON_CODE_UNANIMOUS){
+				}else if(reasonDesc.getPmReason().getReasonCode().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_UNANIMOUS)){
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Disable option reason for 'The Decision is Unanimous'
