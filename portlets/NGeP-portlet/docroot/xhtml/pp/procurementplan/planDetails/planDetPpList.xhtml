@@ -260,12 +260,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			</p:columnGroup>
 		</p:dataTable>
 		<div class="ppRightBtn">
-		<!-- #25549 - start --> 
-		     <p:commandButton value="#{lbl['lbl.btn.clone']}"
+		<!-- #25549@20200818 - start --> 
+		     <p:commandButton id="btnClone" value="#{lbl['lbl.btn.clone']}"
 		        disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
 			    action="#{pPlanBackingBean.rowSelectProcurement()}"
 			    update="dtProcurementPlan, ppProcurementCloneid, dtcloneprosearchresults"
-			    onclick="cloneAcquirementPopUp.show()"/>
+			    onclick="cloneAcquirementPopUp.show()"
+			    rendered="#{pPlanBackingBean.isRolePlanner()}"/>
+			    <p:tooltip id="toolTipGrow" for="btnClone" value="#{lbl['lbl.pp.clone.year.tooltip']}"
+                    position="bottom"/>
 		<!-- end --> 
 		
 			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
