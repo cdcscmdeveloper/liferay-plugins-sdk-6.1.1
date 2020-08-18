@@ -35,6 +35,7 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.comparator.sc.MemberRoleComparator;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -1946,6 +1947,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return scQtCommittee;
 	}
 	
+	// #25638 - Start.
+	/**
+	 *  To Revise.
+	 */
+	public void reviseAction() {
+		updateBPMTask(BpmOutcomeConst.BPM_REVISE, null);
+	}
+	// #25638 - End.
+	
 	/**
 	 * To submit bidding endorsement
 	 * 
@@ -1954,6 +1964,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void submitBiddingEndorsement(String outcome) {
 		debugLogger("submitBiddingEndorsement");
+		
+		//25638 - Start
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			RequestContext.getCurrentInstance().execute("reviseBiddingDlgs.show()");
+			return;
+		}
+		//25638 - End
+		
 		List<ScQtMeeting> meetingList=this.getManagedBean().getMeetingList();
 		if(CollectionUtils.isNotEmpty(meetingList)){
 			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
@@ -2016,7 +2034,20 @@ public class SupplierFinalizationBiddingBackingBean extends
 		suppFinalizationReqDTO.setOutcome(outCome);
 		suppFinalizationReqDTO.setRoleCode(getUserRoleCode());
 		FacesScopes facesScope = new FacesScopes();
-		suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
+		// #25638 - Start
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+				 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+						 && null != committeeActivity.getScCommitteeMember().getMemberRole()
+						 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+					 suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
+					 break;
+				 }
+			 }
+		} else {
+			suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
+		}
+		// #25638 - End
 		suppFinalizationReqDTO.setUserLocale(facesScope.getUserLocale());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		suppFinalizationReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
@@ -2106,15 +2137,33 @@ public class SupplierFinalizationBiddingBackingBean extends
 				signOff();
 			}
 			
+			// #25638 - Start.
+			if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				suppFinalizationReqDTO.setScQt(getManagedBean().getScQt());
+				suppFinalizationReqDTO.setScQtCommittee(getManagedBean().getScQtCommittee());
+				suppFinalizationReqDTO.setChildDocId(getManagedBean().getScQt().getQtId());
+				suppFinalizationReqDTO.setChildDocNo(getManagedBean().getScQt().getQtNo());
+				suppFinalizationReqDTO.setChildDocType(ParameterConst.DOCTYPE_QUOTATION);
+			}
+			// #25638 - End.
+			
 			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
 				
 			if (suppFinalizationResDTO.isSuccessful()) {
-				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
-												  ParameterConst.DOCTYPE_QUOTATION)
-									+ " " + scQt.getQtNo();
-				String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
-				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
-											   qtParam, statusParam);
+				// #25638 - Start.
+				if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					commonMessageAcknowledmentPage(MessageConst.INFO_776042,
+							getMessageCommon("lbl.sc.quotation.tender"), getManagedBean().getScQt().getQtNo());
+				} else {
+					String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_QUOTATION)
+							+ " " + scQt.getQtNo();
+					String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
+					commonMessageAcknowledmentPage(MessageConst.INFO_700026,
+							qtParam, statusParam);
+				}
+				// #25638 - End.
+				
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
