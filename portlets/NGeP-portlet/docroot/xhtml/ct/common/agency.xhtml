@@ -18,6 +18,8 @@
 	  		 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false"/><br/><br/>
 	  		 
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
+       					editable="true" 
+						editMode="cell"
        					value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   						selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
   						rowIndexVar="indexVar" >
