@@ -2777,6 +2777,15 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	// #25638 - Start.
+	/**
+	 *  To Revise.
+	 */
+	public void reviseAction() {
+		updateMultiLoiBpmTask(BpmOutcomeConst.BPM_REVISE, null);
+	}
+	// #25638 - End.
+	
 	/**
 	 * Update multi loi bpm task action. update bpm - save data into database
 	 * and BPM process will route to the next respective user. Authenticating
@@ -2787,6 +2796,14 @@ public class LOIDetailBackingBean extends
 	 */
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
+		
+		//25638 - Start
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
+			return;
+		}
+		//25638 - End
+				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
 		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
@@ -2859,11 +2876,17 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
-
-				successMessage(MessageConst.INFO_700033,
-						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
-								.getScQt().getQtNo(), Boolean.TRUE);
+				// #25638 - Start.
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), getManagedBean().getScQt()
+							.getQtNo(), Boolean.TRUE);
+				} else {
+					successMessage(MessageConst.INFO_700033,
+							ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+							ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
+							.getScQt().getQtNo(), Boolean.TRUE);
+				}
+				// #25638 - End.
 			}
 
 		} finally {
