@@ -303,6 +303,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		/*#26083 start - basri*/
 		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
 			ctBB.getManagedBean().setNotificationSetting(true);
+		} else {
+			ctBB.getManagedBean().setNotificationSetting(false); //#28320 - related to #26083
 		}
 		setValidateContractField(reqDTO);
 		
@@ -357,14 +359,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setSelectedAgency(null);
 					ctBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 							ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+					//Bug #27579
+					ctBB.getManagedBean().setDisableAgent(true);
+					ctBB.getManagedBean().setOwnerOrgProfile(true);
 					for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 						ctBB.checkAgencyStatus(ctAgency);
 						if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 							ctAgency.setAp178(false);
-							ctBB.getManagedBean().setDisableAgent(true);
+							//ctBB.getManagedBean().setDisableAgent(true); //Bug #27579
 						} else {
 							ctAgency.setAp178(true);
 							ctBB.getManagedBean().setDisableAgent(false);
+							ctBB.getManagedBean().setOwnerOrgProfile(false); //Bug #27579
 						}
 					}
 				}
@@ -478,7 +484,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setNewPk7(false);
 				}
 			} else {
+				//#27551 - add null checking
 				if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
+						getRequestNote() != null &&
+						ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
 						getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType().equalsIgnoreCase(
 						ParameterTypeConst.PROCUREMENT_TYPE) && ctBB.newJustification()!= null) {
 					ctBB.getManagedBean().setNewPk7(true);
@@ -931,7 +940,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					&& (deductionRemark == null || deductionRemark.length() == 0)
 					&& (scheduleRemark == null || scheduleRemark.length() == 0) 
 					&& (settingRemark == null || settingRemark.length() == 0)
-					&& (notificationRemark == null) || notificationRemark.length()== 0) {/*#26083 start - basri*/
+					&& (notificationRemark == null || notificationRemark.length() == 0)) {/*#26083 start - basri*/
 				getManagedBean().setSelectedTabIndex(0);
 				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.remark");
 			}
@@ -1050,7 +1059,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}	
 
-			if(!ctBB.getManagedBean().isOwnerOrgProfile()){
+			//#28289 - During Notification Setting, no need to validate
+			if(!ctBB.getManagedBean().isOwnerOrgProfile() && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))){
 				if(ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo() == null
 						|| ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
 					setTabValue("AG");
@@ -1064,7 +1074,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		//Validation for contract item details
-		if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null) {
+		//#28320 - During Notification Setting, no need to validate
+		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
@@ -1124,8 +1135,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}		
 
 		// Validation for schedule
+		//basri -  #28649 During Notification Setting, no need to validate 
 		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-				&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
+				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 				ctBB.getManagedBean().getContractVer().setCtProgressivePayments(null);
 			} else {
@@ -1491,13 +1504,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getManagedBean().setItemIndex(2);
 				ContractItemSearchBackingBean cmbb=new ContractItemSearchBackingBean();
 				cmbb.getManagedBean().reassignValue(true);
-				
-				//cmbb.getManagedBean().allValue(true);
-				//cmbb.getManagedBean().setResetval(true);
+
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().allValue(true);
-				log.info("Value from the Cental Tab ********>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
 			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setDeductionIndex(3);
@@ -1544,7 +1554,27 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					getManagedBean().setSelectedTabIndex(4);
 				}
 				getManagedBean().setSettingIndex(getManagedBean().getSelectedTabIndex());
-			}	  
+				
+			}else if(outputTab.equalsIgnoreCase(ContractConst.NOTIFICATION_DETAIL)){/*#26083 /bug 28314 start - basri*/
+				if(bondRequired){
+					getManagedBean().setSelectedTabIndex(6);
+					if (typeFactoring && typeLoaAmt) {
+						getManagedBean().setSelectedTabIndex(8);
+					}else if(typeLoaAmt || typeFactoring){
+						getManagedBean().setSelectedTabIndex(7);
+					}
+				}else if(typeFactoring){
+					getManagedBean().setSelectedTabIndex(6);
+					if(typeLoaAmt){
+						getManagedBean().setSelectedTabIndex(7);
+					}
+				} else if(typeLoaAmt){
+					getManagedBean().setSelectedTabIndex(6);
+				}else {
+					getManagedBean().setSelectedTabIndex(5);
+				}
+				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
+			}	  /*#26083 /bug 28314 end - basri*/
 
 			/*Set tab value if contract is not zonal*/	 
 		} else {
@@ -1680,7 +1710,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				cmbb.getManagedBean().reassignValue(true);
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
-				//cmbb.getManagedBean().allValue(true);
 			}
 			if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(4);
@@ -1977,8 +2006,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
-		
-		reqDTO.setContractVerId(contractVerId);
+// Fixing Bug #28550 - Start		
+//		reqDTO.setContractVerId(contractVerId);
+		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+		if (latestContractVer != null) {
+			reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		} else {
+			reqDTO.setContractVerId(contractVerId);
+		}
+		// Fixing Bug #28550 - End		
 			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
