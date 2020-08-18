@@ -633,12 +633,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
 	        }
 	        
-	        ppItems.clear();
+	        List<PpProcurementItem> newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
 	        
 	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
+	        	ppItems.clear();
 	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
 	        }
-	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(reorderedList);
+	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+	        log.info("Displaying ppItems for Plan No=  "+
+	        		this.getManagedBean().getSelectedPlan().getPlanNo());
         }
 		
     }
