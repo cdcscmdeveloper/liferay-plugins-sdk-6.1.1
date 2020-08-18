@@ -5839,32 +5839,36 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//set procurement item title or description
 				if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanTitle()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanDesc())){
 					
-					String TitleOrDesc = "";
+					//25549@azza20200819 - start
+					String Title = "";
+					String Desc = "";
 							
 					
 					if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanTitle())){
-						TitleOrDesc = this.getManagedBean().getPlanSearchBean().getPlanTitle();
-					}else if
-					   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanDesc())){
-						TitleOrDesc = this.getManagedBean().getPlanSearchBean().getPlanDesc();
+						Title = this.getManagedBean().getPlanSearchBean().getPlanTitle();
+					}else{ 
+						Title = "''";
+					}
+					if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanDesc())){
+						Desc = this.getManagedBean().getPlanSearchBean().getPlanDesc();
+					}else{ 
+						Desc = "''";
 					}
 					
-					
-					log.info("[#25549] Procurement title/description like: " + TitleOrDesc);
-					SearchFilterBean sfbean1 = new SearchFilterBean();
+					log.info("[#25549] Procurement title like: " + Title);
+					log.info("[#25549] Procurement description like: " + Desc);
+					SearchFilterBean sfbean1 = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 					sfbean1.setCaseInsensitive(true);
-					sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 					sfbean1.setSearchField("procurementTitle");
-					sfbean1.setSearchValue(TitleOrDesc);
+					sfbean1.setSearchValue(Title);
 					sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
 					
-					SearchFilterBean sfbean2 = new SearchFilterBean();
+					SearchFilterBean sfbean2 = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 					sfbean2.setCaseInsensitive(true);
-					sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 					sfbean2.setSearchField("procurementDesc");
-					sfbean2.setSearchValue(TitleOrDesc);
+					sfbean2.setSearchValue(Desc);
 					sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-					
+					//25549@azza20200819 - end
 					SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
 					searchBean.getDataFilterBeans().add(beans);				
 				}
