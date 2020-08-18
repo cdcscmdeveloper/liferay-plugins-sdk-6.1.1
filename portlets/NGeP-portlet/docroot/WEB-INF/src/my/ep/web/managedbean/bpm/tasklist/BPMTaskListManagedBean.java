@@ -1621,8 +1621,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
 			    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
 			    	   
+			    	   reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
 			    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
-			    	   resFLDTO = fulfilmentSO.retrievePIDbyFLDocNo(reqFLDTO);
+			    	   resFLDTO = fulfilmentSO.retrievePIDbyFLDocId(reqFLDTO);
 			    	   
 			    	   if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null && resFLDTO.getFlFulfilmentRequest().getPidValidDays()!=null) {
 							int pidValidDays = resFLDTO.getFlFulfilmentRequest().getPidValidDays();
