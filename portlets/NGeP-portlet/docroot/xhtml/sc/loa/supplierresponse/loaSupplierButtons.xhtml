@@ -59,7 +59,7 @@
 									value="#{lOADetailBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_REVISE_DOC}">
+									<h:panelGroup rendered="#{bpmAction == 'RESUBMIT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
