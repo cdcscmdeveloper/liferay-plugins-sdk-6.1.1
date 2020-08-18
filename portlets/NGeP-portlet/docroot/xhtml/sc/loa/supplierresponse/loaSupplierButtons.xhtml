@@ -88,7 +88,7 @@
 									</h:panelGroup>
 									<!-- End #22211 -->	
 									<!-- Enhancement #21573 -->
-									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and !isLoaReviseStatus}">
+									<h:panelGroup rendered="#{bpmAction == 'ACCEPT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!lOADetailBackingBean.managedBean.qtCancelRequested}"
 											styleClass="ui-button" update="@form"
@@ -102,7 +102,7 @@
 										</p:commandButton>
 									</h:panelGroup>
 		
-									<h:panelGroup rendered="#{bpmAction == 'REJECT' and !isLoaReviseStatus}">
+									<h:panelGroup rendered="#{bpmAction == 'REJECT' and lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId ne QTStatusConst.LOA_REVISE_DOC}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{!isMultipleLOI}"
 											styleClass="ui-button" onstart="blockWidget.show();"
