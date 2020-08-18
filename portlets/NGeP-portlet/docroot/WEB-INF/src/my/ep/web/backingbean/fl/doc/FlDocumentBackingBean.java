@@ -1408,13 +1408,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * 2. Create new service to execute and return specific value. Fast execution time.
 	 * 3. Disable logging
 	 * 
-	 * 
+	 * @param docId
 	 * @param docNo
 	 * @param docStatusId
 	 * @param docType
 	 * @return
 	 */
-	public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docType ){		
+	public boolean checkStatusPIDExpired(String docId, String docNo, Long docStatusId, String docType ){		
 	
  	   IFulfilmentRequestSO flRequestSO;
  	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
@@ -1432,7 +1432,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
 				 ffReqDTO.setFlDocNo(docNo);
-				 ffResDTO= flRequestSO.retrievePIDbyFLDocNo(ffReqDTO);//12177 - code refactoring: performance
+				 ffReqDTO.setFlDocId(docId);
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocId(ffReqDTO);//12177 - code refactoring: performance
 
 	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
 	    			//start search fulfilmenrequest based on doctype is PR
@@ -1492,14 +1493,14 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @param docStatusId
 	 * @param docType
 	 * @return String 
-	 */
-	public String getDocStatus(String docNo, Long docStatusId, String docType ){
+	 */     
+	public String getDocStatus(String docId, String docNo, Long docStatusId, String docType ){
 		
-		if(docNo == null || docStatusId == null || docType == null){
+		if(docId == null || docNo == null || docStatusId == null || docType == null){
 			return null;
 		}
 		
-		if(checkStatusPIDExpired(docNo,docStatusId,docType)){
+		if(checkStatusPIDExpired(docId, docNo,docStatusId,docType)){
 			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
 		}
 		else if(checkStatusSqExpired(docNo, docStatusId, docType )){
