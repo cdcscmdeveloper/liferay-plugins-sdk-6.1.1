@@ -85,6 +85,12 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	
+	// Refactor: To make sqTimeValidity to read only once - Start.
+	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));
+	// Refactor: To make sqTimeValidity to read only once - End.
+	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
 	private static Map bpmMap = null;
@@ -1338,9 +1344,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public boolean isSqStillValid(Date sqEndDate){		
 		
 		Boolean validDate = true;	
-			
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));
+		
+		// Refactor: To make sqTimeValidity to read only once - Start.
+		/*Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));*/
+		// Refactor: To make sqTimeValidity to read only once - End.
 		
 		if(sqEndDate != null){
 				Date currentDate = new Date();
@@ -1349,7 +1357,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+				// Refactor: To make sqTimeValidity to read only once - Start.
+				cal.add(Calendar.DATE, SQ_TIME_VALIDITY); //add 60days to closing/end date
+				// Refactor: To make sqTimeValidity to read only once - Start.
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){
@@ -1487,8 +1497,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	   }
 	    		   }else if (quoteResDTO.getPid() != null){
 	    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+	    			   quotereqDTO.setQuoteId(new Long(worklistItemVO.getDocId()));
 					   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-					   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
+					   quoteResDTO = quoteSO.getPidInfoByDocId(quotereqDTO);
 					   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
 					    Calendar cal = Calendar.getInstance();
 						cal.clear(); 
@@ -1507,8 +1518,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+				   quotereqDTO.setQuoteId(new Long(worklistItemVO.getDocId()));
 				   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-				   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
+				   quoteResDTO = quoteSO.getPidInfoByDocId(quotereqDTO);
 				   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
 					   Calendar cal = Calendar.getInstance();
 						cal.clear(); 
@@ -1524,8 +1536,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				   quoteReqDTO.setQuoteId(new Long(worklistItemVO.getDocId()));
 				   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-				   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);
+				   quoteResDTO = quoteSO.getPidInfoByDocId(quoteReqDTO);
 				   Calendar cal = Calendar.getInstance();
 					cal.clear(); 
 					if(null!=quoteResDTO.getChangeddate()){
@@ -1611,8 +1624,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	   FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
 			    	   FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
 			    	   
+			    	   reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
 			    	   reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
-			    	   resFLDTO = fulfilmentSO.retrievePIDbyFLDocNo(reqFLDTO);
+			    	   resFLDTO = fulfilmentSO.retrievePIDbyFLDocId(reqFLDTO);
 			    	   
 			    	   if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null && resFLDTO.getFlFulfilmentRequest().getPidValidDays()!=null) {
 							int pidValidDays = resFLDTO.getFlFulfilmentRequest().getPidValidDays();
