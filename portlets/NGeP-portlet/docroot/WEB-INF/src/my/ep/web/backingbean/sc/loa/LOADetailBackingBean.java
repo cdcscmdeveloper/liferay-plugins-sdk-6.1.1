@@ -3375,7 +3375,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					//22111 - START
 					|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
 							.getStatusId().longValue())) {				
-				if (this.getManagedBean().getScQt() != null){
+				if (this.getManagedBean().getScQt().getProcurementMode() != null ){
 					//22211 - END
 					updateReviseBPMTaskAction(outcome);				
 				//22111 - START
