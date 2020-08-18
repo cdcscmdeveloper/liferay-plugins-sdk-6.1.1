@@ -542,6 +542,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<Long> procurementItemIdList = new ArrayList<Long>();
 		
 		for (PpProcurementItem ppItem : ppItems) {
+			log.info("ppItem.title= "+ppItem.getProcurementTitle());
 			fromPpItemList.add(ppItem.getFromPpItem());
 			procurementItemIdList.add(ppItem.getProcurementItemId());
 		}
@@ -597,6 +598,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         			ppit.getProcurementTitle());
         }
         
+        if (!ppItemMap.isEmpty() && ppItemMap.size() > 0) {
+    		log.info("ppItemMap size before= "+ppItemMap.size());
+    		ppItemMap.clear();
+        }
+        
 		if (tempClonedPpItemList.size() > 0) {
 			ppItemMap.put(tempClonedPpItemList, tempOriginalPpItemList);
 		}
@@ -604,6 +610,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         List<PpProcurementItem> clones = new ArrayList<PpProcurementItem>();
     	List<PpProcurementItem> reorderedList = new LinkedList<PpProcurementItem>();
     	
+    	if (!reorderedList.isEmpty() && reorderedList.size() > 0) {
+    		log.info("reorderedList size before this= "+reorderedList.size());
+    		reorderedList.clear();
+        }
+    	    	
     	log.info("Size ppItemMap= "+ppItemMap.size());
     	
     	if (ppItemMap.size() > 0) {
@@ -633,12 +644,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
 	        }
 	        
-	        ppItems.clear();
+	        List<PpProcurementItem> newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
 	        
 	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
+	        	ppItems.clear();
 	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
 	        }
-	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(reorderedList);
+	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+	        log.info("Displaying ppItems for Plan No=  "+
+	        		this.getManagedBean().getSelectedPlan().getPlanNo());
         }
 		
     }
