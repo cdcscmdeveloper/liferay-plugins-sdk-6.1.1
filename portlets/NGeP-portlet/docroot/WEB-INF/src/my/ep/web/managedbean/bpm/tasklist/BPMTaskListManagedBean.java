@@ -1497,8 +1497,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	   }
 	    		   }else if (quoteResDTO.getPid() != null){
 	    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+	    			   quotereqDTO.setQuoteId(new Long(worklistItemVO.getDocId()));
 					   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-					   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
+					   quoteResDTO = quoteSO.getPidInfoByDocId(quotereqDTO);
 					   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
 					    Calendar cal = Calendar.getInstance();
 						cal.clear(); 
@@ -1517,8 +1518,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
+				   quotereqDTO.setQuoteId(new Long(worklistItemVO.getDocId()));
 				   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-				   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quotereqDTO);
+				   quoteResDTO = quoteSO.getPidInfoByDocId(quotereqDTO);
 				   //if(quoteResDTO.getQuoteBidDtl().getPurchaseInDefault() != null){
 					   Calendar cal = Calendar.getInstance();
 						cal.clear(); 
@@ -1534,8 +1536,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				   quoteReqDTO.setQuoteId(new Long(worklistItemVO.getDocId()));
 				   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
-				   quoteResDTO = quoteSO.getQuoteDtlByQuoteNoPidDetails(quoteReqDTO);
+				   quoteResDTO = quoteSO.getPidInfoByDocId(quoteReqDTO);
 				   Calendar cal = Calendar.getInstance();
 					cal.clear(); 
 					if(null!=quoteResDTO.getChangeddate()){
