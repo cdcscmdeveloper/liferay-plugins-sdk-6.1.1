@@ -4389,7 +4389,7 @@ public class SupplierFinalizationBackingBean extends
 
 			List<PmReasonDesc> reasonList = resDTO.getReasonDescList();
 
-			/*#25729#142 Start
+			/*#25729#142#190 Start
 		 		If Desk Officer QCB & indicative price below 20k & offer price>50k
 					enable REASON Awarded Price Exceeded Committee Authority
 				else
@@ -4404,7 +4404,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			for (PmReasonDesc reasonDesc : reasonList) {
 				//Include checking/control for #26169 #38 based on SF Decision, Forward To Higher Authority
-				if(reasonDesc.getReasonDesc().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY)){
+				if(reasonDesc.getReasonDescId() == ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY){
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Enable & Auto Checked radio button option reason 'Awarded Price Exceeded Committee Authority'
@@ -4429,7 +4429,7 @@ public class SupplierFinalizationBackingBean extends
 							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 						}						
 					}
-				}else if(reasonDesc.getReasonDesc().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_UNANIMOUS)){
+				}else if(reasonDesc.getReasonDescId() ==ParameterConst.FINALIZATION_REASON_CODE_UNANIMOUS){
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Disable option reason for 'The Decision is Unanimous'
@@ -4454,7 +4454,7 @@ public class SupplierFinalizationBackingBean extends
 				reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),reasonDesc.getReasonDesc());
 			}
 			changeReasonEvent(null);
-			//#25729#142 End				
+			//#25729#142#190 End				
 		} finally {
 			reasonSO = null;
 		}
