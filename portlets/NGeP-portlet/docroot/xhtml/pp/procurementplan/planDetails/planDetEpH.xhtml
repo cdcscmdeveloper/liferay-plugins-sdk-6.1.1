@@ -318,12 +318,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 
 		<div class="ppRightBtn">
 		     
-		    <!-- #25549 - start -->
-	         <p:commandButton value="#{lbl['lbl.btn.clone']}"
+		    <!-- #25549@20200819 - start -->
+	         <p:commandButton id="btnCloneH" value="#{lbl['lbl.btn.clone']}"
 	            action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votAmanah)}"
 	            disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
 			    update="dtExpenditurePlanH, ppExpenditureHCloneid, dtclonepitemsHsearchresults"
-		 		onclick="cloneExpenditureHPopUp.show()"/>
+		 		onclick="cloneExpenditureHPopUp.show()"
+		 		rendered="#{pPlanBackingBean.isRolePlanner()}"/>
+			    <p:tooltip id="toolTipH" for="btnCloneH" value="#{lbl['lbl.pp.clone.year.tooltip']}"
+                    position="bottom"/>
 		    <!-- end --> 
 		    &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanH" 
