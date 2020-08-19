@@ -3222,6 +3222,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			//22211 - start
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			//22211 - end
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
