@@ -2236,7 +2236,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				resDTO = fulfilmentOrderSO.cancelCarryForwardAction(reqDTO);
 			}
 			
-			if(resDTO.isSuccessful()) {
+			if(resDTO != null && resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
