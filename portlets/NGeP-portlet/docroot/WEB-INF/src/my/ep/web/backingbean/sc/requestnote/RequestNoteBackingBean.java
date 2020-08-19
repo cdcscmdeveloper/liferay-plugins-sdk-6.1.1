@@ -1269,10 +1269,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return void
 	 */
 	public void preRenderView() {
-		debugLogger("preRenderView");
+		debugLogger("start preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		log.info("Temp1: start performance - getBpmTaskDetails");
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
-		
+		log.info("Temp1: end performance - getBpmTaskDetails");
 		Long dpId = null;
 		boolean zoneFlag = Boolean.FALSE;
 		ScRequestNote requestNote = null; 
@@ -1292,7 +1293,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setPurchaseInDefaultId(directPurchaseDataType.getPidId());
 		
 		requestNoteReqDTO.setRequestNoteId(dpId);
+		
+		log.info("Temp2: start performance - getRequestNoteSO().getRequestNote");
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+		log.info("Temp2: end performance - getRequestNoteSO().getRequestNote");
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			requestNote = requestNoteResDTO.getRequestNoteDetail();
 		}
@@ -1304,16 +1308,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				getManagedBean().setScRNZone(new ScRNZone());	
 			}
-			
+			log.info("Temp3: start performance - retrieveRequestNoteDetails");
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
+			log.info("Temp3: end performance - retrieveRequestNoteDetails");
+			log.info("Temp4: start performance - checkIsSupplierResponse");
 			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
+			log.info("Temp4: end performance - checkIsSupplierResponse");
+
 			//12177,12183 - Start
 			getDocStatus(requestNote);
 			//12177,12183 - End
 		}
 		
 		//Redmine Enhancement #12177
+		log.info("Temp5: start performance - addButton");
 		addButton();
+		log.info("Temp5: end performance - addButton");
 		if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				MessageUtils.getMessage(MessageConst.ERROR_760481, 
@@ -1343,6 +1353,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setBpkApprover(isBPKApprover());	
 		//26059 - end
 		FacesContext fc = FacesContext.getCurrentInstance();
+		debugLogger("end preRenderView");
 		// page nav. to common request note
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
 	}
