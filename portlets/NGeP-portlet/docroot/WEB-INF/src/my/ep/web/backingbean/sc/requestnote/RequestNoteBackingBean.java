@@ -1269,7 +1269,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @return void
 	 */
 	public void preRenderView() {
-		debugLogger("preRenderView");
+		debugLogger("start preRenderView");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		log.info("Temp1: start performance - getBpmTaskDetails");
 		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
@@ -1354,6 +1354,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setBpkApprover(isBPKApprover());	
 		//26059 - end
 		FacesContext fc = FacesContext.getCurrentInstance();
+		debugLogger("end preRenderView");
 		// page nav. to common request note
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
 	}
