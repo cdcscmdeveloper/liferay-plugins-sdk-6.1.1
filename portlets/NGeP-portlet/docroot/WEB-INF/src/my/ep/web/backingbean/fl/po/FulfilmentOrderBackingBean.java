@@ -1130,6 +1130,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 				yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
 				yepReqDTO.setCarryFoward(true);
+				yepReqDTO.setProgressStatus((long) 0);
 				yepReqDTO.setUserRole(getUserRole());
 				log.info("User role is : " +getUserRole());
 		
@@ -1155,6 +1156,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			
 			
 			}
+			
 
 			try {
 				Date d1 = df.parse(df.format(currTime.getTime()));
@@ -1170,8 +1172,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}else{
 						throw new EpException(MessageConst.ERROR_776107);
 					}
+					
 
 					signingAction(action);
+					
+					yepReqDTO.setFlOrder(getManagedBean().getFulfilmentOrder());
+					yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+					yepReqDTO.setCarryFoward(true);
+					yepReqDTO.setProgressStatus((long) 4);
+					yepReqDTO.setUserRole(getUserRole());
+					yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
+					log.info("Progress status set to 4");
+					
 					String messageCode = "";
 
 					messageCode = MessageConst.INFO_700033;
