@@ -1416,6 +1416,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+				   // call specific column, native query
 				   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 						    currentStatusId, worklistItemVO.getDocType(), true);	
 	    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1429,6 +1430,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	    			   
 	    			   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
 					   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+					   // call specific column, native query
 					   quoteResDTO = quoteSO.getPidInfoBySqDocNo(quotereqDTO);
 					   if(null!=quoteResDTO.getChangeddate() && null!=quoteResDTO.getPidValiddays()){
 						   Calendar cal = Calendar.getInstance();
@@ -1444,6 +1446,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   QuoteReqDTO quotereqDTO = new QuoteReqDTO();
 				   quotereqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+				   // call specific column, native query
 				   quoteResDTO = quoteSO.getPidInfoBySqDocNo(quotereqDTO);
 				   if(null!=quoteResDTO.getChangeddate() && null!=quoteResDTO.getPidValiddays()){
 					   Calendar cal = Calendar.getInstance();
@@ -1457,6 +1460,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 				   quoteReqDTO.setQuoteNo(worklistItemVO.getDocNumber());
+				   // call specific column, native query
 				   quoteResDTO = quoteSO.getPidInfoBySqDocNo(quoteReqDTO);
 				   if(null!=quoteResDTO.getChangeddate() && null!=quoteResDTO.getPidValiddays()){
 					   Calendar cal = Calendar.getInstance();
@@ -1477,6 +1481,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 		    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+		    		  // call specific column, native query
 					  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 								currentStatusId, worklistItemVO.getDocType(), true);	
 					  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1494,6 +1499,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
 			    	   
 			    	reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+			    	// call specific column, native query
 			    	resRNDTO = requestSO.getPidDtlsByRnIdAndRnNo(reqRNDTO);
 
 			    	if(resRNDTO.getPidChangedDate() != null && resRNDTO.getPidValidDays() != null) {
@@ -1521,6 +1527,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+	    		  // call specific column, native query
 				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 							 currentStatusId, worklistItemVO.getDocType(), true);	
 				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
@@ -1538,6 +1545,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			      	   
 			      reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
 			      reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
+			      // call specific column, native query
 			      resFLDTO = fulfilmentSO.retrievePIDbyFLDocId(reqFLDTO);
 			    	   
 			      if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null && resFLDTO.getFlFulfilmentRequest().getPidValidDays()!=null) {
@@ -1565,6 +1573,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+	    		  // call specific column, native query
 			      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
 								currentStatusId, worklistItemVO.getDocType(), true);	
 				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
