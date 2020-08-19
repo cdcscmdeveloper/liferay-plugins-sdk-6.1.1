@@ -4411,6 +4411,7 @@ public class SupplierFinalizationBackingBean extends
 						//Enable & Auto Checked radio button option reason 'Awarded Price Exceeded Committee Authority'
 						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
 						this.getManagedBean().getScQtFinalization().getReason().setReasonCode(reasonDesc.getPmReason().getReasonCode());
+						this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 					}else{
 						//For actualIndicativePrice <= RM 50,000,000.00
 						//Enable select option reason for 'Awarded Exceed Committee Authority' only if isSuppOfferPriceExceedCommunityAuthority = true
@@ -4442,6 +4443,7 @@ public class SupplierFinalizationBackingBean extends
 						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
 						if(!this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()){
 							this.getManagedBean().getScQtFinalization().getReason().setReasonCode(reasonDesc.getPmReason().getReasonCode());
+							this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 						}
 					}
 				}else {
