@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -1384,17 +1385,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Pre render view.
 	 */
 	public void preRenderView() {
+		
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		// temp: to monitor performance
+		MDC.put("taskId", taskId);
+		log.info("start - getLoginUserOrg");
 		getLoginUserOrg();
+		log.info("end - getLoginUserOrg");
 		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 		if (taskId != null) {
 			renewSesionObject();
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.renewSesionObject();
+			log.info("start - getBpmTaskDetails");
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
+			log.info("end - getBpmTaskDetails");
+			log.info("start - initializePRBeans");
 			initializePRBeans();
+			log.info("start - initializePRBeans");
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
 			if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -1416,9 +1426,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId().longValue());
+			log.info("start - retrieveFulfilmentRequest");
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
-			
+			log.info("end - retrieveFulfilmentRequest");
+			log.info("start - setFulfilmentRequestField");
 			setFulfilmentRequestField(resDTO);
+			log.info("end - setFulfilmentRequestField");
 			BigDecimal gstRate = getGstRate();
 			if(getManagedBean().getFulfilmentRequest().getGstRate()!=null && getManagedBean().getFulfilmentRequest().getGstRate().compareTo(gstRate)!=0) {
 				getManagedBean().setGstRateChange(true);
@@ -1428,7 +1441,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getSupplierGst(getManagedBean().getFulfilmentRequest(), getManagedBean().isGstRateChange());
 			
 			// in case of PID
-			log.info("Begin PID validity process");
+			log.info("start - PID validity process");
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault()!=null) {
 				int pidValidDays = getManagedBean().getFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
 				Date pidExpiredDate = new Date(); 
@@ -1449,7 +1462,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 				}
 			}
+			
+			log.info("end - PID validity process");
 			//26279 - start
+			log.info("start - DA");
 			if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION.longValue() 
 					|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_APPROVAL.longValue() 
 					|| getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_REVISION.longValue() 
@@ -1480,6 +1496,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 				}
 			}
+			log.info("end - DA");
 			//26279 - end
 		}
 		log.info("End PID validity process");
@@ -1499,9 +1516,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					MessageUtils.getMessage(MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
 		}
-		
+		log.info("start - addButton");
 		//Redmine Enhancement #12177
 	    addButton();
+	    log.info("end - addButton");
+	    MDC.clear();
 	    if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					MessageUtils.getMessage(MessageConst.ERROR_760481, 
@@ -3368,7 +3387,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					getManagedBean().setTaskDeadLine("365"); //temporary #25147
+					getManagedBean().setTaskDeadLine("0"); //temporary #25147
 					//throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 				}
 				
