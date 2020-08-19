@@ -1499,11 +1499,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			log.info("end - DA");
 			//26279 - end
 		}
-		log.info("End PID validity process");
+		log.info("start - initializePRBeans");
 		initializePRBeans();
+		log.info("end - initializePRBeans");
+		log.info("start - updateDeliveryDate");
 		updateDeliveryDate();
+		log.info("end - updateDeliveryDate");
 		/*#17087 Get Zonal flag*/
+		log.info("start - getzonalTest");
 		getzonalTest();
+		log.info("end - getzonalTest");
+		
+		log.info("start - 20011");
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFulfilmentRequest()));
 		if(!getManagedBean().getFulfilmentRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
@@ -1516,6 +1523,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					MessageUtils.getMessage(MessageConst.INFO_745085, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
 		}
+		log.info("end - 20011");
 		log.info("start - addButton");
 		//Redmine Enhancement #12177
 	    addButton();
