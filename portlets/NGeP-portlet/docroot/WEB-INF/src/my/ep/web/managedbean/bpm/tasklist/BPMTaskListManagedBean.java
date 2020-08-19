@@ -1497,7 +1497,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	IRequestNoteSO requestSO = (IRequestNoteSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);			    	
 			    	RequestNoteReqDTO reqRNDTO = new RequestNoteReqDTO();
 			    	RequestNoteResDTO resRNDTO = new RequestNoteResDTO();
-			    	   
+			    	if(worklistItemVO.getDocId() != null){
+			    		reqRNDTO.setRequestNoteId(worklistItemVO.getDocId().longValue());
+			    	}
 			    	reqRNDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
 			    	// call specific column, native query
 			    	resRNDTO = requestSO.getPidDtlsByRnIdAndRnNo(reqRNDTO);
