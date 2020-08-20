@@ -1551,7 +1551,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			      FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
 			      FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
 			      
-			      if(worklistItemVO.getDocId().toString() != null){
+			      if(worklistItemVO.getDocId() != null){
 			    	  reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
 			    	}
 			      reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
