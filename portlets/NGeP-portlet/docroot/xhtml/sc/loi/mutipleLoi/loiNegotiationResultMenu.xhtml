@@ -137,7 +137,7 @@
 			update="@([id$=reportContentsTbl])" 
 			autoUpdateValue="#{lOIDetailBackingBean.managedBean.autoUpdate}"/>	
 			
-		<p:dialog id="reviseSuppFinalizationLoiDlgs" widgetVar="reviseLoiDlgs"
+		<p:dialog id="reviseLoiDlgs" widgetVar="reviseLoiDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
 			<table>
@@ -151,10 +151,10 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				oncomplete="reviseSuppFinalizationLoiDlgs.hide();"
+				oncomplete="reviseLoiDlgs.hide();"
 				action="#{lOIDetailBackingBean.reviseAction()}" />
 			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="reviseSuppFinalizationLoiDlgs.hide();" type="button" />
+				onclick="reviseLoiDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>	
 

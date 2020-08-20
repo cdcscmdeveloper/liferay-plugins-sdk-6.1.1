@@ -2782,7 +2782,18 @@ public class LOIDetailBackingBean extends
 	 *  To Revise.
 	 */
 	public void reviseAction() {
+        reviseSignOff();
 		updateMultiLoiBpmTask(BpmOutcomeConst.BPM_REVISE, null);
+	}
+	
+	private void reviseSignOff() {
+	  if (StringUtils.isNotBlank(
+          getManagedBean().getCommitteeType())) {
+        for (ScQtCommitteeActivity scQtCommitteeActivity 
+                            : getManagedBean().getFcActivityList()) {
+          scQtCommitteeActivity.setMultiLoiSignedOff(false);
+        }
+	  }
 	}
 	// #25638 - End.
 	
@@ -2799,6 +2810,25 @@ public class LOIDetailBackingBean extends
 		
 		//25638 - Start
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+		    boolean remarksNotFound = true; 
+	        if (!CollectionUtils.isEmpty(getManagedBean().getScQtCommittee().getQtCommitteRemarks())) {
+	            for (ScQtCommitteRemarks scQtRemark : getManagedBean().getScQtCommittee().getQtCommitteRemarks()) {
+	                if (null != scQtRemark.getCreatedUser() && null != scQtRemark.getCreatedUser().getUserId()) {
+	                  if (scQtRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+	                    if (StringUtils.isEmpty(scQtRemark.getRemark()) ) {
+	                      remarksNotFound = true;
+	                      break;
+	                    } else {
+	                      remarksNotFound = false;
+	                    }
+	                  }
+	                }
+	            }
+	        }
+	        
+	        if (remarksNotFound) {
+	            throw new EpException(MessageConst.ERR_775152);
+	        }
 			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
 			return;
 		}
@@ -2878,8 +2908,8 @@ public class LOIDetailBackingBean extends
 				super.renewSesionObject();
 				// #25638 - Start.
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), getManagedBean().getScQt()
-							.getQtNo(), Boolean.TRUE);
+					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), scQtFinalization
+                        .getScQt().getQtNo(), Boolean.TRUE);
 				} else {
 					successMessage(MessageConst.INFO_700033,
 							ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
