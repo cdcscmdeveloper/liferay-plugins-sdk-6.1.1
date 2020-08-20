@@ -3212,6 +3212,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			//22211 - start
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			//22211 - end
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
@@ -3361,8 +3364,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
 			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
-			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION){
-				updateReviseBPMTaskAction(outcome);
+			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION
+					//22111 - START
+					|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
+							.getStatusId().longValue())) {				
+				if (this.getManagedBean().getScQt() != null ){
+					//22211 - END
+					updateReviseBPMTaskAction(outcome);				
+				//22111 - START
+				}else{
+					updateReviseBPMTaskActionWithoutQt(outcome);
+				}//22211 - END
 			}else{
 				updateBpmTaskAction(outcome);
 			}
@@ -3453,6 +3465,76 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}		
 	}
+		
+	// #22211 - Start
+	public void updateReviseBPMTaskActionWithoutQt(String outcome) {
+		debugLogger("updateReviseBPMTaskActionWithoutQt");
+
+		AwardSupplierResDTO resDTO = null;
+
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		parseLOADetails(scLoa, outcome);
+
+		validateLOADetails(scLoa, outcome);
+		scLoa.setScLoaRemarks(null); //To skip adding remark
+
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+		if (this.getManagedBean().getSelectedPtj() != null) {
+			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+		}
+		reqDTO.setScLoa(scLoa);
+		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		reqDTO.setPayLoad(getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			/*******************
+			 * ACKNOWLEDGE_PAGE
+			 *******************/
+			String[] param = new String[3];
+
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[1] = reqDTO.getRequestNoteNo();
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			if (reqDTO.getScLoa().getPmStatus().getStatusId()
+					.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+				successMessage(MessageConst.INFO_700085, param);
+			} else {
+				successMessage(MessageConst.INFO_700084, param);
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+	// #22211 - End
+
+	// #22211 - start
+	public boolean isLoaReviseStatus() {
+
+		Boolean loaReviseStatus = false;
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+
+		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
+				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+			loaReviseStatus = true;
+		}
+
+		return loaReviseStatus;
+	}
+
+	// #22211 - end
 	
 	/**
 	 * Update bpm task action.
