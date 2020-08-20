@@ -389,6 +389,11 @@
 			<portlet id="soaBatchRetry"></portlet>
 			<portlet id="soaNotifyRetry"></portlet>
 		</category>
-		<!-- SOA - END -->		
+		<!-- SOA - END -->	
+       <category name="codification">
+			<portlet id="codificationMaintenance"></portlet>
+			<portlet id="itemCodeCreation"></portlet>
+			<portlet id="extensionCodeCreation"></portlet>
+		</category>			
 	</category>
 </display>
