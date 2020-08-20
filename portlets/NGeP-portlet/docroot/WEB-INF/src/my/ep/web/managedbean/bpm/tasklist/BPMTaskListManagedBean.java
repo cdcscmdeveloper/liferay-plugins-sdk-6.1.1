@@ -1541,14 +1541,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			    	  }
 				  }
 	    	   }else{
-			      IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			      IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			      FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
 			      FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
 			      	   
 			      reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
 			      reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
 			      // call specific column, native query
-			      resFLDTO = fulfilmentSO.retrievePIDbyFLDocId(reqFLDTO);
+			      resFLDTO = fulfilmentRequestSO.retrievePIDbyFLDocId(reqFLDTO);
 			    	   
 			      if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null && resFLDTO.getFlFulfilmentRequest().getPidValidDays()!=null) {
 					int pidValidDays = resFLDTO.getFlFulfilmentRequest().getPidValidDays();
