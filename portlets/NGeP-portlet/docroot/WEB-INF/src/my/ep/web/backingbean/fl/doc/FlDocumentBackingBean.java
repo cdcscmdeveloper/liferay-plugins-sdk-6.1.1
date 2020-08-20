@@ -1374,17 +1374,21 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
  	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
  	    QuoteResDTO quoteResDTO = null;
- 	    
+ 	    Long documentId = null;
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
-	       
+	    
+	    if(docId != null){
+	    	documentId = new Long(docId);
+	    }
+	    
 	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 	    	if( currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION )
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long (docId), docNo, docStatusId, docType, false);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(documentId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;

@@ -1410,14 +1410,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private void processWorklistItemByDocType(WorklistItemVO worklistItemVO) {
 		  // 12177 - Start			       
  	   QuoteResDTO quoteResDTO = null;
-	       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());       
+ 	   Long docId = null;
+ 	   
+ 	   if(worklistItemVO.getDocId() != null){
+ 		   docId = new Long(worklistItemVO.getDocId());
+ 	   }
+	       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());  
+	       
 	       
 	       if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   // call specific column, native query
-				   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
+				   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, worklistItemVO.getDocNumber(), 
 						    currentStatusId, worklistItemVO.getDocType(), true);	
 	    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1482,7 +1488,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 		    		  // call specific column, native query
-					  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
+					  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, worklistItemVO.getDocNumber(), 
 								currentStatusId, worklistItemVO.getDocType(), true);	
 					  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						  if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1530,7 +1536,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		  // call specific column, native query
-				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
+				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, worklistItemVO.getDocNumber(), 
 							 currentStatusId, worklistItemVO.getDocType(), true);	
 				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 					  if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1576,7 +1582,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		  // call specific column, native query
-			      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
+			      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, worklistItemVO.getDocNumber(), 
 								currentStatusId, worklistItemVO.getDocType(), true);	
 				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 					  if(!isSqStillValid(quoteResDTO.getEndDate())){
