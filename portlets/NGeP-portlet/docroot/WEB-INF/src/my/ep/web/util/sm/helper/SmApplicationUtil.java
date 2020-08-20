@@ -6847,12 +6847,12 @@ public class SmApplicationUtil {
 										.isCollectionEmpty(pendingApproveCatTypeList) || !pendingApproveCatTypeList
 										.contains(mac.getCategoryType()
 												.getParameterCode()))
-							//#28677   //24964 - start
+							//#28677   //24964 & 28534 - start
 								&& !appl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 							if(!isMachineExistInLatest(mac, bean
 									.getLatestAppl().getSmMachineDtls())){
 								macIt.remove();
-							} //#28677   //24964 - end						
+							} //#28677   //24964 & 28534 - end						
 						}
 					}
 				}
