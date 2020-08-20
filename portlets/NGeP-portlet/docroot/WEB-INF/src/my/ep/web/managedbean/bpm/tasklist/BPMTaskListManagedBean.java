@@ -1417,7 +1417,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				   IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 				   // call specific column, native query
-				   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+				   quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
 						    currentStatusId, worklistItemVO.getDocType(), true);	
 	    		   if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			   if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1482,7 +1482,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 		    		  // call specific column, native query
-					  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+					  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
 								currentStatusId, worklistItemVO.getDocType(), true);	
 					  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 						  if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1530,7 +1530,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		  // call specific column, native query
-				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+				  quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
 							 currentStatusId, worklistItemVO.getDocType(), true);	
 				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 					  if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1576,7 +1576,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		  // call specific column, native query
-			      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(worklistItemVO.getDocNumber(), 
+			      quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(new Long(worklistItemVO.getDocId()), worklistItemVO.getDocNumber(), 
 								currentStatusId, worklistItemVO.getDocType(), true);	
 				  if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 					  if(!isSqStillValid(quoteResDTO.getEndDate())){
