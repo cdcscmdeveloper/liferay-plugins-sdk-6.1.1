@@ -1368,26 +1368,27 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	
 	// 12177 - Start
 	
-	public boolean checkStatusSqExpired(String docNo, Long docStatusId, String docType ){		
+	public boolean checkStatusSqExpired(String docId, String docNo, Long docStatusId, String docType ){		
 		
 		IQuoteSO quoteSO;
  	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
  	    QuoteResDTO quoteResDTO = null;
- 	    
- 	   IFulfilmentRequestSO flRequestSO;
- 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
- 	    
+ 	    Long documentId = null;
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
-	       
-	    if(docType.equals("PR")){
+	    
+	    if(docId != null){
+	    	documentId = new Long(docId);
+	    }
+	    
+	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 	    	if( currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION )
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
+	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(documentId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
@@ -1422,7 +1423,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    Long currentStatusId = docStatusId;
 	    Boolean pidExpired = false;
 	       
-	    if(docType.equals("PR")){
+	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
@@ -1503,7 +1504,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		if(checkStatusPIDExpired(docId, docNo,docStatusId,docType)){
 			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
 		}
-		else if(checkStatusSqExpired(docNo, docStatusId, docType )){
+		else if(checkStatusSqExpired(docId, docNo, docStatusId, docType )){
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
