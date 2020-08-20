@@ -154,9 +154,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			this.getManagedBean().initRefreshPageNoFlag();
 		}
-
-
-
 	}
 
 	/**
@@ -451,19 +448,28 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					
 					searchBean.getDataFilterBeans().add(bilingualFilter);
 				}
-				FacesScopes fs = new FacesScopes();
-				String itemType = fs.getParameter("itemType");
-
+				
+				/*[#27625] begin*/
+				String itemType;
+				if(StringUtils.isNotBlank(getManagedBean().getTypeName())){
+					itemType = getManagedBean().getTypeName();
+				}else{
+					FacesScopes fs = new FacesScopes();
+					itemType = fs.getParameter("itemType");
+				}
 				log.info("............itemType=" + itemType);
+
 				if (itemType != null) {// save parameter first time it come from
 					// search button
 					setItemTypeParameter(itemType);
-				}
-				log.info("............getItemTypeParameter="
-						+ getItemTypeParameter());
+				}else
+					setItemTypeParameter(null);
+				/*[#27625] end*/
+
+				log.info("............getItemTypeParameter="+ getItemTypeParameter());
 				log.info("............ isAssignCodeFlg ="+ getManagedBean().isAssignCodeFlg());
 				// get parameter from backup property whenever table be reloaded
-				if(!getManagedBean().isAssignCodeFlg()) {
+				//if(!getManagedBean().isAssignCodeFlg()) { /*[#27625]
 					if (getItemTypeParameter() != null
 							&& !getItemTypeParameter().isEmpty()) {
 	
@@ -481,7 +487,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 											"70000000"));
 						}
 					}
-				}
+				//}
 
 				/*
 				 * levelFilterBean.setSearchField("unspscLevel");
@@ -544,7 +550,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
 		this.searchDataModel = searchDataModel;
 	}
-
+	
 	/**
 	 * UNSPSC Search Data Model for displaying list of UNSPSC records.
 	 * 
@@ -555,16 +561,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				.getUnspscCode();
 		String unspscTitle = this.getManagedBean().getTitleFilterBean().getSearchValue().toString();
 
-
-		if ((unspscCode == null && (unspscTitle == null || unspscTitle
-				.isEmpty()))
-				|| ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle
-				.isEmpty()))) {
+		if ((unspscCode == null && (unspscTitle == null || unspscTitle.isEmpty()))
+				|| ((unspscCode != null && unspscCode.isEmpty()) 
+				&& (unspscTitle != null && unspscTitle.isEmpty()))) {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
 
-		if ((unspscCode != null && !unspscCode.isEmpty())
-				&& (unspscCode.length() != 8 || !StringUtils.isNumeric(unspscCode))){
+		if ((unspscCode != null && !unspscCode.isEmpty()) && (unspscCode.length() != 8 || !StringUtils.isNumeric(unspscCode))){
 			throw new EpException(MessageConst.ERROR_715026);
 		}
 
@@ -1866,6 +1869,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	public String backToReviewUnspsc() {
 		FacesScopes fs = new FacesScopes();
+		this.getManagedBean().reset();
 
 		log.info("CD_ADMIN" + fs.hasRoleUser("CM_ADMIN"));
 		log.info("Current Task Name: " + fs.getParameter("currentTaskName"));
@@ -1890,6 +1894,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public String backToPendingCodified() {
+		this.getManagedBean().reset();
 		return getManagedBean().getBackToPreviousPage();
 		//return "assignProductCode?faces-redirect=true";
 	}
