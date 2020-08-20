@@ -1550,8 +1550,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			      IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			      FulfilmentReqDTO reqFLDTO = new FulfilmentReqDTO();
 			      FulfilmentResDTO resFLDTO = new FulfilmentResDTO();
-			      	   
-			      reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
+			      
+			      if(worklistItemVO.getDocId().toString() != null){
+			    	  reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
+			    	}
 			      reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
 			      // call specific column, native query
 			      resFLDTO = fulfilmentRequestSO.retrievePIDbyFLDocId(reqFLDTO);
