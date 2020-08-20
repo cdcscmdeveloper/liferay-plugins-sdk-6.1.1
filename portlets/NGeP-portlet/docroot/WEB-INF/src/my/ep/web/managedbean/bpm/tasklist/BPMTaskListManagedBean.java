@@ -12,6 +12,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -86,10 +87,10 @@ import org.apache.log4j.Logger;
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
-	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
-			.getProperty("sqTimeValidity"));
-	// Refactor: To make sqTimeValidity to read only once - End.
+	// Refactor: #12177 - Start
+	/*private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));*/
+	// Refactor: #12177 - End
 	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
@@ -1287,9 +1288,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				Calendar cal = Calendar.getInstance();
 				cal.clear(); 
 				cal.setTime(closingDate);
-				// Refactor: To make sqTimeValidity to read only once - Start.
-				cal.add(Calendar.DATE, SQ_TIME_VALIDITY); //add 60days to closing/end date
-				// Refactor: To make sqTimeValidity to read only once - Start.
+				// Refactor: #12177 - Start
+				cal.add(Calendar.DATE, NgepApplicationBean.getSqTimeValidity()); //add 60days to closing/end date
+				// Refactor: #12177 - End
 				setExpirationDate(dateToCalendar(cal.getTime()));
 					
 				if(currentDate.compareTo(cal.getTime()) >= 0){
