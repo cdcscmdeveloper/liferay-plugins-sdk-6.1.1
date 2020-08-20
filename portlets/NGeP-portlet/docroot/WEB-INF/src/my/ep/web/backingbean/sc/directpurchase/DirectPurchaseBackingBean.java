@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -1153,9 +1154,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 		Boolean validDate = true;	
 			
-		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
-				.getProperty("sqTimeValidity"));	
-			
+		// Refactor: #12177 - Start
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();	
+		// Refactor: #12177 - End
+		
 		if(sqEndDate != null){
 				Date currentDate = new Date();
 				Date closingDate = sqEndDate;
