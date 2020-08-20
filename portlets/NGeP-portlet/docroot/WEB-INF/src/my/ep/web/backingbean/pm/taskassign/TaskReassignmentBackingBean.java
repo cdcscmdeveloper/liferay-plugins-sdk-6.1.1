@@ -2265,16 +2265,6 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setTaskRoleCode(vo.getRoleList() !=null && !vo.getRoleList().isEmpty() ? vo.getRoleList().get(0) : null);
 				//log.info("[#25018] TaskRoleCode: " + reqDTO.getTaskRoleCode());
 				//For Tracking Diary List (CT)
-				
-				//Start #26319
-				String comType = getCommitteeTypeByStatusAndDocTypeAndNo(reqDTO);
-				if(getManagedBean().isCommitteeUpdate() && StringUtils.isNotBlank(comType)){
-					reqDTO.setRoleQT(PmCommonUtil.getRoleDescByRoleCode(reqDTO.getTaskRoleCode()));
-					if(StringUtils.isNotBlank(comType))
-						reqDTO.setCommitteeType(getParamByCommittee(comType));
-				}
-				//End #26319
-				
 				if(vo.getTrackingDiaryList() != null && !vo.getTrackingDiaryList().isEmpty()){
 					reqDTO.setTrackingDiaryList(vo.getTrackingDiaryList());
 				}
@@ -2334,30 +2324,6 @@ public class TaskReassignmentBackingBean extends
 		}
 
 	}
-	
-	//Start #26319
-	private String getCommitteeTypeByStatusAndDocTypeAndNo(TaskAssignmentReqDTO reqDTO){
-		ISourcingIntegrationSO isSO;
-		Long statusId = reqDTO.getDocStatus().longValue();
-		String docType = reqDTO.getTaskDocType();
-		String docNo = reqDTO.getDocNumber();
-		isSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		return isSO.getCommitteeTypeByStatusAndDocTypeAndNo(statusId,docType,docNo);		
-	}
-
-	private String getParamByCommittee(String code){
-		PmParameter pmParameter = null;
-		pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, code);
-		String parameterDesc = null;
-		parameterDesc = getParameterDesc(pmParameter);
-		if(parameterDesc == null){
-			parameterDesc = getParameterDesc(pmParameter);
-		}
-		return parameterDesc;
-	}
-	
-	//End #26319
 	
 	/**
 	 * To Retieve USer Group User List By User Group Id
@@ -2643,7 +2609,6 @@ public class TaskReassignmentBackingBean extends
 			 ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
 		PmOrgProfile orgProfile = null;
 		ISearchResultBean<PmUser> resultBean = null;
-		String commTypeResult = null;
 		boolean isSearched = false;
 		Long orgProfileId = getManagedBean()
 						.getTaskAssignmentSearchBean().getOrgProfile()
@@ -2717,7 +2682,9 @@ public class TaskReassignmentBackingBean extends
 			
 			resultBean = generateCommitteAssignees(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
 			//Bug #25021
-			getManagedBean().setCommitteeUpdate(true);
+			
+			getManagedBean().setCommitteeUpdate(true);		
+					
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
@@ -3133,12 +3100,13 @@ public class TaskReassignmentBackingBean extends
 			//Bug #25021
 			committeReqDTO.setOrgProfileId(orgProfileId);
 			//end Bug #25021
+			
 			return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
 		} finally {
 			committeSO = null;
 		}
 	}
-		
+	
 	private PmStatusDesc retrieveStatusDesc(Long statusId){
 		IStatusSO statusSO;
 		PmStatusDesc statusDesc;
