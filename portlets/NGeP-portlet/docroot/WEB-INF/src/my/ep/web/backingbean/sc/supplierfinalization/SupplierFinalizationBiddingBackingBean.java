@@ -92,6 +92,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -1952,8 +1953,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 *  To Revise.
 	 */
 	public void reviseAction() {
+	    reviseSignOff();
 		updateBPMTask(BpmOutcomeConst.BPM_REVISE, null);
 	}
+	
+	private void reviseSignOff() {
+	  if (StringUtils.isNotBlank(getManagedBean().getCommitteeType())) {
+        for (ScQtCommitteeActivity scQtCommitteeActivity 
+                            : getManagedBean().getCommitteeEndorsementList()) {
+          scQtCommitteeActivity.setBiddingSignedOff(false);
+        }
+	  }
+    }
 	// #25638 - End.
 	
 	/**
@@ -2144,6 +2155,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				suppFinalizationReqDTO.setChildDocId(getManagedBean().getScQt().getQtId());
 				suppFinalizationReqDTO.setChildDocNo(getManagedBean().getScQt().getQtNo());
 				suppFinalizationReqDTO.setChildDocType(ParameterConst.DOCTYPE_QUOTATION);
+				suppFinalizationReqDTO.setRoleCode(RoleCode.QCA_MEMBER.value());
 			}
 			// #25638 - End.
 			

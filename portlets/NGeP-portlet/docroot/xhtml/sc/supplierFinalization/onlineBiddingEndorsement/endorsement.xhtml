@@ -129,7 +129,7 @@
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/signOff.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
 		
-		<p:dialog id="reviseSuppFinalizationBiddingDlgs" widgetVar="reviseBiddingDlgs"
+		<p:dialog id="reviseBiddingDlgs" widgetVar="reviseBiddingDlgs"
 		header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 		resizable="false" width="400" height="75" closable="false">
 		<table>
@@ -143,10 +143,10 @@
 		<p:spacer height="1" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				oncomplete="reviseSuppFinalizationBiddingDlgs.hide();"
+				oncomplete="reviseBiddingDlgs.hide();"
 				action="#{suppFinalBiddingBackingBean.reviseAction()}" />
 			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="reviseSuppFinalizationBiddingDlgs.hide();" type="button" />
+				onclick="reviseBiddingDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
 		
