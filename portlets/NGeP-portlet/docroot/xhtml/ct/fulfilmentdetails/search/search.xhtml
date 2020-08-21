@@ -227,7 +227,14 @@
 						          action="#{contractDetailsBackingBean.gotoNotificationSetting(data.ctContract.contractId)}"
 						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 						    </p:menuitem>
-
+						    <!-- #25406 - Start -->
+						     <p:menuitem id="menuItemId7" value="#{lbl['lbl.ct.owner.management']}" icon="ui-icon-edit" 
+						          rendered="#{contractDetailsBackingBean.isApprover() and data.ctStatus == 1}"
+									        process="@this" partialSubmit="true"
+						          action="#{contractDetailsBackingBean.gotoOwnerManagementPage(data.ctContract.contractId)}"
+						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						    </p:menuitem>
+							<!-- #25406 - End -->
 				
 					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
 					   	     icon="ui-icon-termination-history" 
