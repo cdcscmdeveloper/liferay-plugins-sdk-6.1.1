@@ -96,6 +96,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -921,6 +922,18 @@ public class EvaluationBackingBean extends
 			 * 
 			 * }
 			 */
+			
+			// 26339  -venkat start
+			String title =this.getManagedBean().getScQtChecklist().getTitle();
+			
+			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
+					title.equals(ParameterConst.ASSET_FACILITIES_TITLE)) {
+				this.getManagedBean().setFP_Compliance(true);
+			} else {
+				this.getManagedBean().setFP_Compliance(false);
+			}
+			// 26339  -venkat End	
+			
 			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
 					new ComplianceSupplierPagingDataModel(
 							"complianceTechnicalSupplier", reqDTO
@@ -1006,8 +1019,35 @@ public class EvaluationBackingBean extends
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
+			
+			// #26339 - Start
+			EvaluationResDTO evaluationResDTO = evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
+			
+			if (null != evaluationResDTO && CollectionUtils.isNotEmpty(evaluationResDTO.getSampleItemList())) {
+				if (null != getManagedBean().getComplianceSampleLblsupplierDM() && CollectionUtils.isNotEmpty(getManagedBean().getComplianceSampleLblsupplierDM().getList())) {
+					
+					for (ScQtSampleLable qtSampleLable : getManagedBean().getComplianceSampleLblsupplierDM().getList()) {
+						if (sampleLabel.getSampleLableId().longValue() == qtSampleLable.getSampleLableId().longValue()) {
+							
+							for (ScQtSampleItem sampleItem : this.getManagedBean()
+									.getComplianceSampleItemListDM().getList()) {
+								
+								for (ScQtSampleItem lblSampleItem : qtSampleLable.getSampleItems()) {
+									if (lblSampleItem.getSampleItemId().longValue() == sampleItem.getSampleItemId().longValue()) {
+										lblSampleItem.setSubmissionStatus(sampleItem.getSubmissionStatus());
+										
+										break;
+									}
+								}
+							}
+							
+							break;
+						}
+					}
+				}
+			}
+			// #26339 - End
 
-			evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
 			if (null != sampleLabel) {
 				this.getManagedBean()
 						.setComplianceSampleItemListDM(
@@ -1111,6 +1151,13 @@ public class EvaluationBackingBean extends
 						 * if (null == proposalCheckList.getCompliance()) { //
 						 * throw new EpException(MessageConst.ERROR_760204); }
 						 */
+						
+						// #26339 - Start
+						if (proposalCheckList.getCompliance() == null && proposalCheckList.getScQtProposalChecklistAttachment() == null) {
+							proposalCheckList.setCompliance(new Integer(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE));
+						}
+						// #26339 - End
+						
 						if (null != proposalCheckList.getCompliance()
 								&&ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE==proposalCheckList.getCompliance()) {
 							if (null == proposalCheckList.getRemark()
@@ -12035,4 +12082,162 @@ private void retriveCommitteeRemarksList(){
 		}
 		
 	}
+	
+	//Enhancement #26339 -start-
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the Status values
+	*/
+	@SuppressWarnings("unused")
+	public SelectItem[] statusDropdownCodeValues(String itemType,ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
+		List<Integer> types = new ArrayList<Integer>();
+	
+		PmDocument pmdoc = this.getManagedBean().getScQtChecklist().getPmDocument();
+		
+		if(pmdoc != null && pmdoc.getDocGroupId()!=null ) {
+			if(pmdoc.getDocGroupId().toString().equals(ParameterConst.ASSET_LIABILITIES_GROUP_ID)) 
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}
+			else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.CREDIT_FACILITIES_GROUP_ID)) 
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}
+			else if(pmdoc.getDocGroupId().toString().equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}
+			else{
+				this.getManagedBean().setFP_Compliance(false);
+			}		
+		}		
+		 
+		if(null!=scQtProposalChecklistAttachment && scQtProposalChecklistAttachment.getAttachmentId()!=null)
+		{
+			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+		} else if(null==scQtProposalChecklistAttachment && this.getManagedBean().isFP_Compliance())
+		{
+			// #28308 Fix - Start (#26339)
+			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+			// #28308 Fix - End (#26339)
+		} else {
+			types.add(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+			types.add(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE);
+			types.add(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+		}
+		 
+		SelectItem[] items = null;
+		
+		try {
+			items = new SelectItem[types.size() + 1];
+			
+			if(null==scQtProposalChecklistAttachment && !this.getManagedBean().isFP_Compliance())
+			{  //lbl.ct.not.applicable 
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			} else {
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+			}
+			
+			int i = 1;
+			
+			for (Integer location : types) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+	
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					log.info("ParamerterDesc Code "+paramDesc.getPmParameter().getParameterCode());
+				
+					if (paramDesc.getPmParameter().getParameterCode()
+							.equals(String.valueOf(location.intValue()))) {   
+	
+						items[i++] = new SelectItem(paramDesc.getPmParameter()
+								.getParameterCode(), paramDesc.getCodeName());
+					}
+				}
+			}
+		} finally {	}
+		
+		return items;
+	}
+	
+	/**
+	 * @param scQtProposalChecklist
+	 * @return
+	 */
+	public boolean isComplianceStatusDisabled(ScQtProposalChecklist scQtProposalChecklist) {
+		
+		if(!this.getManagedBean().isFP_Compliance()) {
+			String title =this.getManagedBean().getScQtChecklist().getTitle();
+			
+			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
+					title.equals(ParameterConst.ASSET_FACILITIES_TITLE) || title.equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
+			{	
+				if (null != scQtProposalChecklist.getScQtProposalChecklistAttachment()) {
+					this.getManagedBean().setFP_Compliance(true);
+				}
+			} else {
+				this.getManagedBean().setFP_Compliance(false);
+			}
+		// #28308 Fix - Start (#26339)
+		} else {
+			if (null == scQtProposalChecklist.getScQtProposalChecklistAttachment()) {
+				return true;
+			}
+		// #28308 Fix - End (#26339)
+		}
+		
+		if (!scQtProposalChecklist.getScQtProposal().isSubmitted() || this.getManagedBean().isStatusOnly() 
+				|| this.getManagedBean().isComplianceReEvaluateRequired() 
+				|| this.getManagedBean().isReadOnly()  || !this.getManagedBean().isFP_Compliance()) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * @param qtSampleLable
+	 * @return
+	 */
+	public boolean sampleChecklistCompleted(ScQtSampleLable qtSampleLable) {
+		try {
+			if (null != qtSampleLable) {
+				log.debug(this.getClass().getName() + ".sampleChecklistCompleted(): checking status for label ID: " + qtSampleLable.getSampleLableId());
+				
+				List<ScQtSampleItem> sampleItemList = qtSampleLable.getSampleItems();
+				
+				boolean statusCompleted = true;
+				
+				if (CollectionUtils.isNotEmpty(sampleItemList)) {
+					for (ScQtSampleItem sampleItem : sampleItemList) {
+						if (null != sampleItem && null == sampleItem.getSubmissionStatus()) {
+							statusCompleted = false;
+							
+							break;
+						}
+					}
+				}
+				
+				log.info(this.getClass().getName() + ".sampleChecklistCompleted(): status of label ID: " + qtSampleLable.getSampleLableId() + " : is : " + statusCompleted);
+				
+				return statusCompleted;
+			}
+		} catch (Exception e) {
+			log.error(this.getClass().getName() + ".sampleChecklistCompleted(): Error while checking status for label ID: " + qtSampleLable.getSampleLableId());
+			log.error(this.getClass().getName() + ".sampleChecklistCompleted(): Error message is: " + e.getMessage());
+			
+			return false;
+		}
+		
+		return false;
+	}
+	//Enhancement #26339 -end-
+	
 }
