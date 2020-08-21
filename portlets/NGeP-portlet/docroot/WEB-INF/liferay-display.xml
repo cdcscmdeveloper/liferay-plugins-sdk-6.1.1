@@ -24,14 +24,14 @@
 			<portlet id="ctRequestFactoring" />
 			<portlet id="ctSuppAgreement" />
 			<portlet id="ctContractSuspend" />
-			<portlet id="ctContractReqadmin" />
 			<portlet id="ctContractTerminate" />
 			<portlet id="ctContractAmendment" />
 			<portlet id="ctChangeBankAccount" />
 			<portlet id="ctRequestTermination" />
 			<portlet id="ctContractSearch" />
 			<portlet id="ctContractDashBoard" />
-			<portlet id="ctCustomerService" />
+			<portlet id="ctCustomerService" />			
+			<portlet id="ctContractOwnerManagement" />
 		</category>
 		
 		<!-- Profile Management - START -->
@@ -148,7 +148,6 @@
 			<portlet id="scSupplierFinalizationEndorsement"/>
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
-            <portlet id="cancelLoaApproval"></portlet>
             <portlet id="QTSupplierAcceptance" />
             <portlet id="BusinessOwner"></portlet>
             <portlet id="ReviewPurchaseInquiry"></portlet>
@@ -328,8 +327,6 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
-		<portlet id="travellingTicketingSystemMaintenance"></portlet>
-		
 
 		<portlet id="smResubmitApplication"></portlet>
 		<portlet id="paymentResponse"></portlet>

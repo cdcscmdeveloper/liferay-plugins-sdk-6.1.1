@@ -192,6 +192,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME
 					+ CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME,
 					"change-bank-account");
+			
+			temp.put(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_NAME,
+					"contract-owner-management");
+			temp.put(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME,
+					"contract-owner-management");
+			
 
 			// Fulfilment Management - Start
 			temp.put(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME
