@@ -487,6 +487,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
+	
+	//Enhancement #26339 -start-
+	private boolean isFP_Compliance = false;
+	//Enhancement #26339 -end-	
+	
 	/**
 	 * Gets the today.
 	 * 
@@ -3373,6 +3378,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
 
-	
+	//Enhancement #26339 -start-	
+	public boolean isFP_Compliance() {
+		return isFP_Compliance;
+	}
+
+	public void setFP_Compliance(boolean isFP_Compliance) {
+		this.isFP_Compliance = isFP_Compliance;
+	}
+	//Enhancement #26339 -end-
 
 }
