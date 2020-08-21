@@ -2984,7 +2984,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL)
 							|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
-						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						//start-28659
+						if(null!=getManagedBean().getFlRequest().getChargeOrgProfile()){
+							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
+						}else{
+							getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
+						}
+						//End-28659
 						System.out.println("PTJ Pembayar");
 					} else {
 						getManagedBean().setChargePTJOrg(getManagedBean().getFlRequest().getChargeOrgProfile());
