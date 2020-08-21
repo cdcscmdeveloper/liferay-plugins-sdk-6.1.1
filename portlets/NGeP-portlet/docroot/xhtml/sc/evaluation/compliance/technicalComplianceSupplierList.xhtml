@@ -54,7 +54,7 @@
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems
-						value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>

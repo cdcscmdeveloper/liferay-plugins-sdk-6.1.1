@@ -49,12 +49,13 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
+				<!-- 26339  Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
 				<p:selectOneMenu
 					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 					value="#{complianceTechnicalSupplier.compliance}">
-
+                  <!-- 26339 End-->
 					<f:selectItems
-						value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
