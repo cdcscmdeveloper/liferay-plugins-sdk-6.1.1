@@ -135,11 +135,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
-	/*#21387-basri start*/
+
+	private static final String PROCESS_OWNER_MANAGEMENT_PAGE = "/xhtml/ct/ownermanagement/ownerManagement.xhtml?faces-redirect=true";
+//	/*#21387-basri start*/
 	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml?faces-redirect=true";/*#21387-basri*/
-	/*#21387-basri end*/
+//	/*#21387-basri end*/
+
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
+	private CtAgency selectedRecommendedAgency;
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -319,8 +323,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		setValidateContractField(reqDTO);
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
-				ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
+		//#25406
+		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
+					ContractManagementConst.NAV_TO_CONTRACT_OWNER_MANAGEMENT);			
+		}else{
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
+					ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
+		}
 
 	}
 
@@ -369,6 +379,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setSelectedAgency(null);
 					ctBB.getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 							ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+					//#25406 - Start
+					if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+						this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
+								ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+						this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+						if(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile() != null){
+							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile());
+						}else{
+							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
+						}
+					}
+					//#25406 - End
 					//Bug #27579
 					ctBB.getManagedBean().setDisableAgent(true);
 					ctBB.getManagedBean().setOwnerOrgProfile(true);
@@ -562,7 +584,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.getManagedBean().setSupplierBranchName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 			ctBB.getManagedBean().setSupplierRegNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
 			ctBB.getManagedBean().setSupplierMofNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
-			if (!ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)) {
+			//#25406
+			if (!ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+					|| !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 				ctBB.renderUpdateCheckbox(ctBB.getManagedBean().getContractVer());
 			}
 			ctBB.retrieveBranchInfo();
@@ -808,6 +832,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 			reqDTO.setCtContract(ctBB.getManagedBean().getContractVer().getCtContract());
 			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+			//#25406 - Start
+			if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
+					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				ctContractVer.setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
+			}
+			
+			if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
+					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
+			}
+			//#25406 - End
 
 			ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
 			ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
@@ -913,6 +948,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
+					//#25406
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) &&
+						ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+					messageId = MessageConst.INFO_700086;
 				}
 
 				if(StringUtils.isNotBlank(nextRole)){
@@ -987,7 +1026,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				throw new EpException(MessageConst.ERROR_100062);
 			}
 		}
-
+		
+		//#25406 - Start
+		/*Validation for Contract Owner Management */
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) &&
+				ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+			if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_775156);
+			}
+		}
+		//#25406 - End
+		
 		// Validation for performance bond exempted
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() 
 				&& !ctBB.getManagedBean().isDirectPurchase()
@@ -2177,8 +2227,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} else {
 			reqDTO.setContractVerId(contractVerId);
 		}
-		// Fixing Bug #28550 - End		
-			
+		// Fixing Bug #28550 - End			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
@@ -2952,7 +3001,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FD_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)) {
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_COM_HT_NAME)//#25406
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_COM_HT_NAME)) {
 			if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)
 					&& getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
@@ -2960,7 +3011,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_CENTRAL)
 					&& getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-				userRole = RoleCode.BPK_CCA.value();			
+				userRole = RoleCode.BPK_CCA.value();
+				//#25406 - Start
+			}else if ((ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_CENTRAL)
+					|| ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY))
+					&& getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+				userRole = RoleCode.CT_APPROVER.value();
+				//#25406 - End
 			}
 		} else if (getManagedBean().getTaskName() != null
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FD_HT_NAME)
@@ -3241,4 +3300,91 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				});
 	}
+	
+	//#25406 - Start
+	/**
+	 * The method used to navigate to contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	public String gotoOwnerManagementPage(Long contractId) {
+		IContractSO contractSO = null;
+		try {
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);
+			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT);
+			
+		
+			reqDTO.setUpdateAction(true);
+			ctBB.getManagedBean().setNotificationSetting(false);
+			ctBB.getManagedBean().setViewContract(false);
+			ctBB.getManagedBean().setUpdateContract(true);
+			ctBB.getManagedBean().setCtAddress(null);
+			setValidateContractField(reqDTO);
+			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			ctBB.chkServiceTaxAlert();
+			getManagedBean().setExternalPageUrl(null);
+			getManagedBean().setSelectedTabIndex(0);	
+			return PROCESS_OWNER_MANAGEMENT_PAGE;
+		} finally {
+			contractSO = null;
+		}
+	}
+	
+	/**
+	 * @return the selectedRecommendedAgency
+	 */
+	public CtAgency getSelectedRecommendedAgency() {
+		return selectedRecommendedAgency;
+	}
+	
+	/**
+	 * @param selectedRecommendedAgency the selectedRecommendedAgency to set
+	 */
+	public void setSelectedRecommendedAgency(CtAgency selectedRecommendedAgency) {
+		this.selectedRecommendedAgency = selectedRecommendedAgency;
+	}
+	
+	/**
+	 * Method to set the selected recommended agency
+	 */
+	public void setSelectedRecommendedAgency() {
+		if (ctBB.getManagedBean().getAgencySelected() != null && ctBB.getManagedBean().getAgencySelected().size() >0 ) {
+			for(PmOrgProfile newOrgProfile :ctBB.getManagedBean().getAgencySelected() ){
+				getManagedBean().setSearchPtjProfile(newOrgProfile);
+				getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(newOrgProfile.getOrgProfileId()));
+				log.info("Cek OrgName List : "+newOrgProfile.getOrgName());
+				log.info("Cek OrgName List : "+getManagedBean().getSearchPtjProfile().getOrgProfileId());
+			}
+			
+		}
+	}
+	
+	/**
+	 * The method used to verify the login user is BPK CC approver 
+	 * or contract approver.
+	 * 
+	 * @return true, if login user is BPK CC approver or contract approver
+	 *         false, if login user is not BPK CC approver or contract approver
+	 */
+	public boolean isApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return (facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.BPK_CC_APPROVER.value()));
+	}
+	
+	/**
+	 * The method used to clear the previous viewed information before
+	 * rendering the contract owner management details screen.
+	 */
+	public void preRenderContractOwnerManagement() {
+		renewSesionObject();
+		defaultMinistryPtjSearchValue();
+		FacesContext fc = FacesContext.getCurrentInstance();			
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_OWNER_MANAGEMENT_PAGE);	
+	}
+	//#25406 - End
 }
