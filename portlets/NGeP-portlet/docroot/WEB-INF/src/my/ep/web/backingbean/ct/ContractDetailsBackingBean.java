@@ -3084,6 +3084,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
 
+	
+//	#21387 - basri
+	public boolean isSelectedCtAdmin(Long userName ,Long flag){
+		
+		if(userName.intValue() == 0){
+			return true;
+		}
+		else if(userName.intValue() == getFacesScopes().getUserSessionBean().getUserId().intValue() && flag == 1 && isContractAdmin()){
+			return true;
+		}else if(userName.intValue() != getFacesScopes().getUserSessionBean().getUserId().intValue() && flag == 1 && isContractAdmin()){
+			return false;
+		}else{
+			return true;
+		}
+		
+		
+	}
+//	#21387 - basri
+	
 	/**
 	 * The method used to disable the ministry lov
 	 * if login user is central contract administrator
