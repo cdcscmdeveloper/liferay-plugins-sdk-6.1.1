@@ -2900,6 +2900,12 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
 			
+			// #25638 - Start.
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			  reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			}
+			// #25638 - End.
+			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
