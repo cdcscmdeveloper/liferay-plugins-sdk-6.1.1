@@ -930,7 +930,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+						&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					messageId = MessageConst.INFO_700021;
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
