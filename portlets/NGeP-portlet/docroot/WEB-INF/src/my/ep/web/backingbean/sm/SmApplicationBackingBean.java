@@ -837,6 +837,9 @@ public class SmApplicationBackingBean extends
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		boolean redirectToBankInfoTab = false;
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		
 
 		if (!fromBpm) {
@@ -873,6 +876,9 @@ public class SmApplicationBackingBean extends
 						for(SmDisciplinaryAction disc : activeDisc){
 							if(disc.isSuspendRegistration()){
 								getManagedBean().getEditVO().setDisciplinary(true);
+								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+								redirectToBankInfoTab = true;
+								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 							}
 						}
 					}
@@ -1158,7 +1164,14 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.getStaffList(smAppl));
 		}
 
-		getManagedBean().setTabActiveIndex(0);
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		if(redirectToBankInfoTab){
+			getManagedBean().setTabActiveIndex(4);
+		} else {
+			getManagedBean().setTabActiveIndex(0);
+		}
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
+
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
