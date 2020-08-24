@@ -29,6 +29,8 @@ import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -777,21 +779,60 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 				perReqDTO.setSmSupplierId(smDisciplinaryAction.getSmSupplier().getSupplierId());
 				
-				PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
-				if(personnelResDTO != null 
-						&& personnelResDTO.getSmPersonnelList().size() > 0){
-					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-						if(personnel.isCancelRegistration()
-								|| personnel.isSuspendRegistration()
-									|| personnel.isBlacklisted()){
-							blacklistOwner.setIcNo(personnel.getIdentificationNo());
-							blacklistownerDirectorList.add(blacklistOwner);
+				PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
+				//28790 - start // follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier))
+				if(smDisciplinaryAction.isSuspendRegistration()){					
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							if(personnel.isSuspendRegistration()){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
 						}
-					}
-					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
+						disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}						
 				}
+				
+				if(smDisciplinaryAction.isCancelRegistration() 
+						&& !smDisciplinaryAction.isBlacklistOwner()){
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							if(personnel.isCancelRegistration()){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
+						}
+						disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}						
+				}
+				
+				if(smDisciplinaryAction.isBlacklistOwner()){
+					if(personnelResDTO != null 
+							&& personnelResDTO.getSmPersonnelList().size() > 0){
+						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+						BlacklistDirectorResDTO resDTO = null;
+						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+							// Get blacklist by identification no
+							resDTO = SmServiceLookup.getBlacklistDirectorSO()
+									.retrievePersonBlacklistByIdentificationNO(reqDTO);
+							if(resDTO != null && 
+									resDTO.getPersonBlacklist() != null){
+								blacklistOwner.setIcNo(personnel.getIdentificationNo());
+								blacklistownerDirectorList.add(blacklistOwner);
+							}
+						}
+						disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
+					}
+				}
+				//28790 - end
 			}
+			
 			//28640 - start
 			List<DisciplinaryActionVO> remarkList = new ArrayList<DisciplinaryActionVO>();
 			DisciplinaryActionVO remark = new DisciplinaryActionVO();
