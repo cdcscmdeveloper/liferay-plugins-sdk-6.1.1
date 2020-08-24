@@ -54,6 +54,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -577,6 +578,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			try {
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(userId);
+				// #28611 - Start.
+				String parameterCodeType = null;
+		        if (null != userId) {
+		            IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		            List<Object[]> paramcodeLst = reportSO.retrieveParameterCodeByUserid(userId);
+		            if (CollectionUtils.isNotEmpty(paramcodeLst)) {
+		                for (Object[] object : paramcodeLst) {
+		                    parameterCodeType = object[0].toString();
+		                }
+		            }
+		        }
+		        if (StringUtils.isNotEmpty(parameterCodeType)
+                    && (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+		          reqDTO.setSupplierUser(true);
+		        }
+		        // #28611 = End.
 				userSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
