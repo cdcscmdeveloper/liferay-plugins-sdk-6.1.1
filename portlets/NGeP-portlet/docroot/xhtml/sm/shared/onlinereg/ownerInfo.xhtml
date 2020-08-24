@@ -144,6 +144,13 @@
 			</p:column>
 
 		</p:dataTable>
+		<!-- 27691 - start - Unbold disabled on DEV Server -->
+		<style>
+		.ui-state-disabled {
+			font-weight: normal !important;
+		}
+		</style>
+		<!-- 27691 - end - Unbold disabled on DEV Server -->
 		<!-- 27691 - start - Add/Delete Supplier Owner -->
 		<script>
 			function unselectSupplierOwner(index) {
