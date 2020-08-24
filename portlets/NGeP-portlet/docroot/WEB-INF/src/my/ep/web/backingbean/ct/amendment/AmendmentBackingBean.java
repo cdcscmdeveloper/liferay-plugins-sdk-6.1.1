@@ -2049,12 +2049,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			
+
 			// Validation for amendment extension period for expired contract
-			if (ctBackingBean.getManagedBean().isContractExpired() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
-				setTabValue("AD");
-				throw new EpException(MessageConst.ERROR_750048);
-			}
+			//28848
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0){
+			   setTabValue("AD");
+			   throw new EpException(MessageConst.ERROR_750048);
+			       
+			  }
+			
 			
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
