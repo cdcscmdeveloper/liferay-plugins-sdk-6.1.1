@@ -4408,7 +4408,7 @@ public class SupplierFinalizationBackingBean extends
 		log.info("getReasonRadioBtn");
 		SelectItem[] items = null;
 		BigDecimal actualIndicativePrice = this.getManagedBean().getScQt().getEstimatedAmount();//To get QT Actual Total Indicative Price
-		Map<String, String> reasonDescMap = new HashMap<String, String>();
+		Map<Long, String> reasonDescMap = new HashMap<Long, String>();//#26169 - 25082020
 		IReasonSO reasonSO = null;
 		try {
 			reasonSO = (IReasonSO) BusinessDelegate.getInstance()
@@ -4439,18 +4439,19 @@ public class SupplierFinalizationBackingBean extends
 			*/
 			for (PmReasonDesc reasonDesc : reasonList) {
 				//Include checking/control for #26169 #38 based on SF Decision, Forward To Higher Authority
+				//#26169 - 25082020 Fix START
 				if(reasonDesc.getPmReason().getReasonCode().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY)){
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Enable & Auto Checked radio button option reason 'Awarded Price Exceeded Committee Authority'
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
-						this.getManagedBean().getScQtFinalization().getReason().setReasonCode(reasonDesc.getPmReason().getReasonCode());
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
+						this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 					}else{
 						//For actualIndicativePrice <= RM 50,000,000.00
 						//Enable select option reason for 'Awarded Exceed Committee Authority' only if isSuppOfferPriceExceedCommunityAuthority = true
 						if(this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()){
 							//Has supplier offer price exceed committee authority amount.
-							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
+							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
 							
 							/*if (expectTotalIndPriceBelowThreshold==true && 
 									SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
@@ -4461,32 +4462,33 @@ public class SupplierFinalizationBackingBean extends
 							}*/
 							
 						}else{
-							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",true);
+							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 						}						
 					}
 				}else if(reasonDesc.getPmReason().getReasonCode().equalsIgnoreCase(ParameterConst.FINALIZATION_REASON_CODE_UNANIMOUS)){
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Disable option reason for 'The Decision is Unanimous'
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",true);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 					}else{
 						//For actualIndicativePrice <= RM 50,000,000.00
 						//Enable option reason for 'The Decision is Unanimous'
 						//Auto Checked Reason only if isSuppOfferPriceExceedCommunityAuthority = false, (No supplier offer price exceed committee authority)
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
 						if(!this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()){
-							this.getManagedBean().getScQtFinalization().getReason().setReasonCode(reasonDesc.getPmReason().getReasonCode());
+							this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 						}
 					}
 				}else {
 					if(this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()){
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
 					}else{
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",true);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 					}
 				}
 				
-				reasonDescMap.put(reasonDesc.getPmReason().getReasonCode(),reasonDesc.getReasonDesc());
+				reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),reasonDesc.getReasonDesc());
+				//#26169 - 25082020 Fix END
 			}
 			changeReasonEvent(null);
 			//#25729#142#190 End				
