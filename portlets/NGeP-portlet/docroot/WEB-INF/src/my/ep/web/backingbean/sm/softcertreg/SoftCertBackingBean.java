@@ -391,7 +391,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					personnel.setFreeSoftCert(true);
 				} else {
-					personnel.setFreeSoftCert(true);
+					/**
+					 * 20200825@MohdHafizAbdRahim - Bug #28264 - Start
+					 */
+					personnel.setFreeSoftCert(false);
+					/**
+					 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				}
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
@@ -423,16 +429,23 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 			i++;
 		}
-		BigDecimal gst = amount.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
+		/**
+		 * 20200825@MohdHafizAbdRahim - Bug #28264 - Start
+		 */
+		BigDecimal gst = amountPerPersonnel.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
 				: getManagedBean().getGstRate().divide(new BigDecimal(100))
-						.multiply(amount);
+						.multiply(amountPerPersonnel);
 		getManagedBean()
 				.setTotalGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
 		this.getManagedBean().setTotalAmountBeforeGst(
-				amount.setScale(2, BigDecimal.ROUND_UP));
+				amountPerPersonnel.setScale(2, BigDecimal.ROUND_UP));
 		this.getManagedBean().setTotalPaymentAmount(
-				gst.add(amount).setScale(2, BigDecimal.ROUND_UP));
+				gst.add(amountPerPersonnel).setScale(2, BigDecimal.ROUND_UP));
+		/**
+		 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
+		 */
 		setPaymentBtnLbl();
+
 	}
 
 	/**
