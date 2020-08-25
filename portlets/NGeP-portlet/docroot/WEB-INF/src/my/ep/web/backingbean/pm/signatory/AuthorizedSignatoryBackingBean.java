@@ -2,6 +2,9 @@ package my.ep.web.backingbean.pm.signatory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+//20200825@Jacky - #28739 - Start
+import java.util.Arrays;
+//20200825@Jacky - #28739 - End
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -16,6 +19,9 @@ import my.ep.biz.service.pm.common.signatory.ISignatorySO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+//20200825@Jacky - #28739 - Start
+import my.ep.constant.pm.ParameterConst;
+//20200825@Jacky - #28739 - End
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
@@ -34,7 +40,9 @@ import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
+//20200825@Jacky - #28739 - Start
+import org.apache.commons.lang.StringUtils;
+//20200825@Jacky - #28739 - End
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -81,6 +89,9 @@ public class AuthorizedSignatoryBackingBean extends
 		this.getManagedBean().setZone(new PmZone());
 		this.getManagedBean().setCertSignatories(new ArrayList<PmCertSignatory>());
 		FacesContext fc = FacesContext.getCurrentInstance(); 
+		//20200825@Jacky - #28739 - Start
+		resetAuthorizedSignatorySearch();
+		//20200825@Jacky - #28739 - End
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 	
@@ -149,9 +160,14 @@ public class AuthorizedSignatoryBackingBean extends
 		PmCertSignatory pmCertSignatory = new PmCertSignatory();
 		//pmCertSignatory.setPmUser(pmuser);
 		pmCertSignatory.setPmZone(zone);
+		//20200825@Jacky - #28739 - Start
+		pmCertSignatory.setNewMof(0);
+		pmCertSignatory.setRenewMof(0);
+		pmCertSignatory.setBumiStat(0);
 		pmCertSignatory.setEffDate(this.getManagedBean().getTomorrow());
-		this.getManagedBean().getCertSignatories().add(pmCertSignatory);
 		this.getManagedBean().setSignatoryUser(null);
+		this.getManagedBean().getCertSignatories().add(pmCertSignatory);
+		//20200825@Jacky - #28739 - End
 		RequestContext.getCurrentInstance().execute(
 				"searchSignatoryResultsWidVar.paginator.endLink.click()");
 	}
@@ -280,11 +296,10 @@ public class AuthorizedSignatoryBackingBean extends
 					}
 				}
 			}
-		}
-		if(activeNumber>1){
-			getManagedBean().setValidationError(true);
-			throw new EpException(MessageConst.ERROR_770144);
-		}else if(activeNumber==0){
+		}//20200825@Jacky - #28739 - Start
+		//remove activeNumber>1
+		//20200825@Jacky - #28739 - End
+		if(activeNumber==0){
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
@@ -352,18 +367,76 @@ public class AuthorizedSignatoryBackingBean extends
 						ISignatorySO.class);
 		SignatoryReqDTO reqDTO = new SignatoryReqDTO();
 		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+		//20200825@Jacky - #28739 - Start
+		List<PmCertSignatory> activeList = new ArrayList<>();
+		for(PmCertSignatory activeAppl: certSignatories){
+			if(DbValueConst.RECORD_STATUS_ACTIVE == activeAppl.getRecordStatusFlg()){
+				if(!activeAppl.isBrandNew()){
+					activeList.add(activeAppl);
+				}
+			}
+		}
 		
 		for(PmCertSignatory pmcertSignatory:certSignatories){
 				
 			if(pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
 				pmcertSignatory.setExpDate(new Date());
 			}
+			
 			String messageId = null;
 			String[] msgParam = null;
 			if (pmcertSignatory.isBrandNew()) {
 				log.info("Tracking diary for virtual certificate: add new value :saveCertSignatoryDetials");
 				log.info(".............pmcertSignatory.getSinnatoryName()="
 						+ pmcertSignatory.getSinnatoryName());
+				
+				if(pmcertSignatory.getSelectedApplType().length < 1){
+					getManagedBean().setValidationError(true);
+					throw new EpException(MessageConst.ERROR_770233);
+				}
+						
+				String[] newSelectedApplType = new String[3];
+				String[] newSelectedApplTypeTemp = pmcertSignatory.getSelectedApplType();
+				for (int i = 0; i < newSelectedApplTypeTemp.length; i++) {
+					newSelectedApplType[i] = newSelectedApplTypeTemp[i];
+				}
+				boolean newMof = Arrays.asList(newSelectedApplType).contains(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				boolean reNewMof = Arrays.asList(newSelectedApplType).contains(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+				boolean bumiStat = Arrays.asList(newSelectedApplType).contains(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+				if(newMof){
+					pmcertSignatory.setNewMof(1);
+				}
+				if(reNewMof){
+					pmcertSignatory.setRenewMof(1);
+				}
+				if(bumiStat){
+					pmcertSignatory.setBumiStat(1);
+				}
+				
+				for(PmCertSignatory activeAutSign: activeList){
+					boolean activeNewMof = Arrays.asList(activeAutSign.getSelectedApplType()).contains(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+					boolean activeRenewMof = Arrays.asList(activeAutSign.getSelectedApplType()).contains(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+					boolean activeBumiStat = Arrays.asList(activeAutSign.getSelectedApplType()).contains(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+					if(pmcertSignatory.getSinnatoryName().equals(activeAutSign.getSinnatoryName())){
+						getManagedBean().setValidationError(true);
+						pmcertSignatory.setNewMof(0);
+						pmcertSignatory.setRenewMof(0);
+						pmcertSignatory.setBumiStat(0);
+						throw new EpException(MessageConst.ERROR_770234, new String[] {pmcertSignatory.getSinnatoryName() + " "});
+					}
+					if((newMof == activeNewMof) && (reNewMof == activeRenewMof) && (bumiStat == activeBumiStat)){
+						getManagedBean().setValidationError(true);
+						pmcertSignatory.setNewMof(0);
+						pmcertSignatory.setRenewMof(0);
+						pmcertSignatory.setBumiStat(0);
+						throw new EpException(MessageConst.ERROR_770235);
+					}
+					if(pmcertSignatory.getSinnatoryName().equals(activeAutSign.getSinnatoryName()) && (newMof == activeNewMof) && (reNewMof == activeRenewMof) && (bumiStat == activeBumiStat)){
+						getManagedBean().setValidationError(true);
+						throw new EpException(MessageConst.ERROR_770236, new String[] {pmcertSignatory.getSinnatoryName() + " "});
+					}
+				}
+				//20200825@Jacky - #28739 - End
 				messageId = MessageConst.TD_80900;
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 
@@ -429,5 +502,34 @@ public class AuthorizedSignatoryBackingBean extends
 		return MessageUtils.getMessage(messageId, params,
 				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
+	//20200825@Jacky - #28739 - Start
+	public void searchAuthorizedSignatory(Long zoneId) {
+		log.info("searchUserProfile - start");
+		
+		if (this.getManagedBean().getZone().getZoneId() == null) {
+			getManagedBean().setValidationError(true);
+			throw new EpException(MessageConst.ERROR_770140);
+		}
+		
+		ISignatorySO iSignatorySO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ISignatorySO.class);
+		SignatoryReqDTO reqDTO = new SignatoryReqDTO();	
+		
+		reqDTO.setZoneId(zoneId);
+		reqDTO.setApplType(this.getManagedBean().getApplType());
+		reqDTO.setSignatoryName(this.getManagedBean().getSignatoryName());
+		SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);
+		
+		this.getManagedBean().setCertSignatories(resDTO.getCertSignatories());
+	
+	}
 
+	public void resetAuthorizedSignatorySearch(){
+		getManagedBean().getZone().setZoneId(null);
+		getManagedBean().setApplType(null);
+		getManagedBean().setSignatoryName(StringUtils.EMPTY);
+		getManagedBean().setCertSignatories(null);
+	}
+	//20200825@Jacky - #28739 - End
 }
