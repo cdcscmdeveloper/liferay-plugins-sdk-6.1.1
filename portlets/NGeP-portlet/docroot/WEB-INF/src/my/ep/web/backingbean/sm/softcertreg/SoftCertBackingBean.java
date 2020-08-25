@@ -397,7 +397,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					personnel.setFreeSoftCert(false);
 					amountPerPersonnel = SmRuleHelper.getInstance()
 							.getSoftCertFee();
-					log.info("amountPerPersonnel111 : " + amountPerPersonnel);
+					amount = amount.add(amountPerPersonnel);
 					/**
 					 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
 					 */
@@ -432,23 +432,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 			i++;
 		}
-		/**
-		 * 20200825@MohdHafizAbdRahim - Bug #28264 - Start
-		 */
-		BigDecimal gst = amountPerPersonnel.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
+		BigDecimal gst = amount.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO
 				: getManagedBean().getGstRate().divide(new BigDecimal(100))
-						.multiply(amountPerPersonnel);
+						.multiply(amount);
 		getManagedBean()
 				.setTotalGstAmount(gst.setScale(2, BigDecimal.ROUND_UP));
 		this.getManagedBean().setTotalAmountBeforeGst(
-				amountPerPersonnel.setScale(2, BigDecimal.ROUND_UP));
+				amount.setScale(2, BigDecimal.ROUND_UP));
 		this.getManagedBean().setTotalPaymentAmount(
-				gst.add(amountPerPersonnel).setScale(2, BigDecimal.ROUND_UP));
-		log.info("amount : " + amount);
-		log.info("amountPerPersonnel : " + amountPerPersonnel);
-		/**
-		 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
-		 */
+				gst.add(amount).setScale(2, BigDecimal.ROUND_UP));
 		setPaymentBtnLbl();
 
 	}
