@@ -1238,7 +1238,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_776107);
 				
 			}
 			return messageSuffix;	
