@@ -75,6 +75,7 @@
 										value="#{directLOABackingBean.managedBean.approverUser.userId}"
 										required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
 										label="#{lbl['lbl.sc.approver']}"
+										disabled="#{isPendingApprovalStatus || isPendingRevApprovalStatus}"
 										style="width: 276px;margin-bottom: 5px;">
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="#{null}" />
