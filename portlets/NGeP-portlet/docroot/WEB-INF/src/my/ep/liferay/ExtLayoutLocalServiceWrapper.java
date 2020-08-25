@@ -85,7 +85,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 		
 		List<Layout> layouts = new ArrayList<Layout>();
 		layouts.addAll(super.getLayouts( groupId,  privateLayout, parentLayoutId));
-		
+		log.info("START 22 validBasicToRenewMOF(): ");
 		if(getLoggedInUserId() > 0 && isBasicSupplier(getLoggedInUserId()) ) {
 			Iterator<Layout> iter = layouts.iterator();
 			
@@ -109,7 +109,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 				}
 			}
 		}
-		
+		log.info("END 22 validBasicToRenewMOF(): ");
 		return layouts;
 	}
 	
