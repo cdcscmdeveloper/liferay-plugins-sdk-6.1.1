@@ -24,7 +24,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			 </td>
 			 <td>
 			 <div align="right" style="width: 100%">
-			  <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false" disabled="true">
+			  <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 				<p:fileDownload value="#{pmTrackingDiaryBackingBean.generateReport(pmTrackingDiaryBackingBean.managedBean.selectedDocType, pmTrackingDiaryBackingBean.managedBean.selectedDocId)}" />
 			  </p:commandLink>
 			  </div>
