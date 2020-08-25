@@ -395,6 +395,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					 * 20200825@MohdHafizAbdRahim - Bug #28264 - Start
 					 */
 					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
+					log.info("amountPerPersonnel111 : " + amountPerPersonnel);
 					/**
 					 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
 					 */
@@ -441,6 +444,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				amountPerPersonnel.setScale(2, BigDecimal.ROUND_UP));
 		this.getManagedBean().setTotalPaymentAmount(
 				gst.add(amountPerPersonnel).setScale(2, BigDecimal.ROUND_UP));
+		log.info("amount : " + amount);
+		log.info("amountPerPersonnel : " + amountPerPersonnel);
 		/**
 		 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
 		 */
