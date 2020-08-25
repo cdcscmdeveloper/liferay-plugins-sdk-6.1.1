@@ -2601,10 +2601,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			
 			personnelReqDTO.setSmSupplierId(personnelResDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+			log.info("azrai---------- User active list = "+personnelResDTO.getSmPersonnelList().size());
 			for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
+				log.info("azraibefore---------------- "+getManagedBean().isUserActive());
 				if(personnel.getPersonnelId() == currentPersonnel.getPersonnelId()){
 					//Commented for testing purposes only
+					log.info("azrai----------------- user active, no dropwdown");
 					getManagedBean().setUserActive(true);
+					log.info("azraiafter----------------- "+getManagedBean().isUserActive());
 				}
 			}
 		}
