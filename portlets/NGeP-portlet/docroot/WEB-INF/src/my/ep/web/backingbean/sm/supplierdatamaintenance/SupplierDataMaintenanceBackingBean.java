@@ -1844,6 +1844,9 @@ public class SupplierDataMaintenanceBackingBean extends
 						if(disc.isCancelCategory()){
 							getManagedBean().setCancelCategoryCode(true);
 							getManagedBean().setCancelCategoryCodeExist(true);
+							// 27815 - add disable button detele if edit DA - Start
+							getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+							// 27815 - add disable button detele if edit DA - End
 						}
 						if(disc.isSuspendRegistration()){
 							getManagedBean().setSuspendRegistration(true);
@@ -1864,6 +1867,9 @@ public class SupplierDataMaintenanceBackingBean extends
 						if(disc.isManufacturerCancel()){
 							getManagedBean().setManufacturerStatusCancel(true);
 							getManagedBean().setManufacturerStatusCancelExist(true);
+							// 27815 - add disable button detele if edit DA - Start
+							getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+							// 27815 - add disable button detele if edit DA - End
 						}
 					}else{
 						resetDisciplinaryActionSectionExist();
