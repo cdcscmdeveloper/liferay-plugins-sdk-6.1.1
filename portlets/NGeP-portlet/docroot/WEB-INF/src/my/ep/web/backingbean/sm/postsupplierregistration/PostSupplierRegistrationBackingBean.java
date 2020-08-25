@@ -320,11 +320,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
 						proceed =false;
+						//Start 27951
 						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 							this.getManagedBean().setPreRegistration(true);
 						}else{
 							this.getManagedBean().setPreRegistration(false);
-						}						
+						}
+						//End 27951
 						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 						SmCommonUtil.redirectToPage(
