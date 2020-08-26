@@ -98,6 +98,7 @@
 				<td><h:panelGroup id="uploadAP58AL" rendered="#{ flOrderBB.managedBean.getFulfilmentOrder().isYep() }">
 					<p:commandButton icon="ui-icon-upload"
 						rendered="#{ flOrderBB.managedBean.attachment.getFileName() == null }"
+						disabled='#{ !(flOrderBB.managedBean.buttonVal eq "AP58") }'
 						process="@this" partialSubmit="true"
 						update=":form:AP58LName, :form:uploadLetterAP"
 						oncomplete="uploadLetterAP.show();return false;" >
@@ -109,6 +110,7 @@
 					<p:spacer width="1"/>
 					<p:commandLink onsuccess="deleteUploadLetterAP.show();"
 						rendered="#{ flOrderBB.managedBean.attachment.getFileName() != null }"
+						disabled='#{ !(flOrderBB.managedBean.buttonVal eq "AP58") }'
 					     process="@this" update=":form:uploadAP58AL" partialSubmit="true">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 		</p:commandLink>
