@@ -1084,10 +1084,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Show confirmation dialog
 	 */
 	public void showConfirmDialog() {
-		//26238: Disciplinary Action - start - 28342
-		if (getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+		//26238: Disciplinary Action - start - 28324
+		if ((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel())
 				&& getManagedBean().isManufacturerStatusCancel()){ 
 			log.info("---showConfirmDialog semua DA---");
 		} else if (!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
@@ -1121,7 +1121,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				} 
 				//27919 - end	
 		} 
-		//26238: Disciplinary Action - end - 28342
+		//26238: Disciplinary Action - end - 28324
 		//27460 : Disciplinary Action
 		if(getManagedBean().isCancelCategoryCode()){			
 			if(getManagedBean().getSelectedApprovedCategories() == null
@@ -1530,20 +1530,28 @@ public class SupplierDataMaintenanceBackingBean extends
 				//26238 -  Disciplonary action - 28146 - end
 			}
 
-			//26238: Disciplinary Action - start - 28342,28779
+			//26238: Disciplinary Action - start - 28324 ,28779
 			//28281 - start (bumi code)
 			if((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 					|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
 					|| getManagedBean().isBlacklistOwnerOrDirector() 
 					|| getManagedBean().isManufacturerStatusCancel() ) && getManagedBean().isBumiputeraStatusCancel()){
-				if (getManagedBean().isBumiputeraStatusCancel()){
-					autoTickBumiCode();  
-				}				 
+				
+				if (getManagedBean().getSmSupplier().isBumi()){
+					if (getManagedBean().isBumiputeraStatusCancel()){
+						autoTickBumiCode();  
+					} 
+				} 
+				
 			} else if (getManagedBean().isBumiputeraStatusCancel()){
-				autoTickBumiCode();  
+				if (getManagedBean().getSmSupplier().isBumi()){
+					if (getManagedBean().isBumiputeraStatusCancel()){
+						autoTickBumiCode();  
+					} 
+				} 
 			}
 			//28281 - end
-			//26238: Disciplinary Action - end - 28342,28779
+			//26238: Disciplinary Action - end - 28324 ,28779
 			
 			//27815: Disciplinary Action - end -checking condition 
 			getManagedBean().setEditDisciplinaryAction(true);
@@ -2923,12 +2931,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setApprovedCategoryList(catList);
 		getManagedBean().setSelectedApprovedCategories(selectList);
 		// Start 27815,28324
-		if (getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+		if ((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel() 
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel()) 
 				&& getManagedBean().isBumiputeraStatusCancel()) {
 			log.info("---do nothing semua DA---");
-			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
+			if(getManagedBean().isDisabledApprovedCategories()){ 
+				getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
+			}
 		} else if(!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
 				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
 				&& !getManagedBean().isBlacklistOwnerOrDirector() && getManagedBean().isBumiputeraStatusCancel()
