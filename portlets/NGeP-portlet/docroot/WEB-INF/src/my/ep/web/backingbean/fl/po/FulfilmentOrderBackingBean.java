@@ -1254,7 +1254,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			return null;
 		} else {
 			validateFulfillmentOrder(outcome);
-			//setTextBeforeSign(outcome);
+			//28377 - uncomment function
+			setTextBeforeSign(outcome);
+			//28377 - end uncomment function
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
