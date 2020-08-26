@@ -2321,10 +2321,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setUpdateAction(true);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
+			ctBB.getManagedBean().setNotificationSetting(false);
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);
-			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			ctBB.getManagedBean().setCtAddress(null);
 			setValidateContractField(reqDTO);
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
