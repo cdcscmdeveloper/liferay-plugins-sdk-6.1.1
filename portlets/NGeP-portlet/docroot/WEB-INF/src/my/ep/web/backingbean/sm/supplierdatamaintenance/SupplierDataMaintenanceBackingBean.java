@@ -1497,7 +1497,18 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
 				&& !getManagedBean().isManufacturerStatusCancel()){
 			getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
-			getManagedBean().setEditDisciplinaryAction(false);
+			//28858: Disciplinary Action - start - 26238 add condition to check existing DA imposed or not
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())) {
+				for (SmDisciplinaryAction disc : getManagedBean().getSmSupplier().getSmDisciplinaryActions()) { 
+					if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().setEditDisciplinaryAction(true);
+						break;
+					}else{
+						getManagedBean().setEditDisciplinaryAction(false);
+					}
+				}
+			}
+			//28858: Disciplinary Action - end - 26238
 			//28281 - start
 			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 			List<SmSupplierCategory> catList = getManagedBean().getApprovedCategoryList();
