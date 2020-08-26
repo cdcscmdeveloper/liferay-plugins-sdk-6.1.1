@@ -737,7 +737,7 @@ public class QTCloneBackingbean extends
 		}
 		try {
 			if(isCreation(nodes)){
-				refreshQT();
+			//	refreshQT();
 			}
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -3230,6 +3230,8 @@ public class QTCloneBackingbean extends
 		
 		scQt.setSpecApprovalReq(copyScqt.getSpecApprovalReq());
 		scQt.setMinistrySpecSecrataryId(copyScqt.getMinistrySpecSecrataryId());
+		
+		scQt.setJustificationProcValue(copyScqt.getJustificationProcValue());
 		
 		PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
 		scQt.setQtStatus(status);
