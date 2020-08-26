@@ -1087,8 +1087,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		//26238: Disciplinary Action - start - 28324
 		if ((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
-				)&& getManagedBean().isManufacturerStatusCancel()){ 
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel())
+				&& getManagedBean().isManufacturerStatusCancel()){ 
 			log.info("---showConfirmDialog semua DA---");
 		} else if (!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
 				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
@@ -1502,7 +1502,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				//26238 -  Disciplonary action - 28146 - end
 			}
 
-			//26238: Disciplinary Action - start - 28324,28779
+			//26238: Disciplinary Action - start - 28324 ,28779
 			//28281 - start (bumi code)
 			if((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 					|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
@@ -1515,7 +1515,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				autoTickBumiCode();  
 			}
 			//28281 - end
-			//26238: Disciplinary Action - end - 28324,28779
+			//26238: Disciplinary Action - end - 28324 ,28779
 			
 			//27815: Disciplinary Action - end -checking condition 
 			getManagedBean().setEditDisciplinaryAction(true);
@@ -2895,9 +2895,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setApprovedCategoryList(catList);
 		getManagedBean().setSelectedApprovedCategories(selectList);
 		// Start 27815,28324
-		if (( getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
+		if ((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
 				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel() )
+				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel()) 
 				&& getManagedBean().isBumiputeraStatusCancel()) {
 			log.info("---do nothing semua DA---");
 			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
