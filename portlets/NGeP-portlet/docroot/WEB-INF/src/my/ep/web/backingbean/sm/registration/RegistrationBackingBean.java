@@ -1221,9 +1221,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		// 27691 - added business type validation for SSM
 		if(SmCommonUtil.getInstance().ssmActive() 
 				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType())){
-			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
-			getManagedBean().getSmSupp().getSmSupplierOwners().clear();
-			getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
+			
+			//#28888 : checking empty list
+			if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
+				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);			
+				getManagedBean().getSmSupp().getSmSupplierOwners().clear();
+				getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
+			}//end #28888
 		}
 		
 		reqDTO.setGstList(getCleanGst());
