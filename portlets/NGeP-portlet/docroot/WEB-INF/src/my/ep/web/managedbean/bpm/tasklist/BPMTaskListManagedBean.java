@@ -86,7 +86,7 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
+	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	// Refactor: #12177 - Start
 	/*private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
 			.getProperty("sqTimeValidity"));*/
@@ -1606,6 +1606,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
+	   } else {		   
+		   logger.info(" worklistItemVO.getTaskId() = " + worklistItemVO.getTaskId() + " | worklistItemVO.getDocStatus() = " + worklistItemVO.getDocStatus());
 	   }
 	}
 	  //#24968-start - performance
