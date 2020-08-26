@@ -33,10 +33,6 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private PmZone zone;
-	//20200825@Jacky - #28739 - Start
-	private String applType;
-	private String signatoryName;
-	//20200825@Jacky - #28739 - End
 
 	private PmCertSignatory pmCertSignatory;
 
@@ -251,21 +247,4 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 		this.today = today;
 	}
 
-	//20200825@Jacky - #28739 - Start
-	public String getApplType() {
-		return applType;
-	}
-
-	public void setApplType(String applType) {
-		this.applType = applType;
-	}
-
-	public String getSignatoryName() {
-		return signatoryName;
-	}
-
-	public void setSignatoryName(String signatoryName) {
-		this.signatoryName = signatoryName;
-	}
-	//20200825@Jacky - #28739 - End
 }
