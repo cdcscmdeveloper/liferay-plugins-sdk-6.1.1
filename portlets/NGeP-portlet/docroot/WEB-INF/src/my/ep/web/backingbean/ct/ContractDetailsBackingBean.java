@@ -381,12 +381,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 					//#25406 - Start
 					if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
-						this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
-								ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
-						this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 						if(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile() != null){
+							this.getManagedBean().setOldMinistryProfile(retrieveMinistryOrgProfile(
+									ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+							this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
+									ctBB.getManagedBean().getContractVer().getOwnerOrgProfile().getOrgProfileId()));
+							this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile().getOrgProfileId()));
 							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile());
 						}else{
+							this.getManagedBean().setOldMinistryProfile(retrieveMinistryOrgProfile(
+									ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+							this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
+									ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+							this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
 						}
 					}
@@ -930,8 +937,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-						&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					messageId = MessageConst.INFO_700021;
 					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
@@ -939,7 +945,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					} else { // Central Contract
 						nextRole = RoleCode.BPK_CC_APPROVER.value();
 					}
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					messageId = MessageConst.INFO_700025;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
@@ -947,15 +953,27 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					messageId = MessageConst.INFO_700010;
 					//#25406
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) &&
 						ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
 					messageId = MessageConst.INFO_700086;
+					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						nextRole = RoleCode.CT_APPROVER.value();
+					} else { // Central Contract
+						nextRole = RoleCode.BPK_CC_APPROVER.value();
+					}
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) &&
+						ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+					messageId = MessageConst.INFO_700087;
+				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) &&
+						ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+					messageId = MessageConst.INFO_700088;
 				}
 
-				if(StringUtils.isNotBlank(nextRole)){
+				if(StringUtils.isNotBlank(nextRole)&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
 					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
 
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -965,7 +983,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 									roleDesc.getRoleName()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-				} else {
+				} else if(StringUtils.isNotBlank(nextRole)&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
+
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean().getContractVer().getDocType()), 
+									ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
+									roleDesc.getRoleName(), getManagedBean().getSearchPtjProfile().getOrgName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}else {
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageId,
 									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ctBB.getManagedBean().getContractVer().getDocType()), 
@@ -3374,10 +3401,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void setSelectedRecommendedAgency() {
 		if (ctBB.getManagedBean().getAgencySelected() != null && ctBB.getManagedBean().getAgencySelected().size() >0 ) {
 			for(PmOrgProfile newOrgProfile :ctBB.getManagedBean().getAgencySelected() ){
+				getManagedBean().setOldMinistryProfile(retrieveMinistryOrgProfile(
+						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 				getManagedBean().setSearchPtjProfile(newOrgProfile);
+				getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(newOrgProfile.getOrgProfileId()));
 				getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(newOrgProfile.getOrgProfileId()));
 				log.info("Cek OrgName List : "+newOrgProfile.getOrgName());
 				log.info("Cek OrgName List : "+getManagedBean().getSearchPtjProfile().getOrgProfileId());
+				log.info("Cek OrgName List : "+getManagedBean().getSearchMinistryProfile().getOrgProfileId());
+				log.info("Cek OrgName List : "+getManagedBean().getSearchPtjGroupProfile().getOrgProfileId());
 			}
 			
 		}
