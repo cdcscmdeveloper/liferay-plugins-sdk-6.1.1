@@ -1848,29 +1848,40 @@ public class SPDetailBackingBean extends
 					// #28398 BUG - 26339 CR - End
 //					assetProposalChecklist.setScQtProposalChecklistAttachment(null);
 					removeAttachment = true;
-					assetProposalChecklist.setSubmitted(true);
-					//this.getManagedBean().setReadOnly(true);
-					assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-				} else {
-					if (assetProposalChecklist.isSubmitted()) {
-						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
-								|| (scQtPRPAssetLiability.getCurrentAssets() != null)
-								|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
-							    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
-								|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
-								|| (scQtPRPAssetLiability.getAcidRatio() != null )
-							    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
-						{
-							assetProposalChecklist.setSubmitted(false);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						} else {
-							assetProposalChecklist.setSubmitted(false);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						}
-					} else {
-						assetProposalChecklist.setSubmitted(false);
-						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+					
+					//start Bug #28887
+					if (null != assetProposalChecklist) {
+						assetProposalChecklist.setSubmitted(true);
+						//this.getManagedBean().setReadOnly(true);
+						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 					}
+					
+					//end Bug #28887
+
+				} else {
+						//start Bug #28887
+						if (null != assetProposalChecklist) {
+							if (assetProposalChecklist.isSubmitted()) {
+								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
+										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
+										|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
+									    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
+										|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
+										|| (scQtPRPAssetLiability.getAcidRatio() != null )
+									    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
+								{
+									assetProposalChecklist.setSubmitted(false);
+									assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+								} else {
+									assetProposalChecklist.setSubmitted(false);
+									assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+								}
+							} else {
+								assetProposalChecklist.setSubmitted(false);
+								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							}
+						}
+						//end Bug #28887
 				}
 			}
 			
@@ -1931,6 +1942,7 @@ public class SPDetailBackingBean extends
 			if (resDTO.isSuccessful()) {
 				// #26339 - Start
 				/*if (isCompleted) {*/
+				
 					int index = 0;
 					
 					for (ScQtProposalChecklist finCheckList : getManagedBean().getFinanceCheckDetailsList()) {
