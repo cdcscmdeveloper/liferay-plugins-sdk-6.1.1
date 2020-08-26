@@ -1412,12 +1412,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		  // 12177 - Start			       
  	   QuoteResDTO quoteResDTO = null;
  	   Long docId = null;
+ 	   Long currentStatusId = null;
  	   
  	   if(worklistItemVO.getDocId() != null){
  		   docId = new Long(worklistItemVO.getDocId());
  	   }
-	       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());  
+ 	   if(worklistItemVO.getDocStatus() != null){
+ 		   currentStatusId = Long.valueOf(worklistItemVO.getDocStatus()); 
+ 	   }
 	       
+	   if((worklistItemVO.getDocId() != null && worklistItemVO.getDocId() != 0) || worklistItemVO.getDocNumber() != null){  
 	       
 	       if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
@@ -1485,7 +1489,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 			      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 			      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-
+	    		   
+	    		   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+	    			   docId = null;
+	    		   }
+	    		   
 		    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 		    		  // call specific column, native query
@@ -1598,7 +1606,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
-		
+	   }
 	}
 	  //#24968-start - performance
 	/**
