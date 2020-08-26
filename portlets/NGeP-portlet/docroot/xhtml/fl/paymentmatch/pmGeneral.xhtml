@@ -65,13 +65,15 @@
 			</tr>
 			<tr>
 				<td><h:outputText value="&#160;" /> </td>
-				<td><p:selectOneMenu rendered="#{!paymentMatchBackingBean.managedBean.userActive}" style="width: 300px;margin-bottom: 5px;"
-						label="S" required="true"
+				<td><p:selectOneMenu
+						rendered="#{!paymentMatchBackingBean.managedBean.userActive}"
+						style="width: 300px;margin-bottom: 5px;" label="S" required="true"
+						requiredMessage="Supplier User #{paymentMatchBackingBean.managedBean.user.userName} is inactive. Please contact supplier for selection of new supplier user that will undertake the take to revise the invoice."
 						id="newSuppInvoice"
 						value="#{paymentMatchBackingBean.managedBean.newSupplierId}">
-						<f:selectItems value="#{paymentMatchBackingBean.showSupplierList()}" />
-					</p:selectOneMenu>
-			 	</td>
+						<f:selectItems
+							value="#{paymentMatchBackingBean.showSupplierList()}" />
+					</p:selectOneMenu></td>
 			</tr>
 		</table>
 	</p:panel>
