@@ -1356,17 +1356,23 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getRegStatusDescList().size() > 1
 				&& getManagedBean().getSmAppl().getSmSupplier().getSmAppl()
 						.getPmRegStatus().getPmStatus() != null) {
+			
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			PmStatusDesc regStatusToExclude = (PmStatusDesc) EntityHelper
 					.getEntityBySinglePropertyFromList(getManagedBean()
 							.getSmAppl().getSmSupplier().getSmAppl()
 							.getPmRegStatus().getPmStatus().getStatusId(),
 							getManagedBean().getRegStatusDescList(), "pmStatus");
 			// 27877 - start - if it is pending site review after approval, registration status can follow what was recommended
-			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean();
+			// 26238 -  Disciplonary action - 28801 
+			BPMTaskListBackingBean bpmBean = new BPMTaskListBackingBean(); 
 			String pendingSiteVisitReviewAfterApprovedStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-			if (getManagedBean().getCurrentStatus() != null && !getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus)) {
+			String pendingRiviewApplicatonStatus = bpmBean.applicationStatus((int) SupplierManagementConst.PM_STATUS_PENDING_REVIEW_APPLICATION);
+			if (getManagedBean().getCurrentStatus() != null && !getManagedBean().getCurrentStatus().equals(pendingSiteVisitReviewAfterApprovedStatus) 
+					&& !getManagedBean().getCurrentStatus().equals(pendingRiviewApplicatonStatus)) {
 				getManagedBean().getRegStatusDescList().remove(regStatusToExclude);
 			}
+			// 28801 - end
 			// 27877 - end
 		}
 
