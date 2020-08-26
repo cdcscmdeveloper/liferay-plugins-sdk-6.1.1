@@ -1508,11 +1508,19 @@ public class SupplierDataMaintenanceBackingBean extends
 					|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
 					|| getManagedBean().isBlacklistOwnerOrDirector() 
 					|| getManagedBean().isManufacturerStatusCancel() ) && getManagedBean().isBumiputeraStatusCancel()){
-				if (getManagedBean().isBumiputeraStatusCancel()){
-					autoTickBumiCode();  
-				}				 
+				
+				if (getManagedBean().getSmSupplier().isBumi()){
+					if (getManagedBean().isBumiputeraStatusCancel()){
+						autoTickBumiCode();  
+					} 
+				} 
+				
 			} else if (getManagedBean().isBumiputeraStatusCancel()){
-				autoTickBumiCode();  
+				if (getManagedBean().getSmSupplier().isBumi()){
+					if (getManagedBean().isBumiputeraStatusCancel()){
+						autoTickBumiCode();  
+					} 
+				} 
 			}
 			//28281 - end
 			//26238: Disciplinary Action - end - 28324 ,28779
@@ -2900,7 +2908,9 @@ public class SupplierDataMaintenanceBackingBean extends
 				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isManufacturerStatusCancel()) 
 				&& getManagedBean().isBumiputeraStatusCancel()) {
 			log.info("---do nothing semua DA---");
-			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
+			if(getManagedBean().isDisabledApprovedCategories()){ 
+				getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
+			}
 		} else if(!getManagedBean().isWarning() && !getManagedBean().isCancelCategoryCode()
 				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
 				&& !getManagedBean().isBlacklistOwnerOrDirector() && getManagedBean().isBumiputeraStatusCancel()
