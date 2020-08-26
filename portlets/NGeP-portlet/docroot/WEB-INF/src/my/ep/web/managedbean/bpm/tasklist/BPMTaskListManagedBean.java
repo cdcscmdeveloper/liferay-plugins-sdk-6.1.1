@@ -85,7 +85,7 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
+	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	// Refactor: To make sqTimeValidity to read only once - Start.
 	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
 			.getProperty("sqTimeValidity"));
@@ -1411,12 +1411,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		  // 12177 - Start			       
  	   QuoteResDTO quoteResDTO = null;
  	   Long docId = null;
+ 	   Long currentStatusId = null;
  	   
  	   if(worklistItemVO.getDocId() != null){
  		   docId = new Long(worklistItemVO.getDocId());
  	   }
-	       Long currentStatusId = Long.valueOf(worklistItemVO.getDocStatus());  
+ 	   if(worklistItemVO.getDocStatus() != null){
+ 		   currentStatusId = Long.valueOf(worklistItemVO.getDocStatus()); 
+ 	   }
 	       
+	   if((worklistItemVO.getDocId() != null && worklistItemVO.getDocId() != 0) || worklistItemVO.getDocNumber() != null){  
 	       
 	       if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
@@ -1484,7 +1488,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 			      || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 			      || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-
+	    		   
+	    		   if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+	    			   docId = null;
+	    		   }
+	    		   
 		    		  IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 		    		  // call specific column, native query
@@ -1597,7 +1605,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
-		
+	   } else {		   
+		   logger.info(" worklistItemVO.getTaskId() = " + worklistItemVO.getTaskId() + " | worklistItemVO.getDocStatus() = " + worklistItemVO.getDocStatus());
+	   }
 	}
 	  //#24968-start - performance
 	/**
