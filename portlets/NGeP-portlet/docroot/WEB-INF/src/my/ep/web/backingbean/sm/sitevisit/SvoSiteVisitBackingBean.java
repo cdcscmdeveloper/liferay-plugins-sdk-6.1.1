@@ -2777,6 +2777,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	public boolean showEditAssistant(SmSvAssistantOfficer assistantOfficer){
 		boolean edit = false;
+		if(assistantOfficer == null){
+			return false;
+		}
 		if(assistantOfficer.getName() != null && assistantOfficer.getNameEnterBySvo() != null){
 			if(!assistantOfficer.getName().equalsIgnoreCase(assistantOfficer.getNameEnterBySvo())){
 				edit = true;
