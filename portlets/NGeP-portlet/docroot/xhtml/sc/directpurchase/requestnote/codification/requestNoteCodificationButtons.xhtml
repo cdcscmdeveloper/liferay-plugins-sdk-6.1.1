@@ -23,7 +23,6 @@
 				<div>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
-							rendered="#{!isPidExpired}"
 							action="#{requestNoteBackingBean.saveCodificationAction('Save')}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="@this" />
