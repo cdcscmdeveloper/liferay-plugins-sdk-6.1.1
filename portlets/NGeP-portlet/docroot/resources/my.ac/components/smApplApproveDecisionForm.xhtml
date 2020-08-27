@@ -108,9 +108,9 @@
 							style="width : auto;" rows="10"
 							value="#{cc.attrs.approvalRemarks}"
 							id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
-							validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
-							maxlength="2500">
-							<f:validateLength maximum="2500" />
+							validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+							maxlength="4000">
+							<f:validateLength maximum="4000" />
 						</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
