@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,12 +39,16 @@ import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -57,6 +62,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -66,6 +73,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
@@ -78,9 +86,12 @@ import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -98,6 +109,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -317,6 +329,23 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.getManagedBean().setHideRemarks(true);
 				PrBB.getManagedBean().setDeclarationCheck(true);
 			}
+			
+			 if(resDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
+				 	Date today  = DateUtils.getCurrentDateWithoutTime();
+					Date ExpDate = DateUtils.addDays(resDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getCreatedDate(), resDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
+					log.info("pID validity begin");
+					if(resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+					 		   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)
+							   || resDTO.getFlFulfilmentRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+						if(ExpDate.before(today)){
+							resDTO.getFlFulfilmentRequest().getStatus().setStatusId(DPStatusConstants.PID_EXPIRED);
+						}  
+					}
+					log.info("pID validity end");
+			 }
+			
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			PrBB.getManagedBean().setBackToDocument(null);
@@ -1336,4 +1365,147 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
 	}
+	
+	// 12177 - Start
+	/**
+	 * 
+	 * @param docId
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return boolean
+	 */
+	public boolean checkStatusSqExpired(String docId, String docNo, Long docStatusId, String docType ){		
+ 	    Long documentId = null;
+	    Long currentStatusId = docStatusId;
+	    Boolean sqExpired = false;
+	    
+	    if(docId != null){
+	    	documentId = new Long(docId);
+	    }
+	    
+	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
+	    	if( currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION )
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+	    		QuoteResDTO quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(documentId, docNo, docStatusId, docType, false);	
+	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
+	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
+	    				sqExpired = true;
+				    }
+	    		}
+	    	}
+	    }    
+		return sqExpired;
+	}
+	
+	/**
+	 * Called from: flDocSearch.xhtml - inside datatable.
+	 * 
+	 * Code performance risk: Looping in datatable. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docId
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return
+	 */
+	public boolean checkStatusPIDExpired(String docId, String docNo, Long docStatusId, String docType ){		
+	    Long currentStatusId = docStatusId;
+	    Boolean pidExpired = false;
+	       
+	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
+	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		
+	    		IFulfilmentRequestSO flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+
+	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
+				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
+				 ffReqDTO.setFlDocNo(docNo);
+				 ffReqDTO.setFlDocId(docId);
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocId(ffReqDTO);//12177 - code refactoring: performance
+
+	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
+	    			//start search fulfilmenrequest based on doctype is PR
+	    			Date today  = DateUtils.getCurrentDate();
+					Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getPidValidDays());//12177
+					if(ExpDate.before(today)){
+						pidExpired = true;
+					}  
+	    		}
+	    	}
+	    }    
+		return pidExpired;
+	}
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(Date endDate){		
+		
+		Boolean validDate = true;	
+
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));
+
+		if(endDate != null){
+			
+			Date currentDate = new Date();
+			Date closingDate = endDate;
+			
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+			
+		    if(currentDate.compareTo(cal.getTime()) >= 0){
+		    	validDate = false;			
+			}	
+		}			
+		return validDate;	
+	}
+	
+	/**
+	 * Triggered from: flDocSearch.xhtml - dataTable id="flDocListDt".
+	 * 
+	 * Code performance risk: Executed inside loop - records from search result. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */     
+	public String getDocStatus(String docId, String docNo, Long docStatusId, String docType ){
+		
+		if(checkStatusPIDExpired(docId, docNo,docStatusId,docType)){
+			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+		}
+		else if(checkStatusSqExpired(docId, docNo, docStatusId, docType )){
+			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+		}
+		Long statusId = null;
+		if(docStatusId != null){
+			statusId = docStatusId;
+		}		
+		return getStatusDescById(statusId);
+	}
+	// 12177 - End
 }
