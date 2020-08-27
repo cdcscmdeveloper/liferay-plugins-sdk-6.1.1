@@ -105,6 +105,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String userAddConfirmationMsg;
 	//27912 -  Disciplinary Action - 26238
 	private boolean suppInPunishment = false;
+	// 26050
+	private boolean hasActiveAppl = false;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -725,5 +727,13 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
+	}
+
+	public boolean isHasActiveAppl() {
+		return hasActiveAppl;
+	}
+
+	public void setHasActiveAppl(boolean hasActiveAppl) {
+		this.hasActiveAppl = hasActiveAppl;
 	}
 }

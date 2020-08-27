@@ -174,6 +174,13 @@ public class SmPersonnelBackingBean extends
 
 		getManagedBean().setNoSupplierUserMsg("");
 		
+		int countActiveAppl = SmServiceLookup.getPersonnelSO()
+				.countSupplierWithActiveApplBySupplierId(reqDTO);
+		
+		if (countActiveAppl > 0) {
+			getManagedBean().setHasActiveAppl(true);
+		}
+		
 		//26238 - start
 		//check disciplinary action on supplier
 		String labelNameVal = "";
@@ -1701,7 +1708,8 @@ public class SmPersonnelBackingBean extends
 			throw new EpException(MessageConst.ERROR_721111);
 		} else {
 			// #26050 - start
-			if (!(getManagedBean().getTaskList().isEmpty()) && getManagedBean().getTaskList() != null && getManagedBean().getTaskList().size() > 0) {
+			if (getManagedBean().isHasActiveAppl() || !(getManagedBean().getTaskList().isEmpty()) && getManagedBean().getTaskList() != null
+					&& getManagedBean().getTaskList().size() > 0) {
 				throw new EpException(MessageConst.ERROR_770228, new String[] { fs.getUserSessionBean().getUserName() });
 			}
 			// #26050 - end
