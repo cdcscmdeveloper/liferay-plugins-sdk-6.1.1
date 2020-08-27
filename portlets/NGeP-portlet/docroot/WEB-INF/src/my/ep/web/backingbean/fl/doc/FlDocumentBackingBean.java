@@ -1421,10 +1421,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 * @return
 	 */
 	public boolean checkStatusPIDExpired(String docId, String docNo, Long docStatusId, String docType ){		
-	
- 	   IFulfilmentRequestSO flRequestSO;
- 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
- 	    
 	    Long currentStatusId = docStatusId;
 	    Boolean pidExpired = false;
 	       
@@ -1434,6 +1430,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		
+	    		IFulfilmentRequestSO flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
@@ -1445,13 +1443,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    			//start search fulfilmenrequest based on doctype is PR
 	    			Date today  = DateUtils.getCurrentDate();
 					Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getPidValidDays());//12177
-					//log.info("pID validity begin");
-					
-						if(ExpDate.before(today)){
-							pidExpired = true;
-						}  
-					
-					//log.info("pID validity end");
+					if(ExpDate.before(today)){
+						pidExpired = true;
+					}  
 	    		}
 	    	}
 	    }    
