@@ -285,6 +285,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			
 			//28221 - start
+			if(!getManagedBean().isUserActive() && getManagedBean().getNewSupplierId() == null){
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(
+						"Supplier User "
+								+ getManagedBean().getUser().getUserName()
+								+ " is inactive. Please contact supplier for selection of new supplier user that will undertake the take to revise the invoice.");
+			}
 			if(getManagedBean().getNewSupplierId() != null){
 				reqDTO.setSupplierSubmittedItd(getManagedBean().getNewSupplierId());
 				reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
