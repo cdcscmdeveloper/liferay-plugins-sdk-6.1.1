@@ -2280,8 +2280,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//#24975
 				//updateReasons = getAllUpdateReasons(ppPlan);
 				//getAllUpdateReasons(ppPlan);
-							
+			   //25549@azza27082020 - start
+			if (this.getManagedBean().isApprovedPlan()){
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)) {
+					
 					//24975 - Start
 				  if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
 					//24975 - End
@@ -2298,9 +2300,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Expenditure..
 				}
 				//24975 - End
-			  }
-			}
-
+			 }
+		   }
+		}
+	   //25549@azza27082020 - End
 			
 //			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 //            reqDTO.setUserRole(getOneRoleByStatus(ppPlan));
@@ -6135,15 +6138,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 								
 								if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCode()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDesc())){
-										
-									String CodeOrDesc = "";
+									//25549@azza27082020 - start	
+									String Code = "";
+									String Desc = "";
 											
 									
 									if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCode())){
-										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCode();
-									}else if
-									   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDesc())){
-										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDesc();
+										Code = this.getManagedBean().getPlanSearchBean().getPlanExCode();
+									}else{
+										Code = "''";
+									}
+									if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDesc())){
+										Desc = this.getManagedBean().getPlanSearchBean().getPlanExDesc();
+									}else{
+										Desc = "''";
 									}
 									
 						     		
@@ -6151,16 +6159,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									sfbean1.setCaseInsensitive(true);
 									sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 									sfbean1.setSearchField("pmGlAccount.glAccCode");
-									sfbean1.setSearchValue(CodeOrDesc);
+									sfbean1.setSearchValue(Code);
 									sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
 									
 									SearchFilterBean sfbean2 = new SearchFilterBean();
 									sfbean2.setCaseInsensitive(true);
 									sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 									sfbean2.setSearchField("pmGlAccount.description");
-									sfbean2.setSearchValue(CodeOrDesc);
+									sfbean2.setSearchValue(Desc);
 									sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-									
+									//25549@azza27082020 - end	
 									SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
 									searchBean.getDataFilterBeans().add(beans);				
 								}
@@ -6218,15 +6226,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 							
 							if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeT()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescT())){
-									
-								String CodeOrDesc = "";
+								//25549@azza27082020 - start		
+								String Code = "";
+								String Desc = "";
 										
 								
 								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeT())){
-									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeT();
-								}else if
-								   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescT())){
-									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescT();
+									Code = this.getManagedBean().getPlanSearchBean().getPlanExCodeT();
+								}else{
+									Code = "''";
+								}
+								 if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescT())){
+									Desc = this.getManagedBean().getPlanSearchBean().getPlanExDescT();
+								}else{
+									Desc = "''";
 								}
 								
 					     		
@@ -6234,16 +6247,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								sfbean1.setCaseInsensitive(true);
 								sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 								sfbean1.setSearchField("pmGlAccount.glAccCode");
-								sfbean1.setSearchValue(CodeOrDesc);
+								sfbean1.setSearchValue(Code);
 								sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
 								
 								SearchFilterBean sfbean2 = new SearchFilterBean();
 								sfbean2.setCaseInsensitive(true);
 								sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 								sfbean2.setSearchField("pmGlAccount.description");
-								sfbean2.setSearchValue(CodeOrDesc);
+								sfbean2.setSearchValue(Desc);
 								sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-								
+								//25549@azza27082020 - end	
 								SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
 								searchBean.getDataFilterBeans().add(beans);				
 							}
@@ -6300,15 +6313,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 								
 								if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeP()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescP())){
-										
-									String CodeOrDesc = "";
+									//25549@azza27082020 - start		
+									String Code = "";
+									String Desc = "";
 											
 									
 									if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeP())){
-										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeP();
-									}else if
-									   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescP())){
-										CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescP();
+										Code = this.getManagedBean().getPlanSearchBean().getPlanExCodeP();
+									}else{
+										Code = "''";
+									}
+									if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescP())){
+										Desc = this.getManagedBean().getPlanSearchBean().getPlanExDescP();
+									}else{
+										Desc = "''";
 									}
 									
 						     		
@@ -6316,16 +6334,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									sfbean1.setCaseInsensitive(true);
 									sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 									sfbean1.setSearchField("pmGlAccount.glAccCode");
-									sfbean1.setSearchValue(CodeOrDesc);
+									sfbean1.setSearchValue(Code);
 									sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
 									
 									SearchFilterBean sfbean2 = new SearchFilterBean();
 									sfbean2.setCaseInsensitive(true);
 									sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 									sfbean2.setSearchField("pmGlAccount.description");
-									sfbean2.setSearchValue(CodeOrDesc);
+									sfbean2.setSearchValue(Desc);
 									sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-									
+									//25549@azza27082020 - end	
 									SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
 									searchBean.getDataFilterBeans().add(beans);				
 								}
@@ -6381,15 +6399,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 							
 							if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeS()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescS())){
-									
-								String CodeOrDesc = "";
+								//25549@azza27082020 - start		
+								String Code = "";
+								String Desc = "";
 										
 								
 								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeS())){
-									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeS();
-								}else if
-								   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescS())){
-									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescS();
+									Code = this.getManagedBean().getPlanSearchBean().getPlanExCodeS();
+								}else{
+									Code = "''";
+								}
+								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescS())){
+									Desc = this.getManagedBean().getPlanSearchBean().getPlanExDescS();
+								}else{
+									Desc = "''";
 								}
 								
 					     		
@@ -6397,16 +6420,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								sfbean1.setCaseInsensitive(true);
 								sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 								sfbean1.setSearchField("pmGlAccount.glAccCode");
-								sfbean1.setSearchValue(CodeOrDesc);
+								sfbean1.setSearchValue(Code);
 								sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
 								
 								SearchFilterBean sfbean2 = new SearchFilterBean();
 								sfbean2.setCaseInsensitive(true);
 								sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 								sfbean2.setSearchField("pmGlAccount.description");
-								sfbean2.setSearchValue(CodeOrDesc);
+								sfbean2.setSearchValue(Desc);
 								sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-								
+								//25549@azza27082020 - end	
 								SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
 								searchBean.getDataFilterBeans().add(beans);				
 							}
@@ -6463,15 +6486,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 							
 							if(StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeH()) || StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescH())){
-									
-								String CodeOrDesc = "";
+								//25549@azza27082020 - start		
+								String Code = "";
+								String Desc = "";
 										
 								
 								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExCodeH())){
-									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExCodeH();
-								}else if
-								   (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescH())){
-									CodeOrDesc = this.getManagedBean().getPlanSearchBean().getPlanExDescH();
+									Code = this.getManagedBean().getPlanSearchBean().getPlanExCodeH();
+								}else{
+									Code = "''";
+								}
+								if (StringUtils.isNotBlank(this.getManagedBean().getPlanSearchBean().getPlanExDescH())){
+									Desc = this.getManagedBean().getPlanSearchBean().getPlanExDescH();
+								}else{
+									Desc = "''";
 								}
 								
 					     		
@@ -6479,16 +6507,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								sfbean1.setCaseInsensitive(true);
 								sfbean1.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 								sfbean1.setSearchField("pmGlAccount.glAccCode");
-								sfbean1.setSearchValue(CodeOrDesc);
+								sfbean1.setSearchValue(Code);
 								sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
 								
 								SearchFilterBean sfbean2 = new SearchFilterBean();
 								sfbean2.setCaseInsensitive(true);
 								sfbean2.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 								sfbean2.setSearchField("pmGlAccount.description");
-								sfbean2.setSearchValue(CodeOrDesc);
+								sfbean2.setSearchValue(Desc);
 								sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
-								
+								//25549@azza27082020 - end	
 								SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
 								searchBean.getDataFilterBeans().add(beans);				
 							}
@@ -7063,6 +7091,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25479 - end
+	//25549@azza20200827 - Start
+	public void onSelectCategoryClone(Long id){
+		log.info("The category id " + id);
+		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
+				break;
+			}
+		}
+	}
+	//25549@azza20200827 - End
 }
 
 
