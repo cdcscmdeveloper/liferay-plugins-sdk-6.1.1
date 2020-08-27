@@ -31,25 +31,16 @@
             	</p:column> 
 			<p:column style="white-space: normal!important;" width="25%">
 				<f:facet name="header">
-					#{lbl['lbl.td.view.action.desc']}
+			#{lbl['lbl.td.view.action.desc']}
 				</f:facet>
-			<!-- 28727 - START -->
-				<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'RT'}">
-					<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
-				</c:if>
-				<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType == 'RT'}">
-					#{ruleTypeDescObj.ruleDesc} #{lbl['lbl.td.action.desc.detail']} #{pmTrackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
-				</c:if>
+			<h:outputText value="#{trackingDiaryObj.actionDesc}" escape="false"/>
 			</p:column>
-			<c:if test="#{pmTrackingDiaryBackingBean.managedBean.selectedDocType != 'RT'}">
-				<p:column width="15%">
-					<f:facet name="header">
-					#{lbl['lbl.td.view.status']}
-					</f:facet>
-			  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
-				</p:column>
-			</c:if>
-			<!-- 28727 - END -->
+			<p:column width="15%">
+				<f:facet name="header">
+				#{lbl['lbl.td.view.status']}
+				</f:facet>
+		  		#{pmTrackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+			</p:column>
 
 		</p:dataTable>
 	</p:panel>

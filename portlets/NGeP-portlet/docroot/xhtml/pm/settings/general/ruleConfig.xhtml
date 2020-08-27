@@ -20,18 +20,6 @@
 					</div>
 				</td>
 			</tr>
-			<!-- 28727 - START -->
-			<tr>
-				<td>
-					<div align="right" style="width: 100%">
-						<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-							style="float:right;"
-							immediate="true"
-							action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.ruleConfigParamCode, ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleTypeId, requestNoteBackingBean.isSupplier())}"/>
-					</div>
-				</td>
-			</tr>
-			<!-- 28727 - END -->
 		</table>
 
 		<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"			
@@ -239,8 +227,7 @@
 		      	#{typeValueObj.ruleDescription}
 			</p:column>
 			<p:column width="15%" style="white-space:normal"
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC') and 
-							(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PTJB')}">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 	             	#{lbl['lbl.pm.zone']}
