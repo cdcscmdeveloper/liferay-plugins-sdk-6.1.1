@@ -4312,6 +4312,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return searchBean;
 	}
 	
+	
+	public boolean isToShow(){
+		
+		boolean show = false;
+		
+		if(this.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getStatus().getStatusId().intValue()
+				== ContractStatusConst.RA_PENDING_APPROVAL){
+			show = true;
+		}else{
+			show =  this.getManagedBean().getContractVer().getCtContract().isAssignedCtAdminFlag();
+		}
+		
+		return show;
+	}
 
 	private String contractAdminRoleCode() {
 		String contractType = getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
