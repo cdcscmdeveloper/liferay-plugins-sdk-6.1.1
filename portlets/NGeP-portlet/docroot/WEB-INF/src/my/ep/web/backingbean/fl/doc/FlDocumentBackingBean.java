@@ -1499,10 +1499,6 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 */     
 	public String getDocStatus(String docId, String docNo, Long docStatusId, String docType ){
 		
-		if(docId == null || docNo == null || docStatusId == null || docType == null){
-			return null;
-		}
-		
 		if(checkStatusPIDExpired(docId, docNo,docStatusId,docType)){
 			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
 		}
