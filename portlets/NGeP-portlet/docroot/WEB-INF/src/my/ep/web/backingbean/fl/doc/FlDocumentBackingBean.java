@@ -1368,13 +1368,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	}
 	
 	// 12177 - Start
-	
+	/**
+	 * 
+	 * @param docId
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return boolean
+	 */
 	public boolean checkStatusSqExpired(String docId, String docNo, Long docStatusId, String docType ){		
-		
-		IQuoteSO quoteSO;
- 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
- 	    QuoteResDTO quoteResDTO = null;
  	    Long documentId = null;
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
@@ -1389,7 +1391,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(documentId, docNo, docStatusId, docType, false);	
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+	    		QuoteResDTO quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(documentId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
