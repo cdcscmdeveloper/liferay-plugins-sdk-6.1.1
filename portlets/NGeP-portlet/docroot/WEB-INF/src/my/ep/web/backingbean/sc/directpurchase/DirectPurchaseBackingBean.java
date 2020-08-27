@@ -1071,6 +1071,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	}
 	
 	// 12177 - Start
+	/**
+	 * 
+	 * @param dpObj
+	 * @return boolean
+	 */
 	public boolean checkStatusSqExpired(Object[] dpObj){
 		
 		Long docId = null;
@@ -1091,15 +1096,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			docType = (String) dpObj[3];
 		}
 			
-		IQuoteSO quoteSO;
- 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
  	    QuoteResDTO quoteResDTO = null;
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
 	    
 	    if(docType.equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1113,6 +1117,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1125,6 +1131,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1137,6 +1145,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
 		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
 		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
 	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
@@ -1216,7 +1226,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	// 12177 - End
 	
 	//12183 - Start
-		
+	/**
+	 * 
+	 * @param dpObj
+	 * @return boolean
+	 */
 	public boolean checkStatusPidExpired(Object[] dpObj){
 		
 		String docNo = null;
@@ -1267,8 +1281,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	    		//scPID = (ScPurchaseInDefault)dpObj[8];
 	    		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
 	    		RequestNoteResDTO resDTO = new RequestNoteResDTO();
-	    		IRequestNoteSO reqSO = null;
-	    		reqSO = BusinessDelegate.getInstance().getServiceObject(
+	    		IRequestNoteSO reqSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	    		
 	    		reqDTO.setRequestNoteId((Long)dpObj[0]);
@@ -1346,13 +1359,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			if(pidChangedDate != null && pidValidDays != null){
 				Date today  = DateUtils.getCurrentDate();
 				Date ExpDate = DateUtils.addDays(pidChangedDate, pidValidDays);
-				
-				log.info("pID validity begin");
-				
+							
 				if(today.after(ExpDate)){
 					valid = true;
 				}
-				log.info("pID validity end");
 			}
 			return valid;
 		}
