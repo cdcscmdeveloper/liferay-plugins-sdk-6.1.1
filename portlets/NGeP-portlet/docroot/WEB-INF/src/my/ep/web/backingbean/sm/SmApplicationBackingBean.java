@@ -13187,7 +13187,12 @@ public class SmApplicationBackingBean extends
 		BigDecimal localCapital = new BigDecimal(0);// C
 */		for(SmPersonnel personnel: personnels){
 			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null){
-				if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+				if (ParameterConst.IDENTIFICATION_TYPES_PASSPORT
+						.equalsIgnoreCase(personnel.getIdentificationType()
+								.getParameterCode())
+						|| !SupplierManagementConst.COUNTRY_MALAYSIA_CODE  //start - 28545
+								.equalsIgnoreCase(personnel.getPmCountry()
+										.getCountryCode())){              //end - 28545
 					nonMalaysianCapital = nonMalaysianCapital.add(personnel.getShareAmt());
 				}else{
 					if(personnel.getBumiFlg() != null && personnel.getBumiFlg()==1){
