@@ -1272,7 +1272,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	//end added for #24968
 	
 	// 12177 - Start
-	public boolean isSqStillValid(Date sqEndDate){		
+	private boolean isSqStillValid(Date sqEndDate){		
 		
 		Boolean validDate = true;	
 		
