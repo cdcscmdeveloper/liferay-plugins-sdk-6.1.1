@@ -11874,25 +11874,27 @@ public class SmApplicationUtil {
            if (!bean.getSmSupplier().getBusinessType()
 					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 					// BUG #28173 & #28315 -START
-					// #28256 - Start (Missing role at personnel/capital/equity section)
-					// && alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
+					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
 					// BUG #28173 & #28315 -END
-					&& (bean.getSelectedShareHolder().isDirector()
+					&& (bean.getSelectedShareHolder().isEquityOwner()
+							|| bean.getSelectedShareHolder().isDirector()
 							|| bean.getSelectedShareHolder()
-									.isHigherManagement())) {
+									.isHigherManagement() || bean
+							.getSelectedShareHolder().isManagement())) {
 				bean.getSelectedShareHolder().setClerical(false);
 				bean.getSelectedShareHolder().setDisableStaff(true);
-					// #28356 - End
+					
 			} else {
 				  if (bean.getSmSupplier().getBusinessType()
 						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-						&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
-						/* #28256 Missing Role as Staff for ROB Partnership - Remove bean.getSelectedShareHolder().isManagement()*/
-						&& // BUG #28173 & #28315 -START
-						bean.getSelectedShareHolder().isManagement()) {
+						/* #28256 - Start (Missing role at personnel/capital/equity section)*/
+						// BUG #28173 & #28315 -START
+						&& bean.getSelectedShareHolder().isDirector()
+							|| bean.getSelectedShareHolder().isHigherManagement()) {
 					    // BUG #28173 & #28315 -END
 					  bean.getSelectedShareHolder().setClerical(false);
-					bean.getSelectedShareHolder().setDisableStaff(true);
+					  bean.getSelectedShareHolder().setDisableStaff(true);
+					  	/*#28356 - End*/
 			} else {
 					bean.getSelectedShareHolder().setDisableStaff(false);
 			}
