@@ -62,11 +62,11 @@
 			<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 					value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70"
-					style="margin-bottom:5px;width : auto;" maxlength="200"
+					style="margin-bottom:5px;width : auto;" maxlength="4000"
 					id="poRemarksToSvc" rows="10"
 					validatorMessage="#{lbl['lbl.sm.po.svc.Remarks']}"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}">
-					<f:validateLength maximum="200" />
+					<f:validateLength maximum="4000" />
 				</p:inputTextarea> <p:message id="poRemarksToSvcMsg" for="poRemarksToSvc"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
@@ -80,11 +80,11 @@
 					<td style="width: 30%; word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 					<td><p:inputTextarea cols="70"
-							style="margin-bottom:5px;width : auto;" maxlength="200"
+							style="margin-bottom:5px;width : auto;" maxlength="4000"
 							id="apprRemarks" rows="10"
 							validatorMessage="#{lbl['lbl.sm.remarks.recommendAppr']}"
 							value="#{backingBean.managedBean.poSecReview.remarkToApprover}">
-							<f:validateLength maximum="200" />
+							<f:validateLength maximum="4000" />
 						</p:inputTextarea> <p:message id="appRemarksMsg" for="apprRemarks"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
