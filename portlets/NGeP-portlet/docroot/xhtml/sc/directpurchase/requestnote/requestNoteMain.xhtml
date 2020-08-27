@@ -28,9 +28,8 @@
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionApproval}" />
 		<ui:param name="isViewOnly"
 			value="#{requestNoteBackingBean.managedBean.viewOnly}" />
-		<ui:param name="isPendingItemCodificationStatus"
-			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingItemCodification}" />
-
+		<ui:param name="isSqStillValid"
+			value="#{requestNoteBackingBean.isSqStillValid()}" />
 		<p:outputPanel id="requestNoteId">
 			<ui:include
 				src="/xhtml/sc/directpurchase/requestnote/requestNoteButtons.xhtml" />
