@@ -11874,15 +11874,15 @@ public class SmApplicationUtil {
            if (!bean.getSmSupplier().getBusinessType()
 					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 					// BUG #28173 & #28315 -START
-					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
+					// #28256 - Start (Missing role at personnel/capital/equity section)
+					// && alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
 					// BUG #28173 & #28315 -END
-					&& (bean.getSelectedShareHolder().isEquityOwner()
-							|| bean.getSelectedShareHolder().isDirector()
+					&& (bean.getSelectedShareHolder().isDirector()
 							|| bean.getSelectedShareHolder()
-									.isHigherManagement() || bean
-							.getSelectedShareHolder().isManagement())) {
+									.isHigherManagement())) {
 				bean.getSelectedShareHolder().setClerical(false);
 				bean.getSelectedShareHolder().setDisableStaff(true);
+					// #28356 - End
 			} else {
 				  if (bean.getSmSupplier().getBusinessType()
 						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
