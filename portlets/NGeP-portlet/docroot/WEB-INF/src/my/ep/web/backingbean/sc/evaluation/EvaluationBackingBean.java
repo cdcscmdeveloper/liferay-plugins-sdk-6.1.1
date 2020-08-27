@@ -2272,9 +2272,13 @@ public class EvaluationBackingBean extends
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(2);//#25138
 				this.getManagedBean().setTabFinancialIndex(3);
+				
 			//#28685 Bug - Start
 				if(!this.getManagedBean().getScQt().isDemoRequired()) {
-				   this.getManagedBean().setTabTechnicalIndex(2);
+				   //this.getManagedBean().setTabTechnicalIndex(2);
+				//farid start 25/8/2020	
+					this.getManagedBean().setTabTechnicalIndex(3);
+				//farid end  25/8/2020	
 				}else if(this.getManagedBean().getScQt().isDemoRequired()){
 					this.getManagedBean().setTabTechnicalIndex(3);
 				}
