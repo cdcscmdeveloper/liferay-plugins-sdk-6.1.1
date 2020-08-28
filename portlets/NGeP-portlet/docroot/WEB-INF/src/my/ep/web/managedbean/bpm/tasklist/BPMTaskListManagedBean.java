@@ -1579,27 +1579,28 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				      
 				      if(worklistItemVO.getDocId() != null){
 				    	  reqFLDTO.setFlDocId(worklistItemVO.getDocId().toString());
-				    	}
+				      }
 				      reqFLDTO.setFlDocNo(worklistItemVO.getDocNumber());
 				      // call specific column, native query
 				      resFLDTO = fulfilmentRequestSO.retrievePIDbyFLDocId(reqFLDTO);
 				    	   
 				      if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null && resFLDTO.getFlFulfilmentRequest().getPidValidDays()!=null) {
-						int pidValidDays = resFLDTO.getFlFulfilmentRequest().getPidValidDays();
-						Date pidExpiredDate = new Date(); 
+				    	  int pidValidDays = resFLDTO.getFlFulfilmentRequest().getPidValidDays();
+				    	  Date pidExpiredDate = new Date(); 
 								
-						if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null) {
-							pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getChangedDate(), pidValidDays);
-						}
+				    	  if(resFLDTO.getFlFulfilmentRequest().getChangedDate()!=null) {
+				    		  pidExpiredDate = DateUtils.addDays(resFLDTO.getFlFulfilmentRequest().getChangedDate(), pidValidDays);
+				    	  }
 								
-						Calendar pidExpiredDateCL = Calendar.getInstance();
-						pidExpiredDateCL.setTime(pidExpiredDate);
-						worklistItemVO.setExpirationDate(pidExpiredDateCL);
-								   
-						if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
-							worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
-						}
-					}
+				    	  Calendar pidExpiredDateCL = Calendar.getInstance();
+				    	  pidExpiredDateCL.setTime(pidExpiredDate);
+				    	  worklistItemVO.setExpirationDate(pidExpiredDateCL);
+									   
+				    	  if(pidExpiredDate.compareTo(DateUtils.getCurrentDate())<0) {
+				    		  worklistItemVO.setDocStatus(DPStatusConstants.PID_EXPIRED.intValue());
+				    	  }
+				      }
+		    	   }
 		    	} else {		   
 					   logger.info("DOCTYPE_PURCHASE_REQUEST not meet condition worklistItemVO.getTaskId() = " + worklistItemVO.getTaskId() + " | worklistItemVO.getDocStatus() = " + worklistItemVO.getDocStatus());
 				}
