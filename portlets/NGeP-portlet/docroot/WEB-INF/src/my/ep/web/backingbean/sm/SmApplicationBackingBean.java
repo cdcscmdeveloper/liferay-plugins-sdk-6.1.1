@@ -8909,7 +8909,13 @@ public class SmApplicationBackingBean extends
 			if(getManagedBean().getSmAppl().getSmSupplier() != null){
 				SmApplicationUtil.rejectSmMofCertForSupplier(
 						getManagedBean().getSmAppl().getSmSupplier());
+				
+				// #28534 START
+				getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
+				getManagedBean().getSmSupplier().setBumi(false);
+				// #28534 END
 			}
+			
 		}
 		log.info("<<<<Appl type>>>>");
 		log.info(getManagedBean().getSmAppl().getApplType());
