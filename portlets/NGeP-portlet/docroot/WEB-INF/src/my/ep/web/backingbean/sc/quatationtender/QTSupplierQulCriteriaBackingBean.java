@@ -1115,10 +1115,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 		}
 		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
-		List<CtPanelItem> panelItems = getManagedBean().getPanelItemList();
-		if (CollectionUtils.isNotEmpty(panelItems)) {
+		/*List<CtPanelItem> panelItems = getManagedBean().getPanelItemList();//#8485-start
+		if (CollectionUtils.isNotEmpty(panelItems)) { 
 			supplierReqDTO.setPanelItemId(panelItems.get(0).getPanelItemId());	
-		}
+		}*////#8485-End
 		if (null != tplSpecZoneDtl) {
 			this.getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
 			supplierReqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
