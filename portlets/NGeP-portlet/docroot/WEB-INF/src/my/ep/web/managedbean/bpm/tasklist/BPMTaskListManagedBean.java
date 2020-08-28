@@ -1631,7 +1631,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
-	   }
+	   	} else {
+	   		logger.info("DOCTYPE NULL not meet condition");
+	   	}
 	}
 	  //#24968-start - performance
 	/**
