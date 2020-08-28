@@ -46,7 +46,7 @@
 						<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
 							itemValue="#{obj.procurementCat.parameterId}" 
 							itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}"/>
-						<p:ajax event="change" update="somProcurementMethodHeader" listener="#{pPlanBackingBean.onSelectCategory(pPlanBackingBean.managedBean.planSearchBean.categoryType.parameterId, index)}"/>					
+					  <p:ajax event="change" update="somProcurementMethodHeader" listener="#{pPlanBackingBean.onSelectCategoryClone(pPlanBackingBean.managedBean.planSearchBean.categoryType.parameterId)}"/>				
 					</p:selectOneMenu></td>
 					<td />
 					<td />
@@ -59,7 +59,6 @@
 					    <f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(pPlanBackingBean.managedBean.planSearchBean.categoryType.parameterId)}" var="obj" 
 			     		  itemValue="#{obj.procurementType.parameterId}" 
 				    	  itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
-				    	<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(pPlanBackingBean.managedBean.planSearchBean.procurementType.parameterId, index)}" process="@this" />
 						</p:selectOneMenu></td>
 					<td />
 					<td />
