@@ -1530,11 +1530,13 @@ public class SmCommonUtil {
 					.divide(compBasic.getPaidUpCapital(), 8,
 							RoundingMode.HALF_UP).multiply(mul)
 					.setScale(3, RoundingMode.HALF_UP));
+			// #28755 SM-DEFECT @harith start
 			compBasic.setLocalCompPercent(compBasic
 					.getLocalCompanyEquity()
 					.divide(compBasic.getPaidUpCapital(), 8,
-							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(3, RoundingMode.HALF_UP));
+							RoundingMode.DOWN).multiply(mul)
+					.setScale(3, RoundingMode.DOWN));
+			// #28755 SM-DEFECT @harith end
 		}
 
 	}
