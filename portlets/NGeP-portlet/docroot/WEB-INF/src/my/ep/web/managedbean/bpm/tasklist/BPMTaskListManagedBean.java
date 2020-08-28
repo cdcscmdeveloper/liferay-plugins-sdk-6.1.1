@@ -694,7 +694,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							    	   }
 						    	   }
 						       }
-						       processWorklistItemByTaskName(worklistItemVO, face); //#24968  - performance
+						       //processWorklistItemByTaskName(worklistItemVO, face); //#24968  - performance
 							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
 							}
