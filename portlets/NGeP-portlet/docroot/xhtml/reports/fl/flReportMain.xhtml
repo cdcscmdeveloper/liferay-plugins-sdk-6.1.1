@@ -253,6 +253,12 @@
 					<ui:include src="/xhtml/reports/fl/pa/Fl033_summary.xhtml"></ui:include>
 				</c:when>
 				
+				<!-- Year End Report -->
+				<c:when
+					test="#{FlReportConst.fl067YearEndReport == flReportBB.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/fl/yep/Fl067_yearEndReport.xhtml"></ui:include>
+				</c:when>
+				
 				<c:otherwise>
         			ERROR!
     
