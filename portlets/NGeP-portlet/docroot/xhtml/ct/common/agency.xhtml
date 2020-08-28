@@ -235,7 +235,7 @@
 
 								<p:ajax process="@this" />
 							</p:inputText>
-							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}" />
+							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.sharing.agency.file.reference']}" />
 						</td>
 					</tr>
 				</table>
@@ -243,7 +243,7 @@
 				
 				<p:dataTable id="lampiranCtSharing" lazy="true"
 					value="#{ctBackingBean.managedBean.contractVer.agencyContractSharingAttachements}"
-					var="attachFile" width="60%" rows="10" rowIndexVar="index" rendered="#{!ctBackingBean.managedBean.disableAgent}">
+					var="attachFile" width="40%" rows="10" rowIndexVar="index" rendered="#{!ctBackingBean.managedBean.disableAgent}">
 
 					<p:column>
 						<f:facet name="header">
