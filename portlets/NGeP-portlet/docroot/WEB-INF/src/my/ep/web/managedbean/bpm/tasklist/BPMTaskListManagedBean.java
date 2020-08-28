@@ -1393,8 +1393,19 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					worklistItemVO.setTitle(sb.toString());
 				}
 			}
-		} else {
-			processTitleWithDocStatus(worklistItemVO, face);
+		}  else if (worklistItemVO.getDocStatus() != null
+				&& QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == worklistItemVO.getDocStatus().intValue()) {
+			if (loiPreparationDays == null) {
+				loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
+						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), KPICodeConst.SC_LOI_PREPARATION);
+			}
+			
+			worklistItemVO.setTitle(worklistItemVO.getTitle() + "<br/> - "
+							+ ResourceBundleUtils.getMessage(
+									"lbl.sc.loiloa.loi.preparation.due.date.message",
+									new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									face.getUserLocale()));
 		}
 	}
     
