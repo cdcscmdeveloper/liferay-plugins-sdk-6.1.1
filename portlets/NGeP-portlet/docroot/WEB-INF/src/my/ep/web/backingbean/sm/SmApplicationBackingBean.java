@@ -8594,6 +8594,32 @@ public class SmApplicationBackingBean extends
 	 */
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
+		//24964 - start
+		if (getManagedBean().getSmAppl().getApplType()
+				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& decision.equalsIgnoreCase("REJECT")) {
+			
+			PmRegStatus pmRegStatus = new PmRegStatus();
+			PmStatus pmStatus = new PmStatus();
+			
+			pmStatus.setStatusId(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED);
+			pmRegStatus.setPmStatus(pmStatus);
+			getManagedBean().getSmAppl().setPmRegStatus(pmRegStatus);
+			
+			if(getManagedBean().getSmAppl().getSmSupplier() != null){
+				SmApplicationUtil.rejectSmMofCertForSupplier(
+						getManagedBean().getSmAppl().getSmSupplier());
+				
+				// #28534 START
+				getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
+				getManagedBean().getSmSupplier().setBumi(false);
+				// #28534 END
+			}
+			
+		}
+		log.info("<<<<Appl type>>>>");
+		log.info(getManagedBean().getSmAppl().getApplType());
+		//24964 - end
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
 		log.info("*** Submit Approve *** " + decision);
