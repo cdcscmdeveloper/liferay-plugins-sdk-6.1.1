@@ -492,21 +492,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							try{
 								processWorklistItemByTitle(worklistItemVO, face);
 								
-								 if (worklistItemVO.getDocStatus() != null
-											&& QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == worklistItemVO.getDocStatus().intValue()) {
-										if (loiPreparationDays == null) {
-											loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
-													ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), KPICodeConst.SC_LOI_PREPARATION);
-										}
-										
-										worklistItemVO.setTitle(worklistItemVO.getTitle() + "<br/> - "
-														+ ResourceBundleUtils.getMessage(
-																"lbl.sc.loiloa.loi.preparation.due.date.message",
-																new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
-																ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-																face.getUserLocale()));
-								}
-								
 								processWorklistItemByTaskName(worklistItemVO, face);
 								
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
@@ -1395,7 +1380,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					worklistItemVO.setTitle(sb.toString());
 				}
 			}
-		}/*  else if (worklistItemVO.getDocStatus() != null
+		}  else if (worklistItemVO.getDocStatus() != null
 				&& QTStatusConst.SF_PENDING_LOI_PREPARATION.intValue() == worklistItemVO.getDocStatus().intValue()) {
 			if (loiPreparationDays == null) {
 				loiPreparationDays = retrieveKpiValueByModuleCodeAndKpiCode(
@@ -1408,7 +1393,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									new String[] { loiPreparationDays != null ? loiPreparationDays.toString() : "" },
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									face.getUserLocale()));
-		}*/
+		}
 	}
     
     /**
