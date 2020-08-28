@@ -1603,7 +1603,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		    	} else {		   
 					   logger.info("DOCTYPE_PURCHASE_REQUEST not meet condition worklistItemVO.getTaskId() = " + worklistItemVO.getTaskId() + " | worklistItemVO.getDocStatus() = " + worklistItemVO.getDocStatus());
 				}
-			 }			   
+			 			   
 	       }else if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
 	    	   if((worklistItemVO.getDocId() != null && worklistItemVO.getDocId() != 0) || worklistItemVO.getDocNumber() != null){  
 		    	   if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
