@@ -1421,8 +1421,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
  		   currentStatusId = Long.valueOf(worklistItemVO.getDocStatus()); 
  	   }
 	       
-	   
-	       
+	   if(worklistItemVO.getDocType() != null && currentStatusId != null){
+		   
 	       if(worklistItemVO.getDocType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 			   if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
 				   if((worklistItemVO.getDocId() != null && worklistItemVO.getDocId() != 0) || worklistItemVO.getDocNumber() != null){  
@@ -1631,7 +1631,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			   }
 	       }
 	       // 12177 - End
-	  
+	   }
 	}
 	  //#24968-start - performance
 	/**
