@@ -228,7 +228,7 @@
 						</td>
 						<td class="TableFieldRight">
 							<p:inputText id="uploadRefNoDoc"
-								style="width:300px;"
+								style="width:400px;"
 								value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}"
 								rendered="#{!ctBackingBean.managedBean.disableAgent}"
 								disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract  or ctBackingBean.managedBean.notificationSetting}">
@@ -250,7 +250,7 @@
 							<h:outputText value="#{lbl['lbl.ct.agency.ap178.description']}" rendered="#{!ctBackingBean.managedBean.disableAgent}"/>
 						</f:facet>
 						<p:inputText id="uploadCtSharingDesc"
-									style="width:300px;" value="#{attachFile.fileDescription}"
+									style="width:350px;" value="#{attachFile.fileDescription}"
 									rendered="#{!ctBackingBean.managedBean.disableAgent}"
 									disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract  or ctBackingBean.managedBean.notificationSetting}" />
 					</p:column>
