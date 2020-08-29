@@ -270,6 +270,17 @@ public class SupplierFinalizationBackingBean extends
 			 */
 			
 			loadInitialData(qtId);
+			
+			 // #27502 -- Start
+			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
+			qtBackingBean.retrieveQuationTenderDetails(qtId);
+			
+			if (!qtBackingBean.getManagedBean().getQt().getPmOrgProfile().getBpk()
+					&& !qtBackingBean.getManagedBean().getQt().getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+						prepareUpdateCommitteeMember();//#25037
+			}
+			// #27502 -- End
+
 			if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
 					&& Arrays.asList(
 							new String[] {
@@ -278,6 +289,7 @@ public class SupplierFinalizationBackingBean extends
 							.contains(this.getManagedBean().getTaskName())) {
 				prepareUpdateCommitteeMember();//#25037
 			}
+
 			
 			fc.getApplication()
 					.getNavigationHandler()
@@ -356,11 +368,12 @@ public class SupplierFinalizationBackingBean extends
 		log.info("loadInitialData");
 		SCEvaluationDataType dataType = (SCEvaluationDataType) 
 				this.getManagedBean().getPayLoad();
-		getManagedBean().setCommitteeType(dataType.getCommitteeType());
+		getManagedBean().setCommitteeType(dataType.getCommitteeType());		
 		
 		retrieveQTDetails(qtId);
-		
-		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
+
+		// #27502 -- Adding condition only
+		if (dataType.getFcDecision() != null && ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
 				.equals(dataType.getFcDecision())) {
 			getManagedBean().setInitialDecisionFwdHighAuth(true);
 		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
@@ -395,6 +408,13 @@ public class SupplierFinalizationBackingBean extends
 		} //#17376-End
 		
 		int tabIndex = 0;
+		
+		// #27502 -- Start
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		qtBackingBean.retrieveQuationTenderDetails(qtId);
+		ScQt scQt = qtBackingBean.getManagedBean().getQt();	
+		// #27502 -- END
+		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
 			getManagedBean().getScQtFinalization()
 					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
@@ -404,7 +424,22 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setEndorsementReportActiveIndex(-1);
 			getManagedBean().setCommEndorsementTabIndex(-1);
-			getManagedBean().setEndorsementReportActiveIndex(-1);
+			getManagedBean().setEndorsementReportActiveIndex(-1);	
+			
+			// #27502 -- Start
+		} else if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			getManagedBean().setPreparationTabIndex(-1);
+			getManagedBean().setEvaluationReportIndex(-1);
+			getManagedBean().setReportTabIndex(tabIndex++);
+			getManagedBean().setFinalizationTabIndex(tabIndex++);
+			getManagedBean().setCommEndorsementTabIndex(-1);		
+			getManagedBean().setEndorsementReportActiveIndex(tabIndex++);
+			getManagedBean().setReverseTabIndex(-1);
+			getManagedBean().setSecretaryUser(true);			
+			
+			ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
+			getManagedBean().setEndorsementReport(endorsementReport); 
+			// #27502 -- END
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
 			getManagedBean().setEvaluationReportIndex(tabIndex++);
@@ -425,7 +460,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		// Dynamically creating main tab menu
-		createMainMenuModel();
+		createMainMenuModel(scQt);
 	}
 	
 	
@@ -453,18 +488,20 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
-			getManagedBean().setOriginalFinalizationSecretaryUserId(
-						scQt.getFinalizationSecratery().getUserId());
+			
+			// #27502 -- Adding condition only
+			if (scQt.getFinalizationSecratery() != null) {
+				getManagedBean().setOriginalFinalizationSecretaryUserId(scQt.getFinalizationSecratery().getUserId());
 
-			boolean isMedicalProcCategory = isMultipleProposalCategory(
-					scQt, null);
-			if(isMedicalProcCategory){
-				this.getManagedBean().getScQt().setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+				boolean isMedicalProcCategory = isMultipleProposalCategory(scQt, null);
+				if (isMedicalProcCategory) {
+					this.getManagedBean().getScQt().setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
+				}
+				// getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
+
+				List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
+				getManagedBean().setZoneDetails(zoneDetails);
 			}
-			//getManagedBean().setProcCategoryMedicine(isMedicalProcCategory);
-
-			List<TplSpecZoneDtl> zoneDetails = resDTO.getZoneDetails();
-			getManagedBean().setZoneDetails(zoneDetails);
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -1280,11 +1317,12 @@ public class SupplierFinalizationBackingBean extends
 			}
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
-				reqDTO.setDeletedMeetingsList(
-						this.getManagedBean().getDeletedMeetingList());
-				scQtCommittee.setQtCommitteRemarks(
-						reqDTO.getScQtCommittee().getQtCommitteRemarks());
-				reqDTO.setScQtCommittee(scQtCommittee);
+				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
+				//#27502- Adding condition only
+				if (reqDTO.getScQtCommittee() != null) {
+					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+					reqDTO.setScQtCommittee(scQtCommittee);
+				}
 			}
 			
 			reqDTO.setInitialDecisionFwdHighAuth(
@@ -4945,7 +4983,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setMessage(null);
 	}
 
-	private void createMainMenuModel() {
+	private void createMainMenuModel(ScQt scQt) {
 		log.info("createMainMenuModel");
 		MenuModel mainMenuModel = new DefaultMenuModel();
 
@@ -4958,127 +4996,150 @@ public class SupplierFinalizationBackingBean extends
 		MenuItem menuItem = null;
 		String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
 		
-		// Preparation Menu Item
-		if (!isBPKUser) {
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage(
-								"lbl.sc.preparation",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:15%;");
-			//menuItem.setDisabled(isQTMaintenanceScreen());
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeCommonAction
-					+ (tabIndex++) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
-		}
-		
-		// Evaluation Report 
-		menuItem = new MenuItem();
-		menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.evaluation.report",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
-		menuItem.setStyle("width:15%;");
-		menuItem.setTransient(true);
-		menuItem.setPartialSubmit(true);
-		menuItem.setProcess("@form");
-		menuItem.setUpdate("@form");
-		//#28240-issued fixed
-		menuItem.setOncomplete(tabMenuChangeCommonAction
-				+ (isBPKUser ? 0 : (tabIndex++)) + "}]); ");
-		mainMenuModel.addMenuItem(menuItem);
-		
-		// Briefing Paper Menu Item
-		menuItem = new MenuItem();
-		menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.briefing.paper.preparation",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
-		menuItem.setStyle("width:15%;");
-		menuItem.setTransient(true);
-		menuItem.setPartialSubmit(true);
-		menuItem.setProcess("@form");
-		menuItem.setUpdate("@form");
-		menuItem.setOncomplete(tabMenuChangeCommonAction
-				+ (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
-		mainMenuModel.addMenuItem(menuItem);
-		
-		
-		// Supplier Finalization Menu Item
-		menuItem = new MenuItem();
-		menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.meeting.decision",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
-		menuItem.setStyle("width:20%;");
-		//menuItem.setDisabled(isQTMaintenanceScreen());
-		menuItem.setTransient(true);
-		menuItem.setPartialSubmit(true);
-		menuItem.setProcess("@form");
-		menuItem.setUpdate("@form");
-		menuItem.setOncomplete(tabMenuChangeCommonAction
-				+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
-		mainMenuModel.addMenuItem(menuItem);
+		// #27502 -- Start
+		if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
 
-		
-		// Supplier Finalization Committee Endorsement Menu Item
-		if (!isBPKUser) {
+			// Briefing Paper Menu Item
 			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage(
-							"lbl.sc.committee.endorsement.finalization",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()));
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			menuItem.setStyle("width:15%;");
-			//menuItem.setDisabled(isQTMaintenanceScreen());
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setOncomplete(tabMenuChangeCommonAction
-					+ (tabIndex++) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);	
-			
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage(
-								"lbl.sc.committee.endorsement.report",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:20%;");
 			menuItem.setTransient(true);
 			menuItem.setPartialSubmit(true);
 			menuItem.setProcess("@form");
 			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeCommonAction
-					+ (tabIndex++) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);			
-		}
-		
-		/*
-		 * Enhancement #21694
-		 *  Supplier Finalization Menu Item
-		 */
-		if(null!=getManagedBean().getScQtReverse()){
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage(
-								"lbl.sc.committee.reverseStatus",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:20%;");
-			//menuItem.setDisabled(isQTMaintenanceScreen());
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeCommonAction
-					+ (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+//			menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
 			mainMenuModel.addMenuItem(menuItem);
-			
+
+			// Supplier Finalization Menu Item
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:20%;");
+			// menuItem.setDisabled(isQTMaintenanceScreen());
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+//			menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (3)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:20%;");
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");		
+			//menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (5)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+
+			// #27502 -- End
+
+		} else {
+
+			// Preparation Menu Item
+			if (!isBPKUser) {
+				menuItem = new MenuItem();
+				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.preparation",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				menuItem.setStyle("width:15%;");
+				// menuItem.setDisabled(isQTMaintenanceScreen());
+				menuItem.setTransient(true);
+				menuItem.setPartialSubmit(true);
+				menuItem.setProcess("@form");
+				menuItem.setUpdate("@form");
+				menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+				mainMenuModel.addMenuItem(menuItem);
+			}
+
+			// Evaluation Report
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.evaluation.report",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:15%;");
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			// #28240-issued fixed
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (tabIndex++)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+
+			// Briefing Paper Menu Item
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:15%;");
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+
+			// Supplier Finalization Menu Item
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:20%;");
+			// menuItem.setDisabled(isQTMaintenanceScreen());
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+
+			// Supplier Finalization Committee Endorsement Menu Item
+			if (!isBPKUser) {
+				menuItem = new MenuItem();
+				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.finalization",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				menuItem.setStyle("width:15%;");
+				// menuItem.setDisabled(isQTMaintenanceScreen());
+				menuItem.setTransient(true);
+				menuItem.setPartialSubmit(true);
+				menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+				mainMenuModel.addMenuItem(menuItem);
+
+				menuItem = new MenuItem();
+				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				menuItem.setStyle("width:20%;");
+				menuItem.setTransient(true);
+				menuItem.setPartialSubmit(true);
+				menuItem.setProcess("@form");
+				menuItem.setUpdate("@form");
+				menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+				mainMenuModel.addMenuItem(menuItem);
+			}
+
+			/*
+			 * Enhancement #21694 Supplier Finalization Menu Item
+			 */
+			if (null != getManagedBean().getScQtReverse()) {
+				menuItem = new MenuItem();
+				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.reverseStatus",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				menuItem.setStyle("width:20%;");
+				// menuItem.setDisabled(isQTMaintenanceScreen());
+				menuItem.setTransient(true);
+				menuItem.setPartialSubmit(true);
+				menuItem.setProcess("@form");
+				menuItem.setUpdate("@form");
+				menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+				mainMenuModel.addMenuItem(menuItem);
+
+			}
+			/*
+			 * Enhancement #21694 END
+			 */
 		}
-		/*
-		 * Enhancement #21694 END  
-		 */
 		
 		this.getManagedBean().setMainMenuModel(mainMenuModel);
 	}	

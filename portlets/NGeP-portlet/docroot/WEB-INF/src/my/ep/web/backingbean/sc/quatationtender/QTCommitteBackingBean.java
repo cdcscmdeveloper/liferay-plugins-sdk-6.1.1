@@ -2535,7 +2535,11 @@ public class QTCommitteBackingBean extends
 			if(Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(status)){
 				return false;
 			}
-		}else{
+			//#27502 -Start
+		} else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCE)){
+			return false;
+			//#27502 -End
+		}else {
 			if(Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(status)){
 				return false;
 			}
