@@ -2912,8 +2912,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 				//#27502 -Start
-				if (scQt.getPmOrgProfile().getBpk() && 
-						scQt.getContractType().getParameterCode().equalsIgnoreCase(SourcingConstants.CENTRAL_CONTRACT)) {
+				if (scQt.getPmOrgProfile().getBpk() &&						
+						scQt.getContractType().getParameterId() == SourcingConstants.CENTRAL_CONTRACT) {
 					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
 					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
