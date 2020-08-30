@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -94,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
@@ -625,9 +627,6 @@ public class SupplierFinalizationBackingBean extends
 		//checkSFHasQualifiedSupplier();
 		//#26169 #38 - END
 		
-		// #18685 - Start
-		populatePendingRecRemarks(getManagedBean().getScQtFinalization());
-		// #18685 - End
 		
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
@@ -636,6 +635,11 @@ public class SupplierFinalizationBackingBean extends
 		initializeFinalizationRemarks();
 		initializeFinalizationEndorsementRemarks();
 		initializeFinalizationPengreysonRemarks();
+		
+		// #18685 - Start
+		populatePendingRecRemarks(getManagedBean().getScQtFinalization());
+		// #18685 - End
+		
 		if(this.getManagedBean().isSecretaryUser()){
 			log.info("ReevaluationSecretaryUser");
 		
@@ -663,7 +667,7 @@ public class SupplierFinalizationBackingBean extends
 		// #25638 - End
 	}
 	
-	// #18685 - Start
+	// #18685 - Start 
 	/**
 	 * @param scQtFinalization
 	 */
@@ -674,15 +678,15 @@ public class SupplierFinalizationBackingBean extends
 				ScQtFinalizationRemarks remark = iterator.next();
 				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
 					getManagedBean().setPendingRecItemizedRemark(remark);
-					iterator.remove();
 				} else if (CommonConstants.PACKAGE_WISE.equals(remark.getSourceName())) {
 					getManagedBean().setPendingRecPackageRemark(remark);
-					iterator.remove();
+				} else {
+				    getManagedBean().setNewSfRemark(remark);
 				}
 			}
 		}
 	}
-	// #18685 - End
+	// #18685 - End 
 	
 	private void loadRecommededSuppliersIntoCachedData(boolean isItemized) {
 		log.info("loadRecommededSuppliersIntoCachedData");
@@ -4910,6 +4914,34 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+	// #18685 - Start
+	/**
+	 * @return
+	 */
+	public List<ScRemark> getPendingRecRemark() {
+	  if (CollectionUtils.isEmpty(getManagedBean().getScRemarks())) {
+	    List<ScRemark> remarkList = new LinkedList<>(); 
+	    remarkList.add(getManagedBean().getNewSfRemark());
+	    getManagedBean().setScRemarks(remarkList);
+	  } else {
+	    getManagedBean().getScRemarks().clear();
+	    getManagedBean().getScRemarks().add(getManagedBean().getNewSfRemark());
+	  }
+	  
+	  String decision = getManagedBean().getScQtFinalization().getDecision().getParameterCode();
+	  if (StringUtils.isNotEmpty(decision) && !decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
+	    getManagedBean().getScRemarks().addAll(getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks());
+	  } else {
+	    if (getManagedBean().isItemize()) {
+	      getManagedBean().getScRemarks().add(getManagedBean().getPendingRecItemizedRemark());
+	    } else {
+	      getManagedBean().getScRemarks().add(getManagedBean().getPendingRecPackageRemark());
+	    }
+	  }
+	  return getManagedBean().getScRemarks();
+	}
+	// #18685 - End.
+	
 	private void resetDecisionRecommendSupplier(ScQtFinalization scQtFinalization) {
 		log.info("resetDecisionRecommendSupplier");
 		scQtFinalization.setHigherCommitte(null);
@@ -4984,165 +5016,165 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void createMainMenuModel(ScQt scQt) {
-		log.info("createMainMenuModel");
-		MenuModel mainMenuModel = new DefaultMenuModel();
+      log.info("createMainMenuModel");
+      MenuModel mainMenuModel = new DefaultMenuModel();
 
-		boolean isBPKUser = false;
-		if (getManagedBean().isInitialDecisionFwdToBPK()) {
-			isBPKUser = true;
-		}
+      boolean isBPKUser = false;
+      if (getManagedBean().isInitialDecisionFwdToBPK()) {
+          isBPKUser = true;
+      }
 
-		int tabIndex = 0;
-		MenuItem menuItem = null;
-		String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
-		
-		// #27502 -- Start
-		if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+      int tabIndex = 0;
+      MenuItem menuItem = null;
+      String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
+      
+      // #27502 -- Start
+      if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
 
-			// Briefing Paper Menu Item
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:15%;");
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-//			menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
+          // Briefing Paper Menu Item
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:15%;");
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+//        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
 
-			// Supplier Finalization Menu Item
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:20%;");
-			// menuItem.setDisabled(isQTMaintenanceScreen());
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-//			menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (3)) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
+          // Supplier Finalization Menu Item
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:20%;");
+          // menuItem.setDisabled(isQTMaintenanceScreen());
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+//        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (3)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
 
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:20%;");
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");		
-			//menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (5)) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:20%;");
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");        
+          //menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (5)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
 
-			// #27502 -- End
+          // #27502 -- End
 
-		} else {
+      } else {
 
-			// Preparation Menu Item
-			if (!isBPKUser) {
-				menuItem = new MenuItem();
-				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.preparation",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				menuItem.setStyle("width:15%;");
-				// menuItem.setDisabled(isQTMaintenanceScreen());
-				menuItem.setTransient(true);
-				menuItem.setPartialSubmit(true);
-				menuItem.setProcess("@form");
-				menuItem.setUpdate("@form");
-				menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-				mainMenuModel.addMenuItem(menuItem);
-			}
+          // Preparation Menu Item
+          if (!isBPKUser) {
+              menuItem = new MenuItem();
+              menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.preparation",
+                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+              menuItem.setStyle("width:15%;");
+              // menuItem.setDisabled(isQTMaintenanceScreen());
+              menuItem.setTransient(true);
+              menuItem.setPartialSubmit(true);
+              menuItem.setProcess("@form");
+              menuItem.setUpdate("@form");
+              menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+              mainMenuModel.addMenuItem(menuItem);
+          }
 
-			// Evaluation Report
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.evaluation.report",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:15%;");
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-			// #28240-issued fixed
-			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (tabIndex++)) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
+          // Evaluation Report
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.evaluation.report",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:15%;");
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+          // #28240-issued fixed
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (tabIndex++)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
 
-			// Briefing Paper Menu Item
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:15%;");
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
+          // Briefing Paper Menu Item
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:15%;");
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
 
-			// Supplier Finalization Menu Item
-			menuItem = new MenuItem();
-			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			menuItem.setStyle("width:20%;");
-			// menuItem.setDisabled(isQTMaintenanceScreen());
-			menuItem.setTransient(true);
-			menuItem.setPartialSubmit(true);
-			menuItem.setProcess("@form");
-			menuItem.setUpdate("@form");
-			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
-			mainMenuModel.addMenuItem(menuItem);
+          // Supplier Finalization Menu Item
+          menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:20%;");
+          // menuItem.setDisabled(isQTMaintenanceScreen());
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
 
-			// Supplier Finalization Committee Endorsement Menu Item
-			if (!isBPKUser) {
-				menuItem = new MenuItem();
-				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.finalization",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				menuItem.setStyle("width:15%;");
-				// menuItem.setDisabled(isQTMaintenanceScreen());
-				menuItem.setTransient(true);
-				menuItem.setPartialSubmit(true);
-				menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-				mainMenuModel.addMenuItem(menuItem);
+          // Supplier Finalization Committee Endorsement Menu Item
+          if (!isBPKUser) {
+              menuItem = new MenuItem();
+              menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.finalization",
+                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+              menuItem.setStyle("width:15%;");
+              // menuItem.setDisabled(isQTMaintenanceScreen());
+              menuItem.setTransient(true);
+              menuItem.setPartialSubmit(true);
+              menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+              mainMenuModel.addMenuItem(menuItem);
 
-				menuItem = new MenuItem();
-				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				menuItem.setStyle("width:20%;");
-				menuItem.setTransient(true);
-				menuItem.setPartialSubmit(true);
-				menuItem.setProcess("@form");
-				menuItem.setUpdate("@form");
-				menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-				mainMenuModel.addMenuItem(menuItem);
-			}
+              menuItem = new MenuItem();
+              menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report",
+                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+              menuItem.setStyle("width:20%;");
+              menuItem.setTransient(true);
+              menuItem.setPartialSubmit(true);
+              menuItem.setProcess("@form");
+              menuItem.setUpdate("@form");
+              menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+              mainMenuModel.addMenuItem(menuItem);
+          }
 
-			/*
-			 * Enhancement #21694 Supplier Finalization Menu Item
-			 */
-			if (null != getManagedBean().getScQtReverse()) {
-				menuItem = new MenuItem();
-				menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.reverseStatus",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				menuItem.setStyle("width:20%;");
-				// menuItem.setDisabled(isQTMaintenanceScreen());
-				menuItem.setTransient(true);
-				menuItem.setPartialSubmit(true);
-				menuItem.setProcess("@form");
-				menuItem.setUpdate("@form");
-				menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
-				mainMenuModel.addMenuItem(menuItem);
+          /*
+           * Enhancement #21694 Supplier Finalization Menu Item
+           */
+          if (null != getManagedBean().getScQtReverse()) {
+              menuItem = new MenuItem();
+              menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.reverseStatus",
+                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+              menuItem.setStyle("width:20%;");
+              // menuItem.setDisabled(isQTMaintenanceScreen());
+              menuItem.setTransient(true);
+              menuItem.setPartialSubmit(true);
+              menuItem.setProcess("@form");
+              menuItem.setUpdate("@form");
+              menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+              mainMenuModel.addMenuItem(menuItem);
 
-			}
-			/*
-			 * Enhancement #21694 END
-			 */
-		}
-		
-		this.getManagedBean().setMainMenuModel(mainMenuModel);
-	}	
+          }
+          /*
+           * Enhancement #21694 END
+           */
+      }
+      
+      this.getManagedBean().setMainMenuModel(mainMenuModel);
+  }   
 
 	private void createZoneMenuModel() {
 		log.info("createZoneMenuModel");
@@ -5308,9 +5340,7 @@ public class SupplierFinalizationBackingBean extends
 						scQtFinalization.getScQtRecommends());
 			}
 			setSelectedSupplierCodesByItem();
-			// #18685 - Start
-			manageRemarks(scQtFinalization, getManagedBean().getPendingRecItemizedRemark(), CommonConstants.PACKAGE_WISE);
-			// #18685 - End
+			
 		} else {
 			if (triggeredFromEvent) {
 				List<ScQtRecommend> scQtRecommendList = 
@@ -5319,9 +5349,7 @@ public class SupplierFinalizationBackingBean extends
 					item.setCancelled(false);
 				}
 			}
-			// #18685 - Start
-			manageRemarks(scQtFinalization, getManagedBean().getPendingRecPackageRemark(), CommonConstants.ITEMIZED);
-			// #18685 - End
+			
 			createShortlistedSuppliersDataModel();
 		}
 		//#26169 #38 #25729#142 - Start 
@@ -5329,28 +5357,6 @@ public class SupplierFinalizationBackingBean extends
 		//#26169 #38 #25729#142 - End
 	}
 
-	// #18685 - Start
-	/**
-	 * @param scQtFinalization
-	 * @param packageWise 
-	 * @param scQtFinalizationRemarks 
-	 */
-	private void manageRemarks(ScQtFinalization scQtFinalization, ScQtFinalizationRemarks scQtFinalizationRemarks, String removeSourceName) {
-		if (null != scQtFinalization) {
-			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
-			while (iterator.hasNext()) {
-				ScQtFinalizationRemarks remark = iterator.next();
-				if (removeSourceName.equals(remark.getSourceName())) {
-					iterator.remove();
-				}
-			}
-			if (null != scQtFinalizationRemarks) {
-				scQtFinalization.getScQtFinalizationRemarks().add(scQtFinalizationRemarks);
-			} 
-		}
-	}
-	// #18685 - End
-	
 	private void setSelectedSupplierCodesByItem() {
 		log.info("setSelectedSupplierCodesByItem");
 		boolean isAward = getManagedBean().isSingleAward();
