@@ -853,7 +853,7 @@ public class SmApplicationBackingBean extends
 				if (cannotProceedAlertMsg) {
 					throw new EpException(MessageConst.ERROR_722542);
 				}
-//#17906
+
 				boolean hasActiveTransactions = SmApplicationUtil
 						.hasActiveTransactions(currSupp);
 				boolean hasOtherActiveTransactions = SmApplicationUtil
@@ -9186,7 +9186,13 @@ public class SmApplicationBackingBean extends
 			PmZone zone = SmServiceLookup.getZoneSO()
 					.retrieveZoneByStateId(zoneReqDTO).getPmZone();
 			ReviewApplicationReqDTO reviewApplicationReqDTO = new ReviewApplicationReqDTO();
-			reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
+			/*#28154 - start*/
+			if (getManagedBean().getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+				reviewApplicationReqDTO.setZoneCode("1");
+			} else {
+				reviewApplicationReqDTO.setZoneCode(zone.getZoneCode());
+			}
+			/*#28154 - end*/
 			List<PmUser> approverList = SmServiceLookup
 					.getReviewApplicationSO()
 					.getApproversByZoneAfterEscalate(reviewApplicationReqDTO)
@@ -9195,13 +9201,20 @@ public class SmApplicationBackingBean extends
 				throw new EpException(MessageConst.ERROR_722658,
 						new String[] { zone.getZoneName() });
 			} else {
-				int i = 0;
+				List<PmUser> displayApproverList = new ArrayList<>();
 				for (PmUser user : approverList) {
+					if (!user.getUserId().equals(getManagedBean().getSmAppl().getPoUserId())) {
+						displayApproverList.add(user);
+					}
+				}
+				int i = 0;
+				for (PmUser user : displayApproverList) {
 					i++;
 					bf.append("<tr><td>").append(i).append(")</td><td>")
 							.append(user.getUserName()).append("</td></tr>");
 				}
 			}
+			/*#28154 - end*/
 		}
 		if (bf.length() > 0) {
 			retVal = bf.toString();
