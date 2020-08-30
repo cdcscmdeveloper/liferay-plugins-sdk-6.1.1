@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -264,8 +265,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
 	// #18685 - Start
-	private ScQtFinalizationRemarks pendingRecItemizedRemark;
-	private ScQtFinalizationRemarks pendingRecPackageRemark;
+	private ScRemark pendingRecItemizedRemark;
+	private ScRemark pendingRecPackageRemark;
+	private ScRemark newSfRemark;
+	private List<ScRemark> scRemarks;
 	// #18685 - End
 	
 	/**
@@ -2276,11 +2279,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#26169 #38 - End
 	
-	// #18685 - Start
+	// #18685 - Start 
 	/**
 	 * @return the pendingRecItemizedRemark
 	 */
-	public ScQtFinalizationRemarks getPendingRecItemizedRemark() {
+	public ScRemark getPendingRecItemizedRemark() {
 		return pendingRecItemizedRemark;
 	}
 
@@ -2288,14 +2291,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
 	 */
 	public void setPendingRecItemizedRemark(
-			ScQtFinalizationRemarks pendingRecItemizedRemark) {
+	    ScRemark pendingRecItemizedRemark) {
 		this.pendingRecItemizedRemark = pendingRecItemizedRemark;
 	}
 
 	/**
 	 * @return the pendingRecPackageRemark
 	 */
-	public ScQtFinalizationRemarks getPendingRecPackageRemark() {
+	public ScRemark getPendingRecPackageRemark() {
 		return pendingRecPackageRemark;
 	}
 
@@ -2303,11 +2306,39 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 * @param pendingRecPackageRemark the pendingRecPackageRemark to set
 	 */
 	public void setPendingRecPackageRemark(
-			ScQtFinalizationRemarks pendingRecPackageRemark) {
+	    ScRemark pendingRecPackageRemark) {
 		this.pendingRecPackageRemark = pendingRecPackageRemark;
 	}
-	// #18685 - End
+	
+	/**
+     * @return the newSfRemark
+     */
+    public ScRemark getNewSfRemark() {
+      return newSfRemark;
+    }
+  
+    /**
+     * @param newSfRemark the newSfRemark to set
+     */
+    public void setNewSfRemark(ScRemark newSfRemark) {
+      this.newSfRemark = newSfRemark;
+    }
 
+    /**
+     * @return the scRemarks
+     */
+    public List<ScRemark> getScRemarks() {
+      return scRemarks;
+    }
+  
+    /**
+     * @param scRemarks the scRemarks to set
+     */
+    public void setScRemarks(List<ScRemark> scRemarks) {
+      this.scRemarks = scRemarks;
+    }
+
+    //#18685 - End 
 }
 
 
