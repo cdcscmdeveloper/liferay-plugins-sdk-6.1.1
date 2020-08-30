@@ -276,7 +276,7 @@
 				</p:dataTable>
 				<p:commandButton
 					oncomplete="ctSharingAttachDlg.show();return false;"
-					value="#{lbl['lbl.txt.attach.files']}"
+					value="#{lbl['lbl.txt.upload']}"
 					disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting or ctBackingBean.managedBean.disableAmendDetails}"
 					rendered="#{!ctBackingBean.managedBean.disableAgent}"
 					process="@this" partialSubmit="true"
