@@ -14,7 +14,8 @@
 		</p:blockUI>
 
 		<ui:param name="isPendingNegotiationStatus"
-			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION}" />
+			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
+			|| lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION}" />
 
 		<ui:param name="isPendingEndorsementStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.SF_PENDING_ENDORSEMENT}" />
