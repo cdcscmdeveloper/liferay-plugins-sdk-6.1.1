@@ -2047,15 +2047,34 @@ public class SupplierFinalizationBiddingBackingBean extends
 		FacesScopes facesScope = new FacesScopes();
 		// #25638 - Start
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+		  String memberRole = null;
 			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
 				 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
-						 && null != committeeActivity.getScCommitteeMember().getMemberRole()
-						 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-					 suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
-					 break;
+						 && null != committeeActivity.getScCommitteeMember().getMemberRole()) {
+				   
+				   if ("S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+				     suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
+				   }
+				   
+				   if (committeeActivity.getScCommitteeMember().getPmUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+				     if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+				       memberRole = RoleCode.QCA_MEMBER.value();
+				     } else if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+				       memberRole = RoleCode.QCA_CHAIRPERSON.value();
+				     }
+				   }
 				 }
 			 }
+			
+            suppFinalizationReqDTO.setScQt(getManagedBean().getScQt());
+            suppFinalizationReqDTO.setScQtCommittee(getManagedBean().getScQtCommittee());
+            suppFinalizationReqDTO.setChildDocId(getManagedBean().getScQt().getQtId());
+            suppFinalizationReqDTO.setChildDocNo(getManagedBean().getScQt().getQtNo());
+            suppFinalizationReqDTO.setChildDocType(ParameterConst.DOCTYPE_QUOTATION);
+            suppFinalizationReqDTO.setRoleCode(memberRole);
+            suppFinalizationReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		} else {
+		    suppFinalizationReqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
 			suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
 		}
 		// #25638 - End
@@ -2147,19 +2166,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 				// Chairperson signing off
 				signOff();
 			}
-			
-			// #25638 - Start.
-			if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-				suppFinalizationReqDTO.setScQt(getManagedBean().getScQt());
-				suppFinalizationReqDTO.setScQtCommittee(getManagedBean().getScQtCommittee());
-				suppFinalizationReqDTO.setChildDocId(getManagedBean().getScQt().getQtId());
-				suppFinalizationReqDTO.setChildDocNo(getManagedBean().getScQt().getQtNo());
-				suppFinalizationReqDTO.setChildDocType(ParameterConst.DOCTYPE_QUOTATION);
-				suppFinalizationReqDTO.setRoleCode(RoleCode.QCA_MEMBER.value());
-				suppFinalizationReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			}
-			suppFinalizationReqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
-			// #25638 - End.
 			
 			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
 				
