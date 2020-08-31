@@ -1136,35 +1136,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.owner", null));
 		}
 		//#28147 - end
-
-		//27919 - start
-		if(getManagedBean().isManufacturerStatusCancel()){
-			if(getManagedBean().getSelectedApprovedCategories() == null
-					|| getManagedBean().getSelectedApprovedCategories().size() <= 0){
-				boolean manufactureCodeExist = false;
-				for(SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
-					if(cat.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){
-						manufactureCodeExist = true;
-					}
-				}
-				
-				if(!manufactureCodeExist){
-					throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
-				}	
-			}else{
-				boolean checkOtherCodeExist = false;
-				for(SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
-					if(cat.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")){ 
-					}else {
-						checkOtherCodeExist = true;
-					}
-				}
-				 if (checkOtherCodeExist){
-						throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.manufacturer.category",null));
-				}
-			} 
-		}		
-		//27919 - end	
+ 	
 		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
