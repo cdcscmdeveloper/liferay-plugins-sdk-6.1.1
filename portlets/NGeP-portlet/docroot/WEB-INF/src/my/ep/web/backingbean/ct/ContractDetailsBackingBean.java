@@ -821,8 +821,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				log.info("nmn"+ctItem.getScRequestItem().getUom().getUomCode());
 				String minValue = getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
 				
-		        ctItem.setMinimumOrderQty(Double.parseDouble(minValue));
-				ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+		        //ctItem.setMinimumOrderQty(Double.parseDouble(minValue));
+				//ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
 			}
 			// End - 28292
 			
