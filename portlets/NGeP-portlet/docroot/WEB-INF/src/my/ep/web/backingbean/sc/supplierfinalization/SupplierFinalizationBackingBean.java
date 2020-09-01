@@ -5036,9 +5036,7 @@ public class SupplierFinalizationBackingBean extends
 						scQtFinalization.getScQtRecommends());
 			}
 			setSelectedSupplierCodesByItem();
-			// #18685 - Start
-			manageRemarks(scQtFinalization, getManagedBean().getPendingRecItemizedRemark(), CommonConstants.PACKAGE_WISE);
-			// #18685 - End
+			
 		} else {
 			if (triggeredFromEvent) {
 				List<ScQtRecommend> scQtRecommendList = 
@@ -5047,9 +5045,7 @@ public class SupplierFinalizationBackingBean extends
 					item.setCancelled(false);
 				}
 			}
-			// #18685 - Start
-			manageRemarks(scQtFinalization, getManagedBean().getPendingRecPackageRemark(), CommonConstants.ITEMIZED);
-			// #18685 - End
+			
 			createShortlistedSuppliersDataModel();
 		}
 		//#26169 #38 #25729#142 - Start 
