@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,6 +93,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
@@ -467,9 +469,6 @@ public class SupplierFinalizationBackingBean extends
 		//checkSFHasQualifiedSupplier();
 		//#26169 #38 - END
 		
-		// #18685 - Start
-		populatePendingRecRemarks(getManagedBean().getScQtFinalization());
-		// #18685 - End
 		
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
@@ -478,6 +477,11 @@ public class SupplierFinalizationBackingBean extends
 		initializeFinalizationRemarks();
 		initializeFinalizationEndorsementRemarks();
 		initializeFinalizationPengreysonRemarks();
+		
+		// #18685 - Start
+		populatePendingRecRemarks(getManagedBean().getScQtFinalization());
+		// #18685 - End
+		
 		if(this.getManagedBean().isSecretaryUser()){
 			log.info("ReevaluationSecretaryUser");
 		
@@ -499,11 +503,13 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().getResetSupplierList() == null) {
 			this.getManagedBean().setResetSupplierList(
 					new HashSet<ScQtEvaluationResultDtl>());
-		}		
-
+		}	
+		// #25638 - Start
+		displayReviseInstrn(getManagedBean().getCommitteeList());
+		// #25638 - End
 	}
 	
-	// #18685 - Start
+	// #18685 - Start 
 	/**
 	 * @param scQtFinalization
 	 */
@@ -514,15 +520,15 @@ public class SupplierFinalizationBackingBean extends
 				ScQtFinalizationRemarks remark = iterator.next();
 				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
 					getManagedBean().setPendingRecItemizedRemark(remark);
-					iterator.remove();
 				} else if (CommonConstants.PACKAGE_WISE.equals(remark.getSourceName())) {
 					getManagedBean().setPendingRecPackageRemark(remark);
-					iterator.remove();
+				} else {
+				    getManagedBean().setNewSfRemark(remark);
 				}
 			}
 		}
 	}
-	// #18685 - End
+	// #18685 - End 
 	
 	private void loadRecommededSuppliersIntoCachedData(boolean isItemized) {
 		log.info("loadRecommededSuppliersIntoCachedData");
@@ -4647,6 +4653,34 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setCancel(true);
 		}
 	}
+	
+	// #18685 - Start
+	/**
+	 * @return
+	 */
+	public List<ScRemark> getPendingRecRemark() {
+	  if (CollectionUtils.isEmpty(getManagedBean().getScRemarks())) {
+	    List<ScRemark> remarkList = new LinkedList<>(); 
+	    remarkList.add(getManagedBean().getNewSfRemark());
+	    getManagedBean().setScRemarks(remarkList);
+	  } else {
+	    getManagedBean().getScRemarks().clear();
+	    getManagedBean().getScRemarks().add(getManagedBean().getNewSfRemark());
+	  }
+	  
+	  String decision = getManagedBean().getScQtFinalization().getDecision().getParameterCode();
+	  if (StringUtils.isNotEmpty(decision) && !decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
+	    getManagedBean().getScRemarks().addAll(getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks());
+	  } else {
+	    if (getManagedBean().isItemize()) {
+	      getManagedBean().getScRemarks().add(getManagedBean().getPendingRecItemizedRemark());
+	    } else {
+	      getManagedBean().getScRemarks().add(getManagedBean().getPendingRecPackageRemark());
+	    }
+	  }
+	  return getManagedBean().getScRemarks();
+	}
+	// #18685 - End.
 	
 	private void resetDecisionRecommendSupplier(ScQtFinalization scQtFinalization) {
 		log.info("resetDecisionRecommendSupplier");

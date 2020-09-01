@@ -600,7 +600,7 @@ public class ConsolidationReportBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			// #18685 - Start
+			// #18685 - Start 
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
 				for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
 					if (StringUtils.isNotEmpty(remark.getRemark())) {
@@ -609,7 +609,15 @@ public class ConsolidationReportBackingBean extends
 					}
 				}
 			}
-			// #18685 - End
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationUlasanremarks())) {
+              for (ScQtRecommendationUlasanRemarks remark : getManagedBean().getFinalizationUlasanremarks()) {
+                  if (StringUtils.isNotEmpty(remark.getRemark())) {
+                      remark.setSourceName(CommonConstants.BRIEFING_PAPER);
+                  }
+              }
+			}
+			// #18685 - End 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 			//saveEvaluationReportsDetaills();
