@@ -15,8 +15,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -32,6 +34,7 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -51,6 +54,8 @@ import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -78,6 +83,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -144,6 +151,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	private CtAgency selectedRecommendedAgency;
+	private static Map<String, Integer> uomMap = new HashMap<String, Integer>();
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -805,6 +813,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 
+			ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
+			List<CtContractItem> itemlist = contractBB.getManagedBean().getServiceListingPagingDataModel().getList() ;
+			
+			// Start - 28292
+			for (CtContractItem ctItem : itemlist) {
+				log.info("nmn"+ctItem.getScRequestItem().getUom().getUomCode());
+				String minValue = getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
+				
+		        ctItem.setMinimumOrderQty(Double.parseDouble(minValue));
+				ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+			}
+			// End - 28292
+			
 			validateFDDescAndAmount(action);
 			ctBB.getZoneObjDetails();
 
@@ -1246,15 +1267,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				
 				// Start - 28292
-				log.info("--min quantity validation--");
 				if (!item.getCtItemMaxQties().isEmpty()) {
-					log.info("--inside validation--");
 					Double maxValue = new Double(0);							
 					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-						maxValue = maxQty.getMaxQuantity().doubleValue();				
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
 					}
-					log.info("max :"+maxValue);
-					log.info("min :"+item.getMinimumOrderQty());
 					if (item.getMinimumOrderQty() > maxValue) {
 						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
 					}
@@ -3438,4 +3456,65 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_OWNER_MANAGEMENT_PAGE);	
 	}
 	//#25406 - End
+	
+	// Start - 28292
+	public String getDisplayNumberFormat(int numberFormatType, String uomCode) {
+		int decimalPrecision = 0;
+		
+		switch (numberFormatType) {
+			case CommonConstants.NUMBER_FORMAT_TYPE_QTY : 				
+				if (StringUtils.isNotBlank(uomCode)) {
+					Integer uomDecimalPrecision = uomMap.get(uomCode);
+					if (uomDecimalPrecision == null) {
+						IUomSO uomSO;
+						try {
+							uomSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+							
+							UomReqDTO reqDTO = new UomReqDTO();
+							reqDTO.setUomCode(uomCode);
+							
+							// Get PmUom from db.
+							UomResDTO resDTO = uomSO.retrieveUomByCode(reqDTO);
+							PmUom pmUom = resDTO.getPmUom();
+							if (pmUom != null) {
+								// Put UOM into map.
+								decimalPrecision = pmUom.getDecimalScale();
+								uomMap.put(uomCode, decimalPrecision);
+							}
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+							throw new EpException(e.getMessage());
+						} finally {
+							uomSO = null;
+						}	
+					} else {
+						decimalPrecision = uomDecimalPrecision;
+					}
+				}
+				
+				break;
+			default :
+				throw new IllegalArgumentException("Invalid numberFormatType.");
+		}
+		
+		return genNumberFormatDecimalPrecision(decimalPrecision);
+	}
+	// End - 28292
+	// Start - 28292
+	private String genNumberFormatDecimalPrecision(int decimalPrecision) {
+		StringBuilder numberFormat = new StringBuilder(CommonConstants.DEFAULT_NUMBER_FORMAT);
+		
+		if (decimalPrecision > 0) {
+			numberFormat.append(".");
+			
+			for (int i = 0; i < decimalPrecision; i++) {
+				numberFormat.append("0");
+			}
+		}
+		
+		return numberFormat.toString();
+	}
+	// Start - 28292
+
 }
