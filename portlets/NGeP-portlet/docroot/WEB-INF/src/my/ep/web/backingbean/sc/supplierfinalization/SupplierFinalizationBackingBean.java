@@ -504,9 +504,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setResetSupplierList(
 					new HashSet<ScQtEvaluationResultDtl>());
 		}	
-		// #25638 - Start
-		displayReviseInstrn(getManagedBean().getCommitteeList());
-		// #25638 - End
+		
 	}
 	
 	// #18685 - Start 
