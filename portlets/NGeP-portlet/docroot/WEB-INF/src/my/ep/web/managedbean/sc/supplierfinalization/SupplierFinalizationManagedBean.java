@@ -242,15 +242,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int evaluationReportIndex;
 	
 	//#25729#142 & #26169 - Start
-		private boolean isSuppOfferPriceExceedCommunityAuthority;
-		private BigDecimal maxAmountCommitteeAuthority;
-		//#25729#142 & #26169 - End
-		
-		// #18685 - Start
-		private ScQtFinalizationRemarks pendingRecItemizedRemark;
-		private ScQtFinalizationRemarks pendingRecPackageRemark;
-		// #18685 - End
-		
+	private boolean isSuppOfferPriceExceedCommunityAuthority;
+	private BigDecimal maxAmountCommitteeAuthority;
+	//#25729#142 & #26169 - End
+	
 	//#26169 #38 - Start
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
@@ -2146,6 +2141,48 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setPreviousPageUrl(String previousPageUrl) {
 		this.previousPageUrl = previousPageUrl;
+	}
+
+	/**
+	 * @return the reverseTabIndex
+	 */
+	public int getReverseTabIndex() {
+		return reverseTabIndex;
+	}
+
+	/**
+	 * @param reverseTabIndex the reverseTabIndex to set
+	 */
+	public void setReverseTabIndex(int reverseTabIndex) {
+		this.reverseTabIndex = reverseTabIndex;
+	}
+
+	/**
+	 * @return the scQtReverse
+	 */
+	public ScQtReverse getScQtReverse() {
+		return scQtReverse;
+	}
+
+	/**
+	 * @param scQtReverse the scQtReverse to set
+	 */
+	public void setScQtReverse(ScQtReverse scQtReverse) {
+		this.scQtReverse = scQtReverse;
+	}
+
+	/**
+	 * @return the isReversed
+	 */
+	public boolean isReversed() {
+		return isReversed;
+	}
+
+	/**
+	 * @param isReversed the isReversed to set
+	 */
+	public void setReversed(boolean isReversed) {
+		this.isReversed = isReversed;
 	}
 
 	/**

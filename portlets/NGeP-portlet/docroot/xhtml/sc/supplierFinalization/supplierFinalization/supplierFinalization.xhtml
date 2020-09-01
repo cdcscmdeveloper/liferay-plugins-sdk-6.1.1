@@ -81,7 +81,7 @@
 										</c:otherwise>
 									</c:choose>
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-																     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
+																     [id$=rePublishPanel],[id$=itemSupplierPanel], [id$=remarksPanel])" 
 										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					   			</p:selectOneMenu>
 					   		</c:if>
@@ -100,7 +100,7 @@
 									</c:choose>
 									
 									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-																     [id$=rePublishPanel],[id$=itemSupplierPanel])" 
+																     [id$=rePublishPanel],[id$=itemSupplierPanel], [id$=remarksPanel])" 
 										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					   			</p:selectOneMenu>
 							</c:if>
@@ -437,7 +437,7 @@
 	
 	<p:outputPanel id="remarksPanel">
 		<ac:scRemarkAndAttachment
-			remarkList="#{suppFinalizationBackingBean.managedBean.finalizationRemarks}"
+			remarkList="#{suppFinalizationBackingBean.getPendingRecRemark()}"
 			showAttachment="false" 
 			readonly="#{suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 	</p:outputPanel>
