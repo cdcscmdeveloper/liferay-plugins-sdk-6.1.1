@@ -4757,6 +4757,10 @@ public class SupplierFinalizationBackingBean extends
 		Map<String,String[]> higherAuthoritiesMap 
 					= getManagedBean().getHigherAuthoritiesMap();
 		
+		//#26169 #85 - START
+		PmOrgProfile currUserLoginOrgProfile = getPTJOrgProfileByLoginUser();
+		//#26169 #85 - END
+		
 		if (!isInitialDecisionFwdToBPK) {
 			if (MapUtils.isEmpty(higherAuthoritiesMap)) {
 				
@@ -4768,6 +4772,9 @@ public class SupplierFinalizationBackingBean extends
 					CommitteReqDTO reqDTO = new CommitteReqDTO();
 					reqDTO.setSupplierFinalization(true);
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+					//#26169 #85 - START
+					reqDTO.setOrgProfileId(currUserLoginOrgProfile.getOrgProfileId());
+					//#26169 #85 - END
 					CommitteResDTO resDTO = committeeSO.retrieveFinalizationCommitteeType(reqDTO);
 					if (resDTO != null) {
 						higherAuthoritiesMap = resDTO.getHigherAuthoritiesMap();
