@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -75,6 +76,7 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 	private static final long serialVersionUID = 1L;
+	private String languageKey;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -570,6 +572,13 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			
 			updatePublishClosingDate(scQt);
 		}
+		//test purpose : #28772
+		languageKey = getlanguageKey();
+	}
+	
+	public String getlanguageKey(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		return context.getExternalContext().getRequestLocale().toString();
 	}
 
 	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
@@ -817,5 +826,13 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		this.getManagedBean().setRequired(Boolean.FALSE);
 		//this.getManagedBean().setZoneLocation(Boolean.FALSE);
 		this.getManagedBean().setAutoUpdate(true);
+	}
+
+	public String getLanguageKey() {
+		return languageKey;
+	}
+
+	public void setLanguageKey(String languageKey) {
+		this.languageKey = languageKey;
 	}
 }
