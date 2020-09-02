@@ -218,7 +218,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="3" integerOnly="true" />
 						<f:attribute name="min" value="0"></f:attribute>
-						<f:attribute name="max" value="100"></f:attribute>
+						<!-- remove #21695 attribute -->
 						<p:ajax event="blur" update="technicalScoringItemScore"
 							process="@this,technicalScoringItemPanel" partialSubmit="true"
 							listener="#{specificationBackingBean.calculateTechnicalItemScore(specificationBackingBean.managedBean.technicalItemScoreSetting)}"></p:ajax>
