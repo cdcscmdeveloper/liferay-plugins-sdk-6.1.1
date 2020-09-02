@@ -1962,6 +1962,27 @@ public class SmApplicationBackingBean extends
 		}
 		//16052019 - SSM INTEGRATION CR - Fahmi END
 		
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		if (fromBpm) {
+		
+			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+				if(currSupp != null){
+					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+					
+					if(activeDisc != null && activeDisc.size() > 0){
+						for(SmDisciplinaryAction disc : activeDisc){
+							if(disc.isSuspendRegistration()){
+								getManagedBean().getEditVO().setDisciplinary(true);
+								getManagedBean().setTabActiveIndex(4);
+							}
+						}
+					}
+				}	
+			}				
+		}
+		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
+		
 		// set Personnel List Count
 		calcPersonnelListCount();	
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
