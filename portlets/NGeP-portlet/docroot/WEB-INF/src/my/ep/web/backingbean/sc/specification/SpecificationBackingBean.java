@@ -16528,8 +16528,8 @@ public class SpecificationBackingBean extends
 				if ((null != this.getManagedBean().getTechnicalItemScore())
 						&& this.getManagedBean().getTechnicalItemScore()
 								.intValue() > 100) {
-					throw new EpException(MessageConst.ERROR_760257);
-
+					throw new EpException(MessageConst.ERROR_7602571);
+// #21695 farid 02/9/2020
 				}
 			}
 
