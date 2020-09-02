@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -813,16 +814,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 
+			// Start - 28292
 			ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 			List<CtContractItem> itemlist = contractBB.getManagedBean().getServiceListingPagingDataModel().getList() ;
 			
-			// Start - 28292
 			for (CtContractItem ctItem : itemlist) {
-				log.info("nmn"+ctItem.getScRequestItem().getUom().getUomCode());
 				String minValue = getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
 				
-		        //ctItem.setMinimumOrderQty(Double.parseDouble(minValue));
-				//ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+				NumberFormat formatter = new DecimalFormat(minValue);				
+		        ctItem.setMinimumOrderQty(Double.parseDouble(formatter.format(ctItem.getMinimumOrderQty())));
+				ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
 			}
 			// End - 28292
 			
