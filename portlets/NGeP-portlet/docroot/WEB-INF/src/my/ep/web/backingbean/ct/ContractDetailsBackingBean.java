@@ -822,7 +822,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				String minValue = getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
 				
 				NumberFormat formatter = new DecimalFormat(minValue);				
-		        ctItem.setMinimumOrderQty(Double.parseDouble(formatter.format(ctItem.getMinimumOrderQty())));
+		        //ctItem.setMinimumOrderQty(Double.parseDouble(formatter.format(ctItem.getMinimumOrderQty())));
+				ctItem.setMinimumOrderQty(3);
+		        log.info("assign minqty");
 				ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
 			}
 			// End - 28292
