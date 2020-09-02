@@ -817,11 +817,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			// Start - 28292
 			ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 			List<CtContractItem> itemlist = contractBB.getManagedBean().getServiceListingPagingDataModel().getList() ;
+			CommonUtils commonUtils = new CommonUtils();
 			
 			for (CtContractItem ctItem : itemlist) {
-				String minValue = getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
 				
-				NumberFormat formatter = new DecimalFormat(minValue);				
+				DecimalFormat formatter = new DecimalFormat(minValue);				
 		        ctItem.setMinimumOrderQty(Double.parseDouble(formatter.format(ctItem.getMinimumOrderQty())));
 				ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
 			}
@@ -3466,65 +3467,4 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_OWNER_MANAGEMENT_PAGE);	
 	}
 	//#25406 - End
-	
-	// Start - 28292
-	public String getDisplayNumberFormat(int numberFormatType, String uomCode) {
-		int decimalPrecision = 0;
-		
-		switch (numberFormatType) {
-			case CommonConstants.NUMBER_FORMAT_TYPE_QTY : 				
-				if (StringUtils.isNotBlank(uomCode)) {
-					Integer uomDecimalPrecision = uomMap.get(uomCode);
-					if (uomDecimalPrecision == null) {
-						IUomSO uomSO;
-						try {
-							uomSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
-							
-							UomReqDTO reqDTO = new UomReqDTO();
-							reqDTO.setUomCode(uomCode);
-							
-							// Get PmUom from db.
-							UomResDTO resDTO = uomSO.retrieveUomByCode(reqDTO);
-							PmUom pmUom = resDTO.getPmUom();
-							if (pmUom != null) {
-								// Put UOM into map.
-								decimalPrecision = pmUom.getDecimalScale();
-								uomMap.put(uomCode, decimalPrecision);
-							}
-							
-						} catch (Exception e) {
-							e.printStackTrace();
-							throw new EpException(e.getMessage());
-						} finally {
-							uomSO = null;
-						}	
-					} else {
-						decimalPrecision = uomDecimalPrecision;
-					}
-				}
-				
-				break;
-			default :
-				throw new IllegalArgumentException("Invalid numberFormatType.");
-		}
-		
-		return genNumberFormatDecimalPrecision(decimalPrecision);
-	}
-	// End - 28292
-	// Start - 28292
-	private String genNumberFormatDecimalPrecision(int decimalPrecision) {
-		StringBuilder numberFormat = new StringBuilder(CommonConstants.DEFAULT_NUMBER_FORMAT);
-		
-		if (decimalPrecision > 0) {
-			numberFormat.append(".");
-			
-			for (int i = 0; i < decimalPrecision; i++) {
-				numberFormat.append("0");
-			}
-		}
-		
-		return numberFormat.toString();
-	}
-	// Start - 28292
-
 }
