@@ -52,7 +52,8 @@
 					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
 					partialSubmit="true"
 					update="@form"
-					process="@form">
+					process="@form"
+					disabled="#{tabBean.disabled}">
 					<c:if test="#{!empty tabBean.icon}">
 						<f:attribute name="icon" value="#{tabBean.icon}" />
 					</c:if>

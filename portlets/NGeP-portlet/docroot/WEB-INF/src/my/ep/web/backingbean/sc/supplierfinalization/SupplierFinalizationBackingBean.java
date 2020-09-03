@@ -8231,6 +8231,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
 		meetingBB.retriveQTDetails(qtId);
 		meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
 		meetingBB.getManagedBean().setFinalBB(this);
 		}
 	//#25037-END

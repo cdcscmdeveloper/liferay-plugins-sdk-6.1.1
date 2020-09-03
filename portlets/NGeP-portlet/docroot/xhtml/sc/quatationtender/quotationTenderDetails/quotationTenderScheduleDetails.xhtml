@@ -7,9 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="isRequire" value="#{!qTDetailBB.managedBean.readOnly}" />
-	<ui:param name="scheduleReadonly"
-		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_SCHDETAILS)}" />
-	
+	<ui:param name="scheduleReadonly" value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_SCHDETAILS)}" />
+	<ui:param name="deskOfficerAssistanceEditable" value="#{!qTDetailBB.enableFieldByStatusNFiledName('DESK_OFFICER_ASSISTANT') and qTDetailBB.managedBean.doaRequestEditable}" />
+	<ac:log m="FieldByStatusNFiledName = #{qTDetailBB.enableFieldByStatusNFiledName('DESK_OFFICER_ASSISTANT')} ||| doaRequestEditable = #{qTDetailBB.managedBean.doaRequestEditable}"/>
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
 		id="scheduleDetalsPublishingClosing">
 		<table style="width: 100%">
@@ -321,8 +321,7 @@
 										disabled="#{scheduleReadonly}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.address1}"
 										size="30" maxlength="255" /></td>
-								<td><p:message id="sampleaddress1Msg" for="sampleaddress1"
-										display="icon" /></td>
+								<td><p:message id="sampleaddress1Msg" for="sampleaddress1" display="icon"/></td>
 							</tr>
 						</table>
 					</td>
@@ -347,7 +346,8 @@
 												<p:ajax event="change"
 													listener="#{qTScheduleDetailBackingBean.retrievePmDivisions}"
 													update="sampleDivison1, sampledistrict1, samplecity1, samplepost1" />
-											</p:selectOneMenu></td>
+											</p:selectOneMenu>
+										</td>
 										<td><p:message id="samplestate1Msg" for="samplestate1"
 												display="icon" /></td>
 									</tr>
@@ -586,56 +586,63 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" id="quotationTndrMainDeskOfficerAdminAssistantPanel"
 		toggleable="true">
-		<p:dataTable id="doaaid" var="deskofficeradmin"
+		
+		<table style="width: 50%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+				<td><p:inputText value="#{qTDetailBB.getDoaaRequestStatus()}" size="50" readonly="true" disabled="true" /></td>
+				<td style="width: 20px">
+					<p:selectBooleanCheckbox rendered="#{qTDetailBB.managedBean.maintanceFlow or !isRequire}" disabled="#{!qTDetailBB.managedBean.requestContent.selectable or qTDetailBB.managedBean.pmuserContactpersonList.size()==0 or !qTDetailBB.isDOAListModified()}" value="#{qTDetailBB.managedBean.requestContent.requireApproval}"></p:selectBooleanCheckbox>
+				</td>
+				<td style="width: 102px">
+					<p:outputLabel rendered="#{qTDetailBB.managedBean.maintanceFlow or !isRequire}"  value="#{lbl['lbl.sc.qt.send.for.approval']}" style="word-wrap: break-word;width:100px;text-align:left;" />
+				</td>
+			</tr>
+
+		</table>
+		<p:dataTable id="doaTableId" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
 			
-			<ac:paginator for="doaaid" />
+			<ac:paginator for="doaTableId" />
 <p:ajax event="rowSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="rowUnselect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="rowSelectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{!scheduleReadonly}" />
-
-			
+				rendered="#{deskOfficerAssistanceEditable}" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<c:choose>
-					<c:when test="#{!scheduleReadonly}">
-						<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
-							id="doaaUserId">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
-								var="appName" itemLabel="#{appName.userName}"
-								itemValue="#{appName.userId}" />
-							<p:ajax event="change" process="doaaUserId" update="doaaUserId"
-								listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
-						</p:selectOneMenu>
-					</c:when>
-					<c:otherwise>
-						#{deskofficeradmin.user.userName}
-					</c:otherwise>
-				</c:choose>
+				<ui:fragment rendered="#{deskOfficerAssistanceEditable}">
+					<p:selectOneMenu value="#{deskofficeradmin.userId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
+							var="user" itemLabel="#{user.userName}"
+							itemValue="#{user.userId}"/>
+						<p:ajax event="change" update="doaTableId"
+							listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
+					</p:selectOneMenu>
+				</ui:fragment>
+				<ui:fragment rendered="#{!deskOfficerAssistanceEditable}"> #{deskofficeradmin.user.userName} </ui:fragment>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				styleClass="BtnSpacing"
-				rendered="#{!scheduleReadonly}"
-				process="@this, doaaid" partialSubmit="true"
+				rendered="#{deskOfficerAssistanceEditable}" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
-				update="doaaid" />
+				update="quotationTndrMainDeskOfficerAdminAssistantPanel" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			id="quotationTndrDeskOfficerAdminAssistantDeleteBtnId" disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
-				styleClass="BtnSpacing" process="@this, doaaid" partialSubmit="true"
+				styleClass="BtnSpacing" process="@this, doaTableId" partialSubmit="true"
 				oncomplete="doaaDeletePopUp.show()"
 				update="@([id$=#{doaaDeleteId}])"
-				rendered="#{!scheduleReadonly}" />
+				rendered="#{deskOfficerAssistanceEditable}" />
 		</div>
 		<ui:param name="doaaDeleteId" value="doaaDeleteId" />
 		<ac:confirmationPopup id="#{doaaDeleteId}" widget="doaaDeletePopUp"

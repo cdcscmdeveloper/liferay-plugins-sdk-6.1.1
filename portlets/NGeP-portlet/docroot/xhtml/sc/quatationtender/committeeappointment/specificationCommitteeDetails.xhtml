@@ -16,7 +16,7 @@
 						size="50" readonly="true" disabled="true" /></td>
 				<td style="width: 20px"><p:selectBooleanCheckbox
 						value="#{committe.approvalReq}"
-						disabled="#{!isCommitteeInfoEditable or qTCommitteBackingBean.isDisabledSendForApproval(qTCommitteBackingBean.managedBean.selectedTabBean.tabType)}">
+						disabled="#{!isCommitteeInfoEditable or qTCommitteBackingBean.isDisabledSendForApproval(qTCommitteBackingBean.managedBean.selectedTabBean.tabType, committe.committeStatus.statusId )}">
 						<p:ajax update="@(.scMemberDtl,.amendButton)"
 							listener="#{qTCommitteBackingBean.checkCommitteFormedOrNot()}" />
 					</p:selectBooleanCheckbox></td>

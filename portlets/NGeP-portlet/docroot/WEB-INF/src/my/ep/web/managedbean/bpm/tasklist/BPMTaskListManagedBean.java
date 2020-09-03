@@ -1698,6 +1698,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.quotation.tender.deskofficermaintenance.approveTaskListTitle", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 		}
 	     //# end 25627
+    	//#25037-start
+		else if (worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_APPROVE) || worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_REVISE)) {
+		//Generic approval workflow, define your title template, lbl.sc.taskname.title.[requestType][action(revise or approve)]
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.taskname.title.".concat(worklistItemVO.getDocType()).concat(worklistItemVO.getTaskName().split(" ")[0]), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		}
+    	//#25037-end
 		  
 	}
  	// end #24968 

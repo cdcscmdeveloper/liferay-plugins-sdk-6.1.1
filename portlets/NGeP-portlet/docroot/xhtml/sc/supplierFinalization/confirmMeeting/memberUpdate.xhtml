@@ -14,13 +14,23 @@
 		</p:blockUI>
 		<p:messages id="confirmMeeting" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" severity="error, info" />
+		<ui:param name="evalBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBB}"></ui:param>
+					<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
+      <c:choose>
+		 <c:when test="#{suppFinalMeetingBackingBean.managedBean.finalBB != null}">
+		 	<ui:param name="meetingBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBB.managedBean.meetingBB}"></ui:param>
+		 </c:when>
+         <c:otherwise>
+         	<ui:param name="meetingBB" value="#{ suppFinalMeetingBackingBean}"></ui:param>
+         </c:otherwise>
+      </c:choose>
 		<div align="left">
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
 				styleClass="BtnSpacing"
-				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('back')}" />
+				action="#{meetingBB.navigateToUpdateMember('back')}" />
 		</div>
 		<div align="left" class="header-info header-spacing">
-			<ui:param name="scQt" value="#{suppFinalMeetingBackingBean.managedBean.scQt}" />
+			<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 10%;"><h:outputLabel
@@ -33,14 +43,14 @@
 					<td style="width: 5%;"><h:outputLabel
 							value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td style="width: 32%;" class="header-info-text">
-						#{suppFinalMeetingBackingBean.retrievePTJByOrgProfileId
+						#{meetingBB.retrievePTJByOrgProfileId
 						(scQt.ownerOrgProfileId,
-						suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.managedBean.currentStatusId)?scQt.publishDate
+						meetingBB.isQTStatusPublished(meetingBB.managedBean.currentStatusId)?scQt.publishDate
 						: scQt.createdDate)}</td>
 					<td style="width: 5%;"><h:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
 					<td style="width: 32%;" class="header-info-text">
-						#{(suppFinalMeetingBackingBean.managedBean.scQtCommittee.recordStatusFlg==1)?lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
+						#{(meetingBB.managedBean.scQtCommittee.recordStatusFlg==1)?lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
 					</td>
 				</tr>
 			</table>
@@ -48,12 +58,12 @@
 		<p:panel id="committeeHistoryId"
 			header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
 			<ac:committeeHistoryPanel
-				historyPaginator="#{suppFinalMeetingBackingBean.managedBean.historyPaginator}"
-				selectedHistory="#{suppFinalMeetingBackingBean.managedBean.selectedCommitteeHistory}"
-				memberHistoryPaginator="#{suppFinalMeetingBackingBean.managedBean.memberHistoryPaginator}"
+				historyPaginator="#{meetingBB.managedBean.historyPaginator}"
+				selectedHistory="#{meetingBB.managedBean.selectedCommitteeHistory}"
+				memberHistoryPaginator="#{meetingBB.managedBean.memberHistoryPaginator}"
 				onSelectHistory="onSelectHistory"
-				committeeName="#{suppFinalMeetingBackingBean.managedBean.currentCommitteeType}"
-				backingBean="#{suppFinalMeetingBackingBean}" 
+				committeeName="#{meetingBB.managedBean.currentCommitteeType}"
+				backingBean="#{meetingBB}" 
 				isSFCommittee="true"/>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.header.update.committee']}"
@@ -64,24 +74,19 @@
 
 			<p:dataTable id="memberListTbl" var="committeeMember"
 				widgetVar="committeeMemberWidVar"
-				value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
+				value="#{meetingBB.managedBean.committeeMembersList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{committeeMember}" update="@this" selectionMode="single"
 				rowIndexVar="index">
 				<ac:paginator for="memberListTbl" />
-
-				<!-- 	<p:ajax event="rowSelect" listener="#{suppFinalMeetingBackingBean.selectMemberEvent}" 
-										update="@([id$=memberListTbl])"></p:ajax>	 -->
-
 				<p:column styleClass="td-check-box-spacing">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selAllMemChk"
-							value="#{suppFinalMeetingBackingBean.managedBean.selectAllMembers}"
+							value="#{meetingBB.managedBean.selectAllMembers}"
 							disabled="true">
 							<p:ajax partialSubmit="true" process="@this"
 								update="@([id$=memberListPanel])"
-								listener="#{suppFinalMeetingBackingBean.selectAll(
-																	suppFinalMeetingBackingBean.managedBean.selectAllMembers,suppFinalMeetingBackingBean.managedBean.committeeMembersList)}" />
+								listener="#{meetingBB.selectAll(meetingBB.managedBean.selectAllMembers,meetingBB.managedBean.committeeMembersList)}" />
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox id="selectMember"
@@ -125,7 +130,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.role']}">
 				<ui:fragment	rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
-					<h:outputText value="#{suppFinalMeetingBackingBean.getFCMemberRole(committeeMember.memberRole)}" />
+					<h:outputText value="#{meetingBB.getFCMemberRole(committeeMember.memberRole)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
 				<p:selectOneMenu id="meetingRoleId" required="true"
@@ -133,8 +138,8 @@
 						value="#{committeeMember.memberRoleId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(committeeMember.PNP,suppFinalMeetingBackingBean.managedBean.scQt,committeeMember.pmUser)}" />
-						<p:ajax event="change" update="memberListTbl" process="@this" partialSubmit="true" listener="#{suppFinalMeetingBackingBean.changeMemberRole(index,suppFinalMeetingBackingBean.managedBean.committeeMembersList)}"></p:ajax>
+							value="#{meetingBB.getRoleTypeDropdownValues(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser)}" />
+						<p:ajax event="change" update="memberListTbl" process="@this" partialSubmit="true" listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax>
 					</p:selectOneMenu>
 					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 				</ui:fragment>					
@@ -146,23 +151,23 @@
 						style="width: 100%; margin-bottom: 5px; white-space:normal"
 						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 						<f:selectItems
-							value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues(suppFinalMeetingBackingBean.managedBean.committeeType)}" />
+							value="#{meetingBB.getRepresentativeTypeDropdownValues(meetingBB.managedBean.committeeType)}" />
 						<p:ajax event="change"
-							listener="#{suppFinalMeetingBackingBean.representiveTypeChangedListener(committeeMember)}"
+							listener="#{meetingBB.representiveTypeChangedListener(committeeMember)}"
 							process="@this" />
 					</p:selectOneMenu>
 				</p:column>
 			</p:dataTable>
 			<div align="right" class="BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-					actionListener="#{suppFinalMeetingBackingBean.addPopupAction}"
+					actionListener="#{meetingBB.addPopupAction}"
 					update="@([id$=memberDialogId])"
 					oncomplete="memberWidgetVar.show();" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					oncomplete="dlgPerformDel.show();" process="@this,memberListTbl"
 					partialSubmit="true"
 					update="@([id$=#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}])"
-					disabled="#{suppFinalMeetingBackingBean.deleteselectedList(suppFinalMeetingBackingBean.managedBean.committeeMembersList)}" />
+					disabled="#{meetingBB.deleteselectedList(meetingBB.managedBean.committeeMembersList)}" />
 			</div>
 			<ui:param
 				name="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"
@@ -170,23 +175,23 @@
 			<ac:confirmationPopup
 				id="#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}"
 				widget="dlgPerformDel" width="450" height="100"
-				okAction="suppFinalMeetingBackingBean.committeeDeleteAction"
+				okAction="meetingBB.committeeDeleteAction"
 				title="#{lbl['lbl.sc.committee.member.list']}"
 				content="#{lbl['lbl.sc.dialog.confirm.message']}"
 				update="@([id$=memberListPanel])" />
 		</p:panel>
 		<ac:scRemarkAndAttachment
-						remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
+						remarkList="#{meetingBB.managedBean.qtCommitteeRemarks}"
 						showAttachment="false" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.update']}" action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('confirm')}" />
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('back')}" />
+			<p:commandButton value="#{lbl['lbl.btn.update']}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" action="#{meetingBB.navigateToUpdateMember('back')}" />
 		</div>
 		<ui:include src="addExistingCommittee.xhtml" />
-		<ac:confirmationPopup rendered="#{suppFinalMeetingBackingBean.managedBean.finalBB != null}" id="confirmSubmitCommitteePopupId"
+		<ac:confirmationPopup rendered="#{meetingBB.managedBean.finalBB != null}" id="confirmSubmitCommitteePopupId"
 			widget="confirmSubmitCommitteePopup" width="490"
 			height="100"
-			okAction="suppFinalMeetingBackingBean.submitAction('SUBMIT')"
+			okAction="meetingBB.submitAction('SUBMIT')"
 			title="#{lbl['lbl.sc.confirmation']}"
 			content="#{lbl['lbl.sc.popup.sendproposalevalConfirm']}"/> 		
 	</ui:define>

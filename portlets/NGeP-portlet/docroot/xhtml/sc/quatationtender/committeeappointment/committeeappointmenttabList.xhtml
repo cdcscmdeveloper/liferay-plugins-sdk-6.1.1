@@ -22,7 +22,7 @@
 	
 			<ui:include src="specificationCommitteeDetails.xhtml" />
 			<h:panelGroup id="buttons" layout="block" styleClass="ppRightBtn">
-				<p:commandButton value="#{!showHistory ? lbl['lbl.btn.view.history'] : lbl['lbl.btn.back']}" styleClass="ppLeftBtn" 
+				<p:commandButton value="#{!showHistory ? lbl['lbl.btn.view.history'] : lbl['lbl.btn.back']}" style="float: left !important; margin-top: 10px !important;"
 					action="#{qTDetailBB.navigateToViewHistory(qtCommitte, !showHistory)}"
 					update="scmemberInfoDtls, buttons"/>
 				<ui:fragment rendered="#{!showHistory}">
