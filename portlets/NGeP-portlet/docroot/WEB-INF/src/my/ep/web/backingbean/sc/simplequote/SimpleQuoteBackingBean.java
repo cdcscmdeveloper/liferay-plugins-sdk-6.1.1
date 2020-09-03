@@ -4818,7 +4818,17 @@ public class SimpleQuoteBackingBean extends
 		.append("^").append(SupplierManagementConst.SUPP_TYPE_CONSULTANT)
 		.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 		.append("|");
-
+		
+		// #28536 - start
+		if (!getManagedBean().isG2GFlag()) {
+			criteria.append("smAppl.supplierType")
+					.append("^").append(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)
+					.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
+					.append("|");
+			criteria.append("pmOrgProfile.govtSeller^0").append("|");
+		}
+		// #28536 - end
+		
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
