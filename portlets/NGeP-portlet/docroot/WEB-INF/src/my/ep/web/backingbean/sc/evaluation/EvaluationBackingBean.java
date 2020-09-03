@@ -6884,7 +6884,7 @@ public class EvaluationBackingBean extends
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
 							retriveFinancialEvaluationStage();
-							retriveNonScoringComplianceFinancial(true);
+							retriveNonScoringComplianceFinancial(true);//#28856
 							outputTab = 3;
 							this.getManagedBean().setTabFinancialIndex(1);
 							
