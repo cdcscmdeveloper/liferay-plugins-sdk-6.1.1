@@ -580,7 +580,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					roleCode = RoleCode.CT_APPROVER.value();
 				} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
 					roleCode = RoleCode.BPK_APPROVER.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+				}else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+					roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+				}  else if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
 					roleCode = RoleCode.DESK_OFFICER.value();
 				} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
 					roleCode = RoleCode.QCA_SECRETARY.value();
