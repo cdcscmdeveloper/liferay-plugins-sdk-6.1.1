@@ -820,7 +820,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
 			CommonUtils commonUtils = new CommonUtils();
 			
-			if(itemlistService.size() > 0){			
+			if(itemlistService != null && !itemlistService.isEmpty()){			
 				for (CtContractItem ctItem : itemlistService) {
 					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
 					DecimalFormat formatter = new DecimalFormat(minValue);	
@@ -829,7 +829,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
 				}
 			}
-			if(itemlistProduct.size() > 0){			
+			if(itemlistProduct != null && !itemlistProduct.isEmpty()){			
 				for (CtContractItem ctItem : itemlistProduct) {
 					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
 					DecimalFormat formatter = new DecimalFormat(minValue);	
