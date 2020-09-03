@@ -318,7 +318,7 @@ public class ViewApplHistoryBackingBean extends
 						"/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierBumiputeraApplicationHistoryPage.xhtml",
 						"", null);
 	}
-	//27843 BPKU : 27565 - END
+	//27843 BPKU : 27565 - END 
 	
 	/**
 	 * View revision application by approver for task that is not claimed
