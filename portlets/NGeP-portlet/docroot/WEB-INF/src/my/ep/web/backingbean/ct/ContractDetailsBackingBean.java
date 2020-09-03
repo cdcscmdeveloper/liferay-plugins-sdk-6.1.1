@@ -816,16 +816,27 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 			// Start - 28292
 			ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
-			List<CtContractItem> itemlist = contractBB.getManagedBean().getServiceListingPagingDataModel().getList() ;
+			List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
+			List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
 			CommonUtils commonUtils = new CommonUtils();
 			
-			for (CtContractItem ctItem : itemlist) {
-				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());
-				
-				DecimalFormat formatter = new DecimalFormat(minValue);	
-				String result = formatter.format(ctItem.getMinimumOrderQty());
-		        ctItem.setMinimumOrderQty(Double.parseDouble(result));
-				ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+			if(itemlistService.size() > 0){			
+				for (CtContractItem ctItem : itemlistService) {
+					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
+					DecimalFormat formatter = new DecimalFormat(minValue);	
+					String result = formatter.format(ctItem.getMinimumOrderQty());
+			        ctItem.setMinimumOrderQty(Double.parseDouble(result));
+					ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+				}
+			}
+			if(itemlistProduct.size() > 0){			
+				for (CtContractItem ctItem : itemlistProduct) {
+					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
+					DecimalFormat formatter = new DecimalFormat(minValue);	
+					String result = formatter.format(ctItem.getMinimumOrderQty());
+			        ctItem.setMinimumOrderQty(Double.parseDouble(result));
+					ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+				}
 			}
 			// End - 28292
 			
