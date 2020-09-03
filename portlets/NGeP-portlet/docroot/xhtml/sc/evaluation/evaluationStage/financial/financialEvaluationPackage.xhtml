@@ -73,7 +73,7 @@
 								<h:outputText value="#{evaluationBackingBean.getStatusDescById(financialEvaluate.pmEvalStatus.statusId)}"></h:outputText>
 							</p:column>
 							<p:column style="width:10%;text-align: center;" >		
-								<ui:fragment rendered="#{technicalEval.scoringReq ne 'false'}">
+								<ui:fragment>
 									<p:commandButton value="#{lbl['lbl.btn.view']}"
 										process="@this" partialSubmit="true"
 										action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEvaluate,index,'EF')}" />
