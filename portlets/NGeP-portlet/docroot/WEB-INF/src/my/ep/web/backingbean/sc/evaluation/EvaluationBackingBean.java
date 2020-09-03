@@ -6880,6 +6880,7 @@ public class EvaluationBackingBean extends
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
 							retriveFinancialEvaluationStage();
+							retriveNonScoringComplianceFinancial(true);//#28856
 							outputTab = 3;
 							this.getManagedBean().setTabFinancialIndex(1);
 							
@@ -13112,6 +13113,12 @@ private void retriveCommitteeRemarksList(){
 				checkFinancialSuppliersQualified();
 
 			}
+			//Bug #28856 - Ahmaa - Start
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+			evaluationSO.generateEvaluationSheet(reqDTO);
+			//Bug #28856 - Ahmaa - End
 			innerCheckList=null;
 			evalstage=null;
 		
