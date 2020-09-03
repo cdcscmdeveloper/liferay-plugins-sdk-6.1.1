@@ -235,7 +235,7 @@
 
 								<p:ajax process="@this" />
 							</p:inputText>
-							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.sharing.agency.file.reference']}" />
+							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.sharing.agency.file.reference']}" rendered="#{!ctBackingBean.managedBean.disableAgent}"/>
 						</td>
 					</tr>
 				</table>
