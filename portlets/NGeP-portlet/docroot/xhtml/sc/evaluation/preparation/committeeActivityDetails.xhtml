@@ -46,7 +46,7 @@
 				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(activity.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
-			<p:column style="width:2%;text-align: center;">
+			<p:column style="text-align: center; white-space: normal;">
 				<f:facet name="header">
 					<h:outputText  value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
 					<ac:iconTooltip id="attendanceTooltip" value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
@@ -62,7 +62,11 @@
 			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
 				styleClass="BtnSpacing" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('update')}"/>
 		</div>
-
+		<ac:confirmationPopup id="navigateConfirmationId"
+			widget="navigateConfirmationPopup" height="100%"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.navigateToUpdateMember('update')"
+			content="#{lbl['lbl.sc.popup.savebeforechange']}" />
 	</p:panel>
 	
 	<ac:scRemarkAndAttachment

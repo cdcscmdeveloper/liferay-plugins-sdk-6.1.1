@@ -13,16 +13,16 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedMembersList}">
             
-			
+			<ui:param name="secretaryAndEvaluationStage" value="#{approvalBackingBean.managedBean.committeeReviseFlow and committeeapprover.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}"/>
 					<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
+					<p:selectBooleanCheckbox disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or secretaryAndEvaluationStage}"
 						value="#{qTDetailBB.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@form"
 							listener="#{qTDetailBB.selectAll(qTDetailBB.managedBean.templateSpecBean.selectAll, membersList.scCommitteeMembers)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{committeeapprover.selected}" disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}">
+				<p:selectBooleanCheckbox value="#{committeeapprover.selected}" disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or secretaryAndEvaluationStage}">
 					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -68,7 +68,7 @@
 				<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 					value="#{committeeapprover.memberRoleId}"
 					style="width: 110px;margin-bottom: 5px;"
-					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection)}">
+					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or secretaryAndEvaluationStage}">
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"

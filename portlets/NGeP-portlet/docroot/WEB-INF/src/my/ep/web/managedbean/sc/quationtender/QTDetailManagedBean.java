@@ -91,6 +91,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -1676,12 +1677,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeReviseFlow;
 	private List<QtCommitteeMemberBean>memberHistoryList;
 	private ScQtApprovalRequest scQtApprovalRequest;
+	private boolean specUpdateInProgress;
+	private ScQtApprovalRequest doaaRequest;
+	private boolean doaRequestEditable;
+	private List<ScQtContactPerson> newDoaList;
+	private List<ScQtContactPerson> prevDoaList;
+	private List<PmUser> deskOfficerAssistantList; 
+	private ScQtRequestContent requestContent;
+	private boolean reapproval;
+	private String prevDOAs;
 
 	//#25037-END
 
 	public QTDetailManagedBean() {
-		log.info("inside ");
-
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
@@ -10422,8 +10430,79 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
 			this.scQtApprovalRequest = scQtApprovalRequest;
 		}
-		//#25037-end
 
+		public boolean isSpecUpdateInProgress() {
+			return specUpdateInProgress;
+		}
+
+		public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
+			this.specUpdateInProgress = specUpdateInProgress;
+		}
+
+		public ScQtApprovalRequest getDoaaRequest() {
+			return doaaRequest;
+		}
+
+		public void setDoaaRequest(ScQtApprovalRequest doaaRequest) {
+			this.doaaRequest = doaaRequest;
+		}
+
+		public boolean isDoaRequestEditable() {
+			return doaRequestEditable;
+		}
+
+		public void setDoaRequestEditable(boolean doaRequestEditable) {
+			this.doaRequestEditable = doaRequestEditable;
+		}
+
+		public List<ScQtContactPerson> getNewDoaList() {
+			return newDoaList;
+		}
+
+		public void setNewDoaList(List<ScQtContactPerson> newDoaList) {
+			this.newDoaList = newDoaList;
+		}
+
+		public List<PmUser> getDeskOfficerAssistantList() {
+			return deskOfficerAssistantList;
+		}
+
+		public void setDeskOfficerAssistantList(
+				List<PmUser> deskOfficerAssistantList) {
+			this.deskOfficerAssistantList = deskOfficerAssistantList;
+		}
+
+		public List<ScQtContactPerson> getPrevDoaList() {
+			return prevDoaList;
+		}
+
+		public void setPrevDoaList(List<ScQtContactPerson> prevDoaList) {
+			this.prevDoaList = prevDoaList;
+		}
+
+		public boolean isReapproval() {
+			return reapproval;
+		}
+
+		public void setReapproval(boolean reapproval) {
+			this.reapproval = reapproval;
+		}
+
+		public ScQtRequestContent getRequestContent() {
+			return requestContent;
+		}
+
+		public void setRequestContent(ScQtRequestContent requestContent) {
+			this.requestContent = requestContent;
+		}
+
+		public String getPrevDOAs() {
+			return prevDOAs;
+		}
+
+		public void setPrevDOAs(String prevDOAs) {
+			this.prevDOAs = prevDOAs;
+		}//#25037-end
 		
 		
 		//#25692 End

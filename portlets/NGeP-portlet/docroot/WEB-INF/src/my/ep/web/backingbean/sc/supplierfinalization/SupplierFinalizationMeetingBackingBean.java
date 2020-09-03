@@ -41,6 +41,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -1535,15 +1536,22 @@ public class SupplierFinalizationMeetingBackingBean extends
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
-			
+			if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+					&& SCProcessNameConst.FINALISE_FC_SELECTION.equals(this
+							.getManagedBean().getTaskName())
+					&& reqDTO.isCommitteeModified()) {
+				String procurementMode = this.getParameterDesc(getManagedBean().getScQt().getProcurementMode(), new FacesScopes().getUserLocale());
+				this.successMessage(MessageConst.TD_760513, new String[]{reqDTO.getCommitteType(), procurementMode, qtNo}, true);
+			}else{
+				String submitMessage=	ResourceBundleUtils
+						.getMessage("lbl.sc.sf.meeting.submit.message",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
+				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+												  ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
+				commonMessageAcknowledmentPage(MessageConst.INFO_700070,submitMessage, qtParam);
+			}
 			renewSesionObject();
-			String submitMessage=	ResourceBundleUtils
-					.getMessage("lbl.sc.sf.meeting.submit.message",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
-			String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
-											  ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
-			commonMessageAcknowledmentPage(MessageConst.INFO_700070,submitMessage, qtParam);
 		} finally {
 			meetingSO = null;
 		}
@@ -1855,7 +1863,6 @@ if (CollectionUtils.isNotEmpty(
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SupplierFinalizationBackingBean finalBB = this.getManagedBean().getFinalBB();
 		String mainPage = (finalBB == null) ? "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml": "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
-		log.info("navigateToUpdateMember");
 		if(action.equalsIgnoreCase("back")){
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);

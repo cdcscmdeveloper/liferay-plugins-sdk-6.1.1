@@ -20,7 +20,35 @@
 				styleClass="BtnSpacing"
 				action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
-		<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
+		<div align="left" class="header-info header-spacing">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 13%"><h:outputLabel
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					<td style="width: 27%" class="header-info-text"><p:commandLink
+							process="@this" partialSubmit="true"
+							action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,evaluationMeetingBackingBean.managedBean.qt,true)}">
+							<h:outputText
+								value="#{evaluationMeetingBackingBean.managedBean.qt.qtNo}"
+								escape="false" />
+						</p:commandLink></td>
+
+					<td style="width: 8%"><h:outputLabel
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td style="width: 29%" class="header-info-text">
+						#{evaluationMeetingBackingBean.retrievePTJByOrgProfileId
+						(evaluationMeetingBackingBean.managedBean.qt.ownerOrgProfileId,
+						evaluationMeetingBackingBean.isQTStatusPublished(evaluationMeetingBackingBean.managedBean.currentStatusId)?evaluationMeetingBackingBean.managedBean.qt.publishDate
+						: evaluationMeetingBackingBean.managedBean.qt.createdDate)}</td>
+					<td style="width: 3%"><h:outputLabel
+							value="#{lbl['lbl.sc.status']}" /></td>
+					<td style="width: 20%" class="header-info-text">
+											#{(evaluationMeetingBackingBean.managedBean.scQtCommittee.recordStatusFlg==1)?lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
+					</td>
+				</tr>
+			</table>
+		</div>
+
 		<ui:param name="taskName" value="#{evaluationMeetingBackingBean.managedBean.taskName}"/>
 		<ui:param name="isCommitteeUpdatable" value="#{evaluationMeetingBackingBean.isCommitteeEditable(taskName)}"/>
 		<p:panel id="committeeHistoryId" header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
@@ -153,7 +181,7 @@
 		</div>
 		<ui:include src="addexistingcommittee.xhtml" />
 		<ac:confirmationPopup id="confirmChangeMemberListId"
-			widget="confirmChangeMemberListPopup" width="490" height="100"
+			height= "100%" widget="confirmChangeMemberListPopup"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction= "evaluationMeetingBackingBean.navigateToUpdateMember('confirm')"
 			content="#{lbl['lbl.sc.popup.needcommitteeapprover']}" />

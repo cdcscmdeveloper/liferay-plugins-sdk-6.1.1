@@ -48,6 +48,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
+	private String currentTaskDocType;//#25037
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -672,6 +673,15 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDontGetSsmData(boolean dontGetSsmData) {
 		this.dontGetSsmData = dontGetSsmData;
 	}
+
+	public String getCurrentTaskDocType() {
+		return currentTaskDocType;
+	}
+
+	public void setCurrentTaskDocType(String currentTaskDocType) {
+		this.currentTaskDocType = currentTaskDocType;
+	}
+	
 
 	public boolean isShowPopup() {
 		return showPopup;
