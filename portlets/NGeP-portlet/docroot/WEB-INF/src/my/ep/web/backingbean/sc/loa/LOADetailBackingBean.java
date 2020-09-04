@@ -3748,6 +3748,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		
+		//22211 - start
+		if(BpmOutcomeConst.BPM_RESUBMIT.equals(outcome)){
+			if(CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
+				for(ScLoaReport loaReport : scLoa.getScLoaReports()) {
+					if(loaReport.getDefinationType().getParameterCode().equals(
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
+							loaReport.getScLoaReportAttachment() == null) {
+						throw new EpException(
+								MessageConst.ERROR_760441, new String[] {loaReport.getTitle()});
+					}
+					if(statusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION) && 
+							loaReport.getDefinationType().getParameterCode().equals(
+									ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD) &&
+									null == loaReport.getScLoaReportAttachment()){
+						throw new EpException(MessageConst.ERROR_760441,
+								new String[] {loaReport.getTitle()});
+					}	
+				}
+			}
+		}
+		//22211 - end
+		
 		// validate deduction payamment for Others
 		validateDeductionPaymentDtls(scLoa);
 
