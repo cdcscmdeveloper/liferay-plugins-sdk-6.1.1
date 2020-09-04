@@ -149,6 +149,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
@@ -207,6 +208,7 @@ public class SmApplicationBackingBean extends
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
+	ViewSmApplBackingBean viewSmApplBackingBean;
 	//SSM CHANGES #27214
 	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
 	public boolean fromPrerenderNewReg = false;
@@ -1939,7 +1941,21 @@ public class SmApplicationBackingBean extends
 		//16052019 - SSM INTEGRATION CR - Fahmi END
 		
 		// set Personnel List Count
-		calcPersonnelListCount();	
+		calcPersonnelListCount();
+		//#28741 BPKU:#27565 - start
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			viewSmApplBackingBean = new ViewSmApplBackingBean();
+			viewSmApplBackingBean.initStep0BaseInfo(smAppl);
+			viewSmApplBackingBean.initStep1CompanyInfo();
+			viewSmApplBackingBean.initStep2BranchCompanyInfo();
+			viewSmApplBackingBean.initStep3PersonnelInfo();
+			viewSmApplBackingBean.initStep4CaptialAndEquityInfo();
+			viewSmApplBackingBean.initStep5BankInfo();
+			viewSmApplBackingBean.initStep6RegisterCategoryCode();
+			viewSmApplBackingBean.initStep7SupportingDocumentsInfo();
+			viewSmApplBackingBean.getManagedBean().setCurrentPageType(getManagedBean().getCurrentPageType());
+		}
+		//#28741 BPKU:#27565 - end
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}

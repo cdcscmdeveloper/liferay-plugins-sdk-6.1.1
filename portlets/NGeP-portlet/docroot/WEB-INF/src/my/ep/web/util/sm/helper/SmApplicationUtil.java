@@ -1069,6 +1069,8 @@ public class SmApplicationUtil {
 	
 	//#27356
 	public static void validateCoordinate(SmApplicationManagedBean managedBean){
+		//#28741 BPKU:#27565
+		if(managedBean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) return;
 		SmCompanyBasic companyBasic = managedBean.getSmAppl().getSmCompanyBasic();
 		List<SmFacility> facility =managedBean.getSmAppl().getSmFacilities();
 		//START 27748 -  SM Disciplinary Action - 26238
