@@ -3185,10 +3185,10 @@ public class QTCloneBackingbean extends
 	private void retrieveQtnDetails(ScQt scQt,ScQt copyScqt,IQTDetailSO QtDetailsSO){
 		//ScQt scQt=new ScQt();
 		if(null==scQt.getFileNo()){
-			scQt.setFileNo(null);
+			
 			scQt.setBrandNew(true);
 		}
-		
+		scQt.setFileNo(null);
 		scQt.setObtainSpecialApproval(copyScqt
 				.getObtainSpecialApproval());
 		scQt.setPanel(copyScqt.isPanel());
@@ -3263,7 +3263,7 @@ public class QTCloneBackingbean extends
 		this.getManagedBean().setCurrentStatusId(currentStatus);
 		this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 		
-		if (this.getManagedBean().getQt().isZonal()) {
+		if (scQt.isZonal()) {
 			
 			if (null != this.getManagedBean().getQt()
 					.getZoneLocationLevel()) {
@@ -3288,8 +3288,11 @@ public class QTCloneBackingbean extends
 //				ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
 //				qtZoneCriterias.setBrandNew(true);
 //				qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
-				
 				ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+				if(null!=scQt.getScQtSupplierCriteria()){
+					supplierCriteria= scQt.getScQtSupplierCriteria();
+				}
+				
 				supplierCriteria.setScQt(scQt);
 				supplierCriteria.setBrandNew(true);
 				supplierCriteria.setLocationLevel(new PmParameter());
@@ -3349,6 +3352,9 @@ public class QTCloneBackingbean extends
 			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
 			
 			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+			if(null!=scQt.getScQtSupplierCriteria()){
+				supplierCriteria= scQt.getScQtSupplierCriteria();
+			}
 			supplierCriteria.setScQt(scQt);
 			supplierCriteria.setBrandNew(true);
 			supplierCriteria.setLocationLevel(cps.getLocationLevel());
