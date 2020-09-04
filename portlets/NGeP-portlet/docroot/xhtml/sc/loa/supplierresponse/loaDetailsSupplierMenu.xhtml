@@ -185,87 +185,154 @@
 			<tr>
 				<td width="18%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.witness.full.name']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="witnessName" size="40"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.witnessName}"
-						required="false" label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
-						maxlength="80" /> <p:message id="witnessNameMsg"
-						for="witnessName" display="icon" /></td>
+						value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td colspan="3">
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="witnessName" size="40"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.witnessName}"
+							required="false" label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
+							maxlength="80" /> <p:message id="witnessNameMsg"
+							for="witnessName" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.witnessName}"
+							disabled="true" size="40" />
+				</c:if></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="identificationNo" size="40"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.identificationNo}"
-						required="false" label="#{lbl['lbl.sc.identification.no']}"
-						maxlength="15" /> <p:message id="identificationNoMsg"
-						for="identificationNo" display="icon" /></td>
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td colspan="3">
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="identificationNo" size="40"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.identificationNo}"
+							required="false" label="#{lbl['lbl.sc.identification.no']}"
+							maxlength="15" /> <p:message id="identificationNoMsg"
+							for="identificationNo" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.identificationNo}"
+							disabled="true" size="40" />
+				</c:if></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.designation']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="designation" size="40"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.designation}"
-						required="false" maxlength="30"
-						label="#{lbl['lbl.sc.designation']}" /> <p:message
-						id="designationMsg" for="designation" display="icon" /></td>
+						value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td colspan="3">
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="designation" size="40"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.designation}"
+							required="false" maxlength="30"
+							label="#{lbl['lbl.sc.designation']}" /> <p:message
+							id="designationMsg" for="designation" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.designation}"
+							disabled="true" size="40" />
+				</c:if></td>
 			</tr>
 			<tr>
 				<td rowspan="3" valign="top" width="18%"><p:outputLabel
 						value="#{lbl['lbl.sc.address']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
-				<td rowspan="3"><p:inputTextarea id="address"
-						readonly="#{lOADetailBackingBean.managedBean.readOnly}" rows="5"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
-						style=" margin-bottom:5px; width: 266px;" required="false"
-						onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
-						maxlength="200" label="#{lbl['lbl.sc.address']}" /> <p:message
-						id="addressMsg" for="address" display="icon" /></td>
+						styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td rowspan="3">
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputTextarea id="address"
+							readonly="#{lOADetailBackingBean.managedBean.readOnly}" rows="5"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
+							style=" margin-bottom:5px; width: 266px;" required="false"
+							onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+							maxlength="200" label="#{lbl['lbl.sc.address']}" /> <p:message
+							id="addressMsg" for="address" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputTextarea
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
+							disabled="true" rows="5"
+							style=" margin-bottom:5px; width: 266px;" required="false"
+							onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
+							maxlength="200" />
+				</c:if></td>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="phoneNo" size="20"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.phoneNo}"
-						required="false" maxlength="20"
-						validator="#{webappBean.checkPhoneNumber}"
-						label="#{lbl['lbl.sc.tel.no']}" /> <ac:iconTooltip
-						value="#{lbl['lbl.sc.telephone.no.tooltip']}" /><p:message id="phoneNoMsg"
-						for="phoneNo" display="icon" /></td>
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td>
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="phoneNo" size="20"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.phoneNo}"
+							required="false" maxlength="20"
+							validator="#{webappBean.checkPhoneNumber}"
+							label="#{lbl['lbl.sc.tel.no']}" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.telephone.no.tooltip']}" /><p:message id="phoneNoMsg"
+							for="phoneNo" display="icon" />
+				</c:if>	
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.phoneNo}"
+							disabled="true" size="20" />
+				</c:if></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="faxNo" size="20"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.faxNo}"
-						required="false" maxlength="20"
-						validator="#{webappBean.checkFaxNumber}"
-						label="#{lbl['lbl.sc.fax.no']}" /><ac:iconTooltip
-						value="#{lbl['lbl.sc.fax.no.tooltip']}" /> <p:message id="faxNoMsg"
-						for="faxNo" display="icon" /></td>
+						value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" /></td>
+				<td>				
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="faxNo" size="20"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.faxNo}"
+							required="false" maxlength="20"
+							validator="#{webappBean.checkFaxNumber}"
+							label="#{lbl['lbl.sc.fax.no']}" /><ac:iconTooltip
+							value="#{lbl['lbl.sc.fax.no.tooltip']}" /> <p:message id="faxNoMsg"
+							for="faxNo" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.faxNo}"
+							disabled="true" size="20" />
+				</c:if></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mobile.no']}" /></td>
-				<td><p:inputText id="mobileNo" size="20"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
-						maxlength="20" validator="#{webappBean.checkPhoneNumber}"
-						label="#{lbl['lbl.sc.mobile.no']}" /><ac:iconTooltip
-						value="#{lbl['lbl.sc.mobile.no.tooltip']}" /> <p:message id="mobileNoMsg"
-						for="mobileNo" display="icon" /></td>
+				<td>
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="mobileNo" size="20"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
+							maxlength="20" validator="#{webappBean.checkPhoneNumber}"
+							label="#{lbl['lbl.sc.mobile.no']}" /><ac:iconTooltip
+							value="#{lbl['lbl.sc.mobile.no.tooltip']}" /> <p:message id="mobileNoMsg"
+							for="mobileNo" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
+							disabled="true" size="20" />
+				</c:if></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
-				<td colspan="3"><p:inputText id="email" size="40"
-						style=" margin-bottom:5px;"
-						disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-						value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"
-						maxlength="80" validator="#{webappBean.checkEmail}"
-						label="#{lbl['lbl.sc.email']}" /> <p:message id="emailMsg"
-						for="email" display="icon" /></td>
+				<td colspan="3">
+				<c:if test="#{isSupplierAckStatus}">
+					<p:inputText id="email" size="40"
+							style=" margin-bottom:5px;"
+							disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"
+							maxlength="80" validator="#{webappBean.checkEmail}"
+							label="#{lbl['lbl.sc.email']}" /> <p:message id="emailMsg"
+							for="email" display="icon" />
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText
+							value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"
+							disabled="true" size="40" />
+				</c:if></td>
 			</tr>
 		</table>
 	</p:panel>
