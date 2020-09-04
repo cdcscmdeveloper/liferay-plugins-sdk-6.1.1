@@ -2290,7 +2290,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		SCQuotationTenderDataType obj = getBpmTaskDetails(SCQuotationTenderDataType.class, null);
 		Long requestId = obj.getRequestId();
 		Long qtId = obj.getQtId();
-		log.info("---> " + "preRenderGenericApproval");
 		String requestType = this.getManagedBean().getCurrentTaskDocType();
 		requestType = requestType == null ? "": requestType;
 		String taskName = this.getManagedBean().getTaskName();
@@ -2377,12 +2376,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		FacesContext context = FacesContext.getCurrentInstance();
 
-//		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
-//		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
-//		response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.portlet.title."
-//				.concat(requestType).concat(taskName.split(" ")[0]),
-//				ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
-//						.getUserLocale()));
+		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.portlet.title."
+				.concat(requestType).concat(taskName.split(" ")[0]),
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
+						.getUserLocale()));
 
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
 	}
