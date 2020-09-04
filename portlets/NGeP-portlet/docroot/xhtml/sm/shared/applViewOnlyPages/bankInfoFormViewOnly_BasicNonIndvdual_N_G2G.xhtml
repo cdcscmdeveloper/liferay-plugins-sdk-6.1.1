@@ -35,7 +35,7 @@
 				<p:column headerText="#{lbl['lbl.sm.for.branch']}">
 				<ui:repeat var="bankBranchBean" value="#{bankBean.smSupplierBranchBanks}" varStatus="status">
 					<h:outputText value="#{status.index+1}) " />
-					<h:outputText value="#{bankBranchBean.smSupplierBranch.branchName}" />
+					<h:outputText value="#{bankBranchBean.smSupplierBranch.branchName}" /><br />
 				</ui:repeat>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.bank.purpose']}">

@@ -35,7 +35,7 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeRenewMof}">#{lbl['lbl.sm.appltype.renewmof']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeUpdateMof}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeCancelMof}">#{lbl['lbl.sm.appltype.cancelmof']}</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeBasic}">#{lbl['lbl.sm.appltype.basic']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeBasic}">#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT ? lbl['lbl.sm.appltype.g2g']:lbl['lbl.sm.appltype.basic']}</c:if>
 				</td>
 				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<c:choose>
