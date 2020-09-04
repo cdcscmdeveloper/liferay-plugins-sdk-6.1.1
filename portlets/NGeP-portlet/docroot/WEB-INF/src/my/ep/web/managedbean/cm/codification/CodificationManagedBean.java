@@ -200,7 +200,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-
+	
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -240,15 +240,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 				ISearchBean<Object[]> searchBean) {
 			
 			
-			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
-				//20200806@akmal - Enhancement27627 - Start -- remove line below
-//				return new SearchResultBean();
-				//20200806@akmal - Enhancement27627 - End
-			}
-
+			  if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())
+						&& StringUtils.isBlank((String) typeFilterBean.getSearchValue())
+						&& StringUtils.isBlank((String) brandFilterBean.getSearchValue())
+						&& StringUtils.isBlank((String) measurementFilterBean.getSearchValue())) {
+					//20200813@azza - Enhancement27627 - Start 
+					return new SearchResultBean();
+					//20200813@azza - Enhancement27627 - End
+				}
+			
+			
 			System.out.println("........search extension combination.................");
 
 			CodificationBackingBean bb = new CodificationBackingBean();
