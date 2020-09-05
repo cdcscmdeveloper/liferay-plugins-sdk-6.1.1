@@ -84,6 +84,8 @@
 
 	<ui:define name="contentSection">
 		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.supplierUser}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer']}" style="float: inherit" escape="false" ></h:outputText>
+		<!-- #28741 BPKU:#27565 -->
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.bumi.disclaimer']}" style="float: inherit" escape="false" />
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
