@@ -2369,20 +2369,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				this.initializeRemarks(request, wfStatus, request.getAppRequestRemarks(), ScQtAppRequestRemark.class);
 			}
-		}catch(IOException e){
-			e.printStackTrace();
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
 		}
 
-
 		FacesContext context = FacesContext.getCurrentInstance();
-
 		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
 		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
 		response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.portlet.title."
 				.concat(requestType).concat(taskName.split(" ")[0]),
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
 						.getUserLocale()));
-
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
 	}
 	public void preSubmitGenericApprovalTask(String outcome){
