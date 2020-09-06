@@ -130,10 +130,13 @@ public class CancelRegistrationBackingBean extends
 										"lbl.sm.req.cancel.confirmation.msg.ApplStatus.Contractor",
 										new String[] { accTypeStr });
 								getManagedBean().setConfirmationMsg(msg);
-
 								RequestContext.getCurrentInstance().execute(
 										"confirmDialog.show();");
 
+						if (getManagedBean().getAccType().equalsIgnoreCase(
+								SupplierManagementConst.STYPE_BASIC)) {
+							accTypeStr = SmCommonUtil.getMessage(
+									"lbl.sm.basic.account.basic", null);
 							} else if (getManagedBean()
 									.getAccType()
 									.equalsIgnoreCase(
@@ -142,10 +145,10 @@ public class CancelRegistrationBackingBean extends
 										.getMessage(
 												"lbl.sm.basic.account.mof.consultant",
 												null);
-								String msg = SmCommonUtil.getMessage(
+								String mssg = SmCommonUtil.getMessage(
 										"lbl.sm.req.cancel.confirmation.msg.ApplStatus.Consulutent",
 										new String[] { accTypeStr });
-								getManagedBean().setConfirmationMsg(msg);
+								getManagedBean().setConfirmationMsg(mssg);
 
 								RequestContext.getCurrentInstance().execute(
 										"confirmDialog.show();");
@@ -195,7 +198,8 @@ public class CancelRegistrationBackingBean extends
 						throw new EpException(MessageConst.ERROR_721090);
 					}
 				}
-			} else {
+			}
+			}else {
 				if(resDTO.getSmSupplier() != null && resDTO.getSmSupplier().getSmAppl()!= null && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 					String labelText = null;
 					if(resDTO.getSmSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
