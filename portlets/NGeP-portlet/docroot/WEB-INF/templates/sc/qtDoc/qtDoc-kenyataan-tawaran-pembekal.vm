@@ -138,8 +138,8 @@ th{
 			<tr>
 				<td>
 					#if ($locLevel == "true")
-						<span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
-						<span class="headerfont"> Location </span>
+						<span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Lokaliti Liputan :</span> $locationLevel <br/>
+						<span class="headerfont"> Lokaliti </span>
 						<table width='100%' class="table2">
 						<span class="headerfont">
 							<tr>
