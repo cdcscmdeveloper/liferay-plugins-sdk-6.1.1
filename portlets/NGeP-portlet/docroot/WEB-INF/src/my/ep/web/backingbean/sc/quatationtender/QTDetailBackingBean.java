@@ -1985,7 +1985,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						throw new EpException(e.getMessage());
 					}
 				}else if(requestContent.isBrandNew()){
-					scQt.getRequestContents().remove(requestContent);
+					if(this.getManagedBean().isMaintanceFlow()){
+						scQt.getRequestContents().remove(requestContent);
+					}
 				}
 			}
 			if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
@@ -4052,7 +4054,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							//log.info("---> request is in progress");
 							requestContent.setBrandNew(false);
 							requestContent.setRequireApproval(true);
-							requestContent.setSelectable(false);
+							requestContent.setSelectable(!state.equalsIgnoreCase(ParameterConst.APPROVAL_DECISION_TYPE_REVISED));
 							this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
 						}else{
 							//log.info("---> request is completed");
@@ -9047,7 +9049,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
 		reqDTO.setDocType(ParameterConst.DOCTYPE_DOA_ASSIGNMENT);
 		reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
-	//	Long[] completeArr = new Long[]{QTStatusConst.DAR_COMPLETED, QTStatusConst.DAR_REJECTED};
 		ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		Long statusId = wfStatus==null ? 0L: wfStatus.getPmStatus().getStatusId();
 
