@@ -95,6 +95,13 @@
 								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 12}">
 								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step12POApproverDecisionRemark.xhtml" />
 							</c:if>
+						    <!-- #27565 BPKU: #28913 Start -->
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 13}">
+								<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step13ViewBumiputeraApproverRemarks.xhtml" />
+							</c:if>
+						    <!-- #27565 BPKU: #28913 End -->
+						
 						</c:when>
 						<c:otherwise>
 							<c:if
