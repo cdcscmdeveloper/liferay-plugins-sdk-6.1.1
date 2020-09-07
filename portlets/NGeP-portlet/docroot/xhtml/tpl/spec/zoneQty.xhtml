@@ -41,12 +41,21 @@
 				<p:ajax partialSubmit="true" process="@this" 
 				    listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, templateSpecBean.selectedSpecQuestion.tplSpecAnswers[0], isItemTypeService)}"
 					update="@this, zoneQtyMsg, @(.calcAmount)" />
- <!-- START #21695 farid-->	
-	  			<c:if test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
-	  				<ac:validateNumber
+ <!-- START #21695  & Bug #28948 farid-->	
+ 			<c:choose>
+ 					<c:when test="#{!templateSpecBackingBean.managedBean.secretaryValidate}">
+ 						<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
 						maxIntegerDigits="10"/>
-				</c:if>
+ 					</c:when>
+ 					<c:otherwise>
+	 					<f:attribute name="min" value="0"></f:attribute>
+	 					<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, templateSpecBean.selectedSpecQuestion.clUom.uomCode)}"
+							maxIntegerDigits="10"/>
+ 					</c:otherwise>
+ 			</c:choose>
+ <!-- END #21695  & Bug #28948 farid-->	
 			</p:inputText>
 				<p:message id="zoneQtyMsg" for="zoneQty" display="icon" />
 			</p:column>
