@@ -509,26 +509,30 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}
 		
 		//28221 start
-		if (getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId() != null) {
-			IUserSO userSO;
-			try {
-				userSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		//WIP data patch
+		if (getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId() == null) {
+			getManagedBean().getPaymentAdvice().getFlInvoice()
+					.setSupplierSubmittedId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
+			getManagedBean().setNewSupplierId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
+		}
 
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+		IUserSO userSO;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
-				UserResDTO userResDTO = userSO.retrieveUserDtlById(userReqDTO);
-				getManagedBean().setUser(userResDTO.getPmUser());
-				getSupplierStatus();
-					
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
-			} finally {
-				userSO = null;
-			}
-		}		
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
+
+			UserResDTO userResDTO = userSO.retrieveUserDtlById(userReqDTO);
+			getManagedBean().setUser(userResDTO.getPmUser());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			userSO = null;
+		}
+		getSupplierStatus();
 		//28221 end
 	}
 	
