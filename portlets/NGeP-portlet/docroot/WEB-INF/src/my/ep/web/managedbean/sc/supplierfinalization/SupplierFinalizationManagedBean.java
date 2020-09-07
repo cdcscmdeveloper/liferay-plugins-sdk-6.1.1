@@ -264,12 +264,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#26169 #38 - Start
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
-	// #18685 - Start
+	// #18685 - Start 
 	private ScRemark pendingRecItemizedRemark;
 	private ScRemark pendingRecPackageRemark;
-	private ScRemark newSfRemark;
+	private List<ScRemark> newSfRemarks;
 	private List<ScRemark> scRemarks;
-	// #18685 - End
+	// #18685 - End 
 	
 	/**
 	 * @return the activeIndex
@@ -2279,7 +2279,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#26169 #38 - End
 	
-	// #18685 - Start 
+	// #18685 - Start
 	/**
 	 * @return the pendingRecItemizedRemark
 	 */
@@ -2310,20 +2310,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.pendingRecPackageRemark = pendingRecPackageRemark;
 	}
 	
-	/**
-     * @return the newSfRemark
-     */
-    public ScRemark getNewSfRemark() {
-      return newSfRemark;
-    }
-  
-    /**
-     * @param newSfRemark the newSfRemark to set
-     */
-    public void setNewSfRemark(ScRemark newSfRemark) {
-      this.newSfRemark = newSfRemark;
-    }
-
     /**
      * @return the scRemarks
      */
@@ -2338,7 +2324,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
       this.scRemarks = scRemarks;
     }
 
-    //#18685 - End 
+    /**
+     * @return the newSfRemarks
+     */
+    public List<ScRemark> getNewSfRemarks() {
+      return newSfRemarks;
+    }
+
+    /**
+     * @param newSfRemarks the newSfRemarks to set
+     */
+    public void setNewSfRemarks(List<ScRemark> newSfRemarks) {
+      this.newSfRemarks = newSfRemarks;
+    }
+
+    //#18685 - End
 }
 
 
