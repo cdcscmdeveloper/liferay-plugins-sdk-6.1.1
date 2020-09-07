@@ -72,11 +72,10 @@
 									</c:if>
 								</c:if>
 							</tr>
+							<c:if
+								test="#{backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
 								<tr>
-								<!-- bug #28173 & #28315-->
-								<!-- #28256 -->
 									<td style="width: 20px"><p:selectBooleanCheckbox
-									        disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner || backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"
 											value="#{backingBean.managedBean.selectedShareHolder.management}">
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
@@ -91,9 +90,8 @@
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" />
 									</td>
 									<!-- SSM Redmine : 9456 -->
-									<!-- #28256 -->
 									<td style="width: 20px"><p:selectBooleanCheckbox
-											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY || (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
+											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
 											<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
@@ -108,6 +106,7 @@
 										<h:outputText style="float: left" value="#{lbl['lbl.sm.person.stf']}" />
 									</td>
 								</tr>
+							</c:if>
 						</table>
 					</td>
 				</tr>
