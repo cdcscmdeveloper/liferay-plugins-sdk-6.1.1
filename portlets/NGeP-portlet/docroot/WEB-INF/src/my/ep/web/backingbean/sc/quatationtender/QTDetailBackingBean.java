@@ -3234,7 +3234,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtId = quationDataType.getQtId().longValue();
 				// retrieveFinalizationSecratryDtl(qtId);
 				retrieveQuationTenderDetails(new Long(qtId));
-				//retrieveScheduleTabDtl();
+				retrieveScheduleTabDtl();
 				ScQt scQt = this.getManagedBean().getQt();
 				if (scQt.getObtainSpecialApproval() != null
 						&& scQt.getObtainSpecialApproval()) {
@@ -9069,8 +9069,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
+		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
 		@SuppressWarnings("unchecked")
-		Map<Long, String> doaMap = (Map<Long, String>) requestContent.getRequestContent();
+		Map<Long, String> doaMap = (Map<Long, String>) content;
 		for (Map.Entry<Long, String> map : doaMap.entrySet()) {
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(map.getKey());
