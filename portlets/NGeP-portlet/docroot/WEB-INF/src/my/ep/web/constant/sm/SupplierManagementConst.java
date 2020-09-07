@@ -505,6 +505,10 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
+	
+	//#27565 BPKU: #28913 Start
+	public static final String SM_APPL_PAGE_TYPE_BUMI_APPR_REMARK = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BUMI_APPR_REMARK;
+	//#27565 BPKU: #28913 End
 
 	public static final String SM_MOF_CERT_SERIAL_SEQ = "SM_MOF_CERT_SERIAL_SEQ";
 	public static final String SM_MOF_465_SEQ = "SM_MOF_465_SEQ";
@@ -1188,6 +1192,12 @@ public class SupplierManagementConst {
 		return PM_STATUS_PO_REVIEW;
 	}
 
+	//#27565 BPKU: #28913 Start
+	public String getSM_APPL_PAGE_TYPE_BUMI_APPR_REMARK() {
+		return SM_APPL_PAGE_TYPE_BUMI_APPR_REMARK;
+	}
+	//#27565 BPKU: #28913 End
+	
 //25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
