@@ -9,14 +9,39 @@
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></td>
-				<td style="font-size: 12px;">:
+				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 0}">
+					<td style="font-size: 12px;">:
 					#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}</td>
+				</c:if>
+				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1}">
+					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
+						<td style="font-size: 12px;">:
+						#{evaluationBackingBean.managedBean.supplierNo}</td>
+					</c:if>
+					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
+						<td style="font-size: 12px;">:
+						#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}</td>
+					</c:if>
+				</c:if>		
+				
 			</tr>
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
-				<td style="font-size: 12px;">:
+				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 0}">
+					<td style="font-size: 12px;">:
 					#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
+				</c:if>
+				<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1}">
+					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
+						<td style="font-size: 12px;">:
+						#{lbl['lbl.sc.eva.all.template']}</td>
+					</c:if>
+					<c:if test="#{evaluationBackingBean.managedBean.evaluationCheckListType != ParameterConst.documentDefinitionTypeTemplateSpecification}">
+						<td style="font-size: 12px;">:
+						#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}</td>
+					</c:if>
+				</c:if>				
 			</tr>
 		</table>
 	</div>
