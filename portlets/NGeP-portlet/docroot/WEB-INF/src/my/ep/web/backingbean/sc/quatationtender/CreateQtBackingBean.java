@@ -728,8 +728,10 @@ public class CreateQtBackingBean extends
 	 * @param scQt
 	 *            (ScQt scQt)
 	 */
-	public void setProcurementMode(ScQt scQt, BigDecimal amount) {
-
+	//Enhancement #25729 -start-
+	public void setProcurementMode(ScQt scQt, BigDecimal amount, String ... enable) {
+	//Enhancement #25729 -end-
+		
 		debugLogger("setProcurementMode,@qtNo = " + scQt.getQtNo());
 		IParameterSO parameterSo = null;
 		try {
