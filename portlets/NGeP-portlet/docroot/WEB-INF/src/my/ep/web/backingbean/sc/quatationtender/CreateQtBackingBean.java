@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -850,10 +851,26 @@ public class CreateQtBackingBean extends
 					getManagedBean().setZoneTrees(null);
 				}
 			}
+			
+			// 25729#174 start
+			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			}
+			// 25729#174 end
 		} finally {
 			parameterSo = null;
 		}
 	}
+
+	//Enhancement #25729 - start -
+	public boolean enableJustificationProValue(boolean enable) {
+		if (!enable) {
+			this.getManagedBean().getQt().setTmpExpectedIntendedPrice(null);
+		}
+		
+		return enable;
+	}
+	//Enhancement #25729 - end -
 
 	/**
 	 * Sets the evaluation type.based on Estimated Price set Evaluation Type.
@@ -2420,12 +2437,19 @@ public class CreateQtBackingBean extends
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		// populate procurment mode values if changes as Non panel
-		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt
-				.getQtStatus().getStatusId())) {
+		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(scQt.getQtStatus().getStatusId())) {
 			BigDecimal amount = scQt.getTmpExpectedIntendedPrice();
-			if(null != amount){
-				setProcurementMode(scQt, amount);
+			
+			//Start - 25729
+			if (null != amount) {
+				// 25729#174 Change 1 line code 
+				if (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0) {
+					setProcurementMode(scQt, amount, "Y");
+				} else {
+					setProcurementMode(scQt, amount);
+				}
 			}
+			//End - 25729
 		}
 	}
 
