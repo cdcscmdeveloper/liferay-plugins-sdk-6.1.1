@@ -667,7 +667,7 @@ public class SupplierFinalizationBackingBean extends
 		// #25638 - End
 	}
 	
-	// #18685 - Start 
+	// #18685 - Start
 	/**
 	 * @param scQtFinalization
 	 */
@@ -680,13 +680,17 @@ public class SupplierFinalizationBackingBean extends
 					getManagedBean().setPendingRecItemizedRemark(remark);
 				} else if (CommonConstants.PACKAGE_WISE.equals(remark.getSourceName())) {
 					getManagedBean().setPendingRecPackageRemark(remark);
-				} else {
-				    getManagedBean().setNewSfRemark(remark);
+				} else if (StringUtils.isEmpty(remark.getRemark())){
+				  if (getManagedBean().getNewSfRemarks() == null) {
+				    List<ScRemark> newSfRemarkList = new LinkedList<>();
+				    getManagedBean().setNewSfRemarks(newSfRemarkList);
+				  }
+				    getManagedBean().getNewSfRemarks().add(remark);
 				}
 			}
 		}
 	}
-	// #18685 - End 
+	// #18685 - End
 	
 	private void loadRecommededSuppliersIntoCachedData(boolean isItemized) {
 		log.info("loadRecommededSuppliersIntoCachedData");
@@ -4928,11 +4932,11 @@ public class SupplierFinalizationBackingBean extends
 	public List<ScRemark> getPendingRecRemark() {
 	  if (CollectionUtils.isEmpty(getManagedBean().getScRemarks())) {
 	    List<ScRemark> remarkList = new LinkedList<>(); 
-	    remarkList.add(getManagedBean().getNewSfRemark());
+	    remarkList.addAll(getManagedBean().getNewSfRemarks());
 	    getManagedBean().setScRemarks(remarkList);
 	  } else {
 	    getManagedBean().getScRemarks().clear();
-	    getManagedBean().getScRemarks().add(getManagedBean().getNewSfRemark());
+	    getManagedBean().getScRemarks().addAll(getManagedBean().getNewSfRemarks());
 	  }
 	  
 	  String decision = getManagedBean().getScQtFinalization().getDecision().getParameterCode();
