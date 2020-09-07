@@ -16507,7 +16507,7 @@ public class SpecificationBackingBean extends
 	/*End of 25633*/
 	
 	
-	// #21695 START FARID
+	
 	/**
 	 * Calculate Technical Item score.calculate Item Technical Scores in
 	 * TechnicalScoring Menu.
@@ -16515,9 +16515,18 @@ public class SpecificationBackingBean extends
 	 * @param Technical
 	 *            (ScQtScoreSetting technicalItem).
 	 */
+// #21695 START FARID - 07/9/2020	
 	public void calculateTechnicalItemScore(ScQtScoreSetting technicalItem) {
 		try {
 			if (null != technicalItem) {
+				String checkDecimal1 = String.valueOf(technicalItem.getOverallTechnical());
+				String checkDecimal2 = String.valueOf(technicalItem.getOverallOtherTechnical());
+				String pattern1 = "[0-9]+";
+				if (!checkDecimal1.matches(pattern1)) {
+					throw new EpException(MessageConst.ERROR_775157);
+				}else if (!checkDecimal2.matches(pattern1)) {
+					throw new EpException(MessageConst.ERROR_775157);
+				}
 				int value1 = technicalItem.getOverallTechnical() != null ? technicalItem
 						.getOverallTechnical().intValue() : 0;
 				int value2 = technicalItem.getOverallOtherTechnical() != null ? technicalItem
@@ -16529,8 +16538,9 @@ public class SpecificationBackingBean extends
 						&& this.getManagedBean().getTechnicalItemScore()
 								.intValue() > 100) {
 					throw new EpException(MessageConst.ERROR_7602571);
-// #21695 farid 02/9/2020
+// #21695 farid 07/9/2020
 				}
+
 			}
 
 		} finally {
