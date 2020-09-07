@@ -56,7 +56,7 @@
 						<c:choose>
 							<c:when test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityStatusInfoFormViewOnly.xhtml" />
-							<c:set value="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}" target="#{viewSmApplBackingBean.managedBean}" property="currentPageType"/>
+							<c:set value="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" target="#{viewSmApplBackingBean.managedBean}" property="currentPageType"/>
 							<c:if
 								test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHolderInfoFormViewOnly.xhtml" />
