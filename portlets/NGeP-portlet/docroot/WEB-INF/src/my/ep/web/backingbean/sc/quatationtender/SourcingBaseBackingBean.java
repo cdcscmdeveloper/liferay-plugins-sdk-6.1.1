@@ -3946,5 +3946,84 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// end of 25396
+		
+	//Enhancement #25729 Allow create QT below threshold RM20k - start -
+	//#25729 #142 start - checking total indicative price <= 20k
+	/**
+	 * Get Total Indicative Price threshold amount
+	 * 
+	 * @return	the panel Total Indicative Price amount
+	 */
+	protected BigDecimal getTotalIndPriceThresholdAmount() {
+		IRuleSO ruleSO = null;
+		BigDecimal indPriceThreshold = new BigDecimal(0);
+
+		try {
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+
+			RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			ruleReqDTO.setRuleType(RuleTypeConst.QTOTAL_INDI_PRICE_THRESHOLD);
+			
+			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+				
+			if (ruleResDTO.isSuccessful()) {
+				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
+				} else {
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+				}	
+			}
+				
+		} finally {
+			ruleSO = null;
+		}
+
+		return indPriceThreshold;
+	}
+		
+	//QT threshold RM20k - 50k
+	public boolean expectTotalIndPriceBetweenThreshold(ScQt scQt) {
+		BigDecimal tmpExpectedIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+				
+		if (!scQt.isPanel() && tmpExpectedIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBetweenThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice: "+ tmpExpectedIntendedPrice +" :::");
+			log.info(":::expectTotalIndPriceBetweenThreshold() tmpExpectedIntendedPrice.doubleValue: "+ tmpExpectedIntendedPrice.doubleValue() +" :::");
+
+			if (SourcingConstants.QT_BELOW_20K <= tmpExpectedIntendedPrice.doubleValue() &&
+				SourcingConstants.QT_BELOW_50K >= tmpExpectedIntendedPrice.doubleValue()) {
+
+				return Boolean.TRUE;
+			}
+		}
+				
+		return Boolean.FALSE;
+	}
+
+	// #25729 #142 Start - Allow create QT below threshold RM20k
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
+		BigDecimal actualIntendedPrice = new BigDecimal(0);
+	
+		if ("createQt".equals(ScreenType)) {
+			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+		} else {
+			actualIntendedPrice = scQt.getEstimatedAmount();
+		}
+				
+		if (!scQt.isPanel() && actualIntendedPrice != null) {
+			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
+			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
+
+			// #25729 #174			 
+			if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
+				return Boolean.TRUE;
+			}
+		}
+				
+		return Boolean.FALSE;
+	}
+	//#25729 #142 end
+	//Enhancement #25729 Allow create QT below threshold RM20k - end -
 	
 }

@@ -14727,8 +14727,12 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 			}
 			log.debug("checkFinancialSpecEstimations count"+count);
-			if(count==0){
+			
+			//#25729 #142 start - checking total indicative price <= 20k
+			//Intended Price
+//			if(count==0){
 				BigDecimal totalSpecEstimatedAmount=null;
+				
 				if (totalSpecEstimatedAmount == null) {
 					totalSpecEstimatedAmount = BigDecimal.valueOf(0);
 				}
@@ -14748,6 +14752,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 				log.debug("totalSpecEstimatedAmount"+totalSpecEstimatedAmount);
 				
+				if (count == 0) {
 				// Intended Price
 				if (qt.isPanel()) {
 					BigDecimal panelThreshold = getPanelThresholdAmount();
@@ -14768,8 +14773,22 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 				qt.setEstimatedAmount(totalSpecEstimatedAmount);
 			}
+				
+			// Check Intended Price
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+			if (null == qt.getTmpExpectedIntendedPrice()
+						|| (qt.getTmpExpectedIntendedPrice()
+								.compareTo(indPriceThreshold) <= 0)) {
+				if (null == totalSpecEstimatedAmount
+						|| (totalSpecEstimatedAmount
+								.compareTo(indPriceThreshold) > 0)) {
+					throw new EpException(MessageConst.ERROR_760504,
+							new String[] { SourcingConstants.DF_AMOUNT
+								.format(indPriceThreshold) });
+				}
+			}
 		}
-		
+		//#25729 #142 end
 	}
 	
 	private void  checkTechnicalFinancialItemCount(ScQtCheckList technicalChecklist,ScQtCheckList financialCheckList){

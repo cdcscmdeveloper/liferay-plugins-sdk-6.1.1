@@ -542,26 +542,12 @@ public class QTDetailBackingBean extends
 				throw new EpException(MessageConst.ERROR_760450);
 			}
 			validateQtDetails();
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_700004,
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															this.getManagedBean()
-																	.getQt()
-																	.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+
+			//Enhancement #25729 -start-
+			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			//Enhancement #25729 -start-
+
 			debugLogger("end of saveQtDetailsAction");
 		} finally {
 
@@ -574,8 +560,10 @@ public class QTDetailBackingBean extends
 	 * 
 	 * @return the string
 	 */
-	public String submitQTDetailsAction() {
-		
+	//Enhancement #25729 -start-
+	public void submitQTDetailsAction() {
+	//Enhancement #25729 -end-	
+
 		debugLogger("start of submitQTDetailsAction");
 		
 		this.getManagedBean().setSaveFlow(false);
@@ -611,31 +599,18 @@ public class QTDetailBackingBean extends
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700026,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
-																scQt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+
+		//Enhancement #25729 -start-
+				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), Boolean.TRUE);
+
 				debugLogger("end of submitQTDetailsAction");
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+//				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
 			detailSO = null;
 		}
-		return null;
+		//Enhancement #25729 -end-
 	}
 
 	/**
