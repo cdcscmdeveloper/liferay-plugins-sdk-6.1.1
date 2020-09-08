@@ -30,7 +30,7 @@
 							value="#{profilePersonalizationBackingBean.tabChangePassword}" />
 					</p:menuitem>
 					<!-- Authorization personnel -->
-					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ap']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.ap']}" update="@form" rendered="#{profilePersonalizationBackingBean.checkFactUser != 'Yes'}">
 						<f:param name="disableValidation" value="true" />     
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabAuthPersonnel}" />
