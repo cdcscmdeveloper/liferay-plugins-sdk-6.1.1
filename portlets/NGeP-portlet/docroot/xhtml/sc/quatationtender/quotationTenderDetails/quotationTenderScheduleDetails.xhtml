@@ -41,7 +41,8 @@
 												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 											</p:inputText>
 											
-											<p:inputText id="tday1" value="Saturday1" style="width: 50px; margin-top: 1px;margin-bottom: 0px; margin-left: 4px; text-align: center;" disabled="true">
+											<p:inputText id="tday1" value="#{qTScheduleDetailBackingBean.managedBean.qt.newPublishDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
 											</p:inputText>
 											
 										</c:when>
@@ -65,7 +66,7 @@
 											</p:inputText>
 																						
 											<p:inputText id="tday2" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
-												<f:convertDateTime pattern="EEEEEEEE" />
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
 											</p:inputText>
 											
 											<p:inputText id="languageKey"  value="#{qTScheduleDetailBackingBean.languageKey}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true" />
@@ -82,7 +83,9 @@
 												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 											</p:inputText>
 											
-											<p:inputText id="tday3" value="Saturday3" style="width: 50px; margin-top: 1px;margin-bottom: 0px; margin-left: 4px; text-align: center;" disabled="true"></p:inputText>																					
+											<p:inputText id="tday3" value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+												<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+											</p:inputText>
 											
 										</c:otherwise>
 									</c:choose> 
@@ -113,7 +116,9 @@
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText>
 						
-						<p:inputText id="tday4" value="Saturday4" style="width: 50px; margin-top: 1px;margin-bottom: 0px; margin-left: 4px; text-align: center;" disabled="true"></p:inputText>
+						<p:inputText id="tday4" value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+						</p:inputText>
 					</td>
 				</tr>
 			</c:if>
@@ -153,8 +158,9 @@
 										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 									</p:inputText>
 									
-									<p:inputText id="tday5" value="Saturday5" style="width: 50px; margin-top: 1px;margin-bottom: 0px; margin-left: 4px; text-align: center;" disabled="true"></p:inputText>
-									
+									<p:inputText id="tday5" value="#{qTScheduleDetailBackingBean.managedBean.qt.newClosingDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+									</p:inputText>
 									
 								</c:when>
 								<c:otherwise>
@@ -172,7 +178,7 @@
 									</p:inputText>
 									
 									<p:inputText id="tday6" value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
-										<f:convertDateTime pattern="EEEEEEEE" locale="ms" />
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
 									</p:inputText>
 									
 								</c:otherwise>
@@ -208,7 +214,9 @@
 										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 									</p:inputText>
 									
-									<p:inputText id="tday7" value="Saturday7" style="width: 50px; margin-top: 1px;margin-bottom: 0px; margin-left: 4px; text-align: center;" disabled="true"></p:inputText>
+									<p:inputText id="tday7" value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+										<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" />
+									</p:inputText>
 									
 								</td>
 								<td><p:message id="sampledate" for="sampleclsdate"
@@ -240,8 +248,10 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
 				
-					<p:inputText id="tday8" value="Saturday8" style="width: 50px; margin-top: 1px;margin-bottom: 0px; margin-left: 4px; text-align: center;" disabled="true"></p:inputText>
-				
+					<p:inputText id="tday8" value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalValidityEndDate}" style="width: 65px; margin-top: 1px;margin-bottom: 0px; margin-left: 3px; text-align: center;" disabled="true">
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+					</p:inputText>
+					
 				</td>
 			</tr>
 			<!-- <tr>
