@@ -1783,6 +1783,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 	//26238 - end
 	
+	//28838 - start
 	public String getCheckFactUser() {
 		String checkFactUser = "No";
 		
@@ -1795,5 +1796,6 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		
 		return checkFactUser;
 	}
+	//28838 - end
 
 }
