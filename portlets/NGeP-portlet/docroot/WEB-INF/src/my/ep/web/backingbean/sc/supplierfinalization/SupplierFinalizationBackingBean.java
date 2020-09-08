@@ -2179,7 +2179,7 @@ public class SupplierFinalizationBackingBean extends
 		//25638 - End
 	}
 
-	// #25638 - Start
+	// #25638 - Start 
 	/**
 	 * 
 	 */
@@ -2190,13 +2190,18 @@ public class SupplierFinalizationBackingBean extends
 			boolean remarksNotFound = true;
 			if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
 				for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
-					if (StringUtils.isNotEmpty(finalizationRemark.getRemark()) && (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()
-							&& finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue())) {
-						remarksNotFound = false;
-						break;
-					}
+				  if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+                    if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+                      if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+                        remarksNotFound = true;
+                        break;
+                      } else {
+                        remarksNotFound = false;
+                      }
+                    }
+                  }
 				}
-			// #25638 - Start.
+			// #25638 - Start. 
 			} else {
 				initializeFinalizationRemarks();
 			}
@@ -2435,11 +2440,11 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRoleCode(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 				       .equals(getManagedBean().getCurrentStatusId()) ? 
 										RoleCode.BPK_APPROVER.value() : getCommitteeRoleCode());
-			// #28472 and #25638 - Start.
-			if (null == reqDTO.getPmUser()) {
+			// #28472 and #25638 - Start. 
+			/*if (null == reqDTO.getPmUser()) {*/
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			}
-			// #28472 and #25638 - End.
+			/*	}*/
+			// #28472 and #25638 - End. 
 			reqDTO.setCurrentFinalizationStatus(
 					getManagedBean().getCurrentStatusId());
 			reqDTO.setInitialDecisionFwdHighAuth(
