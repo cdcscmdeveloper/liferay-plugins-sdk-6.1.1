@@ -2155,6 +2155,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		/*#25956 Start*/
 		amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 		/*#25956 End*/
+		log.info("Check Putra gotoAmendPage contractId "+contractId);
 		amendBB.setAmendmentContractVer(reqDTO);
 		return PROCESS_AMEND_PAGE;
 	}
