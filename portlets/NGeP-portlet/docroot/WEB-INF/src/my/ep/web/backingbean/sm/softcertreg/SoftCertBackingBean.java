@@ -388,27 +388,25 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								RoleCode.SUPPLIER_TEMP.value())) {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					/**
-					 * 20200826@MohdHafizAbdRahim - Bug #28264 - Start	
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
 					 */
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
+                        RoleCode.MOF_SUPPLIER_USER.value())) {
 					personnel.setFreeSoftCert(false);
 					amountPerPersonnel = SmRuleHelper.getInstance()
 							.getSoftCertFee();
 					amount = amount.add(amountPerPersonnel);
 					/**
-					 * 20200826@MohdHafizAbdRahim - Bug #28264 - End
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
 					 */
 				} else {
 					/**
-					 * 20200825@MohdHafizAbdRahim - Bug #28264 - Start	
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
 					 */
-					personnel.setFreeSoftCert(false);
-					amountPerPersonnel = SmRuleHelper.getInstance()
-							.getSoftCertFee();
-					amount = amount.add(amountPerPersonnel);
+					personnel.setFreeSoftCert(true);
 					/**
-					 * 20200825@MohdHafizAbdRahim - Bug #28264 - End
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
 					 */
 				}
 			} else {
