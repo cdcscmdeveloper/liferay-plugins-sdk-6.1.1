@@ -885,6 +885,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		try {
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
+			log.info("Check Putra gotoAmendPage setAmendmentContractVer resDTO.getCtContractVer()"+resDTO.getCtContractVer());
 			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			//26753 - start
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {
@@ -1276,6 +1277,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
 				ctBackingBean.getManagedBean().setContractExpired(true);
 			}
+			log.info("Check Putra gotoAmendPage setAmendmentContractVer ");
 			
 		} finally {
 			contractAmendmentSO = null;
