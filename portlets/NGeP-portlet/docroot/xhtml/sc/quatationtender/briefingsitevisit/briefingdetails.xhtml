@@ -37,15 +37,20 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.date.time']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td colspan="3">
-						<ac:dateTime id="briefdate"
-								mindate="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
-								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.date.time']}"
-								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
-								update="@this">
+						<td colspan="1">
+							<ac:dateTime id="briefdate"
+									mindate="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
+									required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+									label="#{lbl['lbl.sc.date.time']}"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
+									update="@this, @([id$=pday]) "  >									
 							</ac:dateTime>
-
+						</td>
+						<td>
+							<p:inputText id="pday" value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}" style="width: 65px; text-align: center;" disabled="true">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+							</p:inputText>
+						
 						</td>
 					</tr>
 					<tr>
