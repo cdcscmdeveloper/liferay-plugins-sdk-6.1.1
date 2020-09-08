@@ -2056,7 +2056,26 @@ public class SupplierFinalizationBackingBean extends
 			throw new EpException(MessageConst.ERROR_760341);
 		}
 	}
-
+	//25638 - Start
+	/**
+	 * 
+	 */
+	private void reviseSignOff() {
+	  log.info("signOff");
+      if (StringUtils.isNotBlank(
+              getManagedBean().getCommitteeType())) {
+          for (ScQtCommitteeActivity scQtCommitteeActivity 
+                      : getManagedBean().getCommitteeList()) {
+              if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
+                      .equals(getFacesScopes().getUserSessionBean().getUserId())) {
+                  scQtCommitteeActivity.setSignedOff(false);
+                  break;
+              }
+          }
+      }
+    }
+	//25638 - End
+	
 	/**
 	 * Validate, save the selected quotation/tender supplier finalization
 	 * details and update to BPM
@@ -2167,7 +2186,10 @@ public class SupplierFinalizationBackingBean extends
 					signOff();
 				}
 				// #28472 - End.
+				//25638 - Start
+				reviseSignOff();
 				updateBPMTask(outcome, null, reqDTO);
+				//25638 - End
 			}
 			// #25638 - End.
 		} else {
