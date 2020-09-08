@@ -1782,5 +1782,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	}
 	//26238 - end
+	
+	public String getCheckFactUser() {
+		String checkFactUser = "No";
+		
+		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()) {
+			logger.info("User Roles: " + userRole.getPmRole().getRoleCode());
+			if(userRole.getPmRole().getRoleCode().equalsIgnoreCase("FACTORING_USER")) {
+				checkFactUser = "Yes";
+			}
+		}
+		
+		return checkFactUser;
+	}
 
 }
