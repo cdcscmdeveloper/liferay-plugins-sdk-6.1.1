@@ -78,7 +78,6 @@ import org.primefaces.context.RequestContext;
 @RequestScoped
 public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 	private static final long serialVersionUID = 1L;
-	private String languageKey;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -589,8 +588,6 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			
 			updatePublishClosingDate(scQt);
 		}
-		//test purpose : #28772
-		languageKey = getlanguageKey();
 	}
 	
 	public String getlanguageKey(){
@@ -845,11 +842,4 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		this.getManagedBean().setAutoUpdate(true);
 	}
 
-	public String getLanguageKey() {
-		return languageKey;
-	}
-
-	public void setLanguageKey(String languageKey) {
-		this.languageKey = languageKey;
-	}
 }
