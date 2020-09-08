@@ -680,7 +680,7 @@ public class SupplierFinalizationBackingBean extends
 					getManagedBean().setPendingRecItemizedRemark(remark);
 				} else if (CommonConstants.PACKAGE_WISE.equals(remark.getSourceName())) {
 					getManagedBean().setPendingRecPackageRemark(remark);
-				} else if (StringUtils.isEmpty(remark.getRemark())){
+				} else {
 				  if (getManagedBean().getNewSfRemarks() == null) {
 				    List<ScRemark> newSfRemarkList = new LinkedList<>();
 				    getManagedBean().setNewSfRemarks(newSfRemarkList);
