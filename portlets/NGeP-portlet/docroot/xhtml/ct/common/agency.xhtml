@@ -7,7 +7,6 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     
-    
 	<p:panel id="agencyId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.agency']}" />
@@ -23,6 +22,7 @@
 			value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false" />
 		<br />
 		<br />
+		<p:remoteCommand name="loadFilter" onsuccess="tableAgencyWidget.filter();"/>
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
 			widgetVar="tableAgencyWidget"
 			editable="true" 
@@ -31,7 +31,7 @@
 			selectionMode="single" rowKey="#{agencyData}"
 			selection="#{ctBackingBean.managedBean.selectedAgency}"
 			rowIndexVar="indexVar"
-			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}" >
+			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}">
 			<ac:paginator for="tableAgencyDetails" />
 			<p:ajax event="rowSelect" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -90,8 +90,10 @@
 				<h:outputText  value="#{agencyData.orgProfile.orgCode}" style="float:left;text-align:left;"/><br />
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
-		
-			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/> 	
+		     
+			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@this"  update=":form:tableAgencyDetails" oncomplete="tableAgencyWidget.filter();"/> 
+		    <!--   <p:ajax event="cellEdit" listener="#{ctBackingBean.onCellEdit}"  update=":form:tableAgencyDetails" />-->
+				
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
@@ -113,14 +115,12 @@
 					   </h:outputText></f:facet>					  	
                </p:cellEditor> 
 
-                    <ui:fragment rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+                    <ui:fragment  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
                          <div style="text-align:center;">
-                          <i class="fa fa-pencil-square-o"></i>
+                          <i class="fa fa-pencil-square-o"></i>              
                          </div>
                     </ui:fragment>							 					  
-			
-					
-                         
+                
            </p:column> 
            
 			<p:column rowspan="2" style="width:8%;"
@@ -185,8 +185,9 @@
 					value="#{agencyData.chkStatusPmOrgValidity ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}"
 					style="float:none" />
 			</p:column>
-			
+					
 		</p:dataTable>
+	
 
 		<div class="ppRightBtn">
 			<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"
@@ -209,6 +210,8 @@
 						escape="false" />
 				</p:tooltip>
 			</p:commandButton>
+		     <!-- <p:commandButton value="Clear" onclick="tableAgencyWidget.clearFilters();" update=":form:tableAgencyDetails"/>-->  
+		     <!-- <p:commandButton  value="" onsuccess="tableAgencyWidget.filter();"/> -->
 		</div>
 		<br />
 		<br />
