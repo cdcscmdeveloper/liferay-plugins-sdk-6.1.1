@@ -814,28 +814,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 
-			// Start - 28292
-			ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
-			List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
-			List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
+			// Start - 28292			
 			CommonUtils commonUtils = new CommonUtils();
 			
-			if(itemlistService != null && !itemlistService.isEmpty()){			
-				for (CtContractItem ctItem : itemlistService) {
+			if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null
+					&& !ctBB.getManagedBean().getContractVer().getCtContractItems().isEmpty()) {			
+				for (CtContractItem ctItem : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
 					DecimalFormat formatter = new DecimalFormat(minValue);	
 					String result = formatter.format(ctItem.getMinimumOrderQty());
-			        ctItem.setMinimumOrderQty(Double.parseDouble(result));
-					ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
-				}
-			}
-			if(itemlistProduct != null && !itemlistProduct.isEmpty()){			
-				for (CtContractItem ctItem : itemlistProduct) {
-					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
-					DecimalFormat formatter = new DecimalFormat(minValue);	
-					String result = formatter.format(ctItem.getMinimumOrderQty());
-			        ctItem.setMinimumOrderQty(Double.parseDouble(result));
-					ctBB.getManagedBean().getUpdateItemMap().put(ctItem.getScRequestItem().getRequestNoteItemId(), ctItem);
+					ctItem.setMinimumOrderQty(Double.parseDouble(result));
+					
+					ctBB.onChangeMinimumQty(ctItem);
+			        
 				}
 			}
 			// End - 28292
