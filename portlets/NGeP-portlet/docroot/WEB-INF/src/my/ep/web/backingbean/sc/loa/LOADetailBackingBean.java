@@ -4620,7 +4620,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
         //26226 Start
 		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
-		itemBean.setItem(item.getScRequestItem().getItemName());
+		//#28609
+		//itemBean.setItem(item.getScRequestItem().getItemName());
 		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
 		
 		if (null != tplSpecQuestion.getClDeliveryTerm()) {
