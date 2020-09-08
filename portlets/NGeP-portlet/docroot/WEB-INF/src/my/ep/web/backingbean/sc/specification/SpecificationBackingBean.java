@@ -7735,8 +7735,9 @@ public class SpecificationBackingBean extends
 				}
 			}
 			if (checkList.isScoringReq()) {
+				/* FIX VALIDATION PROBLEM 25138*/
 				if (null == contractScoreType
-						|| "".equalsIgnoreCase(contractScoreType)) {
+						|| "".equalsIgnoreCase(contractScoreType) || "0".equalsIgnoreCase(contractScoreType)) {
 					throw new EpException(MessageConst.ERROR_760190);
 				}
 
