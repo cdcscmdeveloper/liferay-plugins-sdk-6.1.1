@@ -36,7 +36,7 @@
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
-					update="spkiOutputPanel" process="@form"
+					update="spkiOutputPanel,proposalMenuContent" process="@form"
 					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
