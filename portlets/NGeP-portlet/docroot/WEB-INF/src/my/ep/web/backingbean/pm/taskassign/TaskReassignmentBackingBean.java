@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.pm.taskassign;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -85,7 +84,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -1965,8 +1963,12 @@ public class TaskReassignmentBackingBean extends
 					getManagedBean().getTaskAssignmentSearchBean().getUser() != null &&
 					getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() != null){
 				reqDTO.setUserLoginId(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId());
+			}else{
+				//28843@azza09092020 - Start
+				reqDTO.setUserLoginId(this.getManagedBean().getSelectedReassignee().get(0));
+				//28843@azza09092020 - End
 			}
-			
+
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
 			if(resDTO != null){
 				vo.setOrderAmount(resDTO.getOrderAmount());
