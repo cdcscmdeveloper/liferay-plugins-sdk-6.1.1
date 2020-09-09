@@ -804,23 +804,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				validateOwnerOrgProfile(
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
-
-			// Start - 28292			
-			CommonUtils commonUtils = new CommonUtils();
-			
-			if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null
-					&& !ctBB.getManagedBean().getContractVer().getCtContractItems().isEmpty()) {			
-				for (CtContractItem ctItem : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
-					DecimalFormat formatter = new DecimalFormat(minValue);	
-					String result = formatter.format(ctItem.getMinimumOrderQty());
-					ctItem.setMinimumOrderQty(Double.parseDouble(result));
-					
-					ctBB.onChangeMinimumQty(ctItem);
-			        
-				}
-			}
-			// End - 28292
 			
 			validateFDDescAndAmount(action);
 			ctBB.getZoneObjDetails();
@@ -1594,6 +1577,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
+		
+		// Start - 28292
+		if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null
+				&& !ctBB.getManagedBean().getContractVer().getCtContractItems().isEmpty()) {
+			CommonUtils commonUtils = new CommonUtils();
+			for (CtContractItem ctItem : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
+						.getScRequestItem().getUom().getUomCode());
+				DecimalFormat formatter = new DecimalFormat(minValue);
+				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setMinimumOrderQty(Double.parseDouble(result));
+
+				ctBB.onChangeMinimumQty(ctItem);
+
+			}
+		}
+		// End - 28292
 	}
 	//LOG : 13847, by Fahmi 22032019
 	/**
