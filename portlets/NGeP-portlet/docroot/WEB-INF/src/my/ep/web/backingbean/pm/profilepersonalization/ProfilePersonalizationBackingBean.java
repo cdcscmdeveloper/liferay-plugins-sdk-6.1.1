@@ -1789,7 +1789,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		
 		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()) {
 			logger.info("User Roles: " + userRole.getPmRole().getRoleCode());
-			if(userRole.getPmRole().getRoleCode().equalsIgnoreCase("FACTORING_USER")) {
+			if(userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.FACTORING_USER.value())) {
 				checkFactUser = false;
 			}
 		}
