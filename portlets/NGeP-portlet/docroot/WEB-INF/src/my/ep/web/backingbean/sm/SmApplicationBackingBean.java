@@ -2863,8 +2863,13 @@ public class SmApplicationBackingBean extends
 					calcPersonnelListCount();
 					SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 							getManagedBean().getSmAppl(), getManagedBean()
-									.getPrevApprovedPersonnels(),
+							.getPrevApprovedPersonnels(),
 							getManagedBean().isDisAllowOwnerEdit());
+					/*#28458 - Start*/
+					if (getManagedBean().isDisAllowOwnerEdit()){
+						throw new EpException(MessageConst.ERROR_722683);
+					}
+					/*#28458 - End*/
 					SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
 							.getManagedBean().getSmSupplier(), this
 							.getManagedBean().getSmAppl().getSmPersonnels());
@@ -2932,6 +2937,11 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
 								getManagedBean().isDisAllowOwnerEdit());
+						/*#28458 - Start*/
+						if (getManagedBean().isDisAllowOwnerEdit()){
+							throw new EpException(MessageConst.ERROR_722683);
+						}
+						/*#28458 - End*/
 						SmApplicationUtil.setPersonnelSoftcertRenewalStatus(
 								this.getManagedBean().getSmSupplier(), this
 										.getManagedBean().getSmAppl()
@@ -8935,6 +8945,11 @@ public class SmApplicationBackingBean extends
 			if(getManagedBean().getSmAppl().getSmSupplier() != null){
 				SmApplicationUtil.rejectSmMofCertForSupplier(
 						getManagedBean().getSmAppl().getSmSupplier());
+				
+				// #28534 START
+				getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
+				getManagedBean().getSmSupplier().setBumi(false);
+				// #28534 END
 			}
 		}
 		log.info("<<<<Appl type>>>>");
