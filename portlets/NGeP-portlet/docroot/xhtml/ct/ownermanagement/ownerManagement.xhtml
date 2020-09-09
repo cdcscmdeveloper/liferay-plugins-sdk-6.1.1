@@ -94,8 +94,8 @@
 		<h:panelGroup style="width:765px;" >
 			<table style="width: 100%">
 					<tr>
-					<td class="columnWidth160">
-						<p:outputLabel id="nosst" value="#{lbl['lbl.ct.loa.no']}" />
+					<td class="columnWidth240">
+						<p:outputLabel id="nosst" style="width:240px;" value="#{lbl['lbl.ct.loa.no']}" />
 					</td>
 					<td>
 						<p:inputText for="nosst" disabled="true"  style="width:130px;"
@@ -103,8 +103,8 @@
 				   			<p:ajax  event="blur"> </p:ajax>
 						</p:inputText>
 					</td>
-					<td class="columnWidth150">
-						<p:outputLabel id="sstdate" value="#{lbl['lbl.ct.loa.date']}" />
+					<td class="columnWidth240">
+						<p:outputLabel id="sstdate" style="width:240px;" value="#{lbl['lbl.ct.loa.date']}" />
 					</td>
 					<td>
 						<p:inputText for="sstdate" disabled="true" style="width:130px;"
@@ -237,7 +237,7 @@
 						value="*" styleClass="mandatory" />
 					</td>
 					<td>
-					<p:inputText id="newOrgProfile" rows="3" cols="63" disabled="true" size="110" style="width:455px;"
+					<p:inputText id="newOrgProfile" rows="3" cols="63" disabled="true" size="100" style="width:auto"
 						value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.orgName}">
 						</p:inputText>
 					<p:commandLink
