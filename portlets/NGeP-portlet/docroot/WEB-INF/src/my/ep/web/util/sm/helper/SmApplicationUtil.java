@@ -11858,7 +11858,16 @@ public class SmApplicationUtil {
 					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){
 						retVal = false;
 					}
+					// #28831 - start
+				} else {
+					if (smPersonnel.getIdentificationType() != null
+							&& ParameterConst.IDENTIFICATION_TYPES_IC.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())
+							&& (smPersonnel.getPmCountry() != null && smPersonnel.getPmCountry().getCountryId() != 131)
+							&& !(smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
+						retVal = false;
+					}
 				}
+				// #28831 - start
 			}
 			//END  #27230
 		} catch (Exception ex) {
