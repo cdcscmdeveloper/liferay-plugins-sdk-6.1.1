@@ -220,6 +220,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
 	
+	private boolean isFinancialAttchment;//#28792
+	
 	/**
 	 * Default Consructor
 	 */
@@ -1924,4 +1926,22 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.zoneGeneralTrees = zoneGeneralTrees;
 	}
 	//#21695 Farid End
+
+	//#28792-start
+	/**
+	 * @return the isFinancialAttchment
+	 */
+	public boolean isFinancialAttchment() {
+		return isFinancialAttchment;
+	}
+
+	/**
+	 * @param isFinancialAttchment the isFinancialAttchment to set
+	 */
+	public void setFinancialAttchment(boolean isFinancialAttchment) {
+		this.isFinancialAttchment = isFinancialAttchment;
+	}
+	
+	//#28792-End
+	
 }
