@@ -3336,15 +3336,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			
 		}
 		// Start - 28292
-		log.info("--min quantity validation--");
 		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
-			log.info("--inside validation--");
 			Double maxValue = new Double(0);							
 			for (CtItemMaxQty maxQty : ctContractItem.getCtItemMaxQties()) {
-				maxValue = maxQty.getMaxQuantity().doubleValue();				
+				if (maxValue < maxQty.getMaxQuantity().doubleValue())
+					maxValue = maxQty.getMaxQuantity().doubleValue();				
 			}
-			log.info("max :"+maxValue);
-			log.info("min :"+ctContractItem.getMinimumOrderQty());
 			if (ctContractItem.getMinimumOrderQty() > maxValue) {
 				throw new EpException(MessageConst.ERROR_100034);
 				
