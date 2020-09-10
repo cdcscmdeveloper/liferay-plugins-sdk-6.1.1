@@ -20,6 +20,7 @@
 				styleClass="BtnSpacing"
 				action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
+		<ui:param name="filteredRoles" value="#{fn:split('S',',')}"/>
 		<div align="left" class="header-info header-spacing">
 			<table style="width: 100%">
 				<tr>
@@ -133,8 +134,10 @@
 							value="#{committeeMember.memberRoleId}"
 							style="width: 110px;margin-bottom: 5px;"
 							disabled="#{!isCommitteeUpdatable}">
-							<f:selectItems
-								value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(committeeMember.PNP,evaluationMeetingBackingBean.managedBean.qt,committeeMember.pmUser)}" />
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								itemLabel="#{role.codeName}"
+								itemValue="#{role.pmParameter.parameterId}" 
+								value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,evaluationMeetingBackingBean.managedBean.qt,committeeMember.pmUser, filteredRoles)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{evaluationMeetingBackingBean.chnageMemberRole(index,evaluationMeetingBackingBean.managedBean.committeeMemberActivity)}"></p:ajax>
 						</p:selectOneMenu>

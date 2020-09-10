@@ -132,8 +132,11 @@
 									<p:selectOneMenu id="appaction"
 										value="#{existcommitteeuser.memberRoleId}"
 										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItems
-											value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(existcommitteeuser.PMP,evaluationMeetingBackingBean.managedBean.qt,existcommitteeuser)}" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+										<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+											itemLabel="#{role.codeName}"
+											itemValue="#{role.pmParameter.parameterId}"
+											value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existcommitteeuser.PMP,evaluationMeetingBackingBean.managedBean.qt,existcommitteeuser,filteredRoles)}" />
 									</p:selectOneMenu>
 								</p:column>
 							</p:dataTable>
