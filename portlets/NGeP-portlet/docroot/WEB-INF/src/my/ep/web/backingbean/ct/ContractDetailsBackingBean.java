@@ -1587,6 +1587,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						.getScRequestItem().getUom().getUomCode());
 				DecimalFormat formatter = new DecimalFormat(minValue);
 				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
 				ctItem.setMinimumOrderQty(Double.parseDouble(result));
 
 				ctBB.onChangeMinimumQty(ctItem);
