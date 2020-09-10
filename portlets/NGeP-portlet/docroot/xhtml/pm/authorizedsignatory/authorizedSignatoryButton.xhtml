@@ -18,6 +18,19 @@
 				</div>
 			</td>
 		</tr>
+		<!-- # 2020/09/10 - 28740 - start -->	
+		<tr>
+			<td>
+				<div align="right" style="width: 100%">
+					<p:commandLink id="authSignatoryTrack" value="#{lbl['lbl.td.doc.trackingDiary']}"
+						disabled="#{authorizedsignatoryBackingBean.managedBean.zone.zoneId==null}"
+						style="float:right;"
+						immediate="true"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.virtualCertificateParamCode, authorizedsignatoryBackingBean.managedBean.zone.zoneId)}"/>
+				</div>
+			</td>
+		</tr>
+		<!-- # 2020/09/10 - 28740 - End -->	
 	</table>
 
 </ui:composition>
