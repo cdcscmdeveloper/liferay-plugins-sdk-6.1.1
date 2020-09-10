@@ -53,6 +53,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 //20200909@akmal - Enhancement28951 - Start
+import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.event.data.PageEvent;
 //20200909@akmal - Enhancement28951 - End
@@ -714,6 +715,20 @@ public class LovBackingBean implements Serializable {
 			Long key = ((PmBusinessNature) value).getBusinessNatureId();
 			if(persistedEntities.containsKey(key)) 
 				persistedEntities.remove(key);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void onToggleSelect(ToggleSelectEvent event){
+		List<BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchDataModel.getList();
+		for(BaseEntity value : templist){
+			if(value instanceof PmBusinessNature){
+				Long key = ((PmBusinessNature) value).getBusinessNatureId();
+				if(persistedEntities.containsKey(key)) 
+					persistedEntities.remove(key);
+				else
+					persistedEntities.put(key,value);
+			}
 		}
 	}
 	

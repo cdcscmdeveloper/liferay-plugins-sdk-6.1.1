@@ -117,7 +117,7 @@
 				<!--20200909@akmal - Enhancement28951 - End-->
 				<p:ajax event="rowSelect" update="@([id$=slbtn])" />   
                 <p:ajax event="rowUnselect" update="@([id$=slbtn])" />  
-                <p:ajax event="toggleSelect" update="@([id$=slbtn])" />
+                <p:ajax event="toggleSelect" update="@([id$=slbtn])" listener="#{lovBackingBean.onToggleSelect}"/>
                 <!--20200909@akmal - Enhancement28951 - Start-->
                 <p:ajax event="page" listener="#{lovBackingBean.onPageChange}" oncomplete="lovPopulateSelection()"/>
                 <!--20200909@akmal - Enhancement28951 - End-->                        
