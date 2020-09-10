@@ -35,25 +35,12 @@
 					</tr>
 					<tr>							
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.dob']}" /></td>
-						<td>
-							<p:outputPanel>
+						<td><p:outputPanel>
 								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.birthDate}" />
 							</p:outputPanel>
 						</td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.designation']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.designation}" /></td>							
-					</tr>
-					<tr>						
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.title.salutationName}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.email']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.email}" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.telno']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.phoneFull}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mobilenumber']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.mobileFull}" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.bumi']}" /></td>
@@ -61,6 +48,28 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.religion']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.isMuslim().booleanValue() ? lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}" /></td>
 					</tr>
+	
+					<tr>						
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.title.salutationName}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.email']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.email}" /></td>
+					</tr>
+					<!-- #13208 - START -->
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.department']}"/></td>
+						<td><p:outputLabel sytleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.department}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.unit']}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.sectionUnit}"/></td>
+					</tr>
+					<!-- #13208 - END -->
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.telno']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.phoneFull}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mobilenumber']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.mobileFull}" /></td>
+					</tr>
+					
 				</p:outputPanel>
 			</table>				
 		</p:outputPanel>
