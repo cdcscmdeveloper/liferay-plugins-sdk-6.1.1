@@ -1630,7 +1630,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	       }
 	       // 12177 - End
 	   	} else {
-	   		logger.info("DOCTYPE NULL not meet condition");
+	   		logger.info("DOCTYPE AND DOCSTATUSID NULL not meet condition = " + worklistItemVO.getTaskId() 
+	   				+ "| worklistItemVO.getDocType() = " + worklistItemVO.getDocType()
+	   				+ "| worklistItemVO.getDocStatus() = " + worklistItemVO.getDocStatus());
 	   	}
 	}
 	  //#24968-start - performance
