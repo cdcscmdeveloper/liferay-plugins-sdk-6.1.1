@@ -2425,8 +2425,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return the role type dropdown values
 	 */
+	public List<PmParameterDesc> getRoleTypeDropdownValuesBasedOnPTJ(boolean isChairPersonReq,ScQt scqt,PmUser user) {//#25037
+		return getRoleTypeDropdownValuesBasedOnPTJ( isChairPersonReq, scqt, user, null);
+	}
 	public List<PmParameterDesc> getRoleTypeDropdownValuesBasedOnPTJ(
-			boolean isChairPersonReq,ScQt scqt,PmUser user) {
+			boolean isChairPersonReq,ScQt scqt,PmUser user, String[] filteredRoles) {//#25037
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		boolean isptj=false;
@@ -2453,9 +2456,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								SearchOperator.OPERATOR_IN.value(),
 								recommendList));
 			}
-
-		return retrieveParametersBySearchBean(
+		//#25037 START
+		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+
+		if(filteredRoles!=null){
+			for(PmParameterDesc role: list){
+				if(Arrays.asList(filteredRoles).contains(role.getPmParameter().getParameterCode())){
+					role.setSelectable(false);
+				}
+			}
+		}
+		return list;
+		//#25037 END
 
 	}
 	

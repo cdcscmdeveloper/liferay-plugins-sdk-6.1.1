@@ -749,6 +749,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
 				if(this.getManagedBean().isCommitteeReviseFlow()){
+					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
 					page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";				
 				}//#25037
 				List<ScQtCommittee> cmts = null;
@@ -2233,7 +2234,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScWorkFlowStatus  wfStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		if(wfStatus!=null){
 			PmStatus status = wfStatus.getPmStatus();
-			log.info("the status " + status.getStatusId());
 			if(Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(status.getStatusId())
 					|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(status.getStatusId())){
 				if(CollectionUtils.isNotEmpty(approvalRequests)){

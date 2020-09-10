@@ -1686,6 +1686,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtRequestContent requestContent;
 	private boolean reapproval;
 	private String prevDOAs;
+	private String[] roleFilterList;
 
 	//#25037-END
 
@@ -10502,6 +10503,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setPrevDOAs(String prevDOAs) {
 			this.prevDOAs = prevDOAs;
+		}
+
+		public String[] getRoleFilterList() {
+			return roleFilterList;
+		}
+
+		public void setRoleFilterList(String[] roleFilterList) {
+			this.roleFilterList = roleFilterList;
 		}//#25037-end
 		
 		

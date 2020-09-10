@@ -3202,6 +3202,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					this.getManagedBean().setReapproval(isReapproval);
 
 					if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) && committeDataType.getReapproval()) {
+						getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
 						String tabType = committeDataType.getCommitteeType();
 						tabType = tabType==null ? "": tabType;
 						List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();

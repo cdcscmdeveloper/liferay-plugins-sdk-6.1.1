@@ -1024,6 +1024,12 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setAutoUpdate(false);
 		getManagedBean().setNameRequired(true);
 		
+		Long qtStatus = getCurrentQtStatusId();
+		if(qtStatus!=null){
+			if(qtStatus.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)){
+				getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
+			}
+		}
 	}
 
 	/**
@@ -2509,7 +2515,10 @@ public class QTCommitteBackingBean extends
 		if (scQt.getQtStatus() != null) {
 			status = scQt.getQtStatus().getStatusId();
 		} else {
-			status = getManagedBean().getCurrentStatusId();
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
+			if(wfStatus!=null){
+				status = wfStatus.getPmStatus().getStatusId();
+			}
 		}
 		return status;
 	}
