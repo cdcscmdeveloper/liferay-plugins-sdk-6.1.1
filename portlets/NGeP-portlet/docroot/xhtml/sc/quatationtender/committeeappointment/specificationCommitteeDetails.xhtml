@@ -84,7 +84,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
-				
+				<ui:param name="filteredRoles" value="#{approvalBackingBean.managedBean.roleFilterList}"/>
 				<ui:fragment rendered="#{(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole))}">
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
@@ -93,8 +93,8 @@
 								listener="#{qTCommitteBackingBean.roleChangedListener(specificationcommittee)}" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-							<f:selectItems var="role"
-								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(specificationcommittee.PNP,qTDetailBB.managedBean.qt,specificationcommittee.pmUser)}"
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(specificationcommittee.PNP,qTDetailBB.managedBean.qt,specificationcommittee.pmUser, filteredRoles)}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" />
 						</p:selectOneMenu>
