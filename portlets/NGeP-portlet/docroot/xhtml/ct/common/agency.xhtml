@@ -22,16 +22,18 @@
 			value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false" />
 		<br />
 		<br />
-		<p:remoteCommand name="loadFilter" onsuccess="tableAgencyWidget.filter();"/>
+		<p:remoteCommand name="loadFilter" onsuccess="tableAgencyWidget.filter();"/> <!--  to set filter loader outside ajax-->
+        <!--  <p:remoteCommand name="savecelledit" action="#{ctBackingBean.savecellTest}" onsuccess="var d=tableAgencyWidget, c=d.jq.find('td:has(.ui-cell-editor-input:visible)'); if(c.length)d.saveCell(c)"/>-->  
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
 			widgetVar="tableAgencyWidget"
 			editable="true" 
 			editMode="cell"
+			filteredValue="#{ctBackingBean.filteredAgencies}"
 			value="#{ctBackingBean.managedBean.contractVer.ctAgencies}"
 			selectionMode="single" rowKey="#{agencyData}"
 			selection="#{ctBackingBean.managedBean.selectedAgency}"
 			rowIndexVar="indexVar"
-			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}">
+			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}" >
 			<ac:paginator for="tableAgencyDetails" />
 			<p:ajax event="rowSelect" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
@@ -91,9 +93,8 @@
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
 		     
-			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@this"  update=":form:tableAgencyDetails" oncomplete="tableAgencyWidget.filter();"/> 
-		    <!--   <p:ajax event="cellEdit" listener="#{ctBackingBean.onCellEdit}"  update=":form:tableAgencyDetails" />-->
-				
+			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@this"  update=":form:tableAgencyDetails" oncomplete="loadFilter();"/>
+		     <!--  <p:ajax event="cellEdit" oncomplete="savecelledit();" />-->
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
