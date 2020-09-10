@@ -153,8 +153,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
@@ -188,6 +190,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
+	
+	//added for 28227 to check list of filter value
+	private List<CtAgency> filteredAgencies;
+	
+	
+
 	static
 	{
 		months = new HashMap<String, String>();
@@ -1451,14 +1459,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
+		System.out.println("agencyList : "+agencyList.size());
+		System.out.println("Changes value using(agencyData) in ContractBackingBean : "+agencyData.getCeilingAmount());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				System.out.println("Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
+				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
-
+          
 			double overallContractAmount = 0.0;
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
@@ -1492,6 +1504,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
 		}
+		System.out.println("filtered value in list ==================== : "+getFilteredAgencies().size());
 	}
 
 	/**
@@ -4310,19 +4323,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	
-	public boolean isToShow(){
-		
-		boolean show = false;
-		
-		if(this.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getStatus().getStatusId().intValue()
-				== ContractStatusConst.RA_PENDING_APPROVAL){
-			show = true;
-		}else{
-			show =  this.getManagedBean().getContractVer().getCtContract().isAssignedCtAdminFlag();
-		}
-		
-		return show;
-	}
+//	public boolean isToShow(){
+//		
+//		boolean show = false;
+//		
+//		if(this.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getStatus().getStatusId().intValue()
+//				== ContractStatusConst.RA_PENDING_APPROVAL){
+//			show = true;
+//		}else{
+//			show =  this.getManagedBean().getContractVer().getCtContract().isAssignedCtAdminFlag();
+//		}
+//		
+//		return show;
+//	}
 
 	private String contractAdminRoleCode() {
 		String contractType = getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
@@ -4335,6 +4348,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return roleCode;
 	}
 	/*#21387 - basri end*/
+
+	//added for 28227
+	public List<CtAgency> getFilteredAgencies() {
+		return filteredAgencies;
+	}
+
+	public void setFilteredAgencies(List<CtAgency> filteredAgencies) {
+		this.filteredAgencies = filteredAgencies;
+	}
+
+	
 	
 
 }  
