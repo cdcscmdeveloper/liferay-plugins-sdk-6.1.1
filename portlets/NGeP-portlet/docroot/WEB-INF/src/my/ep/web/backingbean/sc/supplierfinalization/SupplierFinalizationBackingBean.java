@@ -4511,7 +4511,8 @@ public class SupplierFinalizationBackingBean extends
 					reqDTO.setSupplierFinalization(true);
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 					//#26169 #85 - START
-					reqDTO.setOrgProfileId(currUserLoginOrgProfile.getOrgProfileId());
+					//#26169 #85 - 09092020- include checking null 
+					if(currUserLoginOrgProfile != null)reqDTO.setOrgProfileId(currUserLoginOrgProfile.getOrgProfileId());
 					//#26169 #85 - END
 					CommitteResDTO resDTO = committeeSO.retrieveFinalizationCommitteeType(reqDTO);
 					if (resDTO != null) {
