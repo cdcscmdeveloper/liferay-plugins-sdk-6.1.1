@@ -1459,14 +1459,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
-		System.out.println("agencyList : "+agencyList.size());
-		System.out.println("Changes value using(agencyData) in ContractBackingBean : "+agencyData.getCeilingAmount());
+		log.info("agencyList : "+agencyList.size());
+		log.info("Changes value using(agencyData) in ContractBackingBean :"+agencyData.getCeilingAmount());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-				System.out.println("Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
+				log.info("Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
 				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
@@ -1504,7 +1504,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
 		}
-		System.out.println("filtered value in list ==================== : "+getFilteredAgencies().size());
+		
+		log.info("filtered value in list ==================== : "+getFilteredAgencies().size());
 	}
 
 	/**
