@@ -338,7 +338,7 @@ public class PmTrackingDiaryBackingBean extends
 				
 				String reportName = "";
 				if(docType.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
-					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME_SP;
+					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME_AS;
 				} else {
 					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 				}
