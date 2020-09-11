@@ -15,11 +15,17 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
 
+//#26307
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ParameterConst;
+
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
+
 import my.ep.persistence.entity.py.PyPayment;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
@@ -27,6 +33,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -72,6 +79,9 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = req.getParameter("paydate");
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
+		
+		//#26307
+		String cardType = req.getParameter("cardType") != null ?  req.getParameter("cardType") : null;
 
 		System.out.println("nbcb:" + nbcb);
 		System.out.println("orderId: " + orderId);
@@ -93,7 +103,7 @@ public class MolPayServlet extends HttpServlet {
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setPaymentId(ordId);
 			PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
-			
+														
 			String vKey = SmCommonUtil.getInstance().getPaymentGatewayVKeyByBillType(resDTO.getPyPayment().getPyBill().getBillType());
 			// To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
@@ -167,6 +177,21 @@ public class MolPayServlet extends HttpServlet {
 						PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
 						smPayment.setPmStatus(pmStat);
 					}
+					
+					//#26307 - Start
+					if(cardType != null){
+						if(cardType.equals(ParameterConst.CARD_TYPES_CREDIT)){
+							PmParameter cards = ParameterHelper.getInstance().
+									getParameterByTypeAndCode(ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT);
+							smPayment.setCardType(cards);
+						}
+						if(cardType.equals(ParameterConst.CARD_TYPES_DEBIT)){
+							PmParameter cards = ParameterHelper.getInstance().
+									getParameterByTypeAndCode(ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT);
+							smPayment.setCardType(cards);
+						}
+					}		
+					//#26307 - End
 
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
