@@ -2076,6 +2076,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		} else {
 		    suppFinalizationReqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
 			suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
+			if (QTStatusConst.SF_PENDING_ENDORSEMENT.equals(getManagedBean().getCurrentStatusId())) {
+			  suppFinalizationReqDTO.setRoleCode(RoleCode.QCA_MEMBER.value());
+			}
 		}
 		// #25638 - End
 		suppFinalizationReqDTO.setUserLocale(facesScope.getUserLocale());
