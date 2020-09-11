@@ -20,6 +20,7 @@
        <p:dataTable id="tableAgencyDetails" var="agencyData"  widgetVar="tableAgencyWidget"
        					editable="true" 
 						editMode="cell"
+						filteredValue="#{ctBackingBean.filteredAgencies}"
        					value="#{ctBackingBean.managedBean.contractVer.ctAgencies}" 
   						selectionMode="single" rowKey="#{agencyData}" selection="#{ctBackingBean.managedBean.selectedAgency}" 
   						rowIndexVar="indexVar" >
