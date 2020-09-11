@@ -1468,6 +1468,12 @@ public class CommitteBackingBean extends
 			SelectItem[] pbbItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
 			this.getManagedBean().setAddRepresentativesTypeslist(
 					Arrays.asList(pbbItems));
+			//20200826@asyrafhaziq - 28600 -start
+		}else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equalsIgnoreCase(commType)) {
+			SelectItem[] ppbItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PPR);
+			this.getManagedBean().setAddRepresentativesTypeslist(
+					Arrays.asList(ppbItems));
+			//20200826@asyrafhaziq - 28600 -End
 		} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(commType)) {
 			SelectItem[] qcaItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
 			this.getManagedBean().setAddRepresentativesTypeslist(
