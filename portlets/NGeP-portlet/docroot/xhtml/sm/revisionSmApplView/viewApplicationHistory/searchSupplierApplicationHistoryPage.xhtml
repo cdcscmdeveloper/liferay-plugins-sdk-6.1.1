@@ -11,15 +11,6 @@
 		<script>
 			$('#portlet_viewApplicationHistory_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.application.history']}");			
 		</script>
-		<h:outputStylesheet>
-		.ui-datatable .ui-datatable-header {
-		    text-align: right;
-   		   background: unset;
-           border: 0px none;
-           font-size: 100%;
-    	font-family: inherit;
-		}
-		</h:outputStylesheet>
 	</ui:define>
 	
 	<ui:param name="viewSuppProfileBackingBean" value="#{viewApplHistoryBackingBean}" />
@@ -43,6 +34,15 @@
 				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId" >
 				
 				<f:facet name="header">
+					<h:outputStylesheet>
+					.ui-datatable .ui-datatable-header {
+		    			text-align: right;
+   		  				background: unset;
+           				border: 0px none;
+           				font-size: 100%;
+    					font-family: inherit;
+					}
+					</h:outputStylesheet>
 					<h:outputText value="#{lbl['lbl.sm.row.total']}: #{viewSuppProfileBackingBean.managedBean.smSupplierDataModel.getRowCount()}" />
 				</f:facet>
 				
