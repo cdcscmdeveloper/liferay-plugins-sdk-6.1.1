@@ -198,7 +198,7 @@
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
                          <div class="ppRightBtn">
 		                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true" 
-		                         update=":form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl" 
+		                         update=":form:jabatan,:form:ptjCodeVaue,:form:agencyId,:form:itemId,:form:agencyRemarksAttachmentPnl" 
 		                         action="#{ctBackingBean.deleteAgencyDetails()}" onsuccess="dlgAgenyDel.hide();" 
 		                         onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgenyDel.hide();" type="button" />
