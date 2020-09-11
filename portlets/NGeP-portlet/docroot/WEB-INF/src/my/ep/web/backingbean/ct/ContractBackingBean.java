@@ -174,6 +174,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
+	
+	//added for 28827 to check list of filter value
+	private List<CtAgency> filteredAgencies;	
+
 	static
 	{
 		months = new HashMap<String, String>();
@@ -1416,11 +1420,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
+		log.info("In validateCeilingAmount - agencyList : "+agencyList.size());
+		log.info("In validateCeilingAmount - Changes value using(agencyData) in ContractBackingBean : "+agencyData.getCeilingAmount());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				log.info("In validateCeilingAmount - Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
+				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
 
@@ -1457,6 +1465,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
 		}
+		
+		log.info("In validateCeilingAmount - filtered value in list ==================== : "+getFilteredAgencies().size());
 	}
 
 	/**
@@ -3820,4 +3830,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return null;
 	}
+	
+	//added for 28827
+	public List<CtAgency> getFilteredAgencies() {
+		return filteredAgencies;
+	}
+
+	public void setFilteredAgencies(List<CtAgency> filteredAgencies) {
+		this.filteredAgencies = filteredAgencies;
+	}
+	
 }  
