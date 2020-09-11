@@ -125,6 +125,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 		String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+		log.info("Task id : "+taskId);
+		log.info("getManagedBean().getTaskId() : "+getManagedBean().getTaskId());
 		log.info("SuspensionManagedBean preRenderView contractVerId*******"+contractVerId);
 		log.info("SuspensionManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
 		
@@ -164,7 +166,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			return;
 		}/*End if statement to check  login user */
 		// 20997 - start : to reset search list after save
-		if(getManagedBean().getTaskId()!=null) {
+		//conditional changes from != to == to avoid datatable reload for #28643
+		if(getManagedBean().getTaskId()==null) {
 			getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
 		}
 		// 20997 - end
