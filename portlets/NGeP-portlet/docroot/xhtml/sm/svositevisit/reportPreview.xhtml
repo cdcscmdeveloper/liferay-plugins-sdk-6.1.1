@@ -52,8 +52,8 @@
 					<p:outputPanel rendered="#{attch.recordStatusFlg == svoSiteVisitBackingBean.getRecordStatusActive()}">
 					<tr>
 						<!-- #24964 - start -->
-						<td><p:commandLink value="#{attch.fileName}" >
-							<p:fileDownload value="#{backingBean.commonDownload(attch.filePath, attch.fileName, attch.fileName)}" />
+						<td><p:commandLink value="#{attch.fileName}" ajax="false">
+							<p:fileDownload value="#{svoSiteVisitBackingBean.attachmentDownload(attch)}" />
 						</p:commandLink></td>
 						<!-- #24964 - end -->
 						<td><p:commandLink oncomplete="attachmentDeleteDlg.show()" action="#{svoSiteVisitBackingBean.showDeleteDialog(svTask.smSvTemplate.svTemplateId,attch)}" 
