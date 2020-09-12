@@ -117,7 +117,8 @@ public class CancelRegistrationBackingBean extends
 							getManagedBean().getSuppAdminIdentificationNo().trim())
 							&& selectedPersonnel.getRecordStatusFlg().equals(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) {
 						//#25474------13072020
-						if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) || appl != null){//PM_STATTUS_ID=20199
+						if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) ||
+								resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null){//PM_STATTUS_ID=20199
 							if (getManagedBean()
 									.getAccType()
 									.equalsIgnoreCase(
