@@ -19,25 +19,25 @@
 				rowIndexVar="index">
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.no']}" />
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.item']}" />
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
-						<p:column colspan="3" style="text-align:center" headerText="#{lbl['lbl.sc.offered.price']}" />
+						<p:column rowspan="2" style="text-align:center; width : 3%" headerText="#{lbl['lbl.sc.no']}" />
+						<p:column rowspan="2" style="text-align:center; width : 42%" headerText="#{lbl['lbl.sc.item']}" />
+						<p:column rowspan="2" style="text-align:center; width : 25%" headerText="#{lbl['lbl.sc.supplier.name']}" />
+						<p:column colspan="3" style="text-align:center; width : 30%" headerText="#{lbl['lbl.sc.offered.price']}" />
 					</p:row>
 					<p:row>
-						<p:column headerText="#{lbl['lbl.sc.notice.board.by.loa']}" />
-						<p:column headerText="#{lbl['lbl.sc.notice.board.by.proposal']}" />
-						<p:column headerText="#{lbl['lbl.sc.notice.board.by.bidding']}" />
+						<p:column style="text-align:center" headerText="#{lbl['lbl.sc.notice.board.by.loa']}" />
+						<p:column style="text-align:center"  headerText="#{lbl['lbl.sc.notice.board.by.proposal']}" />
+						<p:column style="text-align:center"  headerText="#{lbl['lbl.sc.notice.board.by.bidding']}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column>
 					<h:outputText value="#{index+1}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{awardedItem.itemName}" />
+					<h:outputText style="white-space : normal;" value="#{awardedItem.itemName}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{awardedItem.supplierName}" />
+					<h:outputText style="white-space : normal;" value="#{awardedItem.supplierName}" />
 				</p:column>
 				<p:column>
 					<h:outputText value="#{awardedItem.priceByLoa}" style="float:right;">
