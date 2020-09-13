@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -47,6 +48,7 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -56,6 +58,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.race.RaceReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -93,6 +96,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
@@ -13692,4 +13696,16 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 // BUG #28173 & #28315 -END
+	
+	//#28741 BPKU:27565 - start
+	public void updateRaceWithMyIdentity(AjaxBehaviorEvent e){
+		SmPersonnel per = getManagedBean().getSelectedShareHolder();
+		if(per == null || per.getIdentificationNo() == null || per.getIdentificationNo().length() != 12
+			|| !per.getIdentificationNo().matches("([0-9]{12})")) return;
+		
+		PmRace pmRace = SmCommonUtil.getRaceWithMyIdentity(per.getIdentificationNo());
+		if(pmRace != null)
+			getManagedBean().getSelectedShareHolder().setPmRace(pmRace);
+	}
+	//#28741 BPKU:27565 - end
 }

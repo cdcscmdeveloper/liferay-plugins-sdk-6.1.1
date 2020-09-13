@@ -118,10 +118,12 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td> 
 						<!-- SSM CHANGE 11012020 -->
+						<!-- #28741 BPKU:27565 (in disabled property) -->
 				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
 						id="equiPerRace" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.pmRace ne null and backingBean.managedBean.selectedShareHolder.pmRace.raceId ne null and backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.pmRace ne null and backingBean.managedBean.selectedShareHolder.pmRace.raceId ne null and backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)
+									or backingBean.managedBean.selectedShareHolder.identificationTypeId == 115}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="select"
@@ -191,6 +193,11 @@
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<!-- #28741 BPKU:27565 - start -->
+							<p:ajax event="change" partialSubmit="true"
+									listener="#{backingBean.updateRaceWithMyIdentity}"
+									update="equiPerRace"/> 
+							<!-- #28741 BPKU:27565 - end -->
 						</p:inputText>
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
