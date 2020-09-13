@@ -2,9 +2,16 @@ package my.ep.web.backingbean.pm.signatory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+//20200825@Jacky - #28739 - Start
+import java.util.Arrays;
+//20200825@Jacky - #28739 - End
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+//20200910@Jacky - #28740 - Start
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+//20200910@Jacky - #28740 - End
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -16,6 +23,9 @@ import my.ep.biz.service.pm.common.signatory.ISignatorySO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+//20200825@Jacky - #28739 - Start
+import my.ep.constant.pm.ParameterConst;
+//20200825@Jacky - #28739 - End
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
@@ -37,7 +47,9 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
+//20200825@Jacky - #28739 - Start
+import org.apache.commons.lang.StringUtils;
+//20200825@Jacky - #28739 - End
 
 /**
  * Backing Bean for Authorized Singatory
@@ -81,6 +93,9 @@ public class AuthorizedSignatoryBackingBean extends
 		this.getManagedBean().setZone(new PmZone());
 		this.getManagedBean().setCertSignatories(new ArrayList<PmCertSignatory>());
 		FacesContext fc = FacesContext.getCurrentInstance(); 
+		//20200825@Jacky - #28739 - Start
+		resetAuthorizedSignatorySearch();
+		//20200825@Jacky - #28739 - End
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 	
@@ -149,9 +164,14 @@ public class AuthorizedSignatoryBackingBean extends
 		PmCertSignatory pmCertSignatory = new PmCertSignatory();
 		//pmCertSignatory.setPmUser(pmuser);
 		pmCertSignatory.setPmZone(zone);
+		//20200825@Jacky - #28739 - Start
+		pmCertSignatory.setNewMof(0);
+		pmCertSignatory.setRenewMof(0);
+		pmCertSignatory.setBumiStat(0);
 		pmCertSignatory.setEffDate(this.getManagedBean().getTomorrow());
 		this.getManagedBean().getCertSignatories().add(pmCertSignatory);
 		this.getManagedBean().setSignatoryUser(null);
+		//20200825@Jacky - #28739 - End
 		RequestContext.getCurrentInstance().execute(
 				"searchSignatoryResultsWidVar.paginator.endLink.click()");
 	}
@@ -280,11 +300,10 @@ public class AuthorizedSignatoryBackingBean extends
 					}
 				}
 			}
-		}
-		if(activeNumber>1){
-			getManagedBean().setValidationError(true);
-			throw new EpException(MessageConst.ERROR_770144);
-		}else if(activeNumber==0){
+		}//20200825@Jacky - #28739 - Start
+		//remove activeNumber>1
+		//20200825@Jacky - #28739 - End
+		if(activeNumber==0){
 			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
@@ -352,6 +371,15 @@ public class AuthorizedSignatoryBackingBean extends
 						ISignatorySO.class);
 		SignatoryReqDTO reqDTO = new SignatoryReqDTO();
 		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+		//20200825@Jacky - #28739 - Start
+		List<PmCertSignatory> activeList = new ArrayList<>();
+		for(PmCertSignatory activeAppl: certSignatories){
+			if(DbValueConst.RECORD_STATUS_ACTIVE == activeAppl.getRecordStatusFlg()){
+				if(!activeAppl.isBrandNew()){
+					activeList.add(activeAppl);
+				}
+			}
+		}
 		
 		for(PmCertSignatory pmcertSignatory:certSignatories){
 				
@@ -364,6 +392,57 @@ public class AuthorizedSignatoryBackingBean extends
 				log.info("Tracking diary for virtual certificate: add new value :saveCertSignatoryDetials");
 				log.info(".............pmcertSignatory.getSinnatoryName()="
 						+ pmcertSignatory.getSinnatoryName());
+				
+				if(pmcertSignatory.getSelectedApplType().length < 1){
+					getManagedBean().setValidationError(true);
+					throw new EpException(MessageConst.ERROR_770233);
+				}
+						
+				String[] newSelectedApplType = new String[3];
+				String[] newSelectedApplTypeTemp = pmcertSignatory.getSelectedApplType();
+				for (int i = 0; i < newSelectedApplTypeTemp.length; i++) {
+					newSelectedApplType[i] = newSelectedApplTypeTemp[i];
+				}
+				boolean newMof = Arrays.asList(newSelectedApplType).contains(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				boolean reNewMof = Arrays.asList(newSelectedApplType).contains(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+				boolean bumiStat = Arrays.asList(newSelectedApplType).contains(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+				if(newMof){
+					pmcertSignatory.setNewMof(1);
+				}
+				if(reNewMof){
+					pmcertSignatory.setRenewMof(1);
+				}
+				if(bumiStat){
+					pmcertSignatory.setBumiStat(1);
+				}
+				
+				for(PmCertSignatory activeAutSign: activeList){
+					boolean activeNewMof = Arrays.asList(activeAutSign.getSelectedApplType()).contains(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+					boolean activeRenewMof = Arrays.asList(activeAutSign.getSelectedApplType()).contains(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+					boolean activeBumiStat = Arrays.asList(activeAutSign.getSelectedApplType()).contains(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+					if((pmcertSignatory.getSinnatoryName().equals(activeAutSign.getSinnatoryName())) && ((newMof == activeNewMof) && (reNewMof == activeRenewMof) && (bumiStat == activeBumiStat))){
+						getManagedBean().setValidationError(true);
+						pmcertSignatory.setNewMof(0);
+						pmcertSignatory.setRenewMof(0);
+						pmcertSignatory.setBumiStat(0);
+						throw new EpException(MessageConst.ERROR_770236, new String[] {pmcertSignatory.getSinnatoryName() + " "});
+					}
+					if(pmcertSignatory.getSinnatoryName().equals(activeAutSign.getSinnatoryName())){
+						getManagedBean().setValidationError(true);
+						pmcertSignatory.setNewMof(0);
+						pmcertSignatory.setRenewMof(0);
+						pmcertSignatory.setBumiStat(0);
+						throw new EpException(MessageConst.ERROR_770234, new String[] {pmcertSignatory.getSinnatoryName() + " "});
+					}
+					if((newMof == activeNewMof) && (reNewMof == activeRenewMof) && (bumiStat == activeBumiStat)){
+						getManagedBean().setValidationError(true);
+						pmcertSignatory.setNewMof(0);
+						pmcertSignatory.setRenewMof(0);
+						pmcertSignatory.setBumiStat(0);
+						throw new EpException(MessageConst.ERROR_770235);
+					}
+				}
+				//20200825@Jacky - #28739 - End
 				messageId = MessageConst.TD_80900;
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 
@@ -429,5 +508,146 @@ public class AuthorizedSignatoryBackingBean extends
 		return MessageUtils.getMessage(messageId, params,
 				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
+	//20200825@Jacky - #28739 - Start
+	public void searchAuthorizedSignatory(Long zoneId) {
+		log.info("searchUserProfile - start");
+		
+		if (this.getManagedBean().getZone().getZoneId() == null) {
+			getManagedBean().setValidationError(true);
+			throw new EpException(MessageConst.ERROR_770140);
+		}
+		
+		ISignatorySO iSignatorySO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ISignatorySO.class);
+		SignatoryReqDTO reqDTO = new SignatoryReqDTO();	
+		
+		reqDTO.setZoneId(zoneId);
+		reqDTO.setApplType(this.getManagedBean().getApplType());
+		reqDTO.setSignatoryName(this.getManagedBean().getSignatoryName());
+		SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);
+		
+		this.getManagedBean().setCertSignatories(resDTO.getCertSignatories());
+		
+	}
 
+	public void resetAuthorizedSignatorySearch(){
+		getManagedBean().getZone().setZoneId(null);
+		getManagedBean().setApplType(null);
+		getManagedBean().setSignatoryName(StringUtils.EMPTY);
+		getManagedBean().setCertSignatories(null);
+	}
+	//20200825@Jacky - #28739 - End
+	//20200910@Jacky - #28740 - Start
+	public String getAuthSignName(String curActionDesc){
+		String sabah = "SABAH";
+		String sarawak = "SARAWAK";
+		String semenanjung = "SEMENANJUNG"; 
+		boolean zonSabah = curActionDesc.contains(sabah);
+		boolean zonSarawak = curActionDesc.contains(sarawak);
+		boolean zonSemenanjung = curActionDesc.contains(semenanjung);
+		String result = null;
+		
+		if(zonSabah){
+			if(curActionDesc.contains("Penandatangan Sijil Maya")){
+				if(curActionDesc.contains("telah ditambah")){
+					Pattern pattern = Pattern.compile("Zon SABAH : Penandatangan Sijil Maya (.*) telah ditambah");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}else if(curActionDesc.contains("telah dinyahaktifkan")){
+					Pattern pattern = Pattern.compile("Zon SABAH : Penandatangan Sijil Maya (.*) telah dinyahaktifkan");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}else if(curActionDesc.contains("telah diaktifkan semula")){
+					Pattern pattern = Pattern.compile("Zon SABAH : Penandatangan Sijil Maya (.*) telah diaktifkan semula");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}
+			}else if(curActionDesc.contains("Butiran Penandatangan")){
+				Pattern pattern = Pattern.compile("Zon SABAH : Butiran Penandatangan (.*) telah dikemaskini.");
+				Matcher matcher = pattern.matcher(curActionDesc);
+				if (matcher.find())
+				{
+					result = matcher.group(1);
+				}
+			}
+		}else if(zonSarawak){
+			if(curActionDesc.contains("Penandatangan Sijil Maya")){
+				if(curActionDesc.contains("telah ditambah")){
+					log.info("IM inside Zon sarawak pendandatangan Sijil Maya ........ telah ditambah");
+					Pattern pattern = Pattern.compile("Zon SARAWAK : Penandatangan Sijil Maya (.*) telah ditambah");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}else if(curActionDesc.contains("telah dinyahaktifkan")){
+					Pattern pattern = Pattern.compile("Zon SARAWAK : Penandatangan Sijil Maya (.*) telah dinyahaktifkan");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}else if(curActionDesc.contains("telah diaktifkan semula")){
+					Pattern pattern = Pattern.compile("Zon SARAWAK : Penandatangan Sijil Maya (.*) telah diaktifkan semula");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}
+			}else if(curActionDesc.contains("Butiran Penandatangan")){
+				Pattern pattern = Pattern.compile("Zon SARAWAK : Butiran Penandatangan (.*) telah dikemaskini.");
+				Matcher matcher = pattern.matcher(curActionDesc);
+				if (matcher.find())
+				{
+					result = matcher.group(1);
+				}
+			}
+		}else if(zonSemenanjung){
+			if(curActionDesc.contains("Penandatangan Sijil Maya")){
+				if(curActionDesc.contains("telah ditambah")){
+					Pattern pattern = Pattern.compile("Zon SEMENANJUNG : Penandatangan Sijil Maya (.*) telah ditambah");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}else if(curActionDesc.contains("telah dinyahaktifkan")){
+					Pattern pattern = Pattern.compile("Zon SEMENANJUNG : Penandatangan Sijil Maya (.*) telah dinyahaktifkan");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}else if(curActionDesc.contains("telah diaktifkan semula")){
+					Pattern pattern = Pattern.compile("Zon SEMENANJUNG : Penandatangan Sijil Maya (.*) telah diaktifkan semula");
+					Matcher matcher = pattern.matcher(curActionDesc);
+					if (matcher.find())
+					{
+						result = matcher.group(1);
+					}
+				}
+			}else if(curActionDesc.contains("Butiran Penandatangan")){
+				Pattern pattern = Pattern.compile("Zon SEMENANJUNG : Butiran Penandatangan (.*) telah dikemaskini.");
+				Matcher matcher = pattern.matcher(curActionDesc);
+				if (matcher.find())
+				{
+					result = matcher.group(1);
+				}
+			}
+		}
+
+		return result;
+	}
+	//20200910@Jacky - #28740 - End
 }
