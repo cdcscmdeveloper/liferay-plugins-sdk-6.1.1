@@ -63,10 +63,23 @@
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.reset.pin']}" 
 					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
 			</h:commandLink>
+			<h:commandLink 
+				action="#{softCertBackingBean.onDisplaySpkiPopup}" 
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="Test SPKI" 
+					/>
+			</h:commandLink>
 		</div>
 	</p:panel>
 	
 	</ui:define>
 
-
+<p:outputPanel id="spkiOutPanel" autoUpdate="false">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{softCertBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{softCertBackingBean.onClickSignSpki(spkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{softCertBackingBean.enableAutoUpdate()}" />
+	</p:outputPanel>
 </ui:composition>
