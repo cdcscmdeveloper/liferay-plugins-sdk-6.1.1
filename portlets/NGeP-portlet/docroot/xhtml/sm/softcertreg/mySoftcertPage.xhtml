@@ -45,11 +45,11 @@
 		
 		<p:spacer height="2px;" />
 		<div align="right">
-			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
+			<h:commandLink 
 				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
-					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
+					/>
 			</h:commandLink>
 			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
 				action="#{softCertBackingBean.changePin}" target="_blank"
