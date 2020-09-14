@@ -1498,19 +1498,19 @@ public class SupplierDataMaintenanceBackingBean extends
 					|| getManagedBean().isBumiputeraStatusCancel()) {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
-				//26238 -  Disciplonary action - 28146 - start
+				//26238 -  Disciplinary action - 28146 - start
 				/*getManagedBean().setCancelRegistration(true);
 				getManagedBean().setFlagBlacklistCancel(true);*/
-				//26238 -  Disciplonary action - 28146 - end
+				//26238 -  Disciplinary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 				
-				//26238 -  Disciplonary action - 28146 - start
+				//26238 -  Disciplinary action - 28146 - start
 				/*if(getManagedBean().isFlagBlacklistCancel()){
 					getManagedBean().setCancelRegistration(false);
 					getManagedBean().setFlagBlacklistCancel(false);
 				}*/
-				//26238 -  Disciplonary action - 28146 - end
+				//26238 -  Disciplinary action - 28146 - end
 			}
 
 			//26238: Disciplinary Action - start - 28324 ,28779
@@ -1563,7 +1563,18 @@ public class SupplierDataMaintenanceBackingBean extends
 //				|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
 //				|| getManagedBean().isBlacklistOwnerOrDirector() || getManagedBean().isBumiputeraStatusCancel()
 //				|| getManagedBean().isManufacturerStatusCancel()
-				) { 
+				) {
+
+			// 27815 - add disable button delete if edit DA - Start 14/9/2020
+			if(getManagedBean().isCancelCategoryCode()){
+				if(!getManagedBean().isEditDisciplinaryAction()){
+					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+				} else {
+					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+				}
+			}
+			// 27815 - add disable button delete if edit DA - End 14/9/2020
+				
 			getManagedBean().setDisciplineVO(getInitDisciplinaryActionVO());
 		} else {
 			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier()); 
@@ -1825,19 +1836,24 @@ public class SupplierDataMaintenanceBackingBean extends
 							getManagedBean().setBlacklistOwnerOrDirector(true);
 							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
 							
-							//26238 -  Disciplonary action - 28146 - start
+							//26238 -  Disciplinary action - 28146 - start
 							if(disc.isCancelRegistration()){
 								getManagedBean().setCancelRegistration(true);
 								getManagedBean().setCancelRegistrationExist(true);
 							}
-							//26238 -  Disciplonary action - 28146 - end
+							//26238 -  Disciplinary action - 28146 - end
 						}
 						if(disc.isCancelCategory()){
 							getManagedBean().setCancelCategoryCode(true);
 							getManagedBean().setCancelCategoryCodeExist(true);
-							// 27815 - add disable button detele if edit DA - Start
-							getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
-							// 27815 - add disable button detele if edit DA - End
+							
+							if(getManagedBean().isEditDisciplinaryAction()){
+								// 27815 - add disable button delete if edit DA - Start
+								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+								// 27815 - add disable button delete if edit DA - End
+							} else {
+								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+							}
 						}
 						if(disc.isSuspendRegistration()){
 							getManagedBean().setSuspendRegistration(true);
@@ -1858,9 +1874,9 @@ public class SupplierDataMaintenanceBackingBean extends
 						if(disc.isManufacturerCancel()){
 							getManagedBean().setManufacturerStatusCancel(true);
 							getManagedBean().setManufacturerStatusCancelExist(true);
-							// 27815 - add disable button detele if edit DA - Start
+							// 27815 - add disable button delete if edit DA - Start
 							getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
-							// 27815 - add disable button detele if edit DA - End
+							// 27815 - add disable button delete if edit DA - End
 						}
 					}else{
 						resetDisciplinaryActionSectionExist();
