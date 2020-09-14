@@ -107,6 +107,7 @@ public class SupplierManagementConst {
 	public static final String ICT_CATEGORY_L1_CODE = "21";
 	//#28253 - start
 	public static final String COUNTRY_UNKNOWN_CODE = "ZZ";
+	public static final String COUNTRY_UNKNOWN_NAME = "UNKNOWN";
 	//#28253 - end
 	public static final String ICT_L2_COMMUNICATION_CODE = "02";
 
