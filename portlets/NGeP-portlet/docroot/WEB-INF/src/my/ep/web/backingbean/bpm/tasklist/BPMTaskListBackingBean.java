@@ -292,8 +292,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + FLProcessNameConst.RESUBMIT_AP59_ORDER,
 					"resubmit-ap59-order");
 			/*#28375 - Logan - YEP Process Beginning*/
-			temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_PO, "po-carryForward");
-			temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_CO, "co-carryForward");
+			//temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_PO, "po-carryForward");
+			//temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_CO, "co-carryForward");
 			/*#28375 - End*/
 			//21229
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
