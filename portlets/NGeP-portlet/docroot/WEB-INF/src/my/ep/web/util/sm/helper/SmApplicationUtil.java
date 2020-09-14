@@ -4912,7 +4912,7 @@ public class SmApplicationUtil {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
 			if (!EntityHelper.isCollectionEmpty(descList)
-					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
+					&& !StringUtils.isBlank(suppType) && suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)|| suppType.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
 				for (PmStatusDesc statDesc : descList) {
 					if (statDesc.getPmStatus() != null
