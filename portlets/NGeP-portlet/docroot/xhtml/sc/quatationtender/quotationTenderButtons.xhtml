@@ -47,21 +47,49 @@
 				<div class="ppRightBtn">
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
-						<ui:decorate
-							template="/WEB-INF/facelets/templates/claim_template.xhtml">
-							<ui:define name="outComeSection">
-								<ui:repeat var="bpmAction"
-									value="#{approvalBackingBean.managedBean.outComes}">
-									<ui:param name="buttonLabel"
-										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									
-									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-										styleClass="ui-button" onstart="blockWidget.show();"
-										oncomplete="blockWidget.hide();"
-										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
-								</ui:repeat>
-							</ui:define>
-						</ui:decorate>
+					<ui:remove>
+						START Bug #28932					
+					</ui:remove>
+						<c:choose>
+							<c:when test="#{isQTStatusPendingSpecCommitteeApprovalAndBefore}">
+								<ui:decorate
+								template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
+								<ui:define name="outComeSection">
+									<ui:repeat var="bpmAction"
+										value="#{approvalBackingBean.managedBean.outComes}">
+										<ui:param name="buttonLabel"
+											value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+										
+										<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+											styleClass="ui-button" onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();"
+											action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+									</ui:repeat>
+								</ui:define>
+								</ui:decorate>
+							</c:when>
+							<c:otherwise>
+								<ui:decorate
+									template="/WEB-INF/facelets/templates/claim_template.xhtml">
+									<ui:define name="outComeSection">
+										<ui:repeat var="bpmAction"
+											value="#{approvalBackingBean.managedBean.outComes}">
+											<ui:param name="buttonLabel"
+												value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+											
+											<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+												styleClass="ui-button" onstart="blockWidget.show();"
+												oncomplete="blockWidget.hide();"
+												action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+										</ui:repeat>
+									</ui:define>
+								</ui:decorate>
+							</c:otherwise>
+						</c:choose>
+						
+						<ui:remove>
+							END Bug #28932					
+						</ui:remove>
 					</h:panelGroup>
 				</div>
 			</c:if>
