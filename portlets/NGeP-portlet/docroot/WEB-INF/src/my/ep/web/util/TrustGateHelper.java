@@ -181,12 +181,20 @@ public class TrustGateHelper {
 							MessageConst.ERROR_TRUSTGATE_776061,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
+				//START 28683	
+				} else if (res.getStatusCode() == SPKIConst.CERT_EXPIRED) {
+					vo.setErrMsg(MessageUtils.getMessage(
+							MessageConst.ERROR_TRUSTGATE_776058,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()));
 				} else {
+					log.info("getSignedData res.getStatusCode()==="+res.getStatusCode());
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_TRUSTGATE_776062,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				}
+				//END 28683
 
 			}
 		} catch (Exception e) {
