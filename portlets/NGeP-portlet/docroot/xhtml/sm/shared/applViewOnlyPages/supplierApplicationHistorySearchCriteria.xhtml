@@ -51,6 +51,28 @@
 							size="35" disabled="true"/>
 					</td>
 				</tr>
+				
+				<!-- #28771 START -->
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.supportingDocumentMode']}" />
+					
+					</td>
+					<td>
+						<p:selectOneMenu 
+						value="#{viewSuppProfileBackingBean.managedBean.supportingDocMode}" > 
+						   <f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}" itemValue=""/>
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+							 itemValue="#{SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}" 
+							itemValue="#{SupplierManagementConst.SUPPORTING_DOC_OFFLINE}"/>
+							<p:ajax event="change" update="@form" 
+							 process="@this" partialSubmit="true" listener="#{viewSuppProfileBackingBean.onChangeSupportingDocumentMode()}"
+							 onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />	
+						</p:selectOneMenu>
+					</td>
+				</tr>
+					<!-- #28771 END -->	
 			</p:outputPanel>
 			
 			<p:outputPanel rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
@@ -156,7 +178,10 @@
 								size="35" maxlength="14" />
 						</td>
 					</tr>
+
 					</p:outputPanel>
+					
+					
 					<p:outputPanel  id="mofOrBasicOnly" 
 					rendered="#{viewSuppProfileBackingBean.managedBean.searchAccountType eq SupplierManagementConst.SUPP_TYPE_BASIC
 					 or viewSuppProfileBackingBean.managedBean.searchAccountType eq 'M'}">
@@ -182,6 +207,7 @@
 								size="35" maxlength="20" />
 						</td>
 					</tr>
+
 					<p:outputPanel rendered="#{viewSuppProfileBackingBean.managedBean.viewApplicationHistory}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
@@ -213,7 +239,25 @@
 								<p:message id="searchApplStatusIdMsg" for="searchApplStatusId" display="icon" />
 							</td>
 						</tr>
+						
+				
 					</p:outputPanel>
+					<!-- #28771 START -->
+						<tr>
+							<td>
+								<p:outputLabel value="#{lbl['lbl.sm.supportingDocumentMode']}" />
+					
+							</td>
+							<td>
+								<p:selectOneMenu value="#{viewSuppProfileBackingBean.managedBean.supportingDocMode}" > 
+						   			<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}" itemValue=""/>
+									<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}" itemValue="#{SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}" itemValue="#{SupplierManagementConst.SUPPORTING_DOC_OFFLINE}"/>
+									<p:ajax event="change" update="@form" process="@this" partialSubmit="true"/>	
+							</p:selectOneMenu>
+							</td>
+						</tr>
+				<!-- #28771 END -->
 					</p:outputPanel>				
 					<tr>
 						<td colspan="2">
@@ -234,5 +278,4 @@
 		</table>
 		
 		<br />
-	
 </ui:composition>

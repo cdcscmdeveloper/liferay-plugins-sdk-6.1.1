@@ -61,6 +61,9 @@ public class ViewApplHistoryManagedBean extends
 	private Date currentDate = new Date();
 	private String searchAccountType;
 	//25792 - end
+	
+	//28771
+	private String SearchDocumentMode;
 
 	//26238 - 28281
 	/*
@@ -89,6 +92,10 @@ public class ViewApplHistoryManagedBean extends
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setObjArrSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
+			
+			//28771 - start
+			reqDTO.setsupportingDocMode(getSupportingDocMode());
+			//28771-end
 			
 			try {
 				if (!isSupplierUser()) {
@@ -374,4 +381,13 @@ public class ViewApplHistoryManagedBean extends
 	}
 	//25792 - end
 	
+	//28771 - start
+	public String getSearchDocumentMode(){
+		return SearchDocumentMode;
+	}
+	
+	public void setSearchDocumentMode(String SearchDocumentMode){
+		this.SearchDocumentMode = SearchDocumentMode;
+	}
+	//28771 - end
 }
