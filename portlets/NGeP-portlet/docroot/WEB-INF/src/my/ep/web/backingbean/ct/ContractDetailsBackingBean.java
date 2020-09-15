@@ -88,7 +88,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -1514,15 +1513,36 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		
 		// Start - 28292
-		if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null
-				&& !ctBB.getManagedBean().getContractVer().getCtContractItems().isEmpty()) {
+		
+		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
+		List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
+		List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
+
+
+		if(itemlistService != null && !itemlistService.isEmpty()){
 			CommonUtils commonUtils = new CommonUtils();
-			for (CtContractItem ctItem : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
+			for (CtContractItem ctItem : itemlistService) {
 				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
 						.getScRequestItem().getUom().getUomCode());
 				DecimalFormat formatter = new DecimalFormat(minValue);
 				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
 				ctItem.setMinimumOrderQty(Double.parseDouble(result));
+
+				ctBB.onChangeMinimumQty(ctItem);
+
+			}
+		}
+		
+		if(itemlistProduct != null && !itemlistProduct.isEmpty()){
+			CommonUtils commonUtils = new CommonUtils();
+			for (CtContractItem ctItem : itemlistProduct) {
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
+						.getScRequestItem().getUom().getUomCode());
+				DecimalFormat formatter = new DecimalFormat(minValue);
+				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
+				ctItem.setMinimumOrderQty(Double.parseDouble(result)); 
 
 				ctBB.onChangeMinimumQty(ctItem);
 
