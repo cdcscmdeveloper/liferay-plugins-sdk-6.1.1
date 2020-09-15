@@ -302,6 +302,18 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean disciplinaryAction;
 	//28281 - end 
 	
+	//28771 - start
+	private String supportingDocMode;
+	
+	public String getSupportingDocMode() {
+		return supportingDocMode;
+	}
+
+	public void setSupportingDocMode(String supportingDocMode) {
+		this.supportingDocMode = supportingDocMode;
+	}
+	//28771- end
+	
 	//26238 -  Disciplonary action - 28146
 	private boolean flagBlacklistCancel;
 	
@@ -486,6 +498,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 				: searchSupplier.getCompanyName();
 		String searchRegno = searchSupplier == null ? StringUtils.EMPTY
 				: searchSupplier.getRegNo();
+		
 		//25792 - start
 		if(!StringUtils.isBlank(accountType)) {
 			if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(accountType)) {
