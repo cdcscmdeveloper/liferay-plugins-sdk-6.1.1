@@ -3815,7 +3815,7 @@ public class SupplierFinalizationBackingBean extends
 		//Enhancement #25729 -start-
 		//To get QT Actual Total Indicative Price
 		BigDecimal actualIndicativePrice = this.getManagedBean().getScQt().getEstimatedAmount();
-		Map<String, String> reasonDescMap = new HashMap<String, String>();
+		Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 		//Enhancement #25729 -end-
 
 		IReasonSO reasonSO = null;
@@ -3858,8 +3858,8 @@ public class SupplierFinalizationBackingBean extends
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1) {
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Enable & Auto Checked radio button option reason 'Awarded Price Exceeded Committee Authority'
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
-						this.getManagedBean().getScQtFinalization().getReason().setReasonCode(reasonDesc.getPmReason().getReasonCode());
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
+						this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 
 					} else {
 
@@ -3867,7 +3867,7 @@ public class SupplierFinalizationBackingBean extends
 						//Enable select option reason for 'Awarded Exceed Committee Authority' only if isSuppOfferPriceExceedCommunityAuthority = true
 						if(this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()) {
 							//Has supplier offer price exceed committee authority amount.
-							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
+							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
 
 							/*if (expectTotalIndPriceBelowThreshold==true && 
 									SourcingConstants.QCB_COMMITTEE.equals(CommType) &&
@@ -3878,7 +3878,7 @@ public class SupplierFinalizationBackingBean extends
 							}*/
 
 						} else {
-							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",true);
+							items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 						}
 					}
 
@@ -3887,30 +3887,30 @@ public class SupplierFinalizationBackingBean extends
 					if(actualIndicativePrice.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) == 1){
 						//For actualIndicativePrice > RM 50,000,000.00
 						//Disable option reason for 'The Decision is Unanimous'
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",true);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 
 					} else {
 
 						//For actualIndicativePrice <= RM 50,000,000.00
 						//Enable option reason for 'The Decision is Unanimous'
 						//Auto Checked Reason only if isSuppOfferPriceExceedCommunityAuthority = false, (No supplier offer price exceed committee authority)
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
 
 						if(!this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()){
-							this.getManagedBean().getScQtFinalization().getReason().setReasonCode(reasonDesc.getPmReason().getReasonCode());
+							this.getManagedBean().getScQtFinalization().getReason().setReasonId(reasonDesc.getPmReason().getReasonId());
 						}
 					}
 
 				} else {
 
 					if(this.getManagedBean().isSuppOfferPriceExceedCommunityAuthority()) {
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",false);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",false);
 					} else {
-						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc(),"",true);
+						items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc(),"",true);
 					}
 				}
 
-				reasonDescMap.put(reasonDesc.getPmReason().getReasonCode(),reasonDesc.getReasonDesc());
+				reasonDescMap.put(reasonDesc.getPmReason().getReasonId(),reasonDesc.getReasonDesc());
 			}
 
 			changeReasonEvent(null);
