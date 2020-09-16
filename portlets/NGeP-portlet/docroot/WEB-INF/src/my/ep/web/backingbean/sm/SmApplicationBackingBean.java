@@ -6664,6 +6664,28 @@ public class SmApplicationBackingBean extends
 	 *            - the personel type to define equity or not
 	 */
 	public void assignNewShareHolder() {
+		/*log.info("fatintestadd" + this.getManagedBean().getSmAppl().getSmPersonnels().size());
+		
+		for (SmPersonnel smPersonnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
+			
+			if (smPersonnel.isEquityOwner()== true && 
+					smPersonnel.isManagement()== true &&
+					smPersonnel.isClerical() == true){
+				
+				log.info("equityowner+management+clerical" + smPersonnel.getName());
+				this.getManagedBean().getSelectedShareHolder()
+				.setDisableStaff(true);
+			}
+			
+			if (smPersonnel.isClerical()== true &&
+					(smPersonnel.isEquityOwner()== false ||
+					smPersonnel.isManagement()== false)){
+
+				log.info("staff" + smPersonnel.getName());
+				this.getManagedBean().getSelectedShareHolder()
+				.setDisableStaff(false);
+			}
+		}*/
 		if (getManagedBean().getIdentificationTypes() == null) {
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
@@ -11893,6 +11915,9 @@ public class SmApplicationBackingBean extends
 	 */
 	public void setRoleStaffAddrReqd() {
 		SmApplicationUtil.setRoleStaffAddrReqd(getManagedBean());
+		// BUG #28173 & #28315 -START
+		managePersonnelStaff();
+		// BUG #28173 & #28315 -END
 	}
 
 	/**
@@ -13114,6 +13139,46 @@ public class SmApplicationBackingBean extends
 		//end 28651
 	}
 	//END : #27239 
+	
+	// BUG #28173 & #28315 -START
+	public void managePersonnelStaff() {
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+
+			    if (getManagedBean().getSelectedShareHolder().isClerical()
+			    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl())) {
+			    	log.info("insert clerical contractor");
+				getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+				getManagedBean().getSelectedShareHolder().setDirector(false);
+				getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+				getManagedBean().getSelectedShareHolder().setManagement(false);
+				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+			}else {
+				/*getManagedBean().getSelectedShareHolder().setEquityOwner(true);
+				getManagedBean().getSelectedShareHolder().setManagement(true);*/
+				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
+				log.info("enable equity owner contractor");
+			}
+		}
+		else if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			if (getManagedBean().getSelectedShareHolder().isClerical()) {
+			    	log.info("insert clerical consultant");
+				getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+				getManagedBean().getSelectedShareHolder().setDirector(false);
+				getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+				getManagedBean().getSelectedShareHolder().setManagement(false);
+				getManagedBean().getSelectedShareHolder().setProf(false);
+				getManagedBean().getSelectedShareHolder().setSemiProf(false);
+				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+			}else {
+				/*getManagedBean().getSelectedShareHolder().setEquityOwner(true);
+				getManagedBean().getSelectedShareHolder().setManagement(true);*/
+				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
+				log.info("enable equity owner consultant");
+			}
+		}
+   }
 		
 //		17906	
 		public void checkActiveAndPendingTransaction(){
