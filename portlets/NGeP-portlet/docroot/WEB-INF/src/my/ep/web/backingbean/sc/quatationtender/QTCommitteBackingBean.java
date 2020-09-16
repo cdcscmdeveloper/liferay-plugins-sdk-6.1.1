@@ -1026,8 +1026,20 @@ public class QTCommitteBackingBean extends
 		
 		Long qtStatus = getCurrentQtStatusId();
 		if(qtStatus!=null){
-			if(qtStatus.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)){
-				getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
+			Long[] specDisabledSecretaryStatusArr = new Long[] {
+					QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF,
+					QTStatusConst.QT_EVALUATION_PROPOSAL};
+			if(Arrays.asList(specDisabledSecretaryStatusArr).contains(qtStatus)){
+				List<String> list = new ArrayList<String>();
+				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+			    if(qtStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
+					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+			    }
+				String[] filterArr = new String[list.size()];
+			    list.toArray(filterArr);
+				getManagedBean().setRoleFilterList(filterArr);
 			}
 		}
 	}
