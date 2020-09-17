@@ -401,6 +401,11 @@
 						</p:outputPanel>
 					</td>
 				</tr>
+
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.designation}" required="#{!empty param['disableValidation']}" maxlength="30" label="#{lbl['lbl.sm.designation']}" /></td>
+				</tr>
 				
 				<!-- #13208-START -->
 				<tr>
@@ -409,7 +414,7 @@
 						<p:outputLabel value="*" styleClass="mandatory"/>	
 					</td>
 					
-					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.department}" required="#{!empty param['disableValidation']}" maxlength="80" label="#{lbl['lbl.sm.department']}"/> 
+					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.department}" required="#{!empty param['disableValidation']}" size="40" maxlength="80" label="#{lbl['lbl.sm.department']}"/> 
 					</td>
 					
 					<td class="tdTitle">
@@ -417,16 +422,10 @@
 					<p:outputLabel value="*" styleClass="mandatory"/>
 					
 					</td>
-					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.sectionUnit}" required="#{!empty param ['disableValidation']}" maxlength="80" label="#{lbl['lbl.sm.unit']}"/> 
+					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.sectionUnit}" required="#{!empty param ['disableValidation']}" size="40" maxlength="80" label="#{lbl['lbl.sm.unit']}"/> 
 					</td>
 				</tr>
-				
 				<!-- #13208-END -->
-
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.designation}" required="#{!empty param['disableValidation']}" maxlength="30" label="#{lbl['lbl.sm.designation']}"/> </td>
-				</tr>
 				
 							<tr>
 				<td class="tdTitle"><p:outputLabel
