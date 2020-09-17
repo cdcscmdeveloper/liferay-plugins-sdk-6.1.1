@@ -105,14 +105,16 @@ public class YearEndProcessBackingBean extends
 		String docType = (String) e.getComponent().getAttributes().get("value");
 
 		// reset everything to false
-		this.getManagedBean().setCheckDocType(false);
+		//#29036 removed for auto check by vinod Start
+		/*this.getManagedBean().setCheckDocType(false); 
 		resetSearchCriteria();
 		this.getManagedBean().setSearchAp58(true);
 		if (docType != null) {
 			if (docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 				this.getManagedBean().setCheckDocType(true);
 			}
-		}
+		}*/
+		//#29036 End vinod
 		getManagedBean().setSearchDocType(docType);
 	}
 
