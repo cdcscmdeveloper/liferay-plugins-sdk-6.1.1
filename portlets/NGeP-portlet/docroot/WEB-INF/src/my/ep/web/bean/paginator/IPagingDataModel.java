@@ -64,4 +64,11 @@ public interface IPagingDataModel<T> {
 	 * Reload the data from database.
 	 */
 	public void reloadDataWithoutReset();
+
+	/**
+	 * Reload the datatable paging.
+	 */
+	 //added for #28643 to only reset paging value
+	public void reloadDatatable();
+	
 }
