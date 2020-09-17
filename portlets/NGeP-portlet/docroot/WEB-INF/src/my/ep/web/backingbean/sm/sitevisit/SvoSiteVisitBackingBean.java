@@ -145,6 +145,32 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private final String templateLangCode = "en";
 	private final String attachmentType = "SVD";
 	
+	//#28774 - Start
+	public boolean checkUserRole() {
+		log.info("====Redmine #28774====");
+		log.info("=====Checking user role=====");
+		log.info("4===" + this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
+		log.info("TR View Mode in checkUserRole -> " + getManagedBean().isViewMode());
+		
+		FacesScopes fs = new FacesScopes();
+		if(this.getManagedBean().isViewMode()==true){
+			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && (this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20017 || this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108))
+				return true;
+			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103)
+				return true;
+			if(fs.hasRoleUser(RoleCode.UPS_SVO.value()) || 
+					   fs.hasRoleUser(RoleCode.UPS_SDO.value()) || 
+					   fs.hasRoleUser(RoleCode.UPS_PO.value())  || 
+					   fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) ||
+					   fs.hasRoleUser(RoleCode.UPS_SVC.value()) ||
+					   fs.hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
+					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value()))
+						return true;
+		}
+		return false;
+	}
+	//#28774 - End
+	
 	private StreamedContent file;
 	
 	public SvoSiteVisitBackingBean() {
@@ -2064,6 +2090,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//validate assistant officer
 		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
 			svTask.setSmSvAssistantOfficer(null);
+			//#28774 - Start
+			//throw new EpException(MessageConst.ERROR_721058);
+			//#28774 - End
+			
 		}//START 24964
 		else{
 			svTask.getSmSvAssistantOfficer().setNameEnterBySvo(svTask.getSmSvAssistantOfficer().getName());
