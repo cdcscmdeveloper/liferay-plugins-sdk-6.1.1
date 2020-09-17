@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.faces.application.FacesMessage;
@@ -1106,11 +1108,16 @@ public class SPDetailBackingBean extends
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
+						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
+								
+								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
+									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
+								}	//#28785-End
 //#21695 farid IN MONITORING START	
 								
 								if (specAnswer.getRatePerUom() != null
@@ -2964,6 +2971,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 							getManagedBean().getZoneTplSpecBeanMap().remove(
 									getManagedBean().getSelectedZone()
 											.getSpecZoneId()));
+					TemplateSpecBean templateSpecbean=	getManagedBean().getTemplateSpecBean(); //#28785-start
+					if(null!=templateSpecbean && null!=templateSpecbean.getSpecAnswerList() && templateSpecbean.getSpecAnswerList().size()>0){
+					List<TplSpecAnswer> specAnswerList=	templateSpecbean.getSpecAnswerList();
+						for(int i=0;i<specAnswerList.size();i++){	
+							if(null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ 
+							specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
+							}
+						}
+						getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
+					} //#28785-End
 				}
 				populateFinancialSpecDetailsByZone();
 
@@ -4103,7 +4120,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		getManagedBean().setTemplateSpecBean(
 				getManagedBean().getZoneTplSpecBeanMap().remove(
 						specZoneDtl.getSpecZoneId()));
-
+		TemplateSpecBean templateSpecbean=	this.getManagedBean().getTemplateSpecBean(); //#28785-start
+		if(null!=templateSpecbean && null!=templateSpecbean.getSpecAnswerList() && templateSpecbean.getSpecAnswerList().size()>0){
+			List<TplSpecAnswer> specAnswerList=	templateSpecbean.getSpecAnswerList();
+			for(int i=0;i<specAnswerList.size();i++){
+				if(null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ 
+				specAnswerList.get(i).getTplSpecSuppAnswer().setTplSpecZoneDtl(getManagedBean().getSelectedZone());
+				}
+			}
+			getManagedBean().getTemplateSpecBean().setSpecAnswerList(specAnswerList);
+		} //#28785-End
 	}
 
 	/**
@@ -5749,5 +5775,28 @@ try {
 }
 return creditFaciltyupload;
 }
-//#28792-End					
+//#28792-End	
+
+//#28785-Start
+public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSpecBean value) {
+	  TplSpecZoneDtl specZoneDetail=null;
+	  try{
+    for (Entry<Long, TemplateSpecBean> entry : map.entrySet()) {
+        if (Objects.equals(value, entry.getValue())) {
+        if(null!=getManagedBean().getZones() && getManagedBean().getZones().size()>0){
+            for(TplSpecZoneDtl specZoneDtl:getManagedBean().getZones()){
+            if(entry.getKey().equals(specZoneDtl.getSpecZoneId())){	
+            	  return specZoneDtl;
+            }
+            }
+        	}
+        }
+    }
+	  }finally{
+		  
+	  }
+    return specZoneDetail;
+}
+//#28785-End
+
 }
