@@ -23,9 +23,18 @@
 			<tr >
 				<td class="tdTitle">
 					<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sv.templ.assisting.officer']}" />
+					<!-- #28774 - Start -->
+					<p:outputLabel value="*" styleClass="mandatory" />
+					
 				</td>
 				<td class="tdContent">
-					<p:inputText id="test" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name}" />
+					<p:inputText id="test" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name}" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true"/>
+					<!-- 
+					#28774 - Start
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" update="" id="deleteSVOBtnId"/> 
+					#28774 - End
+					-->
+					<!-- #28774 - End -->
 					<p:spacer width="5" />
 					<p:graphicImage style="vertical-align:top !important;" rendered="#{fn:length(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name) > 1}" value="/css/images/design/ico-edit.png" title="#{lbl['lbl.sm.edit']}" />
 					<p:spacer width="5" />
@@ -38,5 +47,14 @@
 			</tr>
 			
 		</table>
+		<!-- 
+		#28774 - Start
+		<p:outputPanel>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"/>
+			</div>
+		</p:outputPanel> 
+		#28774 - End
+		-->
 	</p:panel>
 </ui:composition>
