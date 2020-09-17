@@ -2452,6 +2452,34 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
+	public boolean assertCommitteeMemberRoleIsDisabled(String memberRole){
+		Long qtStatus = null;
+		ScQt scQt = getManagedBean().getQt();
+		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {//prevent multiple request
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
+			if(wfStatus!=null){
+				qtStatus = wfStatus.getPmStatus().getStatusId();
+			}
+		}
+		if(qtStatus!=null){
+			Long[] specDisabledRoleStatusArr = new Long[] {
+					QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF};
+
+			List<String> list = new ArrayList<String>();
+
+			if(Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || this.getManagedBean().isCommitteeReviseFlow()){
+				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+			    if(qtStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
+					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+			    }
+			}
+			return list.contains(memberRole);
+		}
+		return false;
+	}
+	
 	//#25037-END
 }
 
