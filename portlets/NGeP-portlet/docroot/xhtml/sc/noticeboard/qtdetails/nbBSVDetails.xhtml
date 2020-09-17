@@ -37,7 +37,7 @@
 						style="width:18%;white-space: normal;">
 						<h:outputText value="#{brfsitdtl.bsvDate}">
 							<f:convertDateTime
-								pattern="#{CommonConstants.DEFAULT_12HR_FORMAT_WITH_DAY}" />
+								pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 						</h:outputText>
 						<br />
 						<ui:param name="bsvDateField" value="#{brfsitdtl.qtBsvDtlId}#{QTFieldConst.FIELD_QT_BSV_SEPARATOR}#{QTFieldConst.FIELD_QT_BSV_DATE}" />
@@ -45,7 +45,7 @@
 						<h:panelGroup rendered="#{!empty bsvDateChangeDate}">
 							<h:outputText value="#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" />
 							<h:outputText value="#{bsvDateChangeDate}" styleClass="lastUpdated">
-								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_FORMAT_WITH_DAY}" />
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
 							</h:outputText>
 						</h:panelGroup>
 					</p:column>
