@@ -13179,6 +13179,18 @@ public class SmApplicationBackingBean extends
 			}
 		}
    }
+	
+	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl) {
+		boolean retVal = false;
+		for (SmPersonnel per : appl.getSmPersonnels()) {
+			if (per.isEquityOwner() && per.isClerical()) {
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
+	}
+// BUG #28173 & #28315 -END
 		
 //		17906	
 		public void checkActiveAndPendingTransaction(){
