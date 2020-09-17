@@ -16,10 +16,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -88,7 +86,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -142,7 +139,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
-	private static Map<String, Integer> uomMap = new HashMap<String, Integer>();
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -777,23 +773,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 
-			// Start - 28292			
-			CommonUtils commonUtils = new CommonUtils();
-			
-			if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null
-					&& !ctBB.getManagedBean().getContractVer().getCtContractItems().isEmpty()) {			
-				for (CtContractItem ctItem : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-					String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem.getScRequestItem().getUom().getUomCode());					
-					DecimalFormat formatter = new DecimalFormat(minValue);	
-					String result = formatter.format(ctItem.getMinimumOrderQty());
-					ctItem.setMinimumOrderQty(Double.parseDouble(result));
-					
-					ctBB.onChangeMinimumQty(ctItem);
-			        
-				}
-			}
-			// End - 28292
-			
 			validateFDDescAndAmount(action);
 			ctBB.getZoneObjDetails();
 
@@ -887,7 +866,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			reqDTO.setCtContractVer(ctContractVer);
 			// Start - #28292/#26475
-			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			//reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
 			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
@@ -1188,12 +1167,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				
 				// Start - 28292
+				//log.info("--min quantity validation--");
 				if (!item.getCtItemMaxQties().isEmpty()) {
+					//log.info("--inside validation--");
 					Double maxValue = new Double(0);							
 					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-							maxValue = maxQty.getMaxQuantity().doubleValue();				
+						maxValue = maxQty.getMaxQuantity().doubleValue();				
 					}
+					//log.info("max :"+maxValue);
+					//log.info("min :"+item.getMinimumOrderQty());
 					if (item.getMinimumOrderQty() > maxValue) {
 						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
 					}
@@ -1512,23 +1494,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
-		
-		// Start - 28292
-		if (ctBB.getManagedBean().getContractVer().getCtContractItems() != null
-				&& !ctBB.getManagedBean().getContractVer().getCtContractItems().isEmpty()) {
-			CommonUtils commonUtils = new CommonUtils();
-			for (CtContractItem ctItem : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
-						.getScRequestItem().getUom().getUomCode());
-				DecimalFormat formatter = new DecimalFormat(minValue);
-				String result = formatter.format(ctItem.getMinimumOrderQty());
-				ctItem.setMinimumOrderQty(Double.parseDouble(result));
-
-				ctBB.onChangeMinimumQty(ctItem);
-
-			}
-		}
-		// End - 28292
 	}
 	//LOG : 13847, by Fahmi 22032019
 	/**
@@ -2161,6 +2126,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 		reqDTO.setUpdateAction(true);
+
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
 		suspBB.getManagedBean().setViewOnly(false);
@@ -2189,7 +2155,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		/*#25956 Start*/
 		amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 		/*#25956 End*/
-		log.info("Check Putra gotoAmendPage contractId "+contractId);
 		amendBB.setAmendmentContractVer(reqDTO);
 		return PROCESS_AMEND_PAGE;
 	}
@@ -2214,7 +2179,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} else {
 			reqDTO.setContractVerId(contractVerId);
 		}
-		// Fixing Bug #28550 - End			
+		// Fixing Bug #28550 - End		
+			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
@@ -3246,7 +3212,4 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				});
 	}
-	
-	
-
 }
