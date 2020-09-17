@@ -1687,6 +1687,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean reapproval;
 	private String prevDOAs;
 	private String[] roleFilterList;
+	private Long currentQTStatus;
 
 	//#25037-END
 
@@ -10512,6 +10513,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setRoleFilterList(String[] roleFilterList) {
 			this.roleFilterList = roleFilterList;
 		}//#25037-end
+
+		public Long getCurrentQTStatus() {
+			return currentQTStatus;
+		}
+
+		public void setCurrentQTStatus(Long currentQTStatus) {
+			this.currentQTStatus = currentQTStatus;
+		}
 		
 		
 		//#25692 End

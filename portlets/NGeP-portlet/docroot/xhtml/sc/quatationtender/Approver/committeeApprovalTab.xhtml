@@ -14,13 +14,15 @@
 	<ui:include src="committeeApproval.xhtml" />
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.clone']}"
-			styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
-			rendered="#{!approvalBackingBean.managedBean.committeeReviseFlow}"
-			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
-			oncomplete="screen2.show();" process="@this"
-			update="@([id$=cloneid])" />
+		<ui:remove>
+<!-- 		<p:commandButton value="#{lbl['lbl.btn.clone'].concat(' test')}" -->
+<!-- 			styleClass="BtnSpacing" -->
+<!-- 			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}" -->
+<!-- 			rendered="#{!approvalBackingBean.managedBean.committeeReviseFlow}" -->
+<!-- 			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}" -->
+<!-- 			oncomplete="screen2.show();" process="@this" -->
+<!-- 			update="@([id$=cloneid])" /> -->
+		</ui:remove>
 		<p:commandButton id="committeeapproveradd" styleClass="BtnSpacing"
 			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 			value="#{lbl['lbl.btn.add']}" process="@this"
