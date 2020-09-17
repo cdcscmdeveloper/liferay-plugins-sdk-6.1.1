@@ -2539,7 +2539,7 @@ public class QTCommitteBackingBean extends
 	private Long getCurrentQtStatusId(){
 		Long status = null;
 		ScQt scQt = getManagedBean().getQt();
-		if (this.getManagedBean().getCurrentQTStatus() == null) {
+		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
 			if(wfStatus!=null){
 				this.getManagedBean().setCurrentQTStatus(wfStatus.getPmStatus().getStatusId());
@@ -2552,6 +2552,7 @@ public class QTCommitteBackingBean extends
 		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
 		if(role!=null && StringUtils.isNotEmpty(committeeType)){
 			Long status = getCurrentQtStatusId();
+			status = status == null? new Long(0L): status;
 			if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
 				if(status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) 
 						|| status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ){
@@ -2580,6 +2581,7 @@ public class QTCommitteBackingBean extends
 	public boolean isCommitteeCloneable(){
 		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
 		Long status = getCurrentQtStatusId();
+		status = status == null? new Long(0L): status;
 		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
 			if(!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)){
 				return false;
