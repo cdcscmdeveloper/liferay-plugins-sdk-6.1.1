@@ -167,8 +167,11 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}/*End if statement to check  login user */
 		// 20997 - start : to reset search list after save
 	    //added reloadDatatable() for #28643
+		if(getManagedBean().getTaskId()!= null){
+			log.info("========================>> reloadTable <<==========================");
 		  getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
-	
+		}
+		log.info("========================>> not in reloadTable <<==========================");
 	
 		
 		// 20997 - end
