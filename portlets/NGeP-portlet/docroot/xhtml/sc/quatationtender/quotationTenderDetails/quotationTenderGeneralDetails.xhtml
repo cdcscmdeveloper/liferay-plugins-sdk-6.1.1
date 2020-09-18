@@ -448,8 +448,8 @@
 							<td>
 							<c:choose>
 							<!-- #21695 farid -->
-				<!-- #21695 farid 02/9/2020 -->
-								<c:when test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
+				<!-- #21695 farid 18/9/2020 -->
+								<c:when test="#{!isMaintenanceFlow and !isReadOnly or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
 										<p:outputPanel id="partialPop">
 													<p:selectOneRadio  value="#{scQt.partial}">
 														<f:selectItems
