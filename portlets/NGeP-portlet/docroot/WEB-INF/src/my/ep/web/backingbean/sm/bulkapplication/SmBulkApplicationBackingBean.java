@@ -749,6 +749,7 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
 				bulkApplicationVO.setPoRemarks(StringUtils.isNotBlank(poRev.getRemarkToApprover()) ? 
 						poRev.getRemarkToApprover() : "N/A");
+				bulkApplicationVO.setCurrentRegStatus("N/A"); //21937
 
 				if (poRev.getRecommendation().equalsIgnoreCase("Approve")
 						|| poRev.getRecommendation().equalsIgnoreCase("Lulus")) {

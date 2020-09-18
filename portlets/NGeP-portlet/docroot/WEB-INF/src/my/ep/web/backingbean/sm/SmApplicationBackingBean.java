@@ -9375,6 +9375,14 @@ public class SmApplicationBackingBean extends
 						if (getManagedBean().getPoSecReview() != null
 								&& getManagedBean().getPoSecReview()
 										.getRecommendation().equals("REJECT")) {
+							//21937 - start
+							PmStatus status = PmCommonUtil
+									.getPmStatusById(getManagedBean()
+											.getPoRecommendStatusId());
+							getManagedBean().getPoSecReview().setPmRegStatus(
+									status.getPmRegStatus());
+							//21937 - end
+							
 							if (getManagedBean().isPoUser()
 									&& getManagedBean().getPoSecReview()
 											.getApplSectionReviewId() != null) {
