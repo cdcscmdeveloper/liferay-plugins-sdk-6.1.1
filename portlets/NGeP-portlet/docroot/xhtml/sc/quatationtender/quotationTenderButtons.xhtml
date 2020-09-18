@@ -9,6 +9,8 @@
 	
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
+	<ui:param name="isQTStatusCmtPendingApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.CMT_PENDING_APPROVAL)}" />
 	<ui:param name="isClone1" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />	
 	<!-- 26095@hatta - start -->
@@ -51,7 +53,7 @@
 						START Bug #28932					
 					</ui:remove>
 						<c:choose>
-							<c:when test="#{isQTStatusPendingSpecCommitteeApprovalAndBefore}">
+							<c:when test="#{isQTStatusCmtPendingApprovalAndBefore}">
 								<ui:decorate
 								template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
 								<ui:define name="outComeSection">
