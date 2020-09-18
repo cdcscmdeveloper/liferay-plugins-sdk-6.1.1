@@ -13254,10 +13254,13 @@ private void retriveCommitteeRemarksList(){
 	public String retrieveTotalSpecScoreBySupplier(Long proposalId, 
 			String checkListType){
 	
-		int totalScore = 0; int total = 0; int sumMaxScore = 0;
+		int totalScore = 0; int total = 0; 
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
-
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		
 		try {
 			
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -13319,8 +13322,9 @@ private void retriveCommitteeRemarksList(){
 
 			if (null != proposalId) {	
 				retrieveTotalSpecScoreBySupplier(proposalId, checkListType);
-				
-				
+				//#25138 - total package max score by supplier - start
+				retriveTemplatePackageSpecScoring(this.getManagedBean().getNewchecklist());
+				//#25138 - total package max score by supplier - end
 			}
 			
 			return "/xhtml/sc/evaluation/evaluationStage/technical/technicalTemplateSpecScoring.xhtml";
@@ -13736,4 +13740,37 @@ private void retriveCommitteeRemarksList(){
 
 	}
 	//#25138 - end
+	
+	//#25138 - total package max score by supplier - start
+	private void retriveTemplatePackageSpecScoring(List<ScQtCheckList> checklist) {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		
+		int sumMaxScore = 0; int maxScore = 0;
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		for(ScQtCheckList list : checklist){
+			specReqDTO.setSpecMaster(list.getScQtDoc().getTplSpecMaster());
+			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+			TemplateSpecResDTO specResDTO = templateSpecSO
+					.getTemplateMaster(specReqDTO);
+			List<TplSpecQuestion> questions = specResDTO.getSpecMaster()
+					.getTplSpecQuestions();
+			for (TplSpecQuestion specQuestion : questions) {
+				
+				if(null != specQuestion.getQuestionType()
+		                && specQuestion.getQuestionType()
+	                    .equalsIgnoreCase(TemplateSpecConst.CONTENT_TYPE_SCORE)){
+					maxScore = specQuestion.getMaxScore().intValue();
+					sumMaxScore = sumMaxScore + maxScore;
+		
+				}
+				
+			}
+			
+		}
+		this.getManagedBean().setTotalMaxScore(Integer.toString(sumMaxScore));
+
+	}
+	//#25138 - total package max score by supplier - end
 }
