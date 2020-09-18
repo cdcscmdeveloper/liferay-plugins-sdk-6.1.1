@@ -166,12 +166,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			return;
 		}/*End if statement to check  login user */
 		// 20997 - start : to reset search list after save
-		
-		if(getManagedBean().getTaskId()!=null) {
-			 //added for #28643 to only reset paging value
-			getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
-			
-		}
+	    //added reloadDatatable() for #28643
+		  getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
+	
+	
 		
 		// 20997 - end
 		/*Return when not call from tasklist*/
