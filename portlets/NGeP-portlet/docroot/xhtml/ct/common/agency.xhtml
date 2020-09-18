@@ -178,15 +178,16 @@
 					style="float:none" />
 			</p:column>
 			
-			  <p:column headerText="#{lbl['lbl.ct.status.org.validity']}"
+			  <!-- <p:column headerText="#{lbl['lbl.ct.status.org.validity']}"
 				style="width:6%;white-space:normal;"
 				styleClass="column-align-center">
 				<h:outputText id="agencyPmOrgValidityStatus"
 					value="#{agencyData.chkStatusPmOrgValidity ? lbl['lbl.ct.active']:lbl['lbl.ct.inactive']}"
 					style="float:none" />
-			</p:column>
-			
+			</p:column> -->
+					
 		</p:dataTable>
+	
 
 		<div class="ppRightBtn">
 			<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}"
@@ -228,7 +229,7 @@
 						</td>
 						<td class="TableFieldRight">
 							<p:inputText id="uploadRefNoDoc"
-								style="width:400px;"
+								style="width:80%;"
 								value="#{ctBackingBean.managedBean.contractVer.ctContractValue.ap178RefNo}"
 								rendered="#{!ctBackingBean.managedBean.disableAgent}"
 								disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract  or ctBackingBean.managedBean.notificationSetting}">
@@ -250,7 +251,7 @@
 							<h:outputText value="#{lbl['lbl.ct.agency.ap178.description']}" rendered="#{!ctBackingBean.managedBean.disableAgent}"/>
 						</f:facet>
 						<p:inputText id="uploadCtSharingDesc"
-									style="width:350px;" value="#{attachFile.fileDescription}"
+									style="width:98%;" value="#{attachFile.fileDescription}"
 									rendered="#{!ctBackingBean.managedBean.disableAgent}"
 									disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewContract  or ctBackingBean.managedBean.notificationSetting}" />
 					</p:column>
