@@ -3318,24 +3318,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		//Bug #28356 - Start
-		if (ctContractItem.getMinimumOrderQty() <= 0) {
-			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(ctContractItem.getContractItemId().equals(item.getContractItemId())){
-					item.setMinimumOrderQty(1);
-					ctContractItem.setMinimumOrderQty(1);
+		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
+			if (ctContractItem.getMinimumOrderQty() <= 0) {
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if(ctContractItem.getContractItemId().equals(item.getContractItemId())){
+						item.setMinimumOrderQty(1);
+						ctContractItem.setMinimumOrderQty(1);
+					}
 				}
+				throw new EpException(MessageConst.ERROR_100033,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} 
+			if (ctContractItem.getMinimumOrderQty() > 0) {
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if(ctContractItem.getContractItemId().equals(item.getContractItemId()))
+					item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+				}
+				
 			}
-			throw new EpException(MessageConst.ERROR_100033,
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		} 
-		if (ctContractItem.getMinimumOrderQty() > 0) {
-			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(ctContractItem.getContractItemId().equals(item.getContractItemId()))
-				item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-			}
-			
-		}
+		}//28292 - null checker
 		// Start - 28292
 		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
 			Double maxValue = new Double(0);							

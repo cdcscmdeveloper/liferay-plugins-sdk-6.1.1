@@ -1494,6 +1494,44 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
+
+		// Start - 28292
+		
+		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
+		List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
+		List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
+
+
+		if(itemlistService != null && !itemlistService.isEmpty()){
+			CommonUtils commonUtils = new CommonUtils();
+			for (CtContractItem ctItem : itemlistService) {
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
+						.getScRequestItem().getUom().getUomCode());
+				DecimalFormat formatter = new DecimalFormat(minValue);
+				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
+				ctItem.setMinimumOrderQty(Double.parseDouble(result));
+
+				ctBB.onChangeMinimumQty(ctItem);
+
+			}
+		}
+		
+		if(itemlistProduct != null && !itemlistProduct.isEmpty()){
+			CommonUtils commonUtils = new CommonUtils();
+			for (CtContractItem ctItem : itemlistProduct) {
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
+						.getScRequestItem().getUom().getUomCode());
+				DecimalFormat formatter = new DecimalFormat(minValue);
+				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
+				ctItem.setMinimumOrderQty(Double.parseDouble(result)); 
+
+				ctBB.onChangeMinimumQty(ctItem);
+
+			}
+		}
+		// End - 28292
 	}
 	//LOG : 13847, by Fahmi 22032019
 	/**
