@@ -25,15 +25,16 @@
 					<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sv.templ.assisting.officer']}" />
 					<!-- #28774 - Start -->
 					<p:outputLabel value="*" styleClass="mandatory" />
+					<!-- #28774 - End -->
 					
 				</td>
 				<td class="tdContent">
-					<p:inputText id="test" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name}" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true"/>
-					<!-- 
+					<!-- #28774 - Start -->
+					<p:inputText id="test" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name}" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true" requiredMessage="Testing for #28774"/>
+					<!-- #28774 - End -->
+					<!--
 					#28774 - Start
-					<p:commandButton value="#{lbl['lbl.btn.delete']}" update="" id="deleteSVOBtnId"/> 
-					#28774 - End
-					-->
+					<p:commandButton value="#{lbl['lbl.btn.delete']}" update="" id="deleteSVOBtnId"/> -->
 					<!-- #28774 - End -->
 					<p:spacer width="5" />
 					<p:graphicImage style="vertical-align:top !important;" rendered="#{fn:length(svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.name) > 1}" value="/css/images/design/ico-edit.png" title="#{lbl['lbl.sm.edit']}" />
@@ -45,7 +46,6 @@
 							alertValue="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficer.nameEnterBySvo}"/>							
 				</td>
 			</tr>
-			
 		</table>
 		<!-- 
 		#28774 - Start
