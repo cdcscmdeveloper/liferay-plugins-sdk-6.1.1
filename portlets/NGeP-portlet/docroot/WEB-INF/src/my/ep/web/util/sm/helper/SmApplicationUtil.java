@@ -4900,7 +4900,20 @@ public class SmApplicationUtil {
 				&& applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
-		} else {
+		} 
+		// 28912 start 
+		else if(!StringUtils.isBlank(applType)
+				&& applType.equals(ParameterConst.SM_BUMI_SUPP_DATA_MAINTAINACE)){
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusList(reqDTO).getStatusDescList();
+			for (int i = 0; i < descList.size(); i++) {
+				if (descList.get(i).getStatusName().equalsIgnoreCase(ParameterConst.SM_REGISTRATION_STATUS_DESC_FOREIGN)){
+			    	descList.remove(i);
+				}
+			}
+		}
+		else {
+			// 28912 end 
 			List<String> consultantRegStatus = Arrays
 					.asList(new String[] {
 							SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED

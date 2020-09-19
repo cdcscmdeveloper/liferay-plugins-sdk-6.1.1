@@ -119,6 +119,14 @@ public class SupplierDataMaintenanceBackingBean extends
 						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
 						"", null, null);
 	}
+	
+	// 28912 start - prerender for Bumiputera Supplier Data Maintenance
+	public void preRenderBumiputeraSupplierDataMaintenance() {
+		initDataForSearchBumiputeraSupplier();
+		SmCommonUtil.redirectToPage("/xhtml/sm/supplierdatamaintenance/searchBumiputeraSupplierDataMaintenance.xhtml",
+				"", null, null);
+	}
+	// 28912 end
 
 	/**
 	 * Pre-render and redirect to Search Page
@@ -322,7 +330,20 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 		}
 		getManagedBean().setDeleteApprovedCategories(new ArrayList<SmSupplierCategory>());
-		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
+		// 28912 start - select bumiputera approved categories
+		if (getManagedBean().isBumiputeraDataMaintainance()) {
+			ArrayList<SmSupplierCategory> ApprovedCategoriesList = (ArrayList<SmSupplierCategory>) getManagedBean().getApprovedCategoryList();
+			ArrayList<SmSupplierCategory> selectedApprovedCategoriesList = new ArrayList<SmSupplierCategory>();
+			for (int i = 0; i < ApprovedCategoriesList.size(); i++) {
+				if (ApprovedCategoriesList.get(i).getPmCategoryL3().getBumiPercentage() > 50){
+					selectedApprovedCategoriesList.add(ApprovedCategoriesList.get(i));
+				}
+			}
+			getManagedBean().setSelectedApprovedCategories(selectedApprovedCategoriesList);
+		}else{
+			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
+		}
+		// 28912 end
 		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
 	
 		this.getManagedBean().setApproverRemark(null);
@@ -337,6 +358,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setFlagShowButtonSubmit(true);
 		}
 		//#28278 - Disciplonary action - #28278 - end
+		// 28912 start - filter Registration Status List for bumi only
+		if (getManagedBean().isBumiputeraDataMaintainance()) {
+			getManagedBean().setRegStatusDescList(
+					SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+							ParameterConst.SM_BUMI_SUPP_DATA_MAINTAINACE));
+		}
+		// 28912 end
 		
 	}
 
@@ -515,7 +543,13 @@ public class SupplierDataMaintenanceBackingBean extends
 					.getDeleteApprovedCategories());
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
-			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			// 28912 start - set remark doc type to bumiputera
+			if (getManagedBean().isBumiputeraDataMaintainance()) {
+				reqDTO.setDocType(ParameterConst.SM_BUMI_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			} else {
+				reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+			}
+			// 28912 end
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
@@ -1633,6 +1667,24 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		*/
 	}
+	// 28912 start - init search data for Bumiputera Data Maintenance
+	private void initDataForSearchBumiputeraSupplier() {
+		renewSesionObject();
+		initLogin();
+		initLoginUserZone();
+		getManagedBean().setDisplaySearchPage(true);
+		getManagedBean().setViewSupplierProfile(true);
+		getManagedBean().setReviewApplicationExist(false);
+		getManagedBean().setViewApplicationHistory(false);
+		getManagedBean().setViewSupplierMaintenancePage(true);
+		getManagedBean().setRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI));
+		getManagedBean().setZoneList(SmServiceLookup.getZoneSO().retrieveActiveZoneList().getZoneList());
+		getManagedBean().setSearchSuppType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+		getManagedBean().setBumiputeraDataMaintainance(true);
+	}
+	// 28912 end
 
 	/**
 	 * Check if the login user is the approver of the selected application
@@ -1858,6 +1910,9 @@ public class SupplierDataMaintenanceBackingBean extends
 					discipline.getSmDiscplinaryAction().setEndDate(
 							disc.getEndDate());
 					discipline.setSuspend(true);
+					// 28912 - get Action By for Disciplinary Action popup
+					discipline.getSmDiscplinaryAction().setCreatedBy(
+							disc.getCreatedBy());
 					
 					break;
 				}
@@ -1893,7 +1948,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	private void initApproverRemarkInfo(){
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-		reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		// 28912 start - bumiputra approver remark
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			reqDTO.setDocType(ParameterConst.SM_BUMI_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		}else {
+			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
+		}
+		// 28912 end
 		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
 		
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(
@@ -2104,10 +2165,19 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	private void approvalHistoryRemarklist() {
-		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
-				ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
-		resDTO.getRemarksList();
-		getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+		// 28912 start - bumiputera approver remark
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
+					ParameterConst.SM_BUMI_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
+			resDTO.getRemarksList();
+			getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+		}else {
+			SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(
+					ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE, getManagedBean().getSmAppl().getApplId());
+			resDTO.getRemarksList();
+			getManagedBean().setApproverRemarkList(resDTO.getRemarksList());
+		}
+		// 28912 end
 	}
 
 	public String getUserNameByUserId(Long userId) {

@@ -32,6 +32,10 @@ public class DisciplinaryActionVO implements Serializable {
 	//27796: Disciplinary Action - start - 26238
 	private List<DisciplinaryActionVO> remarksList;
 	//27796: Disciplinary Action - end - 26238
+	
+	//28912
+	private String createdDate;
+	private Long createdBy;
 
 	public SmDisciplinaryAction getSmDiscplinaryAction() {
 		return smDiscplinaryAction;
@@ -194,5 +198,23 @@ public class DisciplinaryActionVO implements Serializable {
 		this.remarksList = remarksList;
 	}
 	//27796: Disciplinary Action - end - 26238
+
+	//28912 start
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Long getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
+	//28912 end
 
 }

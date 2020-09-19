@@ -8328,6 +8328,43 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<!-- 28912 start - portlet for Bumiputera Supplier Data Maintainance -->
+	<portlet>
+		<portlet-name>bumiputeraSupplierDataMaintenance</portlet-name>
+		<display-name>Bumiputera Supplier Data Maintenance</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>
+				/xhtml/sm/supplierdatamaintenance/preRenderBumiputeraSupplierDataMaintenance.xhtml
+			</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Bumiputera Supplier Data Maintenance</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!-- 28912 end -->
 	<portlet>
 		<portlet-name>changeApplicationFlow</portlet-name>
 		<display-name>Change Supplier Application Flow</display-name>

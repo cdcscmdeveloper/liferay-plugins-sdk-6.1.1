@@ -172,6 +172,8 @@
 				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.basicRemark}" />
 
 	</p:panel>
-	
-	<ui:include src="gstCompanyBasicViewOnly.xhtml" />
+	<!-- 28912 - filter to not display on Bumiputera Supplier Data Maintainance-->
+	<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.bumiputeraDataMaintainance}">
+		<ui:include src="gstCompanyBasicViewOnly.xhtml" />
+	</p:outputPanel>
 </ui:composition>

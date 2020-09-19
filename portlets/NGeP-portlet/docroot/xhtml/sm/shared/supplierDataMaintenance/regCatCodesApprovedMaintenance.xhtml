@@ -38,7 +38,13 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<p:column selectionMode="multiple" disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width:2%" />
+		<!-- 28912 start - auto tick and disable bumi categories -->
+		<p:column selectionMode="multiple"
+			disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories or 
+			(supplierDataMaintenanceBackingBean.managedBean.bumiputeraDataMaintainance and aprvdCatBean.pmCategoryL3.bumiPercentage	> 50)}"
+			style="width:2%" />
+		</p:columnGroup>
+		<!-- 28912 end -->
 		<p:column style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />

@@ -3623,6 +3623,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
 						|| disciplinaryAction.isBumiputeraCancel()){
 					DisciplinaryActionVO retVal = new DisciplinaryActionVO();
+					// 28912 start
+					if(disciplinaryAction.getCreatedDate() != null)
+						retVal.setCreatedDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getCreatedDate()));
+					if(disciplinaryAction.getCreatedBy() != null)
+						retVal.setCreatedBy(disciplinaryAction.getCreatedBy());
+					// 28912 end
 					if(disciplinaryAction.getStartDate() != null)
 						retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
 					if(disciplinaryAction.getEndDate() != null)
