@@ -1069,6 +1069,8 @@ public class SmApplicationUtil {
 	
 	//#27356
 	public static void validateCoordinate(SmApplicationManagedBean managedBean){
+		//#28741 BPKU:#27565
+		if(managedBean.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) return;
 		SmCompanyBasic companyBasic = managedBean.getSmAppl().getSmCompanyBasic();
 		List<SmFacility> facility =managedBean.getSmAppl().getSmFacilities();
 		//START 27748 -  SM Disciplinary Action - 26238
@@ -4923,7 +4925,11 @@ public class SmApplicationUtil {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
 			if (!EntityHelper.isCollectionEmpty(descList)
-					&& !StringUtils.isBlank(suppType) && suppType.equals("J")) {
+					//#27565 BPKU : #28906 START
+					&& !StringUtils.isBlank(suppType) && suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)
+					|| suppType.equals(SupplierManagementConst.STYPE_CONTRACTOR)) 
+					//#27565 BPKU : #28906 END
+			{
 				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
 				for (PmStatusDesc statDesc : descList) {
 					if (statDesc.getPmStatus() != null

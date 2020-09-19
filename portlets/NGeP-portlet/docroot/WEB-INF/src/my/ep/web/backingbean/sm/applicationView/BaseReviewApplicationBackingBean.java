@@ -3845,4 +3845,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 	//28281 - end
+	//#28741 BPKU:#27565 - start
+	public String getSAPVendorCode(Long branchCode) {
+		ViewApplHistoryBackingBean bean = new ViewApplHistoryBackingBean();
+		return bean.getSAPVendorCode(branchCode);
+	}
+	//#28741 BPKU:#27565 - end
 }

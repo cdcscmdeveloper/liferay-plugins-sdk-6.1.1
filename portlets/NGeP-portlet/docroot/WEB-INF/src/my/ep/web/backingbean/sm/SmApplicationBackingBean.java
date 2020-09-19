@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -47,6 +48,7 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -56,6 +58,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.race.RaceReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -93,6 +96,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
@@ -149,6 +153,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewApplHistoryBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSmApplBackingBean;
 import my.ep.web.backingbean.sm.outputmsg.SmOutputMsgBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
@@ -207,6 +212,7 @@ public class SmApplicationBackingBean extends
 	NumberFormat formatter = new DecimalFormat("#0.00");
 	SmRuleHelper ruleHelper = new SmRuleHelper();
 	ViewApplHistoryBackingBean viewApplHistoryBackingBean;
+	ViewSmApplBackingBean viewSmApplBackingBean;
 	//SSM CHANGES #27214
 	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
 	public boolean fromPrerenderNewReg = false;
@@ -1939,7 +1945,21 @@ public class SmApplicationBackingBean extends
 		//16052019 - SSM INTEGRATION CR - Fahmi END
 		
 		// set Personnel List Count
-		calcPersonnelListCount();	
+		calcPersonnelListCount();
+		//#28741 BPKU:#27565 - start
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			viewSmApplBackingBean = new ViewSmApplBackingBean();
+			viewSmApplBackingBean.initStep0BaseInfo(smAppl);
+			viewSmApplBackingBean.initStep1CompanyInfo();
+			viewSmApplBackingBean.initStep2BranchCompanyInfo();
+			viewSmApplBackingBean.initStep3PersonnelInfo();
+			viewSmApplBackingBean.initStep4CaptialAndEquityInfo();
+			viewSmApplBackingBean.initStep5BankInfo();
+			viewSmApplBackingBean.initStep6RegisterCategoryCode();
+			viewSmApplBackingBean.initStep7SupportingDocumentsInfo();
+			viewSmApplBackingBean.getManagedBean().setCurrentPageType(getManagedBean().getCurrentPageType());
+		}
+		//#28741 BPKU:#27565 - end
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
@@ -13676,4 +13696,16 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 // BUG #28173 & #28315 -END
+	
+	//#28741 BPKU:27565 - start
+	public void updateRaceWithMyIdentity(AjaxBehaviorEvent e){
+		SmPersonnel per = getManagedBean().getSelectedShareHolder();
+		if(per == null || per.getIdentificationNo() == null || per.getIdentificationNo().length() != 12
+			|| !per.getIdentificationNo().matches("([0-9]{12})")) return;
+		
+		PmRace pmRace = SmCommonUtil.getRaceWithMyIdentity(per.getIdentificationNo());
+		if(pmRace != null)
+			getManagedBean().getSelectedShareHolder().setPmRace(pmRace);
+	}
+	//#28741 BPKU:27565 - end
 }

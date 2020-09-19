@@ -21,7 +21,17 @@
 	<p:panel header="#{lbl['lbl.sm.declaration']}" toggleable="true">
 		<table style="width: 100%;">
 			<tr>
-				<td><h:outputText escape="false" value="#{lbl['lbl.sm.declaration.msg']}"/></td>
+				<!-- #28741 BPKU:#27565 - start-->
+				<c:choose>
+					<c:when test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+					<td><h:outputText escape="false" value="#{lbl['lbl.sm.declaration.bumi']}"/></td>
+					</c:when>
+					
+					<c:otherwise>
+					<td><h:outputText escape="false" value="#{lbl['lbl.sm.declaration.msg']}"/></td>
+					</c:otherwise>
+				</c:choose>
+				<!-- #28741 BPKU:#27565 - end-->
 				<td style="vertical-align: baseline;">
 					<div align="right">
 						<p:commandLink ajax="false">

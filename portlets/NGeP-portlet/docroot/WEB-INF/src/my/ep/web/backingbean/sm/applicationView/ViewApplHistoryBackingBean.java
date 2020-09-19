@@ -246,6 +246,80 @@ public class ViewApplHistoryBackingBean extends
 						"", null);
 	}
 
+	//27843 BPKU : 27565 - START
+	/**
+	 * Pre-render for View Bumiputera Application History
+	 */
+	public void preRenderViewBumiputeraApplicationHistory() {
+		renewSesionObject();
+		initLogin();
+		getManagedBean().setViewSupplierProfile(true);
+		getManagedBean().setReviewApplicationExist(false);
+		getManagedBean().setViewApplicationHistory(true);
+		getManagedBean().setRenderedBackButton(true);
+		
+		if (!getManagedBean().isSupplierUser()) {
+			initLoginUserZone();
+			String supplierIdParam = getSupplierIdParam();
+			getManagedBean().setRegStatusDescList(
+					retrieveRegistrationStatusList());
+			getManagedBean().setZoneList(
+					SmServiceLookup.getZoneSO().retrieveActiveZoneList()
+							.getZoneList());
+			if (StringUtils.isNotBlank(supplierIdParam)) {
+				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
+				SmSupplier paramSupplier = SmServiceLookup
+						.getSupplierSearchSO().retriveSupplierById(reqDTO)
+						.getSmSupplier();
+				getManagedBean().setSearchSupplier(new SmSupplier());
+				getManagedBean().getSearchSupplier().setRegNo(
+						paramSupplier.getRegNo());
+				if (paramSupplier.getSmAppl() != null) {
+					getManagedBean().setSearchSuppType(
+							paramSupplier.getSmAppl().getSupplierType());
+					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null
+							&& !EntityHelper.isCollectionEmpty(paramSupplier
+									.getSmAppl().getSmCompanyBasic()
+									.getSmCompanyAddresses())) {
+						SmAddress address = paramSupplier.getSmAppl()
+								.getSmCompanyBasic().getSmCompanyAddresses()
+								.get(0).getSmAddress();
+						if (address != null && address.getPmState() != null) {
+							PmZone zone = SmApplicationUtil
+									.retrieveZoneByStateId(address.getPmState()
+											.getStateId());
+							if (zone != null) {
+								getManagedBean().setSearchPmZoneId(
+										zone.getZoneId());
+							}
+						}
+					}
+				}
+
+				getManagedBean().searchSupplier();
+			}
+			
+		}
+		
+		else {			
+			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+			if(!EntityHelper.isCollectionEmpty(resultList)
+					&& resultList.size() > 0){
+				getManagedBean().setDisciplinaryAction(true);
+			} else {
+				getManagedBean().setDisciplinaryAction(false);
+			}			
+		} 
+
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierBumiputeraApplicationHistoryPage.xhtml",
+						"", null);
+	}
+	//27843 BPKU : 27565 - END 
+	
 	/**
 	 * View revision application by approver for task that is not claimed
 	 * 
@@ -459,6 +533,15 @@ public class ViewApplHistoryBackingBean extends
 		validateCompanySearch();
 		getManagedBean().searchSupplier();
 	}
+	
+	//27843 BPKU : 27565 - START
+	public void searchBumi() {
+		getManagedBean().setAccountType(ParameterConst.SUPPLIER_TYPE_MOF);
+		getManagedBean().setSearchApplType(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+		validateCompanySearch();
+		getManagedBean().searchSupplier();
+	}
+	//27843 BPKU : 27565 - END
 
 	/**
 	 * Initialized application by application no
