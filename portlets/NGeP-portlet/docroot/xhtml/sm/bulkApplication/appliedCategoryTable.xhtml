@@ -72,11 +72,11 @@
 							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
 							#{applCat.pmCategoryL3.categoryL3Code} ">
 					<!-- 21937 -->
-					<c:if test="#{!applCat.overLapCategory}">
+					<c:if test="#{applCat.overLapCategory}">
 						<f:selectItem itemValue="1" itemEscaped="false"
 							itemLabel="#{lbl['lbl.sm.catCodes.apprv']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
 					</c:if>
-					<c:if test="#{applCat.overLapCategory}">
+					<c:if test="#{!applCat.overLapCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
 					</c:if>
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
