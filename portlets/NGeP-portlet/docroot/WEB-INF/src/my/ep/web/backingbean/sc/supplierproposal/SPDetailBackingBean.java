@@ -63,6 +63,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -115,6 +116,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -256,6 +258,9 @@ public class SPDetailBackingBean extends
 				getManagedBean().setFinanceCheckDetailsList(
 						resDTO.getFinancialCheckLists());
 				checklistSorting(getManagedBean().getFinanceCheckDetailsList());
+				if(resDTO.getFinancialCheckLists().size()>0){ //#28792-start
+				this.getManagedBean().setFinancialAttchment(Boolean.TRUE);	
+				} //#28792-End				
 				debugLogger("Financial Check list: "
 						+ resDTO.getFinancialCheckLists().size());
 			}
@@ -4038,6 +4043,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 					.getParameter(SourcingConstants.NAV_PARAM_QUOTATION_TENDER_ID);
 
 			retriveSupplierProposalDtl(Long.parseLong(qtId), null, false);
+			if(this.getManagedBean().isFinancialAttchment()){//#28792-start
+			validateFinacialProposalAttachments(false);
+			}//#28792-End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -4961,6 +4969,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			checkSupplierQualificationStatus();
 			proposalSO
 					.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
+			validateFinacialProposalAttachments(true);//#28792
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		} finally {
 			proposalSO = null;
@@ -5270,4 +5279,173 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 	//#25089@hatta - end
 		
+	//#28792-start			
+	private void validateFinacialProposalAttachments(boolean validationSuspend){
+		
+		List<ScQtProposalChecklist> financialChecklist = getManagedBean()
+				.getFinanceCheckDetailsList();
+		if(null!=financialChecklist && CollectionUtils.isNotEmpty(financialChecklist)){
+		for (ScQtProposalChecklist checklist : financialChecklist) {
+		String defType = checklist.getScQtCheckList().getDefinationType()
+				.getParameterCode();
+		String financialsupplierAction = checklist.getScQtCheckList()
+				.getAction().getParameterCode();
+
+		if ((checklist.isSubmitted() && defType.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD) && ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION
+						.equalsIgnoreCase(financialsupplierAction))||(checklist.isSubmitted() && ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION.equalsIgnoreCase(defType))) {
+			if(null==checklist.getScQtProposalChecklistAttachment()){
+			PmDocument document=	checklist.getScQtCheckList().getPmDocument();
+				if(null!=document && null!=document.getDocGroupId() && new Integer(ParameterConst.ASSET_LIABILITIES_GROUP_ID).equals(document.getDocGroupId()) ){
+					ScQtProposalChecklist finProposalChecklist = null;
+					finProposalChecklist = findProposalChecklistByDocDefKey(
+							getManagedBean().getFinanceCheckDetailsList(),
+							QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
+					
+					if(null!=finProposalChecklist){
+						if(finProposalChecklist.isSubmitted()){
+						boolean assetLiabilityUpload=assetLiabilitiesUpload(finProposalChecklist);
+						if(!assetLiabilityUpload){
+						checklist.setSubmitted(Boolean.FALSE);
+						if(validationSuspend){
+						throw new EpException(MessageConst.ERROR_760514);
+						}
+						}
+						}
+						
+					}else{
+						
+						checklist.setSubmitted(Boolean.FALSE);
+						if(validationSuspend){
+						throw new EpException(MessageConst.ERROR_760514);
+						}	
+					}
+				}
+				else if(null!=document && null!=document.getDocGroupId() && new Integer(ParameterConst.CREDIT_FACILITIES_GROUP_ID).equals(document.getDocGroupId()) ){
+					ScQtProposalChecklist finProposalChecklist = null;
+					finProposalChecklist = findProposalChecklistByDocDefKey(
+							getManagedBean().getFinanceCheckDetailsList(),
+							QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
+					
+					if(null!=finProposalChecklist){
+						if(finProposalChecklist.isSubmitted()){
+							boolean creditfacilityUpload=creditFacilityUpload(finProposalChecklist);
+							if(!creditfacilityUpload){
+								checklist.setSubmitted(Boolean.FALSE);
+								if(validationSuspend){
+								throw new EpException(MessageConst.ERROR_760514);
+								}
+								}
+							
+						}
+				}
+					else{
+						
+						checklist.setSubmitted(Boolean.FALSE);
+						if(validationSuspend){
+						throw new EpException(MessageConst.ERROR_760514);
+						}	
+					}
+					
+				}
+	         else{
+	        	 checklist.setSubmitted(Boolean.FALSE);
+	        	 if(validationSuspend){
+	        	 throw new EpException(MessageConst.ERROR_760514); 
+	        	 }
+	         }
+				
+			}
+			
+		}
+		
+	}
+	}
+	}
+	private boolean assetLiabilitiesUpload(ScQtProposalChecklist scQtProposalChecklist){
+		IQTProposalSO proposalSO = null;
+		boolean removeAttachment = false;
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			ProposalResDTO resDTO = proposalSO
+					.retrieveAssetLiabilityDtls(reqDTO);
+
+			ScQtPRPAssetLiability scQtPRPAssetLiability = resDTO
+					.getScQtPRPAssetLiability();
+			this.getManagedBean().setScQtProposalScoreList(
+					resDTO.getProposalScores());
+
+			ScQtProposalScore assetLiabilityAcidRatioScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
+			//ScQtProposalScore assetLiabilityCurrentRatioScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO);
+
+			if (null!=scQtPRPAssetLiability && assetLiabilityAcidRatioScore != null) {
+				scQtPRPAssetLiability.setAcidRatio(
+						assetLiabilityAcidRatioScore.getCriteriaValue());
+			}
+			
+			if ( scQtPRPAssetLiability != null) {
+				
+				BigDecimal totalVal = new BigDecimal(0.00);
+				if (null != scQtPRPAssetLiability.getCurrentAssets()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getCurrentAssets());
+				}
+				if (null != scQtPRPAssetLiability.getCurrentLiabilities()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getCurrentLiabilities());
+				}
+				if (null != scQtPRPAssetLiability.getTotalCashInHand()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getTotalCashInHand());
+				}
+				if (null != scQtPRPAssetLiability.getTotalAccountReceivable()) {
+					totalVal = totalVal.add(scQtPRPAssetLiability.getTotalAccountReceivable());
+				}
+				if( ((null != totalVal && totalVal.compareTo(BigDecimal.ZERO) == 0)
+								&& (null != scQtPRPAssetLiability.getAcidRatio() && scQtPRPAssetLiability.getAcidRatio().compareTo(BigDecimal.ZERO) == 0 )
+								&& (null != scQtPRPAssetLiability.getCurrentRatio() && scQtPRPAssetLiability.getCurrentRatio().compareTo(BigDecimal.ZERO) == 0))) 
+					 {
+				
+					removeAttachment = true;
+					
+					//assetProposalChecklist.setSubmitted(true);
+					
+				}	
+		}	
+		}finally {
+			proposalSO = null;
+			this.getManagedBean().setScQtProposalScoreList(null);
+		}
+		return removeAttachment;
+	}
+
+	private boolean creditFacilityUpload(ScQtProposalChecklist scQtProposalChecklist){
+	boolean creditFaciltyupload=false;	
+	IQTProposalSO proposalSO = null;
+	try {
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		proposalSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
+		reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+		reqDTO.setScQt(this.getManagedBean().getQt());
+		ProposalResDTO resDTO = proposalSO
+				.retrieveCreditFacilitiesDtls(reqDTO);	
+		List<ScQtPRPCreditFacility> creditFacilitiesList = resDTO
+				.getCreditFacilityResultBean();
+		if (creditFacilitiesList == null
+				|| creditFacilitiesList.isEmpty()) {
+			creditFaciltyupload=true;	
+		}
+
+		
+		
+
+	} finally {
+		proposalSO = null;
+	}
+	return creditFaciltyupload;
+	}
+	//#28792-End	
 }
