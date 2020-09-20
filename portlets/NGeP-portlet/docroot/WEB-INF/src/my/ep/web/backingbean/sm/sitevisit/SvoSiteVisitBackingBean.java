@@ -2090,10 +2090,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//validate assistant officer
 		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
 			svTask.setSmSvAssistantOfficer(null);
-			//#28774 - Start
-			//throw new EpException(MessageConst.ERROR_721058);
-			//#28774 - End
-			
 		}//START 24964
 		else{
 			svTask.getSmSvAssistantOfficer().setNameEnterBySvo(svTask.getSmSvAssistantOfficer().getName());
