@@ -1282,8 +1282,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
-				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
+				if(ctContractAmount!=null){//29082
+					getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+					getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());
+				}
 			}
 			//end - #17087
 			
@@ -1505,8 +1507,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
-				getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
-				getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());				
+				if(ctContractAmount!=null){//29082
+					getManagedBean().setMinContractDate(ctContractAmount.getEffDate());
+					getManagedBean().setMaxContractDate(ctContractAmount.getExpDate());	
+				}
 			}
 			//end - #17087
 			
