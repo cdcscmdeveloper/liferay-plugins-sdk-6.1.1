@@ -635,8 +635,8 @@ public class SupplierManagementConst {
 	public static final String SME_STATUS_BOTH = my.ep.constant.sm.SupplierManagementConst.SME_STATUS_BOTH;
 
 	// SUPPLIER TYPE
-	public static final String SUPP_TYPE_CONTRACTOR = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONTRACTOR;
-	public static final String SUPP_TYPE_CONSULTANT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONSULTANT;
+	public static final String SUPP_TYPE_CONTRACTOR = "K";
+	public static final String SUPP_TYPE_CONSULTANT = "J";
 	public static final String SUPP_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_BASIC;
 	public static final String SUPP_TYPE_GOVT_TO_GOVT = my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT;
 
