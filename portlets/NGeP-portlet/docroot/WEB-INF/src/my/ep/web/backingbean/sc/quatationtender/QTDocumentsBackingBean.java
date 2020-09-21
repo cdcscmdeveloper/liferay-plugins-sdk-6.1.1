@@ -2900,13 +2900,15 @@ public class QTDocumentsBackingBean extends
 			docParamValues.put(TemplateDocConst.PARAM_AGENCY_NAME, ptjName);
 			docParamValues.put(TemplateDocConst.PARAM_AGENCY_ADDRESS,
 					agencyAddress);
+			//20200921@asyrafhaziq - 29076 - Start
 			docParamValues
-					.put(TemplateDocConst.PARAM_OFFICER_NAME, doUser!=null ?doUser.getUserName() :" ");
+					.put(TemplateDocConst.PARAM_OFFICER_NAME, doUser!=null && doUser.getUserName()!=null  ?doUser.getUserName() :" ");
 			docParamValues.put(TemplateDocConst.PARAM_TELEPHONE_NUM,
-					doUser!=null ?doUser.getPhoneNo() :" ");
-			docParamValues.put(TemplateDocConst.PARAM_AGENCY_EMAIL, doUser!=null ?doUser.getEmail() :" ");
+					doUser!=null && doUser.getPhoneNo()!=null ?doUser.getPhoneNo() :" ");
+			docParamValues.put(TemplateDocConst.PARAM_AGENCY_EMAIL, doUser!=null && doUser.getEmail()!=null ?doUser.getEmail() :" ");
 			// docParamValues.put(TemplateDocConst.COMPANY_NAME, ptjName);
-			docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, doUser!=null ?doUser.getFaxNo() :" ");
+			docParamValues.put(TemplateDocConst.PARAM_FAX_NUM, doUser!=null && doUser.getFaxNo()!=null ?doUser.getFaxNo() :" ");
+			//20200921@asyrafhaziq - 29076 - End	
 			docParamValues.put(
 					TemplateDocConst.PARAM_VALIDITY_PERIOD,
 					scQt.getQtValidityPeriod() != null ? Integer.toString(scQt
