@@ -66,25 +66,38 @@
 					</table>					
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
+				<!-- 21937 - start -->
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 					value="#{applCat.apprvrDecFlg}" 
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
 							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
-							#{applCat.pmCategoryL3.categoryL3Code} ">
-					<!-- 21937 -->
-					<c:if test="#{applCat.overLapCategory}">
-						<f:selectItem itemValue="1" itemEscaped="false"
-							itemLabel="#{lbl['lbl.sm.catCodes.apprv']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
-					</c:if>
-					<c:if test="#{!applCat.overLapCategory}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
-					</c:if>
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{!applCat.overLapCategory}">
+
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 						itemValue="0" />
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk" partialSubmit="true"
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
 				</p:selectOneRadio>
+				
+				<p:selectOneRadio layout="pageDirection" id="catApprvrApprx"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{applCat.overLapCategory}">
+
+					<f:selectItem itemValue="1" itemEscaped="false"
+							itemLabel="#{lbl['lbl.sm.catCodes.apprv']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+						itemValue="0" />
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				<!-- 21937 - end -->
 			</p:column>
 			<p:column style="width : 25% !important;white-space : normal">
 				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
@@ -156,24 +169,36 @@
 					</table>					
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
+				<!-- 21937 - start -->
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr2"
 					value="#{applCat.apprvrDecFlg}" 
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
 							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
-							#{applCat.pmCategoryL3.categoryL3Code} ">
-					<!-- 21937 -->
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{applCat.overLapCategory}">
+					
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
-					<c:if test="#{applCat.overLapCategory}">
-						<f:selectItem itemValue="0" itemEscaped="false"
-							itemLabel="#{lbl['lbl.sm.catCodes.reject']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
-					</c:if>
-					<c:if test="#{!applCat.overLapCategory}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}" itemValue="0"/>
-					</c:if>
+					<f:selectItem itemLabel="bb: #{lbl['lbl.sm.catCodes.reject']}" itemValue="0"/>
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk2" partialSubmit="true"
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
 				</p:selectOneRadio>
+				
+				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr2x"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} "
+					rendered="#{applCat.overLapCategory}">
+					
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
+					<f:selectItem itemValue="0" itemEscaped="false"
+						itemLabel="bx: #{lbl['lbl.sm.catCodes.reject']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;"/>
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk2" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				<!-- 21937 - end -->
 			</p:column>
 			<p:column style="width : 25% !important;white-space : normal">
 				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
