@@ -9619,6 +9619,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("showActivePromotion");
 		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
 		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
+		//200921@akmal - Enhancement27627 - Start
 		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null && cmSupplierItem.getCmPromotionPricing().getEndDate()!=null){
 			Date currentDate = new Date();
 			if(!(DateUtils.isDateGreaterOrEqual(currentDate, cmSupplierItem.getCmPromotionPricing().getStartDate()) 
@@ -9630,6 +9631,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}else{
 			return false;
 		}
+		//200921@akmal - Enhancement27627 - End
 	}
 	
 	//20200520@akmal - Enhancement27627 - Start
