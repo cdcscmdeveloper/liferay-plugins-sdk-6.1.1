@@ -74,9 +74,8 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
-import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
-//#24975
 import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
+import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -110,6 +109,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
+//#24975
 
 
 /**
@@ -3074,14 +3074,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItems = this.getManagedBean().getEpItemsH();
 		}
 		for(PpExpenditureItem epItem: epItems){
-			//#24975 azza - start
-			if(epItem.getRecordStatusFlg()!= 9){
 			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
 			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
 		}
-	}	
-		//#24975 azza - end
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
 			this.getManagedBean().setEpTotalBudgetB(epTotalBudget);
@@ -6660,6 +6656,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		public void parameterExpenditure(String paramCode) {
 			
+			//25549@azza - start
+			calculateEpGrandTotal(paramCode);
+			//25549@azza - end
+			
 			log.info("parameterExpenditure " + paramCode);
 			     // B
 			if (ParameterConst.VOT_MENGURUS.equals(paramCode)) {	
@@ -7102,6 +7102,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200827 - End
+	//25549@azza20200822 - Start
+	public void disableActiveStatus (Integer status){
+		log.info("status" + status);
+		if (status == 9){
+			this.getManagedBean().setDisable(true);
+		}else{
+			this.getManagedBean().setDisable(false);
+		}
+	}
+	//25549@azza20200822 - End
 }
 
 
