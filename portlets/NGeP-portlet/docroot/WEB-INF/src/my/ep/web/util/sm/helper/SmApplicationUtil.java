@@ -4926,8 +4926,8 @@ public class SmApplicationUtil {
 					.retrieveRegStatusList(reqDTO).getStatusDescList();
 			if (!EntityHelper.isCollectionEmpty(descList)
 					//#27565 BPKU : #28906 START
-					&& !StringUtils.isBlank(suppType) && suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)
-					|| suppType.equals(SupplierManagementConst.STYPE_CONTRACTOR)) 
+					&& !StringUtils.isBlank(suppType) && (suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)
+					|| suppType.equals(SupplierManagementConst.STYPE_CONTRACTOR))) 
 					//#27565 BPKU : #28906 END
 			{
 				List<PmStatusDesc> newList = new ArrayList<PmStatusDesc>();
