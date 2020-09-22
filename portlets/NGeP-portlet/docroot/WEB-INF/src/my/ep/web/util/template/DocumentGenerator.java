@@ -178,10 +178,8 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			//#26180
 			if (html != null) {
 				html = html.replaceAll("&amp;nbsp;", " ");
-				//20200921@asyrafhaziq - 29076 - Start
-	        	//html = html.replaceAll("&amp;", "&amp;amp;")
-	        	//		   .replaceAll("&", "&amp;");
-	        	//20200921@asyrafhaziq - 29076 - End
+	        	html = html.replaceAll("&amp;", "&amp;amp;")
+	        			   .replaceAll("&", "&amp;");
 				html = html.replaceAll("&amp;#62", "&#62");
 				html = html.replaceAll("&amp;#60", "&#60"); 
 			//25142 - start
@@ -195,9 +193,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 				doc.outputSettings().charset("UTF-8");
 			
 				html = doc.html();*/
-				
+				//20220921@asyrafhaziq - 29076 -  Start
 				html = html.replaceAll("&amp;nbsp;", " ");
 				html = html.replaceAll("&amp;amp;", "&");
+				//20220921@asyrafhaziq - 29076 - End
 				/*html = html.replaceAll("&amp;lt", "&#60");
 				html = html.replaceAll("&amp;gt", "&#62");*/					
 			//#25142 - end
