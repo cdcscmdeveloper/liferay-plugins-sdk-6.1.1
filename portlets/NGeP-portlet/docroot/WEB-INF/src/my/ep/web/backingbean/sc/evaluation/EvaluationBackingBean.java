@@ -13315,8 +13315,9 @@ private void retriveCommitteeRemarksList(){
 
 			if (null != proposalId) {	
 				retrieveTotalSpecScoreBySupplier(proposalId, checkListType);
-				
-				
+				//#25138 - total package max score by supplier - start
+				retriveTemplatePackageSpecScoring(this.getManagedBean().getNewchecklist());
+				//#25138 - total package max score by supplier - end
 			}
 			
 			return "/xhtml/sc/evaluation/evaluationStage/technical/technicalTemplateSpecScoring.xhtml";

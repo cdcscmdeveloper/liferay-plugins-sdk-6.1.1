@@ -568,7 +568,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		private Boolean checkTecSpecNotOffer;
 		//#21695 end
 		
-	/**tabIndex
+	
+		//#25138- total max score- start 
+		private Boolean isScoringReq;
+		
+		/** The total technical package max score. */
+		private String totalMaxScore;
+		//#25138- total max score - end
+		
+		/**tabIndex
 	 * Gets the today.
 	 * 
 	 * @return the today
@@ -3705,4 +3713,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.checkTecSpecNotOffer = checkTecSpecNotOffer;
 	}
 	// #21695 farid	end		
+	//#25138- total max score -start
+	public Boolean getIsScoringReq() {
+		return isScoringReq;
+	}
+
+	public void setIsScoringReq(Boolean isScoringReq) {
+		this.isScoringReq = isScoringReq;
+	}
+
+	public String getTotalMaxScore() {
+		return totalMaxScore;
+	}
+
+	public void setTotalMaxScore(String totalMaxScore) {
+		this.totalMaxScore = totalMaxScore;
+	}
+	//#25138- total max score - end
 }
