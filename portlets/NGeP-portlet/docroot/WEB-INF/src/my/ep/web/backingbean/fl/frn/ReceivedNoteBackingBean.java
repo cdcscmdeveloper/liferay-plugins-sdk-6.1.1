@@ -530,13 +530,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 			
-			if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
+			
 				//#14650 - Alert message if contract incomplete
 				if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
 				}
-			}
+			
 			/*#14650 - Ending*/
 			
 			
