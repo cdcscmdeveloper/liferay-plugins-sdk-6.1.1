@@ -306,9 +306,7 @@
 					<p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallFin}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="3" integerOnly="true" />
+						<!-- remove #28949 attribute -->
 						<f:attribute name="min" value="0"></f:attribute>
 						<p:ajax event="blur" update="financialScoringItemScore"
 							process="@this,financialScoringItemPanle" partialSubmit="true"
@@ -321,9 +319,7 @@
 					<p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.finacialItemScoreSetting.overallOtherFin}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="3" integerOnly="true" />
+						<!-- remove #28949 attribute -->
 						<f:attribute name="min" value="0"></f:attribute>
 						<p:ajax event="blur" update="financialScoringItemScore"
 							process="@this,financialScoringItemPanle" partialSubmit="true"

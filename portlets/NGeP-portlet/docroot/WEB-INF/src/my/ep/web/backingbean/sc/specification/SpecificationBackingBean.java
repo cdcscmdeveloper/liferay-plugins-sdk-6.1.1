@@ -7597,8 +7597,18 @@ public class SpecificationBackingBean extends
 	 *            (ScQtScoreSetting financialItem).
 	 */
 	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
+// #21695 START FARID - 22/9/2020	
 		try {
 			if (null != financialItem) {
+				String checkDecimal1 = String.valueOf(financialItem.getOverallFin());
+				String checkDecimal2 = String.valueOf(financialItem.getOverallOtherFin());
+				String pattern1 = "[0-9]+";
+				if (!checkDecimal1.matches(pattern1)) {
+					throw new EpException(MessageConst.ERROR_775157);
+				}else if (!checkDecimal2.matches(pattern1)) {
+					throw new EpException(MessageConst.ERROR_775157);
+				}
+// #21695 END FARID - 22/9/2020					
 				int value1 = financialItem.getOverallFin() != null ? financialItem
 						.getOverallFin().intValue() : 0;
 				int value2 = financialItem.getOverallOtherFin() != null ? financialItem
@@ -12776,7 +12786,6 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setIndex(-1);
 		this.getManagedBean().setNewTemplateSpec(true);
-
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
 
