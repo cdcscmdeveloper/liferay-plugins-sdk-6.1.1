@@ -1361,9 +1361,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sb.append(" ( ");
 				sb.append(mofResDto.getCompanyName());
 				sb.append(" ) ");
-				if (viewGlpFlag() && mofResDto.isGlp()) {
-					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-				}
+//				Enhancement #28766 - Remove GLP flag - Start
+//				if (viewGlpFlag() && mofResDto.isGlp()) {
+//					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+//				}
+//				Enhancement #28766 - Remove GLP flag - End
 			}
 
 			worklistItemVO.setTitle(sb.toString());
