@@ -1457,6 +1457,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setDisplayCatalogue(true);
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			this.getManagedBean().setPricingTabIndex(0);
+			//200921@akmal - Enhancement27627 - Start
+//			this.getManagedBean().setZonalPricingIndex(0);
+//			this.getManagedBean().setZonalTierPricingIndex(0);
+			this.getManagedBean().setNormalPricingIndex(0);
+			//200921@akmal - Enhancement27627 - End
 			this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons();
 
 
@@ -1966,7 +1971,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				this.getManagedBean().setSelectedMaintainItem(cmSupplierItem);
 				retriveSupplierGstInfomation(suppResDTO.getSmSupplier());
 			} else { // Catalogue Item
+				//200921@akmal - Enhancement27627 - Start
 				CatalogueResDTO resDTO = null;
+				CatalogueResDTO supplierResDTO = null;
 				resDTO = catalogueSO.viewSupplierItem(reqDTO);
 				this.getManagedBean().setDisplayCatalogue(true);
 				this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
@@ -1974,8 +1981,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
 				retriveSupplierGstInfomation(resDTO.getSupplierItemList().get(0).getSmSupplier());
-				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+				supplierResDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+				this.getManagedBean().setSupplierZoneList(supplierResDTO.getSupplierZoneLs());
+				//200921@akmal - Enhancement27627 - End
 
 				//remove N/A from Item name if any
 				String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
@@ -9612,7 +9620,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
 		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
 		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null && cmSupplierItem.getCmPromotionPricing().getEndDate()!=null){
-			if(!(cmSupplierItem.getCmPromotionPricing().getStartDate().getTime()<=new Date().getTime() && cmSupplierItem.getCmPromotionPricing().getEndDate().getTime()>=new Date().getTime())){
+			Date currentDate = new Date();
+			if(!(DateUtils.isDateGreaterOrEqual(currentDate, cmSupplierItem.getCmPromotionPricing().getStartDate()) 
+					&& DateUtils.isDateGreaterOrEqual(cmSupplierItem.getCmPromotionPricing().getEndDate(), currentDate))){
 				return false;
 			}else{
 				return true;
