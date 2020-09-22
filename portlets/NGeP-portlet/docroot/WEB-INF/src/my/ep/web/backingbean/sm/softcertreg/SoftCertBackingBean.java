@@ -1063,7 +1063,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 		if (smPersonnel.getPmUser() != null
 				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED || smPersonnel
-						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL)) {
+						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || smPersonnel
+						.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ)) { //29027 add IS_SOFTCERT_REQ
 			getManagedBean().setRenderRevokeButton(true);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
@@ -1100,6 +1101,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 					if (DateUtils.isDateGreaterOrEqual(new Date(),
 							renewDate.getTime())) {
+						disableButton = false;
 						smPersonnel
 								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
 						smPersonnel.setDisableRowSelection(false);
