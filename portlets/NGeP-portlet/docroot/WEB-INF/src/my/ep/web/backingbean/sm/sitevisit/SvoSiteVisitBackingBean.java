@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -947,17 +948,20 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int totalChequeSignatory = 0;
 		int cheqBumi = 0,cheqNonBumi = 0, cheqNonMalaysian = 0;
 		
-		if(this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null){
-			for(SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()){
-				if(svBankInfo.getSmSupplierBank().getSmChequeSignatories().size() > 0){
-					for(SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()){
-						totalChequeSignatory++;
-						if(chequeSignatory.getSmPersonnel().isBumi()){
-							cheqBumi++;
-						}else{ 
-							if(chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
+		// #14055 - start
+		LinkedHashSet<String> IdCheckingList = new LinkedHashSet();
+		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
+			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
+				if (svBankInfo.getSmSupplierBank().getSmChequeSignatories().size() > 0) {
+					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
+						IdCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+						if (chequeSignatory.getSmPersonnel().isBumi()) {
+								cheqBumi++;
+						} else {
+							if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode()
+									.equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
 								cheqNonBumi++;
-							}else{
+							} else {
 								cheqNonMalaysian++;
 							}
 						}
@@ -965,6 +969,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 		}
+		for (int i = 0; i < IdCheckingList.size(); i++) {
+			totalChequeSignatory++;
+		}
+				
+		// #14055 - end	
 		
 		this.getManagedBean().setTotalCheqSign(totalChequeSignatory);
 		this.getManagedBean().setCheqBumi(cheqBumi);
@@ -1558,6 +1567,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		context.put("templateType",templateDesc);
 		context.put("review", review);
+		
+		// #14055 - start
+		context.put("malaysiaCode", SupplierManagementConst.COUNTRY_MALAYSIA_CODE);			
+		// #14055 - end
 		
 		String fileName = fileInitName + "sectionB.pdf";
 		String file = generateToPdf(vmEquity, context, fileName);
@@ -2817,4 +2830,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	// #24964 - end
+	
+	// #14055 - start
+	public String getStatusFromLabel(String tempStatus) {
+		Locale locale = new FacesScopes().getUserLocale();
+
+		String lblTemplate = "lbl.sm.sv.templ." + tempStatus;
+		String templDesc = ResourceBundleUtils
+				.getMessage(lblTemplate, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		return templDesc;
+	}
+	// #14055 - end
 }
