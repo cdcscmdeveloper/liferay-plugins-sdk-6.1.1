@@ -348,7 +348,7 @@
 		</p:panel>
 		<!-- end search panel -->
 		<!-- start result panel -->
-		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.search.result']}" toggleable="true"><!-- #29064 changed lbl.fl.result to lbl.fl.search.result by Vinod -->
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/><br/><br/>
 			<p:dataTable id="flYepList"
 				value="#{yearEndProcessBackingBean.managedBean.flYepDataModel}" lazy="true"
