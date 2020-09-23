@@ -79,9 +79,10 @@
 	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true" id="shrRolesPanel" rendered="#{!viewSmApplBackingBean.managedBean.updatePersonnelPage}">
 		<ui:include src="personnelRolesPanelViewOnly.xhtml" />
 	</p:panel>
+	<!-- #28979 -->
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel"
-		rendered="#{viewSmApplBackingBean.managedBean.userWithRole}">
+		rendered="#{viewSmApplBackingBean.managedBean.userWithRole or viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
 		
 		<table style="width:50%;table-layout:fixed">
 			<c:choose>
