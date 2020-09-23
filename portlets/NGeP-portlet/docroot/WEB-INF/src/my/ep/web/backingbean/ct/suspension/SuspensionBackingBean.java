@@ -168,16 +168,16 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		// 20997 - start : to reset search list after save
 	    //added reloadDatatable() for #28643
 		if(getManagedBean().getTaskId()!= null){
-			log.info("========================>> reloadTable <<==========================");
+			
 		  getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
 		}
-		log.info("========================>> not in reloadTable <<==========================");
+		
 	
 		
 		// 20997 - end
 		/*Return when not call from tasklist*/
 		if(taskId==null) 
-			return;
+		 return;
 
 		getManagedBean().setViewOnly(false);
 		CTContractSuspensionDataType dataType =  super.getBpmTaskDetails(CTContractSuspensionDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
