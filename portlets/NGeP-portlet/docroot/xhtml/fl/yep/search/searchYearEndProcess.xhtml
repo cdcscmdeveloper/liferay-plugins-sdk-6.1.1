@@ -389,12 +389,14 @@
 				
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
 					style="text-align: center">
-					<p:menuButton value="#{lbl['lbl.btn.option']}">			
+					<p:menuButton value="#{lbl['lbl.btn.option']}">	
+									<!-- #29041 start added flYep.phase in rendered by Vinod -->		
 									<p:menuitem value="#{lbl['lbl.fl.yep.closeManPay']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId)}"
+							        	rendered="#{yearEndProcessBackingBean.getAllowClose(flYep.statusId) and !(flYep.phase eq '3')}"
 							        	icon="ui-icon-fl-cancel"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmCloseManual}'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	<!-- #29041 End Vinod-->
 							        	<!-- start 28377 -->
 							        	<p:menuitem value="#{lbl['lbl.fl.ap58']}"  
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
