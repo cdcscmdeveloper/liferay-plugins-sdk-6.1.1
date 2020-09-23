@@ -755,43 +755,48 @@ public class CreateQtBackingBean extends
 									.format(panelThreshold) });
 				}
 			} else {
-				BigDecimal prThreshold = getPRThresholdAmount();
-
-				if (null == amount || (amount.compareTo(prThreshold) <= 0)) {
+				//Enhancement #25729 -start-
+				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
 					throw new EpException(MessageConst.ERROR_760024,
-							new String[] { SourcingConstants.DF_AMOUNT
-									.format(prThreshold) });
+							new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 				}
+
+				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())
+						|| this.getManagedBean().isCreateQt()) {
+					scQt.setJustificationProcValue(null);
+				}
+				//Enhancement #25729 -end-
 			}
 			
-				// Procurement Mode
-				PmPtjSpecialApproval ptjSpecialApproval = getManagedBean().getPtjSpecialApproval();
-				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO
-						.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
-				this.getManagedBean().setProcMethodDropdownPresent(false);
-				if (isQuotationThresHold || isPanel) {
-					parameterReqDTO
-							.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
-				} else if (BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
-						ptjSpecialApproval != null && !isQuotationThresHold &&
-						ptjSpecialApproval.getProcureAmt() != null &&
-						amount != null &&
-						amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0){
-					this.getManagedBean().setProcMethodDropdownPresent(true);
-					//scQt.setProcurementMode(new PmParameter());
-				}else {
-					parameterReqDTO
-							.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
-				}
-				if(!this.getManagedBean().isProcMethodDropdownPresent()){
-					ParameterResDTO parameterResDTO = parameterSo
-							.retrieveParameterByTypeAndCode(parameterReqDTO);
-					scQt.setProcurementMode(parameterResDTO.getPmParameter());
-				}
+			// Procurement Mode
+			PmPtjSpecialApproval ptjSpecialApproval = getManagedBean().getPtjSpecialApproval();
+			
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+			
+			this.getManagedBean().setProcMethodDropdownPresent(false);
+			
+			if (isQuotationThresHold || isPanel) {
+					parameterReqDTO.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+			} else if (BooleanUtils.isTrue(scQt.getObtainSpecialApproval()) && 
+					ptjSpecialApproval != null && !isQuotationThresHold &&
+					ptjSpecialApproval.getProcureAmt() != null &&
+					amount != null &&
+					amount.compareTo(ptjSpecialApproval.getProcureAmt()) <= 0) {
+				this.getManagedBean().setProcMethodDropdownPresent(true);
+				//scQt.setProcurementMode(new PmParameter());
+			} else {
+				parameterReqDTO.setParameterCode(ParameterConst.PROCUREMENT_MODE_TENDER);
+			}
+			
+			if(!this.getManagedBean().isProcMethodDropdownPresent()) {
+				ParameterResDTO parameterResDTO = parameterSo.retrieveParameterByTypeAndCode(parameterReqDTO);
 				
-			debugLogger("setProcurementMode, @procurementMode = "
-					+ scQt.getProcurementMode());
+				scQt.setProcurementMode(parameterResDTO.getPmParameter());
+			}
+				
+			debugLogger("setProcurementMode, @procurementMode = "+ scQt.getProcurementMode());
+
 			if (estimatedAmount == null) {
 				// QT Type
 				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
