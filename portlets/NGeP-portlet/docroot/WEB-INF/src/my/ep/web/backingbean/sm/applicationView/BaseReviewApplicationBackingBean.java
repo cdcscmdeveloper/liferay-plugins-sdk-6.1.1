@@ -3695,10 +3695,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								&& personnelResDTO.getSmPersonnelList().size() > 0){
 							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isSuspendRegistration()){
+								
+								//29078 : Disciplinary Action - 26238 - start
+								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+								resDTO = SmServiceLookup.getBlacklistDirectorSO().retrievePersonBlacklistByIdentificationNO(reqDTO);
+								if(resDTO != null && resDTO.getPersonBlacklist() != null){
 									blacklistOwner.setIcNo(personnel.getIdentificationNo());
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
+								//29078 : Disciplinary Action - 26238 - end
 							}
 							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
 						}						
