@@ -49,7 +49,7 @@
 				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
-					/>
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/> <!--#29027 -->
 			</h:commandLink>
 			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
 				action="#{softCertBackingBean.changePin}" target="_blank"
@@ -67,7 +67,7 @@
 				action="#{softCertBackingBean.onDisplaySpkiPopup}" 
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="Test SPKI" 
-					/>
+					rendered="false"/>  <!--#29027 -->
 			</h:commandLink>
 		</div>
 	</p:panel>
