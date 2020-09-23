@@ -471,7 +471,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
 				switch(status){
-					case "L":
+					case "L"://27382
+						throw new EpException(MessageConst.ERROR_721078,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					case "T":
 					case "B":
 					case "W":
