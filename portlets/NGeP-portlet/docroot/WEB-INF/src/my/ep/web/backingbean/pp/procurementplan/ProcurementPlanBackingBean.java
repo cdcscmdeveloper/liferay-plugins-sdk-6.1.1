@@ -793,6 +793,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				            	//log.info("[SIR#12802] - item status is 2, remove from list!");
 				                itr.remove(); 
 				            }
+				            if (procurementItem.getPpUpdateReasons() != null && 
+									!procurementItem.getPpUpdateReasons().isEmpty()) {
+				            	procurementItem.getPpUpdateReasons().clear();
+				            }
 				        }
 						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());						
 					}
@@ -3537,7 +3541,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						log.info("original reasonDesc for ppItemId "
 								+ppItem.getProcurementItemId()+" = "+reasonDesc);
 						
-						if (!ppItem.isCloned() && reasonDesc == null) {
+						if (!ppItem.isCloned() && reasonDesc == "") {
 							throw new EpException(MessageConst.ERROR_730035);
 						}
 					}
