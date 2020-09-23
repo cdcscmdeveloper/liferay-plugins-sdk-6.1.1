@@ -45,11 +45,11 @@
 		
 		<p:spacer height="2px;" />
 		<div align="right">
-			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
+			<h:commandLink 
 				action="#{softCertBackingBean.updateChallengeResponse}" target="_blank"
 				process="@this" partialSubmit="true" update=":form" >
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.update.chalresponse']}" 
-					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
+					disabled="#{softCertBackingBean.managedBean.disableButton}"/> <!--#29027 -->
 			</h:commandLink>
 			<h:commandLink disabled="#{softCertBackingBean.managedBean.disableButton}"
 				action="#{softCertBackingBean.changePin}" target="_blank"
@@ -63,10 +63,23 @@
 				<p:commandButton type="button" value="#{lbl['lbl.sm.button.reset.pin']}" 
 					disabled="#{softCertBackingBean.managedBean.disableButton}"/>
 			</h:commandLink>
+			<h:commandLink 
+				action="#{softCertBackingBean.onDisplaySpkiPopup2}" 
+				process="@this" partialSubmit="true" update=":form" >
+				<p:commandButton type="button" value="Test SPKI" 
+					rendered="false"/>  <!--#29027 -->
+			</h:commandLink>
 		</div>
 	</p:panel>
 	
 	</ui:define>
 
-
+<p:outputPanel id="spkiOutPanel" autoUpdate="false">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{softCertBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{softCertBackingBean.onClickSignSpki(spkiBackingBean.pmDigiSign)}" 
+			enableAutoUpdate="#{softCertBackingBean.enableAutoUpdate()}" />
+	</p:outputPanel>
 </ui:composition>
