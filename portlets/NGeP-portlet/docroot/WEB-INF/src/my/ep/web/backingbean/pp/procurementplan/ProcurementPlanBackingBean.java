@@ -3539,25 +3539,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 					// Set Reason For Update to be mandatory
 					
-					if(ppItem.getPpUpdateReasons() != null && 
-							!ppItem.getPpUpdateReasons().isEmpty()) {
-						String reasonDesc = ppItem.getPpUpdateReasons().get(0).getReasonDesc();
-						log.info("original reasonDesc for ppItemId "
-								+ppItem.getProcurementItemId()+" = "+reasonDesc);
-						
-						isReasonEmpty = reasonDesc == null || reasonDesc.trim().length() == 0;
-						log.info("isReasonEmpty= "+isReasonEmpty);
-						
-						if (!ppItem.isCloned() && !isReasonEmpty) {
-							notEmptyReasons.add(ppItem.getProcurementItemId());
+					log.info("statusId= "+this.getManagedBean().getSelectedPlan().getStatus().getStatusId());
+					
+					if (ProcurementPlanConst.PPP_APPROVED.equals(this.getManagedBean().getSelectedPlan().getStatus().getStatusId())) {
+						if(ppItem.getPpUpdateReasons() != null && 
+								!ppItem.getPpUpdateReasons().isEmpty()) {
+							String reasonDesc = ppItem.getPpUpdateReasons().get(0).getReasonDesc();
+							log.info("original reasonDesc for ppItemId "
+									+ppItem.getProcurementItemId()+" = "+reasonDesc);
+							
+							isReasonEmpty = reasonDesc == null || reasonDesc.trim().length() == 0;
+							log.info("isReasonEmpty= "+isReasonEmpty);
+							
+							if (!ppItem.isCloned() && !isReasonEmpty) {
+								notEmptyReasons.add(ppItem.getProcurementItemId());
+							}
 						}
 					}
 					
 				}
 			}
-			log.info("notEmptyReasons.size= "+notEmptyReasons.size());
-			if (notEmptyReasons.size() == 0) {
-				throw new EpException(MessageConst.ERROR_730035);
+			if (ProcurementPlanConst.PPP_APPROVED.equals(this.getManagedBean().getSelectedPlan().getStatus().getStatusId())) {
+				log.info("notEmptyReasons.size= "+notEmptyReasons.size());
+				if (notEmptyReasons.size() == 0) {
+					throw new EpException(MessageConst.ERROR_730035);
+				}
 			}
 		}else{
 			// SAM TODO error msg at least one item is required
