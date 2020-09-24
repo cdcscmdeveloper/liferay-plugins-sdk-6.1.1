@@ -190,6 +190,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmMachineCategoryVO;
@@ -11528,6 +11529,11 @@ public class SmApplicationUtil {
 		boolean existAsBranchPoc = false;
 		bean.setPersonType(personType);
 		for (SmPersonnel shr : bean.getSelectedShareHolders()) {
+			//#26050 - start
+			if (shr.getEpRole() != null && PmCommonUtil.isAnyPendingTask(shr.getPmUser().getLoginId())) {
+				throw new EpException(MessageConst.ERROR_770232);
+			}
+			//#26050 - end
 			if (shr.getEpRole() != null
 					&& (shr.getEpRole().equalsIgnoreCase(
 							RoleCode.SUPPLIER_TEMP.value())

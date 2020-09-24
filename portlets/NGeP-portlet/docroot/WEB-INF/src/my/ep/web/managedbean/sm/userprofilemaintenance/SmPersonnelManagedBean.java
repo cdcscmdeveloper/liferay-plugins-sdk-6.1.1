@@ -95,6 +95,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String userLimitTooltips;
 	private int maxUserLimit;
 	private String userAddConfirmationMsg;
+	// 26050
+	private boolean hasActiveAppl = false;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -667,5 +669,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setUserAddConfirmationMsg(String userAddConfirmationMsg) {
 		this.userAddConfirmationMsg = userAddConfirmationMsg;
 	}
+	
+	public boolean isHasActiveAppl() {
+		return hasActiveAppl;
+	}
 
+	public void setHasActiveAppl(boolean hasActiveAppl) {
+		this.hasActiveAppl = hasActiveAppl;
+	}
 }
