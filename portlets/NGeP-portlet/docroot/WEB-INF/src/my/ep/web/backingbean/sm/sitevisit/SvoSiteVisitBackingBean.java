@@ -949,29 +949,34 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int cheqBumi = 0,cheqNonBumi = 0, cheqNonMalaysian = 0;
 		
 		// #14055 - start
-		LinkedHashSet<String> IdCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
 				if (svBankInfo.getSmSupplierBank().getSmChequeSignatories().size() > 0) {
 					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
-						IdCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+						totalCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 						if (chequeSignatory.getSmPersonnel().isBumi()) {
-								cheqBumi++;
+								bumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 						} else {
 							if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode()
 									.equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
-								cheqNonBumi++;
+								nonBumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 							} else {
-								cheqNonMalaysian++;
+								nonMyCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 							}
 						}
 					}
 				}
 			}
 		}
-		for (int i = 0; i < IdCheckingList.size(); i++) {
-			totalChequeSignatory++;
-		}
+		totalChequeSignatory = totalCheckingList.size();
+		cheqBumi = bumiCheckingList.size();
+		cheqNonBumi = nonBumiCheckingList.size();
+		cheqNonMalaysian = nonMyCheckingList.size();
 				
 		// #14055 - end	
 		
