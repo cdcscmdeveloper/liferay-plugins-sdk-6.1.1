@@ -32,6 +32,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -1075,6 +1076,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
 							reqDTO).getSoftcertRequest();
 
+			if (softcertRequest != null && softcertRequest.getPmDigiCert() == null) {
+				softcertRequest = SmServiceLookup.getPersonnelSO()
+						.retrieveLatestPersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+			}
+			
 			if (softcertRequest != null
 					&& softcertRequest.getPmDigiCert() != null) {
 				if (StringUtils.isNotBlank(softcertRequest.getPmDigiCert()
