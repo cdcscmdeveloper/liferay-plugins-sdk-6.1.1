@@ -3514,6 +3514,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("validatePpItem");
 		if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty()){
 			boolean isReasonEmpty;
+			List<Long> notEmptyReasons = new ArrayList<Long>();
 //			int size = this.getManagedBean().getSelectedPlan().getPpProcurementItems().size();
 //			PpProcurementItem ppItem = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(size-1);
 			for(PpProcurementItem ppItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
@@ -3548,11 +3549,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						log.info("isReasonEmpty= "+isReasonEmpty);
 						
 						if (!ppItem.isCloned() && !isReasonEmpty) {
-							throw new EpException(MessageConst.ERROR_730035);
+							notEmptyReasons.add(ppItem.getProcurementItemId());
 						}
 					}
 					
 				}
+			}
+			log.info("notEmptyReasons.size= "+notEmptyReasons.size());
+			if (notEmptyReasons.size() == 0) {
+				throw new EpException(MessageConst.ERROR_730035);
 			}
 		}else{
 			// SAM TODO error msg at least one item is required
