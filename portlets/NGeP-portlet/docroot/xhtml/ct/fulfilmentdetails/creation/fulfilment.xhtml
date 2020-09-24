@@ -125,7 +125,7 @@
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.factoring']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()}"
+			rendered="#{contractDetailsBackingBean.allowShowFactoring()}"
 			actionListener="#{contractDetailsBackingBean.setTabValue('FT')}" update=":form" />
 		  	  
 		  <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.adv.payment.tracking']}"
@@ -241,7 +241,7 @@
 				</p:outputPanel>
 				
 				<p:outputPanel id="ctMenuId10" 
-				     rendered="#{ctBackingBean.managedBean.contractVer.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()
+				     rendered="#{contractDetailsBackingBean.allowShowFactoring()
 				     and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring}">
 					<ui:include src="/xhtml/ct/common/factoring.xhtml"/>
 				</p:outputPanel>
