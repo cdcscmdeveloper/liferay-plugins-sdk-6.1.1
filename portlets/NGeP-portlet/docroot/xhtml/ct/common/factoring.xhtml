@@ -12,18 +12,21 @@
 	   	</f:facet>
 	   	
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthFact220" >  
-			<p:outputLabel  value="#{lbl['lbl.ct.factoring.company']}"/>  
+			<p:outputLabel  value="#{lbl['lbl.ct.factoring.company']}"/> 
 			<p:inputText disabled="true" style="width:620px;" 
-  				value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.financialOrg.finOrgName}"  />
+  				value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.financialOrg.finOrgName 
+  				: ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.financialOrg.finOrgName}"  />
   			
  			<p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}"/>  
       		<p:inputText  disabled="true" style="width:200px;"
-      			value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.authRefNo}" />
+      			value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.authRefNo : 
+      			ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.authRefNo}" />
       		
     		<p:outputLabel  value="#{lbl['lbl.ct.effective.date']}"  /> 
    			<h:panelGrid columns="3">
 	        	<p:inputText disabled="true" style="width:100px;" 
-	      			value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.effDate}">
+	      			value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.effDate :
+	      			ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.effDate}">
 	        		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	     		</p:inputText>  
 	      		<p:spacer width="1"/>
@@ -33,7 +36,8 @@
 			<p:outputLabel  value="#{lbl['lbl.ct.expiry.date']}" />
       		<h:panelGrid columns="3">
      			<p:inputText disabled="true" style="width:100px;"
-         			value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.expDate}">
+         			value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.expDate :
+         			ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.expDate}">
             		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
               	</p:inputText>
              	<p:spacer width="1"/>
@@ -43,7 +47,8 @@
      		<p:outputLabel  value="#{lbl['lbl.ct.approved.date']}" />
         	<h:panelGrid columns="3">
          		<p:inputText  disabled="true" style="width:100px;" 
-           			value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.approvedDate}" >
+           			value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.approvedDate :
+           			ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.approvedDate}" >
                 	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	     		</p:inputText>
 	        	<p:spacer width="1"/>
@@ -53,7 +58,8 @@
    			<p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"  />
      		<h:panelGrid columns="3">
    				<p:inputText   disabled="true" style="width:200px;"
-           			value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.bankName}" />
+           			value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.bankName :
+           			ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.bankName}" />
 				<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
 			</h:panelGrid>
@@ -61,7 +67,8 @@
      		<p:outputLabel  value="#{lbl['lbl.ct.bank.account.no']}"  /> 
      		<h:panelGrid columns="3">
        			<p:inputText  style="width:200px;"
-         			disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.bankAccountNo}" />
+         			disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContract.factoringExpired ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoringExpired.bankAccountNo :
+         			ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.bankAccountNo}" />
        			<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.account']}" />
 			</h:panelGrid> 
