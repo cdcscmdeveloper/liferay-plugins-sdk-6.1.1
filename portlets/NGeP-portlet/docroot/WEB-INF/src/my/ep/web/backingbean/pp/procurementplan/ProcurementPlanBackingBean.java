@@ -1827,7 +1827,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private List <PpRemark> getAllJustifications(PpPlan ppPlan){
 		log.info("getAllJustifications");
 		List <PpRemark> justifications = null;
-		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 	
 			if(ppPlan.getStatus()==null || ppPlan.getStatus().getStatusId()==null
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
@@ -1869,7 +1868,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 				
 			}
-		}
 		return justifications;
 	}
 	
@@ -2265,7 +2263,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			itemRemarks = getAllItemRemarks(ppPlan); 
 			
 			//Get Justification 
-			justifications = getAllJustifications(ppPlan);
+			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				justifications = getAllJustifications(ppPlan);
+			}
 			
 			//Current not Pending Submission/Null and it is SAVE/REVISE
 			if(!brandNew 
@@ -2314,7 +2314,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
-			reqDTO.setJustifications(justifications);
+			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				reqDTO.setJustifications(justifications);
+			}
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -3511,6 +3513,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private void validatePpItem(){
 		log.info("validatePpItem");
 		if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty()){
+			boolean isReasonEmpty;
 //			int size = this.getManagedBean().getSelectedPlan().getPpProcurementItems().size();
 //			PpProcurementItem ppItem = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(size-1);
 			for(PpProcurementItem ppItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
@@ -3541,7 +3544,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						log.info("original reasonDesc for ppItemId "
 								+ppItem.getProcurementItemId()+" = "+reasonDesc);
 						
-						if (!ppItem.isCloned() && reasonDesc == "") {
+						isReasonEmpty = reasonDesc == null || reasonDesc.trim().length() == 0;
+						log.info("isReasonEmpty= "+isReasonEmpty);
+						
+						if (!ppItem.isCloned() && !isReasonEmpty) {
 							throw new EpException(MessageConst.ERROR_730035);
 						}
 					}
