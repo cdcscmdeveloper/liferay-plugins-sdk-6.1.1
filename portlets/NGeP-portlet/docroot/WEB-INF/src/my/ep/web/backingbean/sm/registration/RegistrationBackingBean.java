@@ -2987,7 +2987,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public boolean isSmSupplierOwnerIsAdmin(SmSupplierOwner smSupplierOwner) {
 		for (SmPersonnel smPersonnel : smSupplierOwner.getSmSupplier().getSmAppl().getSmPersonnels()) {
-			if (smPersonnel.getIdentificationNo().equals(smSupplierOwner.getIdentificationNo())) {
+			if (smPersonnel.getIdentificationNo().equals(smSupplierOwner.getIdentificationNo())
+					&& smPersonnel.getEpRole() != null) { //27691
 				boolean isSupplierAdmin = smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ||
 						smPersonnel.getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value());
 				return isSupplierAdmin;
