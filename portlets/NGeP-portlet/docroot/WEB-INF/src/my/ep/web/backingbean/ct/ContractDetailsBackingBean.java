@@ -1882,8 +1882,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 			typeSchedule = true;
 		}
+		
 		/*Set value true if contract is factor*/
-		if(ctBB.getManagedBean().getContractVer().getCtContract().isFactored()  && checkFactoringExpiryDate()){
+		if(allowShowFactoring()){/*#28868 - basri*/
 			typeFactoring = true;
 		}
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
@@ -2113,6 +2114,34 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return false;
 	}
 
+	/*#28868 - basri start*/
+	/**
+	 * The method used to check boolean if allow factoring to show .
+	 * 
+	 * @return true, if factoring tab menu is accessible
+	 *         false, if factoring tab menu is not accessible
+	 */
+	public boolean allowShowFactoring(){
+		
+		boolean allow = false;
+			if(ctBB.getManagedBean().getContractVer().getCtContract().isFactored() && checkFactoringExpiryDate()){
+					allow = true;
+				
+			}else if(!ctBB.getManagedBean().getContractVer().getCtContract().isFactored()){
+				if(ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null){
+					if(ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_EXPIRED){
+						allow = true;
+				
+					}
+				}
+				
+				
+			}
+	
+		
+		return allow;
+	}
+	/*#28868 - basri end*/
 	
 	
 	/**
