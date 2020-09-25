@@ -339,7 +339,11 @@ public class PmTrackingDiaryBackingBean extends
 				String reportName = "";
 				if(docType.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
 					reportName = ReportConst.PM_TRACKING_DIARY_REPORT_NAME_AS;
-				} else {
+				} /* 28727 - START */
+				 else if(docType.equalsIgnoreCase(ParameterConst.RULE_CONFIG_PARAM_CODE)){
+					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME_SP;
+				} /* 28727 - END */
+				 else {
 					reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 				}
 		//20200910@Jacky - #28740 - End
