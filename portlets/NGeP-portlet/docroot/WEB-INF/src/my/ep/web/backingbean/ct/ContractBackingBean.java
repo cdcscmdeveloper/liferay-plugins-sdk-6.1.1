@@ -4270,20 +4270,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{	//#25703 start
-		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
-			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
-				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	{	
+		/*#28868 - basri start*/
+		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
+				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
+					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+				}
+				else{
+					return null;
+				}
 			}
-			else{
+
+			else {
+				return null;
+			}
+		}else{
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
+				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
+					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
+				}
+				else{
+					return null;
+				}
+			}
+
+			else {
 				return null;
 			}
 		}
-
-		else {
-			return null;
-		}
-		//#25703 end
+		/*#28868 - basri end*/
+		
 	}
 	
 	/*#21387 - basri start*/
