@@ -1266,33 +1266,50 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
 			SuppFinalizationReqDTO reqDTO = null;
-			
-			// Save Preparation and Supplier finalization tab(s) data 
 			ScQtCommittee scQtCommittee = null;
-			if (activeIndex == 0 && 
-					!getManagedBean().isInitialDecisionFwdToBPK()) {
-				this.getManagedBean().setSubmit(true);
-				reqDTO = validateInfo(activeIndex, skipValidation);
-				scQtCommittee = reqDTO.getScQtCommittee();
-				reqDTO = validateInfo(2, skipValidation);
-			} else {
-				if (!getManagedBean().isInitialDecisionFwdToBPK()) {
-					scQtCommittee = preparationDtlsInfo();
+			
+			//#27502 -Start
+			ScQt scQt = this.getManagedBean().getScQt();
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+			scQt = qtBackingBean.getManagedBean().getQt();
+			if (scQt.getPmOrgProfile().getBpk() &&						
+					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {			
+				reqDTO = validateInfo(1, skipValidation);
+			} else {	//#27502 - END		
+				// Save Preparation and Supplier finalization tab(s) data
+				
+				if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
+					this.getManagedBean().setSubmit(true);
+					reqDTO = validateInfo(activeIndex, skipValidation);
+					scQtCommittee = reqDTO.getScQtCommittee();
+					reqDTO = validateInfo(2, skipValidation);
+
+				} else {
+					if (!getManagedBean().isInitialDecisionFwdToBPK()) {
+						scQtCommittee = preparationDtlsInfo();
+					}
+					reqDTO = validateInfo(2, skipValidation);
 				}
-				reqDTO = validateInfo(2, skipValidation);
 			}
-			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-			}
-			// #18685 - Start
-			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
-					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
-				getManagedBean().getNewBriefingPaperReportList().addAll(getManagedBean().getConsolidationBriefingPaperReportList());
-			}
-			// #18685 - End
-			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			if(!skipValidation){
-				validateFinalizationReports(reqDTO);
+			
+			//#27502- Adding condition only
+			if (!scQt.getPmOrgProfile().getBpk() &&						
+					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
+				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+					scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+				}
+				// #18685 - Start
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+					getManagedBean().getNewBriefingPaperReportList().addAll(
+							getManagedBean().getConsolidationBriefingPaperReportList());
+				}
+				// #18685 - End
+				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+				if (!skipValidation) {
+					validateFinalizationReports(reqDTO);
+				}
 			}
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
@@ -1337,7 +1354,11 @@ public class SupplierFinalizationBackingBean extends
 					getManagedBean().isInitialDecisionFwdHighAuth());
 			reqDTO.setRefinalize(isQTRefinalized());
 			
-			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
+			//#27502- Adding condition only
+			if (!scQt.getPmOrgProfile().getBpk() &&						
+					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
+				saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
+			}
 
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
 			String desc = ResourceBundleUtils.getMessage(
