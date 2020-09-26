@@ -10,7 +10,6 @@
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
-	<ui:param name="isQTStatusCmtPendingApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.CMT_PENDING_APPROVAL)}" />
 	<ui:param name="isClone1" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />	
 	<!-- 26095@hatta - start -->
@@ -51,44 +50,22 @@
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
 					<ui:remove>
 						START Bug #28932					
-					</ui:remove>
-						<c:choose>
-							<c:when test="#{isQTStatusCmtPendingApprovalAndBefore}">
-								<ui:decorate
-								template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
-								<ui:define name="outComeSection">
-									<ui:repeat var="bpmAction"
-										value="#{approvalBackingBean.managedBean.outComes}">
-										<ui:param name="buttonLabel"
-											value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-										
-										<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-											styleClass="ui-button" onstart="blockWidget.show();"
-											oncomplete="blockWidget.hide();"
-											action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
-									</ui:repeat>
-								</ui:define>
-								</ui:decorate>
-							</c:when>
-							<c:otherwise>
-								<ui:decorate
-									template="/WEB-INF/facelets/templates/claim_template.xhtml">
-									<ui:define name="outComeSection">
-										<ui:repeat var="bpmAction"
-											value="#{approvalBackingBean.managedBean.outComes}">
-											<ui:param name="buttonLabel"
-												value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-											
-											<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-												styleClass="ui-button" onstart="blockWidget.show();"
-												oncomplete="blockWidget.hide();"
-												action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
-										</ui:repeat>
-									</ui:define>
-								</ui:decorate>
-							</c:otherwise>
-						</c:choose>
-						
+					</ui:remove>						
+						<ui:decorate
+							template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
+							<ui:define name="outComeSection">
+								<ui:repeat var="bpmAction"
+									value="#{approvalBackingBean.managedBean.outComes}">
+									<ui:param name="buttonLabel"
+										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									
+									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+										styleClass="ui-button" onstart="blockWidget.show();"
+										oncomplete="blockWidget.hide();"
+										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+								</ui:repeat>
+							</ui:define>
+						</ui:decorate>						
 						<ui:remove>
 							END Bug #28932					
 						</ui:remove>
