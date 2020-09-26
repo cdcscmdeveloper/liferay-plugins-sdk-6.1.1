@@ -332,9 +332,10 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-		String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
-		
-		if(docType !=null && docId !=null) {
+		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
+		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
+		String reportName = getTrackingDiaryReportName(docType);
+		if(docType !=null && docId !=null & reportName!=null) {
 			try {
 				generateReport(reportName, paramMap);
 			} catch (IOException e) {
@@ -343,6 +344,7 @@ public class PmTrackingDiaryBackingBean extends
 		} else {
 			throw new EpException("Report is not available for this document.");
 		}
+		//END- #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 	}
 	
 	public void redirectToMainPage(){
@@ -826,4 +828,37 @@ public class PmTrackingDiaryBackingBean extends
 		sb.append("|recordStatus^1");
 		return sb.toString();
 	}
+	
+	/**
+	 * START - #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
+	 * Function : To get tracking diary report name based on the document type/module
+	 * @param docType , document type
+	 * @return Tracking diary report name
+	 */
+	public String getTrackingDiaryReportName(String docType){
+		String reportName = null;
+		List<String> flDocTypeList = Arrays.asList(
+				ParameterConst.DOCTYPE_CONTRACT_ORDER,ParameterConst.DOCTYPE_CONTRACT_REQUEST,ParameterConst.DOCTYPE_DELIVERY_ORDER,
+				ParameterConst.DOCTYPE_FULFILMENT_NOTE,ParameterConst.DOCTYPE_INVOICE,ParameterConst.DOCTYPE_STOP_DELIVERY,
+				ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE,ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE,
+				ParameterConst.DOCTYPE_PAYMENT_ADVICE,ParameterConst.DOCTYPE_PURCHASE_ORDER,ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+		
+		List<String> dpDocTypeList = Arrays.asList(
+				ParameterConst.DOCTYPE_SIMPLE_QUOTE,ParameterConst.DOCTYPE_REQUEST_NOTE,ParameterConst.DOCTYPE_PURCHASE_INQUIRY,
+				ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		
+		List<String> qtDocTypeList = Arrays.asList("QT","LI","BD");
+		List<String> contractDocTypeList = Arrays.asList("MC","CC");
+		List<String> ppDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_PLAN_PROCUREMENT,ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+		List<String> circularDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		
+		if(flDocTypeList.contains(docType)){//Fulfilment
+			reportName = ReportConst.FL_TRACKING_DIARY;
+		}else{
+			reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
+		}
+		
+		return reportName;
+	}
+	//END - #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 }
