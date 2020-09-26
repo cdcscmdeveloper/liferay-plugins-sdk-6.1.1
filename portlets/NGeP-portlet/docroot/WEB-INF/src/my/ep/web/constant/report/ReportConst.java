@@ -1114,6 +1114,12 @@ public class ReportConst implements Serializable{
 	public static final String FL_DOCTYPE_CO = "CR";
 	public static final String FL_DOCTYPE_PO = "PR";
 	
+	
+	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - START
+	//Purpose : To Split Tracking Diary Report Based on Module
+	public static final String FL_TRACKING_DIARY = "FL_TRACKING_DIARY.jsp";
+	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - END
+	
 	public ReportConst(){}
 	
 	/**
