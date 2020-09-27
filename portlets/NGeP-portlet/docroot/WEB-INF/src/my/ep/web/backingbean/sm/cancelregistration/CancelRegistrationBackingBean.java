@@ -195,6 +195,20 @@ public class CancelRegistrationBackingBean extends
 							RequestContext.getCurrentInstance().execute(
 									"confirmDialog.show();");
 						}
+					}else if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION))){
+						
+						if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
+						}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant", null);
+						}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
+							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
+						}  else if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_GOVT_SELLER)){
+							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
+						}
+						String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg",new String[] { accTypeStr });
+						getManagedBean().setConfirmationMsg(msg);
+						RequestContext.getCurrentInstance().execute("confirmDialog.show();");
 					}else {
 						throw new EpException(MessageConst.ERROR_721090);
 					}
