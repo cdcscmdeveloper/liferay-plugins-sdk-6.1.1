@@ -231,13 +231,15 @@ public class SvcSiteAssignBackingBean extends
 	}
 	
 	/**
-	 * Validation - to ensure at least 2 SVO being selected
+	 * Validation - to ensure only 1 SVO being selected
 	 */
 	public void validateForm(){
 		boolean invalid = true;
 		
 		for(SmSvcAssignmentVO svcAssignmentVO : getManagedBean().getSvcTaskVOLs()){
-			if(svcAssignmentVO.getSvoUserList().getTarget().size() < 2){
+			//#28774 - Start
+			if(svcAssignmentVO.getSvoUserList().getTarget().size() != 1){
+			//#28774 - End
 			  invalid = false;
 			  break;
 			}
