@@ -146,32 +146,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private final String templateLangCode = "en";
 	private final String attachmentType = "SVD";
 	
-	//#28774 - Start
-	public boolean checkUserRole() {
-		log.info("====Redmine #28774====");
-		log.info("=====Checking user role=====");
-		log.info("4===" + this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId());
-		log.info("TR View Mode in checkUserRole -> " + getManagedBean().isViewMode());
-		
-		FacesScopes fs = new FacesScopes();
-		if(this.getManagedBean().isViewMode()==true){
-			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && (this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20017 || this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108))
-				return true;
-			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103)
-				return true;
-			if(fs.hasRoleUser(RoleCode.UPS_SVO.value()) || 
-					   fs.hasRoleUser(RoleCode.UPS_SDO.value()) || 
-					   fs.hasRoleUser(RoleCode.UPS_PO.value())  || 
-					   fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) ||
-					   fs.hasRoleUser(RoleCode.UPS_SVC.value()) ||
-					   fs.hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
-					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value()))
-						return true;
-		}
-		return false;
-	}
-	//#28774 - End
-	
 	private StreamedContent file;
 	
 	public SvoSiteVisitBackingBean() {
@@ -249,7 +223,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(svoTask != null){
 			this.getManagedBean().setSmSvTask(svoTask);
 			SmSvTask smSvTask = this.getManagedBean().getSmSvTask();
-			//		this.getManagedBean().getSmSvTask().getsm
+			
 			log.info("*****this.getManagedBean().getSmSvTask().getSmSvFinChecklists().size()" + smSvTask.getSmSvFinChecklists().size());
 			if(smSvTask.getSmSvFinChecklists().size() < 1){
 				log.info("******getSmSvFinChecklists() == null******");
@@ -284,10 +258,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				smSvTask.getSmSvOffice().setSmSvTask(this.getManagedBean().getSmSvTask());
 			}
 			
-			if(smSvTask.getSmSvAssistantOfficer() == null){
-				smSvTask.setSmSvAssistantOfficer(new SmSvAssistantOfficer());
-				smSvTask.getSmSvAssistantOfficer().setSmSvTask(getManagedBean().getSmSvTask());
+			//#28774 - Start
+			if(smSvTask.getSmSvAssistantOfficers() == null){
+				smSvTask.setSmSvAssistantOfficers(new ArrayList<SmSvAssistantOfficer>());
+				smSvTask.getSmSvAssistantOfficers();
+				for(SmSvAssistantOfficer smSvAssistantOfficer : smSvTask.getSmSvAssistantOfficers()){
+					smSvAssistantOfficer.setSmSvTask(this.getManagedBean().getSmSvTask());
+				}
 			}
+			//#28774 - End
 			
 			for(SmPersonnel contactPerson : smSvTask.getSmAppl().getSmPersonnels()){
 				if(contactPerson.isContactPerson()){
@@ -1406,9 +1385,24 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}else{
 			sb.append("");
 		}
+		//#28774 - Start
+		StringBuilder aOfficer = new StringBuilder();
+		int aOfficer_i = 0;
+		if(svTask.getSmSvAssistantOfficers() != null  && !svTask.getSmSvAssistantOfficers().isEmpty()){
+			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers()){
+				aOfficer.append(++aOfficer_i + ". ");
+				aOfficer.append(smSvAssistantOfficer.getName());
+				aOfficer.append("<br/>");
+			}
+		}
+		//#28774 - End
+		
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("accptDate", accptDate);
 		context.put("svOfficers", sb.toString());
+		//#28774 - Start
+		context.put("svAOfficer", aOfficer.toString());
+		//#28774 - End
 		context.put("addrLiines",getAddressLines(addr));
 		context.put("postCode", (addr.getPostcode() != null && addr.getPostcode().length() > 0)? addr.getPostcode() : "");
 		context.put("townDtls", (addr.getPmCity() != null && addr.getPmCity().getCityName() !=null && addr.getPmCity().getCityName().length() > 0)? addr.getPmCity().getCityName() : "");
@@ -2106,12 +2100,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		
 		//validate assistant officer
-		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
-			svTask.setSmSvAssistantOfficer(null);
+		//#28774 - Start
+		if(svTask.getSmSvAssistantOfficers()==null){
+			svTask.setSmSvAssistantOfficers(null);
 		}//START 24964
 		else{
-			svTask.getSmSvAssistantOfficer().setNameEnterBySvo(svTask.getSmSvAssistantOfficer().getName());
+			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers())
+			{
+				log.info("**************SV Ass. Officer*************");
+				log.info("name -> " + smSvAssistantOfficer.getName());
+				smSvAssistantOfficer.setNameEnterBySvo(smSvAssistantOfficer.getName());
+			}
 		}
+		//#28774 - End
 		//END 24964
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
@@ -2795,9 +2796,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();	
 		
 		//validate assistant officer
-		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
-			svTask.setSmSvAssistantOfficer(null);
+		//#28774 - Start
+		if(svTask.getSmSvAssistantOfficers()==null){
+			svTask.setSmSvAssistantOfficers(null);
 		}
+		//#28774 - End
 		if(svTask.getSmSvTemplate()!=null){
 			if(svTask.getSmSvTemplate().getSmSvInterviewees()== null || svTask.getSmSvTemplate().getSmSvInterviewees().size()<=0){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
@@ -2846,4 +2849,62 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return templDesc;
 	}
 	// #14055 - end
+
+	//#28774 - Start
+	/**
+	 * add Assistant Officer
+	 */
+	public void addSvAsistantOfficer(){
+		if(this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers()==null){
+			this.getManagedBean().getSmSvTask().setSmSvAssistantOfficers(new ArrayList<SmSvAssistantOfficer>());
+		}
+		SmSvAssistantOfficer smSvAssistantOfficer = new SmSvAssistantOfficer();
+		smSvAssistantOfficer.setSmSvTask(this.getManagedBean().getSmSvTask());
+		this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().add(smSvAssistantOfficer);
+	}
+	
+	/**
+	 * Temporary hold Assistant Officer to delete until yes/no choose
+	 * @param smSvAssistantOfficer
+	 */
+	public void selectSvAssistantOfficer(SmSvAssistantOfficer smSvAssistantOfficer){
+		this.getManagedBean().setSelectedAssistantOfficer(smSvAssistantOfficer);
+		RequestContext.getCurrentInstance().execute("assistingOfficerDeletePopUp.show()");
+	}
+	
+	/**
+	 * remove the selected assistant officer(s)
+	 */
+	public void removeSvAssistantOfficer(){
+		if(this.getManagedBean().getSelectedAssistantOfficer() != null){
+			this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().remove(this.getManagedBean().getSelectedAssistantOfficer());
+		}
+		this.getManagedBean().setSelectedAssistantOfficer(null);
+	}
+	
+	/**
+	 * Check current user role to disable or enable the Assistant Officer name input
+	 * @return boolean
+	 */
+	public boolean checkUserRole() {
+		FacesScopes fs = new FacesScopes();
+		if(this.getManagedBean().isViewMode()==true){
+			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
+					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20017 || 
+					 this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108))
+				return true;
+			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103)
+				return true;
+			if(fs.hasRoleUser(RoleCode.UPS_SVO.value()) || 
+					   fs.hasRoleUser(RoleCode.UPS_SDO.value()) || 
+					   fs.hasRoleUser(RoleCode.UPS_PO.value())  || 
+					   fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) ||
+					   fs.hasRoleUser(RoleCode.UPS_SVC.value()) ||
+					   fs.hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
+					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value()))
+						return true;
+		}
+		return false;
+	}
+	//#28774 - End
 }
