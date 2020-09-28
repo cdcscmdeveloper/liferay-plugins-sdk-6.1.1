@@ -71,6 +71,21 @@ public class DisciplinaryActionRest {
 			//find data pending DA, (data with active txn will update DA after complete all txn)
 			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
 			
+			//26238 - Disciplinary Action - 28798 - end
+			//find data pending Cancel Registration or Blacklist Owner / Director of Company
+			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();
+			
+			//remove duplicated data
+			if(updateBCDAList != null
+					&& updateBCDAList.getSmDisciplinaryActions() != null
+					&& updateBCDAList.getSmDisciplinaryActions().size() > 0){
+				releaseDAList.getSmDisciplinaryActions().removeAll(updateBCDAList.getSmDisciplinaryActions());
+				updateDAList.getSmDisciplinaryActions().removeAll(updateBCDAList.getSmDisciplinaryActions());
+				updateDAList.getSmDisciplinaryActions().addAll(updateBCDAList.getSmDisciplinaryActions());
+				
+			}
+			//26238 - Disciplinary Action - 28798 - end
+			
 			if(releaseDAList.getSmDisciplinaryActions() != null
 					&& releaseDAList.getSmDisciplinaryActions().size() > 0){
 				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
