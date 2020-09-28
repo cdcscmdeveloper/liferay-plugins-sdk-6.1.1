@@ -1581,20 +1581,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		return null;
 	}
-	
-	//#13320 - Rahim
-	private List<PmDivision> retrievePmDivisionList(Long stateId) {
-		if(stateId != null){
-			DivisionReqDTO reqDTO = new DivisionReqDTO();
-			reqDTO.setStateId(stateId);
-			IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IDivisionSO.class);
-			DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
-			return resDTO.getDivisionList();
-		}
-
-		return null;
-	}
 
 	/**
 	 * retrieve District List by state Id
@@ -2071,9 +2057,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//#13320 - Rahim Commented Out
 					//getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());					
 					//this.getManagedBean().setBusinessCityLs(null);
-					this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 					
 					//#13320 - Rahim Added
+					this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+
 					getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(true);
 					
 				} else {
