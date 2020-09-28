@@ -161,6 +161,8 @@ public class CancelRegistrationBackingBean extends
 						}else {
 							throw new EpException(MessageConst.ERROR_721090);
 						}
+					}else{
+						throw new EpException(MessageConst.ERROR_721090);
 					}
 				}
 			}else {
@@ -181,7 +183,8 @@ public class CancelRegistrationBackingBean extends
 				}
 				
 			}
-
+		}catch(Exception e){
+			e.printStackTrace();
 		} finally {
 
 		}
