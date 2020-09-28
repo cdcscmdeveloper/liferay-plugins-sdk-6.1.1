@@ -304,7 +304,8 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="pnlCompInfo, divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							<!--  #13320 Rahim Commented and Renew update="pnlCompInfo"-->
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
 					<!-- 13320 -->
@@ -344,7 +345,7 @@
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}"
 						 /></td>
 
-				<td class="tdTitle">
+								<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
@@ -406,7 +407,7 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
-							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}"/>
+							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" />
 						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
 							listener="#{registrationBackingBean.onSelectCity('business')}"/>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
