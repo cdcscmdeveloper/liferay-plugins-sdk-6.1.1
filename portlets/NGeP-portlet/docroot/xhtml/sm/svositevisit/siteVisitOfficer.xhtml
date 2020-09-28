@@ -48,7 +48,6 @@
 									<p:ajax event="keyup" update="deleteSvAObtnId" />
 								</p:inputText>
 								<p:commandButton value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}" />
-								<p:outputLabel styleClass="outputLabel-view-label" value="#{svAOfficer.svAssistantOfficerId}" />
 								<br/>
 							</ui:repeat>
 						</p:column>
