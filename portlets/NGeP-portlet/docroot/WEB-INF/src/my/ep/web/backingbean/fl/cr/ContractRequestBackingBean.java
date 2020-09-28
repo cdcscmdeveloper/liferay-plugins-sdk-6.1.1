@@ -1453,10 +1453,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
 						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
-							//#14650 - Alert message if contract incomplete
-							if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false)
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 							
 							break;
 						}
