@@ -1,26 +1,17 @@
 package my.ep.rest.sm;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 
@@ -31,38 +22,7 @@ public class DisciplinaryActionRest {
 
 	@GET
 	@Path("smdisciplinaryaction") 
-	public Response retrieveDisciplinaryAction() {
-		String url = "https://www.eperolehan.gov.my/NGeP-portlet/rest/pm/createliferay";
-		try {
-			log.info("sending 'GET' request to URL : " + url);
-
-			URL obj = new URL(url);
-			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-			// optional default is GET
-			con.setRequestMethod("GET");
-
-			int responseCode = con.getResponseCode();
-			log.info("Response Code : " + responseCode);
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append(inputLine);
-			}
-			in.close();
-
-			// print result
-			log.info(response.toString());
-
-		} catch (Exception ex) {
-			log.error(ex);
-		} finally {
-			log.info("Update Disciplinary Action - after call UpdateDisciplinaryActionJob");
-		}
+	public Response retrieveDisciplinaryAction() {		
 		log.info("Before success calling retrieve rest api....");
 		try {
 			//27426 : Disciplinary Action - start
