@@ -52,6 +52,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
@@ -150,6 +151,13 @@ public class SmPersonnelBackingBean extends
 		String redirectPage = SmApplicationUtil.getApplicationErrorPage();
 
 		getManagedBean().setNoSupplierUserMsg("");
+		
+		int countActiveAppl = SmServiceLookup.getPersonnelSO()
+				.countSupplierWithActiveApplBySupplierId(reqDTO);
+		
+		if (countActiveAppl > 0) {
+			getManagedBean().setHasActiveAppl(true);
+		}
 
 		redirectPage = "adminReAssign.xhtml";
 		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())) {
@@ -1156,6 +1164,9 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void save() {
 		if (getManagedBean().getBasicSmPersonnel() != null) {
+			//#26050 - start
+			validatePendingTask(getManagedBean().getBasicSmPersonnel());
+			//#26050 - end
 			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
 					.getBasicSmPersonnel().getName(), getManagedBean()
 					.getBasicSmPersonnel().getEmail());
@@ -1203,6 +1214,15 @@ public class SmPersonnelBackingBean extends
 		}
 		resetUserLimitMsg();
 	}
+	
+	//#26050 - start
+	public void validatePendingTask(SmPersonnel smPersonnel) {
+		if (getManagedBean().getBasicSmPersonnel().getPmUser() != null && PmCommonUtil.isAnyPendingTask(getManagedBean().getBasicSmPersonnel().getPmUser().getLoginId())
+				|| smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING) {
+			throw new EpException(MessageConst.ERROR_770231);
+		}
+	}
+	//#26050 - end
 
 	/**
 	 * Deactivate or terminate authorized personnel
@@ -1630,9 +1650,16 @@ public class SmPersonnelBackingBean extends
 	 * Show deactivate admin confirmation dialog box
 	 */
 	public void confirmDeactivateAdmin() {
+		FacesScopes fs = new FacesScopes();
 		if (getManagedBean().getSelectedPersonnelToReassign() == null) {
 			throw new EpException(MessageConst.ERROR_721111);
 		} else {
+			// #26050 - start
+			if (getManagedBean().isHasActiveAppl() || !(getManagedBean().getTaskList().isEmpty()) && getManagedBean().getTaskList() != null
+					&& getManagedBean().getTaskList().size() > 0) {
+				throw new EpException(MessageConst.ERROR_770228, new String[] { fs.getUserSessionBean().getUserName() });
+			}
+			// #26050 - end
 			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		}
 	}
@@ -1655,9 +1682,17 @@ public class SmPersonnelBackingBean extends
 				.getUpdateSmPersonnel().getEpRole()
 				.equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) ? DbValueConst.RECORD_STATUS_ACTIVE
 				: DbValueConst.RECORD_STATUS_DELETED);
-		if (!EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
+//		if (!EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
+//			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+//		}
+		// [#26050 - start]
+		if (EntityHelper.isCollectionEmpty(reqDTO.getTaskList())) {
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		} else {
+			throw new EpException(MessageConst.ERROR_770167);
 		}
+		// [#26050 - end]
+		
 		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.REPLACE_SUPP_ADMIN);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
