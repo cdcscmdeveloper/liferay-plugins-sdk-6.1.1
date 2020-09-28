@@ -3135,8 +3135,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							smSapVendorCode.getSapVendorCode());
 				}
 
-				/*getManagedBean()
-						.setSmSupplierBankList(getSupplierBankByRevNo());*/
 				SupplierSearchReqDTO searchReqDTO = new SupplierSearchReqDTO();
 				searchReqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 				SupplierSearchResDTO searchResDTO = getSupplierSearchSO().retrieveSmSupplierBankByAppl(searchReqDTO);
@@ -3304,6 +3302,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void assignSelectedPersonnel(SmPersonnel selectedPersonnel) {
 
+		//25792 - start - reopen
+		setAddresses(selectedPersonnel);
+		//25792 - end - reopen
 		getManagedBean().setSelectedPersonnel(selectedPersonnel);
 		getManagedBean().setRedirectToPersonPage(true);
 	}
@@ -3476,7 +3477,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				.retrievePersonnelListByApplId(reqDTO);
 		getManagedBean().getSmAppl().setSmPersonnels(
 				resDTO.getSmPersonnelList());
-		List<SmPersonnel> deletedPersonnels = new ArrayList<SmPersonnel>();
+		List<SmPersonnel> deletedPersonnels = new ArrayList<>();//25792 - reopen
 
 		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
 			getManagedBean().getSmAppl().setSmPersonnels(
@@ -3484,21 +3485,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
-
-				String epRoleName = epRoleName(smPersonnel.getEpRole());
-				smPersonnel.setEpRole(epRoleName);
 				if (smPersonnel.getPmUser() != null) {
 					SmSoftcertRequest smSoftcertReq = getSoftcertRequest(smPersonnel
 							.getPmUser().getUserId());
-					List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<SmSoftcertRequest>();
+					List<SmSoftcertRequest> smSoftcerRequests = new ArrayList<>();
 					if (smSoftcertReq != null) {						
 						smSoftcerRequests.add(smSoftcertReq);						
 					}
 					smPersonnel.getPmUser().setSmSoftcertRequests(
 							smSoftcerRequests);
 				}
-				setAddresses(smPersonnel);
-
 				List<PmParameterDesc> pmParameterDescList = smPersonnel
 						.getIdentificationType().getPmParameterDescs();
 
@@ -3516,9 +3512,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						break;
 					}
 				}
-
-				if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+				//25792 - reopen (modified if)
+				if (smPersonnel.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_ACTIVE
+						&& smPersonnel.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 					deletedPersonnels.add(smPersonnel);
 				}
 
@@ -3588,13 +3584,64 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 			getManagedBean().getSmAppl().setSmPersonnels(
 					getPersonnelByRevNo());
-		}
-		if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType()) 
-				&& !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
-				.equalsIgnoreCase(getManagedBean().getSmAppl().getSmSupplier().getBusinessType())) {
-			SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
-					.getSmAppl());
-		}
+			//25792 - start - reopen
+			if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType()) 
+					&& !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
+					.equalsIgnoreCase(getManagedBean().getSmAppl().getSmSupplier().getBusinessType())) {
+				SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
+						.getSmAppl());
+			}		
+			List<SmPersonnel> smPersonnelList = getManagedBean().getSmAppl().getSmPersonnels();
+			if(smPersonnelList != null && !smPersonnelList.isEmpty()) {
+				List<SmPersonnel> newSmPersonnelList = new ArrayList<>();
+				List<SmPersonnel> userSmPersonnelList = new ArrayList<>();
+				List<SmPersonnel> catalogueUserList = new ArrayList<>();
+				if(SupplierManagementConst.SUPP_TYPE_BASIC
+						.equalsIgnoreCase(getManagedBean().getSmAppl()
+								.getSupplierType()) && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
+								.equalsIgnoreCase(getManagedBean().getSmSupplier()
+										.getBusinessType())) {
+					for(SmPersonnel smPersonnel: smPersonnelList) {
+						String epRoleName = epRoleName(smPersonnel.getEpRole());
+						if("BASIC_SUPPLIER_ADMIN".equalsIgnoreCase(smPersonnel.getEpRole())) {
+							smPersonnel.setEpRole(epRoleName);
+							newSmPersonnelList.add(smPersonnel);
+						} else if("BASIC_SUPPLIER_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+							smPersonnel.setEpRole(epRoleName);
+							userSmPersonnelList.add(smPersonnel);
+						} else if("CM_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+							smPersonnel.setEpRole(epRoleName);
+							catalogueUserList.add(smPersonnel);
+						}
+					}
+				} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
+						.equalsIgnoreCase(getManagedBean().getSmAppl()
+								.getSupplierType())) {
+					for(SmPersonnel smPersonnel: smPersonnelList) {
+						String epRoleName = epRoleName(smPersonnel.getEpRole());
+						if("G2G_ADMIN".equalsIgnoreCase(smPersonnel.getEpRole())) {
+							smPersonnel.setEpRole(epRoleName);
+							newSmPersonnelList.add(smPersonnel);
+						} else if("G2G_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+							smPersonnel.setEpRole(epRoleName);
+							userSmPersonnelList.add(smPersonnel);
+						} else if("CM_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+							smPersonnel.setEpRole(epRoleName);
+							catalogueUserList.add(smPersonnel);
+						}
+					}
+				}			
+				if(!userSmPersonnelList.isEmpty()) {
+					newSmPersonnelList.addAll(userSmPersonnelList);
+				}		
+				if(!catalogueUserList.isEmpty()) {
+					newSmPersonnelList.addAll(catalogueUserList);
+				}
+				getManagedBean().getSmAppl().setSmPersonnels(
+						newSmPersonnelList);
+			}
+			//25792 - end - reopen
+		}		
 		getManagedBean().getSmAppl().getSmPersonnels()
 				.removeAll(deletedPersonnels);
 	}
