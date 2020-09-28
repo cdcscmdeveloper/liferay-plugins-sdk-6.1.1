@@ -1298,20 +1298,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//13984-end
 			
 			//#14650 - Logan - Beginning
-			FacesScopes facesScopes = new FacesScopes();
+			//FacesScopes facesScopes = new FacesScopes();
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+			//IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			
 			
-			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
-			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+			//reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			//resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
+			//reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
 			
 			resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 			
-			if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
+			//if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
 				//#14650 - Alert message if contract incomplete
 			if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1319,7 +1319,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				
 			}
 			//#14650 Ending		
-			}
+			//}
 			
 		}else if(contractId != null){
 			/*Start- 13984 - CrList - Back Button*/
@@ -1519,13 +1519,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}		
 			getVotFundList(jabatanOrgProfileId);
 			//End#14650
+			
+			//#14650 - Alert message if contract incomplete - Start
+			if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			}
+			//#14650 - End
 		}
-		//#14650 - Alert message if contract incomplete - Start
-		if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-		}
-		//#14650 - End
 		
 		//26279 - start
 		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
