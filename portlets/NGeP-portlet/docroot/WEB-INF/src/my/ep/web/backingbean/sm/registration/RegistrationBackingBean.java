@@ -1153,9 +1153,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		
 		if(SmCommonUtil.getInstance().ssmActive()){
-			SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
-			getManagedBean().getSmSupp().getSmSupplierOwners().clear();
-			getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
+			
+			//#28888 : checking empty list
+			if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
+				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
+				getManagedBean().getSmSupp().getSmSupplierOwners().clear();
+				getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
+			}//end #28888
 		}
 		
 		reqDTO.setGstList(getCleanGst());
