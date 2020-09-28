@@ -20,7 +20,9 @@ import javax.persistence.PersistenceException;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
@@ -38,7 +40,10 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -65,6 +70,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -452,6 +458,40 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateBasicAccountInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			
+			//26238 - Disciplinary Action - 28798 - start
+			if(getManagedBean().getSmSupplier() != null){
+				// get index of current Supplier from list table
+				int index = 0;
+				for(SmSupplier smSUpplier : getManagedBean().getBasicSupplierDataModel().getList()){
+					if(smSUpplier.getSupplierId().equals(getManagedBean().getSmSupplier().getSupplierId())){
+						index = getManagedBean().getBasicSupplierDataModel().getList().indexOf(smSUpplier);
+						break;
+					}
+				}
+				
+				// replace list table with latest supplier
+				ISupplierSearchSO supplierSearchSO = getISupplierSearchSO();
+				SupplierSearchReqDTO suppReqDTO = new SupplierSearchReqDTO();
+				suppReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierById(suppReqDTO);
+				
+				if(suppResDTO.getSmSupplier().getRecordStatusFlg().equals(9)){
+					for(SmDisciplinaryAction smDA: suppResDTO.getSmSupplier().getSmDisciplinaryActions()){
+						if(smDA.isCancelRegistration()){
+							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("C");
+							break;
+						}
+						else if(smDA.isBlacklistOwner()){
+							suppResDTO.getSmSupplier().setTypeDisciplinaryAction("B");
+							break;
+						}
+					}
+				}
+				getManagedBean().setSmSupplier(suppResDTO.getSmSupplier());
+				getManagedBean().getBasicSupplierDataModel().getList().set(index, getManagedBean().getSmSupplier());
+			}
+			//26238 - Disciplinary Action - 28798 - end
+			
 		} catch (NullPointerException nex) {
 			throw new EpException(nex.getMessage());
 		}
@@ -812,6 +852,36 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			//Untick after save
 			getManagedBean().setEditDisciplinaryAction(false);
+			
+			//26238 - Disciplinary Action - 28798 - start
+			if(getManagedBean().getSmSupplier() != null){
+				// get index of current Supplier from list table
+				int index = 0;
+				for(SmSupplier smSUpplier : getManagedBean().getSmSupplierDataModel().getList()){
+					if(smSUpplier.getSupplierId().equals(getManagedBean().getSmSupplier().getSupplierId())){
+						index = getManagedBean().getSmSupplierDataModel().getList().indexOf(smSUpplier);
+						break;
+					}
+				}
+				
+				// replace list table with latest supplier
+				SmApplRevisionReqDTO smApplReqDTO = new SmApplRevisionReqDTO();
+				getManagedBean().getSmSupplier().setCompanyName(null);
+				smApplReqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+				smApplReqDTO.setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
+				smApplReqDTO.setDisplaySearchPage(true);
+				SmApplRevisionResDTO smApplResDTO = SmServiceLookup.getSmApplRevisionSO()
+						.retrieveSupplierBySearchCriteria(smApplReqDTO);
+				
+				if(smApplResDTO.getSupplierResultBean() != null 
+						&& smApplResDTO.getSupplierResultBean().getResultList() != null 
+						&& !smApplResDTO.getSupplierResultBean().getResultList().isEmpty()){
+					SmSupplier supplier = smApplResDTO.getSupplierResultBean().getResultList().get(0);
+					getManagedBean().setSmSupplier(supplier);
+					getManagedBean().getSmSupplierDataModel().getList().set(index, supplier);
+				}
+			}
+			//26238 - Disciplinary Action - 28798 - end
 
 		} catch (OptimisticLockException opt) {
 			throw new EpException(opt.getMessage());
@@ -1498,19 +1568,19 @@ public class SupplierDataMaintenanceBackingBean extends
 					|| getManagedBean().isBumiputeraStatusCancel()) {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
-				//26238 -  Disciplonary action - 28146 - start
+				//26238 -  Disciplinary action - 28146 - start
 				/*getManagedBean().setCancelRegistration(true);
 				getManagedBean().setFlagBlacklistCancel(true);*/
-				//26238 -  Disciplonary action - 28146 - end
+				//26238 -  Disciplinary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 				
-				//26238 -  Disciplonary action - 28146 - start
+				//26238 -  Disciplinary action - 28146 - start
 				/*if(getManagedBean().isFlagBlacklistCancel()){
 					getManagedBean().setCancelRegistration(false);
 					getManagedBean().setFlagBlacklistCancel(false);
 				}*/
-				//26238 -  Disciplonary action - 28146 - end
+				//26238 -  Disciplinary action - 28146 - end
 			}
 
 			//26238: Disciplinary Action - start - 28324 ,28779
@@ -1836,12 +1906,12 @@ public class SupplierDataMaintenanceBackingBean extends
 							getManagedBean().setBlacklistOwnerOrDirector(true);
 							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
 							
-							//26238 -  Disciplonary action - 28146 - start
+							//26238 -  Disciplinary action - 28146 - start
 							if(disc.isCancelRegistration()){
 								getManagedBean().setCancelRegistration(true);
 								getManagedBean().setCancelRegistrationExist(true);
 							}
-							//26238 -  Disciplonary action - 28146 - end
+							//26238 -  Disciplinary action - 28146 - end
 						}
 						if(disc.isCancelCategory()){
 							getManagedBean().setCancelCategoryCode(true);
@@ -2969,4 +3039,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//13320-end
 	
+	private ISupplierSearchSO getISupplierSearchSO(){
+		return (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+	}
 }
