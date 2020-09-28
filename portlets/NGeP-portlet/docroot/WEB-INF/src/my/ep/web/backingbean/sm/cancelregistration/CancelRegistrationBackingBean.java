@@ -89,131 +89,82 @@ public class CancelRegistrationBackingBean extends
 				if (selectedPersonnel == null) {
 					throw new EpException(MessageConst.ERROR_721090);
 
-				} else {
-					// check the status of softcert request
-					if (selectedPersonnel.getSoftcertFlg() == (DbValueConst.RECORD_STATUS_EXPIRED)) {
-
-						throw new EpException(MessageConst.ERROR_721091);
-					}
-					//boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(resDTO.getSmSupplier());
-					SmAppl activeAppl = SmCommonUtil
-							.getActiveApplBySupplier(getManagedBean().getSmSupplier());
-					// check new MOF Account (Contractor/Consultant) pending
-					// supplier application
-					if(activeAppl != null){
-						PmStatusDesc pmStatusDesc = getPmStatusDesc(activeAppl
-								.getPmStatus().getStatusId());
-						throw new EpException(MessageConst.ERROR_721092,
-								new String[] {
-								activeAppl.getApplNo(),
-								pmStatusDesc.getStatusName()
-								});
+					} else {
+						// check the status of softcert request
+						if (selectedPersonnel.getSoftcertFlg() == (DbValueConst.RECORD_STATUS_EXPIRED)) {
+	
+							throw new EpException(MessageConst.ERROR_721091);
+						}
+						//boolean activeAppl = SmApplicationUtil.checkActiveSmApplForSupp(resDTO.getSmSupplier());
+						SmAppl activeAppl = SmCommonUtil
+								.getActiveApplBySupplier(getManagedBean().getSmSupplier());
+						// check new MOF Account (Contractor/Consultant) pending
+						// supplier application
+						if(activeAppl != null){
+							PmStatusDesc pmStatusDesc = getPmStatusDesc(activeAppl
+									.getPmStatus().getStatusId());
+							throw new EpException(MessageConst.ERROR_721092,
+									new String[] {
+									activeAppl.getApplNo(),
+									pmStatusDesc.getStatusName()
+									});
+							
+						}
+						//to check active rejected application
+						SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(resDTO.getSmSupplier().getSupplierId(),ParameterConst.NEW_SM_APPLN_FOR_MOF);
 						
-					}
-					//to check active rejected application
-					SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(resDTO.getSmSupplier().getSupplierId(),ParameterConst.NEW_SM_APPLN_FOR_MOF);
-					
-					if (selectedPersonnel.getIdentificationNo().equals(
-							getManagedBean().getSuppAdminIdentificationNo().trim())
-							&& selectedPersonnel.getRecordStatusFlg().equals(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) {
-						//#25474------13072020
-						if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) ||
-								resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null){//PM_STATTUS_ID=20199
-							if (getManagedBean()
-									.getAccType()
-									.equalsIgnoreCase(
-											SupplierManagementConst.STYPE_CONTRACTOR)) {
-								accTypeStr = SmCommonUtil
-										.getMessage(
-												"lbl.sm.basic.account.mof.contractor",
-												null);
-								String msg = SmCommonUtil.getMessage(
-										"lbl.sm.req.cancel.confirmation.msg.ApplStatus.Contractor",
-										new String[] { accTypeStr });
-								getManagedBean().setConfirmationMsg(msg);
-								RequestContext.getCurrentInstance().execute(
-										"confirmDialog.show();");
-
-						if (getManagedBean().getAccType().equalsIgnoreCase(
-								SupplierManagementConst.STYPE_BASIC)) {
-							accTypeStr = SmCommonUtil.getMessage(
-									"lbl.sm.basic.account.basic", null);
-							} else if (getManagedBean()
-									.getAccType()
-									.equalsIgnoreCase(
-											SupplierManagementConst.STYPE_CONSULTANT)) {
-								accTypeStr = SmCommonUtil
-										.getMessage(
-												"lbl.sm.basic.account.mof.consultant",
-												null);
-								String mssg = SmCommonUtil.getMessage(
-										"lbl.sm.req.cancel.confirmation.msg.ApplStatus.Consulutent",
-										new String[] { accTypeStr });
-								getManagedBean().setConfirmationMsg(mssg);
-
-								RequestContext.getCurrentInstance().execute(
-										"confirmDialog.show();");
-							}
-						}else{							
+						if (selectedPersonnel.getIdentificationNo().equals(getManagedBean().getSuppAdminIdentificationNo().trim())&& selectedPersonnel.getRecordStatusFlg().equals(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) {
 							//#25474------13072020
-							if (getManagedBean().getAccType().equalsIgnoreCase(
-									SupplierManagementConst.STYPE_BASIC)) {
-								accTypeStr = SmCommonUtil.getMessage(
-										"lbl.sm.basic.account.basic", null);
-
-							} else if (getManagedBean()
-									.getAccType()
-									.equalsIgnoreCase(
-											SupplierManagementConst.STYPE_CONTRACTOR)) {
-								accTypeStr = SmCommonUtil
-										.getMessage(
-												"lbl.sm.basic.account.mof.contractor",
-												null);
-
-							} else if (getManagedBean()
-									.getAccType()
-									.equalsIgnoreCase(
-											SupplierManagementConst.STYPE_CONSULTANT)) {
-								accTypeStr = SmCommonUtil
-										.getMessage(
-												"lbl.sm.basic.account.mof.consultant",
-												null);
-
-							} else {
-								getManagedBean().getAccType().equalsIgnoreCase(
-										SupplierManagementConst.STYPE_GOVT_SELLER);
-								accTypeStr = SmCommonUtil.getMessage(
-										"lbl.sm.basic.account.govt", null);
-
-							}
-
-							String msg = SmCommonUtil.getMessage(
-									"lbl.sm.req.cancel.confirmation.msg",
-									new String[] { accTypeStr });
-							getManagedBean().setConfirmationMsg(msg);
-
-							RequestContext.getCurrentInstance().execute(
-									"confirmDialog.show();");
+							if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) ||
+									resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null){//PM_STATTUS_ID=20199
+								
+								if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
+									String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg.ApplStatus.Contractor",new String[] { accTypeStr });
+									getManagedBean().setConfirmationMsg(msg);
+									RequestContext.getCurrentInstance().execute("confirmDialog.show();");
+								}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant",null);
+									String mssg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg.ApplStatus.Consulutent",new String[] { accTypeStr });
+									getManagedBean().setConfirmationMsg(mssg);
+									RequestContext.getCurrentInstance().execute("confirmDialog.show();");
+								}else{							
+								//#25474------13072020
+									if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
+										accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
+									} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+										accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
+									} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+										accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant",null);
+									} else {getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_GOVT_SELLER);
+										accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
+									}
+		
+										String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg",new String[] { accTypeStr });
+										getManagedBean().setConfirmationMsg(msg);
+										RequestContext.getCurrentInstance().execute("confirmDialog.show();");
+									}
+							}else if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION))){
+							
+								if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
+								}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant", null);
+								}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
+									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
+								}  else if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_GOVT_SELLER)){
+									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
+								}
+								String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg",new String[] { accTypeStr });
+								getManagedBean().setConfirmationMsg(msg);
+								RequestContext.getCurrentInstance().execute("confirmDialog.show();");
+						}else {
+							throw new EpException(MessageConst.ERROR_721090);
 						}
-					}else if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION))){
-						
-						if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
-						}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant", null);
-						}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
-							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
-						}  else if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_GOVT_SELLER)){
-							accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
-						}
-						String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg",new String[] { accTypeStr });
-						getManagedBean().setConfirmationMsg(msg);
-						RequestContext.getCurrentInstance().execute("confirmDialog.show();");
-					}else {
+					}else{
 						throw new EpException(MessageConst.ERROR_721090);
 					}
 				}
-			}
 			}else {
 				if(resDTO.getSmSupplier() != null && resDTO.getSmSupplier().getSmAppl()!= null && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 					String labelText = null;
@@ -232,7 +183,8 @@ public class CancelRegistrationBackingBean extends
 				}
 				
 			}
-
+		}catch(Exception e){
+			throw new EpException(e.getMessage());
 		} finally {
 
 		}
