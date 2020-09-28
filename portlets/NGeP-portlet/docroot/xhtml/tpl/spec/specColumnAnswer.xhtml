@@ -218,11 +218,13 @@
 						label="#{lbl[answerlbl]}">
 						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
 						  <c:choose>
+<!-- FARID START 29/9/2020-->						  
 						  	<c:when test="#{!isSqSpec and !isZonal}">
-						  			 <p:ajax event="change" partialSubmit="true" process="@this" 
-									 update="@this,ansPG,@form"
+						  			 <p:ajax event="change" partialSubmit="true" process="@form" 
+									 update="@form"
 					                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
 						  	</c:when>
+<!-- FARID END 29/9/2020-->							  	
 						  	<c:otherwise>
 						  		<p:ajax event="change" partialSubmit="true" process="@this" 
 							 	update="@this,ansPG"
