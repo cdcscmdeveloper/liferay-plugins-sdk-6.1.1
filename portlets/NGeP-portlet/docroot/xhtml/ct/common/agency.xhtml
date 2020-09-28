@@ -21,9 +21,7 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false" />
 		<br />
-		<br />
-		<p:remoteCommand name="loadFilter" onsuccess="tableAgencyWidget.filter();"/> <!--  to set filter loader outside ajax-->
-        <!--  <p:remoteCommand name="savecelledit" action="#{ctBackingBean.savecellTest}" onsuccess="var d=tableAgencyWidget, c=d.jq.find('td:has(.ui-cell-editor-input:visible)'); if(c.length)d.saveCell(c)"/>-->  
+		<br />		
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
 			widgetVar="tableAgencyWidget"
 			editable="true" 
@@ -93,8 +91,7 @@
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
 		     
-			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@this"  update=":form:tableAgencyDetails" oncomplete="loadFilter();"/>
-		     <!--  <p:ajax event="cellEdit" oncomplete="savecelledit();" />-->
+			<p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/>
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
