@@ -2245,23 +2245,32 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		.getCmPromotionTierPricings().add(price);
 	}
 	
-	//20200520@akmal - Enhancement27627 - Start
+	//20200927@akmal - Enhancement27627 - Start
 	/**
 	 * Adds the new promotion pricing.
 	 */
 	public void addNewPromotionPricing() {
 
 		log.debug("*****addNewPromotionPricing*****");
-		CmPromotionPricing price = new CmPromotionPricing();
-		Date startDate = new Date();
-		price.setStartDate(startDate);
-		price.setEndDate(startDate);
-		price.setPrice(BigDecimal.ZERO);
-		
-		this.getManagedBean().getSelectedMaintainItem()
-		.setCmPromotionPricing(price);
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing() == null){
+			log.debug("*no previous CmPromotionPricing... creating new record*");
+			CmPromotionPricing price = new CmPromotionPricing();
+			Date startDate = new Date();
+			price.setStartDate(startDate);
+			price.setEndDate(startDate);
+			price.setPrice(BigDecimal.ZERO);
+			price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			this.getManagedBean().getSelectedMaintainItem()
+			.setCmPromotionPricing(price);
+		}
+		else{
+			Date startDate = new Date();
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(startDate);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(startDate);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(BigDecimal.ZERO);
+		}
 	}
-	//20200520@akmal - Enhancement27627 - End
+	//20200927@akmal - Enhancement27627 - End
 	
 	/**
 	 * Adds the new zonal tier pricing.
@@ -3411,6 +3420,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			log.info("last check review"+this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
 
+			//20200927@akmal - Enhancement27627 - Start
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean()
+						.getSelectedMaintainItem());
+			//20200927@akmal - Enhancement27627 - End
+			
 			for (CmPromotionTierPricing promotion : this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings()) {
 				promotion.setCmSupplierItem(this.getManagedBean()
@@ -6482,7 +6496,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
-	//20200520@akmal - Enhancement27627 - Start
+	//20200927@akmal - Enhancement27627 - Start
 
 	/**
 	 * delete Normal Promotion Price.
@@ -6491,11 +6505,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void deletePromotionPrice() {
 
 		log.debug("*****deletePromotionPrice*****");
-		this.getManagedBean().getSelectedMaintainItem().setCmPromotionPricing(null);
+		
+		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(null);
+		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(null);
+		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(null);
+		
+//		this.getManagedBean().getSelectedMaintainItem().setCmPromotionPricing(null);
 
 	}
 	
-	//20200520@akmal - Enhancement27627 - End
+	//20200927@akmal - Enhancement27627 - End
 
 	/**
 	 * delete Tier Price.
