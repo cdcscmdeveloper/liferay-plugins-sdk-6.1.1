@@ -1306,24 +1306,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			//reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			//resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
-			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+			//reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
 			
 			resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 			
 			//if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
 				//#14650 - Alert message if contract incomplete
-			if(resDTOInvoice.isCrComplete()==false) {
+			if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
-				/*if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
-				}*/
 			}
 			//#14650 Ending		
-			
+			//}
 			
 		}else if(contractId != null){
 			/*Start- 13984 - CrList - Back Button*/
@@ -1457,15 +1453,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						scheduleNo = ctSchedule.getScheduleNo().toString();
 						reqDTO.setScheduleNo(scheduleNo);
 						if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {//13984
-							//#14650 - Alert message if contract incomplete
-							if(resDTOInvoice.isCrComplete()==false)
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 							
-							/*if(resDTOInvoice.isIdptcontractCompleteCheck()==false)
-								FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-										MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
-							*/				
 							break;
 						}
 					}
@@ -1531,17 +1519,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}		
 			getVotFundList(jabatanOrgProfileId);
 			//End#14650
+			
+			//#14650 - Alert message if contract incomplete - Start
+			if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			}
+			//#14650 - End
 		}
-		//#14650 - Alert message if contract incomplete - Start
-		if(resDTOInvoice.isCrComplete()==false){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-		}
-		/*if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-		}*/
-		//#14650 - End
 		
 		//26279 - start
 		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 

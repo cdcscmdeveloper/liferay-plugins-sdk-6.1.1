@@ -32,6 +32,7 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
+import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -319,7 +320,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();		
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FulfilmentResDTO resDTOInvoice = new FulfilmentResDTO();
 		if(taskId != null){
 			renewSesionObject();
 			IFulfilmentSO iFulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentSO.class);
@@ -453,16 +455,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
 			getAcknowledgeOfficerDropdown();
-			
-			// Set evaluation
-			//#14650 - Alert message if contract incomplete - Start
-			if(getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue() != FulfilmentStatusConst.CR_COMPLETE.longValue()){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-			}
-			//#14650 - End
-			
-			
+		    
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
@@ -522,6 +515,31 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				}
 			}
 			//26279 - end
+			
+			/*#14650 - Logan - Beginning*/
+			//FacesScopes facesScopes = new FacesScopes();
+			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			//IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+			
+			
+			//reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			//resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
+			//reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
+				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+				
+				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);		
+				
+				//#14650 - Alert message if contract incomplete
+					if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+					}
+			}
+			/*#14650 - Ending*/
+			
+			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
