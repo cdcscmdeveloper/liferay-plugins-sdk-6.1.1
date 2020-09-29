@@ -861,6 +861,149 @@ public class QTCloneBackingbean extends
 		debugLogger("addDocumentCloneAction");
 		ScQt scQt = this.getManagedBean().getQt();
 		
+		
+		
+		List<ScQtDocReport> reportList = getManagedBean()
+				.getScQtDocReportList();
+		if (null == reportList) {
+			reportList = retrieveAllDocumentsByQt(scQt);
+		}
+		
+		//List<ScQtDocReport> docInDBList = retrieveDocumentByQt(scQt);
+		List<ScQtDocReport> listDel=new ArrayList<ScQtDocReport>();
+		if(null!=reportList && !reportList.isEmpty()){
+			for(ScQtDocReport toDel:reportList){
+				if(null==toDel.getPmDocument()){
+					toDel.setDeleted(true);
+					listDel.add(toDel);
+				}
+			}
+			this.getManagedBean().setRemoveDocReports(listDel);
+		}
+		reportList.removeAll(listDel);
+		
+		List<String> existedDocumets=new ArrayList<String>(); //additional docs;
+		ScQtDocReport templetDoc=null;
+		if(CollectionUtils.isNotEmpty(reportList)){
+			for(ScQtDocReport docReport:reportList){
+				if(null==docReport.getPmDocument()){
+				existedDocumets.add(docReport.getTitle());
+				}
+				else{
+				String docDefinitionKey=	docReport.getPmDocument().getDocDefinitionKey();
+					if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
+							.equals(docDefinitionKey)) {
+					templetDoc=docReport;
+					}
+				}
+			}
+			
+		}
+		List<ScQtDocReport> scQtDocReports = retrieveDocumentByQt(copyQt);
+//				this.getManagedBean()
+//				.getSelectedCloneScQtDocReports();
+		if (null!=scQtDocReports && !scQtDocReports.isEmpty()) {
+			for (ScQtDocReport docReport : scQtDocReports) {
+				ScQtDocReport qtDocReport = null;
+				ScQtDocReportAttachment qtDocReportAttachment=null;
+				try {
+					if (!existedDocumets
+							.contains(
+									 docReport.getTitle())) {
+						qtDocReport = (ScQtDocReport) BeanUtils
+								.cloneBean(docReport);
+					}
+				} catch (IllegalAccessException | InstantiationException
+						| InvocationTargetException | NoSuchMethodException e) {
+					log.warn(e.getMessage(), e);
+				}
+				if (null != qtDocReport) {
+					qtDocReport.setQtReportId(null);
+					qtDocReport.setScQt(scQt);
+					qtDocReport.setDocId(String.valueOf(qtDocReport.getScQt().getQtId()));
+					setUserDetails(qtDocReport);
+					qtDocReport.setChangedDate(null);
+					
+					if (docReport.getScQtDocReportAttachment() != null) {
+						try {
+							 qtDocReportAttachment = (ScQtDocReportAttachment)BeanUtils.cloneBean(docReport.getScQtDocReportAttachment());
+							if (qtDocReportAttachment != null) {
+								qtDocReportAttachment.setAttachmentId(null);
+								qtDocReportAttachment.setScQtDocReport(qtDocReport);
+								setUserDetails(qtDocReportAttachment);
+								qtDocReportAttachment.setChangedDate(null);
+								
+								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
+							}
+						} catch (IllegalAccessException | InstantiationException
+								| InvocationTargetException | NoSuchMethodException e) {
+							log.warn(e.getMessage(), e);
+						}	
+					}
+					boolean toClone=true;
+					//if SS - syarat-syarat am
+					String docDefinitionKey=null;
+					if(null!=docReport.getPmDocument()){
+						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
+					}		
+					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
+							.equals(docDefinitionKey)){
+						IQTTemplateSO qtTemplateSO = null;
+						try{
+							qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+							QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
+							if (docReport.getTplDocMaster() != null) {
+								if(null!=templetDoc){
+								reportList.remove(templetDoc);
+								templetDoc=retriveRulesAndRegulationReport(templetDoc);
+								TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
+								master=cloneDocMasterDocSectionDetails(master, templetDoc); //replace tplDocmaster
+								templetDoc.setTplDocMaster(master);
+									reqDTO.setScQtDocReport(templetDoc);
+									
+								}else{
+									TplDocMaster master=	retrieveTplDocMasterById(docReport.getTplDocMaster().getDocMasterId());
+									master=cloneDocMasterDocSectionDetails(master, qtDocReport);
+									qtDocReport.setTplDocMaster(master);
+										reqDTO.setScQtDocReport(qtDocReport);
+									
+								}
+								QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
+								qtDocReport=resDTO.getScQtDocReport();	
+							}else{
+								//if(null!=templetDoc){
+								//	reportList.remove(templetDoc);
+								//}
+								//reqDTO.setScQtDocReport(qtDocReport);	
+								toClone=false;
+							}
+							
+							
+						}finally{
+							qtTemplateSO = null;
+						}
+					}
+					
+					if(toClone){
+						reportList.add(qtDocReport);
+					}
+					
+					
+				}
+			}
+			 getManagedBean()
+				.setScQtDocReportList(reportList);
+		} else {
+			throw new EpException(MessageConst.ERROR_760141);
+		}
+		existedDocumets=null;
+	}
+	
+	private void retrieveDocs2(ScQt copyQt){
+		debugLogger("addDocumentCloneAction");
+		ScQt scQt = this.getManagedBean().getQt();
+		
 //		List<ScQtDocReport> docInDBList = retrieveDocumentByQt(scQt);
 //		if(null!=docInDBList && !docInDBList.isEmpty()){
 //			List<ScQtDocReport> listDel=new ArrayList<ScQtDocReport>();
@@ -1739,7 +1882,7 @@ public class QTCloneBackingbean extends
 		
 		
 		debugLogger("retrieveDeductionPaymentTabDtl");
-		if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
+	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1805,7 +1948,7 @@ public class QTCloneBackingbean extends
 			} finally {
 				detailSO = null;
 			}
-		}
+		//}
 	}
 	
 	private void uploadAttachment(ScAttachment copy, ScAttachment origin)
@@ -3358,7 +3501,25 @@ public class QTCloneBackingbean extends
 			supplierCriteria.setScQt(scQt);
 			supplierCriteria.setBrandNew(true);
 			supplierCriteria.setLocationLevel(cps.getLocationLevel());
-			supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
+			
+			if(cps.getScQtLocCriteria()!=null){
+				List<ScQtLocCriteria> listLoc=new ArrayList<ScQtLocCriteria>();
+				for(ScQtLocCriteria loc:cps.getScQtLocCriteria()){
+					ScQtLocCriteria toloc=new ScQtLocCriteria();
+					toloc.setBrandNew(true);
+					toloc.setScQtSupplierCriteria(supplierCriteria);
+					toloc.setDocId(loc.getDocId());
+					toloc.setDocType(loc.getDocType());
+					toloc.setPmDistrict(loc.getPmDistrict());
+					toloc.setPmDivision(loc.getPmDivision());
+					toloc.setPmState(loc.getPmState());
+					toloc.setSpecLocId(loc.getSpecLocId());
+					toloc.setZonalLocation(loc.isZonalLocation());
+				}
+				supplierCriteria.setScQtLocCriteria(listLoc);
+			}
+			
+			
 			supplierCriteria.setAllState(cps.isAllState());
 			supplierCriteria.setLocationLevel(cps.getLocationLevel());
 			setUserDetails(supplierCriteria);
