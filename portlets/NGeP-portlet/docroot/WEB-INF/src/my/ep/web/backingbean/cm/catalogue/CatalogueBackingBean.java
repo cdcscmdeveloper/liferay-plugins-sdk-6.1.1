@@ -3952,6 +3952,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 			}
+			//20200929@akmal - Enhancement27627 - Start
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null
+					&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(BigDecimal.ZERO)==0){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715070, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
+			//20200929@akmal - Enhancement27627 - End
 
 			//---------------------------------- start comparison each date with standard date range ----------------------------------------------------
 
