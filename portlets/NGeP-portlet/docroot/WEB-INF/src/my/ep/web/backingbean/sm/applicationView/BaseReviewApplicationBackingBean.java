@@ -3590,55 +3590,72 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.equalsIgnoreCase(getManagedBean().getSmAppl().getSmSupplier().getBusinessType())) {
 				SmApplicationUtil.sortPersonnelByRoleInCompany(getManagedBean()
 						.getSmAppl());
-			}		
+			}
 			List<SmPersonnel> smPersonnelList = getManagedBean().getSmAppl().getSmPersonnels();
-			if(smPersonnelList != null && !smPersonnelList.isEmpty()) {
-				List<SmPersonnel> newSmPersonnelList = new ArrayList<>();
-				List<SmPersonnel> userSmPersonnelList = new ArrayList<>();
-				List<SmPersonnel> catalogueUserList = new ArrayList<>();
-				if(SupplierManagementConst.SUPP_TYPE_BASIC
-						.equalsIgnoreCase(getManagedBean().getSmAppl()
-								.getSupplierType()) && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
-								.equalsIgnoreCase(getManagedBean().getSmSupplier()
-										.getBusinessType())) {
-					for(SmPersonnel smPersonnel: smPersonnelList) {
-						String epRoleName = epRoleName(smPersonnel.getEpRole());
-						if("BASIC_SUPPLIER_ADMIN".equalsIgnoreCase(smPersonnel.getEpRole())) {
-							smPersonnel.setEpRole(epRoleName);
-							newSmPersonnelList.add(smPersonnel);
-						} else if("BASIC_SUPPLIER_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
-							smPersonnel.setEpRole(epRoleName);
-							userSmPersonnelList.add(smPersonnel);
-						} else if("CM_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
-							smPersonnel.setEpRole(epRoleName);
-							catalogueUserList.add(smPersonnel);
+			if((SupplierManagementConst.SUPP_TYPE_BASIC
+					.equalsIgnoreCase(getManagedBean().getSmAppl()
+							.getSupplierType()) && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
+							.equalsIgnoreCase(getManagedBean().getSmSupplier()
+									.getBusinessType())) || SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
+									.equalsIgnoreCase(getManagedBean().getSmAppl()
+											.getSupplierType())) {			
+				if(smPersonnelList != null && !smPersonnelList.isEmpty()) {
+					List<SmPersonnel> newSmPersonnelList = new ArrayList<>();
+					List<SmPersonnel> userSmPersonnelList = new ArrayList<>();
+					List<SmPersonnel> catalogueUserList = new ArrayList<>();
+					if(SupplierManagementConst.SUPP_TYPE_BASIC
+							.equalsIgnoreCase(getManagedBean().getSmAppl()
+									.getSupplierType()) && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
+									.equalsIgnoreCase(getManagedBean().getSmSupplier()
+											.getBusinessType())) {
+						for(SmPersonnel smPersonnel: smPersonnelList) {
+							String epRoleName = epRoleName(smPersonnel.getEpRole());
+							if("BASIC_SUPPLIER_ADMIN".equalsIgnoreCase(smPersonnel.getEpRole())) {
+								smPersonnel.setEpRole(epRoleName);
+								newSmPersonnelList.add(smPersonnel);
+							} else if("BASIC_SUPPLIER_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+								smPersonnel.setEpRole(epRoleName);
+								userSmPersonnelList.add(smPersonnel);
+							} else if("CM_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+								smPersonnel.setEpRole(epRoleName);
+								catalogueUserList.add(smPersonnel);
+							}
 						}
-					}
-				} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
-						.equalsIgnoreCase(getManagedBean().getSmAppl()
-								.getSupplierType())) {
-					for(SmPersonnel smPersonnel: smPersonnelList) {
-						String epRoleName = epRoleName(smPersonnel.getEpRole());
-						if("G2G_ADMIN".equalsIgnoreCase(smPersonnel.getEpRole())) {
-							smPersonnel.setEpRole(epRoleName);
-							newSmPersonnelList.add(smPersonnel);
-						} else if("G2G_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
-							smPersonnel.setEpRole(epRoleName);
-							userSmPersonnelList.add(smPersonnel);
-						} else if("CM_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
-							smPersonnel.setEpRole(epRoleName);
-							catalogueUserList.add(smPersonnel);
+					} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT
+							.equalsIgnoreCase(getManagedBean().getSmAppl()
+									.getSupplierType())) {
+						for(SmPersonnel smPersonnel: smPersonnelList) {
+							String epRoleName = epRoleName(smPersonnel.getEpRole());
+							if("G2G_ADMIN".equalsIgnoreCase(smPersonnel.getEpRole())) {
+								smPersonnel.setEpRole(epRoleName);
+								newSmPersonnelList.add(smPersonnel);
+							} else if("G2G_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+								smPersonnel.setEpRole(epRoleName);
+								userSmPersonnelList.add(smPersonnel);
+							} else if("CM_USER".equalsIgnoreCase(smPersonnel.getEpRole())) {
+								smPersonnel.setEpRole(epRoleName);
+								catalogueUserList.add(smPersonnel);
+							}
 						}
+					}			
+					if(!userSmPersonnelList.isEmpty()) {
+						newSmPersonnelList.addAll(userSmPersonnelList);
+					}		
+					if(!catalogueUserList.isEmpty()) {
+						newSmPersonnelList.addAll(catalogueUserList);
 					}
-				}			
-				if(!userSmPersonnelList.isEmpty()) {
-					newSmPersonnelList.addAll(userSmPersonnelList);
-				}		
-				if(!catalogueUserList.isEmpty()) {
-					newSmPersonnelList.addAll(catalogueUserList);
+					getManagedBean().getSmAppl().setSmPersonnels(
+							newSmPersonnelList);
 				}
-				getManagedBean().getSmAppl().setSmPersonnels(
-						newSmPersonnelList);
+			} else if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType()) 
+					&& SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL
+					.equalsIgnoreCase(getManagedBean().getSmAppl().getSmSupplier().getBusinessType())) {
+				if(smPersonnelList != null && !smPersonnelList.isEmpty()) {
+					String epRoleName = epRoleName(smPersonnelList.get(0).getEpRole());
+					smPersonnelList.get(0).setEpRole(epRoleName);
+					setAddresses(smPersonnelList.get(0));
+				}
+				
 			}
 			//25792 - end - reopen
 		}		
