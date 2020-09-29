@@ -1386,13 +1386,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			sb.append("");
 		}
 		//#28774 - Start
-		StringBuilder aOfficer = new StringBuilder();
-		int aOfficer_i = 0;
+		StringBuilder assistantOfficer = new StringBuilder();
+		int aOfficer = 0;
 		if(svTask.getSmSvAssistantOfficers() != null  && !svTask.getSmSvAssistantOfficers().isEmpty()){
 			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers()){
-				aOfficer.append(++aOfficer_i + ". ");
-				aOfficer.append(smSvAssistantOfficer.getName());
-				aOfficer.append("<br/>");
+				assistantOfficer.append(++aOfficer + ". ");
+				assistantOfficer.append(smSvAssistantOfficer.getName());
+				assistantOfficer.append("<br/>");
 			}
 		}
 		//#28774 - End
@@ -1401,7 +1401,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("accptDate", accptDate);
 		context.put("svOfficers", sb.toString());
 		//#28774 - Start
-		context.put("svAOfficer", aOfficer.toString());
+		context.put("svAOfficer", assistantOfficer.toString());
 		//#28774 - End
 		context.put("addrLiines",getAddressLines(addr));
 		context.put("postCode", (addr.getPostcode() != null && addr.getPostcode().length() > 0)? addr.getPostcode() : "");
