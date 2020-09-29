@@ -2256,17 +2256,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.debug("*no previous CmPromotionPricing... creating new record*");
 			CmPromotionPricing price = new CmPromotionPricing();
 			Date startDate = new Date();
-			price.setStartDate(startDate);
-			price.setEndDate(startDate);
+			price.setStartDate(null);
+			price.setEndDate(null);
 			price.setPrice(BigDecimal.ZERO);
 			price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem()
 			.setCmPromotionPricing(price);
 		}
 		else{
-			Date startDate = new Date();
-			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(startDate);
-			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(startDate);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(null);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(null);
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(BigDecimal.ZERO);
 		}
 	}
@@ -3936,7 +3935,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			if(promotionError){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715071, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
