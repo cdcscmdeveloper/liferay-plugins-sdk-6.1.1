@@ -3370,8 +3370,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 
-
-
+			//20200929@akmal - Enhancement27627 - Start
+			if(!this.getManagedBean().isSavedFirst()) this.getManagedBean().setSavedFirst(true);
+			//20200929@akmal - Enhancement27627 - End
 			log.info("getCompareDesc:"+this.getManagedBean().getSelectedMaintainItem().getCompareDesc());
 			log.info("getItemDesc:"+this.getManagedBean().getSelectedMaintainItem().getItemDesc());
 			log.info("begining isReviewRequired:"+this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
@@ -3406,11 +3407,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				if(this.getManagedBean().getSelectedMaintainItem().getCmImages()!=null && this.getManagedBean().getSelectedMaintainItem().getCmImages().size()>0){
 					for (CmImage image : this.getManagedBean().getSelectedMaintainItem().getCmImages()) {
+						//20200929@akmal - Enhancement27627 - Start
 						if (image.isBrandNew()) {
+							image.setModified(true);
 							this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 
 							break;
 						}
+						//20200929@akmal - Enhancement27627 - End
 					}
 				}else{
 					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
@@ -3630,7 +3634,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						log.info("*************set true***************");
 						//20200806@akmal - Enhancement27627 - End
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-
+						
 					}else{
 						////// reset review required = false
 						log.info("*************set false***************");
@@ -3650,7 +3654,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 								break;
 							}
-						}
+							//20200929@akmal - Enhancement27627 - Start
+							else if(this.getManagedBean().isSavedFirst()){
+								this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+								this.getManagedBean().setSavedFirst(false);
+								break;
+							}
+							else if(!image.isModified()){
+								this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+								break;
+							}
+							//20200929@akmal - Enhancement27627 - End
+						}	
 					}else{
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 
