@@ -47,7 +47,7 @@
 								<p:inputText id="svAOfficerName" update="deleteSvAObtnId" partialSubmit="true" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svAOfficer.name}" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true" requiredMessage="#{lbl['lbl.sm.sv.visiting.officer.required']}">
 									<p:ajax event="keyup" update="deleteSvAObtnId" />
 								</p:inputText>
-								<p:commandButton value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}" />
+								<p:commandButton rendered="#{svoSiteVisitBackingBean.checkUserRole() eq false}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}"/>
 								<br/>
 							</ui:repeat>
 						</p:column>
@@ -58,7 +58,7 @@
 		
 		<p:outputPanel>
 			<div align="right">
-				<p:commandButton id="addSvAObtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,assistingOfficerId"
+				<p:commandButton rendered="#{svoSiteVisitBackingBean.checkUserRole() eq false}" id="addSvAObtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,assistingOfficerId"
 					action="#{svoSiteVisitBackingBean.addSvAsistantOfficer}" update="assistingOfficerId,@this" />
 			</div>
 		</p:outputPanel> 
