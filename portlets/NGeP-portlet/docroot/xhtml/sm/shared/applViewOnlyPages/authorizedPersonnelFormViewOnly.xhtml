@@ -64,7 +64,7 @@
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.softcert.flg.processing']}" />
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.selectedPersonnel.softcertFlg == 4}">
-						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.epRole ne 'Catalogue User' ? lbl['lbl.sm.softcert.flg.pending'] : lbl['lbl.txt.na']}" />
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.epRole ne 'Catalogue User' and viewSmApplBackingBean.managedBean.selectedPersonnel.epRole ne 'Pengguna Katalog' ? lbl['lbl.sm.softcert.flg.pending'] : lbl['lbl.txt.na']}" />
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.selectedPersonnel.softcertFlg == 5}">
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.softcert.flg.revoked']}" />
