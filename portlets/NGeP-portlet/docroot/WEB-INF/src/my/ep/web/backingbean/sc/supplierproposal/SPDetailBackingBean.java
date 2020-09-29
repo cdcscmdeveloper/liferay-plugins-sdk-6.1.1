@@ -680,6 +680,10 @@ public class SPDetailBackingBean extends
 						scQtProposal.getQtProposalId(),
 						scQtProposal.getProposalNo(), originalText);
 			}
+			
+			// #27233 : CR add new tracking diary entry for update - START
+			reqDTO.setResubmit(scQtProposal.getLastSubmitDate() != null);
+			// #27233 : CR add new tracking diary entry for update - END
 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			scQtProposal.setLastSubmitDate(DateUtils.getCurrentDate());
@@ -5333,7 +5337,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setScQtProposal(proposal);
-			 proposalSO = getProposalSO();
+			
+			// #27233 : CR add new tracking diary entry for update - START
+			Long scQtSuppId = proposal.getScQtSupplier() != null ? proposal.getScQtSupplier().getQtSupplierId() : null;
+			if(scQtSuppId != null){
+				reqDTO.setUpdating(true);
+				reqDTO.setQtSupplierId(scQtSuppId); // need real scSupplier
+				reqDTO.setRoleCode(super.getUserRoleCode());
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			}
+			// #27233 : CR add new tracking diary entry for update - END
+			
+			proposalSO = getProposalSO();
 			ProposalResDTO resDTO = proposalSO
 					.updateQTProposalForReSubmit(reqDTO);
 			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
