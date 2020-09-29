@@ -925,7 +925,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private void chequeSignatoryInfo(){
 		log.info("****cheque signatory**" + this.getManagedBean().getSmSvTask().getSmSvBankInfos().size());
 		int totalChequeSignatory = 0;
-		int cheqBumi = 0,cheqNonBumi = 0, cheqNonMalaysian = 0;
+		int cheqBumi = 0;
+		int cheqNonBumi = 0;
+		int cheqNonMalaysian = 0;
 		
 		// #14055 - start
 		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
@@ -935,7 +937,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
-				if (svBankInfo.getSmSupplierBank().getSmChequeSignatories().size() > 0) {
+				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {	
 					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
 						totalCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 						if (chequeSignatory.getSmPersonnel().isBumi()) {
@@ -1527,9 +1529,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		VelocityContext context = new VelocityContext();
 		String vmEquity= "/sm/sitevisit/sv-section-b.vm";
 
-		List<String> finLsItem = new ArrayList<String>();
-		List<SmSvFinChecklist> finCheckList = new ArrayList<SmSvFinChecklist>();
-		List<PmParameterDesc> pmParamDesc = new ArrayList<PmParameterDesc>();
+		List<String> finLsItem = new ArrayList<>();
+		List<SmSvFinChecklist> finCheckList = new ArrayList<>();
+		List<PmParameterDesc> pmParamDesc = new ArrayList<>();
 		pmParamDesc = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.SVO_FIN_CHECKLIST, templateLangCode);
 		
 		if(!review){
@@ -1555,12 +1557,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("nonBumiCheqSignPct", calculatChequeSignatoryPercentage(this.getManagedBean().getCheqNonBumi()));
 		context.put("nonMalaysianCheqSignPct", calculatChequeSignatoryPercentage(this.getManagedBean().getCheqNonMalaysian()));
 		
-/*		for(SmSvBankInfo svBankInfo : svTask.getSmSvBankInfos()){
-			String e = StringEscapeUtils.escapeHtml(svBankInfo.getSmSupplierBank().getPmFinancialOrg().getFinOrgName());
-			log.info("String e>>>>" + e);
-			svBankInfo.getSmSupplierBank().getPmFinancialOrg().setFinOrgName(e);
-		}
-*/
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("bankInfo", svTask.getSmSvBankInfos());
 		
@@ -1572,9 +1568,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		// #14055 - end
 		
 		String fileName = fileInitName + "sectionB.pdf";
-		String file = generateToPdf(vmEquity, context, fileName);
+		//String file = generateToPdf(vmEquity, context, fileName);
 		
-		return file;
+		return generateToPdf(vmEquity, context, fileName);
 	}
 	
 	/**
@@ -2840,13 +2836,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	// #24964 - end
 	
 	// #14055 - start
-	public String getStatusFromLabel(String tempStatus) {
-		Locale locale = new FacesScopes().getUserLocale();
-
-		String lblTemplate = "lbl.sm.sv.templ." + tempStatus;
-		String templDesc = ResourceBundleUtils
-				.getMessage(lblTemplate, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-		return templDesc;
+	public String getStatusFromLabel(String tempStatus) {		
+		return ResourceBundleUtils.getMessage("lbl.sm.sv.templ." + tempStatus, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 	// #14055 - end
 
