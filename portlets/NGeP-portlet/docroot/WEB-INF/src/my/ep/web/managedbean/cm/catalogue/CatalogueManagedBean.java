@@ -167,6 +167,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The price type tariff. */
 	private boolean priceTypeTariff = false;
+	
+	//20200929@akmal - Enhancement27627 - Start
+	/** Flag to check if item saved 1st before publish**/
+	private boolean isSavedFirst = false;
+	//20200929@akmal - Enhancement27627 - End
 
 	/** The unspsc. */
 	private CmUnspsc unspsc;
@@ -4407,4 +4412,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
+	//20200929@akmal - Enhancement27627 - Start
+	public boolean isSavedFirst() {
+		return isSavedFirst;
+	}
+
+	public void setSavedFirst(boolean isSavedFirst) {
+		this.isSavedFirst = isSavedFirst;
+	}
+	//20200929@akmal - Enhancement27627 - End
 }
