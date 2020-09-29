@@ -52,7 +52,7 @@
 						<h:outputText value="#{lbl['lbl.sm.softcert.flg.issued']}" rendered="#{personBean.softcertFlg == 1}" />
 						<h:outputText value="#{lbl['lbl.sm.softcert.flg.requested']}" rendered="#{personBean.softcertFlg == 2}" />
 						<h:outputText value="#{lbl['lbl.sm.softcert.flg.processing']}" rendered="#{personBean.softcertFlg == 3}" />
-						<h:outputText value="#{personBean.epRole ne 'Catalogue User' ? lbl['lbl.sm.softcert.flg.pending'] : lbl['lbl.txt.na']}" rendered="#{personBean.softcertFlg == 4}" />
+						<h:outputText value="#{personBean.epRole ne 'Catalogue User' and personBean.epRole ne 'Pengguna Katalog' ? lbl['lbl.sm.softcert.flg.pending'] : lbl['lbl.txt.na']}" rendered="#{personBean.softcertFlg == 4}" />
 						<h:outputText value="#{lbl['lbl.sm.softcert.flg.revoked']}" rendered="#{personBean.softcertFlg == 5}" />
 						<h:outputText value="#{lbl['lbl.sm.softcert.flg.rejected']}" rendered="#{personBean.softcertFlg == 6}" />
 						<h:outputText value="#{lbl['lbl.sm.softcert.flg.renew']}" rendered="#{personBean.softcertFlg == 7}"/>
