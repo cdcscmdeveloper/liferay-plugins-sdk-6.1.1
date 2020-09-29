@@ -44,7 +44,7 @@
 				</c:when>
 				<c:otherwise><td class="header-info-text" style="vertical-align: top;">#{lbl['lbl.sm.no.available']}</td></c:otherwise>
 				</c:choose>
-				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applicationstatus']}" /></td>
 				<c:choose>
 				<c:when test="#{not empty viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}">
 				<td class="header-info-text" style="vertical-align: top;">#{viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}</td>
