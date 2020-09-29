@@ -304,8 +304,7 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
-							<!--  #13320 Rahim Commented and Renew update="pnlCompInfo"-->
+							update="pnlCompInfo,divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
 					<!-- 13320 -->
@@ -335,7 +334,7 @@
 					</p:selectOneMenu>
 					</h:panelGroup>
 				</td>
-            </tr>
+			</tr>
 			<tr>
 				<td></td>
 				<td class="tdContent">
