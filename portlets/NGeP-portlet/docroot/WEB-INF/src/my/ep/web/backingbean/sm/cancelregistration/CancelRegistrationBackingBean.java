@@ -183,9 +183,7 @@ public class CancelRegistrationBackingBean extends
 				}
 				
 			}
-		}catch(Exception e){
-			throw new EpException(e.getMessage());
-		} finally {
+		}finally {
 
 		}
 	}
