@@ -2245,7 +2245,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		.getCmPromotionTierPricings().add(price);
 	}
 	
-	//20200927@akmal - Enhancement27627 - Start
+	//20200929@akmal - Enhancement27627 - Start
 	/**
 	 * Adds the new promotion pricing.
 	 */
@@ -2269,7 +2269,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(BigDecimal.ZERO);
 		}
 	}
-	//20200927@akmal - Enhancement27627 - End
+	//20200929@akmal - Enhancement27627 - End
 	
 	/**
 	 * Adds the new zonal tier pricing.
