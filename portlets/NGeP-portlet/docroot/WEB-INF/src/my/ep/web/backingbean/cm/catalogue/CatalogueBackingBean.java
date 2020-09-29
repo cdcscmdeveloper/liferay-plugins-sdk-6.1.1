@@ -2245,7 +2245,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		.getCmPromotionTierPricings().add(price);
 	}
 	
-	//20200927@akmal - Enhancement27627 - Start
+	//20200929@akmal - Enhancement27627 - Start
 	/**
 	 * Adds the new promotion pricing.
 	 */
@@ -2256,21 +2256,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.debug("*no previous CmPromotionPricing... creating new record*");
 			CmPromotionPricing price = new CmPromotionPricing();
 			Date startDate = new Date();
-			price.setStartDate(startDate);
-			price.setEndDate(startDate);
+			price.setStartDate(null);
+			price.setEndDate(null);
 			price.setPrice(BigDecimal.ZERO);
 			price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem()
 			.setCmPromotionPricing(price);
 		}
 		else{
-			Date startDate = new Date();
-			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(startDate);
-			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(startDate);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(null);
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(null);
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(BigDecimal.ZERO);
 		}
 	}
-	//20200927@akmal - Enhancement27627 - End
+	//20200929@akmal - Enhancement27627 - End
 	
 	/**
 	 * Adds the new zonal tier pricing.
@@ -3936,7 +3935,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			if(promotionError){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715071, 
 								new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
@@ -3952,6 +3951,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 			}
+			//20200929@akmal - Enhancement27627 - Start
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null
+					&& this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(BigDecimal.ZERO)==0){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715070, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
+			//20200929@akmal - Enhancement27627 - End
 
 			//---------------------------------- start comparison each date with standard date range ----------------------------------------------------
 
