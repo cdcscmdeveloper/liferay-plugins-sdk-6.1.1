@@ -82,7 +82,7 @@
 					<tr>
 						<td>$velocityCount. $signatory.smPersonnel.name</td>
 						<td class="sColTwentyPerc"></td>
-						<td class="txtBold">Status</td>
+						<td width="20%" class="txtBold">Status</td>
 										
 						#if($signatory.smPersonnel.bumiFlg == 1)
 							<td>$bumi</td> 													
