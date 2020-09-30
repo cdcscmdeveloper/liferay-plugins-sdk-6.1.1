@@ -1580,7 +1580,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		// Start - 28292
 		
-		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
+		/*ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 		List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
 		List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
 
@@ -1613,7 +1613,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.onChangeMinimumQty(ctItem);
 
 			}
-		}
+		}*/
 		// End - 28292
 	}
 	//LOG : 13847, by Fahmi 22032019
