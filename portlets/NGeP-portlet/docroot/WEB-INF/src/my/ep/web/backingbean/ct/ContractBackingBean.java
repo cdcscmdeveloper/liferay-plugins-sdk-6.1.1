@@ -3331,6 +3331,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param ctContractItem   object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
+		// Start - 28292
+		CommonUtils commonUtils = new CommonUtils();
+		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
+				.getScRequestItem().getUom().getUomCode());
+		DecimalFormat formatter = new DecimalFormat(minValue);
+		String result = formatter.format(ctContractItem.getMinimumOrderQty());
+		ctContractItem.setMinimumOrderQty(Double.parseDouble(result));
+		// End - 28292
+		
 		//Bug #28356 - Start
 		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
 			if (ctContractItem.getMinimumOrderQty() <= 0) {
