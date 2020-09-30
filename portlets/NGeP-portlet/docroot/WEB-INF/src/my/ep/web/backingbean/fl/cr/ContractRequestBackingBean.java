@@ -280,7 +280,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/*#17087 zonal flag*/
 	private boolean zonalTest;
 	/*13984 Schedule/ Phase Information*/
-    private static List<ScheduleInfo> schInfo;
+    private List<ScheduleInfo> schInfo;
     /*13984 navigation & schedule number Information*/
     private static String navi;
     private static String schno;
@@ -1122,7 +1122,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
 		//start-13984
 		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
-		FulfilmentResDTO resDTOInvoice = new FulfilmentResDTO();
+		FulfilmentResDTO resDTOInvoice;
 		if(catalogueFlag != null){
 			getManagedBean().setCatalogueFlag(catalogueFlag);
 		}
@@ -1136,7 +1136,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 					IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FulfilmentResDTO resDTO;
 			
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			initializeCRBeans();
@@ -1313,7 +1313,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			//if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
 				//#14650 - Alert message if contract incomplete
-			if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false) {
+			if(!resDTOInvoice.isCrComplete() || !resDTOInvoice.isIdptcontractCompleteCheck()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
@@ -1373,7 +1373,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			getManagedBean().getFlRequest().setStatus(statusResDTO.getPmStatus());
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			List<VCmSupplierItem> vCmSupplierItemList = (List<VCmSupplierItem>) externalContext.getApplicationMap().get(facesScopes.getUserSessionBean().getUserId().toString()+contractId.toString());
+			List<VCmSupplierItem> vCmSupplierItemList = (List<VCmSupplierItem>) externalContext.getApplicationMap().get(facesScopes.getUserSessionBean().getUserId().toString()+contractId);
 			FlTempItem flTempItem = null;
 			if(!getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) && vCmSupplierItemList != null){
 				for(VCmSupplierItem supplierItem : vCmSupplierItemList) {
@@ -1385,7 +1385,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
 					getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
 				}
-				externalContext.getApplicationMap().put(facesScopes.getUserSessionBean().getUserId().toString()+contractId.toString(), null);
+				externalContext.getApplicationMap().put(facesScopes.getUserSessionBean().getUserId().toString()+contractId, null);
 			} else if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				for(CtContractItem contractItem : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems()) {
 					if(contractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE || 
@@ -1409,9 +1409,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FulfilmentResDTO resDTO;
 			
 			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
@@ -1511,7 +1511,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//13984-end
 			
 			//Start #14650 initialize votFundCodeMap
-			System.out.println("noraa ContractRequestBackingBean.preRenderView()");
+			log.info("noraa ContractRequestBackingBean.preRenderView()");
 			Long jabatanOrgProfileId = -1l;
 			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
 			if(jabatan!=null) {
@@ -1521,7 +1521,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//End#14650
 			
 			//#14650 - Alert message if contract incomplete - Start
-			if(resDTOInvoice.isCrComplete()==false || resDTOInvoice.isIdptcontractCompleteCheck()==false){
+			if(!resDTOInvoice.isCrComplete() || !resDTOInvoice.isIdptcontractCompleteCheck()){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
