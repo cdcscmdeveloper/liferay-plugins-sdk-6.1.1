@@ -3348,11 +3348,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
-				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
-					if(getManagedBean().getSelectedApprover() == null){
-						getManagedBean().setSelectedTabIndex(4);
-						throw new EpException(MessageConst.ERROR_750010);
-					}
+				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && getManagedBean().getSelectedApprover() == null){
+					getManagedBean().setSelectedTabIndex(4);
+					throw new EpException(MessageConst.ERROR_750010);
 				}
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					getManagedBean().setSelectedTabIndex(1);
@@ -3397,7 +3395,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
 					getManagedBean().setTaskDeadLine("0"); //temporary #25147
-					//throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 				}
 				
 				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -3419,20 +3416,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 
 			//Bug #25244
-			if(!(BpmOutcomeConst.BPM_REJECT.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome))){
-				if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() != null) {
-					reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
-				}
+			if(!(BpmOutcomeConst.BPM_REJECT.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome))
+					&& getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() != null){
+				reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 			}
 			
-
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
 			
-		}finally{
-			fulfilmentRequestSO = null;
+		} catch (EpException ex){
+			log.error("File : PurchaseRequestBackingBean, Method: validateFulfilmentRequest, Message: "+ex.getMessage());
 		}
 	}
 	
