@@ -4007,9 +4007,8 @@ public class SupplierFinalizationBackingBean extends
 		log.info("disableItemsNotRecommendedToHigherAuthority");
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		//20200824@asyrafhaziq - 28841 - Start
-		retrieveQtFinalization(getManagedBean().getScQt());
+		ScQtFinalization scQtFinalization  = retrieveQtFinalization(getManagedBean().getScQt());
 		//20200824@asyrafhaziq - 28841 - End
-		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		List<ScQtRecommend> recommendList = scQtFinalization.getScQtRecommends();
 		
 		if (CollectionUtils.isNotEmpty(recommendList)) {
@@ -4057,7 +4056,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	//20200824@asyrafhaziq - 28841 - Start
-	private void retrieveQtFinalization(ScQt scQt) {
+	private ScQtFinalization retrieveQtFinalization(ScQt scQt) {
 		log.info("retrieveQtFinalization");
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -4079,8 +4078,10 @@ public class SupplierFinalizationBackingBean extends
 					.retrieveSupplierFinalizationDtls(reqDTO);
 			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
 		if (scQtFinalization != null) {
-				this.getManagedBean().setScQtFinalization(scQtFinalization);	
-			}
+			return 	scQtFinalization;
+		}else {
+			return null;
+		}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
