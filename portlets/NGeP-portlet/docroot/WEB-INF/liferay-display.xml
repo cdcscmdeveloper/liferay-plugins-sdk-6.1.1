@@ -181,6 +181,8 @@
 			<portlet id="directPurchaseMaintenance" />
 			<portlet id="deskOfficerMaintenance"/>
 			<portlet id="deskOfficerMaintenanceApproval"/>
+			<portlet id="maintenanceRequestApproval"/>
+			<portlet id="maintenanceRequestRevision"/>
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->

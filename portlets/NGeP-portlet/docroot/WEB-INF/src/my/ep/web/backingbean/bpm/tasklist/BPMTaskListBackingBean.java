@@ -18,6 +18,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
@@ -30,6 +31,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
@@ -614,6 +616,17 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
+			//#25037-START
+			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
+					+ SCProcessNameConst.REVISE_EVALUATION_MEETING,
+					SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
+					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE,
+					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
+			//#25037-END
 			this.getManagedBean().setBpmMap(temp);
 		}
 
@@ -883,7 +896,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public void preRenderTaskView() {
 		log.info("......................preRenderTaskView");
-
+		log.info("THE SERVER INFO : " + new FacesScopes().getRequest().getServerName() +" " + new FacesScopes().getRequest().getServerPort());
+		log.info("THE SERVER INFO 02: " + EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.PORTAL_BASE_URL) + " " +EpPropertiesUtils.getInstance().getProperty(
+						EpPropertiesConst.SERVER_URL) + " "+ EpPropertiesUtils.getInstance().getProperty(
+								EpPropertiesConst.SERVER_DOMAIN));
 		this.getManagedBean().setViewBy("");
 		this.getManagedBean().setViewByGroup("");
 		this.getManagedBean().setDocNo("");
