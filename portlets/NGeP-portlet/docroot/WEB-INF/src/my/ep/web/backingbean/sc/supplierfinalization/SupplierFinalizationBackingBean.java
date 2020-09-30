@@ -1242,12 +1242,10 @@ public class SupplierFinalizationBackingBean extends
 		setTaskDetails(activeIndex, prepareActiveIndex, taskId, outComes,
 				processName, currentStatusId);		
 	}
-
 	private SuppFinalizationReqDTO validateInfo(int index) {
 		return validateInfo(index, false);
 	}
-	
-	private SuppFinalizationReqDTO validateInfo(int index) {
+	private SuppFinalizationReqDTO validateInfo(int index, boolean skipValidation) {
 		log.info("..In validateInfo()..");
 
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;

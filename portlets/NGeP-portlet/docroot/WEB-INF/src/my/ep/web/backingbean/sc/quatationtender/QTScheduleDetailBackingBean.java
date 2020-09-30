@@ -446,9 +446,6 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 	 */
 	public void retrievePmuserName(ScQtContactPerson contactPerson, int index) {
 		debugLogger("retrievePmuserName");
-		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
-		List<ScQtContactPerson> doaaList = this.getManagedBean()
-				.getPmuserContactpersonList();
 		/*
 		 * List<Long> doaaIdList = new ArrayList<Long>();
 		 * 
