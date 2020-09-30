@@ -1427,9 +1427,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		
 		String fileName = fileInitName + "compInfo.pdf";
-		String file = generateToPdf(vmCompInfo, context, fileName);
 		
-		return file;
+		return generateToPdf(vmCompInfo, context, fileName);
 	}
 	
 	/**
