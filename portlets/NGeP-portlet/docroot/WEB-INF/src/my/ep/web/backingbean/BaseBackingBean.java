@@ -1380,7 +1380,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param String
 	 *            [] params
 	 */
-	public void successMessage(String messageCode, String [] params) {
+	//#25037-START
+	public void successMessage(String messageCode, String [] params){
+		successMessage(messageCode, params, false);
+	}
+	//#25037-END
+
+	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -1389,6 +1395,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								params,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
+		//#25037-START
+		if (isAcknowledgeRequired) {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+		//#25037-END
+
 	}
 
 	/**
@@ -2208,6 +2221,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 
 			return (BPM_DATA_TYPE) payLoad;
 
