@@ -1126,6 +1126,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
+			prepareUpdateCommitteeMember();//#25037
 
 		} finally {
 			meetingSO = null;
@@ -13717,4 +13718,51 @@ private void retriveCommitteeRemarksList(){
 
 		}
 		//#25138 - end
+		
+		//#25138 - total package max score by supplier - start
+		private void retriveTemplatePackageSpecScoring(List<ScQtCheckList> checklist) {
+			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			
+			int sumMaxScore = 0; int maxScore = 0;
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			for(ScQtCheckList list : checklist){
+				specReqDTO.setSpecMaster(list.getScQtDoc().getTplSpecMaster());
+				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+				TemplateSpecResDTO specResDTO = templateSpecSO
+						.getTemplateMaster(specReqDTO);
+				List<TplSpecQuestion> questions = specResDTO.getSpecMaster()
+						.getTplSpecQuestions();
+				for (TplSpecQuestion specQuestion : questions) {
+					
+					if(null != specQuestion.getQuestionType()
+			                && specQuestion.getQuestionType()
+		                    .equalsIgnoreCase(TemplateSpecConst.CONTENT_TYPE_SCORE)){
+						maxScore = specQuestion.getMaxScore().intValue();
+						sumMaxScore = sumMaxScore + maxScore;
+			
+					}
+					
+				}
+				
+			}
+			this.getManagedBean().setTotalMaxScore(Integer.toString(sumMaxScore));
+
+		}
+		//#25138 - total package max score by supplier - end
+		
+		//#25037-START
+		public void prepareUpdateCommitteeMember(){
+			ScQt scQt = this.getManagedBean().getScQt();
+			ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
+			EvaluationMeetingBackingBean meetingBB = new EvaluationMeetingBackingBean();
+			meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
+			meetingBB.getManagedBean().setEvalBB(this);
+			meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+			meetingBB.getManagedBean().setToken(this.getManagedBean().getToken());
+			meetingBB.getManagedBean().setPayLoad(this.getManagedBean().getPayLoad());
+			meetingBB.getManagedBean().setTaskId(this.getManagedBean().getTaskId());
+		}
+		//#25037-END
 }

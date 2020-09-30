@@ -89,10 +89,10 @@
 					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
-					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					
-
+	
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
 						<ui:repeat var="bpmAction"
@@ -102,7 +102,7 @@
 							<ui:param name="bpAction" value="SUBMIT" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
-								onclick="submitConfirmPopUp2.show();"
+								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone2}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
@@ -136,8 +136,8 @@
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and (qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA))}"
-								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
+								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
+								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
 				</c:choose> 

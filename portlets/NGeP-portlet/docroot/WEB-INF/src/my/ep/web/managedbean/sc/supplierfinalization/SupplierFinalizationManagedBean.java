@@ -16,7 +16,6 @@ import javax.faces.model.SelectItem;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
-import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -31,12 +30,14 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -240,6 +241,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String outcome;
 	
 	private int evaluationReportIndex;
+	
+	//#25037-start
+	private boolean committeModified;
+	private List<ScCommitteeMember> deletedMemberList;
+	private SupplierFinalizationMeetingBackingBean meetingBB;
+	//#25037-end
 	
 	//#25729#142 & #26169 - Start
 	private boolean isSuppOfferPriceExceedCommunityAuthority;
@@ -2143,48 +2150,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.previousPageUrl = previousPageUrl;
 	}
 
-	/**
-	 * @return the reverseTabIndex
-	 */
-	public int getReverseTabIndex() {
-		return reverseTabIndex;
-	}
-
-	/**
-	 * @param reverseTabIndex the reverseTabIndex to set
-	 */
-	public void setReverseTabIndex(int reverseTabIndex) {
-		this.reverseTabIndex = reverseTabIndex;
-	}
-
-	/**
-	 * @return the scQtReverse
-	 */
-	public ScQtReverse getScQtReverse() {
-		return scQtReverse;
-	}
-
-	/**
-	 * @param scQtReverse the scQtReverse to set
-	 */
-	public void setScQtReverse(ScQtReverse scQtReverse) {
-		this.scQtReverse = scQtReverse;
-	}
-
-	/**
-	 * @return the isReversed
-	 */
-	public boolean isReversed() {
-		return isReversed;
-	}
-
-	/**
-	 * @param isReversed the isReversed to set
-	 */
-	public void setReversed(boolean isReversed) {
-		this.isReversed = isReversed;
-	}
-
+	
 	/**
 	 * @return the evaluationReportIndex
 	 */
@@ -2299,6 +2265,35 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     }
 
     //#18685 - End 
+	//#25037-start
+	public boolean isCommitteModified() {
+		return committeModified;
+	}
+
+	public void setCommitteModified(boolean committeModified) {
+		this.committeModified = committeModified;
+	}
+
+	public List<ScCommitteeMember> getDeletedMemberList() {
+		return deletedMemberList;
+	}
+
+	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
+		this.deletedMemberList = deletedMemberList;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	//#25037-end
+
+	
+	
+
 }
 
 

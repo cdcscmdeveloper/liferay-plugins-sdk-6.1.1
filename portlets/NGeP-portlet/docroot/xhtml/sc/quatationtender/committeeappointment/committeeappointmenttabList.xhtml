@@ -13,15 +13,20 @@
  		</c:when>
  		<c:otherwise>
  			<ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+ 			<ui:param name="qtCommitte" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee}" />
 			<ui:param name="selectedCommittee" value="#{qTDetailBB.managedBean.committemembers}" />
+			<ui:param name="showHistory" value="#{qTDetailBB.managedBean.showHistory}" />
 	
 			<ui:include src="specificationCommitteeDetails.xhtml" />
-	
-			<div class="ppRightBtn">
-				<c:if test="#{!isQTStatusChecklistAndAfter}">
+			<h:panelGroup id="buttons" layout="block" styleClass="ppRightBtn">
+				<p:commandButton value="#{!showHistory ? lbl['lbl.btn.view.history'] : lbl['lbl.btn.back']}" style="float: left !important; margin-top: 10px !important;"
+					action="#{qTDetailBB.navigateToViewHistory(qtCommitte, !showHistory)}"
+					update="scmemberInfoDtls, buttons"/>
+				<ui:fragment rendered="#{!showHistory}">
+					<c:if test="#{!isQTStatusChecklistAndAfter}">
 					<p:commandButton value="#{lbl['lbl.btn.clone']}"
 						styleClass="BtnSpacing"
-						rendered="#{isCommitteeInfoEditable}"
+						rendered="#{isCommitteeInfoEditable and isCommitteeCloneable}"
 						actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 						oncomplete="screen2.show();" process="@this"
 						update="@([id$=cloneid])" />
@@ -64,7 +69,8 @@
 							disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
 					</c:if>
 				</c:if>
-			</div>
+				</ui:fragment>
+				</h:panelGroup>
 			<ui:param name="committeeAppointmentDeleteId"
 				value="committeeAppointmentDeleteId" />
 			<ac:confirmationPopup id="#{committeeAppointmentDeleteId}"

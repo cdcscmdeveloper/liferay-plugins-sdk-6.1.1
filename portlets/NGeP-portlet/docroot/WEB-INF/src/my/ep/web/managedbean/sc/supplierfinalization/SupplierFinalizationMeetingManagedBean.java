@@ -10,12 +10,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingMember;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -73,6 +77,16 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private Date currentDate = new Date();
 	private boolean nameRequired;
+	
+	//#25037-START
+	private Paginator historyPaginator;
+	private Paginator memberHistoryPaginator;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private String currentCommitteeType;
+	private List<ScCommitteeMember> tempCommitteeMembers;
+	private boolean committeeModified;
+	private SupplierFinalizationBackingBean finalBB; 
+	//#25037-END
 	
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
@@ -542,5 +556,68 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setNameRequired(boolean nameRequired) {
 		this.nameRequired = nameRequired;
 	}
+
+	//#25037-start
+	public Paginator getHistoryPaginator() {
+		return historyPaginator;
+	}
+
+	public void setHistoryPaginator(Paginator historyPaginator) {
+		this.historyPaginator = historyPaginator;
+	}
+
+	public Paginator getMemberHistoryPaginator() {
+		return memberHistoryPaginator;
+	}
+
+	public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
+		this.memberHistoryPaginator = memberHistoryPaginator;
+	}
+
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
+
+	public void setSelectedCommitteeHistory(
+			ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
+
+	public String getCurrentCommitteeType() {
+		return currentCommitteeType;
+	}
+
+	public void setCurrentCommitteeType(String currentCommitteeType) {
+		this.currentCommitteeType = currentCommitteeType;
+	}
+
+	public boolean isCommitteeModified() {
+		return committeeModified;
+	}
+
+	public void setCommitteeModified(boolean committeeModified) {
+		this.committeeModified = committeeModified;
+	}
+
+	public List<ScCommitteeMember> getTempCommitteeMembers() {
+		return tempCommitteeMembers;
+	}
+
+	public void setTempCommitteeMembers(List<ScCommitteeMember> tempCommitteeMembers) {
+		this.tempCommitteeMembers = tempCommitteeMembers;
+	}
+
+	public SupplierFinalizationBackingBean getFinalBB() {
+		return finalBB;
+	}
+
+	public void setFinalBB(SupplierFinalizationBackingBean finalBB) {
+		this.finalBB = finalBB;
+	}
+	//#25037-end
+
+	
+	
+	
 
 }

@@ -45,7 +45,7 @@ suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.mana
 				<td style="width: 5%;"><h:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
 				<td style="width: 32%;" class="header-info-text">
-										#{suppFinalMeetingBackingBean.getStatusDescById(suppFinalMeetingBackingBean.managedBean.currentStatusId)}
+										#{suppFinalMeetingBackingBean.getStatusDescById(suppFinalMeetingBackingBean.managedBean.scQtCommittee.scCommittee.committeStatus.statusId)}
 				</td>
 				
 				<td style="width: 5%;"><h:outputLabel

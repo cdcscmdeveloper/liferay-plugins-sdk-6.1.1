@@ -29,17 +29,22 @@
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					rendered="#{validityDaysExpiredQt}" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" style="float:right;"
-					process="@all" partialSubmit="true"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT'}" onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" process="@all" partialSubmit="true"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+					oncomplete="confirmUpdateAsAttendPopup.show();" style="float:right;"/>
 			</ui:repeat>
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.btn.save']}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			disabled="#{evaluationBackingBean.managedBean.readOnly}"
+			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
+			styleClass="ui-button" oncomplete="confirmSubmitMeetingMainPopup.show();"
+			style="float:right;" process="@all" partialSubmit="true">
+		</p:commandButton>
 
 		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
@@ -154,6 +159,16 @@
 		</c:if>
 
 		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
+		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
+			widget="confirmSubmitMeetingMainPopup" height="100%"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
+		<ac:confirmationPopup id="confirmUpdateAsAttendId"
+			widget="confirmUpdateAsAttendPopup" height="100%"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.popup.updateasattended']}" />
 	</ui:define>
 
 </ui:composition>

@@ -60,6 +60,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -230,7 +231,16 @@ public class SupplierFinalizationBackingBean extends
 									.getUserId();
 			getManagedBean().setLoggedInUserId(loggedInUserId);
 
+			if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
+					&& Arrays.asList(
+							new String[] {
+									SCProcessNameConst.FINALISE_FC_SELECTION,
+									SCProcessNameConst.COORDINATE_FC_MEETING })
+							.contains(this.getManagedBean().getTaskName())) {
+				prepareUpdateCommitteeMember();//#25037
+			}
 			loadInitialData(qtId);
+			prepareUpdateCommitteeMember();//#25037
 			
 			fc.getApplication()
 					.getNavigationHandler()
@@ -1069,6 +1079,9 @@ public class SupplierFinalizationBackingBean extends
 	 * managed bean associated with the current user session
 	 */
 	public void saveSupplierFinalization() {
+		saveSupplierFinalization(false);
+	}
+	public void saveSupplierFinalization(boolean skipValidation) {
 		log.info("..In saveSupplierFinalization()..");
 
 		this.getManagedBean().setSubmit(false);
@@ -1094,14 +1107,14 @@ public class SupplierFinalizationBackingBean extends
 			if (activeIndex == 0 && 
 					!getManagedBean().isInitialDecisionFwdToBPK()) {
 				this.getManagedBean().setSubmit(true);
-				reqDTO = validateInfo(activeIndex);
+				reqDTO = validateInfo(activeIndex, skipValidation);
 				scQtCommittee = reqDTO.getScQtCommittee();
-				reqDTO = validateInfo(2);
+				reqDTO = validateInfo(2, skipValidation);
 			} else {
 				if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 					scQtCommittee = preparationDtlsInfo();
 				}
-				reqDTO = validateInfo(2);
+				reqDTO = validateInfo(2, skipValidation);
 			}
 			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
 				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
@@ -1113,7 +1126,9 @@ public class SupplierFinalizationBackingBean extends
 			}
 			// #18685 - End
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			validateFinalizationReports(reqDTO);
+			if(!skipValidation){
+				validateFinalizationReports(reqDTO);
+			}
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
@@ -1229,6 +1244,10 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private SuppFinalizationReqDTO validateInfo(int index) {
+		return validateInfo(index, false);
+	}
+	
+	private SuppFinalizationReqDTO validateInfo(int index) {
 		log.info("..In validateInfo()..");
 
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -1250,8 +1269,9 @@ public class SupplierFinalizationBackingBean extends
 					reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 					reqDTO.setScQtCommittee(scQtCommittee);
 					reqDTO.setSubmit(this.getManagedBean().isSubmit());
-					
-					qtSuppFinalizationSO.validatePreparation(reqDTO);
+					if(!skipValidation){
+						qtSuppFinalizationSO.validatePreparation(reqDTO);
+					}
 					reqDTO.setScQtFinalization(scQtFinalization);
 					break;
 	
@@ -1273,10 +1293,10 @@ public class SupplierFinalizationBackingBean extends
 								ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 									.equals(decisionTypeCode)) {
 						
-						if (ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
+						if ((ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 								.equals(decisionTypeCode) && 
 								(scQtFinalization.getReason() == null || 
-									scQtFinalization.getReason().getReasonId() == null)) {
+									scQtFinalization.getReason().getReasonId() == null)) && !skipValidation) {
 							navigateToSupplierFinalizationTab();
 							throw new EpException(MessageConst.ERROR_760385);
 						}
@@ -1294,10 +1314,12 @@ public class SupplierFinalizationBackingBean extends
 						}
 						processSuppliersBeforeSaving();
 						
-						if (!getManagedBean().isItemize()) {
-							validateByPackage();
-						} else {
-							validateByItem();
+						if(!skipValidation){
+							if (!getManagedBean().isItemize()) {
+								validateByPackage();
+							} else {
+								validateByItem();
+							}
 						}
 						
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
@@ -2766,10 +2788,12 @@ public class SupplierFinalizationBackingBean extends
 		qtDetailSO = null;
 		}		
 		
+		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
+		PmUser createdUser = isFromWebService ? retrivePmUser(new Long(1)): new FacesScopes().getUserSessionBean();
+
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
-		.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, createdUser.getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
 		StringBuilder ulasan=new StringBuilder();
 		try {
@@ -7926,6 +7950,19 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	
 	// #18685 - End
+	
+	//#25037-START
+	public void prepareUpdateCommitteeMember(){
+		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
+		this.getManagedBean().setMeetingBB(meetingBB);
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
+		meetingBB.retriveQTDetails(qtId);
+		meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		meetingBB.getManagedBean().setFinalBB(this);
+		}
+	//#25037-END
 	
 	//#25729#142 & #26169 - Start
 	public void checkSupplierOfferPriceByItemIsExceedCommitteeAuthority(){

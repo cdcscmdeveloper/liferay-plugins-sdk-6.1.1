@@ -568,7 +568,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		private Boolean checkTecSpecNotOffer;
 		//#21695 end
 		
-	
+	//#25037-START
+	private EvaluationMeetingBackingBean meetingBB;
+	//#25037-END
+		
 		//#25138- total max score- start 
 		private Boolean isScoringReq;
 		
@@ -3693,6 +3696,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.finPackageScore = finPackageScore;
 	}
 
+	//#25037
+	public EvaluationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(EvaluationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	//#25037-end
 
 	//#25138-Ahmaa-End
 // #21695 farid	start

@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.sc.helper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -128,7 +129,8 @@ public class QTFieldMapper {
 		// QT_PENDING_BPK_APPROVAL
 		QT_PENDING_BPK_APPROVAL(
 				QTStatusConst.QT_PENDING_BPK_APPROVAL, 
-				QT_PENDING_PB_APPROVAL.value()),
+				merge(new String[] {QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT},
+				QT_PENDING_PB_APPROVAL.value())),//#25037
 				
         // Pending QT publication Approval
 		QT_PENDING_PUBLICATION_APPROVAL(
@@ -140,7 +142,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_SUPPQUALIFICATION,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
 						QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FIELD_QT_DOCUMENTS }),
+						QTFieldConst.FIELD_QT_DOCUMENTS,
+						QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT}),//#25037
 						
 		// QT_PENDING_PUBLICATION_REVISION_APPROVAL
 		QT_PENDING_PUBLICATION_REVISION_APPROVAL(
@@ -154,7 +157,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
-						QTFieldConst.FIELD_QT_DOCUMENTS }),
+						QTFieldConst.FIELD_QT_DOCUMENTS,
+						QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT }),//#25037
 						
 		/*// QT_PENDING_SPEC_CHNAGES_ENDORSEMENT
 		QT_PENDING_SPEC_CHNAGES_ENDORSEMENT(
@@ -256,7 +260,15 @@ public class QTFieldMapper {
 			}
 			return null;
 		}
-
+		private static String[] merge(String[] arr1, String[] arr2){//#25037
+			List<String> merged = new ArrayList<String>(Arrays.asList(arr1));
+			merged.addAll(Arrays.asList(arr2));
+			String[] mergedArr = new String[merged.size()];
+			for(int i=0;i<mergedArr.length;i++){
+				mergedArr[i] = merged.get(i);
+			}
+			return mergedArr;
+		}
 	}
 
 	/**
@@ -331,7 +343,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_FILE_NO,
-						QTFieldConst.FIELD_QT_OBTAIN_SPEC_APPROVAL}), 
+						QTFieldConst.FIELD_QT_OBTAIN_SPEC_APPROVAL,
+						QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT}), //#25037
 						
 		//QT_PENDING_SCHEDULE_REVISION				
 		QT_PENDING_SCHEDULE_REVISION(
