@@ -450,7 +450,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
 			getManagedBean().setSelectedTabIndex(0);
-			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
+			log.info("getTaskName: "+this.getManagedBean().getTaskName());
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
@@ -532,7 +532,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);		
 				
 				//#14650 - Alert message if contract incomplete
-					if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
+					if(!resDTOInvoice.isIdptcontractCompleteCheck()){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
 					}
