@@ -200,6 +200,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		List<PmUser> list1 = new ArrayList<PmUser>();
 		List<PmUser> list2 = new ArrayList<PmUser>();
 		UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+		UserGroupReqDTO reqDTOCheckActive = new UserGroupReqDTO();//28857
 		BigDecimal isRemove = BigDecimal.ONE;//28857
 		
 		List<PmUser> pmUserList = new ArrayList<PmUser>();
@@ -230,7 +231,10 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				}
 			}
 			//28857-start
-			isRemove = userGroupSO.checkApproverUserActive(approver.getUserId(),groupId);
+			reqDTOCheckActive.setGroupId(groupId);
+			reqDTOCheckActive.setUserId(approver.getUserId());
+			UserGroupResDTO resDTOCheckActive = userGroupSO.checkApproverUserActive(reqDTOCheckActive);
+			isRemove = resDTOCheckActive.getCheckActive();
 			if(isRemove.equals(BigDecimal.ZERO)){
 				list2.remove(0);
 			}else{
