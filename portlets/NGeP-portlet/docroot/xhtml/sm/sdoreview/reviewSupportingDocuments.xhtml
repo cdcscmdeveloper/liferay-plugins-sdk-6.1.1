@@ -343,8 +343,18 @@
 			<ac:smSdoOnlineSuppDoc tableId="nonMandatoryTableId"
 				smApplSupportDocs="#{sdoReviewBackingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
 			
+			<!-- #3460 - Start -->
+			<br/>	
+			<table>
+				<tr>
+					<td><p:outputLabel valign="top" value="#{lbl['lbl.sm.supportingdoc.supp.application.sdo.remarks']}" /></td>
+					<td><p:inputTextarea align="right" id="sdoRemarks" rows="10" cols="10" autoResize="false" maxlength="4000" style="width: 300px;"
+					value="#{sdoReviewBackingBean.managedBean.smRemark.remark}" /></td>
+				</tr>
+			</table>
+			<!-- #3460 - End -->
 		</p:panel>
-
+			
 		<p:panel header="#{lbl['lbl.sm.enquiry']}" toggleable="true"
 			rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}">
 			<p:dataTable id="dtInquiryResponse" selectionMode="single" 
