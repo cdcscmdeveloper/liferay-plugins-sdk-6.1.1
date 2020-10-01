@@ -866,7 +866,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			reqDTO.setCtContractVer(ctContractVer);
 			// Start - #28292/#26475
-			//reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
 			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
@@ -1167,15 +1167,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 				
 				// Start - 28292
-				//log.info("--min quantity validation--");
 				if (!item.getCtItemMaxQties().isEmpty()) {
-					//log.info("--inside validation--");
 					Double maxValue = new Double(0);							
 					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-						maxValue = maxQty.getMaxQuantity().doubleValue();				
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
 					}
-					//log.info("max :"+maxValue);
-					//log.info("min :"+item.getMinimumOrderQty());
 					if (item.getMinimumOrderQty() > maxValue) {
 						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
 					}
@@ -1494,7 +1491,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
-
+		
 		// Start - 28292
 		
 		/*ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
