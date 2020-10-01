@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
@@ -1015,6 +1016,8 @@ public class SmPersonnelBackingBean extends
 					address.setPmState(new PmState());
 					address.setPmDistrict(new PmDistrict());
 					address.setPmCity(new PmCity());
+					//13320 - division
+					address.setPmDivision(new PmDivision());
 					if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.MAIL_ADD)) {
 						address.setAddress1(smPA.getSmAddress().getAddress1());
@@ -1030,6 +1033,10 @@ public class SmPersonnelBackingBean extends
 										.getDistrictId());
 						address.getPmCity().setCityId(
 								smPA.getSmAddress().getPmCity().getCityId());
+						//13320 - division
+						if(smPA.getSmAddress().getPmDivision() != null)
+							address.getPmDivision().setDivisionId(
+									smPA.getSmAddress().getPmDivision().getDivisionId());
 						address.setPostcode(smPA.getSmAddress().getPostcode());
 						smPA.setSmAddress(address);
 						this.getManagedBean()
@@ -1049,6 +1056,10 @@ public class SmPersonnelBackingBean extends
 										.getDistrictId());
 						address.getPmCity().setCityId(
 								smPA.getSmAddress().getPmCity().getCityId());
+						//13320 - division
+						if(smPA.getSmAddress().getPmDivision() != null)
+							address.getPmDivision().setDivisionId(
+									smPA.getSmAddress().getPmDivision().getDivisionId());
 						address.setPostcode(smPA.getSmAddress().getPostcode());
 						smPA.setSmAddress(address);
 						this.getManagedBean()
@@ -1167,6 +1178,10 @@ public class SmPersonnelBackingBean extends
 											.getDistrictId());
 					address.getPmCity().setCityId(
 							smPA.getSmAddress().getPmCity().getCityId());
+					//13320 - division
+					if(smPA.getSmAddress().getPmDivision() != null)
+						address.getPmDivision().setDivisionId(
+								smPA.getSmAddress().getPmDivision().getDivisionId());
 					address.setPostcode(smPA.getSmAddress().getPostcode());
 					smPA.setSmAddress(address);
 					this.getManagedBean().setUpdateSmPersonnelMailingAddress(
@@ -1186,6 +1201,10 @@ public class SmPersonnelBackingBean extends
 											.getDistrictId());
 					address.getPmCity().setCityId(
 							smPA.getSmAddress().getPmCity().getCityId());
+					//13320 - division
+					if(smPA.getSmAddress().getPmDivision() != null)
+						address.getPmDivision().setDivisionId(
+								smPA.getSmAddress().getPmDivision().getDivisionId());
 					address.setPostcode(smPA.getSmAddress().getPostcode());
 					smPA.setSmAddress(address);
 					this.getManagedBean().setUpdateSmPersonnelPermanentAddress(
