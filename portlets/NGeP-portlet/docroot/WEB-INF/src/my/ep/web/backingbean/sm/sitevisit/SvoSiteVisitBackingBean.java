@@ -328,10 +328,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				setMachineList();
 			}
 			
-			if(smSvTask.getSmSvDocLicenses() == null || smSvTask.getSmSvDocLicenses().isEmpty()){
-				if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
-				retrieveAndSetSmSvDocLicense(); //retrieve and set SmSvDocLicense (Additional License)
-				}
+			if((smSvTask.getSmSvDocLicenses() == null || smSvTask.getSmSvDocLicenses().isEmpty())
+					&& getManagedBean().getSmSvTask().getPmCategoryL3() != null){
+				retrieveAndSetSmSvDocLicense(); //retrieve and set SmSvDocLicense (Additional License)	
 			}
 			
 			SmMofAccount mofAccount =  SmApplicationUtil.getActiveMofAccount(smSvTask.getSmAppl().getSmSupplier().getSmMofAccounts(),
