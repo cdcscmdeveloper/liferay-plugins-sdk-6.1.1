@@ -184,7 +184,7 @@ public class TrustGateHelper {
 				//START 28683	
 				} else if (res.getStatusCode() == SPKIConst.CERT_EXPIRED) {
 					vo.setErrMsg(MessageUtils.getMessage(
-							MessageConst.ERROR_DIGICERT_776064,
+							MessageConst.ERROR_TRUSTGATE_776063,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else {
