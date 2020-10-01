@@ -57,7 +57,10 @@
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
 						<!-- bug #28278 -START @harith -->
 						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} #{smSupplier.typeDisciplinaryAction}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />	
-						<h:outputText value="#{lbl['lbl.sm.mof.status.cancel']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />				
+						<!-- bug #29156 -START -->
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted2']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted3']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />	
+						<!-- bug #29156 -END -->		
 					    <!-- bug #28278 -END -->
 					</p:column>
 					
