@@ -2967,7 +2967,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if (fcSecretaries != null && fcSecretaries.length > 0) {
 							fcSecretaryCode = retrieveParameterById(Long
 									.valueOf(fcSecretaries[0].getValue().toString()));
-							;
 						} else {
 							fcSecretaryCode = null;
 						}
@@ -3010,7 +3009,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tabBean.setIcon("ui-icon-endorse");
 			}
 		}
-		if (committeTabs.size() > 0) {
+		if (!committeTabs.isEmpty()) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
 					committeTabs.get(this.getManagedBean()
