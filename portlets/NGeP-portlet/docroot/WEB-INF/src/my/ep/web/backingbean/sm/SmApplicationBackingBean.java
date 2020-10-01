@@ -701,6 +701,89 @@ public class SmApplicationBackingBean extends
 			 }
 			//Bug 27022 - end
 			 
+			 //3460 - Start
+			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+			//to resubmit application for applying new MOF registration
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+				SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+						currSupp.getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_MOF);
+				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				reqDTO.setDocId(appli.getApplId());
+
+				SmRemaksResDTO resDTO = new SmRemaksResDTO();
+				resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+					SmRemark remark = resDTO.getRemarksList().get(0);
+					getManagedBean().setSdoRemark(remark.getRemark());
+				}
+			}
+			//To resubmit application for applying to update profile
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
+				SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+						currSupp.getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
+				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				reqDTO.setDocId(appli.getApplId());
+
+				SmRemaksResDTO resDTO = new SmRemaksResDTO();
+				resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+					SmRemark remark = resDTO.getRemarksList().get(0);
+					getManagedBean().setSdoRemark(remark.getRemark());
+				}
+			}
+			//To resubmit application for applying to renew profile
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+				SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+						currSupp.getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				reqDTO.setDocId(appli.getApplId());
+
+				SmRemaksResDTO resDTO = new SmRemaksResDTO();
+				resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+					SmRemark remark = resDTO.getRemarksList().get(0);
+					getManagedBean().setSdoRemark(remark.getRemark());
+				}
+			}
+			//to resubmit application for applying new category
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
+				SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+						currSupp.getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				reqDTO.setDocId(appli.getApplId());
+
+				SmRemaksResDTO resDTO = new SmRemaksResDTO();
+				resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+					SmRemark remark = resDTO.getRemarksList().get(0);
+					getManagedBean().setSdoRemark(remark.getRemark());
+				}
+			}
+			//to resubmit application for Bumiputera Status
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+						currSupp.getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				reqDTO.setDocId(appli.getApplId());
+
+				SmRemaksResDTO resDTO = new SmRemaksResDTO();
+				resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+					SmRemark remark = resDTO.getRemarksList().get(0);
+					getManagedBean().setSdoRemark(remark.getRemark());
+				}
+			}
+			//3460 - End
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
 					&& !getManagedBean().getSmAppl().getSmSupplierCategories()
 							.isEmpty()) {
@@ -2852,6 +2935,9 @@ public class SmApplicationBackingBean extends
 							|| getManagedBean().isApproverUser()) && !valid) {
 						saveOrUpdateAppl();
 					}
+					//3460 - Start
+					initSDORemarkInfo();
+					//3460 - End
 					initNonMandatoryAndMandatoryDocs();
 					displayBumiRecommendNote();
 					break;
@@ -11730,6 +11816,23 @@ public class SmApplicationBackingBean extends
 
 		}
 	}
+	
+	//3460 - Start
+	private void initSDORemarkInfo(){
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+		
+		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+		
+		//getManagedBean().setSdoRemark(getManagedBean().getSmRemark().getRemark());
+		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+			SmRemark remark = resDTO.getRemarksList().get(0);
+			getManagedBean().setSdoRemark(remark.getRemark());
+			
+		}
+	}
+	//3460 - End
 
 	private void initMandatoryLicenseInfo(
 			List<SmApplSupportDoc> mandatoryLicenseDocs) {
