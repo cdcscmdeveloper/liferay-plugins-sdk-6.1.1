@@ -129,7 +129,8 @@
 			</p:column>
 			<!-- 28912 start - display Action By-->
 			<p:column headerText="#{lbl['lbl.sm.approvremark.actionby']}"
-				style="white-space: normal !important;width : 15% !important; vertical-align:top;" rendered="#{viewSmApplBackingBean.managedBean.bumiputeraDataMaintainance}">
+				style="white-space: normal !important;width : 15% !important; vertical-align:top;" 
+				rendered="#{viewSmApplBackingBean.managedBean.bumiputeraDataMaintainance}">
 				<h:outputText
 					value="#{viewSmApplBackingBean.getUserNameByUserId(disciplinaryAction.createdBy)}" />
 			</p:column>

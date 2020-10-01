@@ -94,7 +94,8 @@
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty smSupplier.smAppl.pmRegStatus}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
-							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and 
+							smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.label.action']}">

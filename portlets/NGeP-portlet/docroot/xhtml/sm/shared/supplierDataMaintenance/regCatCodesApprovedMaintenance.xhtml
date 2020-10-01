@@ -38,13 +38,7 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<!-- 28912 start - auto tick and disable bumi categories -->
-		<p:column selectionMode="multiple"
-			disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories or 
-			(supplierDataMaintenanceBackingBean.managedBean.bumiputeraDataMaintainance and aprvdCatBean.pmCategoryL3.bumiPercentage	> 50)}"
-			style="width:2%" />
-		</p:columnGroup>
-		<!-- 28912 end -->
+		<p:column selectionMode="multiple" disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width:2%" />
 		<p:column style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
@@ -92,7 +86,9 @@
 	
 	<div align="right">
 
+		<!-- 28912 - add filter to remove delete button -->
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
+			rendered = "#{!supplierDataMaintenanceBackingBean.managedBean.bumiputeraDataMaintainance}"
 			disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableDeleteButtonAprrovedCategoryCodePanel or empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 

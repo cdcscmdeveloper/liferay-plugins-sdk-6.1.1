@@ -119,14 +119,6 @@ public class SupplierDataMaintenanceBackingBean extends
 						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
 						"", null, null);
 	}
-	
-	// 28912 start - prerender for Bumiputera Supplier Data Maintenance
-	public void preRenderBumiputeraSupplierDataMaintenance() {
-		initDataForSearchBumiputeraSupplier();
-		SmCommonUtil.redirectToPage("/xhtml/sm/supplierdatamaintenance/searchBumiputeraSupplierDataMaintenance.xhtml",
-				"", null, null);
-	}
-	// 28912 end
 
 	/**
 	 * Pre-render and redirect to Search Page
@@ -330,20 +322,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 		}
 		getManagedBean().setDeleteApprovedCategories(new ArrayList<SmSupplierCategory>());
-		// 28912 start - select bumiputera approved categories
-		if (getManagedBean().isBumiputeraDataMaintainance()) {
-			ArrayList<SmSupplierCategory> ApprovedCategoriesList = (ArrayList<SmSupplierCategory>) getManagedBean().getApprovedCategoryList();
-			ArrayList<SmSupplierCategory> selectedApprovedCategoriesList = new ArrayList<SmSupplierCategory>();
-			for (int i = 0; i < ApprovedCategoriesList.size(); i++) {
-				if (ApprovedCategoriesList.get(i).getPmCategoryL3().getBumiPercentage() > 50){
-					selectedApprovedCategoriesList.add(ApprovedCategoriesList.get(i));
-				}
-			}
-			getManagedBean().setSelectedApprovedCategories(selectedApprovedCategoriesList);
-		}else{
-			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
-		}
-		// 28912 end
+		getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 		getManagedBean().setSelectedPendingApprovedCategories(new ArrayList<SmSupplierCategory>());
 	
 		this.getManagedBean().setApproverRemark(null);
@@ -396,6 +375,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	public void search() {
+		// 28912 start - set supplier type to contractor
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			getManagedBean().setSearchSuppType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
+		}
+		// 28912 end
 		getManagedBean().searchSupplier();
 	}
 	//26238 : Disciplinary action - start
@@ -539,8 +523,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setNewlyAddedCategories(getManagedBean().getActiveCategoryList());
-			reqDTO.setDeletedCategories(getManagedBean()
-					.getDeleteApprovedCategories());
+			// 28912 start - set selected to deleted
+			if (getManagedBean().isBumiputeraDataMaintainance()) {
+				reqDTO.setDeletedCategories(getManagedBean().getSelectedApprovedCategories());
+			} else {
+				reqDTO.setDeletedCategories(getManagedBean().getDeleteApprovedCategories());
+			}
+			// 28912 end
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			// 28912 start - set remark doc type to bumiputera
@@ -761,6 +750,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			
+			// 28912 start - set BumiputeraDataMaintainance for tracking
+			if(getManagedBean().isBumiputeraDataMaintainance()){
+				reqDTO.setBumiputeraDataMaintainance(getManagedBean().isBumiputeraDataMaintainance());
+			}
+			// 28912 end
+			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -912,6 +907,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Back to search screen
 	 */
 	public void backToSearchSupplierMaintenance() {
+		if(getManagedBean().isBumiputeraDataMaintainance()){
+			getManagedBean().setRegStatusDescList(
+					SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+							ParameterConst.NEW_SM_APPLN_FOR_BUMI));
+		}
 		getManagedBean().setDisplaySearchPage(true);
 	}
 
@@ -1667,24 +1667,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		*/
 	}
-	// 28912 start - init search data for Bumiputera Data Maintenance
-	private void initDataForSearchBumiputeraSupplier() {
-		renewSesionObject();
-		initLogin();
-		initLoginUserZone();
-		getManagedBean().setDisplaySearchPage(true);
-		getManagedBean().setViewSupplierProfile(true);
-		getManagedBean().setReviewApplicationExist(false);
-		getManagedBean().setViewApplicationHistory(false);
-		getManagedBean().setViewSupplierMaintenancePage(true);
-		getManagedBean().setRegStatusDescList(
-				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
-						ParameterConst.NEW_SM_APPLN_FOR_BUMI));
-		getManagedBean().setZoneList(SmServiceLookup.getZoneSO().retrieveActiveZoneList().getZoneList());
-		getManagedBean().setSearchSuppType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
-		getManagedBean().setBumiputeraDataMaintainance(true);
-	}
-	// 28912 end
 
 	/**
 	 * Check if the login user is the approver of the selected application
@@ -2994,4 +2976,33 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//13320-end
 	
+	// 28912 start
+	/**
+	 * Pre-render and redirect to Search Page
+	 */
+	public void preRenderBumiputeraSupplierDataMaintenance() {
+		initDataForSearchBumiputeraSupplier();
+		SmCommonUtil.redirectToPage("/xhtml/sm/supplierdatamaintenance/searchBumiputeraSupplierDataMaintenance.xhtml",
+				"", null, null);
+	}
+
+	/**
+	 * Initialized data for search supplier
+	 */
+	private void initDataForSearchBumiputeraSupplier() {
+		renewSesionObject();
+		initLogin();
+		initLoginUserZone();
+		getManagedBean().setDisplaySearchPage(true);
+		getManagedBean().setViewSupplierProfile(true);
+		getManagedBean().setReviewApplicationExist(false);
+		getManagedBean().setViewApplicationHistory(false);
+		getManagedBean().setViewSupplierMaintenancePage(true);
+		getManagedBean().setRegStatusDescList(
+				SmApplicationUtil.getInstance().retrieveRegistrationStatusList(null,
+						ParameterConst.NEW_SM_APPLN_FOR_BUMI));
+		getManagedBean().setZoneList(SmServiceLookup.getZoneSO().retrieveActiveZoneList().getZoneList());
+		getManagedBean().setBumiputeraDataMaintainance(true);
+	}
+	// 28912 end
 }
