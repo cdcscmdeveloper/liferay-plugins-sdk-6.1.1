@@ -6640,8 +6640,19 @@ public class SmApplicationBackingBean extends
 					.getSmAppl());
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+				SmCommonUtil.getInstance().setUserDetails(
+						getManagedBean().getSmAppl());
+				saveOrUpdateAppl();
 				calculateCapital();
 				getManagedBean().setRedirectToPersonPage(false);
+				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
+						getManagedBean().getSmAppl(), getManagedBean()
+								.getPrevApprovedPersonnels(),
+						getManagedBean().isDisAllowOwnerEdit());
+				SmApplicationUtil.setPersonnelSoftcertRenewalStatus(
+						this.getManagedBean().getSmSupplier(), this
+								.getManagedBean().getSmAppl()
+								.getSmPersonnels());
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
@@ -8526,6 +8537,45 @@ public class SmApplicationBackingBean extends
 		} finally {
 			initNonMandatoryAndMandatoryDocs();
 		}
+		
+		// start #28689 - set percentage to 0.000 if null
+		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+				&& getManagedBean().getSmAppl() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null) {
+			SmCompanyBasic smCompanyBasic = getManagedBean().getSmAppl().getSmCompanyBasic();
+			if (smCompanyBasic.getBumiPercentage() != null) {
+				smCompanyBasic.setBumiPercent(smCompanyBasic.getBumiPercentage());
+			} else {
+				smCompanyBasic.setBumiPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+
+			if (smCompanyBasic.getNonBumiPercentage() != null) {
+				smCompanyBasic.setNonBumiPercent(smCompanyBasic.getNonBumiPercentage());
+			} else {
+				smCompanyBasic.setNonBumiPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+
+			if (smCompanyBasic.getForiegnerPercent() == null) {
+				smCompanyBasic.setForiegnerPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+
+			if (smCompanyBasic.getGovtUTPercent() == null) {
+				smCompanyBasic.setGovtUTPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+
+			if (smCompanyBasic.getGovtEquityPercent() == null) {
+				smCompanyBasic.setGovtEquityPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+
+			if (smCompanyBasic.getForiegnCompPercent() == null) {
+				smCompanyBasic.setForiegnCompPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+
+			if (smCompanyBasic.getLocalCompPercent() == null) {
+				smCompanyBasic.setLocalCompPercent(new BigDecimal(0).setScale(3, RoundingMode.HALF_UP));
+			}
+		}
+		// end #28689
 	}
 
 	/**
