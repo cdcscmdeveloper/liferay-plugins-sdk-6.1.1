@@ -32,6 +32,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPendingPoWeightage;
@@ -41,6 +42,7 @@ import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -234,14 +236,25 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(resAction);
-			//reqDTO.setSmRemark(smRmk);
+			
+			//3460 - Start
+			SmRemark smRmk = new SmRemark();
+			smRmk.setDocId(this.getManagedBean().getAppId());
+			smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+			PmRole pmRole = new PmRole();
+			pmRole.setRoleCode(RoleCode.UPS_SDO.value());
+			smRmk.setPmRole(pmRole);
+			smRmk.setRemark(this.getManagedBean().getSmRemark().getRemark());
+			reqDTO.setSmRemark(smRmk);
+			//3460 - End 
+			
 			this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 
 			SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
-			if (resDTO.isSuccessful()) {
+			if (resDTO.isSuccessful()) {			
 				RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
 				//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
