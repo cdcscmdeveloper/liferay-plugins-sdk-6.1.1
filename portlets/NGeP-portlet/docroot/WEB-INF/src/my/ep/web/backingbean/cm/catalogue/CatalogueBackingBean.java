@@ -2255,7 +2255,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing() == null){
 			log.debug("*no previous CmPromotionPricing... creating new record*");
 			CmPromotionPricing price = new CmPromotionPricing();
-			Date startDate = new Date();
 			price.setStartDate(null);
 			price.setEndDate(null);
 			price.setPrice(BigDecimal.ZERO);
