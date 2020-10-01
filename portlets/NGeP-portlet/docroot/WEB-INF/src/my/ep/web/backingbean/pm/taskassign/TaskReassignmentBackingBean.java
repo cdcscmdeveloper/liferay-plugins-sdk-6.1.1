@@ -1965,6 +1965,10 @@ public class TaskReassignmentBackingBean extends
 					getManagedBean().getTaskAssignmentSearchBean().getUser() != null &&
 					getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() != null){
 				reqDTO.setUserLoginId(getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId());
+			}else{
+				//28843@azza09092020 - Start
+				reqDTO.setUserLoginId(this.getManagedBean().getSelectedReassignee().get(0));
+				//28843@azza09092020 - End
 			}
 			
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
