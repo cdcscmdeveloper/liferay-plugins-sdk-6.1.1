@@ -73,6 +73,22 @@
 		<ac:smSupplierOnlineSuppDoc tableId="nonMandatoryTableId" uploadDialogId="nonMandatoryUploadId"
 			smApplSupportDocs="#{backingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
 
+		<!-- #3460 - Start -->
+		<br />
+		<p:outputPanel
+			rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
+			<table>
+				<tr>
+					<td><p:outputLabel valign="top"
+							value="#{lbl['lbl.sm.supportingdoc.supp.application.sdo.remarks']}" /></td>
+					<td><p:inputTextarea align="right" id="sdoRemarks" rows="10"
+							cols="10" autoResize="false" maxlength="4000"
+							style="width: 300px;"
+							value="#{backingBean.managedBean. sdoRemark}" readonly="true" /></td>
+				</tr>
+			</table>
+		</p:outputPanel>
+		<!-- #3460 - End -->
 	</p:panel>
 
 </ui:composition>
