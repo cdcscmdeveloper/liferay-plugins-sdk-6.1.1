@@ -3647,22 +3647,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					if(this.getManagedBean().getSelectedMaintainItem().getCmImages()!=null && this.getManagedBean().getSelectedMaintainItem().getCmImages().size()>0){
 						for (CmImage image : this.getManagedBean().getSelectedMaintainItem().getCmImages()) {
-							if (image.isBrandNew()) {
+							//201001@akmal - Bug29265 - Start
+							if(!image.isImageReviewed()){
 								this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-
+								image.setImageReviewed(true);
 								break;
 							}
-							//20200929@akmal - Enhancement27627 - Start
-							else if(this.getManagedBean().isSavedFirst()){
-								this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-								this.getManagedBean().setSavedFirst(false);
-								break;
-							}
-							else if(!image.isModified()){
-								this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-								break;
-							}
-							//20200929@akmal - Enhancement27627 - End
+							//201001@akmal - Bug29265 - End
 						}	
 					}else{
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
