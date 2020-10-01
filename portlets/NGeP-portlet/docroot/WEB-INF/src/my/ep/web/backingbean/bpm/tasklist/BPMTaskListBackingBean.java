@@ -60,6 +60,17 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 	
 	private String language = new FacesScopes().getUserLocale().getLanguage();
+	private static final String planDetailConstStr = "plan-detail";
+	private static final String mofApplicationConstStr = "mof-application";
+	private static final String fulfilmentDetailsConstStr = "fulfilment-details";
+	private static final String contractReqadminConstStr = "contract-reqadmin";
+	private static final String contractRequestConstStr = "contract-request";
+	private static final String shippingInstructionConstStr = "shipping-instruction";
+	private static final String contractOrderConstStr = "contract-order";
+	private static final String purchaseOrderConstStr = "purchase-order";
+	private static final String invoiceConstStr = "invoice";
+	private static final String deliveryOrderConstStr = "delivery-order";
+	private static final String purchaseRequestConstStr = "purchase-request";
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 
@@ -75,25 +86,24 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			// Procurement Plan - Start
 			temp.put(PPProcessNameConst.EXPENDITURE_PREPARATION_PROCESS_NAME,
-					"plan-detail");
+					planDetailConstStr);
 			temp.put(PPProcessNameConst.PROCUREMENT_PREPARATION_PROCESS_NAME,
-					"plan-detail");
-			temp.put("Start Expenditure Preparation", "plan-detail");
-			temp.put("Start Procurement Preparation", "plan-detail");
+					planDetailConstStr);
+			temp.put("Start Expenditure Preparation", planDetailConstStr);
+			temp.put("Start Procurement Preparation", planDetailConstStr);
 			temp.put("Access Application", "access-application-details");
 			// Procurement Plan - End
 
 			// Supplier Management - Start
 			//temp.put("Disciplinary Action", "disciplinary-action");
 			temp.put("Site Visit Manage", "site-visit");
-			temp.put("MOF Supplier Site Visit", "mof-application");
-			temp.put("MOF Supplier Registration", "mof-application");
-			temp.put("MOF Account Maintain", "mof-application");
-			temp.put("Start MOF Supplier Registration", "mof-application");
-			temp.put("Start MOF Account Maintain", "mof-application");
-			temp.put("MOF Registration Cancellation", "mof-application");
-			temp.put("MOF Application Cancellation", "mof-application");
-			temp.put("User Add Additional", "soft-cert-payment");
+			temp.put("MOF Supplier Site Visit", mofApplicationConstStr);
+			temp.put("MOF Supplier Registration", mofApplicationConstStr);
+			temp.put("MOF Account Maintain", mofApplicationConstStr);
+			temp.put("Start MOF Supplier Registration", mofApplicationConstStr);
+			temp.put("Start MOF Account Maintain", mofApplicationConstStr);
+			temp.put("MOF Registration Cancellation", mofApplicationConstStr);
+			temp.put("MOF Application Cancellation", mofApplicationConstStr);
 			temp.put("User Add Additional", "soft-cert-payment");
 
 			// s1 module
@@ -149,40 +159,40 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME,
 					"review-factoring-request");
 			temp.put(CTProcessNameConst.CONTRACT_CREATION_PROCESS_NAME,
-					"fulfilment-details");
+					fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_INITIATION_PROCESS_NAME,
-					"fulfilment-details");
+					fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_INIT_PROCESS_NAME,
 					"contract-suspension");
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME,
 					"contract-suspension");
 			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME,
-					"contract-reqadmin");
+					contractReqadminConstStr);
 			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, 
-					"contract-reqadmin");
+					contractReqadminConstStr);
 			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME,
-					"contract-reqadmin");
+					contractReqadminConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE,
-					"fulfilment-details");
+					fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING,
-					"fulfilment-details");
+					fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, 
-					"fulfilment-details");
+					fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, fulfilmentDetailsConstStr);
 			temp.put(CTProcessNameConst.CONTRACT_TERMINATION_INIT_PROCESS_NAME,
 					"contract-termination");
 			temp.put(CTProcessNameConst.CONTRACT_TERMINATION_PROCESS_NAME,
@@ -204,50 +214,50 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			// Fulfilment Management - Start
 			temp.put(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME
-					+ FLProcessNameConst.SUBMIT_PHIS_CR, "contract-request");
+					+ FLProcessNameConst.SUBMIT_PHIS_CR, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME
-					+ FLProcessNameConst.SUBMIT_CR_HT, "contract-request");
+					+ FLProcessNameConst.SUBMIT_CR_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_CR_HT, "contract-request");
+					+ FLProcessNameConst.REVIEW_CR_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVISE_CR_HT, "contract-request");
+					+ FLProcessNameConst.REVISE_CR_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
+					+ FLProcessNameConst.CREATE_NORMAL_CO_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVISE_MTO_CR_HT, "contract-request");
+					+ FLProcessNameConst.REVISE_MTO_CR_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_MTO_CR_HT, "contract-request");
+					+ FLProcessNameConst.REVIEW_MTO_CR_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_CO_HT, "contract-request");
+					+ FLProcessNameConst.CREATE_CO_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
+					+ FLProcessNameConst.CREATE_NEW_CO_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
+					+ FLProcessNameConst.INTIATE_MTO_CR_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
+					+ FLProcessNameConst.CREATE_NEW_CO_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
+					+ FLProcessNameConst.CREATE_NORMAL_CO_HT, contractRequestConstStr);
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_NEW_MTO_CO_HT, "contract-request");
+					+ FLProcessNameConst.CREATE_NEW_MTO_CO_HT, contractRequestConstStr);
 
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_SI_HT, "shipping-instruction");
+					+ FLProcessNameConst.CREATE_SI_HT, shippingInstructionConstStr);
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_SI_HT, "shipping-instruction");
+					+ FLProcessNameConst.REVIEW_SI_HT, shippingInstructionConstStr);
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVISE_SI_HT, "shipping-instruction");
+					+ FLProcessNameConst.REVISE_SI_HT, shippingInstructionConstStr);
 
 			temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.MTO_CO_ACK_HT, "contract-order");
+					+ FLProcessNameConst.MTO_CO_ACK_HT, contractOrderConstStr);
 			temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CO_ACK_HT, "contract-order");
+					+ FLProcessNameConst.CO_ACK_HT, contractOrderConstStr);
 			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION
-					+ ParameterConst.DOCTYPE_CONTRACT_ORDER, "contract-order");
+					+ ParameterConst.DOCTYPE_CONTRACT_ORDER, contractOrderConstStr);
 			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION
-					+ ParameterConst.DOCTYPE_PURCHASE_ORDER, "purchase-order");
+					+ ParameterConst.DOCTYPE_PURCHASE_ORDER, purchaseOrderConstStr);
 
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_INVOICE, "invoice");
+					+ FLProcessNameConst.CREATE_INVOICE, invoiceConstStr);
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 					+ FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT, "payment-match");
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
@@ -258,7 +268,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME,
 					"fulfilment-received-note");
 			temp.put(FLProcessNameConst.DELIVERY_ORDER_FL_INITIATION_PROCESS_NAME,
-					"delivery-order");
+					deliveryOrderConstStr);
 			temp.put(FLProcessNameConst.DAN_GENERATION_PROCESS_NAME,
 					"debit-adjustment-note");
 			temp.put(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME,
@@ -266,27 +276,27 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(FLProcessNameConst.STOP_FULFILLMENT_INIT_PROCESS_NAME,
 					"stop-delivery");
 			temp.put(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME
-					+ FLProcessNameConst.SUBMIT_PR_HT, "purchase-request");
+					+ FLProcessNameConst.SUBMIT_PR_HT, purchaseRequestConstStr);
 			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.CREATE_PR_HT, "purchase-request");
+					+ FLProcessNameConst.CREATE_PR_HT, purchaseRequestConstStr);
 			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_PR_HT, "purchase-request");
+					+ FLProcessNameConst.REVIEW_PR_HT, purchaseRequestConstStr);
 			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVISE_PR_HT, "purchase-request");
+					+ FLProcessNameConst.REVISE_PR_HT, purchaseRequestConstStr);
 			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.PR_ACK_HT, "purchase-order");
+					+ FLProcessNameConst.PR_ACK_HT, purchaseOrderConstStr);
 			temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
+					+ FLProcessNameConst.REVIEW_REJECTED_PO_HT, purchaseOrderConstStr);
 			temp.put(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME
-					+ FLProcessNameConst.ACK_MODIFIED_DO_HT, "delivery-order");
+					+ FLProcessNameConst.ACK_MODIFIED_DO_HT, deliveryOrderConstStr);
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, "invoice");
+					+ FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, invoiceConstStr);
 			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
+					+ FLProcessNameConst.REVIEW_CANCEL_DO_HT, deliveryOrderConstStr);
 			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");			
+					+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, deliveryOrderConstStr);			
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
+					+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, invoiceConstStr);
 			temp.put(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME,
 					"remove-factoring-company");
 			temp.put(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + FLProcessNameConst.RESUBMIT_AP59_ORDER,
@@ -297,7 +307,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			/*#28375 - End*/
 			//21229
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
-					+ FLProcessNameConst.REVISE_INVOICE, "invoice");
+					+ FLProcessNameConst.REVISE_INVOICE, invoiceConstStr);
 			// Added for qt..
 			temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
 					+ SCProcessNameConst.SPECIFICATION_APPROVAL, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);

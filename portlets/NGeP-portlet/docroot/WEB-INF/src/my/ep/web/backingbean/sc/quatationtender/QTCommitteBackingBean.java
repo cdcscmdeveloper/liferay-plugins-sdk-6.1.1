@@ -2581,7 +2581,7 @@ public class QTCommitteBackingBean extends
 	public boolean isCommitteeCloneable(){
 		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
 		Long status = getCurrentQtStatusId();
-		status = status == null? new Long(0L): status;
+		status = status == null? 0L : status;
 		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
 			if(!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)){
 				return false;
