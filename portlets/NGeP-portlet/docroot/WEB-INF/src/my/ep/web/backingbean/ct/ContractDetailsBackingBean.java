@@ -394,7 +394,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
 									ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 							this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
-							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
+							this.getManagedBean().setSearchPtjProfile(null);
+//							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
 						}
 					}
 					//#25406 - End
@@ -1058,9 +1059,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		//#25406 - Start
 		/*Validation for Contract Owner Management */
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) &&
+		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) &&
 				ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
-			if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
+			if(getManagedBean().getSearchPtjProfile() != null){
+				if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_775156);
+				}
+			}else{
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_775156);
 			}
