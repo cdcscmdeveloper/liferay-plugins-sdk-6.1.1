@@ -603,7 +603,7 @@
 									<td class="tdTitle"><p:outputPanel
 											id="divisionLabelPanelId">
 											<ui:fragment
-												rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">
+												rendered="#{!smPersonnelBackingBean.managedBean.mailDivisionBox}">
 												<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 												<p:outputLabel value="*" styleClass="mandatory" />
 											</ui:fragment>
@@ -611,7 +611,7 @@
 									<td><p:outputPanel id="divisionDropdownPanelId">
 											<!-- #13320 - added division -->
 											<ui:fragment
-												rendered="#{!smPersonnelBackingBean.managedBean.divisionBox}">				
+												rendered="#{!smPersonnelBackingBean.managedBean.mailDivisionBox}">				
 												<p:selectOneMenu id="basicMailAddDivisionList"
 														label="#{lbl['lbl.sm.division']}"
 														value="#{smPersonnelBackingBean.managedBean.mailDivisionId}"
