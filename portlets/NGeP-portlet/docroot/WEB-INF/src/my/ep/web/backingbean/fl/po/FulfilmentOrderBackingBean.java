@@ -276,6 +276,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && !hasFactoringUserRole()){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
+				
+				//28508-start
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+					fulfilmentSO.checkFulfilmentItemByFLReqId(flRequest.getFulfilmentReqId());
+				}
+				//28508-end
 				reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 				reqDTO.setStopIns(getManagedBean().getStopIns());
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
