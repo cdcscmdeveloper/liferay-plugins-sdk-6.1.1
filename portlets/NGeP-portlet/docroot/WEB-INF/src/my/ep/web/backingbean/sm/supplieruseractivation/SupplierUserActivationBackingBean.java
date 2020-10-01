@@ -408,6 +408,9 @@ public class SupplierUserActivationBackingBean extends
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setIdentificationNo(smPersonnel.getIdentificationNo());
 			reqDTO.setSmSupplierId(supplierId);
+			// #29216 - start
+			reqDTO.setApplId(smPersonnel.getSmAppl().getApplId());
+			// #29216 - end
 			PersonnelResDTO resDTO = personnelSO
 					.retrieveLatestApprovedPersonnelByIdentificationNoAndSupplierId(reqDTO);
 			if (resDTO.getSmPersonnel() != null) {
