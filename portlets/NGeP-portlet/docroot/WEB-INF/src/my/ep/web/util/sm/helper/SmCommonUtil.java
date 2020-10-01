@@ -3475,24 +3475,30 @@ public class SmCommonUtil {
 							reqDTO).getSoftcertRequest();
 			if (softcertRequest != null
 					&& !StringUtils.isBlank(softcertRequest.getReasonCode())) {
+				//#28852 - Start
+				String softcertRemark = "<br />" + SmCommonUtil.getMessage("lbl.sm.remark", null) + ": ";
+				softcertRemark += StringUtils.isNotBlank(softcertRequest.getRemark())? softcertRequest.getRemark() : 
+					SmCommonUtil.getMessage("lbl.sm.no.available", null);
+				//#28852 - End
+				
 				personnel
 						.setSoftcertRejectCode(softcertRequest.getReasonCode());
 				if (softcertRequest.getReasonCode().equals(
 						SupplierManagementConst.REJECTED_WITH_BLACKLIST)) {
 					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
-							"lbl.sm.softcert.rejected.blacklist", null));
+							"lbl.sm.softcert.rejected.blacklist", null) + softcertRemark);
 				} else if (softcertRequest.getReasonCode().equals(
 						SupplierManagementConst.REJECTED_WITH_FRAUD)) {
 					personnel.setSoftcertRejectReason(SmCommonUtil.getMessage(
-							"lbl.sm.softcert.rejected.fraud", null));
+							"lbl.sm.softcert.rejected.fraud", null) + softcertRemark);
 				} else if (softcertRequest
 						.getReasonCode()
 						.equals(SupplierManagementConst.REJECTED_WITH_INCOMPLETE_SUPPDOC)) {
 					personnel
 							.setSoftcertRejectReason(SmCommonUtil
 									.getMessage(
-											"lbl.sm.softcert.rejected.incomplete.suppdoc",
-											null));
+											"lbl.sm.softcert.rejected.incomplete.suppdoc", null)
+											+ softcertRemark);
 				} else if (softcertRequest
 						.getReasonCode()
 						.equals(SupplierManagementConst.REJECTED_WITH_NO_CONFIG_CHALLENGE_RESPONSE)) {
@@ -3500,7 +3506,7 @@ public class SmCommonUtil {
 							.setSoftcertRejectReason(SmCommonUtil
 									.getMessage(
 											"lbl.sm.softcert.rejected.noconfig.challresp",
-											null));
+											null) + softcertRemark);
 				}
 			}
 		}
@@ -4315,7 +4321,7 @@ public class SmCommonUtil {
 			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
 			//only return company valid or not
 			//27329
-			if(ssmReqDTO.isCheckOnly() || ssmReqDTO.isPreRegistration()){
+			if(true){
 				
 				return resDTO;
 			}
