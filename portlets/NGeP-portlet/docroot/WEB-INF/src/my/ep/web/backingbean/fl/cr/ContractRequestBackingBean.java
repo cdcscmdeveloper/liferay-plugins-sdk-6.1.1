@@ -1511,7 +1511,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//13984-end
 			
 			//Start #14650 initialize votFundCodeMap
-			log.info("noraa ContractRequestBackingBean.preRenderView()");
 			Long jabatanOrgProfileId = -1l;
 			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
 			if(jabatan!=null) {
@@ -1521,6 +1520,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//End#14650
 			
 			//#14650 - Alert message if contract incomplete - Start
+			FulfilmentReqDTO reqDTO2 = new FulfilmentReqDTO();
+			reqDTO2.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());				
+			resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO2);			
+			
 			if(!resDTOInvoice.isCrComplete() || !resDTOInvoice.isIdptcontractCompleteCheck()){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
