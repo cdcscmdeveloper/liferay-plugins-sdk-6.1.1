@@ -549,6 +549,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean disciplinaryActionWarning = false;
 	//26284 - End
 	
+	//201002@akmal - Bug29265 - Start
+	private boolean isPromoPriceExist = false;
+	//201002@akmal - Bug29265 - End
+	
 	//SSM integration
 	/** The current date. */
 	private Date minDate = new Date();
@@ -4421,4 +4425,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.isSavedFirst = isSavedFirst;
 	}
 	//20200929@akmal - Enhancement27627 - End
+
+	//201002@akmal - Bug29265 - Start
+	public boolean isPromoPriceExist() {
+		return isPromoPriceExist;
+	}
+
+	public void setPromoPriceExist(boolean isPromoPriceExist) {
+		this.isPromoPriceExist = isPromoPriceExist;
+	}
+	//201002@akmal - Bug29265 - End
 }
