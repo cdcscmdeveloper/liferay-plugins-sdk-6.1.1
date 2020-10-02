@@ -63,6 +63,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> permAddDivisionList;
 	private List<SelectItem> divisionList;
 	private Long divisionId;
+	//#13320 - added division
+	private Long mailDivisionId;
+	private boolean mailDivisionBox=true;
 	private boolean divisionBox=true;
 	//13320-End
 	private List<SelectItem> permAddDistrictList;
@@ -736,4 +739,22 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setHasActiveAppl(boolean hasActiveAppl) {
 		this.hasActiveAppl = hasActiveAppl;
 	}
+
+	//#13320 - added division - start
+	public Long getMailDivisionId() {
+		return mailDivisionId;
+	}
+
+	public void setMailDivisionId(Long mailDivisionId) {
+		this.mailDivisionId = mailDivisionId;
+	}
+
+	public boolean isMailDivisionBox() {
+		return mailDivisionBox;
+	}
+
+	public void setMailDivisionBox(boolean mailDivisionBox) {
+		this.mailDivisionBox = mailDivisionBox;
+	}
+	//#13320 - added division - end
 }
