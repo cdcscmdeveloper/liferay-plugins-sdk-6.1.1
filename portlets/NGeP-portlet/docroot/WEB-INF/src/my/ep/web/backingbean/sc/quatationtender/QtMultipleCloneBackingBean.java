@@ -434,35 +434,16 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
 		
 		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
-//		supplierCriteria.setScQt(scQt);
-//		supplierCriteria.setBrandNew(true);
-//		setUserDetails(supplierCriteria);
+		if(null==supplierCriteria){
+			supplierCriteria = new ScQtSupplierCriteria();
+			supplierCriteria.setScQt(scQt);
+			supplierCriteria.setBrandNew(true);
+			setUserDetails(supplierCriteria);
+		}
+
 		if(cps!=null){
 			if(cps.getLocationLevel()!=null){
 				supplierCriteria.setLocationLevel(cps.getLocationLevel());
-			}
-			if(cps.getScQtLocCriteria()!=null){
-				//supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
-				List<ScQtLocCriteria> toAdd=new ArrayList<ScQtLocCriteria>();
-				for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
-					ScQtLocCriteria loc=new ScQtLocCriteria();
-					loc.setScQtSupplierCriteria(supplierCriteria);
-					loc.setBrandNew(true);
-					loc.setDocId(cloc.getDocId());
-					loc.setDocType(cloc.getDocType());
-					loc.setPmDistrict(cloc.getPmDistrict());
-					loc.setPmDivision(cloc.getPmDivision());
-					loc.setPmState(cloc.getPmState());
-					loc.setReasonForUpdateEnabled(cloc.isReasonForUpdateEnabled());
-					loc.setRecordStatus(cloc.isRecordStatus());
-					loc.setRecordStatusFlg(cloc.getRecordStatusFlg());
-					loc.setSpecLocId(cloc.getSpecLocId());
-					loc.setZonalLocation(cloc.isZonalLocation());
-					setUserDetails(loc);
-					toAdd.add(loc);
-				}
-				supplierCriteria.setScQtLocCriteria(toAdd);
-				
 			}
 			supplierCriteria.setAllState(cps.isAllState());
 		}
@@ -636,16 +617,6 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			
 			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
 			scQt.setScQtSupplierCriteria(supplierCriteria);
-		}else{
-			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
-			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
-			supplierCriteria.setScQt(scQt);
-			supplierCriteria.setBrandNew(true);
-			supplierCriteria.setLocationLevel(new PmParameter());
-			supplierCriteria.setScQtLocCriteria(cps.getScQtLocCriteria());
-			supplierCriteria.setAllState(cps.isAllState());
-			setUserDetails(supplierCriteria);
-			scQt.setScQtSupplierCriteria(supplierCriteria);
 		}
 		
 		
@@ -695,10 +666,6 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
 		}
 		
-		
-		if(copyScqt.isPanel()){
-			
-		}
 		
 		return scQt;
 	
