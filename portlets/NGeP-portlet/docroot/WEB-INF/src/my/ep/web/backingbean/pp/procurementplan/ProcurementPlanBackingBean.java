@@ -553,6 +553,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
 			for (Long commonProcurementItemId : commonProcurementItemIdList) {
 				for (PpProcurementItem ppItem : ppItems) {
+					
+					/* By default, all items are neutral (isOriginal or not).
+					   isClonedItem will be true if only it's cloned during 
+					   that particular round of approval. */
+					ppItem.setClonedItem(false);
+					
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
 					if (!ppItem.isOriginal()) {
@@ -793,13 +799,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				            	//log.info("[SIR#12802] - item status is 2, remove from list!");
 				                itr.remove(); 
 				            }
-				            if ((procurementItem.getPpUpdateReasons() != null && 
-									!procurementItem.getPpUpdateReasons().isEmpty()) && 
-									procurementItem.getPpUpdateReasons().size() > 0) {
-				            	procurementItem.getPpUpdateReasons().clear();
-				            }
-				            log.info("loadPlanDetails, size of PpUpdateReasons= "+procurementItem.getPpUpdateReasons().size());
-				            
 				        }
 						//log.info("[SIR#12802] - Plan 'B': item list size AFTER: " + ppPlan.getPpProcurementItems().size());						
 					}
@@ -5164,6 +5163,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setPpUpdateReasons(originalPpItem.getPpUpdateReasons());
 	    		newPpItem.setStatusEnabled(true);
 	    		newPpItem.setOriginal(false);
+	    		newPpItem.setClonedItem(true);
 	    		
 	    		if (newPpItem.getPpPlan() == null) {
 	    			newPpItem.setPpPlan(ppPlan);
@@ -5250,7 +5250,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("pp item " + ppItem.getProcurementDesc());
 		log.info("reasons= "+ppItem.getPpUpdateReasons().size());
 		
-	if(!ppItem.isBrandNew() || ppItem.isOriginal()){
+	if(!ppItem.isBrandNew()){
 		if(ppItem.getPpUpdateReasons()==null || ppItem.getPpUpdateReasons().isEmpty()){
 			ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
 //			ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
