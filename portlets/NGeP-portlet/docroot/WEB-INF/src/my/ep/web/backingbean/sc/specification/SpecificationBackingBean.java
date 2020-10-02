@@ -2162,8 +2162,11 @@ public class SpecificationBackingBean extends
 									.getQtScoreWeightage());
 							pkgOfferPrice
 									.setOfferPriceType(ParameterConst.RECOMMEND_TYPE_PACKAGE);
-							
-							if (scoreTypeN.equals(QTConstants.AUTO_SCORE)) {
+							//#29168 - Bug - start
+							if(null == scoreTypeN){
+								this.getManagedBean().setOfferScoreType(QTConstants.INITIAl_SCORE);		
+							} else if (scoreTypeN.equals(QTConstants.AUTO_SCORE)) {
+							//#29168 - Bug - end
 								pkgOfferPrice.setScoreType(new BigDecimal(this.getManagedBean()
 										.getOfferScoreType()));
 
@@ -2189,12 +2192,7 @@ public class SpecificationBackingBean extends
 						for (ScQtScoreOfferPrice scoreOfferPrice : tmpCheckList
 								.getQtScoreWeightage()
 								.getScQtScoreOfferPrices()) {
-							//#28688 bug Ahmaa - start
-							if(null != scoreOfferPrice.getScoreType()){
-								this.getManagedBean().setOfferScoreType(
-										String.valueOf(scoreOfferPrice.getScoreType().intValue()));									
-							}
-							//#28688 bug - end
+							
 							if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 									.equalsIgnoreCase(scoreOfferPrice
 											.getOfferPriceType())) {
@@ -2202,6 +2200,10 @@ public class SpecificationBackingBean extends
 								if(null == scoreOfferPrice.getScoreType()){
 									scoreOfferPrice
 										.setScoreType(new BigDecimal(QTConstants.AUTO_SCORE));
+									//#29168 - Bug - start
+									this.getManagedBean().setOfferScoreType(String.valueOf(scoreOfferPrice
+											.getScoreType().intValue()));
+									//#29168 - Bug - end
 									this.getManagedBean()
 										.setOfferPricePackage(scoreOfferPrice);
 								}else{
