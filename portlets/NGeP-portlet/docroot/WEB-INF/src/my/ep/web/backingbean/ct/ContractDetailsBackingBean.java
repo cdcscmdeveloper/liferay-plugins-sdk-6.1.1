@@ -2224,7 +2224,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 				
-				
 			}
 	
 		
