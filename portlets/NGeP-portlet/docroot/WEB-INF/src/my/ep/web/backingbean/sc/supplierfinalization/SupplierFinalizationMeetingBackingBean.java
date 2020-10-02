@@ -1871,18 +1871,18 @@ if (CollectionUtils.isNotEmpty(
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		boolean isPtj = false;
-		if (isChairPerson) {
-			isPtj = orgProfileCheckExist(scqt, user, isPtj);
-		}
-		if ((isChairPerson && isPtj == false) || !isChairPerson) {
-			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							recommendList));
-		}
+//		boolean isPtj = false;
+//		if (isChairPerson) {
+//			isPtj = orgProfileCheckExist(scqt, user, isPtj);
+//		}
+//		if ((isChairPerson && isPtj == false) || !isChairPerson) {
+//			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+//
+//			searchBean.getDataFilterBeans().add(
+//					new SearchFilterBean("pmParameter.parameterCode",
+//							SearchOperator.OPERATOR_NOT_IN.value(),
+//							recommendList));
+//		}
 		recommendList.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -1891,56 +1891,56 @@ if (CollectionUtils.isNotEmpty(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 		return items;
 	}
-	private boolean orgProfileCheckExist(ScQt scqt, PmUser user, boolean isptj) {
-		//PmOrgProfile orgProfile = scqt.getPmOrgProfile();
-		PmOrgProfile orgProfile=null;
-		try{
-			
-		orgProfile=retriveMinistryByOrgprofile(scqt
-				.getPmOrgProfile().getOrgProfileId());
-		if (null != user.getPmUserOrgs() && null!=orgProfile) {
-			for (PmUserOrg userorg : user.getPmUserOrgs()) {
-				log.debug("===user org record status==="
-						+ userorg.isRecordStatus());
-				//orgProfile.setOrgProfileId(273481L);
-				log.debug("===qt PtjId===" + orgProfile.getOrgProfileId());
-				if (userorg.isRecordStatus()
-						&& null != userorg.getPmOrgProfile()) {
-					PmOrgProfile localorgProfile=retriveMinistryByOrgprofile(userorg.getPmOrgProfile().getOrgProfileId());
-					if(null!=localorgProfile && localorgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())){
-					isptj = true;
-					break;
-					}
-				}
-
-			}
-		}
-		}finally{
-			
-		}
-		return isptj;
-	}
-
-	private PmOrgProfile retriveMinistryByOrgprofile(Long orgProfileId){
-		IOrgProfileSO	orgProfileSO=null;
-		PmOrgProfile orgProfile=null;
-		try{
-			
-			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			if(null!=orgProfileId){
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgProfileId(orgProfileId);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveMinistryByOrgProfileId(reqDTO);
-			if (resDTO.getPmOrgProfile() != null) {
-			 orgProfile=resDTO.getPmOrgProfile();
-			}
-		}
-		}finally{
-			orgProfileSO=null;	
-		}
-		return orgProfile;
-	}
+//	private boolean orgProfileCheckExist(ScQt scqt, PmUser user, boolean isptj) {
+//		//PmOrgProfile orgProfile = scqt.getPmOrgProfile();
+//		PmOrgProfile orgProfile=null;
+//		try{
+//			
+//		orgProfile=retriveMinistryByOrgprofile(scqt
+//				.getPmOrgProfile().getOrgProfileId());
+//		if (null != user.getPmUserOrgs() && null!=orgProfile) {
+//			for (PmUserOrg userorg : user.getPmUserOrgs()) {
+//				log.debug("===user org record status==="
+//						+ userorg.isRecordStatus());
+//				//orgProfile.setOrgProfileId(273481L);
+//				log.debug("===qt PtjId===" + orgProfile.getOrgProfileId());
+//				if (userorg.isRecordStatus()
+//						&& null != userorg.getPmOrgProfile()) {
+//					PmOrgProfile localorgProfile=retriveMinistryByOrgprofile(userorg.getPmOrgProfile().getOrgProfileId());
+//					if(null!=localorgProfile && localorgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())){
+//					isptj = true;
+//					break;
+//					}
+//				}
+//
+//			}
+//		}
+//		}finally{
+//			
+//		}
+//		return isptj;
+//	}
+//
+//	private PmOrgProfile retriveMinistryByOrgprofile(Long orgProfileId){
+//		IOrgProfileSO	orgProfileSO=null;
+//		PmOrgProfile orgProfile=null;
+//		try{
+//			
+//			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+//			if(null!=orgProfileId){
+//			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+//			reqDTO.setOrgProfileId(orgProfileId);
+//			OrgProfileResDTO resDTO = orgProfileSO
+//					.retrieveMinistryByOrgProfileId(reqDTO);
+//			if (resDTO.getPmOrgProfile() != null) {
+//			 orgProfile=resDTO.getPmOrgProfile();
+//			}
+//		}
+//		}finally{
+//			orgProfileSO=null;	
+//		}
+//		return orgProfile;
+//	}
 	//#25037-END
 }
