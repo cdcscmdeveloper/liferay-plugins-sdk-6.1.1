@@ -312,11 +312,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String businessType = this.getManagedBean().getSmSupp().getBusinessType();
 		String checkIcSSM = this.getManagedBean().getRegIcCheckSSM();
 		//only business type ROB & ROC will check with SSM
-		if (this.getManagedBean().getSmSupp().getBusinessType() == null || "".equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())) {
+		
+		//29114
+		if(this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
+		if (this.getManagedBean().getSmAppl().getSupplierType() == null || "".equalsIgnoreCase(this.getManagedBean().getSmAppl().getSupplierType())) {
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] {ResourceBundleUtils.getMessage("lbl.sm.mofsuppliertype", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
+		}}
 		if (this.getManagedBean().getSmSupp().getBusinessType() == null || "".equalsIgnoreCase(this.getManagedBean().getSmSupp().getBusinessType())) {
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] {ResourceBundleUtils.getMessage("lbl.sm.businesscomptype", 
