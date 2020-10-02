@@ -2255,18 +2255,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing() == null){
 			log.debug("*no previous CmPromotionPricing... creating new record*");
 			CmPromotionPricing price = new CmPromotionPricing();
-			Date startDate = new Date();
 			price.setStartDate(null);
 			price.setEndDate(null);
 			price.setPrice(BigDecimal.ZERO);
 			price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem()
 			.setCmPromotionPricing(price);
+			//201002@akmal - Bug29265 - Start
+			this.getManagedBean().setPromoPriceExist(true);
+			//201002@akmal - Bug29265 - End
 		}
 		else{
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(null);
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(null);
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(BigDecimal.ZERO);
+			//201002@akmal - Bug29265 - Start
+			this.getManagedBean().setPromoPriceExist(true);
+			//201002@akmal - Bug29265 - End
 		}
 	}
 	//20200929@akmal - Enhancement27627 - End
@@ -3906,23 +3911,29 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 
+			//201002@akmal - Bug29265 - Start
 			//validate promotion's mandatory case if one field is inserted
 			boolean promotionError = false;
-			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null){
-				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
-					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null)
+			if(this.getManagedBean().isPromoPriceExist()){
+				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null){
+					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
+						if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null)
+							promotionError = true;
+						else if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null)
+							promotionError = true;
+					}else{
 						promotionError = true;
+					}
 				}else{
-					promotionError = true;
-				}
-			}else{
-				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null)
-					promotionError = true;
-				else{
-					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null)
+					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null)
 						promotionError = true;
+					else{
+						if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null)
+							promotionError = true;
+					}
 				}
 			}
+			//201002@akmal - Bug29265 - End
 
 			if(promotionError){
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -6524,7 +6535,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setStartDate(null);
 		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setEndDate(null);
 		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setPrice(null);
-		
+		//201002@akmal - Bug29265 - Start
+		this.getManagedBean().setPromoPriceExist(false);
+		//201002@akmal - Bug29265 - End
 //		this.getManagedBean().getSelectedMaintainItem().setCmPromotionPricing(null);
 
 	}
@@ -9676,6 +9689,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
 		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null || cmSupplierItem.getCmPromotionPricing().getEndDate()!=null || cmSupplierItem.getCmPromotionPricing().getPrice() !=null )
 			return true;
+		//201002@akmal - Bug29265 - Start
+		else if(this.getManagedBean().isPromoPriceExist())
+			return true;
+		//201002@akmal - Bug29265 - End
 		else
 			return false;
 	}
