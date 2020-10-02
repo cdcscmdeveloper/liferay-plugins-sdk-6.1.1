@@ -2434,7 +2434,7 @@ public class QTCloneBackingbean extends
 		
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
-		//committee.setApprovalReq(true);
+		committee.setApprovalReq(true);
 		committee.setModified(true);
 		
 		if(null!=copyScQtCommittee.getScCommittee()){
@@ -2780,45 +2780,47 @@ public class QTCloneBackingbean extends
 			ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
 			if(null!=scQt.getScQtSupplierCriteria()){
 				supplierCriteria =scQt.getScQtSupplierCriteria();
+			}else{
+				supplierCriteria.setScQt(scQt);
+				supplierCriteria.setBrandNew(true);
 			}
 			
-//			supplierCriteria.setScQt(scQt);
-//			supplierCriteria.setBrandNew(true);
+
 			if(cps!=null){
 				if(cps.getLocationLevel()!=null){
 					supplierCriteria.setLocationLevel(cps.getLocationLevel());
 				}
 				
 				//to Delete
-				List<ScQtLocCriteria> tobeRemoveLocCriteriaList=new ArrayList<ScQtLocCriteria>();
-				if(null!=supplierCriteria.getScQtLocCriteria() && !supplierCriteria.getScQtLocCriteria().isEmpty()){
-					for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
-						cloc.setDeleted(true);
-						tobeRemoveLocCriteriaList.add(cloc);
-					}
-					this.getManagedBean().setSupplierLocationList(tobeRemoveLocCriteriaList);
-				}
+//				List<ScQtLocCriteria> tobeRemoveLocCriteriaList=new ArrayList<ScQtLocCriteria>();
+//				if(null!=supplierCriteria.getScQtLocCriteria() && !supplierCriteria.getScQtLocCriteria().isEmpty()){
+//					for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
+//						cloc.setDeleted(true);
+//						tobeRemoveLocCriteriaList.add(cloc);
+//					}
+//					this.getManagedBean().setSupplierLocationList(tobeRemoveLocCriteriaList);
+//				}
 				
-				if(cps.getScQtLocCriteria()!=null){
-					List<ScQtLocCriteria> toAdd=new ArrayList<ScQtLocCriteria>();
-					for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
-						ScQtLocCriteria loc=new ScQtLocCriteria();
-						loc.setScQtSupplierCriteria(supplierCriteria);
-						loc.setBrandNew(true);
-						loc.setDocId(cloc.getDocId());
-						loc.setDocType(cloc.getDocType());
-						loc.setPmDistrict(cloc.getPmDistrict());
-						loc.setPmDivision(cloc.getPmDivision());
-						loc.setPmState(cloc.getPmState());
-						loc.setReasonForUpdateEnabled(cloc.isReasonForUpdateEnabled());
-						loc.setRecordStatus(cloc.isRecordStatus());
-						loc.setRecordStatusFlg(cloc.getRecordStatusFlg());
-						loc.setSpecLocId(cloc.getSpecLocId());
-						loc.setZonalLocation(cloc.isZonalLocation());
-						toAdd.add(loc);
-					}
-					supplierCriteria.setScQtLocCriteria(toAdd);
-				}
+//				if(cps.getScQtLocCriteria()!=null){
+//					List<ScQtLocCriteria> toAdd=new ArrayList<ScQtLocCriteria>();
+//					for(ScQtLocCriteria cloc:cps.getScQtLocCriteria()){
+//						ScQtLocCriteria loc=new ScQtLocCriteria();
+//						loc.setScQtSupplierCriteria(supplierCriteria);
+//						loc.setBrandNew(true);
+//						loc.setDocId(cloc.getDocId());
+//						loc.setDocType(cloc.getDocType());
+//						loc.setPmDistrict(cloc.getPmDistrict());
+//						loc.setPmDivision(cloc.getPmDivision());
+//						loc.setPmState(cloc.getPmState());
+//						loc.setReasonForUpdateEnabled(cloc.isReasonForUpdateEnabled());
+//						loc.setRecordStatus(cloc.isRecordStatus());
+//						loc.setRecordStatusFlg(cloc.getRecordStatusFlg());
+//						loc.setSpecLocId(cloc.getSpecLocId());
+//						loc.setZonalLocation(cloc.isZonalLocation());
+//						toAdd.add(loc);
+//					}
+//					supplierCriteria.setScQtLocCriteria(toAdd);
+//				}
 				supplierCriteria.setAllState(cps.isAllState());
 				
 				
@@ -3492,41 +3494,41 @@ public class QTCloneBackingbean extends
 			
 			
 		}else{
-			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
-			
-			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
-			if(null!=scQt.getScQtSupplierCriteria()){
-				supplierCriteria= scQt.getScQtSupplierCriteria();
-			}
-			supplierCriteria.setScQt(scQt);
-			supplierCriteria.setBrandNew(true);
-			supplierCriteria.setLocationLevel(cps.getLocationLevel());
-			
-			if(cps.getScQtLocCriteria()!=null){
-				List<ScQtLocCriteria> listLoc=new ArrayList<ScQtLocCriteria>();
-				for(ScQtLocCriteria loc:cps.getScQtLocCriteria()){
-					ScQtLocCriteria toloc=new ScQtLocCriteria();
-					toloc.setBrandNew(true);
-					toloc.setScQtSupplierCriteria(supplierCriteria);
-					toloc.setDocId(loc.getDocId());
-					toloc.setDocType(loc.getDocType());
-					toloc.setPmDistrict(loc.getPmDistrict());
-					toloc.setPmDivision(loc.getPmDivision());
-					toloc.setPmState(loc.getPmState());
-					toloc.setSpecLocId(loc.getSpecLocId());
-					toloc.setZonalLocation(loc.isZonalLocation());
-				}
-				supplierCriteria.setScQtLocCriteria(listLoc);
-			}
-			
-			
-			supplierCriteria.setAllState(cps.isAllState());
-			supplierCriteria.setLocationLevel(cps.getLocationLevel());
-			setUserDetails(supplierCriteria);
-			if (supplierCriteria.isAllState() == true) {
-				this.getManagedBean().setZoneTrees(null);
-			}
-			scQt.setScQtSupplierCriteria(supplierCriteria);
+//			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
+//			
+//			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+//			if(null!=scQt.getScQtSupplierCriteria()){
+//				supplierCriteria= scQt.getScQtSupplierCriteria();
+//			}
+//			supplierCriteria.setScQt(scQt);
+//			supplierCriteria.setBrandNew(true);
+//			supplierCriteria.setLocationLevel(cps.getLocationLevel());
+//			
+//			if(cps.getScQtLocCriteria()!=null){
+//				List<ScQtLocCriteria> listLoc=new ArrayList<ScQtLocCriteria>();
+//				for(ScQtLocCriteria loc:cps.getScQtLocCriteria()){
+//					ScQtLocCriteria toloc=new ScQtLocCriteria();
+//					toloc.setBrandNew(true);
+//					toloc.setScQtSupplierCriteria(supplierCriteria);
+//					toloc.setDocId(loc.getDocId());
+//					toloc.setDocType(loc.getDocType());
+//					toloc.setPmDistrict(loc.getPmDistrict());
+//					toloc.setPmDivision(loc.getPmDivision());
+//					toloc.setPmState(loc.getPmState());
+//					toloc.setSpecLocId(loc.getSpecLocId());
+//					toloc.setZonalLocation(loc.isZonalLocation());
+//				}
+//				supplierCriteria.setScQtLocCriteria(listLoc);
+//			}
+//			
+//			
+//			supplierCriteria.setAllState(cps.isAllState());
+//			supplierCriteria.setLocationLevel(cps.getLocationLevel());
+//			setUserDetails(supplierCriteria);
+//			if (supplierCriteria.isAllState() == true) {
+//				this.getManagedBean().setZoneTrees(null);
+//			}
+//			scQt.setScQtSupplierCriteria(supplierCriteria);
 		}
 		
 		if (scQt.getObtainSpecialApproval() != null && !scQt.getObtainSpecialApproval()) {
