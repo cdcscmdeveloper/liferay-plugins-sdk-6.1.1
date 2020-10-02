@@ -3476,7 +3476,7 @@ public class SmCommonUtil {
 			if (softcertRequest != null
 					&& !StringUtils.isBlank(softcertRequest.getReasonCode())) {
 				//#28852 - Start
-				String softcertRemark = "<br />" + SmCommonUtil.getMessage("lbl.sm.remark", null) + ": ";
+				String softcertRemark = "<br />" + SmCommonUtil.getMessage("lbl.sm.remark", null) + ": \u00A0";
 				softcertRemark += StringUtils.isNotBlank(softcertRequest.getRemark())? softcertRequest.getRemark() : 
 					SmCommonUtil.getMessage("lbl.sm.no.available", null);
 				//#28852 - End
