@@ -893,7 +893,10 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 				
-		if(!divisionId.isEmpty() || divisionId.equalsIgnoreCase("null")){
+		if((!divisionId.isEmpty() || divisionId.equalsIgnoreCase("null"))
+			&& (getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState()
+					.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))){
+
 			getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().
 				setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(Long.valueOf(divisionId)));
 			getManagedBean().setMailAddDistrictList(
@@ -978,7 +981,8 @@ public class SmPersonnelBackingBean extends
 					SmCommonUtil.getCityList(Long.valueOf(districtId)));
 		}
 		//#13320 - added division
-		getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCity().setCityId(null);
+		if(stateId.isEmpty() ^ districtId.isEmpty())
+			getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCity().setCityId(null);
 	}
 
 	/**
@@ -1064,12 +1068,14 @@ public class SmPersonnelBackingBean extends
 										.getDistrictId());
 						address.getPmCity().setCityId(
 								smPA.getSmAddress().getPmCity().getCityId());
-						//#13320 - added division
+						//#13320 - added division - start
 						if(smPA.getSmAddress().getPmDivision() != null){
-							address.getPmDivision().setDivisionId(
-									smPA.getSmAddress().getPmDivision().getDivisionId());
-							address.setDivisionId(smPA.getSmAddress().getDivisionId());
+							Long divId = smPA.getSmAddress().getPmDivision().getDivisionId();
+							address.getPmDivision().setDivisionId(divId);
+							address.setDivisionId(divId);
+							getManagedBean().setMailDivisionId(divId);
 						}
+						//#13320 - added division - end
 						address.setPostcode(smPA.getSmAddress().getPostcode());
 						smPA.setSmAddress(address);
 						this.getManagedBean()
@@ -1091,9 +1097,10 @@ public class SmPersonnelBackingBean extends
 								smPA.getSmAddress().getPmCity().getCityId());
 						//#13320 - added division - start
 						if(smPA.getSmAddress().getPmDivision() != null){
-							address.getPmDivision().setDivisionId(
-									smPA.getSmAddress().getPmDivision().getDivisionId());
-							address.setDivisionId(smPA.getSmAddress().getDivisionId());
+							Long divId = smPA.getSmAddress().getPmDivision().getDivisionId();
+							address.getPmDivision().setDivisionId(divId);
+							address.setDivisionId(divId);
+							getManagedBean().setDivisionId(divId);
 						}
 						//#13320 - added division - end
 						address.setPostcode(smPA.getSmAddress().getPostcode());
