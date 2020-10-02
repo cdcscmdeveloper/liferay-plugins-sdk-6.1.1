@@ -230,7 +230,8 @@ public class SupplierFinalizationBackingBean extends
 			Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									.getUserId();
 			getManagedBean().setLoggedInUserId(loggedInUserId);
-
+			
+			loadInitialData(qtId);
 			if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
 					&& Arrays.asList(
 							new String[] {
@@ -239,9 +240,7 @@ public class SupplierFinalizationBackingBean extends
 							.contains(this.getManagedBean().getTaskName())) {
 				prepareUpdateCommitteeMember();//#25037
 			}
-			loadInitialData(qtId);
-			prepareUpdateCommitteeMember();//#25037
-			
+						
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
