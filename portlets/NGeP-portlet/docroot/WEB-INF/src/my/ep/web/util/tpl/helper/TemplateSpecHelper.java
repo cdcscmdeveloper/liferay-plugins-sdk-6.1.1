@@ -214,8 +214,11 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setMaxScore(null);
 								}
 								
-								newSpecQuestion.setWeightageReq(false);
-								newSpecQuestion.setWeightage(null);
+								
+								//Danial - #8979 - no need to set setWeightageReq & setWeightage
+								
+								//newSpecQuestion.setWeightageReq(false);
+								//newSpecQuestion.setWeightage(null);
 								
 								if (prevNewSpecQuestion != null && TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newSpecQuestion.getQuestionType())) {
 									String prevQuestionType = prevNewSpecQuestion.getQuestionType();

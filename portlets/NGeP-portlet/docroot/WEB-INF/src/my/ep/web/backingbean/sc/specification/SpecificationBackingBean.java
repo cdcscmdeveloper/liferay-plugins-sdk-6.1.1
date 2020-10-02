@@ -12723,6 +12723,16 @@ public class SpecificationBackingBean extends
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
 							getManagedBean().getQt().isTechEvaluationReq(),
 							true);
+			
+			//Danial - #8979 - if partial, no need to set weightage
+			if(this.getManagedBean().getQt().isPartial()){
+				//set null
+				for(TplSpecQuestion q:specMaster.getTplSpecQuestions()){
+					q.setWeightageReq(false);
+					q.setWeightage(null);
+				}
+			}
+			
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 			if (getManagedBean().getQt().isZonal()) {
