@@ -164,7 +164,8 @@ public interface QTConstants {
 	public static final String FINANCIAL_ASSET_LIABILITY_CODE = "AL";
 	public static final String FINANCIAL_PAID_UP_CAPITAL_CODE = "PC";
 	public static final String FINANCIAL_SUPPLIER_DETAILS_CODE = "SD";
-
+	
+	public static final String INITIAl_SCORE = "0";//#29168
 	public static final String AUTO_SCORE = "1";
 	public static final String USER_SCORE = "2";
 
