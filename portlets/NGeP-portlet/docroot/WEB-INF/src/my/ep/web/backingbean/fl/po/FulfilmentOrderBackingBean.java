@@ -1148,6 +1148,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)){
 						yepReqDTO.setFlOrder(getManagedBean().getFulfilmentOrder());
+						yepReqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
 						yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
 						yepReqDTO.setFlRequest(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest());
 						yepReqDTO.setCarryFoward(true);
@@ -1159,15 +1160,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					reqDTO.setTaskId(getManagedBean().getTaskId());
 					reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
 					
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED) &&
-							getManagedBean().getFulfilmentOrder()!=null && getManagedBean().getFulfilmentOrder().getSapOrderNo() != null){
-						String sapOrderNo = checkSapOrderNo(getManagedBean().getFulfilmentOrder().getDocNo());
-
-						if(sapOrderNo!=null){
-							getManagedBean().getFulfilmentOrder().setSapOrderNo(sapOrderNo);
-						}			
-					}
-					
+										
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)){
 						Map<String, String> paramMap = new HashMap<String, String>();
 						paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getFulfilmentOrder().getDocNo());
@@ -1194,6 +1187,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 					reqDTO.setUserRole(getUserRole());
 					reqDTO.setTaskName(getManagedBean().getTaskName());
+					reqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
 					
 					if(getManagedBean().getPmDigiSign() != null){
 						reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -1213,7 +1207,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					
 					if(resDTO.isSuccessful()) {
 						String messageId = MessageConst.INFO_700033;
-						String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+						String documentType = getManagedBean().getFulfilmentOrder().getDocType();
 						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)) {
 							messageId = MessageConst.INFO_745023;
