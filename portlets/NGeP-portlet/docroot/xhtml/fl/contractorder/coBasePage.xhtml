@@ -109,7 +109,28 @@
 						immediate="true" /></td>
 			</c:if>
 			<td colspan="4" style="text-align: right">
-				<!-- #28374	Vinod Start -->
+				<!-- #28375- Beginning - Logan-->
+					
+				
+					
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+		
+				<p:commandButton
+						value="#{lbl['lbl.fl.yep.proceed']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" disabled="#{flOrderBB.managedBean.disable}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
+					</p:commandButton>
+					
+									<p:commandButton
+						value="#{lbl['lbl.fl.yep.carryForward']}" 
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" >
+						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
+					</p:commandButton>
+			</c:if>
+					
+					
+					<!-- #28375- Ending -->
+	<!-- #28374	Vinod Start -->
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
 					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
 					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
@@ -131,6 +152,7 @@
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- end 28377 -->
 			</td>
+
 				<h:panelGroup id="printButtonCo">
 					<td style="text-align: right; width: 30px;"><p:commandLink
 							value="#{lbl['lbl.btn.print']}" ajax="false">
