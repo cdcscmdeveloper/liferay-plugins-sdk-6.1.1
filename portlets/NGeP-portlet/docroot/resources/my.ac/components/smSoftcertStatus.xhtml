@@ -12,29 +12,29 @@
 	</cc:interface>
 
 	<cc:implementation>
-		<p:outputPanel rendered="#{cc.attrs.personnel.authorizedFlg eq 1}">
-			<p:outputLabel styleClass="outputLabel-view"
+		<h:panelGroup rendered="#{cc.attrs.personnel.authorizedFlg eq 1}">
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.request.failed']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '9' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
-			<p:outputLabel styleClass="outputLabel-view"
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.ready.renewal']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '7' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
-			<p:outputLabel styleClass="outputLabel-view"
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.rejected']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '6' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
-			<p:outputLabel styleClass="outputLabel-view"
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.pending.request']}" rendered="#{cc.attrs.personnel.softcertFlg eq '4'}" />
-			<p:outputLabel styleClass="outputLabel-view"
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.processing']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '3' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
-			<p:outputLabel styleClass="outputLabel-view"
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.requested']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '2' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
-			<p:outputLabel styleClass="outputLabel-view"
+			<h:outputText styleClass="outputLabel-view" escape="false" 
 				value="#{lbl['lbl.sm.person.composition.issued']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '1' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
-		</p:outputPanel>
-		<p:outputLabel styleClass="outputLabel-view"
+		</h:panelGroup>
+		<h:outputText styleClass="outputLabel-view"
 			value="#{lbl['lbl.txt.na']}"
 			rendered="#{cc.attrs.personnel.softcertFlg eq '0' or cc.attrs.personnel.epRole eq 'CM_USER' 
 				or empty cc.attrs.personnel.epRole or cc.attrs.personnel.authorizedFlg eq 0}" />
