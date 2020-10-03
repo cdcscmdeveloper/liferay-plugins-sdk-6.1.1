@@ -255,6 +255,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	/** The is loa title. */
 	private boolean isLoaTitle = Boolean.FALSE;
 	
+	//start #22211
+	private List<PmUser> loacancelapproverList;
+	
+	private PmUser loacancelapproverUser;
+	//end #22211
+	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgressivePayments;
 	
@@ -1564,4 +1570,21 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setFlowamt(Boolean flowamt) {
 		this.flowamt = flowamt;
 	}
+
+	public List<PmUser> getLoacancelapproverList() {
+		return loacancelapproverList;
+	}
+
+	public void setLoacancelapproverList(List<PmUser> loacancelapproverList) {
+		this.loacancelapproverList = loacancelapproverList;
+	}
+
+	public PmUser getLoacancelapproverUser() {
+		return loacancelapproverUser;
+	}
+
+	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
+		this.loacancelapproverUser = loacancelapproverUser;
+	}
+
 }
