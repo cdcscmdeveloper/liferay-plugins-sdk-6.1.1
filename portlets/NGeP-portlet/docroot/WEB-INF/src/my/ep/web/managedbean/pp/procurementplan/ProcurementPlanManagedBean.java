@@ -144,7 +144,9 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean editable;
 	//#24975 17/03/20 - end
 	
+	//25549@18092020 - start
 	private boolean disable;
+	//25549@18092020 - end
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -1337,6 +1339,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	//#24975 17/03/20 - end
 	
+	//25549@18092020 - start
 	public boolean isDisable() {
 		return disable;
 	}
@@ -1344,5 +1347,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setDisable(boolean disable) {
 		this.disable = disable;
 	}
+	//25549@18092020 - end
 
 }
