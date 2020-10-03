@@ -35,6 +35,19 @@
 				<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 					rendered="#{lOADetailBackingBean.managedBean.editFlag}"
 					style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
+				<ui:remove>
+					Enhancement #21694 START
+				</ui:remove>
+				<h:panelGroup rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew}">
+					<p:commandButton value="#{lbl['lbl.btn.reverse']}" id="btnReverse" action="#{lOADetailBackingBean.reverseAction()}"
+						rendered="#{isEditableStatus and !isSaveHideSqExpired}" process="@form" update="@form"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+						<p:tooltip id="toolTipFade" for="btnReverse" value="#{lbl['lbl.btn.reverse.tooltip']}" position="top"/>
+					</p:commandButton>
+				</h:panelGroup>				
+				<ui:remove>
+					Enhancement #21694 END
+				</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{lOADetailBackingBean.saveAction(false)}"
 					rendered="#{isEditableStatus and !isSaveHideSqExpired}" process="@form" update="@form"
@@ -51,6 +64,23 @@
 					action="#{lOADetailBackingBean.cancelPrepareLoaAction}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
+				<ui:remove>
+					Enhancement #22211 START
+				</ui:remove>
+				<h:panelGroup rendered="#{bpmAction == 'CANCEL'}">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" id="cancelLoaBtn"
+						rendered="#{isLoaGenerated}"
+						action="#{LOACancelDetailBackingBean.cancelationLOA(lOADetailBackingBean.managedBean.scLoa.loaId)}"
+						process="@form" update="@form" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+				</h:panelGroup>
+				<p:tooltip for="cancelLoaBtn">
+					<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip']}"
+						escape="false" />
+				</p:tooltip>
+				<ui:remove>
+					Enhancement #22211 END
+				</ui:remove>
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
@@ -71,8 +101,35 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-							
-							<h:panelGroup rendered="#{bpmAction != 'CANCEL'}">
+							<ui:remove>
+							Enhancement #21694 START
+							</ui:remove>
+							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
+								<p:commandButton value="#{lbl['lbl.btn.supplierAction']}"
+									rendered="#{isPendingVerification and isSqStillValid}"
+									onstart="blockWidget.show();cd.show();"
+									oncomplete="blockWidget.hide();" />
+								<p:confirmDialog
+									message="#{lbl['lbl.sc.loa.supplier.reviseDocument']}"
+									header="#{lbl['lbl.sc.dialog.cofirm.header']}"
+									severity="alert" widgetVar="cd">
+									<div class="ppRightBtn">
+										<p:commandButton value="#{lbl['lbl.btn.yes']}"
+											process="@form"
+											update="@all"
+											actionListener="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+											onclick="blockWidget.show();"
+											oncomplete="cd.hide();blockWidget.hide();" id="submitReviseLOA"
+											partialSubmit="true" immediate="true" />
+										<p:commandButton value="#{lbl['lbl.btn.no']}"
+											oncomplete="cd.hide();" />
+									</div>
+								</p:confirmDialog>
+							</h:panelGroup>
+							<ui:remove>
+							Enhancement #21694 END
+							</ui:remove>
+							<h:panelGroup rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE')}">
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
