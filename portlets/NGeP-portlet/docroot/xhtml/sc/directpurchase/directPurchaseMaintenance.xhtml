@@ -15,6 +15,24 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
 		<ac:lovPopup />
+		<p:confirmDialog
+			header="#{lbl['lbl.sc.message']}" 
+			message="#{lbl['lbl.sc.loa.cancel.rnapprover.popup']}" 
+			severity="alert" widgetVar="RnAppAlert">
+			<div class="ppRightBtn">			
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					oncomplete="RnAppAlert.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog
+			header="#{lbl['lbl.sc.message']}"
+			message="#{lbl['lbl.sc.loa.cancel.do.popup']}" 
+			severity="alert" widgetVar="DOAlert">
+			<div class="ppRightBtn">			
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					oncomplete="DOAlert.hide();" />
+			</div>
+		</p:confirmDialog>
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table style="width: 100%;">
@@ -171,6 +189,19 @@
 							icon="ui-icon-cancel"
 							action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />
 					</p:menuButton>
+					
+					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq DPStatusConstants.loaPendingSubmission
+					or Obj[4] eq DPStatusConstants.loaPendingApproval
+					or Obj[4] eq DPStatusConstants.loaPendingRevision
+					or Obj[4] eq DPStatusConstants.loaPendingRevisionApproval}">
+						<p:menuitem id="cancelLoaBtnIcon" value="#{lbl['lbl.btn.cancel']}"
+								icon="ui-icon-cancel"
+								action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />					
+					</p:menuButton>	
+					
+					<p:tooltip for="cancelLoaBtnIcon">
+						<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip']}" escape="false" />
+					</p:tooltip>				
 				</p:column>
 
 			</p:dataTable>

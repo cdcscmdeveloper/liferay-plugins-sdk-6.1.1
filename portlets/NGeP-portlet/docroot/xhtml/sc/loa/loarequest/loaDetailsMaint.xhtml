@@ -32,7 +32,8 @@
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
 		<ui:param name="isSqStillValid" value="#{lOADetailBackingBean.isSqStillValid()}" />
 		<ui:param name="isSaveHideSqExpired" value="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isSqStillValid}" />
-			
+		<ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	
+		<ui:param name="isLoaGenerated" value="#{lOADetailBackingBean.isLoaGenerated()}" />	
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		
@@ -56,6 +57,12 @@
 		<h:outputText styleClass="instruction" rendered="#{isPendingVerification}"
 			value="#{lbl['lbl.sc.loiloa.loa.verify.instruction']}">
 		</h:outputText>
+		<br />
+		<!-- #22211 Start -->
+		<h:outputText styleClass="instruction" rendered="#{isPendingVerification and isSqStillValid and !isTrackingDairyView}"
+			value="#{lbl['lbl.sc.loa.supplier.reviseDocument.instruction']}">
+		</h:outputText>
+		<!-- #22211 End -->
 		
 	    <table border="0" cellspacing="0" cellpadding="0" width="100%">
 		  <tr>
@@ -88,6 +95,9 @@
 					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{!lOADetailBackingBean.managedBean.scLoa.approvalReq}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
 					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.approval']}" update="@form"  disabled="#{!isLOACancelByApprover}">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="8" />
+					</p:menuitem>				
 				</p:tabMenu>
 			</td>
 			<td width="80%" valign="top">
@@ -122,6 +132,10 @@
 					
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 7 : 6)}">
 						<ui:include src="loaApprovalMenu.xhtml" />
+					</c:if>
+					
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 8}">
+						<ui:include src="loaCancelMain.xhtml" />
 					</c:if>
 				</h:panelGroup>
 			</td>
