@@ -12,6 +12,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,6 +42,7 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -70,6 +72,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -96,11 +99,13 @@ import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -114,6 +119,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -139,6 +145,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -152,6 +159,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -250,12 +258,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setSameSupplierLoiLoaList(supplierLoiLoas);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
-			
 			if(!scLoa.isBrandNew())
 			{
 				getManagedBean().setFlowamt(scLoa.isFollowLoaAmt());
 			}
-			
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
 			if (awardDataType != null){
@@ -342,6 +348,63 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	/**
+	 * Enhancement #21694
+	 * to be used in Screen From Tasklist Only
+	 * @param obj
+	 * 		instance of ScQt/ScLoiForQt/ScLoaForQt
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public String reverseAction() {
+		
+		debugLogger("viewReverseStatusDetails");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		//String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		ScQt scQt = this.getManagedBean().getScQt();
+		ScLoaForQt scLoaForQt = new ScLoaForQt();
+		
+		/**
+		 * FINDING QT WORKFLOW-> CASE REVERSAL QT
+		 */
+		IScWorkFlowStatusSO workFlowStatusSO;
+		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);	
+		scWreqDTO.setDocId(scQt.getQtId());		
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOA)) {
+			throw new EpException(MessageConst.ERROR_760497,new String[]{scQt.getQtNo()});
+		}
+		
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setLoaId(scLoa.getLoaId());
+		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLoaForQtByLoaId(reqDTO);
+		
+		scLoaForQt = resDTO.getScLoaForQt();
+		
+		qtDtl.getManagedBean().setEditable(Boolean.TRUE);		
+			
+		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
+		otherArgs.put(MapKeyEnum.loiLoaSelected, scLoa);
+		
+		/* FINDING WORKFLOW STATS*/
+		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+		scWreqDTO.setDocId(scLoa.getLoaId());
+		
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		qtDtl.getManagedBean().setPreviousPage(this.getManagedBean().getBackToPreviousPage());
+		qtDtl.getManagedBean().setQt(scQt);
+		qtDtl.getManagedBean().setScLoaForQt(scLoaForQt);
+		qtDtl.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, qtDtl.reverseQtDetails(Boolean.FALSE,Boolean.TRUE,qtDtl));
+		
+		return null;
+	}
+	
+	/**
 	 * Get the supplier loa details.
 	 * 
 	 * @param sourceId 
@@ -352,6 +415,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * 		the previous page url.
 	 * @param isReadonly
 	 * 		the readonly flag
+	 * @param enableDownloadAllDocuments
+	 * 		either user can download documents
 	 * 
 	 * @return the supplier loa page
 	 */
@@ -3051,6 +3116,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			//22211 - start
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			//22211 - end
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
@@ -3060,7 +3128,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
 				String messageCode = null;
-				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) || 
+				if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) && !isSqStillValid()){
+					messageCode = MessageConst.INFO_700031; 
+				}
+				else if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) || 
 						QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
 
 					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
@@ -3193,12 +3264,180 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-		} 
-		else {
+		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+			// Enhancement #21694 START
+			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+			if(this.getManagedBean().getScLoa().getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_VERIFICATION
+					//22111 - START
+					|| QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
+							.getStatusId().longValue())) {				
+				if (this.getManagedBean().getScQt() != null ){
+					//22211 - END
+					updateReviseBPMTaskAction(outcome);				
+				//22111 - START
+				}else{
+					updateReviseBPMTaskActionWithoutQt(outcome);
+				}//22211 - END
+			}else{
+				updateBpmTaskAction(outcome);
+			}
+			//Enhancement #21694 END
+		}else {
 			updateBpmTaskAction(outcome);
 		}
 	}
 	//20190405@asyrafhaziq - CR25062 - End
+	
+	/**
+	 * Enhancement #21694
+	 * Update bpm task action.
+	 * STAGE REVISE (VERIFY) -> LOA Acceptance (Supplier Action)
+	 * STAGE LOA Acceptance(Supplier Action) -> REVISE (VERIFY)
+	 * update bpm - save data into database and BPM process will route to the next respective user.
+	 * @param outcome the outcome
+	 */
+	public void updateReviseBPMTaskAction(String outcome){
+		debugLogger("updateReviseBPMTaskAction");
+		
+		/*******************
+		 * INITIATE BPM REVISE
+		 */
+		PmParameter procurementMode = this.getManagedBean().getScQt().getProcurementMode();
+		IScActorSO actorSO;
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		ScActorReqDTO actorReqDTO=new ScActorReqDTO();
+		actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+		reqDTO.setScLoa(this.getManagedBean().getScLoa());
+		reqDTO.setPayLoad(getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setQuotation(null!=procurementMode && procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)?true:false);
+		
+		actorReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+		actorReqDTO.setDocTypes(Arrays.asList(ParameterConst.DOCTYPE_QUOTATION));
+		switch(this.getManagedBean().getScQt().getFinalization().getLoiLoaBy()){
+			case ParameterConst.LOILOA_PREPARED_BY_DO	:	//DESK OFFICER
+																actorReqDTO.setUserId(this.getManagedBean().getScQt().getCreatedBy());
+																break;
+			case ParameterConst.LOILOA_PREPARED_BY_FC_SECRETARY	:	//SECRETARY
+																if(null!=this.getManagedBean().getScLoa()){
+																	actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+																}else{
+																	actorReqDTO.setUserId(this.getManagedBean().getScLoa().getCreatedBy());
+																}
+																break;
+		}
+		reqDTO.setScActors(actorSO.retreiveActorByDocTypesDocIdUserId(actorReqDTO).getScActorList());
+		AwardSupplierResDTO resDTO = getQtAwardSO().reviseDocumentLOA(reqDTO);		
+		if(resDTO.isSuccessful()){
+			/*******************
+			 * ACKNOWLEDGE_PAGE
+			 *******************/
+			String[] param = new String[3];
+			
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[1] = this.getManagedBean().getScQt().getQtNo();
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			if(reqDTO.getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_REVISE_DOC)){
+				if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+					successMessage(MessageConst.INFO_700079,param);
+				} else if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_TENDER)) {
+					successMessage(MessageConst.INFO_700080,param);
+				}
+			}else{
+				if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+					successMessage(MessageConst.INFO_700077,param);
+				} else if (procurementMode != null
+						&& procurementMode.getParameterCode().equals(
+								ParameterConst.PROCUREMENT_MODE_TENDER)) {
+					successMessage(MessageConst.INFO_700078,param);
+				}
+			}			
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}		
+	}
+		
+	// #22211 - Start
+	public void updateReviseBPMTaskActionWithoutQt(String outcome) {
+		debugLogger("updateReviseBPMTaskActionWithoutQt");
+
+		AwardSupplierResDTO resDTO = null;
+
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		parseLOADetails(scLoa, outcome);
+
+		validateLOADetails(scLoa, outcome);
+		scLoa.setScLoaRemarks(null); //To skip adding remark
+
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+		if (this.getManagedBean().getSelectedPtj() != null) {
+			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+		}
+		reqDTO.setScLoa(scLoa);
+		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		reqDTO.setPayLoad(getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			/*******************
+			 * ACKNOWLEDGE_PAGE
+			 *******************/
+			String[] param = new String[3];
+
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[1] = reqDTO.getRequestNoteNo();
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			if (reqDTO.getScLoa().getPmStatus().getStatusId()
+					.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+				successMessage(MessageConst.INFO_700085, param);
+			} else {
+				successMessage(MessageConst.INFO_700084, param);
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+	// #22211 - End
+
+	// #22211 - start
+	public boolean isLoaReviseStatus() {
+
+		Boolean loaReviseStatus = false;
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+
+		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
+				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+			loaReviseStatus = true;
+		}
+
+		return loaReviseStatus;
+	}
+
+	// #22211 - end
 	
 	/**
 	 * Update bpm task action.
@@ -3401,6 +3640,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		
+		//22211 - start
+		if(BpmOutcomeConst.BPM_RESUBMIT.equals(outcome)){
+			if(CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
+				for(ScLoaReport loaReport : scLoa.getScLoaReports()) {
+					if(loaReport.getDefinationType().getParameterCode().equals(
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
+							loaReport.getScLoaReportAttachment() == null) {
+						throw new EpException(
+								MessageConst.ERROR_760441, new String[] {loaReport.getTitle()});
+					}
+					if(statusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION) && 
+							loaReport.getDefinationType().getParameterCode().equals(
+									ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD) &&
+									null == loaReport.getScLoaReportAttachment()){
+						throw new EpException(MessageConst.ERROR_760441,
+								new String[] {loaReport.getTitle()});
+					}	
+				}
+			}
+		}
+		//22211 - end
+		
 		// validate deduction payamment for Others
 		validateDeductionPaymentDtls(scLoa);
 
@@ -6669,6 +6931,103 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		Integer sqTimeValidity = null;
+		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
+
+		// by default days
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
+		if (ruleValueList != null && ruleValueList.size() > 0) {
+			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
+		} else {
+			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
+		}
+
+		if(scQuote != null){
+			
+			Date currentDate = new Date();
+			Date closingDate = scQuote.getEndDate();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+			
+			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+				if(currentDate.compareTo(cal.getTime()) >= 0){
+					validDate = false;
+					sqExpiredMessageFlag = true;
+				}
+			}	
+		}			
+		return validDate;	
+	}
+	
+	//#22211 - show LOA Cancellation Approver Detail
+	public boolean isLOACancelByApprover(){
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);		
+		
+		Boolean loaCancelled = false;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		ScLoa scloa = getManagedBean().getScLoa();		
+		
+		ScLoaApproval scLoaApproval = scloa.getScLoaApproval();
+		PmUser approverUser = null;
+		if (scLoaApproval != null) {
+			approverUser = scLoaApproval.getApprover();
+		}
+		if (approverUser == null) { 
+			approverUser = new PmUser();
+		}
+		getManagedBean().setLoacancelapproverUser(approverUser);
+				
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(getUserRoleCode(scloa.getScLoiLoa().getDocType()));
+		userReqDTO.setOrgProfileId(scloa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+		
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		getManagedBean().setLoacancelapproverList(userResDTO.getUserList());	
+		
+		if(currentStatusId.equals(QTStatusConst.LOA_CANCELLED)){
+			loaCancelled = true;
+		}
+		return loaCancelled;
+	}
+	
+	//#22211 - Check if Loa already generated
+	public boolean isLoaGenerated(){
+		Boolean loaGenerated = false;	
+		ScLoa scloa = this.getManagedBean().getScLoa();
+		
+		if(scloa != null) {
+			loaGenerated = true;	
+		}
+		return loaGenerated;
+	}
+	
+	public void cancelLoa(String outcome) {
+		debugLogger("cancelLoa");
+		this.getManagedBean().setAction(outcome);
+		
+		updateBPMTask(outcome,null);
+	}
+	//#22211 - End
+	
+	/**
 	 * @param e
 	 */
 	public void selectAllSchedule(AjaxBehaviorEvent e) {
@@ -6802,58 +7161,5 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
 		}
-	}
-	
-	/**
-	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
-	 */
-	public boolean isSqStillValid(){		
-		
-		Boolean validDate = true;	
-		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
-		Integer sqTimeValidity = null;
-		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
-
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
-
-		if(scQuote != null){
-			
-			Date currentDate = new Date();
-			Date closingDate = scQuote.getEndDate();
-			
-			Calendar cal = Calendar.getInstance();
-			cal.clear(); 
-			cal.setTime(closingDate);
-			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
-			
-			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-				if(currentDate.compareTo(cal.getTime()) >= 0){
-					validDate = false;
-					sqExpiredMessageFlag = true;
-				}
-			}	
-		}			
-		return validDate;	
-	}
-	
-	public void cancelLoa(String outcome) {
-		debugLogger("cancelLoa");
-		this.getManagedBean().setAction(outcome);
-		
-		updateBPMTask(outcome,null);
-	}
+	}//#25022-end
 }
