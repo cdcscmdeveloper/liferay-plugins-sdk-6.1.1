@@ -322,6 +322,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(Boolean.TRUE);
+			//#26475 - start
+			if (getManagedBean().getSelectedPtj() == null){
+				getManagedBean().setSelectedPtj(scLoa.getContractAgency());
+			}
+			//#26475 - end
 			
 			//Enhancement #12177
 			if(!getManagedBean().isTrackingDairyView()){
@@ -3204,6 +3209,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			//#26475 - start
+			if (this.getManagedBean().getSelectedPtj() != null){
+				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
+			//#26475 - end
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -6824,6 +6834,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}	
+		
+		//#26475 - start
+		List<PmUser> pmUserList = getUsersByAgency();
+		PmUser pmUserNull = null;
+		if(CollectionUtils.isEmpty(pmUserList)){
+			throw new EpException(MessageConst.ERROR_760512);
+		}else{
+			scLoa.setContractAdmin(pmUserNull);
+		}
+		//#26475 - end
 	}
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
