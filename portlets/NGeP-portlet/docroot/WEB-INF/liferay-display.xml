@@ -24,6 +24,7 @@
 			<portlet id="ctRequestFactoring" />
 			<portlet id="ctSuppAgreement" />
 			<portlet id="ctContractSuspend" />
+			<portlet id="ctContractReqadmin" />
 			<portlet id="ctContractTerminate" />
 			<portlet id="ctContractAmendment" />
 			<portlet id="ctChangeBankAccount" />

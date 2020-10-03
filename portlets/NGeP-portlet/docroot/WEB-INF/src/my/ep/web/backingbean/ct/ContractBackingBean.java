@@ -4281,5 +4281,71 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//#25703 end
 	}
 	
+	/*#21387 - basri start*/
+	public SelectItem[] getUsersByAgency() {
+		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
+		IUserSO uSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		ISearchResultBean<PmUser> resultBean = uSO.retrieveMinistryUserList(searchBean);
+		List<PmUser> pmUsers = resultBean.getResultList();
+		log.info("Number of Users = " + pmUsers.size());
+
+		SelectItem[] items = getDropdownUsers(pmUsers);
+		return items;
+	}
+
+	protected ISearchBean<PmUser> contractAdminSearchBean() {
+		ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+
+		PmOrgProfile pmOrgProfile = this.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
+		String roleCode = contractAdminRoleCode();
+		
+		if (null != pmOrgProfile.getPmOrgValidity()) {
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
+						.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+						+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+						SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
+								pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
+		}
+		if (roleCode != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmUserRoles.pmRole.roleCode", SearchOperator.OPERATOR_EQUALS
+							.value(), roleCode));
+		}
+
+		return searchBean;
+	}
+	
+	
+	public boolean isToShow(){
+		
+		boolean show = false;
+		
+		if(this.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getStatus().getStatusId().intValue()
+				== ContractStatusConst.RA_PENDING_APPROVAL){
+			show = true;
+		}else{
+			show =  this.getManagedBean().getContractVer().getCtContract().isAssignedCtAdminFlag();
+		}
+		
+		return show;
+	}
+
+	private String contractAdminRoleCode() {
+		String contractType = getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
+		String roleCode = null;
+		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
+			roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			roleCode = RoleCode.BPK_CCA.value();
+		}
+		return roleCode;
+	}
+	/*#21387 - basri end*/
+	
 
 }  

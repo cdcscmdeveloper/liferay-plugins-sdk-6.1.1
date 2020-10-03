@@ -18,7 +18,9 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
@@ -34,6 +36,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -134,7 +137,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,
 					"central-contract-circular");
 			temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
+					+ ParameterConst.DOCTYPE_PANEL_CIRCULAR,
+					"panel-circular");
 			temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME,
 					"cancel-circular-approval");
 			temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME
@@ -151,15 +155,24 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"contract-suspension");
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME,
 					"contract-suspension");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME,
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, 
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME,
+					"contract-reqadmin");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_CONTRACT_UPDATE,
+					"fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING,
+					"fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
-					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, "fulfilment-details");
+					+ ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT, 
+					"fulfilment-details");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
@@ -983,7 +996,37 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 		log.info("**********claimTask");
 		
+		/*21387 - basri*/
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
+		
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("docNumber");
+		
+		String docType = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("docType");
+	
+		
+		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+		    List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
+		    
+		    
+		    for(WorklistItemVO a : list){
+		    	String var = a.getDocNumber();
+		    	String taski = a.getTaskId();
+		    	if(var.equalsIgnoreCase(docNumber)){
+		    		claimBpmTaskGroup(taski);
+		    		
+		    	}
+	    	
+		    	
+		    	
+		    }
+		}else{
 			claimBpmTask();
+		}
+		    /*21387 - basri*/
+		    
 			
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
