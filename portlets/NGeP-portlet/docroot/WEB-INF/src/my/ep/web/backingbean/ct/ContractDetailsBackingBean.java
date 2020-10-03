@@ -136,6 +136,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
+	/*#21387-basri start*/
+	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml?faces-redirect=true";/*#21387-basri*/
+//	/*#21387-basri end*/
 
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
@@ -2189,7 +2192,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 		reqDTO.setUpdateAction(true);
-
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		SuspensionBackingBean	suspBB = new SuspensionBackingBean();
 		suspBB.getManagedBean().setViewOnly(false);
@@ -2437,6 +2439,37 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return CHANGE_BANK_ACCOUNT_PAGE;
 	}
 
+	/**
+	 * The method ised to navigate to request or remove contract admin
+	 * @param contractId
+	 * @return the navigate URL
+	 */
+	
+	/*#21387-basri start*/
+	 public String goToRequestCtAdmin(Long contractId,String doctype){
+		 
+		 	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractId(contractId);
+			CtContractVer contractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+			
+			reqDTO.setContractVerId(contractVer.getContractVerId());
+			reqDTO.setDocType(doctype);
+			reqDTO.setUpdateAction(true);
+			ctBB.getManagedBean().setNotificationSetting(false);
+			RequestCtAdminBackingBean	rcaBB = new RequestCtAdminBackingBean();
+			rcaBB.getManagedBean().setViewOnly(false);
+			rcaBB.getManagedBean().setExternalPageUrl(null);
+			rcaBB.setRequestCtAdminContractVer(reqDTO);
+			
+			/*if(rcaBB.getManagedBean().getContractVer())*/
+			
+			return REQUEST_CONTRACT_ADMIN;
+		
+		
+	 }
+	 /*#21387-basri end*/
+	
 	/**
 	 * The method used to navigate to request factoring screen
 	 * for request or remove factoring company purpose.
@@ -3059,6 +3092,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
 
+	
+//	#21387 - basri
+	public boolean isSelectedCtAdmin(Long userName ,Long flag){
+		
+		if(userName.intValue() == 0){
+			return true;
+		}
+		else if(userName.intValue() == getFacesScopes().getUserSessionBean().getUserId().intValue() && flag == 1 && isContractAdmin()){
+			return true;
+		}else if(userName.intValue() != getFacesScopes().getUserSessionBean().getUserId().intValue() && flag == 1 && isContractAdmin()){
+			return false;
+		}else{
+			return true;
+		}
+		
+		
+	}
+//	#21387 - basri
+	
 	/**
 	 * The method used to disable the ministry lov
 	 * if login user is central contract administrator
