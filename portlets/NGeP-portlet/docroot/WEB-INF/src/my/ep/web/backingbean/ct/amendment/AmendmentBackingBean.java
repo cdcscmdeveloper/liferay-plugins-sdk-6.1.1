@@ -4349,6 +4349,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		boolean representativeSecretary = true;
 		boolean representativeOfficer = true;
 		boolean representativeDirector = true;
+		
+		//26687 start
+		int countMember = 0;
+		//26687 end
+		
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
@@ -4390,6 +4395,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						representativeBPK = false;  
 					}
 				}
+				
+				//#26687 start
+				/*
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(
 						ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
 					if (committeObj.isAttended() && committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(
@@ -4415,7 +4423,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
 						representativeDirector = false;  
 					}
+				}*/
+				
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+					if (committeObj.isAttended() 
+							&& (committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)
+							|| committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)
+							|| committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SBH))) {
+						countMember++;
+						
+					}
 				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (committeObj.isAttended() 
+							&& (committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)
+							|| committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK)
+							|| committeObj.getRepresentativeType().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK))) {
+						countMember++;
+						
+					}
+				}
+				//#26687 end
 			}
 		}    
 		if (chairpersonRole) {
@@ -4424,22 +4452,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson.attendance", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
-		if (secretaryRole){
-			setTabValue("DCN");
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.attendance", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-
-		}
-		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-				|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-			if (memberRole) {
+		
+		//#26687 start
+		if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+				&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+			if (secretaryRole){
 				setTabValue("DCN");
 				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.member.attendance", 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary.attendance", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+
+			}
+			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
+					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+				if (memberRole) {
+					setTabValue("DCN");
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.member.attendance", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
 			}
 		}
+		
+		//#26687 end
+		
 		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
 			if (representativeJKR) {
 				setTabValue("DCN");
@@ -4464,7 +4500,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.bpk", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+		} 
+		//#26687 start
+		/*
+		else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
 			if (representativeOfficer) {
 				setTabValue("DCN");
 				throw new EpException(MessageConst.ERROR_100022, 
@@ -4497,7 +4536,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.attendance.director.sarawak", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
+		}*/
+		else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+			if(countMember<1) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_750057);
+			}
+			else if(countMember>0 &&countMember<2){
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_750058);
+			}
+		}else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+			if(countMember<1) {
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_750057);
+			}
+			else if(countMember>0 &&countMember<2){
+				setTabValue("DCN");
+				throw new EpException(MessageConst.ERROR_750058);
+			}
 		}
+		
+		//#26687 end
 	}
 
 	/**
@@ -4514,6 +4574,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		boolean representativeSecretary = true;
 		boolean representativeOfficer = true;
 		boolean representativeDirector = true;
+		
+		//26687 start
+		int countMember = 0;
+		//26687 end
+		
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
@@ -4561,6 +4626,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						representativeBPK = false;  
 					}
 				}
+				
+				//#26687 start
+				/*
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
 					if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)) {
 						representativeOfficer = false;  
@@ -4570,6 +4638,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						representativeSecretary = false;  
 					}
 				}
+				
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					if (representativeCode.equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
 						representativeSecretary = false;  
@@ -4578,31 +4647,55 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					} else if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
 						representativeDirector = false;  
 					}
+				}*/
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+					if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SBH)
+							|| representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_ASSISTANT_DIRECTOR_SBH)
+							|| representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SBH)) {
+						countMember++;
+						
+					}
 				}
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					if (representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)
+							|| representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_STATE_DEV_OFFICER_SWK)
+							|| representativeCode.equalsIgnoreCase(ParameterConst.COMMITTEE_REPRESENT_JKR_DIRECTOR_SWK)) {
+						countMember++;
+						
+					}
+				}
+				//#26687 end
+				
 			} else if (committeMember.getMemberRole() == null || committeMember.getMemberRoleId() == null) {
 				setTabValue("MET");
 				new EpException(MessageConst.ERROR_750025);
 			}
 		}
-
+		
 		if (chairpersonRole) {
 			setTabValue("MET");
 			throw new EpException(MessageConst.ERROR_100022, 
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
-		if (secretaryRole) {
-			setTabValue("MET");
-			throw new EpException(MessageConst.ERROR_100022, 
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		
+		//#26687 start
+		if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)
+				&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+			if (secretaryRole) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.secretary", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			if(memberRole) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_100022,
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.member", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
 		}
-		if(memberRole) {
-			setTabValue("MET");
-			throw new EpException(MessageConst.ERROR_100022,
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.member", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		}
+		//#26687 end
 
 		if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
 			if (representativeJKR) {
@@ -4628,8 +4721,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.bpk", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
-			if (representativeOfficer) {
+		} 
+		
+		//#26687 start
+		else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
+			/*if (representativeOfficer) {
 				setTabValue("MET");
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.officer.sabah", 
@@ -4643,9 +4739,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.secretary.sabah", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}*/
+			if(countMember<1) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_750059);
+			}
+			else if(countMember>0 &&countMember<2){
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_750060);
 			}
 		} else if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-			if (representativeSecretary) {
+			/*if (representativeSecretary) {
 				setTabValue("MET");
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.secretary.sarawak", 
@@ -4660,8 +4764,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.representative.director.sarawak", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}*/
+			
+			if(countMember<1) {
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_750055);
+			}
+			else if(countMember>0 &&countMember<2){
+				setTabValue("MET");
+				throw new EpException(MessageConst.ERROR_750056);
 			}
 		}
+		//#26687 end
+		
 	}
 
 	/**
