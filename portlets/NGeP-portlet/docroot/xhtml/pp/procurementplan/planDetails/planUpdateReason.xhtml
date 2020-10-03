@@ -26,7 +26,7 @@
 				<tr>
 					<td>
 						<!-- for phase 1 -->
-						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" rendered="#{reason.editable or reason.brandNew}"
+						<p:inputTextarea cols="40" value="#{reason.reasonDesc}" rendered="#{reason.editable or !reason.brandNew}"
 							 maxlength="200"
 							 onkeyup="limitTextArea(this,200);"
 							onkeydown="limitTextArea(this,200);"
