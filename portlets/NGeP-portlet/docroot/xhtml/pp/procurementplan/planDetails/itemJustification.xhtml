@@ -33,7 +33,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<td>
 						<!-- for phase 1 -->
 						<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-							disabled="#{(!pPlanBackingBean.isRolePlanner()) or !(pPlanBackingBean.managedBean.modeEditable and remarkVar.editable)}"
+							disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
 							onkeyup="limitTextArea(this,1000);"
 							onkeydown="limitTextArea(this,1000);">							
 							</p:inputTextarea> 
