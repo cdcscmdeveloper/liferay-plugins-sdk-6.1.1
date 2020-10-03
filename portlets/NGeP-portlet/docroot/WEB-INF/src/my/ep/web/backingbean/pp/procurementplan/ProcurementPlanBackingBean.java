@@ -5279,7 +5279,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		if (!ppUpdateReasons.isEmpty()){
 			if(!ppUpdateReasons.get(0).isBrandNew()){
-				newReason = true;
+				//newReason = true;
 			}
 		}
 
@@ -5287,7 +5287,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (ppUpdateReasons.isEmpty() || ppUpdateReasons.size() == 0) {
 			newReason = true;
 		}
-		
+		log.info("newReason: "+newReason);
 		//if(newReason && this.getManagedBean().isModeReviewEditable()){
 		if (newReason) {
 			log.info("new reason added");
