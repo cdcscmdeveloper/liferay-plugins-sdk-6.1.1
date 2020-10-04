@@ -17,6 +17,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +65,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -296,6 +299,18 @@ public class QTDetailBackingBean extends
 		
 	}
 
+	//25201#52
+	private RoleCode[] deskOfficerRoleCodes = {
+		RoleCode.DESK_OFFICER, 
+		RoleCode.PBB_SECRETARY, 
+		RoleCode.PBA_SECRETARY,
+		RoleCode.QCA_SECRETARY,
+		RoleCode.QCB_SECRETARY,
+		RoleCode.FPB_SECRETARY,
+		// ***17376#55
+		RoleCode.PPB_SECRETARY 
+	};
+		
 	/**
 	 * Inits the.
 	 */
@@ -1001,43 +1016,6 @@ public class QTDetailBackingBean extends
 	
 	/**
 	 * Enhancement #21694
-	 * Method to validateReverseRemark
-	 */
-	public void validateReverseRemark(){
-		/*
-		 * VALIDATE REMARKS MUST NOT BE EMPTY
-		 */
-		if(this.getManagedBean().getScQtReverse().getTypeOfRequest().getParameterCode().equalsIgnoreCase(ParameterConst.APPROVAL_REQUEST_REVERSE_LOA_QT)){
-			//IF LOA
-			if(this.getManagedBean().getScLoaReverseRemarks() != null ){
-				for(ScLoaReverseRemark scLoaReverseRemark :this.getManagedBean().getScLoaReverseRemarks()){
-					if(scLoaReverseRemark.getRemark()==null || scLoaReverseRemark.getRemark().equalsIgnoreCase("")){
-						throw new EpException(MessageConst.ERROR_100022,
-								new String[] { 
-									ResourceBundleUtils.getMessage(
-										"lbl.sc.remark", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) });
-					}
-				}					
-			}
-		}else if(this.getManagedBean().getScQtReverse().getTypeOfRequest().getParameterCode().equalsIgnoreCase(ParameterConst.APPROVAL_REQUEST_REVERSE_LOI_QT)){
-			//IF LOI
-			for(ScLoiReverseRemark scLoiReverseRemark :this.getManagedBean().getScLoiReverseRemarks()){
-				if(scLoiReverseRemark.getRemark()==null || ("").equalsIgnoreCase(scLoiReverseRemark.getRemark())){
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { 
-								ResourceBundleUtils.getMessage(
-									"lbl.sc.remark", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Enhancement #21694
 	 * Method to save the Sc_Qt_Reverse
 	 */
 	public void saveReverseLoiLoa() {
@@ -1354,33 +1332,6 @@ public class QTDetailBackingBean extends
 	/*
 	 * Enhancement #21694 END
 	 */
-	
-	/**
-	 * Find Document Id by document type
-	 * 
-	 * @param qtId
-	 * 		the quotation / tender id
-	 * @return	the document id
-	 */
-	public Long findDocIdByDocType(Long qtId, String docType) {
-		IQTDetailSO qtDetailSO;
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(qtId);
-			
-			QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
-			populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, new SearchBean<ScQt>());
-			if (StringUtils.isNotEmpty(docType)) {
-				reqDTO.setDocType(docType);
-				reqDTO.setDocNo(null);
-			}
-			return qtDetailSO.findDocumentNoByDocType(reqDTO);
-		} finally {
-			qtDetailSO = null;
-		}
-	}
 	
 	/**
 	 * Enhancement #21694
@@ -5481,25 +5432,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * Change pb secretary comm type.
-	 * 
-	 * @param event
-	 *            the event
-	 */
-	public void changePbSecretaryCommType(ScQtApproverSettings approverSettings) {
-		debugLogger("changePbSecretaryCommType");
-		
-		Long commTypeId = approverSettings.getCommitteeType().getParameterId();
-		if (null != commTypeId) {
-			PmParameter commTypeCode = ParameterHelper.getInstance().getPmParameterById(commTypeId);
-			approverSettings.setCommitteeType(commTypeCode);
-			
-			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
-					.getApproverSettings().get(0).setPmUser(new PmUser());
-		}
-	}
-
-	/**
 	 * Submit qt cancel details.
 	 * 
 	 * @return the string
@@ -6855,5 +6787,42 @@ public class QTDetailBackingBean extends
 		}
 		attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
+	}
+	
+	public Boolean getManagedSearchBeanDocumentTypeIsLOI(){
+		if(!StringUtils.isEmpty(getManagedBean().getQtnTenderSearchBean().getDocType())
+			&& ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getDocType())
+			) return true;
+		return false;
+	}
+	
+	/**
+	 * document type in search bean is LOI and prefix of doc no is LI
+	 * @return
+	 */
+	public boolean getManagedSearchBeanDocTypeIsLOIAndPrefixLIAndIsDO(){
+		return getManagedSearchBeanDocumentTypeIsLOI() && checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) && userHasRole(deskOfficerRoleCodes);
+	}
+	
+	/**
+	 * document type in search bean is LOA and prefix of doc no is LA
+	 * @return
+	 */
+	public boolean getManagedSearchBeanDocTypeIsLOAAndPrefixLAAndIsDO(){
+		return getManagedSearchBeanDocumentTypeIsLOA() && checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) && userHasRole(deskOfficerRoleCodes);
+	}
+	
+	private boolean checkSearchBeanDocTypePrefix(String prefix){
+		if(prefix == null){
+			prefix = "";
+		}
+		return  ( getManagedBean().getQtnTenderSearchBean()!=null && !StringUtils.isBlank(getManagedBean().getQtnTenderSearchBean().getDocNo()) && getManagedBean().getQtnTenderSearchBean().getDocNo().substring(0, prefix.length()).equalsIgnoreCase(prefix) );
+	}
+	
+	public Boolean getManagedSearchBeanDocumentTypeIsLOA(){
+		if(!StringUtils.isEmpty(getManagedBean().getQtnTenderSearchBean().getDocType())
+			&& ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getDocType())
+			) return true;
+		return false;
 	}
 }

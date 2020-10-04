@@ -1601,6 +1601,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private ScQtApprovalRequest scQtApprovalDtls;
 
+	// ***25692
+	/*
+	 * approval. some part is readOnly, some part is updatable 
+	 */
+	private boolean approvalEditableSection;
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -9915,6 +9921,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
 	
+	public boolean isApprovalEditableSection() {
+		return approvalEditableSection;
+	}
+
+	public void setApprovalEditableSection(boolean approvalEditableSection) {
+		this.approvalEditableSection = approvalEditableSection;
+	}
+	
 	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
 	public List<TreeNode> getZoneGeneralTreesPanel() {
 		return zoneGeneralTreesPanel;
@@ -9925,6 +9939,89 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
 	
+	public ScLoiForQt getScLoiForQt() {
+		return scLoiForQt;
+	}
+
+	public void setScLoiForQt(ScLoiForQt scLoiForQt) {
+		this.scLoiForQt = scLoiForQt;
+	}
+
+	public ScLoaForQt getScLoaForQt() {
+		return scLoaForQt;
+	}
+
+	public void setScLoaForQt(ScLoaForQt scLoaForQt) {
+		this.scLoaForQt = scLoaForQt;
+	}
+
+	public boolean isMeeting() {
+		return isMeeting;
+	}
+
+	public void setMeeting(boolean isMeeting) {
+		this.isMeeting = isMeeting;
+	}
+
+	public ScQtReverse getScQtReverse() {
+		return scQtReverse;
+	}
+
+	public void setScQtReverse(ScQtReverse scQtReverse) {
+		this.scQtReverse = scQtReverse;
+	}
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
+	}
+
+	public List<ScLoiReverseRemark> getScLoiReverseRemarks() {
+		return scLoiReverseRemarks;
+	}
+
+	public void setScLoiReverseRemarks(List<ScLoiReverseRemark> scLoiReverseRemarks) {
+		this.scLoiReverseRemarks = scLoiReverseRemarks;
+	}
+
+	public List<ScLoaReverseRemark> getScLoaReverseRemarks() {
+		return scLoaReverseRemarks;
+	}
+
+	public void setScLoaReverseRemarks(List<ScLoaReverseRemark> scLoaReverseRemarks) {
+		this.scLoaReverseRemarks = scLoaReverseRemarks;
+	}
+
+	/**
+	 * @return the isViewFinalization
+	 */
+	public boolean isViewFinalization() {
+		return isViewFinalization;
+	}
+
+	/**
+	 * @param isViewFinalization the isViewFinalization to set
+	 */
+	public void setViewFinalization(boolean isViewFinalization) {
+		this.isViewFinalization = isViewFinalization;
+	}
+
+	/**
+	 * @return the scLoi
+	 */
+	public ScLoi getScLoi() {
+		return scLoi;
+	}
+
+	/**
+	 * @param scLoi the scLoi to set
+	 */
+	public void setScLoi(ScLoi scLoi) {
+		this.scLoi = scLoi;
+	}
 
 	/**
 	 * @return the scLoa
