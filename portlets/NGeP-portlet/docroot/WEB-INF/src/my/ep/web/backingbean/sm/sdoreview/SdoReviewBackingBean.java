@@ -238,14 +238,16 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setOutcome(resAction);
 			
 			//3460 - Start
-			SmRemark smRmk = new SmRemark();
-			smRmk.setDocId(this.getManagedBean().getAppId());
-			smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
-			PmRole pmRole = new PmRole();
-			pmRole.setRoleCode(RoleCode.UPS_SDO.value());
-			smRmk.setPmRole(pmRole);
-			smRmk.setRemark(this.getManagedBean().getSmRemark().getRemark());
-			reqDTO.setSmRemark(smRmk);
+			if ((!getManagedBean().getSmRemark().getRemark().equalsIgnoreCase(""))) {
+				SmRemark smRmk = new SmRemark();
+				smRmk.setDocId(this.getManagedBean().getAppId());
+				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode(RoleCode.UPS_SDO.value());
+				smRmk.setPmRole(pmRole);
+				smRmk.setRemark(this.getManagedBean().getSmRemark().getRemark());
+				reqDTO.setSmRemark(smRmk);
+			}
 			//3460 - End 
 			
 			this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
