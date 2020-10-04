@@ -21,7 +21,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -82,7 +84,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	/** The sc loa approval. */
 	private ScLoaApproval scLoaApproval;
-
+	
+	/** The sc qt supplier */
+	private ScQtSupplier scQtSupplier;
+	
+	/** The sc qt proposal */
+	private ScQtProposal scQtProposal;
+	
 	/** The selected sc loa reports. */
 	private List<ScLoaReport> selectedScLoaReports;
 	
@@ -517,6 +525,32 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setScLoaApproval(ScLoaApproval scLoaApproval) {
 		this.scLoaApproval = scLoaApproval;
 	}
+	
+	/**
+	 * 
+	 * @return the scQtSupplier
+	 */
+	public ScQtSupplier getScQtSupplier() {
+		return scQtSupplier;
+	}
+
+	/**
+	 * 
+	 * @param scQtSupplier
+	 */
+	public void setScQtSupplier(ScQtSupplier scQtSupplier) {
+		this.scQtSupplier = scQtSupplier;
+	}
+	
+	public ScQtProposal getScQtProposal() {
+		return scQtProposal;
+	}
+
+	public void setScQtProposal(ScQtProposal scQtProposal) {
+		this.scQtProposal = scQtProposal;
+	}
+	
+	
 
 	/**
 	 * Gets the selected sc loa reports.
