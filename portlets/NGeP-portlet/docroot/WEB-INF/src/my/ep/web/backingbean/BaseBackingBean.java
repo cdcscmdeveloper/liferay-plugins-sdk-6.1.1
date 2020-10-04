@@ -2323,6 +2323,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	return uomCodeDesc;	
 	}
 	
+	/**
+	 * Determine if user for current session have role
+	 * 
+	 * @param roleCodes
+	 * @return
+	 */
+	public Boolean userHasRole(RoleCode [] roleCodes){
+		FacesScopes faceScopes = new FacesScopes();
+		if(roleCodes != null && roleCodes.length > 0){
+			for(int i = 0; i< roleCodes.length; i++){
+				if(faceScopes.hasRoleUser(roleCodes[i].value())) return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isNull(Object o){
+		if(o == null){
+			return true;
+		}
+		return false;
+	}
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 			public boolean businessTypeTovalidateWithSSM(String regNo,String businessType){
 				//String regNo = this.getManagedBean().getSmSupp().getRegNo();
