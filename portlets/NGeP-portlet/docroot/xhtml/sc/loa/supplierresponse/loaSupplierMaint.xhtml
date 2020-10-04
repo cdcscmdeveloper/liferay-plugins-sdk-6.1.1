@@ -13,9 +13,10 @@
 					closable="true" showSummary="false" />
 		<ui:param name="isEditableStatus" value="false" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
-	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
+	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType eq ParameterConst.doctypeQuotation}" />
+	    <ui:param name="isDocTypeDirectNego" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType eq ParameterConst.doctypeDirectNego}" />
 	    <ui:param name="isBondReq" value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}" />
-	
+	    <ui:param name="isLoaReviseStatus" value="#{lOADetailBackingBean.isLoaReviseStatus()}" />
 	
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
@@ -121,3 +122,7 @@
 
 	</ui:define>
 </ui:composition>
+
+
+
+<!-- ***19366 -->
