@@ -42,7 +42,8 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
-				<td><p:inputText readonly="true" id="eqCompanyNameId" value="#{svTask.smAppl.smCompanyBasic.companyName}" /></td>
+				<td><p:inputText readonly="true" id="eqCompanyNameId" value="#{svTask.smAppl.smCompanyBasic.companyName}" 
+						style="width: -webkit-fill-available;" /></td>
 			</tr>
 
 			<tr>
@@ -122,7 +123,8 @@
 							<p:outputLabel value="#{equityStat.index +1}." />
 							<p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
 							</td>
-							<td><p:inputText readonly="true" value="#{equityOwner.name}" /></td>
+							<td><p:inputText readonly="true" value="#{equityOwner.name}" 
+									style="width: -webkit-fill-available;" /></td>
 							<td>&#160;</td>
 						</tr>
 					</ui:repeat>
@@ -131,7 +133,8 @@
 					<c:otherwise>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /></td>
-						<td><p:inputText readonly="true"  /></td>
+						<td><p:inputText readonly="true"  
+								style="width: -webkit-fill-available;" /></td>
 						<td>&#160;</td>
 					</tr>
 					</c:otherwise>
@@ -230,7 +233,8 @@
 								<p:outputLabel value="#{mgmtStatus.index + 1}." />
 								<p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
 							</td>
-							<td><p:inputText readonly="true" value="#{mgmt.name}" /></td>
+							<td><p:inputText readonly="true" value="#{mgmt.name}" 
+									style="width: -webkit-fill-available;" /></td>
 						</tr>
 					</ui:repeat>
 				</c:when>
@@ -241,7 +245,8 @@
 							<p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" />
 							<p:outputLabel value="&#160;" />
 						</td>
-						<td><p:inputText readonly="true" /></td>
+						<td><p:inputText readonly="true" 
+								style="width: -webkit-fill-available;" /></td>
 					</tr>
 				</c:otherwise>
 			</c:choose>
@@ -281,7 +286,8 @@
 								<p:outputLabel value="#{staffStatus.index + 1}." />
 								<p:outputLabel value="#{lbl['lbl.sm.sitevist.staff.name']}" rendered="#{staffStatus.index == 0}" />
 							</td>
-							<td><p:inputText readonly="true" value="#{staff.name}" /></td>
+							<td><p:inputText readonly="true" value="#{staff.name}" 
+									style="width: -webkit-fill-available;" /></td>
 						</tr>
 					</ui:repeat>
 				</c:when>
@@ -292,7 +298,8 @@
 							<p:outputLabel value="#{lbl['lbl.sm.sitevist.staff.name']}" />
 							<p:outputLabel value="&#160;" />
 						</td>
-						<td><p:inputText readonly="true" /></td>
+						<td><p:inputText readonly="true" 
+								style="width: -webkit-fill-available;" /></td>
 					</tr>
 				</c:otherwise>
 			</c:choose>

@@ -738,7 +738,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmPersonnel personnel : this.getManagedBean().getSmSvTask().getSmAppl().getSmPersonnels()){
 			if(personnel.isDirector()){
 				ttlBOD++;
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){//24964
 					dirBumi++;
 				}else{
 					if(!personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -753,7 +753,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 			if(personnel.isHigherManagement() || personnel.isManagement()){
 				ttlMgmt++;
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null && personnel.isBumi()){//24964
 					mgmtBumi++;
 				}else{ 
 					if(personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -778,7 +778,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if(personnel.isClerical()){
 				ttlWorker++;
 
-				if(personnel.isBumi()){
+				if(personnel.isBumi() != null &&  personnel.isBumi()){//24964
 					wrkBumi++;
 				}else {
 					if(personnel.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
@@ -2064,8 +2064,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//validate assistant officer
 		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
 			svTask.setSmSvAssistantOfficer(null);
+		}//START 24964
+		else{
+			svTask.getSmSvAssistantOfficer().setNameEnterBySvo(svTask.getSmSvAssistantOfficer().getName());
 		}
-		
+		//END 24964
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
@@ -2735,4 +2738,52 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 
 	}
+	
+	// #24964 - start
+	public void saveSiteVisitReportByPO(){		
+		log.info("***********saveSiteVisitReportByPO***********");
+		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
+		SmSvTask svTask = this.getManagedBean().getSmSvTask();	
+		
+		//validate assistant officer
+		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
+			svTask.setSmSvAssistantOfficer(null);
+		}
+		if(svTask.getSmSvTemplate()!=null){
+			if(svTask.getSmSvTemplate().getSmSvInterviewees()== null || svTask.getSmSvTemplate().getSmSvInterviewees().size()<=0){
+				throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+						new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
+			}else{
+				for(SmSvInterviewee interviewee : svTask.getSmSvTemplate().getSmSvInterviewees()){
+					if(StringUtils.isBlank(interviewee.getName()) || StringUtils.isBlank(interviewee.getDesignation())){
+						return;
+					}
+				}
+			}
+		}
+
+		reqDTO.setSmSvTask(svTask);
+		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
+		reqSO.saveOrSubmitSiteVisitReport(reqDTO);
+		retrieveSiteVisitInfo("V");
+		RequestContext.getCurrentInstance().execute("poReportDlg.hide()");
+	} 
+	
+	public boolean showEditAssistant(SmSvAssistantOfficer assistantOfficer){
+		boolean edit = false;
+		if(assistantOfficer == null){
+			return false;
+		}
+		if(assistantOfficer.getName() != null && assistantOfficer.getNameEnterBySvo() != null){
+			if(!assistantOfficer.getName().equalsIgnoreCase(assistantOfficer.getNameEnterBySvo())){
+				edit = true;
+			}
+		}else{
+			edit = false;
+		}
+		return edit;
+	}
+	
+	// #24964 - end
 }

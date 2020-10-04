@@ -140,7 +140,7 @@
 				<td><p:selectOneMenu id="purchaseMethodId" label="#{lbl['lbl.sm.machine.purMthd']}"  rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine != null}"
 					value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod}" required="#{!empty param['disableMsgAutoUpdate']}">
 						<f:selectItems value="#{svoSiteVisitBackingBean.getDropdownCodeValues(ParameterTypeConst.purchasingMethod)}" />
-						<p:ajax event="change" update="txtPurchaseMethodRemark,lblPurchaseMethodRemark"></p:ajax>
+						<p:ajax event="change" update="txtPurchaseMethodRemark,lblPurchaseMethodRemark" />
 					</p:selectOneMenu></td>
 			</tr>
 			
