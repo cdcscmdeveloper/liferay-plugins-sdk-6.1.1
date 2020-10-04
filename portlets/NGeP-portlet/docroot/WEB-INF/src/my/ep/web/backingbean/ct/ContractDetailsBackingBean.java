@@ -1065,11 +1065,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						|| ctBB.getManagedBean().getContractVer().getCtContractValue().getAp178RefNo().isEmpty()){
 					setTabValue("AG");
 					throw new EpException(MessageConst.ERROR_750045);
-				}else if(ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
-						ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements().getFilePath() == null){
+				}//25703 start
+				else if(ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements() == null ||
+						ctBB.getManagedBean().getContractVer().getAgencyContractSharingAttachements().isEmpty()){
 					setTabValue("AG");
 					throw new EpException(MessageConst.ERROR_750046);
 				}
+				//25703 end
 			}
 		}
 
