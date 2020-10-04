@@ -60,7 +60,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	
 	private List <PpExpenditureItem> epItemsB;
 	private BigDecimal epTotalBudgetB;
-	private BigDecimal epTotalPlanB;
+	private BigDecimal epTotalPlanB ;
 	private BigDecimal epTotalNonEpAllocB;
 	private List <PpExpenditureItem> epItemsT;
 	private BigDecimal epTotalBudgetT;
@@ -143,6 +143,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	//#24975 17/03/20 - start
 	private boolean editable;
 	//#24975 17/03/20 - end
+	
+	//25549@18092020 - start
+	private boolean disable;
+	//25549@18092020 - end
 	
 	public ProcurementPlanManagedBean(){}
 
@@ -1334,5 +1338,15 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	}
 	
 	//#24975 17/03/20 - end
+	
+	//25549@18092020 - start
+	public boolean isDisable() {
+		return disable;
+	}
+	
+	public void setDisable(boolean disable) {
+		this.disable = disable;
+	}
+	//25549@18092020 - end
 
 }

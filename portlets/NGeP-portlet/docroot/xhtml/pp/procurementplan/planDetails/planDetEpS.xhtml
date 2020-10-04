@@ -119,9 +119,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</p:columnGroup>
 			<!-- [SIR#12802] - start -->
 			<p:column>
-				<p:selectBooleanCheckbox 
-					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable)}" 
-					value="#{epItem.deleted}"/>
+				<!--25549@18092020 -->
+				<p:selectBooleanCheckbox id="checkBox" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or (pPlanBackingBean.managedBean.disable) or (epItem.cloneEnabled)}" 
+				    value="#{epItem.deleted}"/>
 			<!-- #24975 -->
 				<p:commandLink
 				        rendered="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) and pPlanBackingBean.managedBean.modeEditable}"
@@ -129,12 +130,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						immediate="true" 
 						update="dtExpenditurePlanS" 
 						partialSubmit="true"
-						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan}">
+						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or pPlanBackingBean.managedBean.disable}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votSetia, pPlanBackingBean.managedBean.selectedPlan, index)}"
-				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan}"
+				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or pPlanBackingBean.managedBean.disable}"
 				      		update="@form"/>
 				      </h:graphicImage>
 				</p:commandLink>
@@ -149,9 +150,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						required="#{!empty param['disableValidation']}"
 						/>
 					&#160;	
+				    <!--25549@18092020 -->					
 					<p:commandLink id="glAccountSearchCL" 
 						partialSubmit="true"
-						disabled="#{!(epItem.brandNew) or epItem.disableEditAccount}"
+						disabled="#{!(epItem.brandNew) or epItem.disableEditAccount or (pPlanBackingBean.managedBean.disable)}"
 						process="@this" 
 						readonly="true" 
 						action="#{pmGoSearchBackingBean.initPmGoPopup}"
@@ -183,9 +185,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		#{epItem.pmGlAccount.description}
 	        </p:column>
 	        <p:column>
+	            <!--25549@18092020 -->	        
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
-		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable) or (pPlanBackingBean.managedBean.disable)}"
 		  			onkeypress="if (event.keyCode == 13) { return false; }">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<f:attribute name="max" value="99999999999"/>		
@@ -197,9 +200,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
 	        </p:column>
 	        <p:column>
+	         <!--25549@18092020 -->
    				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
-		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable)}"
+		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable) or (pPlanBackingBean.managedBean.disable)}"
 		  			onkeypress="if (event.keyCode == 13) { return false; }">
 		  			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		  			<f:attribute name="max" value="99999999999"/>		
@@ -237,16 +241,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	         <p:column style="text-align:center;">
+	            <!--25549@18092020 -->
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
-			        id="clEpJustification">
-				    <p:graphicImage value="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.justificationEnabled ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+			        id="clEpJustification" disabled="#{pPlanBackingBean.managedBean.disable}">
+				    <p:graphicImage value="#{(!pPlanBackingBean.isRolePlanner()) or !pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 				    disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />	
 				</p:commandLink>
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
+	              <!--25549@18092020 -->
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemarkS"
-			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable}">
+			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable  or (pPlanBackingBean.managedBean.disable)}">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
 					<!--  <f:param name="disableValidation" value="" />-->
@@ -255,7 +261,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
 	        			disabled="#{epItem.cloneEnabled or epItem.statusEnabled}">  
-	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	        		   <f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	        		<!--25549@18092020 -->
+	  	            <p:ajax event="change" update="addUpdateEpBInfo, itBudgetAmt, itPlanAmt, clEpJustification, clEpRemarkS, checkBox, glAccountSearchCL" 
+	  	               listener="#{pPlanBackingBean.disableActiveStatus(epItem.recordStatusFlg)}" />
 	          	</p:selectOneMenu> 
 	        </p:column>
 	        <p:column rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">

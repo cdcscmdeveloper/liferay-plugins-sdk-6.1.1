@@ -2287,7 +2287,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//updateReasons = getAllUpdateReasons(ppPlan);
 				//getAllUpdateReasons(ppPlan);
 			   //25549@azza27082020 - start
-			if (this.getManagedBean().isApprovedPlan()){
+			/*if (this.getManagedBean().isApprovedPlan()){
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action)) {
 					
 					//24975 - Start
@@ -2307,7 +2307,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 				//24975 - End
 			 }
-		   }
+		   }*/
 		}
 	   //25549@azza27082020 - End
 			
@@ -3082,14 +3082,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItems = this.getManagedBean().getEpItemsH();
 		}
 		for(PpExpenditureItem epItem: epItems){
-			//#24975 azza - start
-			if(epItem.getRecordStatusFlg()!= 9){
+			//25549@3102020 - start
+			if(!epItem.isCloneEnabled()){
+			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
+			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
+			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
+		}else{
+			if(epItem.getRecordStatusFlg() != 9){
 			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
 			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
 		}
-	}	
-		//#24975 azza - end
+	  }
+	}
+	//25549@3102020 - end
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
 			this.getManagedBean().setEpTotalBudgetB(epTotalBudget);
@@ -6708,6 +6714,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		public void parameterExpenditure(String paramCode) {
 			
+			//25549@azza - start
+			calculateEpGrandTotal(paramCode);
+			//25549@azza - end
+			
 			log.info("parameterExpenditure " + paramCode);
 			     // B
 			if (ParameterConst.VOT_MENGURUS.equals(paramCode)) {	
@@ -7150,6 +7160,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200827 - End
+	//25549@azza20200822 - Start
+	public void disableActiveStatus (Integer status){
+		log.info("status" + status);
+		if (status == 9){
+			this.getManagedBean().setDisable(true);
+		}else{
+			this.getManagedBean().setDisable(false);
+		}
+	}
+	//25549@azza20200822 - End
 }
 
 
