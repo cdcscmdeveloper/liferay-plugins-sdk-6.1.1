@@ -74,9 +74,8 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
-import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
-//#24975
 import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
+import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -110,6 +109,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
+//#24975
 
 
 /**
@@ -553,9 +553,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
 			for (Long commonProcurementItemId : commonProcurementItemIdList) {
 				for (PpProcurementItem ppItem : ppItems) {
+					
+					/* By default, all items are neutral (isOriginal or not).
+					   isClonedItem will be true if only it's cloned during 
+					   that particular round of approval. */
+					ppItem.setClonedItem(false);
+					
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
-					if (ppItem.isOriginal()) {
+					if (!ppItem.isOriginal()) {
 						if (ppItem.getFromPpItem().equals(commonProcurementItemId)) {
 							ppItem.setCloneEnabled(false);
 							ppItem.setDisableForPindaan(true);
@@ -584,7 +590,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
 		
         for (PpProcurementItem ppItem : ppItems) {
-			if (ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
+			if (!ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
 				tempClonedPpItemList.add(ppItem);
 			} else {
 				tempOriginalPpItemList.add(ppItem);
@@ -1823,7 +1829,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private List <PpRemark> getAllJustifications(PpPlan ppPlan){
 		log.info("getAllJustifications");
 		List <PpRemark> justifications = null;
-		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 	
 			if(ppPlan.getStatus()==null || ppPlan.getStatus().getStatusId()==null
 					|| (ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
@@ -1865,7 +1870,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 				
 			}
-		}
 		return justifications;
 	}
 	
@@ -2227,7 +2231,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpRemark remark = null;
 		boolean brandNew = false;
 		//#24975
-		List <PpUpdateReason> updateReasons = null;
+		//List <PpUpdateReason> updateReasons = null;
 		
 		try{
 			reqDTO = new ProcurementPlanReqDTO();
@@ -2261,7 +2265,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			itemRemarks = getAllItemRemarks(ppPlan); 
 			
 			//Get Justification 
-			justifications = getAllJustifications(ppPlan);
+			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				justifications = getAllJustifications(ppPlan);
+			}
 			
 			//Current not Pending Submission/Null and it is SAVE/REVISE
 			if(!brandNew 
@@ -2310,7 +2316,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
-			reqDTO.setJustifications(justifications);
+			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				reqDTO.setJustifications(justifications);
+			}
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
@@ -3447,6 +3455,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
+		ppItem.setOriginal(true);
 
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
@@ -3511,6 +3520,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private void validatePpItem(){
 		log.info("validatePpItem");
 		if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty()){
+			//boolean isReasonEmpty;
+			//List<Long> totalClones = new ArrayList<Long>();
+			//List<Long> notEmptyReasons = new ArrayList<Long>();
 //			int size = this.getManagedBean().getSelectedPlan().getPpProcurementItems().size();
 //			PpProcurementItem ppItem = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(size-1);
 			for(PpProcurementItem ppItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
@@ -3535,19 +3547,39 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 					// Set Reason For Update to be mandatory
 					
-					if(ppItem.getPpUpdateReasons() != null && 
-							!ppItem.getPpUpdateReasons().isEmpty()) {
-						String reasonDesc = ppItem.getPpUpdateReasons().get(0).getReasonDesc();
-						log.info("original reasonDesc for ppItemId "
-								+ppItem.getProcurementItemId()+" = "+reasonDesc);
-						
-						if (!ppItem.isCloned() && reasonDesc == null) {
-							throw new EpException(MessageConst.ERROR_730035);
+					log.info("statusId= "+this.getManagedBean().getSelectedPlan().getStatus().getStatusId());
+					
+					/*if (ProcurementPlanConst.PPP_APPROVED.equals(this.getManagedBean().getSelectedPlan().getStatus().getStatusId())) {
+						if(ppItem.getPpUpdateReasons() != null && 
+								!ppItem.getPpUpdateReasons().isEmpty()) {
+							String reasonDesc = ppItem.getPpUpdateReasons().get(0).getReasonDesc();
+							log.info("original reasonDesc for ppItemId "
+									+ppItem.getProcurementItemId()+" (isCloned="
+									+ppItem.isCloned()+") = "+reasonDesc);
+							
+							isReasonEmpty = reasonDesc == null || reasonDesc.trim().length() == 0;
+							log.info("isReasonEmpty= "+isReasonEmpty);
+							
+							if (ppItem.isCloned() && !isReasonEmpty) {
+								notEmptyReasons.add(ppItem.getProcurementItemId());
+							}
+							if (ppItem.isCloned()) {
+								totalClones.add(ppItem.getProcurementItemId());
+							}
 						}
-					}
+					}*/
 					
 				}
 			}
+			/*if (ProcurementPlanConst.PPP_APPROVED.equals(this.getManagedBean().getSelectedPlan().getStatus().getStatusId())) {
+				log.info("notEmptyReasons.size= "+notEmptyReasons.size());
+				log.info("totalClones.size= "+totalClones.size());
+				if ((notEmptyReasons.size() == 0 && totalClones.size() > 0) || 
+						((totalClones.size() > 0) && 
+								(totalClones.size() != notEmptyReasons.size()))) {
+					throw new EpException(MessageConst.ERROR_730035);
+				}
+			}*/
 		}else{
 			// SAM TODO error msg at least one item is required
 		}
@@ -5070,8 +5102,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	List<PpProcurementItem> procurementLinkedList = new LinkedList<PpProcurementItem>();
 	    	List<PpProcurementItem> newProcurementList = new ArrayList<PpProcurementItem>();
 	    	PpProcurementItem newPpItem = new PpProcurementItem();
-	    	List<PpUpdateReason> clonedPpUpdateReasons = new ArrayList<PpUpdateReason>();
-	    	PpUpdateReason clonedUpdateReason = new PpUpdateReason();
+	    	//boolean isReasonEmpty;
+	    	
+	    	PmRole roleCode = new PmRole();
 	    	
 	    	if (this.getManagedBean().getSelectedPlan().getPlanYear() == null) {	
 	    		throw new EpException(MessageConst.ERROR_730028);
@@ -5087,9 +5120,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		}
 	    		
 	    		//PpProcurementItem clonedPpItem =  procurementList.get(index);
-	    		PpProcurementItem clonedPpItem =  procurementLinkedList.get(index);
-	    		
-	    		//validatePpItem(); //Disabled this if no validation required at this stage
+	    		PpProcurementItem originalPpItem =  procurementLinkedList.get(index);
 	    		
 	    		/*newPpItem = (PpProcurementItem) procurementList.
 	    				get(index).cloneEntity();*/
@@ -5104,51 +5135,66 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpItem.setInvitationDate(date.getTime());
 		    	}
 	    		
-	    		if (clonedPpItem.getPpUpdateReasons().isEmpty()) {
+	    		// Always allow user to clone without key in reason
+	    		/*if (originalPpItem.getPpUpdateReasons().isEmpty()) {
+	    			PpUpdateReason clonedUpdateReason = new PpUpdateReason();
 	    			clonedUpdateReason.setReasonDesc("\u200B");
-	    			clonedPpUpdateReasons.add(clonedUpdateReason);
-	    		} else {
-	    			for (PpUpdateReason cR : clonedPpItem.getPpUpdateReasons()) {
-	    				if (cR.getReasonDesc() != null) {
-	    					clonedUpdateReason.setReasonDesc(cR.getReasonDesc());
-		    				clonedPpUpdateReasons.add(clonedUpdateReason);
-		    				break;
-	    				}
+	    			
+	    			isReasonEmpty = clonedUpdateReason.getReasonDesc() == null || 
+	    					clonedUpdateReason.getReasonDesc().trim().length() == 0;
+	    			
+	    			if (!isReasonEmpty) {
+	    				originalPpItem.getPpUpdateReasons().add(clonedUpdateReason);
 	    			}
-	    		}
+	    			
+	    		}*/
 	    		
 	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
-	    		newPpItem.setProcurementCat(clonedPpItem.getProcurementCat());
-		    	newPpItem.setProcurementType(clonedPpItem.getProcurementType());
-		    	newPpItem.setProcurementTitle(clonedPpItem.getProcurementTitle());
-		    	newPpItem.setProcurementDesc(clonedPpItem.getProcurementDesc());
-		    	newPpItem.setEstimatedAmt(clonedPpItem.getEstimatedAmt());
+	    		newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
+		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());
+		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
+		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
+		    	newPpItem.setEstimatedAmt(originalPpItem.getEstimatedAmt());
 	    		newPpItem.setEditable(true);
 	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	    		newPpItem.setBrandNew(true);
 	    		newPpItem.setCloneEnabled(true);
 	    		newPpItem.setDisableForPindaan(true);
-	    		newPpItem.setFromPpItem(clonedPpItem.getProcurementItemId());
+	    		newPpItem.setFromPpItem(originalPpItem.getProcurementItemId());
 	    		newPpItem.setReasonForUpdateEnabled(false);
-	    		newPpItem.setPpUpdateReasons(clonedPpUpdateReasons);
+	    		newPpItem.setPpUpdateReasons(originalPpItem.getPpUpdateReasons());
 	    		newPpItem.setStatusEnabled(true);
+	    		newPpItem.setOriginal(false);
+	    		newPpItem.setClonedItem(true);
+	    		
+	    		if (newPpItem.getPpPlan() == null) {
+	    			newPpItem.setPpPlan(ppPlan);
+	    		}
+	    		
+	    		log.info("PpUpdateReasons size= "+newPpItem.getPpUpdateReasons().size());
 	    		
     			if (newPpItem.getPpUpdateReasons() != null && 
 						!newPpItem.getPpUpdateReasons().isEmpty()) {
 	    			log.info("newPpItem reasonDesc= "+newPpItem.getPpUpdateReasons()
 	    					.get(0).getReasonDesc());
-	    			for (PpUpdateReason updateReason: newPpItem.getPpUpdateReasons()){
-	    				if (updateReason.getRoleCode() == null) {
-	    					PmRole roleCode = new PmRole();
+	    			for (PpUpdateReason newUpdateReason: newPpItem.getPpUpdateReasons()){
+	    				if (newUpdateReason.getRoleCode() == null) {
 	    					roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
-	    					updateReason.setRoleCode(roleCode);
+	    					newUpdateReason.setRoleCode(roleCode);
 	    				}
-	    				log.info("newPpItem getRole= "+updateReason.getRoleCode());
+	    				if (newUpdateReason.getDocId() == null) {
+	    					newUpdateReason.setDocId(originalPpItem.getProcurementItemId());
+						}
+	    				if (newUpdateReason.getDocType() == null) {
+	    					newUpdateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT); 
+						}
 	    			}
-	    		} else {
-	    			throw new EpException(MessageConst.ERROR_730035);
+	    			log.info("newPpItem PpUpdateReasons(): " +
+    						"reasonDesc= "+newPpItem.getPpUpdateReasons().get(0).getReasonDesc()+
+    						", getRole= "+newPpItem.getPpUpdateReasons().get(0).getRoleCode()+
+    						", getDocType= "+newPpItem.getPpUpdateReasons().get(0).getDocType());
 	    		}
 	    			
 	    		procurementLinkedList.listIterator(index+1).add(newPpItem);
@@ -5206,6 +5252,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void retrievePpUpdateReasons(PpProcurementItem ppItem){
 		log.info("retrievePpUpdateReasons");
 		log.info("pp item " + ppItem.getProcurementDesc());
+		log.info("reasons= "+ppItem.getPpUpdateReasons().size());
+		
 	if(!ppItem.isBrandNew()){
 		if(ppItem.getPpUpdateReasons()==null || ppItem.getPpUpdateReasons().isEmpty()){
 			ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
@@ -5235,7 +5283,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		if (!ppUpdateReasons.isEmpty()){
 			if(!ppUpdateReasons.get(0).isBrandNew()){
-				newReason = true;
+				//newReason = true;
 			}
 		}
 
@@ -5243,7 +5291,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (ppUpdateReasons.isEmpty() || ppUpdateReasons.size() == 0) {
 			newReason = true;
 		}
-		
+		log.info("newReason: "+newReason);
 		//if(newReason && this.getManagedBean().isModeReviewEditable()){
 		if (newReason) {
 			log.info("new reason added");
