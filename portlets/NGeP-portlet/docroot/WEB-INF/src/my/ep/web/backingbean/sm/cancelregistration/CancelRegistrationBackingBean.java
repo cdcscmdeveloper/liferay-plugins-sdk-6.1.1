@@ -84,6 +84,16 @@ public class CancelRegistrationBackingBean extends
 							.getSmAppl().getSmPersonnels()) && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 				
 				getManagedBean().setSmAppl(resDTO.getSmSupplier().getSmAppl());
+				if (resDTO.getSmSupplier().getSmAppl() != null
+						&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier().getSmAppl()
+								.getSmPersonnels())) {
+					for (SmPersonnel per : resDTO.getSmSupplier().getSmAppl().getSmPersonnels()) {
+						if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+							selectedPersonnel = per;
+							break;
+						}
+					}
+				}
 				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				if (selectedPersonnel == null) {
