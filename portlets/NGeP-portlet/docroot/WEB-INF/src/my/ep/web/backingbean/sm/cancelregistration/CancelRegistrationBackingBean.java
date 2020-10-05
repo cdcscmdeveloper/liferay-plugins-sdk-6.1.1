@@ -94,7 +94,7 @@ public class CancelRegistrationBackingBean extends
 						}
 					}
 				}
-				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
+				//selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				if (selectedPersonnel == null) {
 					throw new EpException(MessageConst.ERROR_721090);
