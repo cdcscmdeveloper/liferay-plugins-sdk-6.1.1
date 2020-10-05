@@ -74,8 +74,16 @@
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panelUnspsc">
 				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.itype']}"></p:outputLabel></td>
+						<td>
+							<p:selectOneMenu id="itemType" value="#{codificationBackingBean.managedBean.typeName}" style="width:30%">
+								<f:selectItems value="#{codificationBackingBean.managedBean.typeList}"></f:selectItems>
+							</p:selectOneMenu>
+						</td>
+					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 						<td colspan="1"><p:autoComplete size="40"
@@ -95,10 +103,13 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
-					update="cmUNSPSCsearchID">
+					update="unspscTableID">
 					<f:param name="itemType"
 						value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" />
 				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{codificationBackingBean.resetAction}"
+					update="panelUnspsc unspscTableID"/>
 				<p:commandButton value="#{lbl['lbl.btn.back']}"
 					action="#{codificationBackingBean.backToReviewUnspsc}">
 					<f:param name="currentTaskName"
