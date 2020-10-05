@@ -3518,6 +3518,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 */
 	public void cancelPendingItemCodificationDPM() {
+		log.info("cancelPendingItemCodificationDPM");
+		if(getManagedBean().getRequestNote() != null){
+			log.info("RN doc no. : " + getManagedBean().getRequestNote().getRequestNoteNo());
+		}else{
+			log.info("RN doc no. is NULL");
+		}
 		
 		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -3527,6 +3533,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
+			log.info("docNo : " + prObj[1]);
 			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: " + DPStatusConstants.RN_PENDING_ITEM_CODIFICATION + " docType : " + ParameterConst.DOCTYPE_REQUEST_NOTE);
 		    ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
 		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), prObj[1]));
