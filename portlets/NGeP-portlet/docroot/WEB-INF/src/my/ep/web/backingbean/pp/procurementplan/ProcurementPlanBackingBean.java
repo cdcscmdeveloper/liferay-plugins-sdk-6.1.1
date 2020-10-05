@@ -2782,7 +2782,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(true);
 					this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
 					count++;
 				}
@@ -7101,10 +7101,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
-							ppItem.setClonedItem(true);
-							
-							log.info("getActionClonedEnabled1 " + ppItem.isActionCloneEnabled());
-							
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -7115,9 +7111,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(true);
-							ppItem.setClonedItem(true);
-							
-							log.info("getActionClonedEnabled2 " + ppItem.isActionCloneEnabled());
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
