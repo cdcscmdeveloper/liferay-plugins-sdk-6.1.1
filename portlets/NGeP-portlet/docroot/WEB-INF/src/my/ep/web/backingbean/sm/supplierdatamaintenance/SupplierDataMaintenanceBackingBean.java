@@ -1543,12 +1543,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())) {
 				for (SmDisciplinaryAction disc : getManagedBean().getSmSupplier().getSmDisciplinaryActions()) { 
 					if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						//29181: Disciplinary Action - start - 26238
+						getManagedBean().setEditDisciplinaryActionCheckBox(true);
 						getManagedBean().setEditDisciplinaryAction(true);
 						break;
 					}else{
-						getManagedBean().setEditDisciplinaryAction(false);
+						getManagedBean().setEditDisciplinaryActionCheckBox(false);
+						getManagedBean().setEditDisciplinaryAction(true);
+						//29181: Disciplinary Action - end - 26238
 					}
 				}
+			} else {
+				//29181: Disciplinary Action - start - 26238
+				getManagedBean().setEditDisciplinaryActionCheckBox(false);
+				getManagedBean().setEditDisciplinaryAction(false);
+				//29181: Disciplinary Action - end - 26238
 			}
 			//28858: Disciplinary Action - end - 26238
 			//28281 - start
@@ -1606,8 +1615,25 @@ public class SupplierDataMaintenanceBackingBean extends
 			//28281 - end
 			//26238: Disciplinary Action - end - 28324 ,28779
 			
-			//27815: Disciplinary Action - end -checking condition 
-			getManagedBean().setEditDisciplinaryAction(true);
+			//27815: Disciplinary Action - end -checking condition
+			
+			//29181: Disciplinary Action - start - 26238
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())) {
+				for (SmDisciplinaryAction disc : getManagedBean().getSmSupplier().getSmDisciplinaryActions()) { 
+					if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						getManagedBean().setEditDisciplinaryActionCheckBox(true);
+						getManagedBean().setEditDisciplinaryAction(true);
+						break;
+					}else{
+						getManagedBean().setEditDisciplinaryActionCheckBox(false);
+						getManagedBean().setEditDisciplinaryAction(true);
+					}
+				}
+			} else {
+				getManagedBean().setEditDisciplinaryActionCheckBox(false);
+				getManagedBean().setEditDisciplinaryAction(true);
+			}
+			//29181: Disciplinary Action - end - 26238
 			onTickDiscipline();
 		}
 	}
@@ -1622,10 +1648,10 @@ public class SupplierDataMaintenanceBackingBean extends
 //				&& !getManagedBean().isSuspendRegistration() && !getManagedBean().isCancelRegistration()
 //				&& !getManagedBean().isBlacklistOwnerOrDirector() && !getManagedBean().isBumiputeraStatusCancel()
 //				&& !getManagedBean().isManufacturerStatusCancel() ||
-				!EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions()) &&
-				getManagedBean().isEditDisciplinaryAction()) {
+				!EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions()) && getManagedBean().isEditDisciplinaryActionCheckBox()) { //29181: Disciplinary Action - change edit check box variable
 			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
 			getManagedBean().setEditDisciplinaryAction(true);
+			getManagedBean().setEditDisciplinaryActionCheckBox(true);//29181
 		} else if (
 				EntityHelper.isCollectionEmpty(getManagedBean().getSmSupplier().getSmDisciplinaryActions())
 //				getManagedBean().isEditDisciplinaryAction()
@@ -1637,7 +1663,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			// 27815 - add disable button delete if edit DA - Start 14/9/2020
 			if(getManagedBean().isCancelCategoryCode()){
-				if(!getManagedBean().isEditDisciplinaryAction()){
+				if(!getManagedBean().isEditDisciplinaryActionCheckBox()){//29181: Disciplinary Action - change edit check box variable
 					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 				} else {
 					getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
@@ -1648,6 +1674,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setDisciplineVO(getInitDisciplinaryActionVO());
 		} else {
 			initSupplierDisciplinaryAction(getManagedBean().getSmSupplier()); 
+			//29181: Disciplinary Action - start - 26238
+			getManagedBean().setEditDisciplinaryActionCheckBox(false);
+			getManagedBean().setEditDisciplinaryAction(false);
+			//29181: Disciplinary Action - end - 26238
 		}
 		//27857: Disciplinary Action - end - 26238
 	}
@@ -1901,7 +1931,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					.getSmDisciplinaryActions()) {
 				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					//27857: Disciplinary Action - start - 26238
-					if(!getManagedBean().isEditDisciplinaryAction()){
+					if(!getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
 						if(disc.isBlacklistOwner()){
 							getManagedBean().setBlacklistOwnerOrDirector(true);
 							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
@@ -1917,7 +1947,7 @@ public class SupplierDataMaintenanceBackingBean extends
 							getManagedBean().setCancelCategoryCode(true);
 							getManagedBean().setCancelCategoryCodeExist(true);
 							
-							if(getManagedBean().isEditDisciplinaryAction()){
+							if(getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
 								// 27815 - add disable button delete if edit DA - Start
 								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 								// 27815 - add disable button delete if edit DA - End
@@ -1950,6 +1980,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						}
 					}else{
 						resetDisciplinaryActionSectionExist();
+						getManagedBean().setEditDisciplinaryActionCheckBox(true);//29181: Disciplinary Action - 26238
 						getManagedBean().setEditDisciplinaryAction(true);
 					}
 					//27857: Disciplinary Action - end - 26238

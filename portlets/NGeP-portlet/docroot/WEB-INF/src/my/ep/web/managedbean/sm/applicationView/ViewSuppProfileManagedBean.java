@@ -178,6 +178,10 @@ public class ViewSuppProfileManagedBean extends
 	private boolean disabledApprovedCategories;
 	// End 27815
 	
+	//29181: Disciplinary Action - start - 26238
+	private boolean editDisciplinaryActionCheckBox;
+	//29181: Disciplinary Action - end - 26238
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -949,5 +953,15 @@ public class ViewSuppProfileManagedBean extends
 	public void setDisabledApprovedCategories(boolean disabledApprovedCategories) {
 		this.disabledApprovedCategories = disabledApprovedCategories;
 	}
+
+	//29181: Disciplinary Action - start - 26238
+	public boolean isEditDisciplinaryActionCheckBox() {
+		return editDisciplinaryActionCheckBox;
+	}
+
+	public void setEditDisciplinaryActionCheckBox(boolean editDisciplinaryActionCheckBox) {
+		this.editDisciplinaryActionCheckBox = editDisciplinaryActionCheckBox;
+	}
+	//29181: Disciplinary Action - end - 26238
 
 }
