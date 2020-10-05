@@ -77,13 +77,14 @@
 			<div align="left" class="header-info">
 			 <table style="width: 100%">
 				<tr>
+				
 					<td style="width: 15%">
 						<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 					</td>
 					<td style="width: 10%">					
 						<p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}" 
 					       process="@this" partialSubmit="true" styleClass="blue_font"
-					       action="#{requestCtAdminBackingBean.goToLoaView(ctBackingBean.managedBean.contractVer.ctContractValue.loaNo)}"/>
+					       action="#{requestCtAdminBackingBean.goToLoaView(ctBackingBean.managedBean.contractVer.ctContract.loa)}"/>
 					</td>
 					<td style="width: 10%">
 						<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
