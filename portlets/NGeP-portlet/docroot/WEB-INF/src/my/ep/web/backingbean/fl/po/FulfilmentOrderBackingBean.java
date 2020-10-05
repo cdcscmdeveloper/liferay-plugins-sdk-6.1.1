@@ -238,7 +238,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 *  navigate to acknowledge page.
 	 *  @throws IOException 
 	 */
-
+  	
    	public String fulfillmentOrderAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
 		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
@@ -311,17 +311,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) && !hasFactoringUserRole()){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
-
+				
 				//28508-start
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
 					fulfilmentSO.checkFulfilmentItemByFLReqId(flRequest.getFulfilmentReqId());
 				}
 				//28508-end
-			/*#28375 - Logan - Beginning*/
-			}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
-				resDTO = fulfilmentOrderSO.acknowledgeForCarryForward(reqDTO);
-     		}
-			/*Ending*/
+			}
 			//#28377 razin
 			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -363,10 +359,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				}
-				/*#28375 - Logan - Beginning*/
-				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
-					messageId = MessageConst.INFO_700033;
-				}/*Ending*/
 				//#28377 - razin
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
 					messageId = MessageConst.INFO_700005;
@@ -1063,7 +1055,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		}
 
 		/* #28375 - Beginning - Logan */
-		public void carryForward(String action) throws PortalException, SystemException, IOException {
+		public String carryForward(String action) throws PortalException, SystemException, IOException {
 
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FeeExemptionReqDTO reqFeeDTO = new FeeExemptionReqDTO();
@@ -1076,6 +1068,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			IFulfilmentYepSO fulfilmentYepSO = (IFulfilmentYepSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentYepSO.class);
+			String messagePrefix = "";
+			String messageSuffix = "";
 			FlYepReqDTO yepReqDTO = new FlYepReqDTO();
 			FlYepResDTO yepResDTO =null;
 			
@@ -1085,23 +1079,38 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			Calendar currTime = Calendar.getInstance();
 			
-			if(action==BpmOutcomeConst.BPM_PROCEED){
+			if(action==BpmOutcomeConst.BPM_CARRYFORWARD){
 				yepReqDTO.setFlOrder(getManagedBean().getFulfilmentOrder());
 				reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 				yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
 				yepReqDTO.setCarryFoward(true);
+				yepReqDTO.setProgressStatus((long) 0);
 				yepReqDTO.setUserRole(getUserRole());
 				log.info("User role is : " +getUserRole());
 		
-				fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
-				log.info("Carry Forward set to true");
+				yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
+				log.info("Carry Forwarded");
 				
-				String messageCode = "";
-
-				messageCode = MessageConst.INFO_776108;
-
-				successMessage(messageCode, "", yepReqDTO.getDocNo(), Boolean.TRUE);
+				if(yepResDTO.isSuccessful()) {
+					String messageId = MessageConst.INFO_700005;
+					String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
+					String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
+						messageId = MessageConst.INFO_745022;
+					}
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					throw new EpException(MessageConst.ERROR_700020);
+				}
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			
+			
 			}
+			
 
 			try {
 				Date d1 = df.parse(df.format(currTime.getTime()));
@@ -1117,15 +1126,105 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}else{
 						throw new EpException(MessageConst.ERROR_776107);
 					}
-
-					signingAction(action);
-					String messageCode = "";
-
-					messageCode = MessageConst.INFO_700033;
-
-					successMessage(messageCode, "", "", Boolean.TRUE);
-
-				}
+					reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+					validateFulfillmentOrder(action);
+					Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+					
+					
+					reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+					
+					reqDTO.setFlDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+					reqDTO.setYep(getManagedBean().getFulfilmentOrder().isYep());
+					reqDTO.setStartDate(getManagedBean().getFlRequest().getStartDate());
+					log.info("getFacesScopes().getUserSessionBean()"+getFacesScopes().getUserSessionBean());
+					log.info("getUserRole("+getUserRole());
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+					reqDTO.setUserRole(getUserRole());
+					reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+					reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+					reqDTO.setSmSupplier(getManagedBean().getFlRequest().getSmSupplier());
+					if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+						reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+					}
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)){
+						yepReqDTO.setFlOrder(getManagedBean().getFulfilmentOrder());
+						yepReqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
+						yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+						yepReqDTO.setFlRequest(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest());
+						yepReqDTO.setCarryFoward(true);
+						yepReqDTO.setProgressStatus((long) 4);
+						yepReqDTO.setUserRole(getUserRole());
+						yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
+						log.info("Update task list carry forward as true");
+					}
+					reqDTO.setTaskId(getManagedBean().getTaskId());
+					reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
+					
+										
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)){
+						Map<String, String> paramMap = new HashMap<String, String>();
+						paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getFulfilmentOrder().getDocNo());
+						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+						reqDTO.setReportUrl("<a href='"+generateReportURL(ReportConst.FL_NGEP_PURCHASE_ORDER,paramMap)+ "'>"+getManagedBean().getFulfilmentOrder().getDocNo()+"</a>");
+					}
+					reqDTO.setTaskId(this.getManagedBean().getTaskId());
+					reqDTO.setTaskName(this.getManagedBean().getTaskName());
+					reqDTO.setOutcome(action);
+					reqDTO.setToken(token);
+					
+					reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+					if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+						reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+					}
+					reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
+					reqDTO.setContractOrder(getManagedBean().isContractRequest());
+					if(reqDTO.isContractRequest() == Boolean.FALSE){
+						if(getManagedBean().getFactoringCheck().equalsIgnoreCase("true")) {
+							getManagedBean().getFulfilmentOrder().setFactored(true);
+						}
+					}
+					reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+					reqDTO.setUserRole(getUserRole());
+					reqDTO.setTaskName(getManagedBean().getTaskName());
+					reqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
+					
+					if(getManagedBean().getPmDigiSign() != null){
+						reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
+					}
+					
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED))
+						resDTO = fulfilmentOrderSO.acknowledgeForCarryForward(reqDTO);
+					
+					yepReqDTO.setFlOrder(getManagedBean().getFulfilmentOrder());
+					yepReqDTO.setDocNo(getManagedBean().getFulfilmentOrder().getDocNo());
+					yepReqDTO.setFlRequest(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest());
+					yepReqDTO.setCarryFoward(true);
+					yepReqDTO.setProgressStatus((long) 4);
+					yepReqDTO.setUserRole(getUserRole());
+					yepResDTO=fulfilmentYepSO.updateCarryForwardFlYepTaskList(yepReqDTO);
+					log.info("Progress status set to 4");
+					
+					if(resDTO.isSuccessful()) {
+						String messageId = MessageConst.INFO_700033;
+						String documentType = getManagedBean().getFulfilmentOrder().getDocType();
+						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)) {
+							messageId = MessageConst.INFO_745023;
+						}
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						throw new EpException(MessageConst.ERROR_700020);
+					}
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+					
+					/*Ending*/
+				
+			}
 
 				else {
 					FacesContext
@@ -1142,7 +1241,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (Exception e) {
 				throw new EpException(MessageConst.ERROR_776107);
 				
-			}	
+			}
+			return messageSuffix;	
 						
 					
 			
@@ -1197,7 +1297,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)|| hasFactoringUserRole()) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole()) {
 			if(hasFactoringUserRole()) {
 				validateFulfillmentOrder(outcome);
 			}
