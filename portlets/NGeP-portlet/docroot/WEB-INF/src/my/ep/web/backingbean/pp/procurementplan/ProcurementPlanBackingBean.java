@@ -5759,19 +5759,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanPreviousYearOptions() {
 		log.info("getPlanPreviousYearOptions");
 		
-			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
-			Integer preYear1 = currentYear - 1;
-			Integer preYear2 = preYear1 - 1;
+		log.info("selected year " + this.getManagedBean().getPlanSearchBean().getYear());
+		    //25549@05102020 - start
+			Long currentYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+			
+			if (currentYear != null){
+			Long preYear1 = currentYear - 1;
+			Long preYear2 = preYear1 - 1;
 			SelectItem[] items = new SelectItem[2];
 			items[0] = new SelectItem(preYear1.longValue(), preYear1.toString());
 			items[1] = new SelectItem(preYear2.longValue(), preYear2.toString());
-				
-			log.info("selected year " + this.getManagedBean().getPlanSearchBean().getYear());
 			
 			return items;
+			}		
+			return null;
+		    //25549@05102020 - end
 		}
-	
-	
 	
 		/**
 		 * Main Filtration For Procurement Plan
@@ -6892,7 +6895,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpExItem.setStatusEnabled(true);
 		    		newPpExItem.setJustificationEnabled(false);
 		    		newPpExItem.setDisableEditAccount(true);
-		    		
+		    		//25549@05102020 - start
+		    		newPpExItem.setJustifications(clonedPpExpItem.getJustifications());
+		    		//25549@05102020 - end
 		    			
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
 		    		log.info("FromPpItem " + newPpExItem.getFromPpItem());
@@ -7090,12 +7095,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
 							
-							ppItem.setCloneEnabled(true);
-							ppItem.setDisableForPindaan(true);
-							ppItem.setReasonForUpdateEnabled(false);
+							ppItem.setCloneEnabled(false);
+							ppItem.setDisableForPindaan(false);
+							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
+							ppItem.setClonedItem(true);
+							
+							log.info("getActionClonedEnabled1 " + ppItem.isActionCloneEnabled());
+							
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -7106,6 +7115,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(true);
+							ppItem.setClonedItem(true);
+							
+							log.info("getActionClonedEnabled2 " + ppItem.isActionCloneEnabled());
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
