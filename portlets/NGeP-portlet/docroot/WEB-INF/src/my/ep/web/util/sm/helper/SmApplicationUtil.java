@@ -5497,7 +5497,7 @@ public class SmApplicationUtil {
 		desAddr.setDivisionId(srcAddr.getDivisionId());
 		if (srcAddr.getPmDivision() != null
 				&& srcAddr.getPmDivision().getDivisionId() != null) {
-			desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionById(
+			desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
 					srcAddr.getPmDivision().getDivisionId()));
 		}
 		//#13320 - added division - end
