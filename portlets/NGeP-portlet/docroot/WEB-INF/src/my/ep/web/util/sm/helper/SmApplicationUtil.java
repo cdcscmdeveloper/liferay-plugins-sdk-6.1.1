@@ -1815,12 +1815,13 @@ public class SmApplicationUtil {
 				}
 			}*/
 			validPersonnel = true;
-			if(per.isEquityOwner() || per.isAuthorized()){
-				if((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() ==  null) || (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null) || per.getPmRace() == null){
-					validPersonnel = false;
-				}else if(per.getSmPersonnelAddresses()==null || per.getSmPersonnelAddresses().size()<=0){
-					validPersonnel = false;
-				}
+			//#28693
+			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
+					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null)
+					|| per.getPmRace() == null) {
+				validPersonnel = false;
+			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
+				validPersonnel = false;
 			}
 			if(!validPersonnel){
 				sb.append(++i + ". ");
