@@ -2583,7 +2583,8 @@ public class QTCommitteBackingBean extends
 		Long status = getCurrentQtStatusId();
 		status = status == null? 0L : status;
 		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
-			if(!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)){
+			Long[] arrList = new Long[]{QTStatusConst.QT_PENDING_QT_SUBMISSION, new Long(0L)};
+			if(!Arrays.asList(arrList).contains(status)){
 				return false;
 			}
 			//#27502 -Start
