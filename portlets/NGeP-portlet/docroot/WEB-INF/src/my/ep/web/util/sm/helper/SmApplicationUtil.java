@@ -5493,6 +5493,14 @@ public class SmApplicationUtil {
 			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
 					srcAddr.getPmDistrict().getDistrictId()));
 		}
+		//#13320 - added division - start
+		desAddr.setDivisionId(srcAddr.getDivisionId());
+		if (srcAddr.getPmDivision() != null
+				&& srcAddr.getPmDivision().getDivisionId() != null) {
+			desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+					srcAddr.getPmDivision().getDivisionId()));
+		}
+		//#13320 - added division - end
 		desAddr.setDistrictId(srcAddr.getDistrictId());
 		if (srcAddr.getPmCity() != null
 				&& srcAddr.getPmCity().getCityId() != null) {
