@@ -84,7 +84,10 @@ public class CancelRegistrationBackingBean extends
 							.getSmAppl().getSmPersonnels()) && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 				
 				getManagedBean().setSmAppl(resDTO.getSmSupplier().getSmAppl());
-				if (resDTO.getSmSupplier().getSmAppl() != null
+				
+				
+				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
+				if (selectedPersonnel == null && resDTO.getSmSupplier().getSmAppl() != null
 						&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier().getSmAppl()
 								.getSmPersonnels())) {
 					for (SmPersonnel per : resDTO.getSmSupplier().getSmAppl().getSmPersonnels()) {
@@ -94,7 +97,6 @@ public class CancelRegistrationBackingBean extends
 						}
 					}
 				}
-				//selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				if (selectedPersonnel == null) {
 					throw new EpException(MessageConst.ERROR_721090);
