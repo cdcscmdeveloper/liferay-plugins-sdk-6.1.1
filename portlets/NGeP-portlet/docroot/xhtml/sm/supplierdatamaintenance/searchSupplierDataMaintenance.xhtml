@@ -96,7 +96,7 @@
 								rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED or smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
 							<p:graphicImage value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"
-								rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_CANCELLED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
+								rendered="#{smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_CANCELLED and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />
 						   	<!-- bug #29156 -END -->
 						</p:commandLink>
 					</p:column>
