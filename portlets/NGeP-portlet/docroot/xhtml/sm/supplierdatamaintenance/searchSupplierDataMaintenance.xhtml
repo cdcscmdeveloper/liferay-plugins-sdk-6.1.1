@@ -71,7 +71,7 @@
 
 					<p:column headerText="#{lbl['lbl.sm.regStatus']}">
 						<h:outputText value="#{smSupplier.smAppl.workflowStatusDesc}"
-							rendered="#{not empty smSupplier.smAppl.pmRegStatus}" />
+							rendered="#{not empty smSupplier.smAppl.pmRegStatus and smSupplier.mofStatus ne SupplierManagementConst.MOF_STATUS_DELETED}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty smSupplier.smAppl.pmRegStatus}" />
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
