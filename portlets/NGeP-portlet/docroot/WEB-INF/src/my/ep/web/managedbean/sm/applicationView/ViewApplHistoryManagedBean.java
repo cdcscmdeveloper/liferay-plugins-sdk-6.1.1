@@ -1,14 +1,12 @@
 package my.ep.web.managedbean.sm.applicationView;
 
 
-import java.util.Date;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -19,12 +17,8 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -32,12 +26,12 @@ import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "viewApplHistoryMB")
 @SessionScoped
@@ -47,6 +41,7 @@ public class ViewApplHistoryManagedBean extends
 	/**
 	 * 
 	 */
+	public static Logger log = Logger.getLogger(ViewApplHistoryManagedBean.class);
 	private static final long serialVersionUID = 1191700333390541593L;
 	private SmAppl selectedApplHistory;
 	private boolean claimTask;
@@ -108,7 +103,7 @@ public class ViewApplHistoryManagedBean extends
 					return getApplicationHistoryResultBean(reqDTO);
 				}
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage());
 				return new SearchResultBean();
 			} finally {
 				reqDTO = null;
