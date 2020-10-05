@@ -88,7 +88,7 @@ public class CancelRegistrationBackingBean extends
 						&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier().getSmAppl()
 								.getSmPersonnels())) {
 					for (SmPersonnel per : resDTO.getSmSupplier().getSmAppl().getSmPersonnels()) {
-						if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
 							selectedPersonnel = per;
 							break;
 						}
