@@ -258,7 +258,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label"
 								value="#{lbl['lbl.sm.disciplinary.action.edit']}" /></td>
 						<td>
-							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
+							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryActionCheckBox}" 
 								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}">
 					            <p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.onTickDiscipline()}"
