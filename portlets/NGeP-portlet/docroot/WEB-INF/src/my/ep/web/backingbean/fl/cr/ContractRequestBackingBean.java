@@ -1313,7 +1313,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			//if(!fulfilmentRequestSO.isContractRequestInUsed(reqDTO).getHaveFlRecord()) {
 				//#14650 - Alert message if contract incomplete
-			if(!resDTOInvoice.isCrComplete() || !resDTOInvoice.isIdptcontractCompleteCheck()) {
+			if(!resDTOInvoice.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
@@ -1524,7 +1524,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO2.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());				
 			resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO2);			
 			
-			if(!resDTOInvoice.isCrComplete() || !resDTOInvoice.isIdptcontractCompleteCheck()){
+			if(!resDTOInvoice.isCrComplete()){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 			}
