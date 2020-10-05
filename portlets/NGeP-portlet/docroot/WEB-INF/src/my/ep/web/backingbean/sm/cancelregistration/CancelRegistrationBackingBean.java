@@ -84,7 +84,19 @@ public class CancelRegistrationBackingBean extends
 							.getSmAppl().getSmPersonnels()) && resDTO.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_IN_PROGRESS) {
 				
 				getManagedBean().setSmAppl(resDTO.getSmSupplier().getSmAppl());
+				
+				
 				selectedPersonnel = getAdminPersonnel(resDTO.getSmSupplier());
+				if (selectedPersonnel == null && resDTO.getSmSupplier().getSmAppl() != null
+						&& !EntityHelper.isCollectionEmpty(resDTO.getSmSupplier().getSmAppl()
+								.getSmPersonnels())) {
+					for (SmPersonnel per : resDTO.getSmSupplier().getSmAppl().getSmPersonnels()) {
+						if (per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || per.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+							selectedPersonnel = per;
+							break;
+						}
+					}
+				}
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				if (selectedPersonnel == null) {
 					throw new EpException(MessageConst.ERROR_721090);
@@ -113,7 +125,7 @@ public class CancelRegistrationBackingBean extends
 						//to check active rejected application
 						SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(resDTO.getSmSupplier().getSupplierId(),ParameterConst.NEW_SM_APPLN_FOR_MOF);
 						
-						if (selectedPersonnel.getIdentificationNo().equals(getManagedBean().getSuppAdminIdentificationNo().trim())&& selectedPersonnel.getRecordStatusFlg().equals(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) {
+						if (selectedPersonnel.getIdentificationNo().equals(getManagedBean().getSuppAdminIdentificationNo().trim())) {
 							//#25474------13072020
 							if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) ||
 									resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null){//PM_STATTUS_ID=20199
