@@ -1718,17 +1718,27 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
     
   //29089-Start
     private boolean isHideTaskListYep(WorklistItemVO worklistItemVO) {
+    	FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
     	BigDecimal isHideTaskYEP=BigDecimal.ZERO;
+    	FulfilmentResDTO resDTO =null;
         Boolean isHide=false;
+        reqDTO.setDocId(worklistItemVO.getDocId().longValue());
+		reqDTO.setFlDocNo(worklistItemVO.getPocoNo());
         IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
     	if(worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_CO)){
-    		isHideTaskYEP = fulfilmentOrderSO.checkIsHideTaskList(worklistItemVO.getDocId().longValue(),worklistItemVO.getPocoNo());
+    		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
+    		isHideTaskYEP = resDTO.getIsHideTaskYEP();
     		if(isHideTaskYEP.doubleValue()>0){
     			isHide = true;
     		}
     	}else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
    	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
-    		isHideTaskYEP = fulfilmentOrderSO.checkIsHideTaskList(null,worklistItemVO.getPocoNo());
+    		reqDTO.setDocId(null);
+    		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
+    		isHideTaskYEP = resDTO.getIsHideTaskYEP();
+    		if(isHideTaskYEP.doubleValue()>0){
+    			isHide = true;
+    		}
     	}
     	return isHide;	    
     }//29089-End
