@@ -36,8 +36,12 @@
 			</tr>
 			<!-- 13320 -->
 					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmDivision.divisionName}" /></td>
+						<!-- #13320 - render division -->
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+											rendered="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmDivision.divisionName}"
+											rendered="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}" /></td>
+						<!-- #13320 - render division - end-->
 					</tr>
 
 			<tr>
