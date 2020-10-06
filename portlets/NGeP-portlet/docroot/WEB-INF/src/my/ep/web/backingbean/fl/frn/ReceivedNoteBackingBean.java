@@ -517,25 +517,26 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			//26279 - end
 			
 			/*#14650 - Logan - Beginning*/
-			//FacesScopes facesScopes = new FacesScopes();
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			//IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			
-			
-			//reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			//resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
-			//reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
 					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
 				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+							
+				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+				FulfilmentReqDTO reqDTOsum = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTOsum = new FulfilmentResDTO();
 				
-				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);		
+				reqDTOsum.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+				resDTOsum = receivedNoteSO.retriveSumReceivedAmtByReqId(reqDTOsum);
+				sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+				reqDTO.setAmount(sumReceivedAmt);
+				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
-				//#14650 - Alert message if contract incomplete
-					if(!resDTOInvoice.isCrComplete()){
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
-					}
+				if(!resDTOInvoice.isCrComplete()){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				}
 			}
 			/*#14650 - Ending*/
 			
@@ -1508,7 +1509,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			if(getManagedBean().isLastFRNTaxInv()){
 				//double check DB
-				System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN() **4** !getManagedBean().isLastFRNTaxInv() ");
 				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
@@ -1521,9 +1521,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 						}
 					
 						for(FlFulfilmentNoteItem frnItem : note.getFlFulfilmentNoteItem()) {
-							System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN()**7***1333***** "+ frnItem.getFulfilmentNoteItemId());
-							System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN()**8***1333***** "+ frnItem.isCoGSTRReq());
-							
+						
 							if(!frnItem.isCoGSTRReq()){
 								countisCogstrFalseDB = countisCogstrFalseDB + 1;
 							}else{
@@ -1717,4 +1715,5 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end	
+	
 }
