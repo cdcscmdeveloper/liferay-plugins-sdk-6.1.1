@@ -11225,6 +11225,15 @@ public class SmApplicationUtil {
 					smAddress.setPmState(state);
 					smAddress.setStateId(state.getStateId());
 					//START 27879
+					//#13320 - added division - start
+					if(addr.getSmAddress().getPmDivision() != null){
+						PmDivision div = new PmDivision();
+						div.setDivisionId(addr.getSmAddress().getPmDivision()
+								.getDivisionId());
+						smAddress.setPmDivision(div);
+						smAddress.setDivisionId(div.getDivisionId());
+					}
+					//#13320 - added division - end
 					if(addr.getSmAddress().getPmDistrict() != null){
 						PmDistrict district = new PmDistrict();
 
