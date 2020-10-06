@@ -667,7 +667,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		for (PpProcurementItem pp: ppItems) {
 			//For cloning
-			pp.setCloneEnabled(false);
+			/*pp.setCloneEnabled(false);
 			pp.setDisableForPindaan(false);
 			//For update reason
 			pp.setReasonForUpdateEnabled(true);
@@ -675,7 +675,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//For status
 			pp.setStatusEnabled(false);
 			pp.setCloneEnabled(false);
-			pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+			pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);*/
+			
+			log.info("ppitem= "+pp.getProcurementItemId()+", isOriginal= "+pp.isOriginal()+
+					", getFromPpItem= "+pp.getFromPpItem());
+			log.info("cloneEnabled= "+pp.isCloneEnabled()+", disableForPindaan= "+pp.isDisableForPindaan()+
+					", brandNew= "+pp.isBrandNew()+", statusEnabled= "+pp.isStatusEnabled()+
+					", reasonForUpdateEnabled= "+pp.isReasonForUpdateEnabled()+
+					", recordStatusFlg= "+pp.getRecordStatusFlg());
+			
+			if (pp.isOriginal()) {
+				pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				pp.setCloneEnabled(false);
+				pp.setDisableForPindaan(false);
+				pp.setStatusEnabled(false);
+			}
+			
+			
 		}
 		
 	}
