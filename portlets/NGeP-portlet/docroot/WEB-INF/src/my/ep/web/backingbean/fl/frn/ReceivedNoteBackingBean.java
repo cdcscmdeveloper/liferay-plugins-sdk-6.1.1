@@ -524,12 +524,26 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
 							
 				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+				BigDecimal frnReceivedAmt = BigDecimal.ZERO;
 				FulfilmentReqDTO reqDTOsum = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTOsum = new FulfilmentResDTO();
 				
 				reqDTOsum.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+				if(getManagedBean().getFulfilmentNote()!=null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId()!=null){					
+					reqDTOsum.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+				}else{
+					reqDTOsum.setRequestNoteId(null);
+				}
+				
+				//get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
 				resDTOsum = receivedNoteSO.retriveSumReceivedAmtByReqId(reqDTOsum);
 				sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+				//get this FRN amount
+				for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+					frnReceivedAmt = frnReceivedAmt.add(noteItem.getReceivedAmt());
+				}				
+				sumReceivedAmt = sumReceivedAmt.add(frnReceivedAmt);				
+
 				reqDTO.setAmount(sumReceivedAmt);
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
