@@ -482,7 +482,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 
-						boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - End
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
 								processWorklistItemByTitle(worklistItemVO, face);
@@ -626,7 +628,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if (responseDTO.getWorklistVO() != null) {
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-						boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - End
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try {
 								if (worklistItemVO.getTitle().matches("<")) {
@@ -665,9 +669,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
 								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
-								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
+								    	   //	Enhancement #28766 - Start
+								    	   //	if(viewGlpFlag && mofResDto.isGlp()) {
+								    	   //	sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+								    	   //	}
+								    	//	Enhancement #28766 - End
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -795,7 +801,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if (responseDTO.getWorklistVO() != null) {
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
-						boolean viewGlpFlag = viewGlpFlag();
+				    	   //	Enhancement #28766 - Start
+							//	boolean viewGlpFlag = viewGlpFlag();
+				    	   //	Enhancement #28766 - End
 						
 						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), 
 								new java.util.Comparator<WorklistItemVO>() {
@@ -1052,15 +1060,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return false;
 	}
 
-	private boolean viewGlpFlag() {
-		FacesScopes fs = new FacesScopes();
-		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
-				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
-				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
-			return true;
-		}
-		return false;
-	}
+	//	Enhancement #28766 - Start
+	//	private boolean viewGlpFlag() {
+	//		FacesScopes fs = new FacesScopes();
+	//		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
+	//				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
+	//				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
+	//			return true;
+	//		}
+	//		return false;
+	//	}
+	//	Enhancement #28766 - End
 
 	public boolean isSdoWithMultipleRoles() {
 		return sdoWithMultipleRoles;
