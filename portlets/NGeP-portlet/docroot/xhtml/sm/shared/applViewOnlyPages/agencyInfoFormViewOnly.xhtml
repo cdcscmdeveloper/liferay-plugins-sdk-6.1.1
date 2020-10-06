@@ -42,8 +42,10 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
 						<!-- 13320 -->
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionName}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionName}"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/></td>
 					
 					</tr>
 					<tr>
