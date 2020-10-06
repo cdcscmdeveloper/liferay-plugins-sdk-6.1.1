@@ -53,8 +53,12 @@
 					<tr>
 						<td>&#160;</td>
 						<td></td>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionName}"/></td>
+						<!-- #13320 - render division - end-->
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionName}"
+											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/></td>
+						<!-- #13320 - render division - end-->
 					</tr>
 					<tr>
 						<td>&#160;</td>
