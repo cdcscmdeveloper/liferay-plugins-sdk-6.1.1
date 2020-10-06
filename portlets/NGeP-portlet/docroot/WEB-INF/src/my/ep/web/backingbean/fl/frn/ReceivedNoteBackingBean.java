@@ -450,7 +450,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
 			getManagedBean().setSelectedTabIndex(0);
-			System.out.println("getTaskName: "+this.getManagedBean().getTaskName());
+			log.info("getTaskName: "+this.getManagedBean().getTaskName());
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
@@ -517,25 +517,40 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			//26279 - end
 			
 			/*#14650 - Logan - Beginning*/
-			//FacesScopes facesScopes = new FacesScopes();
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			//IInvoiceSO invoiceRequestSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			
-			
-			//reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			//resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
-			//reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
 					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
 				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+							
+				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+				BigDecimal frnReceivedAmt = BigDecimal.ZERO;
+				FulfilmentReqDTO reqDTOsum = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTOsum = new FulfilmentResDTO();
 				
-				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);		
+				reqDTOsum.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+				if(getManagedBean().getFulfilmentNote()!=null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId()!=null){					
+					reqDTOsum.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+				}else{
+					reqDTOsum.setRequestNoteId(null);
+				}
 				
-				//#14650 - Alert message if contract incomplete
-					if(resDTOInvoice.isIdptcontractCompleteCheck()==false){
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
-					}
+				//get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
+				resDTOsum = receivedNoteSO.retriveSumReceivedAmtByReqId(reqDTOsum);
+				sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+				//get this FRN amount
+				for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+					frnReceivedAmt = frnReceivedAmt.add(noteItem.getReceivedAmt());
+				}				
+				sumReceivedAmt = sumReceivedAmt.add(frnReceivedAmt);				
+
+				reqDTO.setAmount(sumReceivedAmt);
+				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
+				
+				if(!resDTOInvoice.isCrComplete()){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				}
 			}
 			/*#14650 - Ending*/
 			
