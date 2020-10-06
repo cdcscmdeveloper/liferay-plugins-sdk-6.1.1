@@ -9862,6 +9862,15 @@ public class SmApplicationBackingBean extends
 										.getStateById(addr.getStateId()));
 								onChangeState(addr, panel);
 							}
+							//#13320 - added division - start
+							if(compBasicAddr.getPmDivision() != null){
+								addr.setDivisionId(compBasicAddr.getPmDivision()
+										.getDivisionId());
+								addr.setPmDivision(SmCommonUtil.getInstance()
+										.getDivisionById(addr.getDivisionId()));
+								onChangeDistrictByDivision(addr, panel);
+							}
+							//#13320 - added division - end
 							if (compBasicAddr.getPmDistrict() != null) {
 								addr.setDistrictId(compBasicAddr
 										.getPmDistrict().getDistrictId());
@@ -13889,6 +13898,7 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
+		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionById(addr.getDivisionId()));
 	}
 	//13320-End	
 	
