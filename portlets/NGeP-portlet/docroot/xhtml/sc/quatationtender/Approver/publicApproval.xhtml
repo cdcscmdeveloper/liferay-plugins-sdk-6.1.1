@@ -45,6 +45,11 @@
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
+							
+							<p:inputText id="pday" value="#{approvalBackingBean.managedBean.qt.publishDate}" style="width: 65px; text-align: center;" disabled="true">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+							</p:inputText>
+							
 							<p:message id="noticePublishMsg" for="noticePublish" display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -57,6 +62,11 @@
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
+							
+							<p:inputText id="pday2" value="#{approvalBackingBean.managedBean.qt.publishDate}" style="width: 65px; text-align: center;" disabled="true">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+							</p:inputText>
+							
 						</c:otherwise>
 					</c:choose>
 				</td>
@@ -74,6 +84,9 @@
 						<p:inputText id="bsvTime" value="#{approvalBackingBean.managedBean.qt.proposalStartDate}" disabled="true" size="4"
 							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
+						</p:inputText>
+						<p:inputText id="pday3" value="#{approvalBackingBean.managedBean.qt.proposalStartDate}" style="width: 65px; text-align: center;" disabled="true">
+								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
 						</p:inputText>
 					</td>
 				</tr>
@@ -101,6 +114,11 @@
 						style="width: 65px;margin-top: 5px;margin-bottom: 0px;">
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 					</p:inputText>
+					
+					<p:inputText id="pday4" value="#{approvalBackingBean.managedBean.qt.closingDate}" style="width: 65px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+					</p:inputText>
+					
 				</td>
 			</tr>
 			
@@ -122,6 +140,11 @@
 							style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText>
+						
+						<p:inputText id="pday5" value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}" style="width: 65px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+						</p:inputText>
+						
 					</td>
 				</tr>
 			</c:if>
@@ -144,7 +167,13 @@
 						style="width: 120px;margin-top:5px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					
+					<p:inputText id="pday6" value="#{approvalBackingBean.managedBean.qt.proposalValidityEndDate}" style="width: 65px; text-align: center;" disabled="true">
+							<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_DAY_ONLY}" /> 
+					</p:inputText>
+					
+					</td>
 			</tr>
 			<!-- <tr>
 				<td style="width: 200px;"><p:outputLabel
