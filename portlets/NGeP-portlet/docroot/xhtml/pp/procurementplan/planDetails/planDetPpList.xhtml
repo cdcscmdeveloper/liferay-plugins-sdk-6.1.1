@@ -25,7 +25,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:inputText>
 
 	   	<p:dataTable id="dtProcurementPlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
-	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
+	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}" rendered="#{ppItem.recordStatusFlg != 2}"
 		     rowIndexVar="index" rowKey="#{ppItem}">
 			<ac:paginator for="dtProcurementPlan" />
 			<p:columnGroup type="header">
