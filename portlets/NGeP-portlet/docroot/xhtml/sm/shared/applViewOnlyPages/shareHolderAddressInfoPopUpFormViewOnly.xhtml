@@ -38,8 +38,12 @@
 						</tr>
 						<!-- 13320 -->
 						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionName}"/></td>
+							<!-- #13320 - render division-->
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionName}"
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"/></td>
+							<!-- #13320 - render division - end-->
 						</tr>
 
 						<tr>
@@ -85,8 +89,12 @@
 						</tr>
 						<!-- 13320 -->
 						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionName}"/></td>
+							<!-- #13320 - render division -->
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionName}"
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}"/></td>
+							<!-- #13320 - render division - end-->
 						</tr>
 
 						<tr>
@@ -137,8 +145,12 @@
 						</tr>
 						<!-- 13320 -->
 						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionName}"/></td>
+							<!-- #13320 - render division -->
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionName}"
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}"/></td>
+							<!-- #13320 - render division - end-->
 						</tr>
 						
 
@@ -185,8 +197,12 @@
 						</tr>
 						<!-- 13320 -->
 						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionName}"/></td>
+							<!-- #13320 - render division-->
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionName}"
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"/></td>
+							<!-- #13320 - render division - end-->
 						</tr>
 
 						<tr>
