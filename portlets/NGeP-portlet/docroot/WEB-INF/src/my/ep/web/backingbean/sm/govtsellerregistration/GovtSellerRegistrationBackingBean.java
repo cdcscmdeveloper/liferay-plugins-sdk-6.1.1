@@ -571,7 +571,8 @@ public class GovtSellerRegistrationBackingBean extends
 										.getSmAddress().getPmState()
 										.getStateId()));
 		//#13320 - added division - start
-		getManagedBean()
+		if(getManagedBean().getSelectedBranch().getSmAddress().getPmDivision() != null){
+			getManagedBean()
 				.getSelectedBranch()
 				.getSmAddress()
 				.setPmDivision(
@@ -579,6 +580,7 @@ public class GovtSellerRegistrationBackingBean extends
 								getManagedBean().getSelectedBranch()
 									.getSmAddress().getPmDivision()
 									.getDivisionId()));
+		}
 		//#13320 - added division - end
 		getManagedBean()
 				.getSelectedBranch()
@@ -787,6 +789,8 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(true);
 			}else{
 				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(false);
+				//#13320 - remove division for non-sarawak
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDivision(null);
 			} 
 			if(states !=null && states.getAdoptDivision()) {
 				getManagedBean().setDivisionBox(false);	
@@ -816,6 +820,8 @@ public class GovtSellerRegistrationBackingBean extends
 				
 				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(true);
 			}else{
+				//#13320 - remove division for non-sarawak
+				this.getManagedBean().getSmPermenantAdd().setPmDivision(null);
 				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
@@ -869,6 +875,8 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(null);
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(true);
 			}else{
+				//#13320 - remove division for non-sarawak
+				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
