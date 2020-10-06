@@ -240,6 +240,7 @@
 						          and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 						          			 and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)}" 
 									        process="@this" partialSubmit="true"
+								  disabled="#{data.assignedCtAdminFlag == 1}"
 						          action="#{contractDetailsBackingBean.gotoOwnerManagementPage(data.ctContract.contractId)}"
 						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 						    </p:menuitem>
