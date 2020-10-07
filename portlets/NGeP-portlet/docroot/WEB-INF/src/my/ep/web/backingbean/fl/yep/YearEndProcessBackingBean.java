@@ -106,16 +106,16 @@ public class YearEndProcessBackingBean extends
 
 		// reset everything to false
 		//#29036 removed for auto check by vinod Start
-		/*this.getManagedBean().setCheckDocType(false); 
+		//#29281 changed commented code for auto check Ap58 -- Vinod
+		this.getManagedBean().setCheckDocType(false); 
 		resetSearchCriteria();
-		this.getManagedBean().setSearchAp58(true);*/
-		//#29036 End vinod
-		//#29281 un commented the following condition -- Vinod
+		//this.getManagedBean().setSearchAp58(true);
 		if (docType != null) {
 			if (docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 				this.getManagedBean().setCheckDocType(true);
 			}
 		}
+		//#29036 End vinod
 		getManagedBean().setSearchDocType(docType);
 	}
 
