@@ -5334,27 +5334,31 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		ScQtProposal proposal = this.getManagedBean().getQtProposal();
 		proposal.setSubmitted(false);
 		IQTProposalSO proposalSO;
-		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setScQtProposal(proposal);
-			
-			// #27233 : CR add new tracking diary entry for update - START
-			Long scQtSuppId = proposal.getScQtSupplier() != null ? proposal.getScQtSupplier().getQtSupplierId() : null;
-			if(scQtSuppId != null){
-				reqDTO.setUpdating(true);
-				reqDTO.setQtSupplierId(scQtSuppId); // need real scSupplier
-				reqDTO.setRoleCode(super.getUserRoleCode());
-				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			}
-			// #27233 : CR add new tracking diary entry for update - END
-			
-			proposalSO = getProposalSO();
-			ProposalResDTO resDTO = proposalSO
-					.updateQTProposalForReSubmit(reqDTO);
-			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
-		} finally {
-			proposalSO = null;
+		
+		// #29134 - CR 27233: Static Code Analysis
+		// start
+		// removed try and finally clause
+//		try {
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setScQtProposal(proposal);
+		
+		// #27233 : CR add new tracking diary entry for update - START
+		Long scQtSuppId = proposal.getScQtSupplier() != null ? proposal.getScQtSupplier().getQtSupplierId() : null;
+		if(scQtSuppId != null){
+			reqDTO.setUpdating(true);
+			reqDTO.setQtSupplierId(scQtSuppId); // need real scSupplier
+			reqDTO.setRoleCode(super.getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		}
+		// #27233 : CR add new tracking diary entry for update - END
+		
+		proposalSO = getProposalSO();
+		ProposalResDTO resDTO = proposalSO
+				.updateQTProposalForReSubmit(reqDTO);
+		this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
+//		} finally {
+//			proposalSO = null;
+//		}
 	}
 
 	/**
