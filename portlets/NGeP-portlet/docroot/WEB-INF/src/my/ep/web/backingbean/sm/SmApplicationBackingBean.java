@@ -13894,7 +13894,8 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
 				panelName, getManagedBean());
 		setRoleStaffAddrReqd();
-		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionById(addr.getDivisionId()));
+		//#13320 - SmCommonUtil change method
+		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
 	}
 	//13320-End	
 	
