@@ -82,6 +82,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -112,6 +113,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -592,6 +594,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					roleCode = RoleCode.PBB_SECRETARY.value();
 				} else if (getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) {
 					roleCode = RoleCode.PPB_SECRETARY.value();
+				}else if (getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())) {
+					roleCode = RoleCode.QCA_CHAIRPERSON.value();
+				}else if (getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())) {
+					roleCode = RoleCode.QCB_CHAIRPERSON.value();
+				}else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+					roleCode = RoleCode.MOF_SUPPLIER_ADMIN.value();
 				}
 
 				
