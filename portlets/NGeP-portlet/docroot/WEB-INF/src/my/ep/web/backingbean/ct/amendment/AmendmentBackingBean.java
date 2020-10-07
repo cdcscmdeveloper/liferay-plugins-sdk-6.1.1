@@ -574,48 +574,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
 
-				/*Start if statement if login user not approver / desk officer*/
-				String roleCode = null;
-				
-			
-				if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-					roleCode = RoleCode.CT_APPROVER.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) {
-					roleCode = RoleCode.BPK_APPROVER.value();
-				}else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-					roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
-				}  else if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-					roleCode = RoleCode.DESK_OFFICER.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
-					roleCode = RoleCode.QCA_SECRETARY.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
-					roleCode = RoleCode.QCB_SECRETARY.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
-					roleCode = RoleCode.PBB_SECRETARY.value();
-				} else if (getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) {
-					roleCode = RoleCode.PPB_SECRETARY.value();
-				}else if (getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())) {
-					roleCode = RoleCode.QCA_CHAIRPERSON.value();
-				}else if (getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())) {
-					roleCode = RoleCode.QCB_CHAIRPERSON.value();
-				}else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-					roleCode = RoleCode.MOF_SUPPLIER_ADMIN.value();
-				}
-
-				
-				CtActor contractAdminActor = retrieveContractActor(
-						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
-						ctBackingBean.getManagedBean().getContractVer().getDocType(),roleCode);
-
-				if (contractAdminActor != null
-						&& !getFacesScopes().getUserSessionBean().getUserId().equals(contractAdminActor.getUser().getUserId())) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"", MessageUtils.getMessage(MessageConst.ERROR_700116,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
-					return;
-				}/*end if statement*/
-
 				getManagedBean().setViewOnly(true);
 				getManagedBean().setTaskId(taskId);
 				return;
