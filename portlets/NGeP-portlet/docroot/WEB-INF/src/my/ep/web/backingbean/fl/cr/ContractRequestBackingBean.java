@@ -280,7 +280,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/*#17087 zonal flag*/
 	private boolean zonalTest;
 	/*13984 Schedule/ Phase Information*/
-    private static List<ScheduleInfo> schInfo;
+    private List<ScheduleInfo> schInfo;
     /*13984 navigation & schedule number Information*/
     private static String navi;
     private static String schno;
@@ -1122,7 +1122,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		String scheduleNo = originalServletRequest.getParameter("scheduleNo");
 		//start-13984
 		String catalogueFlag = originalServletRequest.getParameter("catalogueFlag"); //13984 - CrList - Back Button
-		
+		FulfilmentResDTO resDTOInvoice;
 		if(catalogueFlag != null){
 			getManagedBean().setCatalogueFlag(catalogueFlag);
 		}
@@ -1136,7 +1136,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 					IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FulfilmentResDTO resDTO;
 			
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			initializeCRBeans();
@@ -1414,6 +1414,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 			flBackingBean.initializeRemarkAndAttachement(getManagedBean().getFlRequest().getFlWorkflowStatus(), flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			getManagedBean().setSelectedTabIndex(0);
+			
 			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 			}
