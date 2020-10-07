@@ -30,17 +30,20 @@
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT'}" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" process="@all" partialSubmit="true"
+					oncomplete="blockWidget.hide();" style="float:right;"
+					process="@all" partialSubmit="true" 
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					oncomplete="confirmUpdateAsAttendPopup.show();" style="float:right;"/>
 			</ui:repeat>
 		</ui:fragment>
-		<p:commandButton value="#{lbl['lbl.btn.save']}"
+		<ui:fragment rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
 			styleClass="ui-button" oncomplete="confirmSubmitMeetingMainPopup.show();"
 			style="float:right;" process="@all" partialSubmit="true">
