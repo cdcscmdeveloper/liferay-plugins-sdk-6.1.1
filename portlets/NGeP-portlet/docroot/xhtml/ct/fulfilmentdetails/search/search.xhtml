@@ -268,7 +268,7 @@
 					     		icon="ui-icon-edit"
 					     		process="@this" partialSubmit="true"
 					     		rendered="#{(contractDetailsBackingBean.isContractAdmin() or ctBackingBean.isApprover()) 
-					     				and data.status
+					     				and data.status == 1
 					     				and data.ctStatus == 1 
 					     				and data.ctContract.recordStatusFlg==1
 					     				and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
