@@ -3799,8 +3799,44 @@ public class EvaluationBackingBean extends
 	 *            
 	 */
 	public void specTabChange() {
+		
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		
 		try {
 			this.getManagedBean().getFinSpecSupplierListDM().reloadData();
+			//#25138 - Save package score when zone tab change - start
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			List<ScQtProposalChecklist> scoreDtls = this.getManagedBean()
+					.getFinSpecSupplierListDM().getList();
+			evalReqDTO.setPropChecklist(scoreDtls);
+			evalReqDTO.setQtId(
+					this.getManagedBean().getScQt().getQtId());
+			evalReqDTO.setDocDefinationKey(
+					ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
+			evalReqDTO.setDocCategory(
+					ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
+			evalReqDTO.setCheckListId(
+					this.getManagedBean().getScQtChecklist().getQtChecklistId());
+			
+			if(scoreDtls != null){
+				for(ScQtProposalChecklist list : scoreDtls){
+
+					ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
+					if (null != amountScore) {
+								this.getManagedBean().setFinPackageScore(true);	
+						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
+								.getWithInVarieance().intValue()){
+							this.getManagedBean().setFinPackageScore(false);
+							throw new EpException(MessageConst.ERROR_760201);
+						}
+					}		
+				}	
+			}
+			evaluationSO.saveUserScorePackageDetails(evalReqDTO);
+			//#25138 - Save package score when zone tab change - end
 			Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
 					.getCurrentInstance().getExternalContext()
 					.getRequestParameterMap().get("selectedZoneTabIndex"));
@@ -13117,12 +13153,16 @@ private void retriveCommitteeRemarksList(){
 				checkFinancialSuppliersQualified();
 
 			}
-			//Bug #28856 - Ahmaa - Start
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-			evaluationSO.generateEvaluationSheet(reqDTO);
-			//Bug #28856 - Ahmaa - End
+			//#25138 - filter auto score condition - Start
+			if(QTConstants.AUTO_SCORE.equalsIgnoreCase(this
+					.getManagedBean().getOfferScoreType())){
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+				evaluationSO.generateEvaluationSheet(reqDTO);
+			
+			}
+			//#25138 - filter auto score condition - End
 			innerCheckList=null;
 			evalstage=null;
 		
