@@ -105,9 +105,7 @@ public class ViewApplHistoryManagedBean extends
 			} catch (Exception ex) {
 				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage());
 				return new SearchResultBean();
-			} finally {
-				reqDTO = null;
-			}
+			} 
 		}
 
 		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
