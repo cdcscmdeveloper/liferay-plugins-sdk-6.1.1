@@ -571,7 +571,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 	public void onChangeDivision(SmAddress addr) {
 		Long divisionId = addr.getDivisionId() == null ? addr.getPmDivision()
 				.getDivisionId() : addr.getDivisionId();
-		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionById(
+		//#13320 - SmCommonUtil change method
+		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
 				divisionId));
 		addr.setDivisionId(divisionId);
 

@@ -13713,7 +13713,8 @@ public class SmApplicationUtil {
 					SmApplicationManagedBean bean) {
 				try {
 					Long divisionId = addr.getDivisionId();
-					addr.setPmDivision(SmCommonUtil.getInstance().getDivisionById(
+					//#13320 - SmCommonUtil change method
+					addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
 							divisionId));
 					DistrictReqDTO reqDTO = new DistrictReqDTO();
 					reqDTO.setDistrictId(divisionId);
