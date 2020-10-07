@@ -37,7 +37,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:messages id="sGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
 		</div>
 	   	<p:dataTable id="dtExpenditurePlanS" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsS}"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsS}" rendered="#{epItem.recordStatusFlg != 2}"
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtExpenditurePlanS" />
 	    	<p:columnGroup type="header">
