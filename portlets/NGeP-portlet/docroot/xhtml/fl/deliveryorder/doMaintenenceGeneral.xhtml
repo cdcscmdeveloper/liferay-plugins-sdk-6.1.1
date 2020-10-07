@@ -5,6 +5,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- 29234 start -->
+	<style>
+		.highlight-mark:before {
+ 			color: red;
+ 			content: "*";
+		}
+	</style>
+	<!-- 29234 end -->
 	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true" id="flDoDetails">
 		<table style="width: 100%">
 			<tr>
@@ -106,8 +114,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="51"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.supplierName}" /></td>
-				<td ><p:outputLabel
+						<!-- 29234 start -->
+				<td><p:outputLabel styleClass="highlight-mark" 
 							value="#{lbl['lbl.fl.do.supp.do.no']}" /></td>
+						<!-- 29234 end -->
 					<td><p:inputText size="35" maxlength="30"
 							value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}" 
 							readonly="#{createDOBackingBean.managedBean.buttonVal == BpmOutcomeConstant.bpmView or 
