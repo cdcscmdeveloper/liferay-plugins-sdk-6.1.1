@@ -9,6 +9,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -126,8 +128,13 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	/**
 	 * Method to retrieve portal name from property file
 	 */
-	public String getPortletTitle() {
-		return ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	public String getPortletTitle() {	
+		String docType = getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getDocType();
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
+			return ResourceBundleUtils.getMessage("lbl.ct.contract.remove.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		else
+			return ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		
 	}
 	
 	/**
@@ -266,8 +273,6 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				}
 
 				if(StringUtils.isNotBlank(nextRole)){
-					PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
-
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 									this.getManagedBean().getContractVer().getCtContract().getContractNo(),
@@ -496,6 +501,13 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
 		log.info("RequestCtAdminManagedBean preRenderView contractVerId*******"+contractVerId);
 		log.info("RequestCtAdminManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils.getMessage("lbl.ct.contract.remove.ct.admin",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
+						.getUserLocale()));
 		
 		/*Start if statement to check login user*/
 		if(contractVerId!=null) {
