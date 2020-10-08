@@ -886,6 +886,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				smApplReqDTO.setSmSupplier(getManagedBean().getSmSupplier());
 				smApplReqDTO.setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
 				smApplReqDTO.setDisplaySearchPage(true);
+				smApplReqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());//26238: Disciplinary Action - add language - 
 				SmApplRevisionResDTO smApplResDTO = SmServiceLookup.getSmApplRevisionSO()
 						.retrieveSupplierBySearchCriteria(smApplReqDTO);
 				
