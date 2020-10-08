@@ -663,9 +663,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
     }
 	
-	private void resetPpProcurementItemFields(List<PpProcurementItem> ppItems) {
+	private void resetPpProcurementItemFields() {
 		
-		for (PpProcurementItem pp: ppItems) {
+		log.info("resetPpProcurementItemFields");
+		log.info("After delete, size= "+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size()+"\n");
+		
+		List<Long> getFromItems = new ArrayList<Long>();
+		
+		for (PpProcurementItem pp: this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
+			if (pp.getFromPpItem() != null) {
+				getFromItems.add(pp.getFromPpItem());
+			}
+		}
+		
+		for (PpProcurementItem pp: this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
 			//For cloning
 			/*pp.setCloneEnabled(false);
 			pp.setDisableForPindaan(false);
@@ -676,8 +687,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			pp.setStatusEnabled(false);
 			pp.setCloneEnabled(false);
 			pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);*/
-			
-			log.info("ppitem= "+pp.getProcurementItemId()+", isOriginal= "+pp.isOriginal()+
+				
+			log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+
 					", getFromPpItem= "+pp.getFromPpItem());
 			log.info("cloneEnabled= "+pp.isCloneEnabled()+", disableForPindaan= "+pp.isDisableForPindaan()+
 					", brandNew= "+pp.isBrandNew()+", statusEnabled= "+pp.isStatusEnabled()+
@@ -685,12 +696,40 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					", recordStatusFlg= "+pp.getRecordStatusFlg());
 			
 			if (pp.isOriginal()) {
-				pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// if there are any clones under it
+				if (getFromItems.size() > 0) {
+					// If a clone is found, the original status will be 9
+					if (getFromItems.contains(pp.getProcurementItemId())) {
+						pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						pp.setCloneEnabled(true);
+						pp.setDisableForPindaan(true);
+						pp.setStatusEnabled(true);
+					} else {
+						pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						pp.setCloneEnabled(false);
+						pp.setDisableForPindaan(false);
+						pp.setStatusEnabled(false);
+					}
+				} else {
+					pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					pp.setCloneEnabled(false);
+					pp.setDisableForPindaan(false);
+					pp.setStatusEnabled(false);
+				}
+				
+			} else {
+				pp.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));				
 				pp.setCloneEnabled(false);
 				pp.setDisableForPindaan(false);
 				pp.setStatusEnabled(false);
 			}
-			
+			log.info("*******************************FINAL VALUES****************************************");
+			log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+
+					", getFromPpItem= "+pp.getFromPpItem());
+			log.info("cloneEnabled= "+pp.isCloneEnabled()+", disableForPindaan= "+pp.isDisableForPindaan()+
+					", brandNew= "+pp.isBrandNew()+", statusEnabled= "+pp.isStatusEnabled()+
+					", reasonForUpdateEnabled= "+pp.isReasonForUpdateEnabled()+
+					", recordStatusFlg= "+pp.getRecordStatusFlg());
 			
 		}
 		
@@ -718,6 +757,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setPlanId(id);
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
+			
 			if (resDTO.isSuccessful()) {
 				ppPlan = resDTO.getPlan();
 				if(ppPlan!=null){
@@ -2344,6 +2384,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}	
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
+			
+			if (this.getManagedBean().getDeletePpItems() == null) {
+				this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
+			}
+			reqDTO.setDeletedPpItemList(this.getManagedBean().getDeletePpItems());
+				
 			//SAVE Plan to DB
 			resDTO = reqSO.savePlan(reqDTO);
 			//resDTO.setSuccessful(false); // for testing only...	
@@ -3634,6 +3680,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		if(this.getManagedBean().getDeletePpItems()==null){
 			this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
+		} else {
+			this.getManagedBean().getDeletePpItems().clear();
 		}
 		//add deleted item to list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getSelectedPlan().getPpProcurementItems()){
@@ -3644,8 +3692,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//[SIR#12802] - end
 				//Set to status 2 - Cancelled
 				//log.info("[SIR#12802] - Set item status to 2");
-				procurementItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));				
+				log.info("To be deleted= "+procurementItem.getProcurementItemId()+" -> "+procurementItem.getProcurementTitle());
 				
+				if (procurementItem.getFromPpItem() != null) {
+					procurementItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));				
+				}
+				
+				log.info("Now, status of "+procurementItem.getProcurementTitle()+
+						" is "+procurementItem.getRecordStatusFlg());
 				//Add deleted item
 				this.getManagedBean().getDeletePpItems().add(procurementItem);
 				count++;
@@ -3655,12 +3709,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(count==0){
 			throw new EpException(MessageConst.ERROR_730015);
 		}
-
+		
 		//remove deleted item from list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
 			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
 		}
-		resetPpProcurementItemFields(this.getManagedBean().getSelectedPlan().getPpProcurementItems());
+		resetPpProcurementItemFields();
 		calculatePpGrandTotal();
 		
 		
