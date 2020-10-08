@@ -129,7 +129,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 * Method to retrieve portal name from property file
 	 */
 	public String getPortletTitle() {	
-		String docType = getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getDocType();
+		String docType = getManagedBean().getContractVer().getDocType();
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
 			return ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		else
