@@ -2555,10 +2555,18 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setTechnicalSummaryView("");
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-					&& !this.getManagedBean().isReadOnly()
-					&& this.getManagedBean().getScQt().getEvaluationType()
-							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
-					&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
+					//#25138 -start
+					|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_ENDORSEMENT)
+						|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
+						|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_SIGN_OFF)
+						&& !this.getManagedBean().isReadOnly()
+						&& this.getManagedBean().getScQt().getEvaluationType()
+								.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
+						&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
+				//#25138 -end
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
