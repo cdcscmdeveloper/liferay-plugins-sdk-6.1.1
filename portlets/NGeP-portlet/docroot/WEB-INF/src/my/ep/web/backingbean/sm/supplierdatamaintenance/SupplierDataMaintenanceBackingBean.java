@@ -1565,7 +1565,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						break;
 					}else{
 						getManagedBean().setEditDisciplinaryActionCheckBox(false);
-						getManagedBean().setEditDisciplinaryAction(true);
+						getManagedBean().setEditDisciplinaryAction(false);
 						//29181: Disciplinary Action - end - 26238
 					}
 				}
@@ -1586,7 +1586,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			//28494
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 			//28281 - end
-			onTickDiscipline();
 		} else {
 			// 27815: Disciplinary Action - start - checking condition 
 			if (getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel() 
@@ -1650,7 +1649,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setEditDisciplinaryAction(true);
 			}
 			//29181: Disciplinary Action - end - 26238
-			onTickDiscipline();
 		}
 	}
 	//26238 - end
