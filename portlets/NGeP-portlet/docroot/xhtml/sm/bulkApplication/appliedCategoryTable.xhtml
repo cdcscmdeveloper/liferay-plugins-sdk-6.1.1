@@ -175,10 +175,10 @@
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
 							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
 							#{applCat.pmCategoryL3.categoryL3Code} "
-					rendered="#{applCat.overLapCategory}">
+					rendered="#{!applCat.overLapCategory}">
 					
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
-					<f:selectItem itemLabel="bb: #{lbl['lbl.sm.catCodes.reject']}" itemValue="0"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}" itemValue="0"/>
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk2" partialSubmit="true"
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
