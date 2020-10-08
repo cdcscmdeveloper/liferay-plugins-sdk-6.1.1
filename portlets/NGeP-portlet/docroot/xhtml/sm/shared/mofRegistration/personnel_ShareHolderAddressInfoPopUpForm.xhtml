@@ -77,7 +77,7 @@
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
-										update="divisionPrnlSharLabelPanelId,divisionPrnlSharDropdownPanelId,divisionWipPrnlSharLabelPanelId,divisionWipPrnlSharDropdownPanelId,prsShrPermDist,prsShrPermCity" />
+										update="divisionPrnlSharLabelPanelId,divisionPrnlSharDropdownPanelId,prsShrPermDist,prsShrPermCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
@@ -94,7 +94,6 @@
 									id="divisionPrnlSharDropdownPanelId"
 									rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}">
 									<p:selectOneMenu id="prsShrPermDivision"
-										label="#{lbl['lbl.sm.division']}"
 										value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId}"
 										style="width:80%">
 										<f:selectItem itemValue=""
@@ -113,37 +112,6 @@
 								</h:panelGroup></td>
 						</tr>
 						
-						<!-- 13320-WorkInProgress -->
-						<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
-						<tr id="divTrPermId">
-							<td class="tdTitle"><h:panelGroup
-									id="divisionWipPrnlSharLabelPanelId"
-									rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}">
-									<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-								</h:panelGroup></td>
-							<td class="tdContent"><h:panelGroup
-									id="divisionWipPrnlSharDropdownPanelId"
-									rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}">
-									<p:selectOneMenu id="prsShrWipPermDivision"
-										label="#{lbl['lbl.sm.division']}"
-										value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId}"
-										style="width:80%">
-										<f:selectItem itemValue=""
-											itemLabel="#{lbl['lbl.txt.select']}" />
-										<f:selectItems var="divisionPerm"
-											value="#{backingBean.managedBean.shrHldrPermDivisions}"
-											itemValue="#{divisionPerm.divisionId}"
-											itemLabel="#{divisionPerm.divisionName}" />
-										<p:ajax event="change"
-											listener="#{backingBean.populateDivisionsByState(backingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId, 
-								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
-											update="prsShrPermDist,prsShrPermCity" />
-									</p:selectOneMenu>
-								</h:panelGroup></td>
-						</tr>
-						</p:outputPanel>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:selectOneMenu
@@ -264,7 +232,7 @@
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
-										update="divisionMailLabelPanelId,divisionMailDropdownPanelId,divisionWipMailLabelPanelId,divisionWipMailDropdownPanelId,prsShrWipMailDist,prsShrMailCity" />
+										update="divisionMailLabelPanelId,divisionMailDropdownPanelId,prsShrWipMailDist,prsShrMailCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
@@ -280,7 +248,6 @@
 									id="divisionMailDropdownPanelId"
 									rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}">
 									<p:selectOneMenu id="prsShrMailDivision"
-										label="#{lbl['lbl.sm.division']}"
 										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId}"
 										style="width:80%">
 										<f:selectItem itemValue=""
@@ -298,39 +265,6 @@
 									</p:selectOneMenu>
 								</h:panelGroup></td>
 						</tr>
-						
-						<!-- 13320-WorkInProgress -->
-					<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
-						<tr id="divMailId">
-							<td class="tdTitle"><h:panelGroup
-									id="divisionWipMailLabelPanelId"
-									rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}">
-									<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-								</h:panelGroup></td>
-							<td class="tdContent"><h:panelGroup
-									id="divisionWipMailDropdownPanelId"
-									rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}">
-									<p:selectOneMenu id="prsShrWipMailDivision"
-										label="#{lbl['lbl.sm.division']}"
-										value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId}"
-										style="width:80%">
-										<f:selectItem itemValue=""
-											itemLabel="#{lbl['lbl.txt.select']}" />
-										<f:selectItems var="divisionMail"
-											value="#{backingBean.managedBean.shrHldrMailDivisions}"
-											itemValue="#{divisionMail.divisionId}"
-											itemLabel="#{divisionMail.divisionName}" />
-										<p:ajax event="change"
-											listener="#{backingBean.populateDivisionByState(backingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId,
-								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
-											update="prsShrMailDist,prsShrMailCity" />
-									</p:selectOneMenu>
-								</h:panelGroup></td>
-						</tr>
-						</p:outputPanel>
-						
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
@@ -460,7 +394,7 @@
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
 										update="divisionShrhLabelPanelId,divisionShrhDropdownPanelId,
-										divisionWipShrhLabelPanelId,divisionWipShrhDropdownPanelId,prsShrResDist,prsShrResCity" />
+												prsShrResDist,prsShrResCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
@@ -476,7 +410,6 @@
 									id="divisionShrhDropdownPanelId"
 									rendered="backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision">
 									<p:selectOneMenu id="prsShrResDivision"
-										label="#{lbl['lbl.sm.division']}"
 										value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId}"
 										style="width:80%">
 										<f:selectItem itemValue=""
@@ -495,38 +428,6 @@
 									</p:selectOneMenu>
 								</h:panelGroup></td>
 						</tr>
-						<!-- 13320-WorkInProgress -->
-						<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
-						<tr id="divTrResId">
-							<td class="tdTitle"><h:panelGroup
-									id="divisionWipShrhLabelPanelId"
-									rendered="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}">
-									<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-								</h:panelGroup></td>
-							<td class="tdContent"><h:panelGroup
-									id="divisionWipShrhDropdownPanelId"
-									rendered="backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision">
-									<p:selectOneMenu id="prsShrResDivision"
-										label="#{lbl['lbl.sm.division']}"
-										value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId}"
-										style="width:80%">
-										<f:selectItem itemValue=""
-											itemLabel="#{lbl['lbl.txt.select']}" />
-										<f:selectItems var="divisionWipResAddr"
-											value="#{backingBean.managedBean.shrHldrResdDivisions}"
-											itemValue="#{divisionResAddr.divisionId}"
-											itemLabel="#{divisionResAddr.divisionName}" />
-										<p:ajax event="change"
-											listener="#{backingBean.populateDivisionsByState(backingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId, 
-								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
-											update="prsShrResDist,prsShrResCity" />
-
-									</p:selectOneMenu>
-								</h:panelGroup></td>
-						</tr>
-						</p:outputPanel>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
@@ -648,8 +549,7 @@
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
-										update="divisionOffLabelPanelId,divisionWipOffLabelPanelId,
-										divisionOffDropdownPanelId,divisionWipOffDropdownPanelId,prsShrOffDist,prsShrOffCity" />
+										update="divisionOffLabelPanelId,divisionOffDropdownPanelId,prsShrOffDist,prsShrOffCity" />
 
 								</p:selectOneMenu></td>
 						</tr>
@@ -666,7 +566,6 @@
 									id="divisionOffDropdownPanelId"
 									rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}">
 									<p:selectOneMenu id="prsShrWipOffDivision"
-										label="#{lbl['lbl.sm.division']}"
 										value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId}"
 										style="width:80%">
 										<f:selectItem itemValue=""
@@ -684,37 +583,6 @@
 									</p:selectOneMenu>
 								</h:panelGroup></td>
 						</tr>
-						<!-- 13320-WorkInProgress -->
-						<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
-								<tr id="divTrOffId">
-							<td class="tdTitle"><h:panelGroup
-									id="divisionWipOffLabelPanelId"
-									rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}">
-									<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-								</h:panelGroup></td>
-							<td class="tdContent"><h:panelGroup
-									id="divisionWipOffDropdownPanelId"
-									rendered="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}">
-									<p:selectOneMenu id="prsShrWipOffDivision"
-										label="#{lbl['lbl.sm.division']}"
-										value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId}"
-										style="width:80%">
-										<f:selectItem itemValue=""
-											itemLabel="#{lbl['lbl.txt.select']}" />
-										<f:selectItems var="divisionOffc"
-											value="#{backingBean.managedBean.shrHldrOffDivisions}"
-											itemValue="#{divisionOffc.divisionId}"
-											itemLabel="#{divisionOffc.divisionName}" />
-										<p:ajax event="change"
-											listener="#{backingBean.populateDivisionsByState(backingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId, 
-								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
-								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
-											update="prsShrOffDist,prsShrOffCity" />
-									</p:selectOneMenu>
-								</h:panelGroup></td>
-						</tr>
-						</p:outputPanel>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
