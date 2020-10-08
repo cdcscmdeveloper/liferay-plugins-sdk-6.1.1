@@ -2468,7 +2468,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			return null;
 		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-			validateContractAmendment(outcome);
+//			validateContractAmendment(outcome);
 			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
 				RequestContext.getCurrentInstance().execute("supplierrejectConfirmDlg.show()");
 			
