@@ -131,9 +131,9 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	public String getPortletTitle() {	
 		String docType = getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getDocType();
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
-			return ResourceBundleUtils.getMessage("lbl.ct.contract.remove.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		else
 			return ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		else
+			return ResourceBundleUtils.getMessage("lbl.ct.contract.remove.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		
 	}
 	
