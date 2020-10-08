@@ -23,6 +23,7 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -43,6 +44,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.ExtensionCodeVO;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "codificationMB")
@@ -249,8 +251,14 @@ public class CodificationManagedBean extends BaseManagedBean {
 					//20200813@azza - Enhancement27627 - End
 				}
 			
-			
-			System.out.println("........search extension combination.................");
+			  //#29177 - CR 27627: Static Code Analysis
+			  //start
+			  //removed System.out.println
+			  //remove old commented block
+			  //removed old commented block
+			  //removed old commented block
+			  //removed finally block
+			  //removed System.out.println
 
 			CodificationBackingBean bb = new CodificationBackingBean();
 
@@ -295,52 +303,38 @@ public class CodificationManagedBean extends BaseManagedBean {
 				}
 
 				resDTO = codificationSO.searchExtension(reqDTO);
-
-				//int count =0;
-				Map tempMap = new HashMap();
-				for (int i = 0; i < resDTO.getExtensionResultBean().getResultList().size(); i++) {
-					Object[] objects = (Object[]) resDTO.getExtensionResultBean().getResultList().get(i);
-
-					if(bb.getManagedBean().getCloneExtensionVOs()!=null && bb.getManagedBean().getCloneExtensionVOs().size()>0){
-
-						for(ExtensionCodeVO obj : bb.getManagedBean().getCloneExtensionVOs()){
-							if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
-
-								if(!tempMap.containsKey(obj.getKey())){
-									objects[8] = true;
-									//count = count + 1;
-									//System.out.println("**loop***"+count);
-									tempMap.put(obj.getKey(), obj.getKey());
-								}
-							}
-						}
-
-					}
-
-				}
-				/*System.out.println("count:"+count);
-				System.out.println("resDTO.getExtensionResultBean().getResultList().size():"+resDTO.getExtensionResultBean().getResultList().size());
-				if(count == resDTO.getExtensionResultBean().getResultList().size()){
-					bb.getManagedBean().setExtensionSearchcheckBoxAll(true);
-				}else{
-					bb.getManagedBean().setExtensionSearchcheckBoxAll(false);
-				}*/
-
-				RequestContext.getCurrentInstance().execute("refreshExtensionSearch();");
-
-
-				//System.out.println("isExtensionSearchcheckBoxAll:"+bb.getManagedBean().isExtensionSearchcheckBoxAll());
-
-
-
+				//commented this code block as per request from Izni
+//				Map tempMap = new HashMap();
+//				for (int i = 0; i < resDTO.getExtensionResultBean().getResultList().size(); i++) {
+//					Object[] objects = (Object[]) resDTO.getExtensionResultBean().getResultList().get(i);
+//
+//					if(bb.getManagedBean().getCloneExtensionVOs()!=null && bb.getManagedBean().getCloneExtensionVOs().size()>0){
+//
+//						for(ExtensionCodeVO obj : bb.getManagedBean().getCloneExtensionVOs()){
+//							if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
+//
+//								if(!tempMap.containsKey(obj.getKey())){
+//									objects[8] = true;
+//									//count = count + 1;
+//									//System.out.println("**loop***"+count);
+//									tempMap.put(obj.getKey(), obj.getKey());
+//								}
+//							}
+//						}
+//
+//					}
+//
+//				}
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				codificationSO = null;
 			}
+			//removed finally clause
+			//} finally {
+			//	codificationSO = null;
+			//}
 			if (resDTO != null) {
-				System.out.println("*******end************");
 				return resDTO.getExtensionResultBean();
+				//end #29177 - CR 27627: Static Code Analysis
 			}
 			return null;
 		}
