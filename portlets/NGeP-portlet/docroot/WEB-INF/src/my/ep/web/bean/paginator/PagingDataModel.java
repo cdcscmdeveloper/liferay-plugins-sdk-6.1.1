@@ -338,6 +338,18 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		}
 		//log.info(message);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.bean.paginator.IPagingDataModel#reloadData()
+	 */
+	@Override
+	 //added for #28643 to only reset paging value
+	public final void reloadDatatable() {
+		resetValue();
+		
+	}
 
 	/**
 	 * @return the first
