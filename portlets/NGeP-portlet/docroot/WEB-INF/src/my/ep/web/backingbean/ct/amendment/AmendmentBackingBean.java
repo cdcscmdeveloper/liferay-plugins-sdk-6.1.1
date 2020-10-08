@@ -1282,7 +1282,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
-			validateContractAmendment(outcome);
+			
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				String remark = getManagedBean().getRemarkList().get(0).getRemark();
+				String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+				String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
+
+				if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
+						&& (supplierRemark == null || supplierRemark.length() == 0)) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_100064, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}else{
+				validateContractAmendment(outcome);
+			}
 
 			// Generate Supplier Acknowledgement Receipt
 			if (getManagedBean().getTaskName() != null 
@@ -1651,7 +1667,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 
 		//#25956 - Start Add validate remark for cancel and Reject Button Amendment
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+		/*if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
 			String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
@@ -1668,7 +1684,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#25956 - End Add validate remark for cancel and Reject Button Amendment
 
 		/*validation for other  selection*/
-		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+		// #25956 remove outcome cancel
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
 			// Validation for mandatory attachments
 		/*	if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
 				setTabValue("AD");
