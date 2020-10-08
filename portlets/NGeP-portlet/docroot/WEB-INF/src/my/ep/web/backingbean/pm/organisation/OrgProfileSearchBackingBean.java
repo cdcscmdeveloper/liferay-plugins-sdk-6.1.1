@@ -180,11 +180,11 @@ public class OrgProfileSearchBackingBean extends
 		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
 		if (StringUtils.isNotBlank(portletName) && portletName.toLowerCase().contains("loa")){
 			this.getManagedBean().setMinistryProfileId(ministryId);
-			if (ministryId != null){
-				this.getManagedBean().setDisabledMinistry(true);
-			}else{
-				this.getManagedBean().setDisabledMinistry(false);
-			}
+			//#29173 - CR 26475: Static Code Analysis
+			//start
+			//#29173 - replaced if-else statement to a single method invocation
+			this.getManagedBean().setDisabledMinistry(ministryId != null);
+			//end #29173 - CR 26475: Static Code Analysis
 		}
 		//#26475 - end
 	}
