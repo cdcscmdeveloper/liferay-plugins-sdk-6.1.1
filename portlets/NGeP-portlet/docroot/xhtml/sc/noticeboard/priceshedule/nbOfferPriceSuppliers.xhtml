@@ -12,7 +12,8 @@
 			var="supplierBean" rows="10" rowIndexVar="rowIndex">
 			<ac:paginator for="supplierPriceDtls"></ac:paginator>
 
-			<p:column headerText="#{lbl['lbl.sc.no']}">
+			<!-- CR 21639 added render condition style attribute -->
+			<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center;">
 				<h:outputText value="#{rowIndex+1}" />
 			</p:column>
 
