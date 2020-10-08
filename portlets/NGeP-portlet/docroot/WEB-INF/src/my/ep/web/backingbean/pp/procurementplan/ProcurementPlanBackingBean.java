@@ -3701,8 +3701,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//log.info("[SIR#12802] - Set item status to 2");
 				log.info("To be deleted= "+procurementItem.getProcurementItemId()+" -> "+procurementItem.getProcurementTitle());
 				
-				if (procurementItem.getFromPpItem() != null ||
-						procurementItem.getProcurementItemId() != null) {
+				if ( (procurementItem.getFromPpItem() != null && 
+						procurementItem.getProcurementItemId() != null) ||
+						(procurementItem.getProcurementItemId() != null && 
+						procurementItem.getFromPpItem() == null) ) {
 					procurementItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));				
 				}
 				
