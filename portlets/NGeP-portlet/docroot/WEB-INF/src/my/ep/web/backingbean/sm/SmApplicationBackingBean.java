@@ -9862,7 +9862,7 @@ public class SmApplicationBackingBean extends
 								addr.setDivisionId(compBasicAddr.getPmDivision()
 										.getDivisionId());
 								addr.setPmDivision(SmCommonUtil.getInstance()
-										.getDivisionById(addr.getDivisionId()));
+										.getDivisionByUsingId(addr.getDivisionId()));
 								onChangeDistrictByDivision(addr, panel);
 							}
 							//#13320 - added division - end
