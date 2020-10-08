@@ -1282,23 +1282,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
-			
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				String remark = getManagedBean().getRemarkList().get(0).getRemark();
-				String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
-				String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
-
-				if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
-						&& (supplierRemark == null || supplierRemark.length() == 0)) {
-					setTabValue("AD");
-					throw new EpException(MessageConst.ERROR_100064, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-			}else{
+			//#25956 - Start
+			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+					|| !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				
 				validateContractAmendment(outcome);
 			}
+			//#25956 - End
 
 			// Generate Supplier Acknowledgement Receipt
 			if (getManagedBean().getTaskName() != null 
@@ -2460,6 +2450,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 //			validateContractAmendment(outcome);
+			validateRemarkCancel(outcome);
 			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 				RequestContext.getCurrentInstance().execute("cancelofficerConfirmDlg.show()");				
@@ -2469,6 +2460,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 //			validateContractAmendment(outcome);
+			validateRemarkCancel(outcome);
 			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
 				RequestContext.getCurrentInstance().execute("supplierrejectConfirmDlg.show()");
 			
@@ -6797,7 +6789,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if ((BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
 				
 				setSecretary();
-				validateContractAmendment(outcome);
+//				validateContractAmendment(outcome);
+				validateRemarkCancel(outcome);
 				// Temp setTextBeforeSign : DocNo+Type
 				StringBuilder sb = new StringBuilder();
 				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
@@ -6829,7 +6822,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& isSupplierRole()
 					&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 //				preRejectContractAmendment(outcome);
-				validateContractAmendment(outcome);	
+//				validateContractAmendment(outcome);	
+				validateRemarkCancel(outcome);
 				getManagedBean().setButtonAction(outcome);
 				getManagedBean().setAutoUpdate(Boolean.FALSE);
 				if(hasGovtSellerRole()) {
@@ -6845,6 +6839,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				return saveContractAmendment(outcome);
 			}
+		}
+		//#25956 - End
+		
+		
+		//#25956 - Start
+		/**
+		 * The method used for validating Remark Cancel Button.
+		 * A warning message will display on screen when Remark is null
+		 * 
+		 * @throws Exception  if an exception occurred
+		 * @see    Exception
+		 */
+		public void validateRemarkCancel(String action) throws Exception {
+			
+			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+			String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+			String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
+
+			if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
+					&& (supplierRemark == null || supplierRemark.length() == 0)) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100064, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+
 		}
 		//#25956 - End
 
