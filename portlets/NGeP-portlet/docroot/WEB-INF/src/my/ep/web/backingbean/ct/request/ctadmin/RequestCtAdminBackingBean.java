@@ -557,8 +557,8 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		FacesContext context = FacesContext.getCurrentInstance();
 		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
 		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
-		String docType = getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getDocType();
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
+		
+		if(dataType.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
 			response.setTitle(ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
 							.getUserLocale()));
