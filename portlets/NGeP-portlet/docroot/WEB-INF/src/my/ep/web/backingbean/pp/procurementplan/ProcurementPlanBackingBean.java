@@ -1821,27 +1821,34 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				){
 			
 			rejectReasons = new ArrayList<PpRejectReason>();
+			//25549 - star
+			int itemIndex = 0;
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpProcurementItem ppProcurementItem:ppPlan.getPpProcurementItems()){
 					if(ppProcurementItem.getPpRejectReasons()!=null && !ppProcurementItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppProcurementItem.getPpRejectReasons().get(0);
-						if(rejectReason!=null && !StringUtils.isBlank(rejectReason.getReasonDesc())){ //&& rejectReason.isBrandNew() add this for phase 2
+						if(rejectReason!=null && !StringUtils.isBlank(rejectReason.getReasonDesc())){
+							rejectReason.setItemSeq(itemIndex);//&& rejectReason.isBrandNew() add this for phase 2
 							rejectReason.setDocId(ppProcurementItem.getProcurementItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							rejectReasons.add(rejectReason);
 						}
 					}
+					itemIndex++;
 				}
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
 					if(ppExpenditureItem.getPpRejectReasons()!=null && !ppExpenditureItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
-						if(rejectReason!=null &&!StringUtils.isBlank(rejectReason.getReasonDesc())){ //&& rejectReason.isBrandNew() add this for phase 2
+						if(rejectReason!=null &&!StringUtils.isBlank(rejectReason.getReasonDesc())){
+							rejectReason.setItemSeq(itemIndex);////&& rejectReason.isBrandNew() add this for phase 2
 							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 							rejectReasons.add(rejectReason);
 						}
 					}
+					itemIndex++;
+					//25549 - end
 				}
 			}
 		}
