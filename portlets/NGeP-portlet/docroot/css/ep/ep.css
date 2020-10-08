@@ -3200,6 +3200,12 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	width: 20%;
 }
 
+/*Enhancement 21693 -start-*/
+.columnWidth23 {
+	width: 23%;
+}
+/*Enhancement 21693 -end-*/
+
 .columnWidth20AlignTop {
 	width: 20%;
 	vertical-align: top;

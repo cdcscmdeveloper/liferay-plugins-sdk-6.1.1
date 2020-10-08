@@ -169,13 +169,16 @@
 			</h:outputText>
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
-			
+			<!-- 21693 Start -->
+			<ui:remove>	
 			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
 			<h:outputLabel value="" />
+			</ui:remove>
+			<!-- 21693 END -->
 		</h:panelGrid>
 
 		<h:panelGrid border="0" width="100%" columns="3" id="publishTabQTDtls"
@@ -248,13 +251,16 @@
 				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
 			</h:outputText>
 			<h:outputLabel value="" />
-			
+			<!-- 21693 Start -->
+			<ui:remove>	
 			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
 			<h:outputLabel value="" />
+			</ui:remove>	
+			<!-- 21693 END -->
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
