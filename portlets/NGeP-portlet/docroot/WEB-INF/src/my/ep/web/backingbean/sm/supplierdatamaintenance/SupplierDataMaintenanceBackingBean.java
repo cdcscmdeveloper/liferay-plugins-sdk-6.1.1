@@ -767,6 +767,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			
+			//26238 - Disciplinary Action - 29227 - start
+			if(!getManagedBean().isWarning() 
+					&& !getManagedBean().isCancelCategoryCode()
+					&& !getManagedBean().isSuspendRegistration()
+					&& !getManagedBean().isCancelRegistration()
+					&& !getManagedBean().isBlacklistOwnerOrDirector()
+					&& !getManagedBean().isManufacturerStatusCancel()
+					&& !getManagedBean().isBumiputeraStatusCancel()){
+				
+				SmDisciplinaryAction smDisiplinaryAction = new SmDisciplinaryAction(); 
+				
+				reqDTO.setSmDisciplinaryAction(smDisiplinaryAction);
+				
+			}
+			//26238 - Disciplinary Action - 29227 - end
+			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
