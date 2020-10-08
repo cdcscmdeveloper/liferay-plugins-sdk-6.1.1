@@ -2790,7 +2790,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							//25549@07102020 - start	
-							expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
 					}
 				  }
@@ -2800,7 +2800,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
 					count++;
 				}
@@ -2846,7 +2847,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							//25549@07102020 - start	
-							expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
 
 					}
@@ -2858,7 +2859,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsT().add(expenditureItem);
 					count++;
 				}
@@ -2904,7 +2905,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							//25549@07102020 - start	
-							expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
 					}
 				  }
@@ -2915,7 +2916,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsP().add(expenditureItem);
 					count++;
 				}
@@ -2962,7 +2963,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							//25549@07102020 - start	
-							expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
 					}
 				  }
@@ -2973,7 +2974,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsS().add(expenditureItem);
 					count++;
 				}
@@ -3019,7 +3020,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							//25549@07102020 - start	
-							expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
 					}
 				  }
@@ -3029,7 +3030,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);
 					count++;
 				}
@@ -6991,9 +6993,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setStatusEnabled(false);
 				 cloned.setJustificationEnabled(false);
 				 cloned.setDisableEditAccount(true);
-				//25549@07102020 - start	
-				 cloned.getJustifications().get(0).setJustificationEnabled(false);
-				//25549@05102020 - end	
+				
 			 }
 			 
 			 idx -= 1;
@@ -7007,9 +7007,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setStatusEnabled(true);
 				 original.setDisableEditAccount(true);
 				 original.setJustificationEnabled(true);
-				//25549@07102020 - start	
-				 original.getJustifications().get(0).setJustificationEnabled(false);
-				//25549@07102020 - start	
 			 }
 		}
 
@@ -7150,7 +7147,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
-							ppItem.getJustifications().get(0).setJustificationEnabled(false);
+							//ppItem.getJustifications().get(0).setJustificationEnabled(false);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -7161,7 +7158,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(true);
-							ppItem.getJustifications().get(0).setJustificationEnabled(true);
+							//ppItem.getJustifications().get(0).setJustificationEnabled(true);
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
