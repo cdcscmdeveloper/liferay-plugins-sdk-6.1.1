@@ -23,6 +23,7 @@
 	<tr>
 		<td><p:outputLabel value="#{lbl['lbl.sm.facility.address.same.as']}" /></td>
 		<td>
+			<!-- #13320 - added division id in update -->
 			<p:selectOneMenu id="sameAsAddrId"
 				label="#{lbl['lbl.sm.facility.address.same.as']}"
 				value="#{cc.attrs.backingBean.managedBean.facAddresSameAs}"
@@ -32,7 +33,7 @@
 				<p:ajax event="change" process="@this"
 					listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.facility,cc.attrs.facilityPanel)}"
 					update="addr1LabelId,addr1InputId,addr2InputId,addr3InputId,
-					countryLabelId,countryInputId,stateLabelId,stateInputId,districtLabelId,districtInputId,
+					countryLabelId,countryInputId,stateLabelId,stateInputId,divisionLabelPanelId,divisionDropdownPanelId,districtLabelId,districtInputId,
 					cityLabelId,cityInputId,postCodeLabelId,postCodeInputId,coordinateLabelId,coordinateInputId,:#{p:component(cc.attrs.panelId)}" />
 			</p:selectOneMenu>
 			&#160; 
