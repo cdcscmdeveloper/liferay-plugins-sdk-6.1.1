@@ -175,7 +175,7 @@
 					</p:tab>
 				</p:accordionPanel>
 			</c:if>
-			<c:if test 	="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">				
+			<c:if test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'null'}">				
 				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>
 			</c:if>    
 		</p:panel>
