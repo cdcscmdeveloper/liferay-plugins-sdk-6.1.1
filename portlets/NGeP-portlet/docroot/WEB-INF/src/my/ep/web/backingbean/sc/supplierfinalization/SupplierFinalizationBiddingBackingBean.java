@@ -2045,8 +2045,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		suppFinalizationReqDTO.setOutcome(outCome);
 		suppFinalizationReqDTO.setRoleCode(getUserRoleCode());
 		FacesScopes facesScope = new FacesScopes();
-		// #25638 - Start
-		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)) {
+		// #25638 - Start 
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)
+		    || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
+		    || BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(outCome)) {
 		  String memberRole = null;
 			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
 				 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
@@ -2054,15 +2056,27 @@ public class SupplierFinalizationBiddingBackingBean extends
 				   
 				   if ("S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				     suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
+				     memberRole = RoleCode.QCA_SECRETARY.value();
 				   }
 				   
 				   if (committeeActivity.getScCommitteeMember().getPmUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
 				     if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				       memberRole = RoleCode.QCA_MEMBER.value();
+				       if (committeeActivity.isBiddingSignedOff()) {
+				         suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
+				       }
 				     } else if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				       memberRole = RoleCode.QCA_CHAIRPERSON.value();
 				     }
 				   }
+				   
+				   if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+                     if (committeeActivity.isBiddingSignedOff()) {
+                       suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
+                     } else {
+                       suppFinalizationReqDTO.setNextStatusId(null);
+                     }
+                   }
 				 }
 			 }
 			
@@ -2080,7 +2094,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			  suppFinalizationReqDTO.setRoleCode(RoleCode.QCA_MEMBER.value());
 			}
 		}
-		// #25638 - End
+		// #25638 - End 
 		suppFinalizationReqDTO.setUserLocale(facesScope.getUserLocale());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		suppFinalizationReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
