@@ -702,12 +702,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
 		    }
 		});
-
+		//#28576 - start
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
+						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -717,6 +718,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
+						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -727,7 +729,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementName()));
+						measurement.getMeasurementCode() + " - " + measurement.getMeasurementName()));
 			}
 		}
 
@@ -744,10 +746,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
+						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
-
+		//#28576 - end
 		this.getManagedBean().getExtensionSearchItemDataModel().resetData();
 		this.getManagedBean().getColorFilterBean().setSearchValue("");
 		this.getManagedBean().getTypeFilterBean().setSearchValue("");
@@ -820,12 +823,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		        return compareFirstChoice(t1.getMeasurementCode(), t2.getMeasurementCode(), t1.getMeasurementName().trim().compareToIgnoreCase(t2.getMeasurementName().trim()));
 		    }
 		});
-		
+		//#28576 - start
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
 			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
+						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -835,6 +839,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
+						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -845,7 +850,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementName()));
+						measurement.getMeasurementCode() +" - " + measurement.getMeasurementName()));
 			}
 		}
 
@@ -861,10 +866,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
+						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
-
+		//#28576 - end
 		this.getManagedBean().getExtensionSearchItemDataModel().resetData();
 		this.getManagedBean().getColorFilterBean().setSearchValue("");
 		this.getManagedBean().getTypeFilterBean().setSearchValue("");
@@ -2167,6 +2173,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
 		    }
 		});
+		//#28576 - start
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
@@ -2174,6 +2181,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
+						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
@@ -2183,6 +2191,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
+						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -2192,6 +2201,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
+						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -2202,10 +2212,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementName()));
+						measurement.getMeasurementCode() + " - " + measurement.getMeasurementName()));
 			}
 		}
-
+		//#28576 - end
 		if (this.getManagedBean().getCurrentTaskName() != null
 				&& (this.getManagedBean()
 						.getCurrentTaskName()
@@ -2421,6 +2431,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		        return compareFirstChoice(t1.getColorCode(), t2.getColorCode(), t1.getColorName().trim().compareToIgnoreCase(t2.getColorName().trim()));
 		    }
 		});
+		//#28576 - start
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
@@ -2428,6 +2439,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
+						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
@@ -2458,6 +2470,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
+						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -2470,6 +2483,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
+						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -2479,10 +2493,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementName()));
+						measurement.getMeasurementCode() + " - " + measurement.getMeasurementName()));
 			}
 		}
-		
+		//#28576 - end
 		
 
 		return "searchExtensionToAssignItem.xhtml";
