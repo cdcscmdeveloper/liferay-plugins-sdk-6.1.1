@@ -660,7 +660,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
         }
-		
+
     }
 	
 	private void resetPpProcurementItemFields() {
@@ -1041,9 +1041,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							epItem.setSelectable(false); //disabled checkbox	
 							//#25975
 							epItem.setEditable(false); 
+							//25549@09102020 - start
+							epItem.setReviseReject(false);
+							//25549@09102020 - end
 						} else {
 							log.info("[SIR#12802] - item pending for approval");
 							epItem.setSelectable(true); //enabled checkbox
+							//25549@09102020 - start
+							epItem.setReviseReject(true);
+							//25549@09102020 - end
 						}
 					}
 					log.info("[SIR#12802] - Check item for approved status - End");
@@ -1082,9 +1088,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//#25975
 							//ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);	//190919 set if approved, auto update status = inactive
 							ppItem.setEditable(false); 
+							//25549@09102020 - start
+							ppItem.setReviseReject(false);
+							//25549@09102020 - end
 						} else {
 							log.info("[SIR#12802] - item pending for approval");
 							ppItem.setSelectable(true); //enabled checkbox
+							//25549@09102020 - start
+							ppItem.setReviseReject(true);
+							//25549@09102020 - end
 						}
 					}
 					log.info("[SIR#12802] - Check item for approved status - End");
@@ -1094,7 +1106,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == epItem.getRecordStatusFlg()){
-						epItem.setEditable(true);
+						epItem.setEditable(true);				
 					}else{
 						epItem.setEditable(false);
 					}
@@ -2619,6 +2631,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setVotFundType(new PmParameter());
 		epItem.setEditable(true);
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
+		 //25549@09102020 - start
+		epItem.setReviseReject(true);
+	    //25549@09102020 - end
+			
 		
 		
 		//B
@@ -3548,6 +3564,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
 		ppItem.setOriginal(true);
+		//25549@09102020 - start
+		ppItem.setReviseReject(true);
+		//25549@09102020 - end
 
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
@@ -5271,7 +5290,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setStatusEnabled(true);
 	    		newPpItem.setOriginal(false);
 	    		newPpItem.setClonedItem(true);
-	    		
+	    		//25549@09102020 - start
+	    		newPpItem.setReviseReject(true);
+	    		//25549@09102020 - end
 	    		if (newPpItem.getPpPlan() == null) {
 	    			newPpItem.setPpPlan(ppPlan);
 	    		}
@@ -7007,6 +7028,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				    }
 				    newPpExItem.setJustifications(newJustifications);
 		    		//25549@05102020 - end
+				  //25549@09102020 - start
+				    newPpExItem.setReviseReject(true);
+				  //25549@09102020 - end
 		    			
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
 		    		log.info("FromPpItem " + newPpExItem.getFromPpItem());
