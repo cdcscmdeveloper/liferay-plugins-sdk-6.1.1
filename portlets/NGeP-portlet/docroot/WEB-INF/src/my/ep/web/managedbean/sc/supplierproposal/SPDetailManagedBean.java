@@ -216,7 +216,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtCheckList financialQtChecklist;
 	private int supplierInfoActiveIndex; //25089@hatta
 	private List<TreeNode> zoneGeneralTrees; //#21695 Farid
-	
+	private boolean tierType=false; //#11715 danial
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
 	
@@ -1926,6 +1926,16 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.zoneGeneralTrees = zoneGeneralTrees;
 	}
 	//#21695 Farid End
+
+	//#11715 danial start
+	public boolean isTierType() {
+		return tierType;
+	}
+
+	public void setTierType(boolean tierType) {
+		this.tierType = tierType;
+	}
+	//#11715 danial end
 
 	//#28792-start
 	/**
