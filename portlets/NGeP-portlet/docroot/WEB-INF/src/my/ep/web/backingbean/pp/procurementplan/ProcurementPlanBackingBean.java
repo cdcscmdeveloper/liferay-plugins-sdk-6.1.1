@@ -7205,13 +7205,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
 							
-							ppItem.setCloneEnabled(false);
-							ppItem.setDisableForPindaan(false);
-							ppItem.setReasonForUpdateEnabled(true);
+							ppItem.setCloneEnabled(true);
+							ppItem.setDisableForPindaan(true);
+							ppItem.setReasonForUpdateEnabled(false);
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
-							//ppItem.getJustifications().get(0).setJustificationEnabled(false);
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -7222,7 +7221,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
 							ppItem.setJustificationEnabled(true);
-							//ppItem.getJustifications().get(0).setJustificationEnabled(true);
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
