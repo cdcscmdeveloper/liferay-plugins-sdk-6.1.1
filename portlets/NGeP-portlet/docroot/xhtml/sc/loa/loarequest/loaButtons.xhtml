@@ -88,6 +88,8 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+							
+							<h:panelGroup rendered="#{bpmAction != 'CANCEL'}">
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
