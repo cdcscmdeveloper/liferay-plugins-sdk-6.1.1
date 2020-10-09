@@ -402,7 +402,6 @@
 					</td>
 				</tr>
 
-
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent"><p:inputText value="#{bb.managedBean.smPersonnel.designation}" required="#{!empty param['disableValidation']}" maxlength="30" label="#{lbl['lbl.sm.designation']}" /></td>
@@ -517,17 +516,19 @@
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionUserLabelPanelId" rendered="#{bb.managedBean.smResAdd.pmState.adoptDivision}">
-						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
+					<!-- #13320 -->
+					<h:panelGroup id="divisionUserLabelPanelId" >
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" rendered="#{bb.managedBean.smResAdd.pmState.adoptDivision}"/>
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{bb.managedBean.smResAdd.pmState.adoptDivision}"/>
 					</h:panelGroup>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionUserDropdownPanelId" rendered="#{bb.managedBean.smResAdd.pmState.adoptDivision}">
+					<h:panelGroup id="divisionUserDropdownPanelId">
 						<p:selectOneMenu id="cmbResDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.smResAdd.pmDivision.divisionId}"
-						style="width:80%">
+						style="width:80%"
+						rendered="#{bb.managedBean.smResAdd.pmState.adoptDivision}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{bb.managedBean.residentialDivisionLs}"

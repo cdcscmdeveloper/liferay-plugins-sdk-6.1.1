@@ -2317,6 +2317,12 @@ public class SmCommonUtil {
 				permanent.getPmCountry().getCountryId()));
 		permanent.setPmState(SmCommonUtil.getInstance().getStateById(
 				permanent.getPmState().getStateId()));
+		//#13320 - added division
+		if(permanent.getPmDivision() != null){
+			permanent.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+				permanent.getPmDivision().getDivisionId()));
+		}
+		//#13320 - added division - end
 		permanent.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
 				permanent.getPmDistrict().getDistrictId()));
 		permanent.setPmCity(SmCommonUtil.getInstance().getCityById(
@@ -2331,6 +2337,11 @@ public class SmCommonUtil {
 					s2.getPmCountry().getCountryId()));
 			s2.setPmState(SmCommonUtil.getInstance().getStateById(
 					s2.getPmState().getStateId()));
+			//#13320 - added division
+			if(s2.getPmDivision() != null){
+				s2.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+					s2.getPmDivision().getDivisionId()));
+			}
 			s2.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
 					s2.getPmDistrict().getDistrictId()));
 			s2.setPmCity(SmCommonUtil.getInstance().getCityById(
@@ -2361,8 +2372,10 @@ public class SmCommonUtil {
 		if (refAddress.getPostcode() != null)
 			address.setPostcode(new String(refAddress.getPostcode().toString()));
 
+		//#13320 - added division - start
 		PmCountry country = new PmCountry();
 		PmState state = new PmState();
+		PmDivision division = new PmDivision();
 		PmDistrict district = new PmDistrict();
 		PmCity city = new PmCity();
 
@@ -2371,13 +2384,19 @@ public class SmCommonUtil {
 
 		state.setStateId(refAddress.getPmState().getStateId());
 		address.setPmState(state);
+		
+		if(refAddress.getPmDivision() != null){
+			division.setDivisionId(refAddress.getPmDivision().getDivisionId());
+			address.setPmDivision(division);
+		}
 
 		district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
 		address.setPmDistrict(district);
 
 		city.setCityId(refAddress.getPmCity().getCityId());
 		address.setPmCity(city);
-
+		
+		//#13320 - added division - end
 		return address;
 	}
 
@@ -3577,6 +3596,12 @@ public class SmCommonUtil {
 		}
 	}
 //13320-5
+	/**
+	 * Retrieve division list by state. 
+	 * The division ver. of getCityById() is getDivisionByUsingId(Long divisionId).
+	 * @param divisionId
+	 * @return
+	 */
 	public PmDivision getDivisionById(Long divisionId) {
 		if (divisionId != null) {
 			DivisionReqDTO reqDTO = new DivisionReqDTO();
