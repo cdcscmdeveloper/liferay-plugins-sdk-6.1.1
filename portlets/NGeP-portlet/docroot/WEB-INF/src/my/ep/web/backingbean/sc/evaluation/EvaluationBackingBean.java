@@ -2552,10 +2552,18 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setTechnicalSummaryView("");
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-					&& !this.getManagedBean().isReadOnly()
-					&& this.getManagedBean().getScQt().getEvaluationType()
-							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
-					&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
+					//#25138 -start
+					|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_ENDORSEMENT)
+						|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
+						|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_SIGN_OFF)
+						&& !this.getManagedBean().isReadOnly()
+						&& this.getManagedBean().getScQt().getEvaluationType()
+								.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
+						&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
+				//#25138 -end
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
@@ -3796,8 +3804,50 @@ public class EvaluationBackingBean extends
 	 *            
 	 */
 	public void specTabChange() {
+		
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		
 		try {
 			this.getManagedBean().getFinSpecSupplierListDM().reloadData();
+			//#25138 - Save package score when zone tab change - start
+			if(this.getManagedBean().getEvaluatioStageActiveIndex() == 1 
+					|| this.getManagedBean().getTabFinancialIndex() == 2 
+					&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE)){
+				
+				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+				List<ScQtProposalChecklist> scoreDtls = this.getManagedBean()
+						.getFinSpecSupplierListDM().getList();
+				evalReqDTO.setPropChecklist(scoreDtls);
+				evalReqDTO.setQtId(
+						this.getManagedBean().getScQt().getQtId());
+				evalReqDTO.setDocDefinationKey(
+						ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
+				evalReqDTO.setDocCategory(
+						ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
+				evalReqDTO.setCheckListId(
+						this.getManagedBean().getScQtChecklist().getQtChecklistId());
+				
+				if(scoreDtls != null){
+					for(ScQtProposalChecklist list : scoreDtls){
+
+						ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
+						if (null != amountScore) {
+									this.getManagedBean().setFinPackageScore(true);	
+							if(amountScore.getTotalScore().intValue() > this.getManagedBean()
+									.getWithInVarieance().intValue()){
+								this.getManagedBean().setFinPackageScore(false);
+								throw new EpException(MessageConst.ERROR_760201);
+							}
+						}		
+					}	
+				}
+				evaluationSO.saveUserScorePackageDetails(evalReqDTO);
+			}
+			
+			//#25138 - Save package score when zone tab change - end
 			Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
 					.getCurrentInstance().getExternalContext()
 					.getRequestParameterMap().get("selectedZoneTabIndex"));
@@ -13114,12 +13164,16 @@ private void retriveCommitteeRemarksList(){
 				checkFinancialSuppliersQualified();
 
 			}
-			//Bug #28856 - Ahmaa - Start
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-			evaluationSO.generateEvaluationSheet(reqDTO);
-			//Bug #28856 - Ahmaa - End
+			//#25138 - filter auto score condition - Start
+			if(QTConstants.AUTO_SCORE.equalsIgnoreCase(this
+					.getManagedBean().getOfferScoreType())){
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+				evaluationSO.generateEvaluationSheet(reqDTO);
+			
+			}
+			//#25138 - filter auto score condition - End
 			innerCheckList=null;
 			evalstage=null;
 		
@@ -13251,10 +13305,13 @@ private void retriveCommitteeRemarksList(){
 	public String retrieveTotalSpecScoreBySupplier(Long proposalId, 
 			String checkListType){
 	
-		int totalScore = 0; int total = 0; int sumMaxScore = 0;
+		int totalScore = 0; int total = 0; 
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
-
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		
 		try {
 			
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -13647,110 +13704,110 @@ private void retriveCommitteeRemarksList(){
 		}
 		// FARID #21695 END
 		
-		//#25138 - Ahmaa Re open - start
-		public void retriveNonScoringComplianceTechnical() {
-			IQTEvaluationSO evaluationSO = null;
-			EvaluationResDTO resDTO = null;
-			this.getManagedBean().setComplianceActiveIndex(0);
-			try {
-				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
-				reqDTO.setIsScoring(SourcingConstants.NON_SCORING_COMPLIANCE_CHECKLIST);
-				reqDTO.setCompliance(null);
-				reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+	//#25138 - Ahmaa Re open - start
+	public void retriveNonScoringComplianceTechnical() {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = null;
+		this.getManagedBean().setComplianceActiveIndex(0);
+		try {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
+			reqDTO.setIsScoring(SourcingConstants.NON_SCORING_COMPLIANCE_CHECKLIST);
+			reqDTO.setCompliance(null);
+			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
 
-				resDTO = evaluationSO.retrieveCheckListsNonScoring(reqDTO);
+			resDTO = evaluationSO.retrieveCheckListsNonScoring(reqDTO);
+			
+			this.getManagedBean().setComplianceTechnicalCheckList(
+					resDTO.getCheckListResultBean().getResultList());
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
+			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
+			}
+		} finally {
+			evaluationSO = null;
+		}
+
+	}
+	//#25138 - end
+	
+	//#25138 Re open - start
+	/**
+	 * Retrieve non-scoring compliance financial.display all the financial checklist in
+	 * compliance stage financial checklist tab
+	 * 
+	 * 
+	 */
+	public void retriveNonScoringComplianceFinancial(boolean value) {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = null;
+		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
+		try {
+			if (this.getManagedBean().getScQt().isSampleReq() && value) {
+				this.getManagedBean().setComplianceActiveIndex(2);
+			} else {
+				if(value){
+				this.getManagedBean().setComplianceActiveIndex(1);
+				}
+			}
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			// this.getManagedBean().getScQt().getQtId()
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			reqDTO.setCompliance(null);
+			reqDTO.setIsScoring(SourcingConstants.NON_SCORING_COMPLIANCE_CHECKLIST);
+			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+			resDTO = evaluationSO.retrieveCheckListsNonScoring(reqDTO);
+
+			this.getManagedBean().setCompliancefinancialCheckList(
+					resDTO.getCheckListResultBean().getResultList());
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
+				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
+				}
+
+		} finally {
+			evaluationSO = null;
+		}
+
+	}
+	//#25138 - end
+	
+	//#25138 - total package max score by supplier - start
+	private void retriveTemplatePackageSpecScoring(List<ScQtCheckList> checklist) {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		
+		int sumMaxScore = 0; int maxScore = 0;
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		for(ScQtCheckList list : checklist){
+			specReqDTO.setSpecMaster(list.getScQtDoc().getTplSpecMaster());
+			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+			TemplateSpecResDTO specResDTO = templateSpecSO
+					.getTemplateMaster(specReqDTO);
+			List<TplSpecQuestion> questions = specResDTO.getSpecMaster()
+					.getTplSpecQuestions();
+			for (TplSpecQuestion specQuestion : questions) {
 				
-				this.getManagedBean().setComplianceTechnicalCheckList(
-						resDTO.getCheckListResultBean().getResultList());
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
-				checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
-				}
-			} finally {
-				evaluationSO = null;
-			}
-
-		}
-		//#25138 - end
+				if(null != specQuestion.getQuestionType()
+		                && specQuestion.getQuestionType()
+	                    .equalsIgnoreCase(TemplateSpecConst.CONTENT_TYPE_SCORE)){
+					maxScore = specQuestion.getMaxScore().intValue();
+					sumMaxScore = sumMaxScore + maxScore;
 		
-		//#25138 Re open - start
-		/**
-		 * Retrieve non-scoring compliance financial.display all the financial checklist in
-		 * compliance stage financial checklist tab
-		 * 
-		 * 
-		 */
-		public void retriveNonScoringComplianceFinancial(boolean value) {
-			IQTEvaluationSO evaluationSO = null;
-			EvaluationResDTO resDTO = null;
-			this.getManagedBean().setNonScoringActiveIndex(0);//#25138
-			try {
-				if (this.getManagedBean().getScQt().isSampleReq() && value) {
-					this.getManagedBean().setComplianceActiveIndex(2);
-				} else {
-					if(value){
-					this.getManagedBean().setComplianceActiveIndex(1);
-					}
-				}
-				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-				// this.getManagedBean().getScQt().getQtId()
-				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-				reqDTO.setCompliance(null);
-				reqDTO.setIsScoring(SourcingConstants.NON_SCORING_COMPLIANCE_CHECKLIST);
-				reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
-				resDTO = evaluationSO.retrieveCheckListsNonScoring(reqDTO);
-
-				this.getManagedBean().setCompliancefinancialCheckList(
-						resDTO.getCheckListResultBean().getResultList());
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
-					checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
-					}
-
-			} finally {
-				evaluationSO = null;
-			}
-
-		}
-		//#25138 - end
-		
-		//#25138 - total package max score by supplier - start
-		private void retriveTemplatePackageSpecScoring(List<ScQtCheckList> checklist) {
-			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-							ITemplateSpecSO.class);
-			
-			int sumMaxScore = 0; int maxScore = 0;
-			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			for(ScQtCheckList list : checklist){
-				specReqDTO.setSpecMaster(list.getScQtDoc().getTplSpecMaster());
-				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO specResDTO = templateSpecSO
-						.getTemplateMaster(specReqDTO);
-				List<TplSpecQuestion> questions = specResDTO.getSpecMaster()
-						.getTplSpecQuestions();
-				for (TplSpecQuestion specQuestion : questions) {
-					
-					if(null != specQuestion.getQuestionType()
-			                && specQuestion.getQuestionType()
-		                    .equalsIgnoreCase(TemplateSpecConst.CONTENT_TYPE_SCORE)){
-						maxScore = specQuestion.getMaxScore().intValue();
-						sumMaxScore = sumMaxScore + maxScore;
-			
-					}
-					
 				}
 				
 			}
-			this.getManagedBean().setTotalMaxScore(Integer.toString(sumMaxScore));
-
+			
 		}
-		//#25138 - total package max score by supplier - end
+		this.getManagedBean().setTotalMaxScore(Integer.toString(sumMaxScore));
+
+	}
+	//#25138 - total package max score by supplier - end
 		
 		//#25037-START
 		public void prepareUpdateCommitteeMember(){

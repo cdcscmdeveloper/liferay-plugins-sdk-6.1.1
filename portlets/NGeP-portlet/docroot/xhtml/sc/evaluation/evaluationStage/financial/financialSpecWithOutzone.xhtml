@@ -15,7 +15,11 @@
 
 		<p:messages id="financialEvaluationmsgId" autoUpdate="true"
 			closable="true" showDetail="true" showSummary="false"
-			severity="error, info"></p:messages>
+			severity="error, info">
+		</p:messages>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
+		</p:blockUI>
 		<!-- #25138-Ahmaa-Start -->
 		<table width="100%" class="BtnSpacing">
 			<tr>

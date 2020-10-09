@@ -571,15 +571,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25037-START
 	private EvaluationMeetingBackingBean meetingBB;
 	//#25037-END
-		
-		//#25138- total max score- start 
-		private Boolean isScoringReq;
-		
-		/** The total technical package max score. */
-		private String totalMaxScore;
-		//#25138- total max score - end
-		
-		/**tabIndex
+	//#25138- total max score- start 
+	private Boolean isScoringReq;
+	
+	/** The total technical package max score. */
+	private String totalMaxScore;
+	//#25138- total max score - end
+	/**tabIndex
 	 * Gets the today.
 	 * 
 	 * @return the today
