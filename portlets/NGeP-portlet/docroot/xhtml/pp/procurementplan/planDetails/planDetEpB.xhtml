@@ -38,7 +38,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</div>
 	
 		<p:dataTable id="dtExpenditurePlanB" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsB}"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsB}" rendered="#{epItem.recordStatusFlg != 2}"
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtExpenditurePlanB" />
 	    	<p:columnGroup type="header">
@@ -122,7 +122,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column>
 			    <!--25549@18092020 -->
 				<p:selectBooleanCheckbox id="checkBox" 
-					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or (pPlanBackingBean.managedBean.disable) or (epItem.cloneEnabled)}" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or (pPlanBackingBean.managedBean.disable)}" 
 					value="#{epItem.deleted}"/>
 			<!-- #24975 -->
 				<p:commandLink
@@ -224,7 +224,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			   <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
-			    	disabled="#{!epItem.rejected or !epItem.editable}" id="clEpReason" update=":form:dgReason" immediate="true">
+			    	disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.rejected or !epItem.reviseReject or (pPlanBackingBean.managedBean.disable)}" id="clEpReason" update=":form:dgReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
@@ -251,7 +251,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        		disabled="#{epItem.cloneEnabled or epItem.statusEnabled}"> 
 	        		<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	        	    <!--25549@18092020 -->
-	            	<p:ajax event="change" update="addUpdateEpBInfo, itBudgetAmt, itPlanAmt, clEpJustification, clEpRemark, checkBox, glAccountSearchCL" 
+	            	<p:ajax event="change" update="addUpdateEpBInfo, itBudgetAmt, itPlanAmt, clEpJustification, clEpRemark, checkBox, glAccountSearchCL, clEpReason" 
 	            	   listener="#{pPlanBackingBean.disableActiveStatus(epItem.recordStatusFlg)}"/>
 	          	</p:selectOneMenu> 
 	        </p:column>

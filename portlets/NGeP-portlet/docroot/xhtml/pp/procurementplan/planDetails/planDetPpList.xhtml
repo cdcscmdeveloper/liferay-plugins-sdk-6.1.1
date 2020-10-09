@@ -25,7 +25,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:inputText>
 
 	   	<p:dataTable id="dtProcurementPlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
-	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
+	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}" rendered="#{ppItem.recordStatusFlg != 2}"
 		     rowIndexVar="index" rowKey="#{ppItem}">
 			<ac:paginator for="dtProcurementPlan" />
 			<p:columnGroup type="header">
@@ -219,7 +219,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    </p:selectBooleanCheckbox>
 			     <!--25549@18092020 -->				    
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrievePpRejectReasons(ppItem)}"
-			    	disabled="#{!ppItem.rejected or !ppItem.editable or (pPlanBackingBean.managedBean.disable)}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
+			    	disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or !ppItem.rejected or !(ppItem.reviseReject) or (pPlanBackingBean.managedBean.disable)}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>

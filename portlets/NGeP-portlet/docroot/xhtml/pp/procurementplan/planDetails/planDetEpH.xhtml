@@ -37,7 +37,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:messages id="hGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
 		</div>
 	   	<p:dataTable id="dtExpenditurePlanH" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsH}"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsH}" rendered="#{epItem.recordStatusFlg != 2}"
 		     rowIndexVar="index" rowKey="#{epItem}">
 			<ac:paginator for="dtExpenditurePlanH" />
 	    	<p:columnGroup type="header">
@@ -121,7 +121,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column>
 				<!--25549@18092020 -->
 				<p:selectBooleanCheckbox id="checkBox" 
-					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or (pPlanBackingBean.managedBean.disable) or (epItem.cloneEnabled)}" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or (pPlanBackingBean.managedBean.disable)}" 
 					value="#{epItem.deleted}"/>
 			<!-- #24975 -->
 				<p:commandLink
@@ -230,12 +230,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        	</p:column>
 	        </ui:remove>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
-			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable or epItem.brandNew}">
-			    	<p:ajax event="change" update="clEpReason"/>
+		    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
+		    	<p:ajax event="change" update="clEpReason"/>
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
-			    	disabled="#{!epItem.rejected or !epItem.editable}" id="clEpReason" update=":form:dgReason" immediate="true">
+			    	disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.rejected or !epItem.reviseReject or (pPlanBackingBean.managedBean.disable)}" id="clEpReason" update=":form:dgReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
@@ -262,7 +262,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        	   	disabled="#{epItem.cloneEnabled or epItem.statusEnabled}"> 
 	        	   	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	        	    <!--25549@18092020 -->
-	  	            <p:ajax event="change" update="addUpdateEpBInfo, itBudgetAmt, itPlanAmt, clEpJustification, clEpRemarkH, checkBox, glAccountSearchCL" 
+	  	            <p:ajax event="change" update="addUpdateEpBInfo, itBudgetAmt, itPlanAmt, clEpJustification, clEpRemarkH, checkBox, glAccountSearchCL, clEpReason" 
 	  	               listener="#{pPlanBackingBean.disableActiveStatus(epItem.recordStatusFlg)}"/>
 	          	</p:selectOneMenu> 
 	        </p:column>
