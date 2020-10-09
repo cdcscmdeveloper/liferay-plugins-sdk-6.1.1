@@ -660,7 +660,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
         }
-		
+
     }
 	
 	private void resetPpProcurementItemFields(List<PpProcurementItem> ppItems) {
@@ -702,6 +702,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setPlanId(id);
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
+			
 			if (resDTO.isSuccessful()) {
 				ppPlan = resDTO.getPlan();
 				if(ppPlan!=null){
@@ -985,9 +986,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							epItem.setSelectable(false); //disabled checkbox	
 							//#25975
 							epItem.setEditable(false); 
+							//25549@09102020 - start
+							epItem.setReviseReject(false);
+							//25549@09102020 - end
 						} else {
 							log.info("[SIR#12802] - item pending for approval");
 							epItem.setSelectable(true); //enabled checkbox
+							//25549@09102020 - start
+							epItem.setReviseReject(true);
+							//25549@09102020 - end
 						}
 					}
 					log.info("[SIR#12802] - Check item for approved status - End");
@@ -1026,9 +1033,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//#25975
 							//ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);	//190919 set if approved, auto update status = inactive
 							ppItem.setEditable(false); 
+							//25549@09102020 - start
+							ppItem.setReviseReject(false);
+							//25549@09102020 - end
 						} else {
 							log.info("[SIR#12802] - item pending for approval");
 							ppItem.setSelectable(true); //enabled checkbox
+							//25549@09102020 - start
+							ppItem.setReviseReject(true);
+							//25549@09102020 - end
 						}
 					}
 					log.info("[SIR#12802] - Check item for approved status - End");
@@ -1038,7 +1051,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == epItem.getRecordStatusFlg()){
-						epItem.setEditable(true);
+						epItem.setEditable(true);				
 					}else{
 						epItem.setEditable(false);
 					}
@@ -1765,27 +1778,34 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				){
 			
 			rejectReasons = new ArrayList<PpRejectReason>();
+			//25549 - star
+			int itemIndex = 0;
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpProcurementItem ppProcurementItem:ppPlan.getPpProcurementItems()){
 					if(ppProcurementItem.getPpRejectReasons()!=null && !ppProcurementItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppProcurementItem.getPpRejectReasons().get(0);
-						if(rejectReason!=null && !StringUtils.isBlank(rejectReason.getReasonDesc())){ //&& rejectReason.isBrandNew() add this for phase 2
+						if(rejectReason!=null && !StringUtils.isBlank(rejectReason.getReasonDesc())){
+							rejectReason.setItemSeq(itemIndex);//&& rejectReason.isBrandNew() add this for phase 2
 							rejectReason.setDocId(ppProcurementItem.getProcurementItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							rejectReasons.add(rejectReason);
 						}
 					}
+					itemIndex++;
 				}
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
 					if(ppExpenditureItem.getPpRejectReasons()!=null && !ppExpenditureItem.getPpRejectReasons().isEmpty()){
 						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
-						if(rejectReason!=null &&!StringUtils.isBlank(rejectReason.getReasonDesc())){ //&& rejectReason.isBrandNew() add this for phase 2
+						if(rejectReason!=null &&!StringUtils.isBlank(rejectReason.getReasonDesc())){
+							rejectReason.setItemSeq(itemIndex);////&& rejectReason.isBrandNew() add this for phase 2
 							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 							rejectReasons.add(rejectReason);
 						}
 					}
+					itemIndex++;
+					//25549 - end
 				}
 			}
 		}
@@ -2550,6 +2570,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setVotFundType(new PmParameter());
 		epItem.setEditable(true);
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
+		 //25549@09102020 - start
+		epItem.setReviseReject(true);
+	    //25549@09102020 - end
+			
 		
 		
 		//B
@@ -2773,6 +2797,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							//25549@07102020 - start	
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//25549@07102020 - end	
 					}
 				  }
 				}
@@ -2781,8 +2808,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
 					count++;
 				}
@@ -2827,6 +2854,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							//25549@07102020 - start	
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//25549@07102020 - end	
+
 					}
 				  }
 				}
@@ -2836,7 +2867,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsT().add(expenditureItem);
 					count++;
 				}
@@ -2881,6 +2912,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							//25549@07102020 - start	
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//25549@07102020 - end	
 					}
 				  }
 				}
@@ -2890,7 +2924,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsP().add(expenditureItem);
 					count++;
 				}
@@ -2936,6 +2970,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							//25549@07102020 - start	
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//25549@07102020 - end	
 					}
 				  }
 				}
@@ -2945,7 +2982,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
-					
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsS().add(expenditureItem);
 					count++;
 				}
@@ -2990,6 +3027,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							//25549@07102020 - start	
+							//expItem.getJustifications().get(0).setJustificationEnabled(false);
+							//25549@07102020 - end	
 					}
 				  }
 				}
@@ -2998,7 +3038,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//[SIR#12802] - end	
 					//Set to status 2 - Cancelled
 					//log.info("[SIR#12802] - Set item status to 2");
-					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
+					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));
+					expenditureItem.setBrandNew(false);
 					this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);
 					count++;
 				}
@@ -3462,6 +3503,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
 		ppItem.setOriginal(true);
+		//25549@09102020 - start
+		ppItem.setReviseReject(true);
+		//25549@09102020 - end
 
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
@@ -5174,7 +5218,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setStatusEnabled(true);
 	    		newPpItem.setOriginal(false);
 	    		newPpItem.setClonedItem(true);
-	    		
+	    		//25549@09102020 - start
+	    		newPpItem.setReviseReject(true);
+	    		//25549@09102020 - end
 	    		if (newPpItem.getPpPlan() == null) {
 	    			newPpItem.setPpPlan(ppPlan);
 	    		}
@@ -5759,19 +5805,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public SelectItem[] getPlanPreviousYearOptions() {
 		log.info("getPlanPreviousYearOptions");
 		
-			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
-			Integer preYear1 = currentYear - 1;
-			Integer preYear2 = preYear1 - 1;
+		log.info("selected year " + this.getManagedBean().getPlanSearchBean().getYear());
+		    //25549@05102020 - start
+			Long currentYear = this.getManagedBean().getSelectedPlan().getPlanYear();
+			
+			if (currentYear != null){
+			Long preYear1 = currentYear - 1;
+			Long preYear2 = preYear1 - 1;
 			SelectItem[] items = new SelectItem[2];
 			items[0] = new SelectItem(preYear1.longValue(), preYear1.toString());
 			items[1] = new SelectItem(preYear2.longValue(), preYear2.toString());
-				
-			log.info("selected year " + this.getManagedBean().getPlanSearchBean().getYear());
 			
 			return items;
+			}		
+			return null;
+		    //25549@05102020 - end
 		}
-	
-	
 	
 		/**
 		 * Main Filtration For Procurement Plan
@@ -6892,7 +6941,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		newPpExItem.setStatusEnabled(true);
 		    		newPpExItem.setJustificationEnabled(false);
 		    		newPpExItem.setDisableEditAccount(true);
-		    		
+		    		//25549@05102020 - start			    					    
+				    List<PpRemark> newJustifications = new ArrayList<PpRemark>();	
+				    for (PpRemark oldJustifications : clonedPpExpItem.getJustifications()){
+				    	
+				    	PpRemark copyJustifications = new PpRemark();
+				    	copyJustifications.setDocId(oldJustifications.getDocId());
+				    	copyJustifications.setDocType(oldJustifications.getDocType());
+				    	copyJustifications.setRoleCode(oldJustifications.getRoleCode());
+				    	copyJustifications.setRemarkType(oldJustifications.getRemarkType());
+				    	copyJustifications.setRemark(oldJustifications.getRemark());
+				    	
+				    	newJustifications.add(copyJustifications);
+				    }
+				    newPpExItem.setJustifications(newJustifications);
+		    		//25549@05102020 - end
+				  //25549@09102020 - start
+				    newPpExItem.setReviseReject(true);
+				  //25549@09102020 - end
 		    			
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
 		    		log.info("FromPpItem " + newPpExItem.getFromPpItem());
@@ -6943,6 +7009,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setStatusEnabled(false);
 				 cloned.setJustificationEnabled(false);
 				 cloned.setDisableEditAccount(true);
+				
 			 }
 			 
 			 idx -= 1;
