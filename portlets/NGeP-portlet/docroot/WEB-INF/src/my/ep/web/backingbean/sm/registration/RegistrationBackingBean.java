@@ -1628,7 +1628,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			List<Integer> recStatusLs = new ArrayList<Integer>();
 			recStatusLs.add(DbValueConst.RECORD_STATUS_ACTIVE);
 			recStatusLs.add(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-			recStatusLs.add(SupplierManagementConst.MIGRATION_DATA_RECORD_STATUS); //#29005
 			
 			IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
 			reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
