@@ -14,6 +14,7 @@ import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 @Path("/sm")
@@ -78,6 +79,14 @@ public class DowngradeExpMofPersonnelRest {
 				log.info("ChangeExpiredMofPersonnelToBasicJob updateMoFAcc -  Exception>>>>" + ex.getMessage()
 						+ "- supplier ID -" + mofAccount.getSmSupplier().getSupplierId());
 			}
+			
+			// #28800 START
+			try {
+				reqSO.sendEmailExpiredMOFToSupplier(schedulerReqDTO);
+			} catch (Exception ex){
+				log.info("sendEmailExpiredMOFToSupplier ERROR :: " +ex.getMessage());
+			}
+			// #28800 END
 		}
 		log.info("**********changeExpiredMofPersonnelToDeleted - END************");
 	}
