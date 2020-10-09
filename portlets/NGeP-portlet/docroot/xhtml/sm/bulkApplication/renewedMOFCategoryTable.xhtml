@@ -66,7 +66,7 @@
 					</table>					
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
-				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
+				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr" rendered="#{!applCat.overLapCategory}"
 					value="#{applCat.apprvrDecFlg}" 
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
 							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
@@ -75,6 +75,19 @@
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 						itemValue="0" />
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>
+				<p:selectOneRadio layout="pageDirection" id="catApprvrApprx" rendered="#{applCat.overLapCategory}"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} ">
+					<!-- 21937 -->
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;" itemEscaped="false"
+						itemValue="0"  />
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk" partialSubmit="true"
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
@@ -151,7 +164,7 @@
 					</table>					
 			</p:column>
 			<p:column style="width : 10% !important;white-space : normal">
-			<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
+			<p:selectOneRadio layout="pageDirection" id="catApprvrAppr" rendered="#{!applCat.overLapCategory}"
 					value="#{applCat.apprvrDecFlg}" 
 					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
 							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
@@ -159,13 +172,24 @@
 					<!-- 21937 -->
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}" itemValue="1"/>
 					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
-						itemValue="0" />
+						itemValue="0"  />
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk" partialSubmit="true"
 						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
 				</p:selectOneRadio>
-				<p:graphicImage rendered="#{applCat.overLapCategory}"
-						value="/css/images/design/reject.png" style="float:right;"/>			
+				<p:selectOneRadio layout="pageDirection" id="catApprvrApprx" rendered="#{applCat.overLapCategory}"
+					value="#{applCat.apprvrDecFlg}" 
+					label="#{lbl['lbl.sm.catCodes.appAct']} #{lbl['lbl.sm.catCodes.forCatCode']} 
+							#{applCat.pmCategoryL1.categoryL1Code} #{applCat.pmCategoryL2.categoryL2Code} 
+							#{applCat.pmCategoryL3.categoryL3Code} ">
+					<!-- 21937 -->
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"  itemValue="1"/>
+					<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']} &lt;img src=&quot;/NGeP-portlet/css/images/design/reject.png&quot;/&gt;" itemEscaped="false"
+						itemValue="0" />
+					<p:ajax event="change" process="@this"
+						update="apprvrCatDecisionRmrk" partialSubmit="true"
+						listener="#{bulkApplicationBackingBean.assignCategoryApproveOrRejectDate(applCat)}" />
+				</p:selectOneRadio>		
 			</p:column>
 			<p:column style="width : 25% !important;white-space : normal">
 				<p:inputTextarea value="#{applCat.approverRemarks}" maxlength="200"
