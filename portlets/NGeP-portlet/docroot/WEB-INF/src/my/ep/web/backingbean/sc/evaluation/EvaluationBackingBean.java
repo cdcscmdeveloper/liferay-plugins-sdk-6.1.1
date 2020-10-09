@@ -11623,8 +11623,17 @@ private void retriveCommitteeRemarksList(){
 						return new SearchResultBean<Object[]>();
 					}
 				}
-				return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
+				
+//#21695 Farid Start 9/10/2020				
+				if(isZonal){
+					return evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
+							.getNotOfferSupplierResultBean();
+				}
+				else{
+					return evaluationSO.retrieveSummaryNotOfferSuppliersNonZonal(reqDTO)
 						.getNotOfferSupplierResultBean();
+				}
+//#21695 Farid End 9/10/2020					
 			} finally {
 				evaluationSO = null;
 			}
