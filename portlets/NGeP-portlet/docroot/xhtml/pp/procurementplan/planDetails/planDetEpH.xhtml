@@ -235,7 +235,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
-			    	disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.rejected or (pPlanBackingBean.managedBean.disable) or (epItem.cloneEnabled)}" id="clEpReason" update=":form:dgReason" immediate="true">
+			    	disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.rejected or !epItem.reviseReject or (pPlanBackingBean.managedBean.disable)}" id="clEpReason" update=":form:dgReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
