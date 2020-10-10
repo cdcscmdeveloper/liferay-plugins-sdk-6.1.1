@@ -2063,15 +2063,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 				   if (committeeActivity.getScCommitteeMember().getPmUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
 				     if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				       memberRole = RoleCode.QCA_MEMBER.value();
-				       if (committeeActivity.isBiddingSignedOff()) {
-				         suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
-				       }
 				     } else if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				       memberRole = RoleCode.QCA_CHAIRPERSON.value();
 				     }
 				   }
 				   
-				   if (!isAllMembersEndorsed && ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+				   if (isAllMembersEndorsed && ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
                      if (!committeeActivity.isBiddingSignedOff()) {
                        isAllMembersEndorsed = false;
                      } 
