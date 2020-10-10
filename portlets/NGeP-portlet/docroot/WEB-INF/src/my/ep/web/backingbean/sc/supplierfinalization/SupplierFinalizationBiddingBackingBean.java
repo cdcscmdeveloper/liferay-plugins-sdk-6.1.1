@@ -2049,7 +2049,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outCome)
 		    || BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outCome)
 		    || BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(outCome)) {
-		  String memberRole = null;
+		    String memberRole = null;
+		    boolean isAllMembersEndorsed = true;
 			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
 				 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 						 && null != committeeActivity.getScCommitteeMember().getMemberRole()) {
@@ -2070,16 +2071,17 @@ public class SupplierFinalizationBiddingBackingBean extends
 				     }
 				   }
 				   
-				   if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-                     if (committeeActivity.isBiddingSignedOff()) {
-                       suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
-                     } else {
-                       suppFinalizationReqDTO.setNextStatusId(null);
-                     }
+				   if (!isAllMembersEndorsed && ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+                     if (!committeeActivity.isBiddingSignedOff()) {
+                       isAllMembersEndorsed = false;
+                     } 
                    }
 				 }
 			 }
 			
+			if (isAllMembersEndorsed) {
+			  suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
+			}
             suppFinalizationReqDTO.setScQt(getManagedBean().getScQt());
             suppFinalizationReqDTO.setScQtCommittee(getManagedBean().getScQtCommittee());
             suppFinalizationReqDTO.setChildDocId(getManagedBean().getScQt().getQtId());
