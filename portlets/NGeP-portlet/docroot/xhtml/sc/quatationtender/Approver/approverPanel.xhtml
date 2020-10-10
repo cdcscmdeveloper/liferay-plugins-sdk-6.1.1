@@ -61,7 +61,8 @@
 		
 		<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
-			resizable="false" width="360" height="90" modal="true">
+			resizable="false" width="360" height="90" modal="true"
+			closable="false">
 
 			<table>
 				<tr>
@@ -71,10 +72,10 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable();reviseCANCELBtn.disable();" value="#{lbl['lbl.btn.yes']}"
 					oncomplete="reviceApprovalDlg.hide();"
 					action="#{approvalBackingBean.updateReviceBpmTask}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
+				<p:commandButton widgetVar="reviseCANCELBtn" value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlg.hide();" type="button" />
 			</div>
 		</p:dialog>
