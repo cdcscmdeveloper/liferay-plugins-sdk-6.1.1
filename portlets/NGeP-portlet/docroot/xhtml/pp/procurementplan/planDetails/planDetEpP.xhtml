@@ -121,7 +121,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column>
 			   <!--25549@18092020 -->
 				<p:selectBooleanCheckbox id="checkBox" 
-					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or (pPlanBackingBean.managedBean.disable)}" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable)}" 
 				    value="#{epItem.deleted}"/>
 			<!-- #24975 -->
 				<p:commandLink
@@ -238,7 +238,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
-			    	disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.rejected or !epItem.reviseReject or (pPlanBackingBean.managedBean.disable)}" id="clEpReason" update=":form:dgReason" immediate="true">
+			    	disabled="#{!epItem.rejected or !epItem.reviseReject or (pPlanBackingBean.managedBean.disable)}" id="clEpReason" update=":form:dgReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>

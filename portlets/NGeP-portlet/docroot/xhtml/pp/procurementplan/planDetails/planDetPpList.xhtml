@@ -113,7 +113,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				  <!--25549@18092020 -->				
 				<p:selectBooleanCheckbox 
 				    id="checkbox"
-					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or (pPlanBackingBean.managedBean.disable)}" 
+					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
 					value="#{ppItem.deleted}" title="#{lbl['lbl.pp.make.amendment']}" />
 				<!-- [SIR#12802] - end -->
 				<!-- #24975 -->
@@ -214,12 +214,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>
 
 	       <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
-			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable or (pPlanBackingBean.managedBean.disable)}">
 			    	<p:ajax event="change" update="clPpReason"/>
 			    </p:selectBooleanCheckbox>
 			     <!--25549@18092020 -->				    
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrievePpRejectReasons(ppItem)}"
-			    	disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or !ppItem.rejected or !(ppItem.reviseReject) or (pPlanBackingBean.managedBean.disable)}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
+			    	disabled="#{!ppItem.rejected or !ppItem.reviseReject or (pPlanBackingBean.managedBean.disable)}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
