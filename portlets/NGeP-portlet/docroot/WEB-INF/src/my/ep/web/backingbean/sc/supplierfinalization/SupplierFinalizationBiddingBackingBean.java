@@ -2055,9 +2055,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 				 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 						 && null != committeeActivity.getScCommitteeMember().getMemberRole()) {
 				   
-				   if ("S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+				   if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				     suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
-				     memberRole = RoleCode.QCA_SECRETARY.value();
 				   }
 				   
 				   if (committeeActivity.getScCommitteeMember().getPmUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
@@ -2065,7 +2064,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 				       memberRole = RoleCode.QCA_MEMBER.value();
 				     } else if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
 				       memberRole = RoleCode.QCA_CHAIRPERSON.value();
-				     }
+				     } else  if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+	                   memberRole = RoleCode.QCA_SECRETARY.value();
+	                 }
 				   }
 				   
 				   if (isAllMembersEndorsed && ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
