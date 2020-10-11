@@ -1459,8 +1459,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		scLoa.setIssueDate(scLoa.getContractEffDate());
-
+		
+		// #26474 - start
+		if (getManagedBean().getSelectedPtj() == null) {
+			getManagedBean().setSelectedPtj(scLoa.getContractAgency());
+		}
 		scLoa.setContractAdmin(null);
+		// #26474 - end
+
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
