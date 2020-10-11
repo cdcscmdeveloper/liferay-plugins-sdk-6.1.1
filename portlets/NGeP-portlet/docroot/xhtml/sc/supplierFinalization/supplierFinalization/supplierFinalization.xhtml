@@ -42,7 +42,7 @@
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/qualifiedSuppliersByEvalStage.xhtml" />
 	<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierPreferencemargin.xhtml" />
 	
-	<h:outputText styleClass="instruction" escape="false"
+	<h:outputText styleClass="instruction" escape="false" rendered="#{suppFinalizationBackingBean.managedBean.displayReviseInstrn}"
 			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
 			
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
