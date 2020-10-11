@@ -213,24 +213,12 @@
 							</tr>
 							<!-- 13320 -->
 							<tr>
+								<td>
+									<p:outputLabel value="#{lbl['lbl.sm.division']}"  rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/>
+									<p:outputLabel value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}"/>
+								</td>
+							</tr>
 
-								<td class="tdTitle"><h:panelGroup
-										id="divisionCompInfoLabelPanelId"
-										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
-										<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-										<p:outputLabel value="*" styleClass="mandatory" />
-									</h:panelGroup></td>
-							</tr>
-							<!-- 13320-WorkInProgress-->
-							<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
-							<tr>
-								<td class="tdTitle"><h:panelGroup
-										id="divisionWIPCompInfoLabelPanelId"
-										rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
-										<p:outputLabel value="#{lbl['lbl.sm.division']}" />
-									</h:panelGroup></td>
-							</tr>
-							</p:outputPanel>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
@@ -286,7 +274,7 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-											update="basHdPan,divisionWIPCompInfoDropdownPanelId,divisionWIPCompInfoLabelPanelId,divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
+											update="basHdPan,divisionWIPCompInfoDropdownPanelId,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
 									</p:selectOneMenu> 
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
