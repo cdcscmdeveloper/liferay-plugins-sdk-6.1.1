@@ -275,7 +275,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					updateContractDetails(scLoa);
 				}
 				
-				validateContractDetails(scLoa); //#26474
 				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
 	
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1461,6 +1460,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 
+		scLoa.setContractAdmin(null);
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
@@ -8491,15 +8491,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
 		// #26474 - start
-//		Locale locale = new FacesScopes().getUserLocale();
-//    
-//		if (StringUtils.isBlank(
-//				scLoa.getContractAdmin().getUserName())) {
-//			throw new EpException(MessageConst.ERROR_760400,
-//					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-//				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-//		}
-		
 		List<PmUser> pmUserList = getUsersByAgency();
 		if (CollectionUtils.isEmpty(pmUserList)) {
 			throw new EpException(MessageConst.ERROR_760512);

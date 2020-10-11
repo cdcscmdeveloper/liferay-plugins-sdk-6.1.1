@@ -2980,7 +2980,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
-					validateContractDetails(scLoa);
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
