@@ -670,6 +670,10 @@ public class LOIDetailBackingBean extends
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			
+			// #25638 - Start
+			displayReviseInstrn(getManagedBean().getFcActivityList());
+			// #25638 - End
+			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
@@ -2666,6 +2670,26 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
+	// #25638 - Start.
+	/**
+	 *  To Revise.
+	 */
+	public void reviseAction() {
+        reviseSignOff();
+		updateMultiLoiBpmTask(BpmOutcomeConst.BPM_REVISE, null);
+	}
+	
+	private void reviseSignOff() {
+	  if (StringUtils.isNotBlank(
+          getManagedBean().getCommitteeType())) {
+        for (ScQtCommitteeActivity scQtCommitteeActivity 
+                            : getManagedBean().getFcActivityList()) {
+          scQtCommitteeActivity.setMultiLoiSignedOff(false);
+        }
+	  }
+	}
+	// #25638 - End.
+	
 	/**
 	 * Update multi loi bpm task action. update bpm - save data into database
 	 * and BPM process will route to the next respective user. Authenticating
@@ -2676,6 +2700,33 @@ public class LOIDetailBackingBean extends
 	 */
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
+		
+		//25638 - Start
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+		    boolean remarksNotFound = true; 
+	        if (!CollectionUtils.isEmpty(getManagedBean().getScQtCommittee().getQtCommitteRemarks())) {
+	            for (ScQtCommitteRemarks scQtRemark : getManagedBean().getScQtCommittee().getQtCommitteRemarks()) {
+	                if (null != scQtRemark.getCreatedUser() && null != scQtRemark.getCreatedUser().getUserId()) {
+	                  if (scQtRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+	                    if (StringUtils.isEmpty(scQtRemark.getRemark()) ) {
+	                      remarksNotFound = true;
+	                      break;
+	                    } else {
+	                      remarksNotFound = false;
+	                    }
+	                  }
+	                }
+	            }
+	        }
+	        
+	        if (remarksNotFound) {
+	            throw new EpException(MessageConst.ERR_775152);
+	        }
+			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
+			return;
+		}
+		//25638 - End
+				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
 		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
@@ -2742,17 +2793,29 @@ public class LOIDetailBackingBean extends
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
 			
+			// #25638 - Start. Remove so that PmUser can get current user data
+//			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) { 
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+//			}
+			// #25638 - End.
+			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				super.renewSesionObject();
-
-				successMessage(MessageConst.INFO_700033,
-						ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
-								.getScQt().getQtNo(), Boolean.TRUE);
+				// #25638 - Start.
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					successMessage(MessageConst.INFO_776042, getMessageCommon("lbl.sc.quotation.tender"), scQtFinalization
+                        .getScQt().getQtNo(), Boolean.TRUE);
+				} else {
+					successMessage(MessageConst.INFO_700033,
+							ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+							ParameterConst.RECOMMEND_BY_MULTIPLE_LOI, scQtFinalization
+							.getScQt().getQtNo(), Boolean.TRUE);
+				}
+				// #25638 - End.
 			}
 
 		} finally {
@@ -6119,4 +6182,19 @@ public class LOIDetailBackingBean extends
 	public boolean getManagedBeanIsReadOnly(){
 		return this.getManagedBean().isReadOnly();
 	}
+	
+	// #25638 - Start
+	/**
+	 * @return
+	 */
+	public boolean isPendingNegotiationStatus() {
+	  Long statusId  = getManagedBean().getCurrentStatusId();
+      if (null != statusId && (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION.equals(statusId.longValue()) 
+          || QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(statusId.longValue()))) {
+        return true;
+	  } else {
+	    return false;
+	  }
+	}
+	// #25638 - End
 }

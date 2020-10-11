@@ -13648,10 +13648,11 @@ private void retriveCommitteeRemarksList(){
 	// #26339 - End
 	
 	// #25638 - Start
-		/**
-		 * @return
-		 */
-		public boolean displayReviseInstrn() {
+	/**
+	 * @return
+	 */
+	public boolean displayReviseInstrn() {
+		if (null != getManagedBean().getCurrentStatusId()) {
 			long currentStatus = getManagedBean().getCurrentStatusId().longValue();
 			if ((currentStatus == QTStatusConst.EC_PENDING_ENDORSEMENT.longValue())
 					|| (currentStatus == QTStatusConst.TEC_PENDING_ENDORSEMENT.longValue())
@@ -13666,9 +13667,10 @@ private void retriveCommitteeRemarksList(){
 					|| (currentStatus == QTStatusConst.OC_PENDING_SIGN_OFF.longValue())) {
 				return true;
 			}
-			return false;
 		}
-		// #25638 - End
+		return false;
+	}
+	// #25638 - End
 		
 		// FARID #21695 START	
 		public Boolean checkTecSpecNotOffer(TplSpecAnswer tplSpecAnswer) {
