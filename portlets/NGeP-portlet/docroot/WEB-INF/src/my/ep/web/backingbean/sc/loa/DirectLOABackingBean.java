@@ -4741,11 +4741,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		 */
 		public void approveBeforeupdateBpmTaskAction(String outcome) {
 			debugLogger("approveBeforeupdateBpmTaskAction");
-
-			// #26474 - start
-			validateContractDetails(this.getManagedBean().getScLoa());
-			// #26474 - end
-		
 			this.getManagedBean().setAction(outcome);
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
@@ -4873,11 +4868,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-
-		// #26474 - start
-		validateContractDetails(this.getManagedBean().getScLoa());
-		// #26474 - end
-
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(this.getManagedBean().getScLoa(), outcome);
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
