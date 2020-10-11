@@ -107,6 +107,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean resubmitAppl = false;
 	private boolean showPopup = false;
 
+	// #25638 - Start		
+	private boolean displayReviseInstrn;
+	// #25638 - End	
+	
 	/**
 	 * @return the token
 	 */
@@ -694,7 +698,22 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setResubmitAppl(boolean resubmitAppl) {
 		this.resubmitAppl = resubmitAppl;
 	}
-	
+
+	// #25638 - Start
+	/**
+	 * @return the displayReviseInstrn
+	 */
+	public boolean isDisplayReviseInstrn() {
+		return displayReviseInstrn;
+	}
+
+	/**
+	 * @param displayReviseInstrn the displayReviseInstrn to set
+	 */
+	public void setDisplayReviseInstrn(boolean displayReviseInstrn) {
+		this.displayReviseInstrn = displayReviseInstrn;
+	}
+	// #25638 - End
 	
 	
 }

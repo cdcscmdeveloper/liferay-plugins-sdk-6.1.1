@@ -513,10 +513,12 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setResetSupplierList(
 					new HashSet<ScQtEvaluationResultDtl>());
 		}	
-		
+		// #25638 - Start
+		displayReviseInstrn(getManagedBean().getCommitteeList());
+		// #25638 - End
 	}
 	
-	// #18685 - Start 
+	// #18685 - Start
 	/**
 	 * @param scQtFinalization
 	 */
@@ -1890,7 +1892,22 @@ public class SupplierFinalizationBackingBean extends
 			throw new EpException(MessageConst.ERROR_760341);
 		}
 	}
-
+	//25638 - Start
+	/**
+	 * 
+	 */
+	private void reviseSignOff() {
+	  log.info("signOff");
+      if (StringUtils.isNotBlank(
+              getManagedBean().getCommitteeType())) {
+          for (ScQtCommitteeActivity scQtCommitteeActivity 
+                      : getManagedBean().getCommitteeList()) {
+                  scQtCommitteeActivity.setSignedOff(false);
+          }
+      }
+    }
+	//25638 - End
+	
 	/**
 	 * Validate, save the selected quotation/tender supplier finalization
 	 * details and update to BPM
@@ -1905,6 +1922,9 @@ public class SupplierFinalizationBackingBean extends
 
 		//25638 - Start
 		if (revise.length == 0 && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			// #25638 - Start
+			validateRemarks();
+			// #25638 - End
 			RequestContext.getCurrentInstance().execute("reviseSuppFinalizationDlgs.show()");
 		} else {
 		//25638 - End
@@ -1965,30 +1985,10 @@ public class SupplierFinalizationBackingBean extends
 			// #25638 - Start
 			PmUser secretaryUser = null;
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-				
-				if (null != getManagedBean().getCurrentStatusId() 
-						&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
-					boolean remarksNotFound = true;
-					if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
-						for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
-							if (StringUtils.isNotEmpty(finalizationRemark.getRemark()) && (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()
-									&& finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue())) {
-								remarksNotFound = false;
-								break;
-							}
-						}
-					// #25638 - Start.
-					} else {
-						initializeFinalizationRemarks();
-					}
-					// #25638 - End.
-					
-					if (remarksNotFound) {
-						throw new EpException(MessageConst.ERR_775152);
-					}
-				}
-				
+				// #25638 - Start
+			    reviseSignOff();
+				validateRemarks();
+				// #25638 - End
 				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
 					 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
 							 && null != committeeActivity.getScCommitteeMember().getMemberRole()
@@ -2003,7 +2003,8 @@ public class SupplierFinalizationBackingBean extends
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
-			if (StringUtils.isNotBlank(committeeType) && 
+			// #25638 - Start.
+			if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && StringUtils.isNotBlank(committeeType) && 
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
 					isDigiSigningRequired(committeeResDTO.getRoleCode(),
 											this.getManagedBean().getCommitteeList())) {
@@ -2015,8 +2016,11 @@ public class SupplierFinalizationBackingBean extends
 					signOff();
 				}
 				// #28472 - End.
+				//25638 - Start
 				updateBPMTask(outcome, null, reqDTO);
+				//25638 - End
 			}
+			// #25638 - End.
 		} else {
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
@@ -2025,6 +2029,41 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//25638 - End
 	}
+
+	// #25638 - Start 
+	/**
+	 * 
+	 */
+	private void validateRemarks() {
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
+				|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+			boolean remarksNotFound = true;
+			if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+				for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+				  if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+                    if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+                      if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+                        remarksNotFound = true;
+                        break;
+                      } else {
+                        remarksNotFound = false;
+                      }
+                    }
+                  }
+				}
+			// #25638 - Start. 
+			} else {
+				initializeFinalizationRemarks();
+			}
+			// #25638 - End.
+			
+			if (remarksNotFound) {
+				throw new EpException(MessageConst.ERR_775152);
+			}
+		}
+	}
+	// #25638 - End	
 	
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
@@ -2239,11 +2278,11 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRoleCode(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
 				       .equals(getManagedBean().getCurrentStatusId()) ? 
 										RoleCode.BPK_APPROVER.value() : getCommitteeRoleCode());
-			// #28472 and #25638 - Start.
-			if (null == reqDTO.getPmUser()) {
+			// #28472 and #25638 - Start. 
+			/*if (null == reqDTO.getPmUser()) {*/
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			}
-			// #28472 and #25638 - End.
+			/*	}*/
+			// #28472 and #25638 - End. 
 			reqDTO.setCurrentFinalizationStatus(
 					getManagedBean().getCurrentStatusId());
 			reqDTO.setInitialDecisionFwdHighAuth(
@@ -6989,6 +7028,16 @@ public class SupplierFinalizationBackingBean extends
 			scQtRecommend.getRecommendDtls().clear();
 			scQtRecommend.getRecommendDtls().addAll(toBeAddedSet);
 		}			
+	}
+	
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 	
 	private void checkAndResetPreviouslyAwardedSupplier(
