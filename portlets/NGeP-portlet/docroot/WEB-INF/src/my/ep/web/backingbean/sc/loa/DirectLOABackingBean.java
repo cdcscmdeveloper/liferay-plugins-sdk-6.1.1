@@ -1637,6 +1637,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
 							ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 			}	
+		// #26474 - start
+		if (getManagedBean().getSelectedPtj() == null) {
+			getManagedBean().setSelectedPtj(scLoa.getContractAgency());
+		}
+		// #26474 - end
 		}
 
 	/**
