@@ -240,106 +240,93 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void saveAction(boolean supplier) {
 		debugLogger("saveAction");
-
-		//#26474 -start-
+		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		try {
-			PmParameter contractType = getManagedBean().getScLoa().getContractType();
-
-			if (contractType != null && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
-					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())) {
-				throw new EpException(MessageConst.ERROR_760485);
-			} else {
-				DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
-
-				String outcome = BpmOutcomeConst.BPM_SAVE;
-				ScLoa scLoa = this.getManagedBean().getScLoa();
-				ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
-				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
-				boolean validateWitness=this.getManagedBean().isValidatewitness(); //#17376
-				
-				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-						.equals(statusId)) {
-					validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
-				}
-				
-				parseLOADetails(scLoa, outcome, reqDTO);
-				//20200325@asyrafhaziq _ Bug #27740 - Start
-				validateLoaAmount(scLoa);
-				//20200325@asyrafhaziq _ Bug #27740 - End
-				validateSupplierDetails(scLoa);
-				validateDeductionPaymentDtls(scLoa);
-				validateLOAReportAttachments(scLoa);
-				validateContractNGovtSignDate(scLoa);
-				
-				if (!supplier) {
-					updateContractDetails(scLoa);
-				}
-				
-				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
-	
-				reqDTO.setTaskId(this.getManagedBean().getTaskId());
-				reqDTO.setScLoa(scLoa);
-				reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
-				reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
-				reqDTO.setOutcome(outcome);
-				reqDTO.setRoleCode(getUserRoleCode());
-				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				updateToBeDeleteSpecAnswersTOReq(reqDTO);
-				reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-				reqDTO.setTobeDeleteProPayments(this.getManagedBean()
-						.getToBeRemoveProgPayments());
-				reqDTO.setToBeDeleteschedules(this.getManagedBean()
-						.getToBeRemoveSchedules());
-				reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
-						.getToBedeletedSupplierZone());
-				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-				DirectAwardResDTO resDTO = getQtDirectAwardSO()
-						.saveDirectAwardDetails(reqDTO);
-				scLoa = resDTO.getLoa();
-	
-				if (resDTO.isSuccessful()
-						&& null == this.getManagedBean().getTaskId()) {
-					if (QTStatusConst.LOA_PENDING_SUBMISSION
-							.equals(statusId)) {
-						// rename temporary Loa No folder name in docRepo
-						RenameTempLoaNoRepoDirByLoaNo(scLoa);
-					}
-					successMessage(MessageConst.INFO_700025,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-							scLoa.getLoaNo(), Boolean.TRUE);
-				} else {
-					int selectedTabIndx = this.getManagedBean()
-							.getSelectedTabIndex();
-					String taskId = this.getManagedBean().getTaskId();
-					String[] outComes = this.getManagedBean().getOutComes();
-					SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
-							.getManagedBean().getPayLoad();
-					renewSesionObject();
-					this.getManagedBean().setTaskId(taskId);
-					this.getManagedBean().setOutComes(outComes);
-					this.getManagedBean().setSelectedTabIndex(selectedTabIndx);
-					this.getManagedBean().setPayLoad(awardSupplierDataType);
-					this.getManagedBean().setValidatewitness(validateWitness); //#17376
-					if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(scLoa.getPmStatus().getStatusId())) {
-						retriveLoaDetails(scLoa.getLoaId(), null, false);
-	
-						contractTypeChanged();
-					}
-					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-							.equals(scLoa.getPmStatus().getStatusId())) {
-						getSupplierDeatilsByLoaId(scLoa.getLoaId());
-
-					}
-
-					successMessage(MessageConst.INFO_700025,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-							scLoa.getLoaNo(), Boolean.FALSE);
-				}
+			String outcome = BpmOutcomeConst.BPM_SAVE;
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+			ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
+			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+			boolean validateWitness=this.getManagedBean().isValidatewitness(); //#17376
+			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(statusId)) {
+				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
 			}
-			//#26474 -end-
+			parseLOADetails(scLoa, outcome, reqDTO);
+			//20200325@asyrafhaziq _ Bug #27740 - Start
+			validateLoaAmount(scLoa);
+			//20200325@asyrafhaziq _ Bug #27740 - End
+			validateSupplierDetails(scLoa);
+			validateDeductionPaymentDtls(scLoa);
+			validateLOAReportAttachments(scLoa);
+			validateContractNGovtSignDate(scLoa);
+			if (!supplier) {
+				updateContractDetails(scLoa);
+			}
+			validateContractDetails(scLoa);
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
+
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setScLoa(scLoa);
+			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			updateToBeDeleteSpecAnswersTOReq(reqDTO);
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setTobeDeleteProPayments(this.getManagedBean()
+					.getToBeRemoveProgPayments());
+			reqDTO.setToBeDeleteschedules(this.getManagedBean()
+					.getToBeRemoveSchedules());
+			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
+					.getToBedeletedSupplierZone());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			DirectAwardResDTO resDTO = getQtDirectAwardSO()
+					.saveDirectAwardDetails(reqDTO);
+			scLoa = resDTO.getLoa();
+
+			if (resDTO.isSuccessful()
+					&& null == this.getManagedBean().getTaskId()) {
+				if (QTStatusConst.LOA_PENDING_SUBMISSION
+						.equals(statusId)) {
+					// rename temporary Loa No folder name in docRepo
+					RenameTempLoaNoRepoDirByLoaNo(scLoa);
+				}
+				successMessage(MessageConst.INFO_700025,
+						ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+						scLoa.getLoaNo(), Boolean.TRUE);
+			} else {
+				int selectedTabIndx = this.getManagedBean()
+						.getSelectedTabIndex();
+				String taskId = this.getManagedBean().getTaskId();
+				String[] outComes = this.getManagedBean().getOutComes();
+				SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
+						.getManagedBean().getPayLoad();
+				renewSesionObject();
+				this.getManagedBean().setTaskId(taskId);
+				this.getManagedBean().setOutComes(outComes);
+				this.getManagedBean().setSelectedTabIndex(selectedTabIndx);
+				this.getManagedBean().setPayLoad(awardSupplierDataType);
+				this.getManagedBean().setValidatewitness(validateWitness); //#17376
+				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+						.equals(scLoa.getPmStatus().getStatusId())) {
+					retriveLoaDetails(scLoa.getLoaId(), null, false);
+
+					contractTypeChanged();
+				}
+				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+						.equals(scLoa.getPmStatus().getStatusId())) {
+					getSupplierDeatilsByLoaId(scLoa.getLoaId());
+
+				}
+
+				successMessage(MessageConst.INFO_700025,
+						ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+						scLoa.getLoaNo(), Boolean.FALSE);
+			}
+
 		} finally {
 			// qtAwardSO = null;
 		}
@@ -420,76 +407,67 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void submitAction() {
 		debugLogger("submitAction");
-		//#26474 -start-
+		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		try {
-			PmParameter contractType = getManagedBean().getScLoa().getContractType();
+			String outcome = BpmOutcomeConst.BPM_SUBMIT;
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+
+			parseLOADetails(scLoa, outcome, reqDTO);
+
+			validateSupplierDetails(scLoa);
+			//20200325@asyrafhaziq _ Bug #27740 - Start
+			validateLoaAmount(scLoa);
+			//20200325@asyrafhaziq _ Bug #27740 - End
+			validateLOAReportAttachments(scLoa);
+			validateLOADetails(scLoa, outcome);
+
+			validateContractAmount(scLoa.getLoaAmt(), outcome);
+			validateContractNGovtSignDate(scLoa);
+			updateContractDetails(scLoa);
+			validateContractDetails(scLoa);
+
+			log.info("submitAction loop executed");
+			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
+			scLoa.setScLoaWorkFlowStatuses(null);
+			// To avoid insert workflow status when direct submit without save.
+			if (scLoa.isBrandNew()) {
+				List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
+				if (CollectionUtils.isNotEmpty(remarks)) {
+					for (ScLoaRemark remark : remarks) {
+						remark.setScWorkFlowStatus(null);
+					}
+				}	
+			}
 			
-			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
-					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode())) {
-				throw new EpException(MessageConst.ERROR_760485);
-			} else {
-				DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
-				//#26474 -end-
-				String outcome = BpmOutcomeConst.BPM_SUBMIT;
-				ScLoa scLoa = this.getManagedBean().getScLoa();
-	
-				parseLOADetails(scLoa, outcome, reqDTO);
-	
-				validateSupplierDetails(scLoa);
-				//20200325@asyrafhaziq _ Bug #27740 - Start
-				validateLoaAmount(scLoa);
-				//20200325@asyrafhaziq _ Bug #27740 - End
-				validateLOAReportAttachments(scLoa);
-				validateLOADetails(scLoa, outcome);
-	
-				validateContractAmount(scLoa.getLoaAmt(), outcome);
-				validateContractNGovtSignDate(scLoa);
-				updateContractDetails(scLoa);
-				validateContractDetails(scLoa);
-	
-				log.info("submitAction loop executed");
-				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
-				scLoa.setScLoaWorkFlowStatuses(null);
-				// To avoid insert workflow status when direct submit without save.
-				if (scLoa.isBrandNew()) {
-					List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
-					if (CollectionUtils.isNotEmpty(remarks)) {
-						for (ScLoaRemark remark : remarks) {
-							remark.setScWorkFlowStatus(null);
-						}
-					}	
-				}
-				
-				reqDTO.setScLoa(scLoa);
-				reqDTO.setPayLoad(getManagedBean().getPayLoad());
-				reqDTO.setOutcome(outcome);
-				reqDTO.setSourceId(getManagedBean().getSourceId());
-				reqDTO.setRoleCode(getUserRoleCode());
-				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				reqDTO.setTaskId(this.getManagedBean().getTaskId());
-				reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-				reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
-				reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
-				updateToBeDeleteSpecAnswersTOReq(reqDTO);
-				reqDTO.setTobeDeleteProPayments(this.getManagedBean()
-						.getToBeRemoveProgPayments());
-				reqDTO.setToBeDeleteschedules(this.getManagedBean()
-						.getToBeRemoveSchedules());
-				reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
-						.getToBedeletedSupplierZone());
-				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-				DirectAwardResDTO resDTO = getQtDirectAwardSO()
-						.submitDirectAwardDetails(reqDTO);
-	
-				if (resDTO.isSuccessful()) {
-					scLoa = resDTO.getLoa();
-					RenameTempLoaNoRepoDirByLoaNo(scLoa);
-					successMessage(MessageConst.INFO_700026,
-							ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-							scLoa.getLoaNo(), Boolean.TRUE);
-				}
-			} //#26474
+			reqDTO.setScLoa(scLoa);
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
+			updateToBeDeleteSpecAnswersTOReq(reqDTO);
+			reqDTO.setTobeDeleteProPayments(this.getManagedBean()
+					.getToBeRemoveProgPayments());
+			reqDTO.setToBeDeleteschedules(this.getManagedBean()
+					.getToBeRemoveSchedules());
+			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
+					.getToBedeletedSupplierZone());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			DirectAwardResDTO resDTO = getQtDirectAwardSO()
+					.submitDirectAwardDetails(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				scLoa = resDTO.getLoa();
+				RenameTempLoaNoRepoDirByLoaNo(scLoa);
+				successMessage(MessageConst.INFO_700026,
+						ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+						scLoa.getLoaNo(), Boolean.TRUE);
+			}
 		} finally {
 			// qtAwardSO = null;
 		}
