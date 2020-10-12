@@ -2960,13 +2960,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
+					PmUser pmUserNull = null;//#26475 & #26474
+					Long statusId = null;
+					PmUser pmUserNull = null;//#26475 & #26474
+					
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
 						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 					}
 					ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
-					Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+					//#29173 - CR 26475: Static Code Analysis
+					//start
+					//#29173 - removed longValue() from getStatusId
+					//#29173 - added if statement to check if null
+					if(scLoa != null)
+						statusId = scLoa.getPmStatus().getStatusId();
 		
 					if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 							.equals(statusId)) {
@@ -2974,7 +2983,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
-					validateContractDetails(scLoa);
+					//validateContractDetails(scLoa); // #26475 & #26474 - disable validation on save action
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
