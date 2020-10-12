@@ -6768,7 +6768,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppItem.setReviseReject(true);
+	                ppItem.setOriginal(true);
 	                //25549@12102020 - end
+	              
 	                
 	                
 	               System.out.println("size list " + j );
@@ -6826,6 +6828,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppExItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppExItem.setReviseReject(true);
+	                ppExItem.setOriginal(true);
 	                //25549@12102020 - end
 	                
 					// B
