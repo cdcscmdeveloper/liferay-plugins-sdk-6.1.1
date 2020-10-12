@@ -262,7 +262,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!supplier) {
 				updateContractDetails(scLoa);
 			}
-			//validateContractDetails(scLoa); // #26475 & #26474 - disable validation on save action
+			validateContractDetails(scLoa);
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1134,10 +1134,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *            the outcome
 	 */
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
-		//#26474 -start-
-		validateContractDetails(scLoa); 
-		//#26474 -end-
-
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
@@ -8471,15 +8467,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		// #26474 - start
-		List<PmUser> pmUserList = getUsersByAgency();
-		if (CollectionUtils.isEmpty(pmUserList)) {
-			throw new EpException(MessageConst.ERROR_760512);
-		} else {
-			scLoa.setContractAdmin(pmUserList.get(0));
-		}
-		// #26474 - end
-		
 		//Redmine Bug #21137
 		if(scLoa.getContractDuration() != null && (scLoa.getContractDuration().compareTo(new BigDecimal(1)) < 0)) {
 			throw new EpException(MessageConst.ERROR_760473);
