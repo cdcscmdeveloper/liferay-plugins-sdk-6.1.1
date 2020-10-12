@@ -262,7 +262,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!supplier) {
 				updateContractDetails(scLoa);
 			}
-			validateContractDetails(scLoa);
+			//validateContractDetails(scLoa); // #26475 & #26474 - disable validation on save action
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
