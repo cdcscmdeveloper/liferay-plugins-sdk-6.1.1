@@ -5371,14 +5371,11 @@ public class RuleCatalogueBackingBean extends
         if (getManagedBean().getSelectedRuleDescType() != null) {
         	selectedRuleType = getManagedBean().getSelectedRuleDescType()
         			.getRuleType().getRuleType();
-        	
-        	if (selectedRuleType.equals("LOPO")) {
-        		getManagedBean().setLOPOSelected(true);
-        	} else {
-        		getManagedBean().setLOPOSelected(false);
-        	}
+        	//#29267 - CR 22113: Static Code Analysis
+        	//shaqimi start - replaced if-else with single method invocation
+        	getManagedBean().setLOPOSelected(selectedRuleType.equals("LOPO"));
+        	//end #29267 - CR 22113: Static Code Analysis
         }
-        
 	}
 	
 	/* 27827 - START */
