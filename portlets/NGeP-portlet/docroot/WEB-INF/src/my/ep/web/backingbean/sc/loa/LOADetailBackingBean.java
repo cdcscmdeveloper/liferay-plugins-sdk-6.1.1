@@ -313,6 +313,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(Boolean.TRUE);
+			//#26475 - start
+			if (getManagedBean().getSelectedPtj() == null){
+				getManagedBean().setSelectedPtj(scLoa.getContractAgency());
+			}
+			//#26475 - end
 			
 			//Enhancement #12177
 			if(!getManagedBean().isTrackingDairyView()){
@@ -2751,6 +2756,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
+					Long statusId = null;
+					PmUser pmUserNull = null;//#26475 & #26474
+					
+					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
 						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
@@ -2764,7 +2773,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
-					validateContractDetails(scLoa);
+					
+					// start - #26475 & #26474 - disable validation on save action
+					//validateContractDetails(scLoa);
+					scLoa.setContractAdmin(pmUserNull);
+					// end - #26475 & #26474 
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
@@ -2998,6 +3011,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			//#26475 - start
+			if (this.getManagedBean().getSelectedPtj() != null){
+				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
+			//#26475 - end
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -4204,7 +4222,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty()? "" 
 					: item.getTplSpecTierQty().getToQty().toString());
 		}
-
+        //26226 Start
+		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+		//#28609
+		//itemBean.setItem(item.getScRequestItem().getItemName());
+		
+		
+		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
+		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
+		log.info("Delivery Term --->"+tplSpecQuestion.getClDeliveryTerm().toString() );
+		log.info("Duration month --->"+tplSpecQuestion.getClDurationMonth().toString());*/
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
@@ -6316,7 +6343,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					int order = specQuestion.getQuestionOrder();
 					if (!questionSpecMap.containsKey(order)) {
 						ItemBean specBean = new ItemBean();
-						specBean.setItem(specQuestion.getClItem());
+						//20200824@asyrafhaziq  - #28609 - Start
+						String itemName = specQuestion.getClItem();
+						if (itemName == null) {
+							itemName = "";
+						}
+						itemName = itemName.trim();
+						//replace all special characters
+						itemName = itemName.replaceAll("<", "&#60;");
+						itemName = itemName.replaceAll(">", "&#62;");
+						itemName = itemName.replaceAll("\u2264", "&#60;=");//symbol less then equal
+						itemName = itemName.replaceAll("\u2265", "&#62;=");//symbol greater then equal
+						itemName = itemName.replaceAll("\r\n", "<br/>");
+						specBean.setItem(itemName);
+						//20200824@asyrafhaziq  - #28609 - End
 						specBean.setSpecs(new ArrayList<String>());
 						questionSpecMap.put(order, specBean);						} 
 				} else {
@@ -6401,14 +6441,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		Locale locale = new FacesScopes().getUserLocale();
+//		Locale locale = new FacesScopes().getUserLocale();
+//
+//		if (StringUtils.isBlank(
+//				scLoa.getContractAdmin().getUserName())) {
+//			throw new EpException(MessageConst.ERROR_760400,
+//					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
+//				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+//		}	
 		
-		if (StringUtils.isBlank(
-				scLoa.getContractAdmin().getUserName())) {
-			throw new EpException(MessageConst.ERROR_760400,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}	
+		//#26475 - start
+		List<PmUser> pmUserList = getUsersByAgency();
+		PmUser pmUserNull = null;
+		if(CollectionUtils.isEmpty(pmUserList)){
+			throw new EpException(MessageConst.ERROR_760512);
+		}else{
+			scLoa.setContractAdmin(pmUserNull);
+		}
+		//#26475 - end
 	}
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
