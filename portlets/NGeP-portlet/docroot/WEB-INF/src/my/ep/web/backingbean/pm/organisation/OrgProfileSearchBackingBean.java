@@ -187,9 +187,7 @@ public class OrgProfileSearchBackingBean extends
 			//end #29173 - CR 26475: Static Code Analysis
 		}
 		//#26474 - start
-		else{
-			this.getManagedBean().setMinistryProfileId(ministryId);
-		}
+		this.getManagedBean().setMinistryProfileId(ministryId);
 		// #26474 - end
 		//#26475 - end
 	}
