@@ -440,6 +440,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			reqDTO.setScLoa(scLoa);
+			//#26474 - start
+			if(getManagedBean().getContractSignerUser() != null){
+				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
+			}
+			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -4484,6 +4489,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
 		}
+		//#26474 - start
+		else{
+			getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+		}
+		//#26474 - end
 		
 		// Actual Total Intended Price (RM)
 		if (scLoa.getEstimatedPrice() != null) {
@@ -4753,6 +4763,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 			reqDTO.setScLoa(this.getManagedBean().getScLoa());
+			//#26474 - start
+			if(getManagedBean().getContractSignerUser() != null){
+				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
+			}
+			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
