@@ -404,7 +404,9 @@ public class LovBackingBean implements Serializable {
 		this.setLovSearchBean(new SearchBean());
 //		this.setLovBean(new LovBean());
 		//20200909@akmal - Enhancement28951 - Start
-		this.getSelectedEntities().clear();
+		if(this.getSelectedEntities() != null){
+			this.getSelectedEntities().clear();
+		}		
 		//20200909@akmal - Enhancement28951 - End
 		if(!getLovBean().isDisplayResultWhenReset()) {
 			disableDisplayResult();
