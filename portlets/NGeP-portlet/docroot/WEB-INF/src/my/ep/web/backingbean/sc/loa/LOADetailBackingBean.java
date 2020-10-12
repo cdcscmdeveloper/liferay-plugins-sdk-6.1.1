@@ -2980,6 +2980,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
+					//validateContractDetails(scLoa); // #26475 & #26474 - disable validation on save action
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
