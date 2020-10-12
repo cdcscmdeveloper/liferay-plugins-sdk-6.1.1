@@ -3025,78 +3025,72 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		this.getManagedBean().setScQtDoc(scQtDoc);
 
 		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
-
+		//#29134 - CR 27233: Static Code Analysis
+		//shaqimi start - removed try-finally clause as it is not needed
 		ITemplateSpecSO templateSpecSO = null;
-		try {
+		templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
-			templateSpecSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-							ITemplateSpecSO.class);
-			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+		SmSupplier smSupplier = new SmSupplier();
+		smSupplier.setSupplierId(getManagedBean().getSupplierId());
+		reqDTO.setSupplier(smSupplier);
 
-			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setSupplier(smSupplier);
-
-			reqDTO.setSpecMaster(specMaster);
-			if (getManagedBean().getSelectedZone() != null) {
-				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
-			}
-			if (getManagedBean().getQt().getMaxProposal() > 1) {
-				reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
-			}
-			reqDTO.setScQt(getManagedBean().getQt());
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.getTemplateMaster(reqDTO);
-			if (resDTO.isSuccessful()) {
-				specMaster = resDTO.getSpecMaster();
-				
-				//#11715 danial start
-				for(TplSpecAnswer answer: resDTO.getSpecAnswerList()){
-					if(null!=answer.getTplSpecQuestion()){
-						if(null!=answer.getTplSpecQuestion().getClPriceTypeCode()){
-							String code=answer.getTplSpecQuestion().getClPriceTypeCode().getParameterCode();
-							if(code.equals(ParameterConst.PRICE_TYPE_TIER)||
-							   code.equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER)||
-							   code.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)||
-							   code.equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)||
-							   code.equals(ParameterConst.PRICE_TYPE_TARIFF)||
-							   code.equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
-								this.getManagedBean().setTierType(true);
-							}
-						}
-						
+		reqDTO.setSpecMaster(specMaster);
+		if (getManagedBean().getSelectedZone() != null) {
+			reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
+		}
+		if (getManagedBean().getQt().getMaxProposal() > 1) {
+			reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
+		}
+		reqDTO.setScQt(getManagedBean().getQt());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		TemplateSpecResDTO resDTO = templateSpecSO
+				.getTemplateMaster(reqDTO);
+		if (resDTO.isSuccessful()) {
+			specMaster = resDTO.getSpecMaster();
+			
+			//#11715 danial start
+			for(TplSpecAnswer answer: resDTO.getSpecAnswerList()){
+				//shaqimi start - merged if statement
+				if(null!=answer.getTplSpecQuestion() &&
+						null!=answer.getTplSpecQuestion().getClPriceTypeCode()){
+					String code=answer.getTplSpecQuestion().getClPriceTypeCode().getParameterCode();
+					if(code.equals(ParameterConst.PRICE_TYPE_TIER)||
+					   code.equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER)||
+					   code.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)||
+					   code.equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)||
+					   code.equals(ParameterConst.PRICE_TYPE_TARIFF)||
+					   code.equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
+						this.getManagedBean().setTierType(true);
 					}
 				}
-				//#11715 danial end
-				
-				TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-				templateSpecBean.setSpecMaster(specMaster);
-				templateSpecBean.setContentType(reqDTO.getContentType());
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				templateSpecBean.setSelectedSpecQuestion(null);
-//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
-				this.getManagedBean().getTemplateSpecBackingBean()
-				.calcAllSpecAnswerTotalAmount(templateSpecBean);
-//#21695 Farid end				
-				this.getManagedBean().getTemplateSpecBackingBean()
-						.calcGrandTotalAmount(templateSpecBean);
-				if (getManagedBean().getQt().isZonal()) {
-					getManagedBean().getZoneTplSpecBeanMap().put(
-							getManagedBean().getSelectedZone().getSpecZoneId(),
-							templateSpecBean);
-				} else {
-					getManagedBean().setTemplateSpecBean(templateSpecBean);
-				}
-
 			}
-		} finally {
-
-			templateSpecSO = null;
+			//#11715 danial end
+			
+			TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+			templateSpecBean.setSpecMaster(specMaster);
+			templateSpecBean.setContentType(reqDTO.getContentType());
+			templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+			templateSpecBean.setSelectedSpecQuestion(null);
+//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
+			this.getManagedBean().getTemplateSpecBackingBean()
+			.calcAllSpecAnswerTotalAmount(templateSpecBean);
+//#21695 Farid end				
+			this.getManagedBean().getTemplateSpecBackingBean()
+					.calcGrandTotalAmount(templateSpecBean);
+			if (getManagedBean().getQt().isZonal()) {
+				getManagedBean().getZoneTplSpecBeanMap().put(
+						getManagedBean().getSelectedZone().getSpecZoneId(),
+						templateSpecBean);
+			} else {
+				getManagedBean().setTemplateSpecBean(templateSpecBean);
+			}
+			//shaqimi start - removed useless assignment to templateSpecSO
 		}
-
+		// end #29134 - CR 27233: Static Code Analysis
 	}
 
 	/**
