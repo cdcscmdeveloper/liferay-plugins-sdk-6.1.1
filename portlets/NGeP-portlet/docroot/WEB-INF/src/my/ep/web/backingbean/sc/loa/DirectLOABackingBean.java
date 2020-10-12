@@ -4493,6 +4493,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getEstimatedPrice() != null) {
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
+		
+		//#26474 - start
+		if (scLoa.getContractAgency() == null) {
+			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+			scLoa.setContractAgency(pmOrgProfile);
+		}
+		//#26474 - end
 
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
