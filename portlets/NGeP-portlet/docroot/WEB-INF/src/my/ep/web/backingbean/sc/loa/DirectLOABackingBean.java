@@ -4723,12 +4723,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-			} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-				//Enhancement #21694 START
-				//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
-				updateReviseBPMTaskAction(outcome);
-				//Enhancement #21694 END
-			}
+			} 
 			else {
 				updateBpmTaskAction(outcome);
 			}
