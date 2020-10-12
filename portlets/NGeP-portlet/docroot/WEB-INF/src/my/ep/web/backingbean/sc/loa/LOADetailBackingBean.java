@@ -2961,6 +2961,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
 					Long statusId = null;
+					PmUser pmUserNull = null;//#26475 & #26474
+					
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
@@ -2980,7 +2982,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					validateLOADetails(scLoa, outcome);
-					//validateContractDetails(scLoa); // #26475 & #26474 - disable validation on save action
+					
+					// start - #26475 & #26474 - disable validation on save action
+					//validateContractDetails(scLoa);
+					scLoa.setContractAdmin(pmUserNull);
+					// end - #26475 & #26474 
 					if (!supplier) {
 						updateContractDetails(scLoa);
 					}
