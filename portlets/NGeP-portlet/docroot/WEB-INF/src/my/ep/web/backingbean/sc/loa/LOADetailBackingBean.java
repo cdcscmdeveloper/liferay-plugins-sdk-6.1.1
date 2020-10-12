@@ -2960,7 +2960,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 					String outcome = BpmOutcomeConst.BPM_SAVE;
 					ScLoa scLoa = this.getManagedBean().getScLoa();
-					PmUser pmUserNull = null;//#26475 & #26474
 					Long statusId = null;
 					PmUser pmUserNull = null;//#26475 & #26474
 					
