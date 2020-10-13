@@ -164,7 +164,7 @@
 							required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCountry"
 								value="#{bb.managedBean.countryLs}" />
@@ -179,7 +179,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmState.stateId}"
@@ -207,7 +207,7 @@
 					<td>
 				<p:outputPanel id="divisionBranchInfoDropdownPanelId">
 				<ui:fragment rendered="#{bb.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
-					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDivision.divisionId}"
@@ -229,7 +229,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="branchDist" required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
@@ -246,7 +246,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="branchCity" required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCity.cityId}">
@@ -316,7 +316,7 @@
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.person.composition.poc']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 								required="#{bb.managedBean.valueReqd}"
 								label="#{lbl['lbl.sm.person.composition.poc']}" id="brnPerVal"
 								value="#{bb.managedBean.selectedBranch.smPersonnel.personnelId}">
