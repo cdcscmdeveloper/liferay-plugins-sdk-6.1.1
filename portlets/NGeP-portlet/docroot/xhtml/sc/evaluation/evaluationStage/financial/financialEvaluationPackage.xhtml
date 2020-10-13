@@ -40,17 +40,17 @@
 								</h:outputText>
 							</p:column>
 							<p:column style="width:15%;white-space: normal;">
-								<h:outputText value="#{evaluationBackingBean.getStatusDescById(financialEval.pmEvalStatus.statusId)}"></h:outputText>
+								<h:outputText value="#{evaluationBackingBean.getStatusDescById(evaluationBackingBean.managedBean.evalStatus)}"></h:outputText>
 							</p:column>
 							<p:column style="width:10%;text-align: center;"
 								rowspan="#{reasonGroup.size()}" rendered="#{st.index==0}">		
-								<ui:fragment rendered="#{technicalEval.scoringReq ne false}"
+								<ui:fragment rendered="#{financialEval.scoringReq ne false and  (evaluationBackingBean.managedBean.evalStatus ne null and evaluationBackingBean.managedBean.evalStatus eq '60451')}"
 								align="center">
 									<p:commandButton value="#{lbl['lbl.btn.view']}"
 										process="@this" partialSubmit="true"
 										action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 								</ui:fragment>
-								<ui:fragment rendered="#{technicalEval.scoringReq eq false}"
+								<ui:fragment rendered="#{financialEval.scoringReq ne false and  (evaluationBackingBean.managedBean.evalStatus eq null or evaluationBackingBean.managedBean.evalStatus ne '60451')}"
 								align="center">
 									<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 										process="@this" partialSubmit="true"
