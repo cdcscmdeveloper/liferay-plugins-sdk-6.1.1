@@ -274,7 +274,7 @@
 										<p:ajax event="change" process="@this"
 											listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-											update="basHdPan,divisionWIPCompInfoDropdownPanelId,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
+											update="basHdPan,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
 									</p:selectOneMenu> 
 									<ac:ssmShowIconAlertGreen 
 										greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
