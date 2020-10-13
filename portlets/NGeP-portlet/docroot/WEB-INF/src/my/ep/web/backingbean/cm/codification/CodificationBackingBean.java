@@ -708,7 +708,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
-						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -718,7 +717,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
-						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -729,7 +727,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementCode() + " - " + measurement.getMeasurementName()));
+						measurement.getMeasurementName()));
 			}
 		}
 
@@ -746,7 +744,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
-						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
@@ -829,7 +826,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
-						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -839,7 +835,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
-						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -850,7 +845,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementCode() +" - " + measurement.getMeasurementName()));
+						measurement.getMeasurementName()));
 			}
 		}
 
@@ -866,7 +861,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
-						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
@@ -2181,7 +2175,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
-						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
@@ -2191,7 +2184,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
-						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -2201,7 +2193,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
-						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -2212,7 +2203,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementCode() + " - " + measurement.getMeasurementName()));
+						measurement.getMeasurementName()));
 			}
 		}
 		//#28576 - end
@@ -2439,7 +2430,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
-						.getColorCode() + " - " + color
 						.getColorName()));
 			}
 		}
@@ -2470,7 +2460,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
-						.getBrandCode() + " - " + brand
 						.getBrandName()));
 			}
 		}
@@ -2483,7 +2472,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
-						.getTypeCode() + " - " + type
 						.getTypeName()));
 			}
 		}
@@ -2493,7 +2481,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
-						measurement.getMeasurementCode() + " - " + measurement.getMeasurementName()));
+						measurement.getMeasurementName()));
 			}
 		}
 		//#28576 - end
