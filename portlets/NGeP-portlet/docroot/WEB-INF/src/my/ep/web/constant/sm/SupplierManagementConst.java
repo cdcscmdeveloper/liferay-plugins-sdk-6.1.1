@@ -669,6 +669,11 @@ public class SupplierManagementConst {
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
 
+	//29156: Disciplinary Action  - start
+	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = "B";
+	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	//29156: Disciplinary Action  - end
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1231,5 +1236,14 @@ public class SupplierManagementConst {
 		return MOF_STATUS_EXPIRED_SYSTEM;
 	}
 	// #29156 -END
-	
+
+	// #29156 -START
+	public static String getSmMofDisciplinaryActionBlacklist() {
+		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public static String getSmMofDisciplinaryActionCancelReg() {
+		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	// #29156 -START
 }
