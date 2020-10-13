@@ -27,7 +27,7 @@
 			<p:selectOneMenu id="sameAsAddrId"
 				label="#{lbl['lbl.sm.facility.address.same.as']}"
 				value="#{cc.attrs.backingBean.managedBean.facAddresSameAs}"
-				style="width: 207px;margin-bottom: 5px;">
+				style="width: 207px;margin-bottom: 5px;background-color:white;">
 				<f:selectItems 
 					value="#{cc.attrs.backingBean.managedBean.addrSameAsItems}" />
 				<p:ajax event="change" process="@this"
@@ -94,7 +94,7 @@
 					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.country']}"
 					value="#{cc.attrs.facility.smAddress.countryId}"
-					style="width: 207px;margin-bottom: 5px;">
+					style="width: 207px;margin-bottom: 5px;background-color:white;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.countryItems}" />
@@ -116,7 +116,7 @@
 		</td>
 		<td>
 			<p:outputPanel id="stateInputId">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{cc.attrs.facility.smAddress.stateId}"
@@ -146,7 +146,7 @@
 		<td>
 				<p:outputPanel id="divisionDropdownPanelId">
 				<ui:fragment rendered="#{cc.attrs.facility.smAddress.pmState.adoptDivision}">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					id="divisionId" 
 					label="#{lbl['lbl.sm.division']}"
 					value="#{cc.attrs.facility.smAddress.divisionId}">
@@ -172,7 +172,7 @@
 		</td>
 		<td>
 			<p:outputPanel id="districtInputId">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					id="districtId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.district']}"
 					value="#{cc.attrs.facility.smAddress.districtId}">
@@ -196,7 +196,7 @@
 		</td>
 		<td>
 			<p:outputPanel id="cityInputId">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					id="cityId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
 					value="#{cc.attrs.facility.smAddress.cityId}">
