@@ -446,7 +446,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				String designation = getManagedBean().getContractSignerUser().getDesignation();
 				reqDTO.getScLoa().setLoaSignerDesig(designation);
 			}
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -5014,7 +5014,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(scQt);
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
 			//#26474 -end-
 			
 			reqDTO.setScLoa(scLoa);
