@@ -20,19 +20,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
-import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -109,6 +99,13 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Received Note .
@@ -571,7 +568,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		boolean statusMatch = false;
 		if(flWorkflowStatus!=null) {
-			if(rejectionRemarks.size()>0 && rejectionRemarks.get(0).getFlWorkflowStatus()!=null) {
+			if(!rejectionRemarks.isEmpty() && rejectionRemarks.get(0).getFlWorkflowStatus()!=null) {
 				if(flWorkflowStatus.getPmStatus().getStatusId().longValue()==rejectionRemarks.get(0).getFlWorkflowStatus().getPmStatus().getStatusId().longValue()) {
 					statusMatch = true;
 				}
@@ -579,13 +576,15 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		} else { // both also null
 			statusMatch = true;
 		}
-		if(rejectionRemarks.size()>0){
-			if(rejectionRemarks.get(0).getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId())){
+		//#29171, CR 14650: Static Code Analysis Start
+		//if(rejectionRemarks.size()>0){
+			if(!rejectionRemarks.isEmpty() && rejectionRemarks.get(0).getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId())){
 				statusMatch = true;
 			}
-		}
+		//}
+		//#29171, CR 14650: Static Code Analysis End
 		
-		if (rejectionRemarks.size() == 0 || !statusMatch) {
+		if (rejectionRemarks.isEmpty() || !statusMatch) {
 			FlRemark remark = new FlRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -693,9 +692,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			for(PmUser user : getManagedBean().getPmUserList()){
 				if(getManagedBean().getUserLoginId().equals(user.getUserId())){
 					orderApproverList.add(user);
-				} else if (orderApproverList.size() > 0) {
+				} else if (!orderApproverList.isEmpty()) {
 					orderApproverList.add(user);
-				} else if (orderApproverList.size() == 0) {
+				} else if (orderApproverList.isEmpty()) {
 					pendingApproverList.add(user);
 				}
 			}
@@ -763,20 +762,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		
 		FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();	
-//		if(fulfilmentNote.getFlRequest().getCtContract() != null) {
-//			if(fulfilmentNote.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-//				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-//				ContractReqDTO contractReqDTO = new ContractReqDTO();
-//				contractReqDTO.setContractId(fulfilmentNote.getFlRequest().getCtContract().getContractId());
-//				if(!contractSO.checkContractStatus(contractReqDTO).isActive()) {
-//					throw new EpException(MessageConst.ERROR_740056);
-//				}
-//			} else if((fulfilmentNote.getReceivedDate().after(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) 
-//					|| fulfilmentNote.getReceivedDate().before(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate()))){
-//				throw new EpException(MessageConst.ERROR_740021);
-//			}
-//		}
-		
 		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
 			checkLastTaxFRN();
@@ -788,7 +773,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(personnelResDTO.getSmPersonnelList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
-			System.out.println("issuance cogst: "+getManagedBean().isIssuanceCogstrCheck() + " **isLastFRNTaxInv: " +getManagedBean().isLastFRNTaxInv());
+			//System.out.println("issuance cogst: "+getManagedBean().isIssuanceCogstrCheck() + " **isLastFRNTaxInv: " +getManagedBean().isLastFRNTaxInv());
 			if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isLastFRNTaxInv()){
 				getManagedBean().setSelectedTabIndex(0);
 				onTabChange(getManagedBean().getSelectedTabIndex());
@@ -812,13 +797,15 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param supplierEvaluation the supplier evaluation
 	 */
 	public void checkScore(FlSupplierEvaluation supplierEvaluation){
-		if(supplierEvaluation.getScore()!=null) {
-			if(supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0){
+		//#29171, CR 14650: Static Code Analysis Start
+		//if(supplierEvaluation.getScore()!=null) {
+			if( supplierEvaluation.getScore()!=null && (supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0)){
 				String score = supplierEvaluation.getScore().toString();
 				supplierEvaluation.setScore(null);
 				throw new EpException(MessageConst.ERROR_100039, new String[]{score,"1","5"});
 			}
-		}
+		//}
+		//#29171, CR 14650: Static Code Analysis End
 	}
 	
 	/**
@@ -1073,8 +1060,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * Back to document.
 	 *
 	 * @return the string
+	 * @throws IOException 
 	 */
-	public String backAction() throws PortalException, SystemException, IOException {
+	public String backAction() throws IOException {
 		if(getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -1125,7 +1113,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
 				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
@@ -1167,7 +1154,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
 			} catch (EpException e) {
 				handleException(e);
-				return;
 			}finally{
 				receivedNoteSO = null;
 			}
@@ -1187,11 +1173,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 *
 	 */
 	public boolean isReceivingOfficer() {
+		//#29171, CR 14650: Static Code Analysis Start
+		/*
 		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
 			return true;
 		}else{
 			return false;
 		}
+		*/
+		return getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value());
+		//#29171, CR 14650: Static Code Analysis End
 	}
 	
 	private void getSupplierGst(FlFulfilmentNote fulfilmentNote) {
@@ -1212,7 +1203,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 
 		boolean amtChanged = reCalculateGstUnitPrice(fulfilmentNote);
-		if(amtChanged == true){
+		if(amtChanged){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
@@ -1504,26 +1495,26 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				gstItemResDTO = gstItemSO.retrieveGSTFlag(gstItemReqDTO); 
 				//check atLeast one isCoGSTRFlag = false, LastFRNTaxInv false
 				if(!gstItemResDTO.isCoGSTRFlag()){
-					//getManagedBean().setLastFRNTaxInv(false);
-					//break;
 					countisCogstrFalse = countisCogstrFalse+1;
-				}else{
-					//getManagedBean().setLastFRNTaxInv(true); 
 				}
 				
 			}
-			
+			//#29171, CR 14650: Static Code Analysis Start
+			/*
 			if(countisCogstrFalse > 0){
 				getManagedBean().setLastFRNTaxInv(false);
 			}else{
 				getManagedBean().setLastFRNTaxInv(true); 
 			}
+			*/
+			
+			getManagedBean().setLastFRNTaxInv(countisCogstrFalse > 0? false:true);
+			//#29171, CR 14650: Static Code Analysis Start
 			
 			int countisCogstrFalseDB = 0;
 			
 			if(getManagedBean().isLastFRNTaxInv()){
 				//double check DB
-				System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN() **4** !getManagedBean().isLastFRNTaxInv() ");
 				IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 				reqDTO.setFlRequestId(getManagedBean().getFulfilmentNote().getFlRequest().getFulfilmentReqId());
@@ -1536,23 +1527,23 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 						}
 					
 						for(FlFulfilmentNoteItem frnItem : note.getFlFulfilmentNoteItem()) {
-							System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN()**7***1333***** "+ frnItem.getFulfilmentNoteItemId());
-							System.out.println("ReceivedNoteBackingBean.checkLastTaxFRN()**8***1333***** "+ frnItem.isCoGSTRReq());
-							
+						
 							if(!frnItem.isCoGSTRReq()){
 								countisCogstrFalseDB = countisCogstrFalseDB + 1;
-							}else{
-								//getManagedBean().setLastFRNTaxInv(true); 
 							}
 						}
 					}
 				}
-				
+				//#29171, CR 14650: Static Code Analysis Start
+				/*
 				if(countisCogstrFalseDB > 0){
 					getManagedBean().setLastFRNTaxInv(false);
 				}else{
 					getManagedBean().setLastFRNTaxInv(true); 
 				}
+				*/
+				getManagedBean().setLastFRNTaxInv(countisCogstrFalseDB > 0 ? false : true);
+				//#29171, CR 14650: Static Code Analysis End
 			}
 		}
 	}
@@ -1657,7 +1648,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * @param outcome the new text before sign
 	 */
 	private void setTextBeforeSign(String outcome) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(getManagedBean().getFulfilmentRequest().getFlFulfilmentOrder().getDocNo()+"|");
 		sb.append(getManagedBean().getFulfilmentNote().getFulfilmentNoteNo()+"|");
 		sb.append(outcome+"|");
@@ -1694,9 +1685,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		for(PmUser user : getManagedBean().getPmUserList()){
 			if(getManagedBean().getUserLoginId().equals(user.getUserId())){
 				orderApproverList.add(user);
-			} else if (orderApproverList.size() > 0) {
+			} else if (!orderApproverList.isEmpty()) {
 				orderApproverList.add(user);
-			} else if (orderApproverList.size() == 0) {
+			} else if (orderApproverList.isEmpty()) {
 				pendingApproverList.add(user);
 			}
 		}
@@ -1732,4 +1723,5 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end	
+	
 }
