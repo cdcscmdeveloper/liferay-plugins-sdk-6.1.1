@@ -201,7 +201,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.bankDtls.acctPurpose']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
@@ -235,7 +235,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankName']}" id="smBankNameVal"
 							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" update="@([id$=save])"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="finOrg"								
 								value="#{backingBean.managedBean.finOrgLs}"
@@ -339,7 +339,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="smBankCntryId"
 							value="#{backingBean.managedBean.selectedBank.smAddress.countryId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCountry"
 								value="#{backingBean.managedBean.countryItems}" />
@@ -361,7 +361,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.stateId}"
@@ -397,7 +397,7 @@
 					<td>
 				<p:outputPanel id="divisionBankFormDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.divisionId}"
 							id="smBankDivision">
@@ -426,7 +426,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="smBankDist" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.districtId}">
@@ -450,7 +450,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="smBankCity" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.cityId}">
