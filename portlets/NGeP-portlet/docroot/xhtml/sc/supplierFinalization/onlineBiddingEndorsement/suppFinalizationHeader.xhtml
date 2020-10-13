@@ -18,7 +18,7 @@
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td style="width: 27%" class="header-info-text">
 				<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scQt,true)}">
+						action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
 				<h:outputText value="#{scQt.qtNo}" escape="false" />
 					</p:commandLink>
 				</td>

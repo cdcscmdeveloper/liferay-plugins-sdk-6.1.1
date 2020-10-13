@@ -47,9 +47,11 @@
 					<td><p:outputLabel id="docNoMain"
 							value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td class="header-info-text">
+					<!-- #28780 start -->
 						<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scheduleBiddingBB.managedBean.scQt,true)}">
-				<h:outputText value="#{scheduleBiddingBB.managedBean.scQt.qtNo}" escape="false" />
+					    	action="#{qTDetailBB.editQuationTenderDetails(scheduleBiddingBB.managedBean.scQt, false, true, view.viewId)}">
+						<h:outputText value="#{scheduleBiddingBB.managedBean.scQt.qtNo}" escape="false" />
+					<!-- #28780 end -->
 					</p:commandLink>
 						</td>
 
