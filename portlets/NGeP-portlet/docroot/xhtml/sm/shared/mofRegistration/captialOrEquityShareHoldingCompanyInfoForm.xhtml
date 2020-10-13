@@ -291,7 +291,7 @@
 							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
 							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"	
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCountry"
 								value="#{backingBean.managedBean.countryItems}" />
@@ -316,7 +316,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 	
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}"
@@ -353,7 +353,7 @@
 						<p:selectOneMenu id="equiDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
-						style="width: 207px;margin-bottom: 5px;"
+						style="width: 207px;margin-bottom: 5px;background-color:white;"
 						rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
@@ -381,7 +381,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="equiDist" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}">
@@ -406,7 +406,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="equiCity" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}">
