@@ -1321,6 +1321,35 @@ public class QTCloneBackingbean extends
 			}
 		}
 	
+		
+	private ScQtContactPerson copyEmailPhoneAndFax(ScQtContactPerson origin,ScQtContactPerson copy){
+		PmUser user = new FacesScopes().getUserSessionBean();
+		
+		if(origin.getPhoneNo()!=null){
+			copy.setPhoneNo(origin.getPhoneNo());
+		}else{
+			if(user.getEmail().equals(origin.getEmail()) && user.getUserName().equals(origin.getName())){
+			copy.setPhoneNo(user.getPhoneNo());
+			}
+		}
+		if(origin.getEmail()!=null){
+			copy.setEmail(origin.getEmail());
+		}else{
+			if(user.getEmail().equals(origin.getEmail()) && user.getUserName().equals(origin.getName())){
+			copy.setEmail(user.getEmail());
+			}
+		}
+		if(origin.getPhoneNo()!=null){
+			copy.setFaxNo(origin.getFaxNo());
+		}else{
+			if(user.getEmail().equals(origin.getEmail()) && user.getUserName().equals(origin.getName())){
+			copy.setFaxNo(user.getFaxNo());
+			}
+		}
+		
+		return copy;
+	}
+		
 	private void retrievePublishing(ScQt copyScqt){
 		ScQt qt = this.getManagedBean().getQt();
 		IQTDetailSO detailSO=null;
@@ -1355,30 +1384,30 @@ public class QTCloneBackingbean extends
 			if (qtContactPersons != null || !qtContactPersons.isEmpty()) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
 				PmUser user = new FacesScopes().getUserSessionBean();
-				ScQtContactPerson contactPerson = new ScQtContactPerson();
-				contactPerson.setPhoneNo(user.getPhoneNo());
-				contactPerson.setUser(user);
-				contactPerson.setEmail(user.getEmail());
-				contactPerson.setFaxNo(user.getFaxNo());
-				contactPerson
-						.setOfficerType(SourcingConstants.OFFICER_TYPE_QT);
-				contactPerson.setName(user.getUserName());
-				contactPerson.setScQt(this.getManagedBean().getQt());
-				persons.add(contactPerson);
+//				ScQtContactPerson contactPerson = new ScQtContactPerson();
+//				contactPerson.setPhoneNo(user.getPhoneNo());
+//				contactPerson.setUser(user);
+//				contactPerson.setEmail(user.getEmail());
+//				contactPerson.setFaxNo(user.getFaxNo());
+//				contactPerson
+//						.setOfficerType(SourcingConstants.OFFICER_TYPE_QT);
+//				contactPerson.setName(user.getUserName());
+//				contactPerson.setScQt(this.getManagedBean().getQt());
+//				persons.add(contactPerson);
 				for(ScQtContactPerson origin:qtContactPersons){
-					boolean different=true;
-					if(user.getEmail().equals(origin.getEmail()) && user.getUserName().equals(origin.getName())){
-						different=false;
-					}
-					if(different){
+//					boolean different=true;
+//					if(user.getEmail().equals(origin.getEmail()) && user.getUserName().equals(origin.getName())){
+//						different=false;
+//					}
+					//if(different){
 						ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_QT);
 						persons.add(copy);
-					}
+					//}
 				}
 			   this.getManagedBean().setScQtContactPersons(persons);
 			}
 			List<ScQtContactPerson> desks=resDTO.getDeskOfficers().getResultList();
-			if (desks != null || !desks.isEmpty()) {
+			if (desks != null) {
 				List<ScQtContactPerson> persons=new ArrayList<ScQtContactPerson>();
 				for(ScQtContactPerson origin:desks){
 					ScQtContactPerson copy=populateContact(origin,SourcingConstants.OFFICER_TYPE_DOAA);
@@ -1430,10 +1459,7 @@ public class QTCloneBackingbean extends
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
 		//PmUser user = new FacesScopes().getUserSessionBean();
-		contactPerson.setPhoneNo(origin.getPhoneNo());
-		//contactPerson.setUser(user);
-		contactPerson.setEmail(origin.getEmail());
-		contactPerson.setFaxNo(origin.getFaxNo());
+		contactPerson=copyEmailPhoneAndFax(origin,contactPerson);
 		contactPerson
 				.setOfficerType(type);
 		contactPerson.setUser(origin.getUser());
