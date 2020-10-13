@@ -7256,6 +7256,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				for (PpExpenditureItem ppItem : ppItems) {
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
+				 if (ppItem.getFromPpItem()!= null){
 					if (ppItem.isOriginal()) {
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
@@ -7285,8 +7286,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}        
 				}
 			}
-		   }
 		}
+	 }
+   }
 	//25479 - end
 	//25479 - start
 	private void CheckDuplicatePpExpenditureItems(List<PpExpenditureItem> ppItems) {
