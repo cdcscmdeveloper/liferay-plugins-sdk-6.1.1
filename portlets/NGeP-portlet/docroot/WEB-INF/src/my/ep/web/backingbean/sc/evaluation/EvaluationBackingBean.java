@@ -2414,13 +2414,13 @@ public class EvaluationBackingBean extends
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
 					 * );
 					 */
-					evaluationStageStatusCheck();
+					financialCheckListStatusCheckPackage();//#25138 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
 				
 				}else{
-					evaluationStageStatusCheck();
+					financialCheckListStatusCheckPackage();//#25138 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -2591,12 +2591,12 @@ public class EvaluationBackingBean extends
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
 					 * );
 					 */
-					financialCheckListStatusCheck();
+					financialCheckListStatusCheckPackage();//#25138 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
 				}else{//#25138-start
-					financialCheckListStatusCheck();
+					financialCheckListStatusCheckPackage();//#25138 
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -13186,6 +13186,43 @@ private void retriveCommitteeRemarksList(){
 			
 			}
 			//#25138 - filter auto score condition - End
+			
+			//#25138 - evaluate/view status - start
+			List<ScQtCheckList> amountChecklist = resDTO
+					.getCheckListResultBean().getResultList();
+			for(ScQtCheckList singleChecklist : amountChecklist){
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+						.equalsIgnoreCase(singleChecklist
+								.getDefinationType().getParameterCode())) {
+					if (SourcingConstants.FINANCIAL_DOCTYPE
+							.equalsIgnoreCase(singleChecklist.getDocCategory())){
+						
+						EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
+						EvaluationResDTO resDTO2 = new EvaluationResDTO();
+						reqDTO2.setCheckListId(singleChecklist.getQtChecklistId());
+						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
+						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
+						
+						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
+							if (null != proplist.getScQtProposal()
+									.getProposalAmount().getPmEvalStatus()) {
+								this.getManagedBean().setEvalStatus(QTStatusConst.TS_COMPLETED);
+								
+							}else{
+								this.getManagedBean().setEvalStatus(QTStatusConst.TS_PENDING_SUBMISSION);
+								
+							}
+							
+						}
+					}
+					
+					
+					
+				}
+				
+			}
+			//#25138 - evaluate/view status - end
 			innerCheckList=null;
 			evalstage=null;
 		
@@ -13516,7 +13553,17 @@ private void retriveCommitteeRemarksList(){
 				}	
 			}
 			evalResDTO = evaluationSO.saveUserScorePackageDetails(evalReqDTO);
-			
+			//#25138 - evaluate/view status - start
+			if(evalResDTO.getComplainceList() != null){
+				for(ScQtProposalChecklist newList : evalResDTO.getComplainceList()){
+					ScQtProposalAmount amountScore = newList.getScQtProposal().getProposalAmount();
+					
+					this.getManagedBean().setEvalStatus(amountScore
+							.getPmEvalStatus().getStatusId());
+					
+				}
+			}
+			//#25138 - evaluate/view status - end
 			if (evalResDTO.isSuccessful()){
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);}
@@ -13836,4 +13883,83 @@ private void retriveCommitteeRemarksList(){
 
 	}
 	//#25138 - total package max score by supplier - end
+	
+	//#25138 - validation financial package score - start
+	private void financialCheckListStatusCheckPackage(){
+		
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = new EvaluationResDTO();
+		
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+				.equalsIgnoreCase(this.getManagedBean().getCommitteeType()) || 
+					ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
+			List<String> evalstage = new ArrayList<String>();
+			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+				if (!this.getManagedBean().getScQt().isTechEvaluationReq()) {
+					evalstage.add(QTConstants.COMPLIANCE_CHECK);
+				} else if (this.getManagedBean().getScQt()
+						.isTechEvaluationReq()) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+				}
+			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
+				} else {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+				}
+
+			}
+			reqDTO.setResultStages(evalstage);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			reqDTO.setCompliance(null);
+			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			
+			for(ScQtCheckList newList : resDTO.getCheckListResultBean().getResultList()){
+
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+						.equalsIgnoreCase(newList
+								.getDefinationType().getParameterCode())) {
+					if (SourcingConstants.FINANCIAL_DOCTYPE
+							.equalsIgnoreCase(newList.getDocCategory())){
+						
+						EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
+						EvaluationResDTO resDTO2 = new EvaluationResDTO();
+						reqDTO2.setCheckListId(newList.getQtChecklistId());
+						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
+						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
+						
+						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
+							if (null == proplist.getScQtProposal()
+									.getProposalAmount().getPmEvalStatus()) {
+								this.getManagedBean().getOneTierFinancialActiveIndex();
+								retriveFinancialEvaluationStagePackage();
+								throw new EpException(
+										MessageConst.ERROR_760241);
+								
+							}
+							
+						}
+					}
+					
+					
+					
+				}
+				
+			
+			}
+			
+		}
+		
+	}
+	//#25138 - validation financial package score - end
 }
