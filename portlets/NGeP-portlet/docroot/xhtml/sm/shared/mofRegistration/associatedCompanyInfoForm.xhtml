@@ -250,7 +250,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="asocCompCntrId"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assCountry"
 								value="#{backingBean.managedBean.countryItems}" />
@@ -275,7 +275,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.stateId}"
@@ -312,7 +312,7 @@
 						<p:selectOneMenu id="assocDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}"
-						style="width: 207px;margin-bottom: 5px;">
+						style="width: 207px;margin-bottom: 5px;background-color:white;">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{backingBean.managedBean.assocCompanyDivisions}"
@@ -341,7 +341,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 	
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="assocDist" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.districtId}">
@@ -367,7 +367,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="assocCity" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.cityId}">
