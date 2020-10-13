@@ -395,8 +395,8 @@
 			  </table>
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
+				<p:outputLabel style="width: 151%;text-align:left;margin-top: -40px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td>
 				<table>
@@ -412,11 +412,11 @@
 							</p:selectOneRadio>
 							<p:message id="sl1mReqMsg" for="sl1mReq" display="icon" />
 						</td>
+						<td style="margin-top: -3px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
+						</td>
 					</tr>
 				</table>
-			</td>
-			<td style="margin-top: -3px">
-				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
 			</td>
 		</tr>
 		</table>
