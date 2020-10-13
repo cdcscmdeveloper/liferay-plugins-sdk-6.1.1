@@ -577,6 +577,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The total technical package max score. */
 	private String totalMaxScore;
 	//#25138- total max score - end
+	//#25138 - set eval status
+	private Long evalStatus;
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3740,4 +3742,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.totalMaxScore = totalMaxScore;
 	}
 	//#25138- total max score - end
+	//#25138 - set eval status - start
+	public Long getEvalStatus() {
+		return evalStatus;
+	}
+
+	public void setEvalStatus(Long evalStatus) {
+		this.evalStatus = evalStatus;
+	}
+	//#25138 - set eval status - end
 }
