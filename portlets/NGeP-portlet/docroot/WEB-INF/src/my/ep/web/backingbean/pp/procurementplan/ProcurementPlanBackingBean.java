@@ -7256,8 +7256,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				for (PpExpenditureItem ppItem : ppItems) {
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
-				 if (ppItem.getFromPpItem()!= null){
 					if (ppItem.isOriginal()) {
+					 if (ppItem.getFromPpItem()!= null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
 							
@@ -7268,6 +7268,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
 						}
+					 }
 					} else {
 						/* Always disable Pindaan for original ppItem
 						   Always enable Reason For Update for original ppItem*/
@@ -7282,13 +7283,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(false);
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setJustificationEnabled(true);
-						}
-					}        
+						  }
+					    }
+					  }
+				   }        
 				}
 			}
-		}
-	 }
-   }
+ 
 	//25479 - end
 	//25479 - start
 	private void CheckDuplicatePpExpenditureItems(List<PpExpenditureItem> ppItems) {
@@ -7311,8 +7312,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				for (PpExpenditureItem ppItem : ppItems) {
 					//25549 - start
 					log.info("null pointer " + ppItem.getFromPpItem());
-				 if(ppItem.getFromPpItem() != null){
 					if (ppItem.isOriginal()) {
+					 if(ppItem.getFromPpItem() != null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							
 							log.info("getFrom " + ppItem.getFromPpItem() + "ppId " + commonExpenditureItemId);
