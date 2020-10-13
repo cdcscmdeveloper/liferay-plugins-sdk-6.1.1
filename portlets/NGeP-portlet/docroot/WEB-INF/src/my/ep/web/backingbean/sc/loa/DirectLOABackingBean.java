@@ -443,6 +443,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//#26474 - start
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
+				String designation = getManagedBean().getContractSignerUser().getDesignation();
+				reqDTO.getScLoa().setLoaSignerDesig(designation);
 			}
 			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -4492,6 +4494,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//#26474 - start
 		else{
 			getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+			getManagedBean().getScLoa().setLoaSignerDesig(scLoa.getContractSigner().getDesignation());
 		}
 		//#26474 - end
 		
