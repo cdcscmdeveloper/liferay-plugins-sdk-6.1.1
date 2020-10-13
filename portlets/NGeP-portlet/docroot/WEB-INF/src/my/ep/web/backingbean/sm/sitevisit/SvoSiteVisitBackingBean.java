@@ -146,6 +146,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private Locale locale = new Locale("en");
 	private static final String templateLangCode = "en";
 	private static final String attachmentType = "SVD";
+	private DecimalFormat formatter = new DecimalFormat("###,##0.00");
 	
 	private StreamedContent file;
 	
@@ -329,14 +330,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void rptPreview(SmSvTemplate svTemplate){
 
 		getManagedBean().setSelectedSvTemplate(svTemplate);
-		
-		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			if(svTemplate.getSmSvFacility() == null){
+		//#29200 CR 14055: Static Code Analysis Start
+		if((svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) ||  svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)) && svTemplate.getSmSvFacility() == null){
+			//if(svTemplate.getSmSvFacility() == null){
 				setSelectedSmSvFacility(svTemplate);
-			}
+			//}
 		}
+		//#29200 CR 14055: Static Code Analysis End
 	}
 	
 	/**
@@ -509,9 +509,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		
 		// add to smLicenseInsurance
-		if(catType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) 
-				|| catType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			if(svTemplate.getSmSvLicenseInsurances().size() < 1){
+		//#29200 CR 14055: Static Code Analysis Start
+		if((catType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || catType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)) && svTemplate.getSmSvLicenseInsurances().size() < 1){
+			//if(svTemplate.getSmSvLicenseInsurances().size() < 1){
 				List<PmParameterDesc> dockyardLicenceInsurance = SmCommonUtil.retrieveParameterDescList(strLicenseIns, new FacesScopes().getUserLocale().getLanguage());
 				for(PmParameterDesc dockWorkLicenseIns : dockyardLicenceInsurance){
 					SmSvLicenseInsurance svLicenseInsurance = new SmSvLicenseInsurance();
@@ -519,8 +519,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					svLicenseInsurance.setSmSvTemplate(svTemplate);
 					svTemplate.getSmSvLicenseInsurances().add(svLicenseInsurance);
 				}
-			}
+			//}
 		}
+		//#29200 CR 14055: Static Code Analysis End
 	}
 	
 	/**
@@ -637,7 +638,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @return
 	 */
 	private String formatEquity(BigDecimal equityAmount) {
-		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		//DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		return formatter.format(equityAmount);
 	}
 	
@@ -647,12 +648,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @return String
 	 */
 	public String calculateEquityPercentage(String equityAmt){
-		double eqAmt =  (equityAmt == null || equityAmt == "" ? new Double(0) : new Double(equityAmt));
+		double eqAmt =  (equityAmt == null || equityAmt == "" ? Double.valueOf(0) : Double.valueOf(equityAmt));
 		double paidUpCapital = this.getManagedBean().getSmSvTask().getSmAppl().getSmCompanyBasic().getPaidUpCapital().doubleValue();
 		
 		Double percentage = (eqAmt * 100) / paidUpCapital;
 		
-		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		//DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		formatter.setRoundingMode(RoundingMode.HALF_UP);
 		return formatter.format(percentage);
 
@@ -775,15 +776,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param dirNo
 	 * @return BigDecimal
 	 */
-	public BigDecimal calculateDirectorPercentage(int dirNo){
-		BigDecimal convertedDirNo = new BigDecimal(dirNo);
-		BigDecimal ttlDirector = new BigDecimal(this.getManagedBean().getTotalBOD());
-		BigDecimal percentage = new BigDecimal(0.00);
+	private BigDecimal calculateDirectorPercentage(int dirNo){
+		BigDecimal convertedDirNo = BigDecimal.valueOf(dirNo);
+		BigDecimal ttlDirector = BigDecimal.valueOf(this.getManagedBean().getTotalBOD());
+		BigDecimal percentage = BigDecimal.valueOf(0.00);
 		
 		try{
-			percentage = convertedDirNo.divide(ttlDirector, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+			percentage = convertedDirNo.divide(ttlDirector, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 		}catch(ArithmeticException e) {
-			percentage = new BigDecimal(0.00).setScale(2);
+			percentage = BigDecimal.valueOf(0.00).setScale(2);
 		}
 		return percentage;
 	}
@@ -793,13 +794,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param mgmtNo
 	 * @return BigDecimal
 	 */
-	public BigDecimal calculateMgmtPercentage(int mgmtNo){
-		BigDecimal convertedMgmtNo = new BigDecimal(mgmtNo);
-		BigDecimal ttlMgmt= new BigDecimal(this.getManagedBean().getTotalMgmt());
-		BigDecimal percentage = new BigDecimal(0.00);
+	private BigDecimal calculateMgmtPercentage(int mgmtNo){
+		BigDecimal convertedMgmtNo = BigDecimal.valueOf(mgmtNo);
+		BigDecimal ttlMgmt= BigDecimal.valueOf(this.getManagedBean().getTotalMgmt());
+		BigDecimal percentage = BigDecimal.valueOf(0.00);
 
 		try{
-			percentage = convertedMgmtNo.divide(ttlMgmt, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+			percentage = convertedMgmtNo.divide(ttlMgmt, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 		} catch (ArithmeticException e) {
 			percentage = new BigDecimal(0.00).setScale(2);
 		}
@@ -812,15 +813,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param workerNo
 	 * @return BigDecimal
 	 */
-	public BigDecimal calculateWorkerPercentage(int workerNo){
-		BigDecimal convertedWrkNo = new BigDecimal(workerNo);
-		BigDecimal ttlWorker= new BigDecimal(this.getManagedBean().getTotalWorker());
-		BigDecimal percentage = new BigDecimal(0.00);
+	private BigDecimal calculateWorkerPercentage(int workerNo){
+		BigDecimal convertedWrkNo = BigDecimal.valueOf(workerNo);
+		BigDecimal ttlWorker= BigDecimal.valueOf(this.getManagedBean().getTotalWorker());
+		BigDecimal percentage = BigDecimal.valueOf(0.00);
 
 		try{
-			percentage = convertedWrkNo.divide(ttlWorker, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+			percentage = convertedWrkNo.divide(ttlWorker, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 		}catch (ArithmeticException e) {
-			percentage = new BigDecimal(0.00).setScale(2);
+			percentage = BigDecimal.valueOf(0.00).setScale(2);
 		}
 		return percentage;
 	}
@@ -830,15 +831,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param chequeSignatory
 	 * @return
 	 */
-	public BigDecimal calculatChequeSignatoryPercentage(int chequeSignatory){
-		BigDecimal convertedCheqNo = new BigDecimal(chequeSignatory);
-		BigDecimal ttlCheqSign= new BigDecimal(this.getManagedBean().getTotalCheqSign());
-		BigDecimal percentage = new BigDecimal(0.00);
+	private BigDecimal calculatChequeSignatoryPercentage(int chequeSignatory){
+		BigDecimal convertedCheqNo = BigDecimal.valueOf(chequeSignatory);
+		BigDecimal ttlCheqSign= BigDecimal.valueOf(this.getManagedBean().getTotalCheqSign());
+		BigDecimal percentage = BigDecimal.valueOf(0.00);
 
 		try{
-			percentage = convertedCheqNo.divide(ttlCheqSign, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+			percentage = convertedCheqNo.divide(ttlCheqSign, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 		}catch (ArithmeticException e) {
-			percentage = new BigDecimal(0.00).setScale(2);
+			percentage = BigDecimal.valueOf(0.00).setScale(2);
 		}
 		return percentage;
 	}
@@ -1490,7 +1491,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			String preLocOwnerShip = lblOwnerShip != null ? ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale) : "";
 
-			DecimalFormat formatter = new DecimalFormat("###,##0.00");
+			//DecimalFormat formatter = new DecimalFormat("###,##0.00");
 			String preLocPurchasePrice = smFacility != null && smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()) : null;
 			String preLocRentalRate = smFacility != null &&  smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()) : null;
 			
@@ -1552,7 +1553,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			String preLocOwnerShip = lblOwnerShip != null ? ResourceBundleUtils.getMessage(lblOwnerShip,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale) : "";
 
-			DecimalFormat formatter = new DecimalFormat("###,##0.00");
+			//DecimalFormat formatter = new DecimalFormat("###,##0.00");
 			String preLocPurchasePrice = smFacility != null && smFacility.getPurchasePrice() != null ? formatter.format(smFacility.getPurchasePrice()) : null;
 			String preLocRentalRate = smFacility != null && smFacility.getRentalRate() != null ? formatter.format(smFacility.getRentalRate()) : null;
 			
@@ -1639,7 +1640,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			BigDecimal officePrice =  this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getPurchasePrice();
 			BigDecimal officeRentalRate = this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getRentalRate();
 
-			DecimalFormat formatter = new DecimalFormat("###,##0.00");
+			//DecimalFormat formatter = new DecimalFormat("###,##0.00");
 			String svOfficePurchasePrice = officePrice != null ? formatter.format(officePrice) : null;
 			String svOfficeRentalRate = officeRentalRate != null ? formatter.format(officeRentalRate) : null;
 			
@@ -1678,7 +1679,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		BigDecimal officePrice =  this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getPurchasePrice();
 		BigDecimal officeRentalRate = this.getManagedBean().getSmSvTask().getSmSvOffice().getSmFacility().getRentalRate();
 
-		DecimalFormat formatter = new DecimalFormat("###,##0.00");
+		//DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		String svOfficePurchasePrice = officePrice != null ? formatter.format(officePrice) : null;
 		String svOfficeRentalRate = officeRentalRate != null ? formatter.format(officeRentalRate) : null;
 		
@@ -1914,11 +1915,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 
 		//Add/ Remove SmSvMachine
+		/*
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING) || 
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
 		}
+		*/
 
 		//validate duplicate Workers
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
@@ -2539,7 +2542,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	// #24964 - start
 	public void saveSiteVisitReportByPO(){		
-		log.info("***********saveSiteVisitReportByPO***********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();	
 		
@@ -2585,11 +2587,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	// #24964 - end
 	
-	// #14055 - start
+	// #29200 CR 14055: Static Code Analysis
 	public String getStatusFromLabel(String tempStatus) {		
 		return ResourceBundleUtils.getMessage("lbl.sm.sv.templ." + tempStatus, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
-	// #14055 - end
+	// #29200 CR 14055: Static Code Analysis
 
 	//#28774 - Start
 	/**
