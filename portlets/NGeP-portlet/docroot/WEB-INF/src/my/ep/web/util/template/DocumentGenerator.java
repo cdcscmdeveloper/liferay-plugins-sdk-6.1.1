@@ -178,8 +178,8 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			//#26180
 			if (html != null) {
 				html = html.replaceAll("&amp;nbsp;", " ");
-	        	html = html.replaceAll("&amp;", "&amp;amp;")
-	        			   .replaceAll("&", "&amp;");
+				html = html.replaceAll("&amp;", "&amp;amp;")
+						.replaceAll("&", "&amp;");
 				html = html.replaceAll("&amp;#62", "&#62");
 				html = html.replaceAll("&amp;#60", "&#60"); 
 			//25142 - start
@@ -378,12 +378,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		Text t2 = factory.createText();
 		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
 		Text t3 = factory.createText();
-
-		t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
+		// #26770 - Start.
+		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak ini");
 		Text t4 = factory.createText();
-		t4.setValue("\r\n  Pihak Syarikat  : pegawai yang diberi kuasa dengan sewajarnya oleh syarikat untuk menandatangani Surat ini");
+		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
 		run.getContent().add(br);
+		run.getContent().add(br);
+		run.getContent().add(br);
+		// #26770 - End.
 		run.getContent().add(t2);
 		run.getContent().add(br);
 
