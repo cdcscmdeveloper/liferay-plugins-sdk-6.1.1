@@ -2654,6 +2654,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
 		 //25549@09102020 - start
 		epItem.setReviseReject(true);
+		epItem.setOriginal(true);
 	    //25549@09102020 - end
 			
 		
@@ -7128,7 +7129,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 
 	   public void ChekDuplicatePpItemClone(List<PpExpenditureItem> epItems) {
-		   
+		 
+ 
 		 CheckDuplicatePpExpenditureItems(epItems);
 	
          List<PpExpenditureItem> expenditureItems = null;
@@ -7255,6 +7257,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
 					if (ppItem.isOriginal()) {
+					 if (ppItem.getFromPpItem()!= null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
 							
@@ -7265,6 +7268,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
 						}
+					 }
 					} else {
 						/* Always disable Pindaan for original ppItem
 						   Always enable Reason For Update for original ppItem*/
@@ -7279,17 +7283,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(false);
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setJustificationEnabled(true);
-						}
-					}        
+						  }
+					    }
+					  }
+				   }        
 				}
 			}
-		}
-	}
+ 
 	//25479 - end
 	//25479 - start
 	private void CheckDuplicatePpExpenditureItems(List<PpExpenditureItem> ppItems) {
 		log.info("Resetting PpItems...");
 		
+				
 		List<Long> fromPpItemList = new ArrayList<Long>();
 		List<Long> expenditureIItemIdList = new ArrayList<Long>();
 		
@@ -7297,14 +7303,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			fromPpItemList.add(ppItem.getFromPpItem());
 			expenditureIItemIdList.add(ppItem.getExpenditureItemId());
 		}
-	
+	    
 		List<Long> commonExpenditureItemIdList = new ArrayList<Long>(fromPpItemList);
 		commonExpenditureItemIdList.retainAll(expenditureIItemIdList);
 		
 		if (commonExpenditureItemIdList != null && !commonExpenditureItemIdList.isEmpty()) {
 			for (Long commonExpenditureItemId : commonExpenditureItemIdList) {
 				for (PpExpenditureItem ppItem : ppItems) {
+					//25549 - start
+					log.info("null pointer " + ppItem.getFromPpItem());
 					if (ppItem.isOriginal()) {
+					 if(ppItem.getFromPpItem() != null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							
 							log.info("getFrom " + ppItem.getFromPpItem() + "ppId " + commonExpenditureItemId);
@@ -7316,6 +7325,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 	}
+}
 	//25479 - end
 	//25549@azza20200827 - Start
 	public void onSelectCategoryClone(Long id){
