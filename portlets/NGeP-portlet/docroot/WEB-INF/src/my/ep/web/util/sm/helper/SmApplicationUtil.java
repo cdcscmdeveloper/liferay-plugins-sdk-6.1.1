@@ -11097,7 +11097,8 @@ public class SmApplicationUtil {
 	 */
 	public static void assignSelShareHolderAddress(SmPersonnel shareHolderBean,
 			SmApplicationManagedBean bean) {
-		if (isPersonnelViewOnly(shareHolderBean)
+		//#13320 - view only
+		if ((isPersonnelViewOnly(shareHolderBean) || bean.isDisAllowOwnerEdit())
 				&& shareHolderBean.getPersonnelId() != null) {
 			if (shareHolderBean.getSmPersonnelAddresses() != null
 					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
