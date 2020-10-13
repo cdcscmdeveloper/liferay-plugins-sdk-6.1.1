@@ -1239,11 +1239,11 @@ public class SupplierManagementConst {
 	// #29156 -END
 
 	// #29156 -START
-	public static String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
+	public String getSM_MOF_DISCIPLINARY_ACTION_BLACKLIST() {
 		return SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
 	}
 
-	public static String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
+	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
 		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
 	// #29156 -START
