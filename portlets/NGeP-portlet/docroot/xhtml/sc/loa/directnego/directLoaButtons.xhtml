@@ -56,26 +56,43 @@
 									Enhancement #21694 START
 									</ui:remove>
 									<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
-										<p:commandButton value="#{lbl['lbl.btn.supplierAction']}"
-											rendered="#{isPendingVerification}"
-											onstart="blockWidget.show();cd.show();"
-											oncomplete="blockWidget.hide();" />
-										<p:confirmDialog
-											message="#{lbl['lbl.sc.loa.supplier.reviseDocument']}"
-											header="#{lbl['lbl.sc.dialog.cofirm.header']}"
-											severity="alert" widgetVar="cd">
-											<div class="ppRightBtn">
-												<p:commandButton value="#{lbl['lbl.btn.yes']}"
-													process="@form"
-													update="@all"
-													actionListener="#{directLOABackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
-													onclick="blockWidget.show();"
-													oncomplete="cd.hide();blockWidget.hide();" id="submitReviseLOA"
-													partialSubmit="true" immediate="true" />
-												<p:commandButton value="#{lbl['lbl.btn.no']}"
-													oncomplete="cd.hide();" />
-											</div>
-										</p:confirmDialog>
+										<c:when test="#{isPendingVerification}">
+											<p:commandButton value="#{lbl['lbl.btn.supplierAction']}"
+												rendered="#{isPendingVerification}"
+												onstart="blockWidget.show();cd.show();"
+												oncomplete="blockWidget.hide();" />
+											<p:confirmDialog
+												message="#{lbl['lbl.sc.loa.supplier.reviseDocument']}"
+												header="#{lbl['lbl.sc.dialog.cofirm.header']}"
+												severity="alert" widgetVar="cd">
+												<div class="ppRightBtn">
+													<p:commandButton value="#{lbl['lbl.btn.yes']}"
+														process="@form"
+														update="@all"
+														actionListener="#{directLOABackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+														onclick="blockWidget.show();"
+														oncomplete="cd.hide();blockWidget.hide();" id="submitReviseLOA"
+														partialSubmit="true" immediate="true" />
+													<p:commandButton value="#{lbl['lbl.btn.no']}"
+														oncomplete="cd.hide();" />
+												</div>
+											</p:confirmDialog>
+										</c:when>
+										<ui:remove>
+											Enhancement #21694 TO CATER BUG REVISE BUTTON NOT APPEAR AT APPROVAL START
+										</ui:remove>
+										<c:otherwise>
+											<p:commandButton value="#{lbl[buttonLabel]}"
+												styleClass="ui-button" onstart="blockWidget.show();"
+												rendered="#{!isPendingVerification}"
+												oncomplete="blockWidget.hide();"
+												action="#{directLOABackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
+												partialSubmit="true" process="#{isCancelNReject ? '@this' : '@form'}"
+												update="#{isCancelNReject ? '@this' : '@form'}" />
+										</c:otherwise>		
+										<ui:remove>
+											Enhancement #21694 TO CATER BUG REVISE BUTTON NOT APPEAR AT APPROVAL END
+										</ui:remove>								
 									</h:panelGroup>
 									
 								<!-- 20190405@asyrafhaziq - CR(25062)- Start -->
