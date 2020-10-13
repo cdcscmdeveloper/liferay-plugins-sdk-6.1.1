@@ -2913,13 +2913,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 								
 								//#13320 - Rahim - If Statement Only
-								if(this.getManagedBean().getSmBusinessAdd().getPmDivision() == null ||  this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId() < 1){
+								//if(this.getManagedBean().getSmBusinessAdd().getPmDivision() == null ||  this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId() < 1){
 									
 									this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 									this.getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
 									getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 									getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
-								} 
+								//} 
 																
 								List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 								this.getManagedBean().setBusinessDivisionLs(divisionLs);								
