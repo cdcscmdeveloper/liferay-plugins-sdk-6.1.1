@@ -38,10 +38,13 @@
 						<ui:remove>
 							Bug #27412 #70 - added filter by supplier START
 						</ui:remove>
+						
+						<!-- #28780 start -->
 						<p:commandLink rendered="#{!qTDetailBB.isMofSupplier() and (isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scQt,false)}">
+						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scQt, false, true, view.viewId)}">
 							<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation || isDocTypeDirectNego}" escape="false" />
 						</p:commandLink>
+						<!-- #28780 start -->
 						<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{qTDetailBB.isMofSupplier() and (isDocTypeQuotation || isDocTypeDirectNego)}" escape="false" />
 						<ui:remove>
 						    Bug #27412 #70 - added filter by supplier END

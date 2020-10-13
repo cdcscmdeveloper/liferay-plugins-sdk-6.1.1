@@ -57,10 +57,12 @@
 						<tr>
 							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.bsv.qtn.no']}:" /></td>
 							<td style="width: 40%" class="header-info-text">
+							<!-- #28780 start -->
 							<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scQt,true)}">
-				<h:outputText value="#{scQt.qtNo}" escape="false" />
-					</p:commandLink>
+								action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+								<h:outputText value="#{scQt.qtNo}" escape="false" />
+							</p:commandLink>
+							<!-- #28780 end -->
 							</td>
 							<td style="width: 10%"><h:outputLabel value="#{lbl['lbl.sc.title']}:" /></td>
 							<td style="width: 40%" class="header-info-text">

@@ -184,9 +184,11 @@
 					<td style="width: 15%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
 					<td class="header-info-text">
+					<!-- #28780 start -->
 						<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,bsvAttendanceBackingBean.managedBean.scQt,true)}">
-				<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}" escape="false" />
+						action="#{qTDetailBB.editQuationTenderDetails(bsvAttendanceBackingBean.managedBean.scQt, false, true, view.viewId)}">
+						<h:outputText value="#{bsvAttendanceBackingBean.managedBean.scQt.qtNo}" escape="false" />
+					<!-- #28780 end -->
 					</p:commandLink>
 						</td>
 					<td style="width: 10%"><h:outputLabel
