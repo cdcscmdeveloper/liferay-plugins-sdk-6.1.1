@@ -3994,9 +3994,6 @@ public class SmApplicationUtil {
 		 managedBean.setDisAllowOwnerEdit(false);
 		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
 			managedBean.setDisAllowOwnerEdit(true);
-			/*#28458 - Start*/
-			throw new IllegalArgumentException("Error - Can't edit the information within 6 months after the registration of New Application");
-			/*#28458 - End*/
 		}
 		//managedBean.setDisAllowOwnerEdit(false);
 	}
