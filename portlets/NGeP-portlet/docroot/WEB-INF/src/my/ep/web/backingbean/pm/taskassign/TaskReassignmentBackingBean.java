@@ -2857,6 +2857,21 @@ public class TaskReassignmentBackingBean extends
 				
 			
 			break;
+		/* 27827 - START */
+		case ProfileManagementConst.REASSIGN_TYPE_PTJ_AND_BPK:
+			//11 - Include PTJ & BPK
+			
+			List<String> paramcodes=new ArrayList<String>();
+			paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
+			paramcodes.add(ParameterConst.ORG_TYPE_BPK);
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+							SearchOperator.OPERATOR_IN.value(), 
+							paramcodes));
+			break;
+		/* 27827 - END */
 		default:
 			// not allow to search
 			isSearched = true;
