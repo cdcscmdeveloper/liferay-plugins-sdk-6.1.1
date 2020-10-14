@@ -108,8 +108,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
-import weblogic.wsee.connection.local.LocalConnection;
-
 import com.liferay.portal.util.PortalUtil;
 //#24975
 
@@ -7262,7 +7260,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
 					if (!ppItem.isOriginal()) {
-					// if (ppItem.getFromPpItem()!= null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
 							
@@ -7273,7 +7270,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
 						}
-					// }
 					} else {
 						/* Always disable Pindaan for original ppItem
 						   Always enable Reason For Update for original ppItem*/
@@ -7315,18 +7311,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (commonExpenditureItemIdList != null && !commonExpenditureItemIdList.isEmpty()) {
 			for (Long commonExpenditureItemId : commonExpenditureItemIdList) {
 				for (PpExpenditureItem ppItem : ppItems) {
+					
+					log.info("expenditure id null " + ppItem.getExpenditureItemId());
+					
 					//25549 - start
-					if (!ppItem.isOriginal()) {
-						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
+				  if (ppItem.getExpenditureItemId() != null){
+					 if (!ppItem.isOriginal()) {
+						 if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							
 							log.info("getFrom " + ppItem.getFromPpItem() + "ppId " + commonExpenditureItemId);
 							
 							ppItem.setBrandNew(false);
 						}
+				      }
 				    }
-			    }
-		    }
-	    }
+			     }
+		      }
+	       }
 }
 	//25479 - end
 	//25549@azza20200827 - Start
@@ -7350,6 +7351,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200822 - End
+
 }
 
 
