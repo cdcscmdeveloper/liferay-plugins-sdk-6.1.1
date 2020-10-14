@@ -1419,19 +1419,6 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
 		super.resetSearch();
 	}
-	
-	public String getSAPVendorCode(Long branchCode) {
-		
-		IVendorCodeSO vendorCodeSO = (IVendorCodeSO) BusinessDelegate.getInstance()
-		.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				IVendorCodeSO.class);
-		
-		SmSapVendorCode smSAPVendorCode = vendorCodeSO.retrieveSapVendorCodeByEpNoAndBranchCode(null, branchCode);
-		if(smSAPVendorCode != null) {
-			return smSAPVendorCode.getSapVendorCode();
-		}
-		return "";
-	}
 	// 25792 - end
 	
 	public void resubmitSSM(){
