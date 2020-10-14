@@ -863,13 +863,13 @@ public class GovtSellerRegistrationBackingBean extends
 			}
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			//13320-Start
-			Long State=getManagedBean().getSelectedBranch().getSmAddress().getPmState().getStateId();
-			PmState states = (SmCommonUtil.getInstance().getStateById(State));
+			Long stateId = state.getStateId();
+			PmState states = (SmCommonUtil.getInstance().getStateById(stateId));
 			if (states != null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 				//#13320 - null check
 				if(this.getManagedBean().getSelectedBranch().getSmAddress().getPmDivision() == null)
 					this.getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(new PmDivision());
-				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(State);
+				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(stateId);
 				this.getManagedBean().setBranchCompanyDivisions(divisionLs);
 				getManagedBean().setBranchCompanyDistricts(new ArrayList<SelectItem>());
 				getManagedBean().setBranchCompanyCities(null);
@@ -883,7 +883,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setDivisionBox(false);	
 			}else {
 				getManagedBean().setDivisionBox(true);
-				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(State);
+				List<SelectItem> districtLs = SmCommonUtil.getDistrictList(stateId);
 				getManagedBean().setBranchCompanyDistricts(districtLs);
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
@@ -1332,8 +1332,8 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().setCountryLs(SmCommonUtil.getCountryList());
 		onChangeCountry(addr.getPmCountry(), "COMPANY_ADDRESS");
 		onChangeState(addr.getPmState(), "COMPANY_ADDRESS");
+		onChangeDivision(addr.getPmDivision(), "COMPANY_ADDRESS");//13320
 		onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
-		onChangeDivision(addr.getPmDivision(), "USER_PERMANENT_ADDRESS");//13320
 	}
 
 	/**
