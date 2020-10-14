@@ -108,6 +108,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
+import weblogic.wsee.connection.local.LocalConnection;
+
 import com.liferay.portal.util.PortalUtil;
 //#24975
 
@@ -533,6 +535,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setEpTotalBudgetH(null);
 		this.getManagedBean().setEpTotalPlanH(null);
 		this.getManagedBean().setEpTotalNonEpAllocH(null);
+		
+		this.getManagedBean().setDisable(false);
 	}
 	
 	private void resetPpProcurementItems(List<PpProcurementItem> ppItems) {
@@ -750,6 +754,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ProcurementPlanReqDTO reqDTO = null;
 		IProcurementPlanSO reqSO = null;
 		ProcurementPlanResDTO resDTO = null;
+		//25549 - start
+		this.getManagedBean().setDisable(false);
+		//25549 - start
 		
 		try{
 			reqDTO = new ProcurementPlanReqDTO();
@@ -2494,6 +2501,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						|| (StringUtils.isBlank(this.getManagedBean().getTaskId()) 
 								&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))) { //PP20150108-0007
 					renewSesionObject();
+
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}
 			}
@@ -2654,7 +2662,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
 		 //25549@09102020 - start
 		epItem.setReviseReject(true);
-		epItem.setOriginal(true);
 	    //25549@09102020 - end
 			
 		
@@ -3585,7 +3592,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
-		ppItem.setOriginal(true);
 		//25549@09102020 - start
 		ppItem.setReviseReject(true);
 		//25549@09102020 - end
@@ -5385,6 +5391,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 
 		 if (!(original.isCloned() && original.isBrandNew())) {
 			 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+			 original.setOriginal(true);
 			 original.setCloneEnabled(true);
 			 original.setReasonForUpdateEnabled(true);
 			 original.setStatusEnabled(true);
@@ -6769,7 +6776,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppItem.setReviseReject(true);
-	                ppItem.setOriginal(true);
 	                //25549@12102020 - end
 	              
 	                
@@ -6829,7 +6835,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppExItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppExItem.setReviseReject(true);
-	                ppExItem.setOriginal(true);
 	                //25549@12102020 - end
 	                
 					// B
@@ -7120,6 +7125,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 
 			 if (!(original.isCloned() && original.isBrandNew())) {	 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+				 original.setOriginal(true);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
@@ -7257,7 +7263,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
 					if (ppItem.isOriginal()) {
-					 if (ppItem.getFromPpItem()!= null){
+					// if (ppItem.getFromPpItem()!= null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
 							
@@ -7268,7 +7274,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setJustificationEnabled(false);
 							ppItem.setBrandNew(true);
 						}
-					 }
+					// }
 					} else {
 						/* Always disable Pindaan for original ppItem
 						   Always enable Reason For Update for original ppItem*/
