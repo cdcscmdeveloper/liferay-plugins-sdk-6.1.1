@@ -859,29 +859,36 @@ u {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">10.2 Bilangan minimum peserta PROT&Eacute;G&Eacute;</span></td>
 					<td class="text_family_red">:</td>
-					<table width="100%">
-					<td align="left" class="text_family_red">
+					<td>
+					<table width="50%" align="center" style="border-collapse: collapse;">
 						<tr>
-							<td class="text_family_red">........... peserta</td>
-						</tr>
-						<tr>
-							<td align="left"<span
-							class="text_family_red">Formula :                 <p style="text-decoration:underline;"> 1% X Harga Kontrak*</p></span></td>
-						</tr>
-						
-						<tr>
-							<td class="text_family_red"> RM24,000**</td>
-						</tr>
-						<tr>	
-							<td class="text_family_red">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah
-							nilai tawaran yang dipersetujui tanpa cukai
+							<td>
+								<span class="text_family_red">........... peserta</span>
 							</td>
 						</tr>
 						<tr>
-							<td class="text_family_red">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan</td>
+							<td>
+								<span class="text_family_red">Formula :                 <p style="text-decoration:underline;"> 1% X Harga Kontrak*</p></span>
+							</td>
 						</tr>
-					</td>
+						<tr>
+							<td>
+								<span class="text_family_red">RM24,000**</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="text_family_red">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;, Harga Kontrak adalah
+							nilai tawaran yang dipersetujui tanpa cukai</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="text_family_red">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan)</span>
+							</td>
+						</tr>
 					</table>
+					</td>
 				</tr>
 				
 				<tr>
