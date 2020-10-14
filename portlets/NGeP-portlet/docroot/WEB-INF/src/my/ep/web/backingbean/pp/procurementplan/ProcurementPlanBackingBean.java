@@ -2662,6 +2662,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		epItem.setPpPlan(this.getManagedBean().getSelectedPlan());
 		 //25549@09102020 - start
 		epItem.setReviseReject(true);
+		epItem.setOriginal(true);
 	    //25549@09102020 - end
 			
 		
@@ -2940,7 +2941,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setBrandNew(false);
 							//For status
 							expItem.setStatusEnabled(false);
-							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
@@ -2998,7 +2998,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setBrandNew(false);
 							//For status
 							expItem.setStatusEnabled(false);
-							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
@@ -3056,7 +3055,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setBrandNew(false);
 							//For status
 							expItem.setStatusEnabled(false);
-							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
@@ -3113,7 +3111,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setBrandNew(false);
 							//For status
 							expItem.setStatusEnabled(false);
-							expItem.setCloneEnabled(false);
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
@@ -3594,6 +3591,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setEditable(true);
 		//25549@09102020 - start
 		ppItem.setReviseReject(true);
+		ppItem.setOriginal(true);
 		//25549@09102020 - end
 
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
@@ -5391,7 +5389,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 
 		 if (!(original.isCloned() && original.isBrandNew())) {
 			 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-			 original.setOriginal(true);
 			 original.setCloneEnabled(true);
 			 original.setReasonForUpdateEnabled(true);
 			 original.setStatusEnabled(true);
@@ -6776,6 +6773,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppItem.setReviseReject(true);
+	                ppItem.setOriginal(true);
 	                //25549@12102020 - end
 	              
 	                
@@ -6826,15 +6824,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			    
 	                ppExItem.setPmGlAccount(PpExpenditureItemClone.getPmGlAccount());
 	                ppExItem.setVotFundType(new PmParameter());
-	                ppExItem.setBudgetAmt(PpExpenditureItemClone.getBudgetAmt());
-	                ppExItem.setPlanAmt(PpExpenditureItemClone.getPlanAmt());
-	                ppExItem.setNonEpAmt(PpExpenditureItemClone.getNonEpAmt());
+	               // ppExItem.setBudgetAmt(PpExpenditureItemClone.getBudgetAmt());
+	               //ppExItem.setPlanAmt(PpExpenditureItemClone.getPlanAmt());
+	              // ppExItem.setNonEpAmt(PpExpenditureItemClone.getNonEpAmt());
 	                ppExItem.setPpPlan(this.getManagedBean().getSelectedPlan());
 	                ppExItem.setJustifications(PpExpenditureItemClone.getJustifications());
 	                ppExItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppExItem.setEditable(true);
 	                //25549@12102020 - start
 	                ppExItem.setReviseReject(true);
+	                ppExItem.setOriginal(true);
 	                //25549@12102020 - end
 	                
 					// B
@@ -7062,6 +7061,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				    	newJustifications.add(copyJustifications);
 				    }
 				    newPpExItem.setJustifications(newJustifications);
+				    newPpExItem.setOriginal(false);
 		    		//25549@05102020 - end
 				  //25549@09102020 - start
 				    newPpExItem.setReviseReject(true);
@@ -7125,7 +7125,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 
 			 if (!(original.isCloned() && original.isBrandNew())) {	 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-				 original.setOriginal(true);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
 				 original.setStatusEnabled(true);
@@ -7262,7 +7261,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				for (PpExpenditureItem ppItem : ppItems) {
 					/* Always disable Pindaan for cloned ppItem
 					   Always disable Reason For Update for original ppItem*/
-					if (ppItem.isOriginal()) {
+					if (!ppItem.isOriginal()) {
 					// if (ppItem.getFromPpItem()!= null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);
@@ -7318,7 +7317,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				for (PpExpenditureItem ppItem : ppItems) {
 					//25549 - start
 					log.info("null pointer " + ppItem.getFromPpItem());
-					if (ppItem.isOriginal()) {
+					if (!ppItem.isOriginal()) {
 					 if(ppItem.getFromPpItem() != null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							
