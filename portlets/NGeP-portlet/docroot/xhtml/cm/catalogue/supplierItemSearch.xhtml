@@ -347,6 +347,16 @@
 									style="white-space: normal">
 									<p:commandLink value="#{supplierItem.itemName}"
 										action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
+										
+									<!-- #27654 start -->
+									<p:spacer width="5" />
+									<p:commandLink id="itemSuspendedAlert"
+										rendered="#{(catalogueMB.catTypeFilterBean.searchValue eq 'MC' or catalogueMB.catTypeFilterBean.searchValue eq 'CC') and supplierItem.itemSuspended}"	
+										onclick="dlItemSuspendedWv.show();">
+										<p:graphicImage id="itemSuspendedAlertGI" value="/css/images/design/exclamation.png" />
+									</p:commandLink>
+									<!-- #27654 end -->
+									
 								</p:column>
 
 								<p:column width="8%" headerText="#{lbl['lbl.cm.contact.no']}"
@@ -436,7 +446,7 @@
 								<p:column headerText="#{lbl['lbl.cm.action']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}">
 
-									<p:menuButton value="" disabled="#{!supplierItem.atcRequired or supplierItem.contractTerminated}">
+									<p:menuButton value="" disabled="#{!supplierItem.atcRequired or supplierItem.contractTerminated or supplierItem.itemSuspended}">  <!-- #27654 -->
 										<p:menuitem value="#{lbl['lbl.cm.add.to.cr']}"
 											actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}"
 											update="@form" icon="ui-icon-plus"
@@ -579,6 +589,13 @@
 			width="500px" modal="true">
 			<ui:include src="viewWishListItem.xhtml"></ui:include>
 		</p:dialog> -->
+		
+		<!-- #27654 start -->
+		<p:dialog id="dlItemSuspended" header="#{lbl['lbl.cm.alert.message']}" 
+			widgetVar="dlItemSuspendedWv" dynamic="true" width="500" height="100" closable="true">
+			<ui:include src="itemSuspendedPopup.xhtml"></ui:include>
+		</p:dialog>
+		<!-- #27654 end -->
 	</h:panelGroup>
 
 	<ui:include
