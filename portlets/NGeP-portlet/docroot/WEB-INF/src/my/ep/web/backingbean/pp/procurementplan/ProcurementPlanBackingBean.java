@@ -7316,20 +7316,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			for (Long commonExpenditureItemId : commonExpenditureItemIdList) {
 				for (PpExpenditureItem ppItem : ppItems) {
 					//25549 - start
-					log.info("null pointer " + ppItem.getFromPpItem());
 					if (!ppItem.isOriginal()) {
-					 if(ppItem.getFromPpItem() != null){
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
 							
 							log.info("getFrom " + ppItem.getFromPpItem() + "ppId " + commonExpenditureItemId);
 							
 							ppItem.setBrandNew(false);
 						}
-					}
-				}
-			}
-		}
-	}
+				    }
+			    }
+		    }
+	    }
 }
 	//25479 - end
 	//25549@azza20200827 - Start
