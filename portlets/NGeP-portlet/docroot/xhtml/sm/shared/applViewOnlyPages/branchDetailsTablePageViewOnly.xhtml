@@ -71,9 +71,9 @@
 				<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{empty viewSmApplBackingBean.managedBean.selectedBranch.smPersonnel.name}"/>
 			</td>
 		</tr>
-		 <tr>
-		 <td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sap.vendor.code']}" /></td>
-		<!--<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getSAPVendorCode(viewSmApplBackingBean.managedBean.selectedBranch.branchCode)}" /></td>-->
+		<tr>
+		<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sap.vendor.code']}" /></td>
+		<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getSAPVendorCode(viewSmApplBackingBean.managedBean.selectedBranch.branchCode)}" /></td>
 		</tr>
 		</table>
 	</p:outputPanel>
