@@ -2220,7 +2220,7 @@ public class TemplateSpecBackingBean extends
 				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 						.equals(specMaster.getSpecTypeCode().getParameterCode());
 				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
-				if(!isFinancialSpec && isPartial || isFinancialSpec && isPartial){
+				if(isFinancialSpec && isPartial){
 // condition for QTY ==0
 //for zonal
 					if (specAnswer.getTplSpecZoneQty()!=null 
@@ -2267,8 +2267,11 @@ public class TemplateSpecBackingBean extends
 							if (userScore != null) {
 								totalScore = totalScore.add(userScore);
 							}
-							totalMaxScore = totalMaxScore.add(specAnswer
-									.getTplSpecQuestion().getMaxScore());
+							if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+									&& (autoScore != null || userScore != null)) {
+								totalMaxScore = totalMaxScore.add(specAnswer
+										.getTplSpecQuestion().getMaxScore());
+							}
 					}
 			}
 //#21695 Farid END 12/8/2020
