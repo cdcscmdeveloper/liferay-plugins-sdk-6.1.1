@@ -42,6 +42,13 @@
 			<p:message id="specificationMsg" for="specification" display="icon" />
 			<br />
 			#{question.cmItem.extensionCode}
+			<p:spacer width="20" />
+			<p:commandLink id="itemSpecificationLink" process="@this"
+				update="@([id$=itemSpecificationDlg])"
+				oncomplete="itemSpecificationDlgVar.show();"
+				rendered="#{!simpleQuoteBackingBean.managedBean.panelItemFlag and !simpleQuoteBackingBean.managedBean.newableFlag and simpleQuoteBackingBean.managedBean.addNewSpecFlag and question.ctPanelItem != null}">
+				<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+			</p:commandLink>
 			</ui:fragment>
 		</c:if>
 		<c:if test="#{!updateSpec}">

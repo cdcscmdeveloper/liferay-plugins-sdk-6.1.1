@@ -154,6 +154,19 @@
 
 					<c:if test="#{isEditable}">
 						<div class="ppRightBtn BtnSpacing" style="width: 100%">
+							<h:outputText styleClass="instruction"
+								escape="false"
+								value="#{lbl['lbl.sc.instruction.click']}" />
+					
+							<p:commandLink styleClass="instruction"
+								style="padding-left: 4px;padding-right: 4px;font-size: 13px;"
+								ajax="false" immediate="true" process="@this"
+								value="#{lbl['lbl.sc.instruction.here']}"
+								action="#{simpleQuoteBackingBean.downloadBusinessNaturePdf}" />
+					
+							<h:outputText styleClass="instruction"
+								escape="false"
+								value="#{lbl['lbl.sm.download.natureofbusiness']}" />
 							<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 								postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
 								headerText="#{lbl['lbl.sc.sq.business.nature']}" buttonLabel="#{lbl['lbl.btn.add']}"
