@@ -73,7 +73,7 @@
 		</tr>
 		<tr>
 		<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sap.vendor.code']}" /></td>
-		<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getSAPVendorCode(viewSmApplBackingBean.managedBean.selectedBranch.branchCode)}" /></td>
+		<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getSAPVendorCode(viewSmApplBackingBean.managedBean.selectedBranch.smAppl.smSupplier.epNo, viewSmApplBackingBean.managedBean.selectedBranch.supplierBranchId)}" /></td>
 		</tr>
 		</table>
 	</p:outputPanel>
