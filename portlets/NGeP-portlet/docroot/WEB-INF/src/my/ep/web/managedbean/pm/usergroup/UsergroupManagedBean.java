@@ -51,7 +51,7 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private String userName;
 	private String identificationNo;
 	private List<PmUserGroupUser> userGroupUserSearch;
-	private boolean isUserSearch;
+	private boolean userSearch; //#29225 rename to avoid property not found in jsf
 	private String recordSearchStatusFlg;
 	//27629 end
 
@@ -391,14 +391,14 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	 * @return the isUserSearch
 	 */
 	public boolean isUserSearch() {
-		return isUserSearch;
+		return userSearch;
 	}
 
 	/**
 	 * @param isUserSearch the isUserSearch to set
 	 */
-	public void setUserSearch(boolean isUserSearch) {
-		this.isUserSearch = isUserSearch;
+	public void setUserSearch(boolean userSearch) {
+		this.userSearch = userSearch;
 	}
 	
 	public String getRecordSearchStatusFlg() {
