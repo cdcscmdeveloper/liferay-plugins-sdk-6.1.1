@@ -1877,17 +1877,18 @@ public class SpecificationBackingBean extends
 				techWeightageSum();
 				techScoreSum();
 				
+//#28948 Start - remove this (fixed in #21695)			
 				//#25635 danial 11/3/2020
-				if(null!=this.getManagedBean().getTechnicalItemScoreSetting()){
-					if(null!=this.getManagedBean().getTechnicalItemScoreSetting().getOverallOtherTechnical()
-							&&
-					   null!=this.getManagedBean().getTechnicalItemScoreSetting().getOverallTechnical()
-							){
-						technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
-					}
-				}
-					
-				
+//				if(null!=this.getManagedBean().getTechnicalItemScoreSetting()){
+//					if(null!=this.getManagedBean().getTechnicalItemScoreSetting().getOverallOtherTechnical()
+//							&&
+//					   null!=this.getManagedBean().getTechnicalItemScoreSetting().getOverallTechnical()
+//							){
+//						technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
+//					}
+//				}
+//					
+//#28949 End - remove this (fixed in #21695)			
 			}
 
 			if (null != this.getManagedBean().getTechnicalScoring()
@@ -7604,18 +7605,21 @@ public class SpecificationBackingBean extends
 	 *            (ScQtScoreSetting financialItem).
 	 */
 	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
-// #21695 START FARID - 22/9/2020	
+// #21695 #28949 START FARID - 15/10/2020	
 		try {
 			if (null != financialItem) {
 				String checkDecimal1 = String.valueOf(financialItem.getOverallFin());
 				String checkDecimal2 = String.valueOf(financialItem.getOverallOtherFin());
-				String pattern1 = "[0-9]+";
-				if (!checkDecimal1.matches(pattern1)) {
-					throw new EpException(MessageConst.ERROR_775157);
-				}else if (!checkDecimal2.matches(pattern1)) {
-					throw new EpException(MessageConst.ERROR_775157);
+				String pattern1 = "^[0-9\\s]+$";
+				if(this.getManagedBean().getFinacialItemScoreSetting().getOverallFin() != null 
+						&& this.getManagedBean().getFinacialItemScoreSetting().getOverallOtherFin()  != null){
+					if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}else if (!checkDecimal2.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
 				}
-// #21695 END FARID - 22/9/2020					
+// #21695 #28949 END FARID - 15/10/2020					
 				int value1 = financialItem.getOverallFin() != null ? financialItem
 						.getOverallFin().intValue() : 0;
 				int value2 = financialItem.getOverallOtherFin() != null ? financialItem
@@ -16532,17 +16536,20 @@ public class SpecificationBackingBean extends
 	 * @param Technical
 	 *            (ScQtScoreSetting technicalItem).
 	 */
-// #21695 START FARID - 07/9/2020	
+// #21695 #28949 START FARID - 15/10/2020	
 	public void calculateTechnicalItemScore(ScQtScoreSetting technicalItem) {
 		try {
 			if (null != technicalItem) {
 				String checkDecimal1 = String.valueOf(technicalItem.getOverallTechnical());
 				String checkDecimal2 = String.valueOf(technicalItem.getOverallOtherTechnical());
-				String pattern1 = "[0-9]+";
-				if (!checkDecimal1.matches(pattern1)) {
-					throw new EpException(MessageConst.ERROR_775157);
-				}else if (!checkDecimal2.matches(pattern1)) {
-					throw new EpException(MessageConst.ERROR_775157);
+				String pattern1 = "^[0-9\\s]+$";
+				if(this.getManagedBean().getTechnicalItemScoreSetting().getOverallTechnical() != null 
+						&& this.getManagedBean().getTechnicalItemScoreSetting().getOverallOtherTechnical() != null){
+					if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}else if (!checkDecimal2.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
 				}
 				int value1 = technicalItem.getOverallTechnical() != null ? technicalItem
 						.getOverallTechnical().intValue() : 0;
@@ -16555,9 +16562,8 @@ public class SpecificationBackingBean extends
 						&& this.getManagedBean().getTechnicalItemScore()
 								.intValue() > 100) {
 					throw new EpException(MessageConst.ERROR_7602571);
-// #21695 farid 07/9/2020
 				}
-
+// #21695 #28949 farid END 15/10/2020
 			}
 
 		} finally {
