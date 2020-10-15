@@ -150,7 +150,15 @@
 				<p:message id="percentageValueMsg" for="percentageValueId"
 					display="icon" />
 			</p:column>
-
+			<!-- 27827 - START -->
+			<p:column rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC'}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					    #{lbl['lbl.pm.value']}
+				</f:facet>
+				<h:outputText value="#{typeValueObj.ruleValue}"/>
+			</p:column>
+			<!-- 27827 - END -->
 			<p:column
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C'}">
 				<f:facet name="header">
@@ -211,6 +219,35 @@
 		       </f:facet>
 		      	#{typeValueObj.categoryL3Id.categoryName}
 		</p:column>
+			<!-- 27827 - START -->
+			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+				<f:facet name="header">
+	             	#{lbl['lbl.pm.desc']}
+		       	</f:facet>
+		      	#{typeValueObj.ruleDescription}
+			</p:column>
+			<p:column width="15%" style="white-space:normal"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+	             	#{lbl['lbl.pm.zone']}
+		       	</f:facet>
+		      	<p:selectOneMenu id="zoneCode"
+					label="#{lbl['lbl.pm.zone.name']}"
+					value="#{typeValueObj.zoneId}"
+					required="true"
+					requiredMessage="#{lbl['lbl.pm.settings.zone.required']}"
+					disabled="#{!(typeValueObj.brandNew)}"
+					style="width: 250px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
+					<f:selectItems var="zoneLs"
+						value="#{ruleCatalogueBackingBean.managedBean.zoneList}"
+						itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@this, zoneCodeMsg"/>
+				</p:selectOneMenu>
+				<p:message id="zoneCodeMsg" for="zoneCode" display="icon"/>
+			</p:column>
+			<!-- 27827 - END -->
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
@@ -219,7 +256,7 @@
 				</f:facet>
 
 				<p:calendar  navigator="true"
-					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"					
+					yearRange="#{DateUtils.getCalendarMaxYearRange(typeValueObj.effDate)}"
 					rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType != 1) or (ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 1 and typeValueObj.showFlag)}"
 					disabled="#{typeValueObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 					showOn="button" id="ruleValeffDateId"
@@ -240,7 +277,7 @@
 
 				</p:calendar>
 			</p:column>
-
+			
 			<p:column width="16%">
 				<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
@@ -339,12 +376,22 @@
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}"
+				rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C') and
+						    !(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}"
 				id="addTypeValueButton" style="float:right;"
 				action="#{ruleCatalogueBackingBean.addNewRuleTypeValue}"
 				partialSubmit="true" process="@this"
 				update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
-
+			
+			<!-- 27827 - START -->
+			<p:commandButton value="#{lbl['lbl.btn.add']}" id="ptjAddBtn"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}"
+				process="@this" partialSubmit="true"
+				update="@([id$=ptjCRPopup])" style="float:right;"
+				oncomplete="ptjCRPopup.show();"
+				action="#{ruleCatalogueBackingBean.initPtjPopup}">
+			</p:commandButton>
+			<!-- 27827 - END -->
 		</div>
 		
 		<ac:confirmationPopup id="ruleValueDeleteId"

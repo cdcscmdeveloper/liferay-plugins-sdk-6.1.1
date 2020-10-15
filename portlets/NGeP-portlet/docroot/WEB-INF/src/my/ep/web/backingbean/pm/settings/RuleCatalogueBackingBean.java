@@ -32,6 +32,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
@@ -57,6 +58,7 @@ import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
@@ -438,6 +440,9 @@ public class RuleCatalogueBackingBean extends
 			List<PmConfigRuleDesc> list = retriveConfigRuleDescFromDB();
 			getManagedBean().setConfigRuleDescList(list);
 			getManagedBean().setSelectedRuleDescType(list.get(0));
+			/* 27827 - START */
+			retrievePmZoneList();
+			/* 27827 - END */
 			// List<PmConfigRule> list = retriveConfigRuleFromDB();
 			// this.getManagedBean().setConfigRuleList(list);
 			// this.getManagedBean().setSelectedRuleType(list.get(0));
@@ -5393,5 +5398,38 @@ public class RuleCatalogueBackingBean extends
         }
         
 	}
+	
+	/* 27827 - START */
+	public void addPTJCRValues(){
+		log.info("addPTJCRValues");
+		
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
+		PmConfigRuleValue newRuleValue  = null;
+		int index = 0;
+		
+		for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
+			if(orgProfile.isSelected()){
+				newRuleValue = new PmConfigRuleValue();
+				newRuleValue.setPmOrgProfile(orgProfile);
+				newRuleValue.setRuleType(configRuleType);
+				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
+				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
+				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
+				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+				index = configRuleType.getConfigRuleValues().size();
+				configRuleType.getConfigRuleValues().add(index, newRuleValue);
+			}
+		}
+		RequestContext.getCurrentInstance().execute("ptjCRPopup.hide();");
+		
+		log.info("end addPTJCRValues");
+	}
+	
+	public void retrievePmZoneList() {
+		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
+		this.getManagedBean().setZoneList(resDTO.getZoneList());
+	}
+	/* 27827 - END */
 	
 }
