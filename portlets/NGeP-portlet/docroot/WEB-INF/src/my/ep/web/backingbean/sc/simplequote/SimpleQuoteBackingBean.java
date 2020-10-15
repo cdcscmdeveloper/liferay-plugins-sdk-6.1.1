@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.simplequote;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -46,6 +48,7 @@ import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -58,6 +61,9 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -87,6 +93,8 @@ import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
@@ -122,6 +130,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -144,12 +153,16 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.format.AttachmentDefaultFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -204,7 +217,7 @@ public class SimpleQuoteBackingBean extends
 	private String disciplinaryActionstartDate;
 	private String disciplinaryActionEndDate;
 	//26284 - End
-
+	
 	/**
 	 * Instantiates a new simple quote backing bean.
 	 */
@@ -222,7 +235,6 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 	}
-
 	
 	/**
 	 * View quote.
@@ -571,6 +583,12 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 						// panel item specific
 						isGeneralOrSpecific = Boolean.TRUE;
+						//#3761 - start
+						getManagedBean().setPanelItemFlag(Boolean.FALSE);
+						getManagedBean().setNewableFlag(Boolean.FALSE);
+						getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
+						scQuote.setPanelItem(selectedPanelItem);
+						//#3761 - end
 					}
 
 					boolean alreadyExists = checkItemExists(null, selectedPanelItem);
@@ -1246,6 +1264,17 @@ public class SimpleQuoteBackingBean extends
 						productTemplateSpecBean);
 			}
 		}
+		
+		//#3761 - start
+		@SuppressWarnings("unchecked")
+		List<TplSpecQuestion> savedTplSpecQuestions = (List<TplSpecQuestion>) portletSession
+			.getAttribute("savedTplSpecQuestions");
+		if (CollectionUtils.isNotEmpty(savedTplSpecQuestions)) {
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecQuestions(savedTplSpecQuestions);
+			portletSession.removeAttribute("savedTplSpecQuestions");
+			return;
+		}
+		//#3761 - end
 	}
 
 	/**
@@ -7687,5 +7716,70 @@ public class SimpleQuoteBackingBean extends
 		}
 		//12183 - End
 		
+		//#3761 - start
+		public void downloadBusinessNaturePdf() throws Exception{
+			debugLogger("downloadBusinessNaturePdf");
+			ScPbAttachment pbAttachment = new ScPbAttachment();
+			pbAttachment.setFileName("Business Nature.pdf");
+
+			String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+
+			StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+			filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+			filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+			pbAttachment.setFilePath(filePath.toString());
+
+			File theDir = new File(getActualFilePath(pbAttachment));
+			theDir.mkdirs();
+
+			AttachmentFormat scFormat = new AttachmentDefaultFormat();
+			String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_SC_LOA_BUSINESS_NATURE,
+					pbAttachment.getPrefixFileName());
+
+			filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+			filePath.append(formatedFileName);
+			pbAttachment.setFilePath(filePath.toString());
+
+			downloadFile(pbAttachment);
+		}
 		
+		public void gotoPanelPage(Long circularVerId, String docType) {
+			if ((circularVerId == null) || (circularVerId.longValue() == 0)) {
+				ICircularDetailSO circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularDetailSO.class);
+				CircularDetailReqDTO circularReqDTO = new CircularDetailReqDTO();
+				circularReqDTO.setPanelItemId(getManagedBean().getScQuote().getPanelItem().getPanelItemId());
+				CircularDetailResDTO circularseqDTO = circularDetailSO.getPanelItemById(circularReqDTO);
+				if ((circularseqDTO != null) && (circularseqDTO.getCtPanelItem() != null)
+						&& (circularseqDTO.getCtPanelItem().getCtCircularVer() != null)) {
+					circularVerId = circularseqDTO.getCtPanelItem().getCtCircularVer().getCircularVerId();
+				}
+			}
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(circularVerId);
+			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				PanelBackingBean ppBB = new PanelBackingBean();
+				ppBB.getManagedBean().setSelectionOfZone(false);
+				ppBB.getManagedBean().setSelectedPanelItems(null);
+				ppBB.getManagedBean().setSelectedPanelZone(null);
+				ppBB.getManagedBean().setSelectedTabIndex(0);
+				ppBB.getManagedBean().setAction("view");
+				ppBB.getManagedBean().setUpdateAction(false);
+				ppBB.getManagedBean().setViewContract(true);
+				ppBB.getManagedBean().setOutComes(new String[] {});
+				ppBB.setPanelCircularVar(reqDTO);
+				ppBB.getManagedBean().setFromCircularNotice(false);
+				ppBB.getManagedBean().setDifferentModule(false);
+				ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
+				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext()
+						.getSession(false);
+				portletSession.setAttribute("savedTplSpecQuestions", getManagedBean().getProductTemplateSpecBean()
+					.getSpecMaster().getTplSpecQuestions());
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "/xhtml/ct/circular/portal/panelCircularTab.xhtml");
+			}
+		}
+		//#3761 - end
 }

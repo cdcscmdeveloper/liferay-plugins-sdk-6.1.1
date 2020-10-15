@@ -55,6 +55,36 @@
      </h:panelGroup>
 
 	<ui:include src="/xhtml/sc/directpurchase/simplequote/cloneItemSpecSearch.xhtml" />
+	
+		<p:dialog id="itemSpecificationDlg"
+			widgetVar="itemSpecificationDlgVar"
+			header="#{lbl['lbl.ct.item.specification.list']}" styleClass="pop_up_top" modal="true"
+			style="width:70%" resizable="false">
+			<h:panelGrid columns="1">
+				<p:outputLabel
+					value="#{lbl['lbl.ct.item.name']}: #{simpleQuoteBackingBean.managedBean.panelItems[0].itemName}" />
+			</h:panelGrid>
+			<p:spacer height="5" />
+			<p:dataTable id="itemSpecDescTbl"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				var="ctPanelItemSpec" rowIndexVar="index"
+				value="#{simpleQuoteBackingBean.managedBean.panelItems[0].ctPanelItemSpecs}">
+				<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+					style="width:45%; white-space:normal">
+					<p:inputTextarea value="#{ctPanelItemSpec.specification}"
+						maxlength="200" rows="3" style="width:98%;" autoResize="false" disabled="true" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.cm.description']}"
+					style="width:45%; white-space:normal">
+					<p:inputTextarea value="#{ctPanelItemSpec.description}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
+						disabled="true" />
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2" />
+			<div class="ppRightBtn"> 
+				<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecificationDlgVar.hide();" />
+			</div>
+		</p:dialog>
 </p:panel>
 
 </ui:composition>

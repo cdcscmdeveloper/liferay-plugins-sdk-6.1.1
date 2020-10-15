@@ -39,6 +39,7 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -60,6 +61,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -126,6 +129,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -150,7 +154,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private ContractBackingBean ctBB = new ContractBackingBean();
-
+	
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -391,7 +395,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} else if(getManagedBean().isDifferentModule()){
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
+			//#3761 - start
+			if (StringUtils.equals(getManagedBean().getGotoPreviewPage(), "simpleQuoteMain")) {
+				SimpleQuoteBackingBean sqbb = new SimpleQuoteBackingBean();
+				sqbb.getManagedBean().setPanelItemFlag(false);
+				sqbb.getManagedBean().setG2GFlag(false);
+				sqbb.getManagedBean().setActiveIndex(0);
+				sqbb.getManagedBean().getProductTemplateSpecBean().setSpecMaster(null);
+				CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
+				reqDTO.setCircularVerId(getManagedBean().getCircularVer().getCircularVerId());
+				reqDTO.setPanelItemTypeGroup(true);
+				Long selectedPanelItemId = getManagedBean().getCircularVer().getCtPanelItems().get(0).getPanelItemId();
+				sqbb.simpleQuoteAction(selectedPanelItemId, true, null);
+			}
 			return getManagedBean().getGotoPreviewPage();
+			//#3761 - end
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}

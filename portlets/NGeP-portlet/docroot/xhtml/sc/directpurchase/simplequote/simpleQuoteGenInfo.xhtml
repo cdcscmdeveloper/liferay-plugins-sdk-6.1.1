@@ -29,6 +29,17 @@
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
 									id="panelMsg" for="panel" display="icon" /> <ac:iconTooltip
 									value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
+									
+							<td style="padding-left: 20px;">
+							<div align="left">
+								<h:commandLink id="treasuryCircularLink"
+									value="#{lbl['lbl.sc.view.panel.details']}"
+									process="@this" partialSubmit="true"
+									rendered="#{!simpleQuoteBackingBean.managedBean.panelItemFlag and !simpleQuoteBackingBean.managedBean.newableFlag 
+										and simpleQuoteBackingBean.managedBean.addNewSpecFlag}"
+									action="#{simpleQuoteBackingBean.gotoPanelPage(null, 'PQ')}">
+								</h:commandLink>
+							</div></td>
 						</tr>
 					</table>
 				</td>
