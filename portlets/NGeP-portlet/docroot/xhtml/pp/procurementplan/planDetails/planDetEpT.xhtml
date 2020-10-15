@@ -244,7 +244,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	          <!--25549@18092020 -->
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			    	 id="clEpJustification" disabled="#{pPlanBackingBean.managedBean.disable}">
-					<p:graphicImage value="#{(!pPlanBackingBean.isRolePlanner()) or !pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					<p:graphicImage value="#{(!pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />
 					<f:param name="disableValidation" value="" />
 				</p:commandLink>
@@ -254,7 +254,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemarkT"
 			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable  or (pPlanBackingBean.managedBean.disable)}">
-					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					<p:graphicImage value="/css/images/design/edit.png"
 					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
 					<f:param name="disableValidation" value="" />
 				</p:commandLink>
