@@ -569,6 +569,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(false);
 							ppItem.setBrandNew(true);
+							
+							/*if(plan != null && plan.getStatus() != null && 
+									(ProcurementPlanConst.PPP_APPROVED.equals(plan.getStatus().getStatusId()) 
+									|| ProcurementPlanConst.PPE_APPROVED.equals(plan.getStatus().getStatusId()))) {
+								ppItem.setAllowAnotherPindaan(true);
+							}
+							log.info("allowAnotherPindaan for "+ ppItem.getProcurementTitle()+" is "+ppItem.isAllowAnotherPindaan());*/
 						}
 					} else {
 						/* Always disable Pindaan for original ppItem
@@ -1074,14 +1081,32 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				
 			} else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 
-				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){					
+				for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
+					log.info("ppItem= "+ppItem.getProcurementTitle()+" berstatus "+ppItem.getRecordStatusFlg()+
+							". Rejected? "+ppItem.isRejected());
 					if(DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg() && ppItem.isRejected()){						
 						ppItem.setEditable(true);
 						//25549@12102020 - start
 						ppItem.setReviseReject(true);
 						//25549@12102020 - end
 						this.getManagedBean().getSelectedPlan().setRejected(false);
-					}
+					} /*else {
+						if (DbValueConst.RECORD_STATUS_ACTIVE == ppItem.getRecordStatusFlg() && !ppItem.isRejected()) {
+							if (!ppItem.isOriginal()) {
+								ppItem.setCloneEnabled(false);
+								ppItem.setDisableForPindaan(true);
+								ppItem.setReasonForUpdateEnabled(false);
+								ppItem.setBrandNew(true);
+								
+								if(ppPlan != null && ppPlan.getStatus() != null && 
+										(ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId()) 
+										|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId()))) {
+									ppItem.setAllowAnotherPindaan(true);
+								}
+								log.info("allowAnotherPindaan for "+ ppItem.getProcurementTitle()+" is "+ppItem.isAllowAnotherPindaan());
+							}
+						}
+					}*/
 				}
 				
 				if(this.getManagedBean().getSelectedPlan().isRejected()){
@@ -1122,6 +1147,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setSelectable(true); //enabled checkbox
 							//25549@09102020 - start
 							ppItem.setReviseReject(true);
+							ppItem.setEditable(true);
+							log.info("item yg menanti: "+ppItem.getProcurementTitle()+
+									",isEditable= " +ppItem.isEditable());
 							//25549@09102020 - end
 						}
 					}
@@ -2433,12 +2461,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if (this.getManagedBean().getDeletePpItems() == null) {
 				this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
 			}
+			log.info("Before save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size()); 
 			reqDTO.setDeletedPpItemList(this.getManagedBean().getDeletePpItems());
 				
 			//SAVE Plan to DB
 			resDTO = reqSO.savePlan(reqDTO);
 			//resDTO.setSuccessful(false); // for testing only...	
 			docType = retrievePlanDocType(ppPlan);
+			
+			this.getManagedBean().getDeletePpItems().clear();
+			log.info("After save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size()); 
 				
 			if (resDTO.isSuccessful()) {
 				//LOG : 26549 : SLA Monitoring
@@ -3754,6 +3786,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				log.info("Now, status of "+procurementItem.getProcurementTitle()+
 						" is "+procurementItem.getRecordStatusFlg());
 				//Add deleted item
+				//procurementItem.setBrandNew(false);
 				this.getManagedBean().getDeletePpItems().add(procurementItem);
 				count++;
 			}
