@@ -274,6 +274,7 @@
 							style="width: 150px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{registrationBackingBean.managedBean.salutationItems}" />
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
 						</p:selectOneMenu>
 						<p:message id="salutationIdMsg" for="salutationId" display="icon" />
 					</td>
@@ -289,6 +290,7 @@
 							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}"
 							rendered="#{!registrationBackingBean.disableFieldSSm(registrationBackingBean.managedBean.smPersonnel.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull)}"
 							>
+							<p:ajax event="blur" partialSubmit="true"></p:ajax>
 						</p:calendar>
 						<p:calendar id="dobCalId2"
 							navigator="true" required="#{!empty param['disableValidation']}" 
@@ -298,6 +300,7 @@
 							rendered="#{registrationBackingBean.disableFieldSSm(registrationBackingBean.managedBean.smPersonnel.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull)}"
 							disabled="#{!registrationBackingBean.managedBean.smPersonnel.birthDateSsmNull}"
 							>
+							<p:ajax event="blur" partialSubmit="true"></p:ajax>
 						</p:calendar>
 					</td>
 				</tr>
@@ -318,6 +321,7 @@
 							value="#{registrationBackingBean.managedBean.userBumiFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
 						</p:selectOneRadio>
 						<p:message id="bumiIdMsg" for="bumiId" showSummary="true" showDetail="false" display="icon" />
 					</td>
@@ -332,6 +336,7 @@
 							value="#{registrationBackingBean.managedBean.userMuslimFlg}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
 						</p:selectOneRadio>
 						<p:message id="religionIdMsg" for="religionId" showSummary="true" showDetail="false" display="icon" />
 					</td>
@@ -356,7 +361,8 @@
 					<td class="tdContent"><p:inputText size="40" maxlength="100" 
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
-							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
+							id="txtPermAdd1" ><p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
+							&#160; <p:graphicImage id="addti"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							id="addtt" for="addti">
 							<p:outputLabel escape="false"
@@ -387,7 +393,8 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}"
-							 id="txtPermAdd2" maxlength="100" /></td>
+							 id="txtPermAdd2" maxlength="100" ><p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
+							 </td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
@@ -437,7 +444,8 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
-							id="txtPermAdd3" maxlength="100" /></td>
+							id="txtPermAdd3" maxlength="100" ><p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
+							</td>
 							
 					<td class="tdTitle">
 						<p:outputLabel value="#{lbl['lbl.sm.district']}" />
@@ -484,6 +492,7 @@
 									value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="40">
+									<p:ajax event="blur" partialSubmit="true"></p:ajax>
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
 								<p:message id="txtPermPostcodeMyMsg" for="txtPermPostcodeMy"
@@ -495,6 +504,7 @@
 									label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcodeForeign"
 									value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 									size="35">
+									<p:ajax event="blur" partialSubmit="true"></p:ajax>
 								</p:inputText>
 								<p:message id="txtPermPostcodeForeignMsg"
 									for="txtPermPostcodeForeign" showSummary="true"
@@ -544,7 +554,8 @@
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smPersonnel.designation}" required="#{!empty param['disableValidation']}" maxlength="30" label="#{lbl['lbl.sm.designation']}" /></td>
+					<td class="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smPersonnel.designation}" required="#{!empty param['disableValidation']}" maxlength="30" label="#{lbl['lbl.sm.designation']}" >
+					<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText></td>
 					<td class="tdTitle" > </td>
 				<td class="tdContent">
 					<p:outputPanel>
@@ -608,6 +619,7 @@
 						value="#{registrationBackingBean.managedBean.smPersonnel.email}" validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
 					</p:inputText> &#160;
 					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="emailtt" for="emailti">
@@ -624,7 +636,8 @@
 				</td>
 				<td class="tdContent">
 				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" 
-				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80"/>
+				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80">
+				<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
 
