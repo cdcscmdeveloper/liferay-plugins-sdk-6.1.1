@@ -32,23 +32,14 @@ public class DisciplinaryActionRest {
 		try {
 			//27426 : Disciplinary Action - start
 			//find data with end date less than current date
-			SupplierDataMaintenanceResDTO releaseDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();
+			SupplierDataMaintenanceResDTO releaseDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveDisciplinaryAction();//28798: Disciplinary Action - remove blacklist and cancel registration
 			//find data pending DA, (data with active txn will update DA after complete all txn)
-			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction();
+			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryAction(); //28798: Disciplinary Action - remove blacklist and cancel registration
 			
 			//26238 - Disciplinary Action - 28798 - end
 			//find data pending Cancel Registration or Blacklist Owner / Director of Company
-			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();
+			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();//28798: Disciplinary Action - get all active for cancel registration and blacklist
 			
-			//remove duplicated data
-			if(updateBCDAList != null
-					&& updateBCDAList.getSmDisciplinaryActions() != null
-					&& updateBCDAList.getSmDisciplinaryActions().size() > 0){
-				releaseDAList.getSmDisciplinaryActions().removeAll(updateBCDAList.getSmDisciplinaryActions());
-				updateDAList.getSmDisciplinaryActions().removeAll(updateBCDAList.getSmDisciplinaryActions());
-				updateDAList.getSmDisciplinaryActions().addAll(updateBCDAList.getSmDisciplinaryActions());
-				
-			}
 			//26238 - Disciplinary Action - 28798 - end
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
@@ -75,6 +66,27 @@ public class DisciplinaryActionRest {
 					SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
 				}
 			}
+			
+			//28798: Disciplinary Action - start - 26238 - reopen
+			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0){
+				Date today = new Date(); 
+				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
+					if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
+						if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
+							cancelRegBlacklist.getSmSupplier();
+							cancelRegBlacklist.getSmSupplier().getSmAppl(); 
+							PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
+							List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+							SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
+						}
+						if(cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()){
+							cancelRegBlacklist.getSmSupplier();
+							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
+						}
+					}
+				}
+			}
+			//28798: Disciplinary Action - end - 26238 - reopen
 			return Response.status(200).entity("success calling process disciplinary action !!").build();
 		} catch (Exception e) {
 			return Response.status(406).entity(e.getMessage()).build();
