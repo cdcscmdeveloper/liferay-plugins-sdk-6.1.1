@@ -5306,11 +5306,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			        		break;
 			        	}
 			        }
+		       }
 		        //reset or clear list in all deleted item list after finished.
 		        this.getManagedBean().getDeleteEpItemsAll().clear();
 		        //log.info("[SIR#12802] - All Expenditure Deleted item list size after compare:" + this.getManagedBean().getDeleteEpItemsAll().size());
-		        //log.info("[SIR#12802] - Expenditure item list size after compare:" + pplan.getPpExpenditureItems().size());
-		       }
+		        //log.info("[SIR#12802] - Expenditure item list size after compare:" + pplan.getPpExpenditureItems().size());		        
 			}			
 		}
 		
@@ -7394,7 +7394,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setDisableForPindaan(true);
 							ppItem.setReasonForUpdateEnabled(true);
 							ppItem.setDisableEditAccount(true);
-							ppItem.setJustificationEnabled(false);
+							ppItem.setJustificationEnabled(true);
 						}else {
 							// The rest should retain the existing field logics
 							ppItem.setDisableForPindaan(false);
