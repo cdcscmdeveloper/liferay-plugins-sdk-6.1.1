@@ -2988,13 +2988,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//END 27239
 	//25792 - start
-	public String getSAPVendorCode(Long branchCode) {
+	public String getSAPVendorCode(String epNo, Long branchCode) {
 
 		IVendorCodeSO vendorCodeSO = (IVendorCodeSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IVendorCodeSO.class);
 
-		SmSapVendorCode smSAPVendorCode = vendorCodeSO.retrieveSapVendorCodeByEpNoAndBranchCode(null, branchCode);
+		SmSapVendorCode smSAPVendorCode = vendorCodeSO.retrieveSapVendorCodeByEpNoAndBranchCode(epNo, branchCode);
 		if(smSAPVendorCode != null) {
 			return smSAPVendorCode.getSapVendorCode();
 		}
