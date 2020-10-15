@@ -2214,20 +2214,6 @@ public class TemplateSpecBackingBean extends
 			for (TplSpecAnswer specAnswer : specAnswerList) {
 				BigDecimal autoScore = specAnswer.getAutoScore();
 				BigDecimal userScore = specAnswer.getUserScore();
-
-				if (autoScore != null) {
-					totalScore = totalScore.add(autoScore);
-				}
-
-				if (userScore != null) {
-					totalScore = totalScore.add(userScore);
-				}
-
-				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-						&& (autoScore != null || userScore != null))  {
-					totalMaxScore = totalMaxScore.add(specAnswer
-							.getTplSpecQuestion().getMaxScore());
-				}
 				
 //#21695 Farid Start ... 12/8/2020				
 				TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
@@ -2290,7 +2276,46 @@ public class TemplateSpecBackingBean extends
 						}
 						
 					}
-				}
+			//START
+			// checking auto/user score for zonal and non zonal with partial that has quantity 0		
+					if (specAnswer.getTplSpecQuestion().getMaxScore() != null)  {
+						if (autoScore != null && specAnswer.getTplSpecZoneQty()!=null 
+								&& !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
+							totalScore = totalScore.add(autoScore);
+							totalMaxScore = totalMaxScore.add(specAnswer
+									.getTplSpecQuestion().getMaxScore());
+						}
+						if (userScore != null && specAnswer.getTplSpecZoneQty()!=null 
+								&& !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
+							totalScore = totalScore.add(userScore);
+							totalMaxScore = totalMaxScore.add(specAnswer
+									.getTplSpecQuestion().getMaxScore());
+						}
+						if(userScore != null && specAnswer.getTplSpecQuestion().getClQuantity() != null 
+								&& specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 ){
+							totalScore = totalScore.add(userScore);
+							totalMaxScore = totalMaxScore.add(specAnswer
+									.getTplSpecQuestion().getMaxScore());
+						}
+						if(autoScore != null && specAnswer.getTplSpecQuestion().getClQuantity() != null 
+								&& specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 ){
+							totalScore = totalScore.add(autoScore);
+							totalMaxScore = totalMaxScore.add(specAnswer
+									.getTplSpecQuestion().getMaxScore());
+						}
+						
+					}
+			// checking zonal and non zonal for partial that has quantity 0	
+			//END	
+				}else {
+							if (autoScore != null) {
+								totalScore = totalScore.add(autoScore);
+							}
+			
+							if (userScore != null) {
+								totalScore = totalScore.add(userScore);
+							}
+					}
 			}
 //#21695 Farid END 12/8/2020
 			totalScoreStr = totalScore.toString() + " / "
