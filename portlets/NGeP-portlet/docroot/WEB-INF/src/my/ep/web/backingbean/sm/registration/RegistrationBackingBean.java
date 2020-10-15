@@ -63,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -1949,29 +1950,122 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public void populateDistrictByAddType(String typeAdd, boolean reset) {
 		if (typeAdd.equals("business")) {
+			//13320
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 			}
-			this.getManagedBean().getSmBusinessAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
-			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
-			this.getManagedBean().setBusinessDistrictLs(districtLs);
-			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-		} else if (typeAdd.equals("residential")) {
-			log.info("------------residential----------------");
-			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
-			this.getManagedBean().setResidentialDistrictLs(districtLs);
-			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
-		} else if (typeAdd.equals("permenant")) {
-			log.info("------------permenant----------------"
-					+ this.getManagedBean().getSmPermenantAdd().getPmState()
-					.getStateId());
-			List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
-			this.getManagedBean().setPermenantDistrictLs(districtLs);
-			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
+			getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(false);
+			if(state != null){
+				if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+										
+					//#13320 - Rahim Added If Only and Else(content)
+					if(this.getManagedBean().getSmBusinessAdd().getPmDivision()==null) {
+						getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
+					} else {
+						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId());			
+						this.getManagedBean().setBusinessDistrictLs(districtLs);
+					}
+															
+					List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+					this.getManagedBean().setBusinessDivisionLs(divisionLs);
+					
+					//#13320 - Rahim Commented Out
+					//getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());					
+					//this.getManagedBean().setBusinessCityLs(null);
+					
+					//#13320 - Rahim Added
+					this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 
-			log.info("------permenant LS-------------"
-					+ this.getManagedBean().getPermenantDistrictLs().size());
+					getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(true);
+					
+				} else {
+					this.getManagedBean().getSmBusinessAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
+					List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+					this.getManagedBean().setBusinessDistrictLs(districtLs);
+					this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+				}
+			}
+				
+		} else if (typeAdd.equals("residential")) {
+			//13320
+			if(reset){
+				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
+				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
+			}
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
+			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
+			if(state != null){
+			if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				
+				//#13320 - Rahim Added If Only and Else(content)
+				if(this.getManagedBean().getSmResAdd().getPmDivision()==null) {
+					getManagedBean().getSmResAdd().setPmDivision(new PmDivision());
+				} else {
+					List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId());
+					this.getManagedBean().setResidentialDistrictLs(districtLs);
+				}
+				
+				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
+				this.getManagedBean().setResidentialDivisionLs(divisionLs);
+				
+				//#13320 - Rahim Commented Out
+				//getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());
+				//this.getManagedBean().setResidentialCityLs(null);
+				
+				//#13320 - Rahim Added
+				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
+				
+				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(true);
+			}else{
+				    this.getManagedBean().getSmResAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
+					List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
+					this.getManagedBean().setResidentialDistrictLs(districtLs);
+					this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
+				}
+				
+			}
+		} else if (typeAdd.equals("permenant")) {
+			//13320
+			if(reset){
+				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+			}
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
+			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
+			if(state !=null){
+				if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+					
+					//#13320 - Rahim Added If Only and Else(content)
+					if(this.getManagedBean().getSmPermenantAdd().getPmDivision()==null) {
+						getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
+					} else {
+						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId());
+						this.getManagedBean().setPermenantDistrictLs(districtLs);
+					}
+					
+					List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
+					this.getManagedBean().setPermenantDivisionLs(divisionLs);
+					
+					//#13320 - Rahim Commented Out
+					//getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
+					//this.getManagedBean().setPermenantCityLs(null);	
+					
+					//#13320 - Rahim Added
+					this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+					
+					getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(true);
+				}else{  
+					   this.getManagedBean().getSmPermenantAdd().setPmState(SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
+						List<SelectItem> districtLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
+						this.getManagedBean().setPermenantDistrictLs(districtLs);
+						this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+	
+						log.info("------permenant LS-------------" + this.getManagedBean().getPermenantDistrictLs().size());
+				}	
+			}
+			
 		}
 	}
 
@@ -2130,8 +2224,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 					
 					this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-					this.populateStateByAddType("business", false);
-					this.populateDistrictByAddType("business", false);
+					
+					this.populateStateByAddType("business", false);		
+					
+					//#13320 - Rahim Added If Statement
+					if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)) {
+						this.populateDivisionByAddType("business", false);
+					}
+										
+					this.populateDistrictByAddType("business", false);				
 					this.populateCityByAddType("business", false);
 				}
 				this.retrievePmCountryList();
@@ -2906,13 +3008,41 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//for(PmState state : stateLs){
 				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
 						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
-					List<PmState> sarawakLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SARAWAK, 
-							SupplierManagementConst.COUNTRY_MALAYSIA_CODE);				
-					if(sarawakLs.size() > 0){
+					
+					List<PmState> sarawakLs = SmCommonUtil.getInstance().retrieveStateByZone(SupplierManagementConst.SM_STATE_NAME_SARAWAK,  SupplierManagementConst.COUNTRY_MALAYSIA_CODE);				
+					if(!sarawakLs.isEmpty()){
 						stateSelectLs = EntityHelper.convertListToSelectItem(sarawakLs,"stateName", "stateId");
 						state = sarawakLs.get(0);
-						this.getManagedBean().getSmBusinessAdd().setPmState(state);
-						this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId()));
+						this.getManagedBean().getSmBusinessAdd().setPmState(state); //13320-only sarawak
+							
+						//#13320 - Rahim Start
+						//if(this.getManagedBean().getSmBusinessAdd().getPmDivision() == null ||  this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId() < 1){
+							if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+								
+								//#13320 - Rahim - If Statement Only
+								//if(this.getManagedBean().getSmBusinessAdd().getPmDivision() == null ||  this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId() < 1){
+									
+									this.getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
+									this.getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
+									getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+									getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+								//} 
+																
+								List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+								this.getManagedBean().setBusinessDivisionLs(divisionLs);								
+								this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
+								getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
+								this.getManagedBean().setBusinessCityLs(null);
+								
+							}
+						//}
+						//#13320 - Rahim End
+							if(state !=null && state.getAdoptDivision()) {
+								getManagedBean().setDivisionBox(false);	
+							} else{
+								this.getManagedBean().setDivisionBox(true);
+								this.getManagedBean().setBusinessDistrictLs(SmCommonUtil.getDistrictList(state.getStateId())); //13320
+							}
 					}
 				}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
 						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
@@ -4177,6 +4307,38 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}			
 		}
 	}
+	//13320-start
+	public void populateDivisionByAddType(String typeAdd, boolean reset){				
+		if((typeAdd.equals("business"))){
+			//registrationBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId
+
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId());			
+			this.getManagedBean().setBusinessDistrictLs(divisionLs);
+			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());	
+		}
+		if((typeAdd.equals("residential"))){
+			//registrationBackingBean.managedBean.smResAdd.pmDivision.divisionId
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId());
+			this.getManagedBean().setResidentialDistrictLs(divisionLs);
+			this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());	
+		}
+		if((typeAdd.equals("permenant"))){
+			//registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId());
+			this.getManagedBean().setPermenantDistrictLs(divisionLs);
+			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());	
+		}
+	}
+	public boolean showDivision(PmState state){
+		if(state!=null){
+			PmState st = (SmCommonUtil.getInstance().getStateById(state.getStateId()));
+			if(st!=null){
+				return st.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE);
+			}
+		}		
+		return false;
+	}
+	//13320-end
 }
 
 

@@ -19,15 +19,19 @@
 					latestAddrObj="#{backingBean.managedBean.latestPermAddr}" 
 					addrPanelId="staffPermAddrPan" addrId="staffEquiPersPermAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrPermStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrPermDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrPermDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrPermCities}"
 					countryId="staffEquiPersPermCntry" stateId="staffEquiPersPermState" 
+					divisionId="staffEquiPersPermDivision" 
 					districtId="staffEquiPersPermDist" cityId="staffEquiPersPermCity" 
 					postCodeId="staffEquiPersPermAddrPostCode"
 					addressType="#{SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL}"/>
 					
 				</p:outputPanel></td>
-			<td><p:outputPanel id="staffMailAddrPan"
+			<td>
+			<!-- 13320-DivisionAdd -->
+			<p:outputPanel id="staffMailAddrPan"
 					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
 					layout="block">
 					
@@ -38,9 +42,11 @@
 					latestAddrObj="#{backingBean.managedBean.latestMailAddr}" 
 					addrPanelId="staffMailAddrPan" addrId="staffEquiPersMailAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrMailStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrMailDivisions}" 
 					districtItems="#{backingBean.managedBean.shrHldrMailDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrMailCities}"
 					countryId="staffEquiPersMailCntry" stateId="staffEquiPersMailState" 
+					divisionId="staffEquiPersMailDivision" 
 					districtId="staffEquiPersMailDist" cityId="staffEquiPersMailCity" 
 					postCodeId="staffEquiPersMailAddrPostCode" showTick="true"
 					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}"

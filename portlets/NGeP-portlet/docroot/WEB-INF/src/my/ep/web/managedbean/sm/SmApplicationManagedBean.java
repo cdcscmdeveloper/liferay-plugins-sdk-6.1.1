@@ -29,6 +29,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmMachine;
@@ -265,7 +266,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> basicCompanyDistricts;
 	private List<SelectItem> basicCompanyCities;
 	private List<PmRace> racesList;
-
+    private Long divisionId;//13320
 	private List<SelectItem> basicOffFacStates;
 	private List<SelectItem> basicOffFacDistricts;
 	private List<SelectItem> basicOffFacCities;
@@ -317,24 +318,48 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> salutationSelectItems;
 
 	private List<PmState> persnlPermStates;
+	private List<PmDivision> persnlPermDivisions;
 	private List<PmDistrict> persnlPermDistricts;
 	private List<PmCity> persnlPermCities;
 
 	private List<PmState> persnlOffStates;
+	private List<PmDivision> persnlOffDivisions;
 	private List<PmDistrict> persnlOffDistricts;
 	private List<PmCity> persnlOffCities;
 
 	private List<PmState> persnlMailStates;
+	private List<PmDivision> persnlMailDivisions;
 	private List<PmDistrict> persnlMailDistricts;
 	private List<PmCity> persnlMailCities;
 
 	private List<PmState> persnlResdStates;
+	private List<PmDivision> persnlResdDivisions;
 	private List<PmDistrict> persnlResdDistricts;
 	private List<PmCity> persnlResdCities;
 
 	private List<SelectItem> bankStates;
 	private List<SelectItem> bankDistricts;
 	private List<SelectItem> bankCities;
+	private List<SelectItem> bankDivisions;//13320
+	
+	
+	//13320-Start
+	private List<SelectItem> basicCompanyDivisions;
+	private List<SelectItem> basicOffFacDivisions;
+	private List<SelectItem> branchCompanyDivisions;
+	private List<SelectItem> assocCompanyDivisions;
+	private List<SelectItem> equiCompanyDivisions;
+	private List<SelectItem> factoryFacilityDivisions;
+	private List<SelectItem> dockFacilityDivisions;
+	private List<SelectItem> workShopFacilityDivisions;
+	private List<SelectItem> storeFacilityDivisions;
+	private List<SelectItem> shrHldrPermDivisions;
+	private List<SelectItem> shrHldrOffDivisions;
+	private List<SelectItem> shrHldrMailDivisions;
+	private List<SelectItem> shrHldrResdDivisions;
+	private boolean divisionBox=true;//13320
+	
+	//13320-End
 
 	private List<Long> svTaskIdsNeedToDelete;
 
@@ -4160,6 +4185,166 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
+	}
+	
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public List<SelectItem> getBankDivisions() {
+		return bankDivisions;
+	}
+
+	public void setBankDivisions(List<SelectItem> bankDivisions) {
+		this.bankDivisions = bankDivisions;
+	}
+
+	public List<PmDivision> getPersnlPermDivisions() {
+		return persnlPermDivisions;
+	}
+
+	public void setPersnlPermDivisions(List<PmDivision> persnlPermDivisions) {
+		this.persnlPermDivisions = persnlPermDivisions;
+	}
+
+	public List<PmDivision> getPersnlOffDivisions() {
+		return persnlOffDivisions;
+	}
+
+	public void setPersnlOffDivisions(List<PmDivision> persnlOffDivisions) {
+		this.persnlOffDivisions = persnlOffDivisions;
+	}
+
+	public List<PmDivision> getPersnlMailDivisions() {
+		return persnlMailDivisions;
+	}
+
+	public void setPersnlMailDivisions(List<PmDivision> persnlMailDivisions) {
+		this.persnlMailDivisions = persnlMailDivisions;
+	}
+
+	public List<PmDivision> getPersnlResdDivisions() {
+		return persnlResdDivisions;
+	}
+
+	public void setPersnlResdDivisions(List<PmDivision> persnlResdDivisions) {
+		this.persnlResdDivisions = persnlResdDivisions;
+	}
+
+	public List<SelectItem> getBasicCompanyDivisions() {
+		return basicCompanyDivisions;
+	}
+
+	public void setBasicCompanyDivisions(List<SelectItem> basicCompanyDivisions) {
+		this.basicCompanyDivisions = basicCompanyDivisions;
+	}
+
+	public List<SelectItem> getBasicOffFacDivisions() {
+		return basicOffFacDivisions;
+	}
+
+	public void setBasicOffFacDivisions(List<SelectItem> basicOffFacDivisions) {
+		this.basicOffFacDivisions = basicOffFacDivisions;
+	}
+
+	public List<SelectItem> getBranchCompanyDivisions() {
+		return branchCompanyDivisions;
+	}
+
+	public void setBranchCompanyDivisions(List<SelectItem> branchCompanyDivisions) {
+		this.branchCompanyDivisions = branchCompanyDivisions;
+	}
+
+	public List<SelectItem> getAssocCompanyDivisions() {
+		return assocCompanyDivisions;
+	}
+
+	public void setAssocCompanyDivisions(List<SelectItem> assocCompanyDivisions) {
+		this.assocCompanyDivisions = assocCompanyDivisions;
+	}
+
+	public List<SelectItem> getEquiCompanyDivisions() {
+		return equiCompanyDivisions;
+	}
+
+	public void setEquiCompanyDivisions(List<SelectItem> equiCompanyDivisions) {
+		this.equiCompanyDivisions = equiCompanyDivisions;
+	}
+
+	public List<SelectItem> getFactoryFacilityDivisions() {
+		return factoryFacilityDivisions;
+	}
+
+	public void setFactoryFacilityDivisions(List<SelectItem> factoryFacilityDivisions) {
+		this.factoryFacilityDivisions = factoryFacilityDivisions;
+	}
+
+	public List<SelectItem> getDockFacilityDivisions() {
+		return dockFacilityDivisions;
+	}
+
+	public void setDockFacilityDivisions(List<SelectItem> dockFacilityDivisions) {
+		this.dockFacilityDivisions = dockFacilityDivisions;
+	}
+
+	public List<SelectItem> getWorkShopFacilityDivisions() {
+		return workShopFacilityDivisions;
+	}
+
+	public void setWorkShopFacilityDivisions(List<SelectItem> workShopFacilityDivisions) {
+		this.workShopFacilityDivisions = workShopFacilityDivisions;
+	}
+
+	public List<SelectItem> getStoreFacilityDivisions() {
+		return storeFacilityDivisions;
+	}
+
+	public void setStoreFacilityDivisions(List<SelectItem> storeFacilityDivisions) {
+		this.storeFacilityDivisions = storeFacilityDivisions;
+	}
+
+	public List<SelectItem> getShrHldrPermDivisions() {
+		return shrHldrPermDivisions;
+	}
+
+	public void setShrHldrPermDivisions(List<SelectItem> shrHldrPermDivisions) {
+		this.shrHldrPermDivisions = shrHldrPermDivisions;
+	}
+
+	public List<SelectItem> getShrHldrOffDivisions() {
+		return shrHldrOffDivisions;
+	}
+
+	public void setShrHldrOffDivisions(List<SelectItem> shrHldrOffDivisions) {
+		this.shrHldrOffDivisions = shrHldrOffDivisions;
+	}
+
+	public List<SelectItem> getShrHldrMailDivisions() {
+		return shrHldrMailDivisions;
+	}
+
+	public void setShrHldrMailDivisions(List<SelectItem> shrHldrMailDivisions) {
+		this.shrHldrMailDivisions = shrHldrMailDivisions;
+	}
+
+	public List<SelectItem> getShrHldrResdDivisions() {
+		return shrHldrResdDivisions;
+	}
+
+	public void setShrHldrResdDivisions(List<SelectItem> shrHldrResdDivisions) {
+		this.shrHldrResdDivisions = shrHldrResdDivisions;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
 	}
 
 }

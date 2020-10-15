@@ -144,9 +144,10 @@
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
-				
+				<!-- #13320 - added division -->
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedStoreFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.storeFacilityStates}"
+					divisionItems="#{backingBean.managedBean.storeFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.storeFacilityDistricts}" cityItems="#{backingBean.managedBean.storeFacilityCities}" 
 					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeBlockPanel"/>
 					

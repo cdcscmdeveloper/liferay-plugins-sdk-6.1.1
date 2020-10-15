@@ -208,7 +208,9 @@
 						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 						size="40" id="companyNameId"  
-						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}" /> 
+						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm or registrationBackingBean.managedBean.activeDisicplinaryAction}" >
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
+						</p:inputText> 
 						<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
 			</tr>
 			<tr>
@@ -222,13 +224,17 @@
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						readonlyInput="true" size="30" showOn="button" yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{CommonConstants.CURRENT_DATE}" />
+						readonlyInput="true" size="30" showOn="button" yearRange="#{lbl['lbl.calendar.year.range']}" maxdate="#{CommonConstants.CURRENT_DATE}" >
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
+						</p:calendar>
 					
 					<p:calendar rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm and !empty registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}" disabled="true" id="estDateCalIdV"
 						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" 
-						readonlyInput="true" size="30" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}"/>
+						readonlyInput="true" size="30" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}">
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
+						</p:calendar>
 					<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
 			</tr>
 
@@ -237,6 +243,7 @@
 				<td class="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
 						size="40" id="incomeTaxId" maxlength="30" disabled="#{registrationBackingBean.managedBean.viewMode}">
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
 						</p:inputText>
 				<p:message for="incomeTaxId" id="incomeTaxIdMsg" display="icon" /></td>
 				<td></td>
@@ -253,7 +260,7 @@
 						label="#{lbl['lbl.sm.companyaddress']}" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}"
 						>
-						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput"></p:ajax>
+						<p:ajax event="blur" update=":form:acgmap:gmapInput:gmapInput" partialSubmit="true"></p:ajax>
 					</p:inputText>
 					<p:graphicImage id="ttImageCompAdd1" value="/css/images/design/tooltips.png" />
 					<p:tooltip for="ttImageCompAdd1" id="ttCompAdd1">
@@ -285,7 +292,9 @@
 					<p:inputText size="60"
 						id="compAdd2" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" 
-						/></td>
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
+						</p:inputText>
+						</td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
@@ -301,17 +310,45 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="pnlCompInfo,divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
+					</tr>
+					<!-- 13320 -->
+			<tr id="divTrId">
+				<td></td>
+				<td></td>
+				<td class="tdTitle">
+					<h:panelGroup id="divisionLabelPanelId" rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</h:panelGroup>
+				</td>
+				<td class="tdContent">
+					<h:panelGroup id="divisionDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+						<p:selectOneMenu id="busDivision"
+						label="#{lbl['lbl.sm.division']}"
+						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
+						style="width:80%">
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+						<f:selectItems var="division"
+							value="#{registrationBackingBean.managedBean.businessDivisionLs}"
+							itemValue="#{division.divisionId}"
+							itemLabel="#{division.divisionName}" />
+						<p:ajax event="change" process="@this"
+							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
+							update="busDistrict,busCity" />
+					</p:selectOneMenu>
+					</h:panelGroup>
+				</td>
 			</tr>
-
 			<tr>
 				<td></td>
 				<td class="tdContent">
 					<p:inputText size="60"
 						id="compAdd3" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}"
-						 /></td>
+						<p:ajax event="blur" partialSubmit="true"></p:ajax>
+						 </p:inputText></td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
@@ -346,6 +383,7 @@
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40">
 								<f:validator validatorId="postcodeValidator" />
+								<p:ajax event="blur" partialSubmit="true"></p:ajax>
 							</p:inputText>
 							<p:message id="compPostCodeMyMsg" for="compPostCodeMy"
 								showSummary="true" showDetail="false" display="icon" />
@@ -356,6 +394,7 @@
 								label="#{lbl['lbl.sm.postcode']}" id="compPostCodeForeign"
 								value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
 								size="35" disabled="#{registrationBackingBean.managedBean.viewMode}">
+								<p:ajax event="blur" partialSubmit="true"></p:ajax>
 							</p:inputText>
 							<p:message id="compPostCodeForeignMsg"
 								for="compPostCodeForeign" showSummary="true"

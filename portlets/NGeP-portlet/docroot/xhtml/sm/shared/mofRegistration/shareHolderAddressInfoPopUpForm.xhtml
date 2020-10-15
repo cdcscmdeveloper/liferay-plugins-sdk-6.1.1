@@ -19,15 +19,18 @@
 					latestAddrObj="#{backingBean.managedBean.latestPermAddr}" 
 					addrPanelId="permAddrPan" addrId="equiPersPermAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrPermStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrPermDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrPermDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrPermCities}"
-					countryId="equiPersPermCntry" stateId="shrPermState" 
+					countryId="equiPersPermCntry" stateId="shrPermState" divisionId="shrPermDivision"
 					districtId="shrPermDist" cityId="shrPermCity" 
 					postCodeId="equiPersPermAddrPostCode"
 					addressType="#{SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL}"/>
 					
 				</p:outputPanel></td>
-			<td><p:outputPanel id="mailAddrPan"
+			<td>
+			<!-- 13320-DivisionAdd -->
+			<p:outputPanel id="mailAddrPan"
 					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
 					layout="block">
 					
@@ -38,9 +41,10 @@
 					latestAddrObj="#{backingBean.managedBean.latestMailAddr}" 
 					addrPanelId="mailAddrPan" addrId="equiPersMailAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrMailStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrMailDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrMailDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrMailCities}"
-					countryId="equiPerMailCntry" stateId="shrMailState" 
+					countryId="equiPerMailCntry" stateId="shrMailState" divisionId="shrMailDivision" 
 					districtId="shrMailDist" cityId="shrMailCity" 
 					postCodeId="equiPersMailAddrPostCode" showTick="true"
 					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}"
@@ -48,6 +52,7 @@
 					
 				</p:outputPanel></td>
 		</tr>
+		<!-- 13320-DivisionAdd -->
 		<tr>
 			<td valign="top" width="50%">
 				<p:outputPanel id="resiAddrPan" layout="block"
@@ -62,9 +67,10 @@
 					latestAddrObj="#{backingBean.managedBean.latestResdAddr}" 
 					addrPanelId="resiAddrPan" addrId="equiPersResiAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrResdStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrResdDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrResdDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrResdCities}"
-					countryId="equiPersResiCntry" stateId="shrResState" 
+					countryId="equiPersResiCntry" stateId="shrResState" divisionId="shrResDivision" 
 					districtId="shrResDist" cityId="shrResCity" 
 					postCodeId="equiPersResdAddrPostCode" showTick="true" 
 					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}" 
@@ -83,9 +89,10 @@
 					latestAddrObj="#{backingBean.managedBean.latestOffAddr}" 
 					addrPanelId="offcAddrPan" addrId="equiPersOffcAddrLine" 
 					stateItems="#{backingBean.managedBean.shrHldrOffStates}"
+					divisionItems="#{backingBean.managedBean.shrHldrOffDivisions}"
 					districtItems="#{backingBean.managedBean.shrHldrOffDistricts}"
 					cityItems="#{backingBean.managedBean.shrHldrOffCities}"
-					countryId="equiPersOffcCntry" stateId="shrOffState" 
+					countryId="equiPersOffcCntry" stateId="shrOffState" divisionId="shrOffDivision" 
 					districtId="shrOffDist" cityId="shrOffCity" 
 					postCodeId="equiPersOffcAddrPostCode" showTick="true"
 					tickLabel="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}"
