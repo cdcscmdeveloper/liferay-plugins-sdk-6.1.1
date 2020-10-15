@@ -2370,9 +2370,24 @@ public class QTCloneBackingbean extends
 					scQt.getQtId());
 			committeTabs.add(new TabBean(parameterHelper.getParameterDesc(
 					parameterType, tabType), tabType, specCommitte));
+			boolean fsApplicable=false;
+			SelectItem[] fcTypes=this.retrieveFinalizationCommitteeType();
+			if(null!=fcTypes){
+				if(fcTypes.length>0){
+					for(SelectItem i:fcTypes){
+						if(copyScqt.getFinalizationCommitte()!=null){
+							if(i.getValue().equals(copyScqt.getFinalizationCommitte().getParameterId())){
+								fsApplicable=true;
+							}
+						}
+					}
+				}
+			}	
+			if(fsApplicable){
+				scQt.setFinalizationCommitte(copyScqt.getFinalizationCommitte());
+				scQt.setFinalizationSecratery(copyScqt.getFinalizationSecratery());
+			}
 			
-			scQt.setFinalizationCommitte(copyScqt.getFinalizationCommitte());
-			scQt.setFinalizationSecratery(copyScqt.getFinalizationSecratery());
 			if (null == this.getManagedBean().getQt().getFinalizationCommitte()) {
 				scQt.setFinalizationCommitte(new PmParameter());
 			}
