@@ -939,7 +939,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
 							// TODO Auto-generated method stub
 												
-							return o1.getPmGlAccount().getGlAccCode().compareTo(o2.getPmGlAccount().getGlAccCode());
+							return (o1.getPmGlAccount().getGlAccCode() + o1.getExpenditureItemId()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getExpenditureItemId());
 						}
 
 				    });
@@ -957,8 +957,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
 							// TODO Auto-generated method stub
 											
-							return o1.getPmGlAccount().getGlAccCode().compareTo(o2.getPmGlAccount().getGlAccCode());
-						}
+						  return (o1.getPmGlAccount().getGlAccCode() + o1.getExpenditureItemId()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getExpenditureItemId());
+											
+					    }
 
 				    });
 				    
@@ -975,7 +976,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
 							// TODO Auto-generated method stub
 												
-							return o1.getPmGlAccount().getGlAccCode().compareTo(o2.getPmGlAccount().getGlAccCode());
+						    return (o1.getPmGlAccount().getGlAccCode() + o1.getExpenditureItemId()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getExpenditureItemId());
+						
 						}
 
 				    });
@@ -993,7 +995,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
 								// TODO Auto-generated method stub
 													
-								return o1.getPmGlAccount().getGlAccCode().compareTo(o2.getPmGlAccount().getGlAccCode());
+							   return (o1.getPmGlAccount().getGlAccCode() + o1.getExpenditureItemId()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getExpenditureItemId());
 							}
 
 					    });
@@ -1011,13 +1013,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
 								// TODO Auto-generated method stub
 													
-								return o1.getPmGlAccount().getGlAccCode().compareTo(o2.getPmGlAccount().getGlAccCode());
+							  return (o1.getPmGlAccount().getGlAccCode() + o1.getExpenditureItemId()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getExpenditureItemId());
+							
 							}
 
 					    });
 					    
 					}
-		}
+		     }
 		
 		
 		calculateEpGrandTotal(ParameterConst.VOT_MENGURUS);
