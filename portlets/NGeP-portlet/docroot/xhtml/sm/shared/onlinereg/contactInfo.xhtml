@@ -78,7 +78,8 @@
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.correspondenceadd']}"
 						value="#{registrationBackingBean.managedBean.smResAdd.address1}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /> 
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" > 
+						<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
 					<p:message id="conAddress1Msg" for="conAddress1" display="icon" />
 				</td>
 
@@ -137,7 +138,9 @@
 				<td class="tdContent"><p:inputText size="40"
 						id="conAddress2" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smResAdd.address2}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" >
+						<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
+						</td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
@@ -164,7 +167,9 @@
 				<td class="tdContent"><p:inputText size="40"
 						id="conAddress3" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smResAdd.address3}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" >
+						<p:ajax event="blur" partialSubmit="true"></p:ajax></p:inputText>
+						</td>
 
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
@@ -196,6 +201,7 @@
 								value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40">
+								<p:ajax event="blur" partialSubmit="true"></p:ajax>
 								<f:validator validatorId="postcodeValidator" />
 							</p:inputText>
 							<p:message id="conPostCodeMyMsg" for="conPostCodeMy"
