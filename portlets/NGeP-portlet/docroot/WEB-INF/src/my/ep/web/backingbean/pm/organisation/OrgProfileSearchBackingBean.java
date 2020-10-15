@@ -188,6 +188,7 @@ public class OrgProfileSearchBackingBean extends
 		}
 		//#26474 - start
 		this.getManagedBean().setMinistryProfileId(ministryId);
+		this.getManagedBean().setDisabledMinistry(false);
 		// #26474 - end
 		//#26475 - end
 	}
