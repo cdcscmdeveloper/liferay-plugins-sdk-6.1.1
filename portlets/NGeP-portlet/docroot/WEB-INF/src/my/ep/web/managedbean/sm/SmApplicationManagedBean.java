@@ -20,7 +20,6 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
-import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -72,7 +71,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.aut.SearchOperator;
@@ -92,7 +90,6 @@ import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
-import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
@@ -104,7 +101,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
 
-//import my.ep.persistence.entity.pm.common.PmEduLevel;
 
 @ManagedBean(name = "smApplMB")
 @SessionScoped
@@ -239,7 +235,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean mofSupplier;
 	private boolean inDbAlreadyAuth;
 	private String decisionAckMsg;
-	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
 	private String[] bpmActions;
 	private String bpmTaskName;
@@ -249,7 +244,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String poSiteVisitType;
 	private boolean testBlock;
 	private int maxReviewCount;
-	// private int authPerCount;
 	private SmApplSectionReview poSecReview;
 	private SmApplSectionReview apprvrSecReview;
 	private boolean termsAccepted;
@@ -516,7 +510,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poInquiryRespond;
 	private boolean changeCurrRegStatus;
 	private boolean showPoApprovedOrRecommendButton;
-	private boolean showNewChanges;
+	//private boolean showNewChanges;
 	private boolean updatePersonnelPage;
 	private boolean wasBumiApplication;
 
@@ -568,12 +562,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	//#16052019 - SSM INTEGRATION CR
 	private List<SmEquityCompany> smEquityCompanyTemp;
-	private List<SmPersonnel> personnelsOwner = new ArrayList();
-	private List<SmPersonnel> personnelsDirector  = new ArrayList();
-	private List<SmPersonnel> personnelsSsm  = new ArrayList();
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();
+	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();
 	
 	//26238
 	private Long disabledCategoryL3Id;
@@ -598,9 +592,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			try {
 				return getRejectDescResultBean(reqDTO);
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<PmReasonDesc>();
 			} finally {
-				reqDTO = null;
+				//reqDTO = null;
 			}
 		}
 
@@ -638,7 +632,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 
 	public SmApplicationManagedBean() {
-		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
 		List<Role> loginUserRoles = sc.getUserRoleList();
 		poSecReview = new SmApplSectionReview();
@@ -650,12 +643,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
 				|| sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
 			setPoUser(true);
-			System.out.println("  *** LOGGED IN USER IS PO ****");
 		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
 				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)
 				|| sc.hasRoleUser(SupplierManagementConst.APPROVER)) {
 			setApproverUser(true);
-			System.out.println("  *** LOGGED IN USER IS APPROVER ****");
 		} else if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
@@ -670,18 +661,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				setMofSupplier(true);
 			}
 		}
-		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
-		// setPoUser(true);
-		// }
 
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
-		// defaultAddr.setPmCountry(new PmCountry());
 		defaultAddr
 				.setPmCountry(SmCommonUtil
 						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
-		// defaultAddr.getPmCountry().setCountryId(1l);
 		defaultAddr.setPmState(new PmState());
 
 		editVO = new SmSectionEditorVO();
@@ -710,9 +696,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				.setSmCompanyExperienceCats(new ArrayList<SmCompanyExperienceCat>());
 		selectedCompanyExperience.getSmCompanyExperienceCats().add(
 				setDefaulatExpCatVal());
-		// selectedConstProjs = new ArrayList<SmProjectExperience>();
-		// selectedConstProj = new SmProjectExperience();
-		// For share holder personell
 		selectedShareHolder = new SmPersonnel();
 		selectedShareHolder.setPmCountry(SmApplicationUtil.setDefaultAddr(null)
 				.getPmCountry());
@@ -735,18 +718,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 				.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedShareHolder
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		// selectedShareHolder.getSmPersonnelAddresses().add(shareHolderMailAddr);
-		// selectedShareHolder.getSmPersonnelAddresses().add(shareHolderPermAddr);
 		selectedShareHolder
 				.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
-		// shareHolderAcademics = new SmStaffAcademic();
-		// selectedShareHolder.getSmStaffAcademics().add(shareHolderAcademics);
 
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
 		selectedPersonnel.setPmCountry(SmApplicationUtil.setDefaultAddr(null)
 				.getPmCountry());
-		// smapplAuthPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersAcademics = new ArrayList<SmStaffAcademic>();
 		selectedPersJobFunctions = new ArrayList<SmStaffExperience>();
@@ -778,7 +756,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
 		selectedManufacturer = new SmManufacturingDtl();
-		// selectedManufacturer.setPmUom(new PmUom());
 		selectedMachine = new SmMachineDtl();
 		selectedMachine.setCategoryType(new PmParameter());
 		selectedMachine.setMachine(new PmMachine());
@@ -792,7 +769,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		smAppl = new SmAppl();
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		selectedBank = new SmSupplierBank();
-		// selectedBank.setPmbank(new PmBank());
 		selectedBank.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
 		selectedBank.setPmFinancialOrg(new PmFinancialOrg());
 		selectedBank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
@@ -820,7 +796,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedRelatedCompany = new SmRelatedCompany();
 		selectedStaffAcademic = new SmStaffAcademic();
 		selectedStaffAcademic.setPmEduField(new PmEduField());
-		// selectedStaffAcademic.setPmEduLevel(new PmEduLevel());
 		selectedStaffAcademic.setQualificationId(new PmParameter());
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
@@ -1095,15 +1070,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.shareHolderMailAddr = shareHolderMailAddr;
 	}
 
-	// public SmStaffAcademic getShareHolderAcademics() {
-	// return shareHolderAcademics;
-	// }
-	//
-	// public void setShareHolderAcademics(SmStaffAcademic shareHolderAcademics)
-	// {
-	// this.shareHolderAcademics = shareHolderAcademics;
-	// }
-
 	public SmSupplierBank getSelectedSignatoryBankAcct() {
 		return selectedSignatoryBankAcct;
 	}
@@ -1129,15 +1095,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedBanks = selectedBanks;
 	}
 
-	// public List<SmPersonnel> getSmapplAuthPersonnels() {
-	// return smapplAuthPersonnels;
-	// }
-	//
-	// public void setSmapplAuthPersonnels(List<SmPersonnel>
-	// smapplAuthPersonnels) {
-	// this.smapplAuthPersonnels = smapplAuthPersonnels;
-	// }
-
 	public List<SmPersonnel> getSelectedPersonnels() {
 		return selectedPersonnels;
 	}
@@ -1153,30 +1110,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedPersonnel(SmPersonnel selectedPersonnel) {
 		this.selectedPersonnel = selectedPersonnel;
 	}
-
-	// public SmPersonnelAddress getPersonnelPermAddr() {
-	// return personnelPermAddr;
-	// }
-	//
-	// public void setPersonnelPermAddr(SmPersonnelAddress personnelPermAddr) {
-	// this.personnelPermAddr = personnelPermAddr;
-	// }
-	//
-	// public SmPersonnelAddress getPersonnelMailAddr() {
-	// return personnelMailAddr;
-	// }
-	//
-	// public void setPersonnelMailAddr(SmPersonnelAddress personnelMailAddr) {
-	// this.personnelMailAddr = personnelMailAddr;
-	// }
-
-	// public SmStaffAcademic getPersonnelAcademics() {
-	// return personnelAcademics;
-	// }
-	//
-	// public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
-	// this.personnelAcademics = personnelAcademics;
-	// }
 
 	public SmPersonnel getSelectedPersonnelDtl() {
 		return selectedPersonnelDtl;
@@ -2000,22 +1933,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedPersAcademics = selectedPersAcademics;
 	}
 
-	// public SmPersonnelAddress getPersonnelOffAddr() {
-	// return personnelOffAddr;
-	// }
-	//
-	// public void setPersonnelOffAddr(SmPersonnelAddress personnelOffAddr) {
-	// this.personnelOffAddr = personnelOffAddr;
-	// }
-	//
-	// public SmPersonnelAddress getPersonnelResdAddr() {
-	// return personnelResdAddr;
-	// }
-	//
-	// public void setPersonnelResdAddr(SmPersonnelAddress personnelResdAddr) {
-	// this.personnelResdAddr = personnelResdAddr;
-	// }
-
 	public List<PmState> getPersnlPermStates() {
 		return persnlPermStates;
 	}
@@ -2135,14 +2052,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setReasonId(Long[] reasonId) {
 		this.reasonId = reasonId;
 	}
-
-	// public int getAuthPerCount() {
-	// return authPerCount;
-	// }
-	//
-	// public void setAuthPerCount(int authPerCount) {
-	// this.authPerCount = authPerCount;
-	// }
 
 	public SmPersonnleCalcVO getPersonCalc() {
 		return personCalc;
@@ -3027,18 +2936,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.rejectionOtherReasonId = rejectionOtherReasonId;
 	}
 
-	/*
-	 * public PmEduLevel getCertEduLevel() { return certEduLevel; }
-	 * 
-	 * public void setCertEduLevel(PmEduLevel certEduLevel) { this.certEduLevel
-	 * = certEduLevel; }
-	 * 
-	 * public PmEduLevel getDiplomaEduLevel() { return diplomaEduLevel; }
-	 * 
-	 * public void setDiplomaEduLevel(PmEduLevel diplomaEduLevel) {
-	 * this.diplomaEduLevel = diplomaEduLevel; }
-	 */
-
 	public List<PmParameterDesc> getEduLevelList() {
 		return eduLevelList;
 	}
@@ -3271,15 +3168,19 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 
 	public boolean isShowNewChanges() {
-		String newChanges = EpPropertiesUtils.getInstance().getProperty(
-				"sm.show.new.changes");
-		boolean showNewChanges = Boolean.valueOf(newChanges);
-		return showNewChanges;
+		//#29116 CR 3460: Static Code Analysis Start
+		//String newChanges = EpPropertiesUtils.getInstance().getProperty( "sm.show.new.changes");
+		//boolean showNewChanges = Boolean.valueOf(newChanges);
+		//return showNewChanges;
+		return Boolean.parseBoolean(EpPropertiesUtils.getInstance().getProperty( "sm.show.new.changes"));
+		//#29116 CR 3460: Static Code Analysis End
 	}
 
+	/*
 	public void setShowNewChanges(boolean showNewChanges) {
 		this.showNewChanges = showNewChanges;
 	}
+	*/
 
 	public boolean isAlreadyBusinessSpecialCatcode() {
 		return alreadyBusinessSpecialCatcode;
