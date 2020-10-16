@@ -236,7 +236,9 @@
 						value="#{lbl['lbl.fl.supp.invoice.no']}" /><p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="30" maxlength="30" disabled="#{invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView || !bpmTasklistBackingBean.managedBean.claim}" 
-						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" label="#{lbl['lbl.fl.supp.inv.no']}">
+						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" label="#{lbl['lbl.fl.supp.inv.no']}"
+						validatorMessage="#{lbl['lbl.txt.special.char']}">
+						<f:validateRegex pattern="^[a-zA-Z0-9~`!@#\$%\^&amp;\*\(\)_\-\+={\[\}\]\|\\:;&quot;'&lt;,>\.\?\/  ]*$" />
 						<p:ajax update="@this"></p:ajax>
 						</p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/><p:message for="supplierInvoiceRef" display="icon" /></td>		
