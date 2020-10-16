@@ -4978,7 +4978,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			//#26474 -start-
-			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(scQt);
 			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
