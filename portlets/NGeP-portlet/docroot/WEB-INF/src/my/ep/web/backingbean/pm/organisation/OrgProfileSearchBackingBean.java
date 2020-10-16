@@ -174,11 +174,21 @@ public class OrgProfileSearchBackingBean extends
 	
 	public void resetOrgProfiles(){
 		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
+		
 		this.renewSesionObject();
+		
 		getOrgProfileDataModel().resetData();
+		
 		//#26475 - start
 		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
-		if (StringUtils.isNotBlank(portletName) && portletName.toLowerCase().contains("loa")){
+		
+		//#26474 -start-:::
+		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains("loa") || 
+				 portletName.toLowerCase().contains("createmanualsourcing"))) {
+			 
+			log.info("::: resetOrgProfiles() portletName: "+ portletName);
+			//#26474 -end-:::
+			
 			this.getManagedBean().setMinistryProfileId(ministryId);
 			//#29173 - CR 26475: Static Code Analysis
 			//start
@@ -186,10 +196,6 @@ public class OrgProfileSearchBackingBean extends
 			this.getManagedBean().setDisabledMinistry(ministryId != null);
 			//end #29173 - CR 26475: Static Code Analysis
 		}
-		//#26474 - start
-		this.getManagedBean().setMinistryProfileId(ministryId);
-		this.getManagedBean().setDisabledMinistry(false);
-		// #26474 - end
 		//#26475 - end
 	}
 
