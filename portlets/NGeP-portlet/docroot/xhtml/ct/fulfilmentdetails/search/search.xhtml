@@ -223,9 +223,11 @@
                              	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
 								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					        </p:menuitem>
-					        
+					        <!--#29374 start-->
 					        <p:menuitem id="menuItemId15" value="#{lbl['lbl.ct.notification.setting']}" icon="ui-icon-edit" 
-						          rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
+						          rendered="#{contractDetailsBackingBean.isContractAdmin() 
+						          			and data.ctStatus == 1
+						          			and data.ctContract.recordStatusFlg==1
 						          			and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 									        and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 									        and !data.allowAgreementCreation}"
@@ -233,6 +235,7 @@
 						          action="#{contractDetailsBackingBean.gotoNotificationSetting(data.ctContract.contractId)}"
 						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 						    </p:menuitem>
+						     <!--#29374 end-->
 						    
 						    <!-- #25406 - Start -->
 						     <p:menuitem id="menuItemId7" value="#{lbl['lbl.ct.owner.management']}" icon="ui-icon-edit" 
