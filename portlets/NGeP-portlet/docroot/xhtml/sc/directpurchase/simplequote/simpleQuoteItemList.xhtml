@@ -60,12 +60,11 @@
 			widgetVar="itemSpecificationDlgVar"
 			header="#{lbl['lbl.ct.item.specification.list']}" 
 			styleClass="pop_up_top" modal="true"
-			width="700" height="450" resizable="false">
+			width="700" resizable="false">
 			<h:panelGrid columns="1">
 				<p:outputLabel
 					value="#{lbl['lbl.ct.item.name']}: #{simpleQuoteBackingBean.managedBean.panelItems[0].itemName}" />
 			</h:panelGrid>
-			<p:spacer height="2" />
 			<p:dataTable id="itemSpecDescTbl"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="ctPanelItemSpec" rowIndexVar="index"
