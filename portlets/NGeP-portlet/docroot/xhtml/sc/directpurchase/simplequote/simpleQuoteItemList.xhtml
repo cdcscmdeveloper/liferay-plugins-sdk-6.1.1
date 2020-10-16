@@ -58,8 +58,9 @@
 	
 		<p:dialog id="itemSpecificationDlg"
 			widgetVar="itemSpecificationDlgVar"
-			header="#{lbl['lbl.ct.item.specification.list']}" styleClass="pop_up_top" modal="true"
-			style="width:70%" resizable="false">
+			header="#{lbl['lbl.ct.item.specification.list']}" 
+			styleClass="pop_up_top" modal="true"
+			width="700" height="450" resizable="false">
 			<h:panelGrid columns="1">
 				<p:outputLabel
 					value="#{lbl['lbl.ct.item.name']}: #{simpleQuoteBackingBean.managedBean.panelItems[0].itemName}" />
