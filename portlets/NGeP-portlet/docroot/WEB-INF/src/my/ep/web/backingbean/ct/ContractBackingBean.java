@@ -1466,7 +1466,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		
-		log.info("In validateCeilingAmount - filtered value in list ==================== : "+getFilteredAgencies().size());
+		//log.info("In validateCeilingAmount - filtered value in list ==================== : "+getFilteredAgencies().size());
 	}
 
 	/**
