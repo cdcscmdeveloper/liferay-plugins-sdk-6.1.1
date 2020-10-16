@@ -2226,10 +2226,12 @@ public class TemplateSpecBackingBean extends
 					if (specAnswer.getTplSpecZoneQty()!=null 
 					&& specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
 						if (autoScore != null) {
+							specAnswer.setAutoScore(BigDecimal.valueOf(0));
 							autoScore = BigDecimal.valueOf(0);
 							totalScore = totalScore.add(autoScore);
 							totalMaxScore = BigDecimal.valueOf(0);
 						}else if(userScore != null){
+							specAnswer.setUserScore(BigDecimal.valueOf(0));
 							userScore = BigDecimal.valueOf(0);
 							totalScore = totalScore.add(userScore);
 							totalMaxScore = BigDecimal.valueOf(0);
@@ -2239,10 +2241,12 @@ public class TemplateSpecBackingBean extends
 					if (specAnswer.getTplSpecQuestion().getClQuantity() != null 
 							&& specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) < 0) {
 							if (autoScore != null) {
+								specAnswer.setAutoScore(BigDecimal.valueOf(0));
 								autoScore = BigDecimal.valueOf(0);
 								totalScore = totalScore.add(autoScore);
 								totalMaxScore = BigDecimal.valueOf(0);
 							}else if(userScore != null){
+								specAnswer.setUserScore(BigDecimal.valueOf(0));
 								userScore = BigDecimal.valueOf(0);
 								totalScore = totalScore.add(userScore);
 								totalMaxScore = BigDecimal.valueOf(0);
