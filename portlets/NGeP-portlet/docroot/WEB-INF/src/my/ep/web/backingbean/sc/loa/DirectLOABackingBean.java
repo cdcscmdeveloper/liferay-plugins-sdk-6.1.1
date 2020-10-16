@@ -4737,19 +4737,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		 */
 		public void approveBeforeupdateBpmTaskAction(String outcome) {
 			debugLogger("approveBeforeupdateBpmTaskAction");
-
-			// #26474 - start
-			validateContractDetails(this.getManagedBean().getScLoa());
-			// #26474 - end
-		
 			this.getManagedBean().setAction(outcome);
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-			} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-				//Enhancement #21694 START
-				//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
-				updateReviseBPMTaskAction(outcome);
+			}
+			else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+				//Enhancement #21694 START 
+				if(this.getManagedBean().getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)){
+					//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+					updateReviseBPMTaskAction(outcome);
+				}else{
+					//IF REVISE BUT NOT REVISE DOCUMENT STAGE
+					updateBpmTaskAction(outcome);
+				}
 				//Enhancement #21694 END
 			}
 			else {
