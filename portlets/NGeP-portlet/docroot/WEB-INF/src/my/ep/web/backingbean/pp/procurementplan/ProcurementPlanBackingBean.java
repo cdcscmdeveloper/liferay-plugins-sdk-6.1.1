@@ -2841,33 +2841,35 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(!epItems.isEmpty()){
 			List <Long> soIds = new ArrayList<Long>();
 			for(PpExpenditureItem epItem: epItems){
-				if(DbValueConst.RECORD_STATUS_ACTIVE ==epItem.getRecordStatusFlg()){
-					if(epItem.getPmGlAccount().getGlAccountId()==null){
-						throw new EpException(MessageConst.ERROR_730003);
-					}
-					if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
-						throw new EpException(MessageConst.ERROR_730004);
-					}
-					if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
-						throw new EpException(MessageConst.ERROR_730005);
-					}
-					if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
-						throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
-					}
-					if(epItem.getNonEpAmt().intValue()>0){
-						if(epItem.getJustifications()==null 
-								|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
-								|| (epItem.getJustifications()!=null 
-									&& epItem.getJustifications().isEmpty() 
-									&& epItem.getJustifications().get(0)==null)  
-								|| (epItem.getJustifications()!=null &&(
-									 epItem.getJustifications().isEmpty() 
-									|| epItem.getJustifications().get(0)==null
-									|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
-							throw new EpException(MessageConst.ERROR_730007);
+				if(epItem.getRecordStatusFlg() != null){
+					if(DbValueConst.RECORD_STATUS_ACTIVE ==epItem.getRecordStatusFlg()){
+						if(epItem.getPmGlAccount().getGlAccountId()==null){
+							throw new EpException(MessageConst.ERROR_730003);
 						}
+						if(epItem.getBudgetAmt()==null || epItem.getBudgetAmt().intValue()<=0){
+							throw new EpException(MessageConst.ERROR_730004);
+						}
+						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
+							throw new EpException(MessageConst.ERROR_730005);
+						}
+						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
+							throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
+						}
+						if(epItem.getNonEpAmt().intValue()>0){
+							if(epItem.getJustifications()==null 
+									|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
+									|| (epItem.getJustifications()!=null 
+										&& epItem.getJustifications().isEmpty() 
+										&& epItem.getJustifications().get(0)==null)  
+									|| (epItem.getJustifications()!=null &&(
+										 epItem.getJustifications().isEmpty() 
+										|| epItem.getJustifications().get(0)==null
+										|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
+								throw new EpException(MessageConst.ERROR_730007);
+							}
+						}
+						soIds.add(epItem.getPmGlAccount().getGlAccountId());
 					}
-					soIds.add(epItem.getPmGlAccount().getGlAccountId());
 				}
 			}
 			if(!soIds.isEmpty()){
