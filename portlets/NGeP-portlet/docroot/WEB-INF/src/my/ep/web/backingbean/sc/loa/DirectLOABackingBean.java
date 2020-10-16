@@ -538,12 +538,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
-
-			// #26474 - start
-			if (getManagedBean().getSelectedPtj() == null) {
-				getManagedBean().setSelectedPtj(scLoa.getContractAgency());
-			}
-			// #26474 - end
 			
 			// overall ct amount or loa amt
 //			BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
@@ -1443,9 +1437,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 		
 		// #26474 - start
-		if (getManagedBean().getSelectedPtj() == null) {
-			getManagedBean().setSelectedPtj(scLoa.getContractAgency());
-		}
 		scLoa.setContractAdmin(null);
 		// #26474 - end
 
@@ -1625,13 +1616,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.getScQt().setFulfilmentType(
 					getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
 							ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-			}	
-		// #26474 - start
-		if (getManagedBean().getSelectedPtj() == null) {
-			getManagedBean().setSelectedPtj(scLoa.getContractAgency());
-		}
-		// #26474 - end
-		}
+		}	
+	}
 
 	/**
 	 * Contract agency changed. shows Contract Administrator based on agency
@@ -4514,13 +4500,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getEstimatedPrice() != null) {
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
-		
-		//#26474 - start
-		if (scLoa.getContractAgency() == null) {
-			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
-			scLoa.setContractAgency(pmOrgProfile);
-		}
-		//#26474 - end
 
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
@@ -5022,7 +5001,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			//#26474 -start-
-			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(scQt);
 			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
