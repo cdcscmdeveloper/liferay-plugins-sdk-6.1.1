@@ -599,6 +599,17 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value());
 	}
 	
+	/**
+	 * #28934
+	 * Checks if is fl fulfilment factoring user.
+	 *
+	 * @return true, if is fl factoring user
+	 */
+	public boolean isFlFactoringUser() {
+		return  getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) || 
+				getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value());
+	}
+	
 	private List<String> getUserRoles() {
 		List<String> roleList = new ArrayList<String>();
 		if(isBPKApprover()) {
@@ -684,12 +695,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	public List<String> getDocTypeListByRole() {
 		List<String> flDocTypes = new ArrayList<String>();
 		if(ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(getSearchOrderType())) {
-			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+//			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);//28934
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				//flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 			}
-			if(isFlFulfilmentApprover() || isBPKApprover() || isAuditor()){
+			if(isFlFulfilmentApprover() || isAuditor()){//28934
+				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -699,6 +711,11 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			if(isBPKApprover() || isFlFactoringUser()){//28934
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 			}
 			if(isFlFulfilmentRecevingOfficer() || isAcknowledgeOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
@@ -706,22 +723,25 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			}
 			if(isFlFulfilmentPaymentOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 			}
 			if(isFlFulfilmentSupplier()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+//				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+//				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);//28934
 			}
 		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getSearchOrderType())) {
-			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+//			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);//28934
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 			}
-			if(isFlFulfilmentApprover() || isBPKApprover() || isAuditor()){
+			if(isFlFulfilmentApprover() || isAuditor()){//28934
+				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -730,6 +750,11 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			if(isBPKApprover() || isFlFactoringUser()){//28934
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 			}
 			if(isFlFulfilmentRecevingOfficer() || isAcknowledgeOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
@@ -737,15 +762,17 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			}
 			if(isFlFulfilmentPaymentOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 			}
 			if(isFlFulfilmentSupplier()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+//				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);//28934
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+//				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE); //28934
 			}
 		}
 		
