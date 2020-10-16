@@ -2176,6 +2176,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getApprovalUsers();
 		prepareSignerInfo();
 		FacesContext fc = FacesContext.getCurrentInstance();
+		/* ENHANCEMENT 26474 START */
+		this.getManagedBean().getScLoa().setContractAgency(pmOrgProfile);
+		this.getManagedBean().setSelectedPtj(pmOrgProfile);
+		/* ENHANCEMENT 26474 END */
+		
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null, redirectUrl);
