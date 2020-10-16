@@ -208,7 +208,7 @@
 						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 						size="40" id="companyNameId"  
-						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm or registrationBackingBean.managedBean.activeDisicplinaryAction}" >
+						disabled="#{registrationBackingBean.managedBean.disabledCompanyNameInMaintenance or registrationBackingBean.managedBean.viewMode or registrationBackingBean.managedBean.smAppl.applValidWithSsm}" >
 						<p:ajax event="blur" partialSubmit="true"></p:ajax>
 						</p:inputText> 
 						<p:message id="companyNameIdMsg" for="companyNameId" display="icon" /></td>
@@ -346,7 +346,7 @@
 				<td class="tdContent">
 					<p:inputText size="60"
 						id="compAdd3" maxlength="100" disabled="#{backingBean.disableFieldSSm(registrationBackingBean.managedBean.smBusinessAdd.ssmData,registrationBackingBean.managedBean.smAppl.applValidWithSsm,registrationBackingBean.managedBean.smBusinessAdd.addressSsmNull)}"
-						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}"
+						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}">
 						<p:ajax event="blur" partialSubmit="true"></p:ajax>
 						 </p:inputText></td>
 
