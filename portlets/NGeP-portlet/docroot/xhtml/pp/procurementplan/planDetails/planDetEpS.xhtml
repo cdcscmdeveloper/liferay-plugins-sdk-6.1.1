@@ -121,7 +121,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:column>
 				<!--25549@18092020 -->
 				<p:selectBooleanCheckbox id="checkBox" 
-					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable)}" 
+					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.selectable}" 
 				    value="#{epItem.deleted}"/>
 			<!-- #24975 -->
 				<p:commandLink
@@ -244,7 +244,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            <!--25549@18092020 -->
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			        id="clEpJustification" disabled="#{pPlanBackingBean.managedBean.disable}">
-				    <p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+				    <p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.selectable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 				    disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />	
 				</p:commandLink>
 	        </p:column>
