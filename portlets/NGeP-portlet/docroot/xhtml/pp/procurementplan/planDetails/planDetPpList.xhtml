@@ -122,12 +122,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						update="dtProcurementPlan" 
 						partialSubmit="true"
 						rendered="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}"
-						disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or pPlanBackingBean.managedBean.disable}">
+						disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or pPlanBackingBean.managedBean.disable or !pPlanBackingBean.managedBean.modeEditable}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateInfo(pPlanBackingBean.managedBean.selectedPlan, index)}"
-				      		disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or pPlanBackingBean.managedBean.disable}"
+				      		disabled="#{ppItem.cloneEnabled or ppItem.disableForPindaan or pPlanBackingBean.managedBean.disable or !pPlanBackingBean.managedBean.modeEditable}"
 				      		update="@form" />
 				      </h:graphicImage>
 				</p:commandLink>
@@ -237,7 +237,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        <!-- #25549 - end --> 
 	        <p:column>
 	        	<p:selectOneMenu id="recordStatus" value="#{ppItem.recordStatusFlg}" style="width:99%"
-	        		disabled="#{ppItem.cloneEnabled or ppItem.statusEnabled}">  
+	        		disabled="#{ppItem.cloneEnabled or ppItem.statusEnabled or !pPlanBackingBean.managedBean.modeEditable}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	                <!--25549@18092020 -->
 	  	             <p:ajax event="change" update="UpdateReason, clPpReason, itEstAmt, effDateId, somProcurementMethod, somCategory, checkbox, addUpdateInfo, itaPpTitle, itaPpDesc" 
