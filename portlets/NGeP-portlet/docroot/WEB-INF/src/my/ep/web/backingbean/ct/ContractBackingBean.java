@@ -191,11 +191,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
 	
-	//added for 28227 to check list of filter value
-	private List<CtAgency> filteredAgencies;
 	
-	
-
 	static
 	{
 		months = new HashMap<String, String>();
@@ -1503,9 +1499,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				throw new EpException(MessageConst.ERROR_750007,
 						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
 			}
+			
+			
 		}
 		
-		log.info("filtered value in list ==================== : "+getFilteredAgencies().size());
+		//log.info("filtered value in list ==================== : "+getFilteredAgencies().size());
+		
 	}
 
 	/**
@@ -4377,17 +4376,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return roleCode;
 	}
 	/*#21387 - basri end*/
-
-	//added for 28227
-	public List<CtAgency> getFilteredAgencies() {
-		return filteredAgencies;
-	}
-
-	public void setFilteredAgencies(List<CtAgency> filteredAgencies) {
-		this.filteredAgencies = filteredAgencies;
-	}
-
-	
-	
+	 
 
 }  

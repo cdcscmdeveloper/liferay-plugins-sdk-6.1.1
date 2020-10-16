@@ -26,7 +26,6 @@
 			widgetVar="tableAgencyWidget"
 			editable="true" 
 			editMode="cell"
-			filteredValue="#{ctBackingBean.filteredAgencies}"
 			value="#{ctBackingBean.managedBean.contractVer.ctAgencies}"
 			selectionMode="single" rowKey="#{agencyData}"
 			selection="#{ctBackingBean.managedBean.selectedAgency}"
@@ -91,7 +90,8 @@
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
 		     
-			<p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/>
+		 	<p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/>
+			
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
