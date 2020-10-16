@@ -174,11 +174,21 @@ public class OrgProfileSearchBackingBean extends
 	
 	public void resetOrgProfiles(){
 		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
+		
 		this.renewSesionObject();
+		
 		getOrgProfileDataModel().resetData();
+		
 		//#26475 - start
 		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
-		if (StringUtils.isNotBlank(portletName) && portletName.toLowerCase().contains("loa")){
+		
+		//#26474 -start-:::
+		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains("loa") || 
+				 portletName.toLowerCase().contains("createmanualsourcing"))) {
+			 
+			log.info("::: resetOrgProfiles() portletName: "+ portletName);
+			//#26474 -end-:::
+			
 			this.getManagedBean().setMinistryProfileId(ministryId);
 			if (ministryId != null){
 				this.getManagedBean().setDisabledMinistry(true);
