@@ -78,7 +78,7 @@ public class SmApplicationNotificationUtil {
 	 *            - ReviewApplicationReqDTO
 	 */
 	public static void setRejectionNotificationParameters(SmAppl smAppl,
-			String supplierRemarks, String mofNo, String applRejectionRemarks, SmSupplier supplier,
+			String mofNo, String applRejectionRemarks, SmSupplier supplier,
 			ReviewApplicationReqDTO reqDTO) {
 		if (smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -86,8 +86,6 @@ public class SmApplicationNotificationUtil {
 			reqDTO.setCompanyName(supplier.getCompanyName());
 			reqDTO.setApproverOrPoRemarks(applRejectionRemarks);
 			reqDTO.setMofNum(mofNo);
-			//10908
-			reqDTO.setSupplierRemarks(supplierRemarks);
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
