@@ -546,55 +546,65 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		for (PpProcurementItem ppItem : ppItems) {
 			log.info("ppItem.title= "+ppItem.getProcurementTitle());
-			fromPpItemList.add(ppItem.getFromPpItem());
+			if (!ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
+				fromPpItemList.add(ppItem.getFromPpItem());
+			}
 			procurementItemIdList.add(ppItem.getProcurementItemId());
 		}
 		
-		List<Long> commonProcurementItemIdList = new ArrayList<Long>(fromPpItemList);
-		commonProcurementItemIdList.retainAll(procurementItemIdList);
+		log.info("fromPpItemList= "+fromPpItemList.size());
 		
-		if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
-			for (Long commonProcurementItemId : commonProcurementItemIdList) {
-				for (PpProcurementItem ppItem : ppItems) {
-					
-					/* By default, all items are neutral (isOriginal or not).
-					   isClonedItem will be true if only it's cloned during 
-					   that particular round of approval. */
-					ppItem.setClonedItem(false);
-					
-					/* Always disable Pindaan for cloned ppItem
-					   Always disable Reason For Update for original ppItem*/
-					if (!ppItem.isOriginal()) {
-						if (ppItem.getFromPpItem().equals(commonProcurementItemId)) {
-							ppItem.setCloneEnabled(false);
-							ppItem.setDisableForPindaan(true);
-							ppItem.setReasonForUpdateEnabled(false);
-							ppItem.setBrandNew(true);
-							
-							/*if(plan != null && plan.getStatus() != null && 
-									(ProcurementPlanConst.PPP_APPROVED.equals(plan.getStatus().getStatusId()) 
-									|| ProcurementPlanConst.PPE_APPROVED.equals(plan.getStatus().getStatusId()))) {
-								ppItem.setAllowAnotherPindaan(true);
+		if (fromPpItemList.size() > 0) {
+			
+			List<Long> commonProcurementItemIdList = new ArrayList<Long>(fromPpItemList);
+			commonProcurementItemIdList.retainAll(procurementItemIdList);
+		
+			if (commonProcurementItemIdList != null && !commonProcurementItemIdList.isEmpty()) {
+				for (Long commonProcurementItemId : commonProcurementItemIdList) {
+					log.info("commonProcurementItemId= "+commonProcurementItemId);
+					for (PpProcurementItem ppItem : ppItems) {
+						
+						/* By default, all items are neutral (isOriginal or not).
+						   isClonedItem will be true if only it's cloned during 
+						   that particular round of approval. */
+						ppItem.setClonedItem(false);
+						
+						/* Always disable Pindaan for cloned ppItem
+						   Always disable Reason For Update for original ppItem*/
+						log.info("procurementItemId= "+ppItem.getProcurementItemId()+", isOriginal= "
+						   +ppItem.isOriginal()+", fromPpItem= "+ppItem.getFromPpItem()
+						   +", commonProcurementItemId= "+commonProcurementItemId);
+						if (!ppItem.isOriginal()) {
+							if (ppItem.getFromPpItem().equals(commonProcurementItemId)) {
+								ppItem.setCloneEnabled(false);
+								ppItem.setDisableForPindaan(true);
+								ppItem.setReasonForUpdateEnabled(false);
+								ppItem.setBrandNew(true);
+								
+								/*if(plan != null && plan.getStatus() != null && 
+										(ProcurementPlanConst.PPP_APPROVED.equals(plan.getStatus().getStatusId()) 
+										|| ProcurementPlanConst.PPE_APPROVED.equals(plan.getStatus().getStatusId()))) {
+									ppItem.setAllowAnotherPindaan(true);
+								}
+								log.info("allowAnotherPindaan for "+ ppItem.getProcurementTitle()+" is "+ppItem.isAllowAnotherPindaan());*/
 							}
-							log.info("allowAnotherPindaan for "+ ppItem.getProcurementTitle()+" is "+ppItem.isAllowAnotherPindaan());*/
-						}
-					} else {
-						/* Always disable Pindaan for original ppItem
-						   Always enable Reason For Update for original ppItem*/
-						if (ppItem.getProcurementItemId().equals(commonProcurementItemId)) {
-							ppItem.setCloneEnabled(true);
-							ppItem.setDisableForPindaan(true);
-							ppItem.setReasonForUpdateEnabled(true);
 						} else {
-							// The rest should retain the existing field logics
-							ppItem.setDisableForPindaan(false);
-							ppItem.setReasonForUpdateEnabled(true);
+							/* Always disable Pindaan for original ppItem
+							   Always enable Reason For Update for original ppItem*/
+							if (ppItem.getProcurementItemId().equals(commonProcurementItemId)) {
+								ppItem.setCloneEnabled(true);
+								ppItem.setDisableForPindaan(true);
+								ppItem.setReasonForUpdateEnabled(true);
+							} else {
+								// The rest should retain the existing field logics
+								ppItem.setDisableForPindaan(false);
+								ppItem.setReasonForUpdateEnabled(true);
+							}
 						}
 					}
 				}
-			}
-	    }
-		
+		    }
+		}
 		// Attempting to reorder the PpItems only if clones exist
         List<PpProcurementItem> tempOriginalPpItemList = new ArrayList<PpProcurementItem>();
 		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
@@ -625,6 +635,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         
         List<PpProcurementItem> clones = new ArrayList<PpProcurementItem>();
     	List<PpProcurementItem> reorderedList = new LinkedList<PpProcurementItem>();
+    	List<PpProcurementItem> newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
     	
     	if (!reorderedList.isEmpty() && reorderedList.size() > 0) {
     		log.info("reorderedList size before this= "+reorderedList.size());
@@ -660,7 +671,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
 	        }
 	        
-	        List<PpProcurementItem> newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
+	        newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
 	        
 	        if (!ppItems.isEmpty() && ppItems.size() > 0) {
 	        	ppItems.clear();
@@ -669,6 +680,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
+        } else {
+        	
+        	log.info("The ProcurementItem list currently has no clones");
+        	
+        	if (tempOriginalPpItemList != null && tempOriginalPpItemList.size() > 0) {
+	        	for (int i = 0; i < tempOriginalPpItemList.size(); i++) {
+					reorderedList.add(tempOriginalPpItemList.get(i));
+		        }
+        	}
+        	
+        	newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
+        	
+        	if (!ppItems.isEmpty() && ppItems.size() > 0) {
+ 	        	ppItems.clear();
+ 	        	this.getManagedBean().getSelectedPlan().setPpProcurementItems(null);
+ 	        }
+        	
+ 	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
+ 	        log.info("Displaying ppItems for Plan No=  "+
+ 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
+        	
         }
 
     }
