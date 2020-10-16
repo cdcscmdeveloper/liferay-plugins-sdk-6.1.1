@@ -755,8 +755,11 @@
 						<p:outputPanel id="opPtjOrgCode" 
 							rendered="#{ParameterConst.orgTypePtj eq directLOABackingBean.managedBean.selectedOrgType.parameterCode or 
 							ParameterConst.orgTypePtjGroup eq directLOABackingBean.managedBean.selectedOrgType.parameterCode}">
+							<ui:remove>
+								Enhancement #26474 - upSize size from 60 - 106	
+							</ui:remove>
 							<p:inputText 
-								size="60"
+								size="106"
 								id="itSelectedPtj" 
 								value="#{directLOABackingBean.managedBean.selectedPtj.orgName}" 
 								readonly="true"
