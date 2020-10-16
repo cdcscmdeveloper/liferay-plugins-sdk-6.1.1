@@ -10,6 +10,11 @@
 		widgetVar="screen3" width="970" height="600"
 		styleClass="cloneCommitteMember" position="top">
 		<h:panelGroup id="pnlid2">
+			
+			<p:blockUI block="panelresult" widgetVar="blockWidgetClone">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+			
 			<p:messages id="clonemessages2" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" severity="error, info" />
 			<p:panel id="clonesearchpnlid2" header="#{lbl['lbl.btn.search']}"
@@ -135,7 +140,7 @@
 						resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+			<p:panel id="panelresult" header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 				<p:dataTable id="clonesearchCommitteid2"
 					value="#{qTCloneBackingbean.managedBean.cloneSearchQTDataModel}"
 					selection="#{qTCloneBackingbean.managedBean.selectedCloneTender}"
@@ -210,6 +215,7 @@
 
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						onclick="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
 						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@(form,.briefingList,.amendButton,.sampleSubmitionUpdate)"
 						action="#{qTCloneBackingbean.addToClone()}">
 					 <f:param name="skipvalidation" value="1" />
