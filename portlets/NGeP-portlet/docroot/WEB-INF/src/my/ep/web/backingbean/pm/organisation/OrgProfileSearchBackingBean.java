@@ -182,10 +182,13 @@ public class OrgProfileSearchBackingBean extends
 		
 		//#26475 - start
 		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
-		
+
 		//#26474 -start-:::
+		log.info("::: resetOrgProfiles() 001 portletName: "+ portletName);
+		
 		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains("loa") || 
-				 portletName.toLowerCase().contains("createmanualsourcing"))) {
+				 portletName.toLowerCase().contains("createmanualsourcing") || 
+				 portletName.toLowerCase().contains("reviewmanualsourcing"))) {
 			 
 			log.info("::: resetOrgProfiles() portletName: "+ portletName);
 			//#26474 -end-:::
