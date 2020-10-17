@@ -1893,6 +1893,11 @@ public class SpecificationBackingBean extends
 
 			if (null != this.getManagedBean().getTechnicalScoring()
 					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
+//#21695 Start retrieve totalscore of sum overalltech + overallothertech 	
+				calculateTechnicalItemScore(this
+						.getManagedBean()
+						.getTechnicalItemScoreSetting());
+//#21695 End
 				this.getManagedBean().setTechnicalUserScoringSchema(false);
 				for (ScQtCheckList technicalScoringChecklist : this
 						.getManagedBean().getTechnicalScoring()) {
