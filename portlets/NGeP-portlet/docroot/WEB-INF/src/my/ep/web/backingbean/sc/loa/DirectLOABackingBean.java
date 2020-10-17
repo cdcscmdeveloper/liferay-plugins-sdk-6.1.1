@@ -425,6 +425,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractNGovtSignDate(scLoa);
 			updateContractDetails(scLoa);
 			validateContractDetails(scLoa);
+			validateContractAdmin(scLoa);  // #26474 validate contract admin
 
 			log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
@@ -8519,6 +8520,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_760472, new String[] {scLoa.getContractDuration().toString()});
 		}
 	}
+	
+
+	// #26474 - start
+	private void validateContractAdmin(ScLoa scLoa) {
+		List<PmUser> pmUserList = getUsersByAgency();
+		if (CollectionUtils.isEmpty(pmUserList)) {
+			throw new EpException(MessageConst.ERROR_760512);
+		}
+	}
+	// #26474 - end
 	
 	/**
 	 * Get User Organization Profile by user id.
