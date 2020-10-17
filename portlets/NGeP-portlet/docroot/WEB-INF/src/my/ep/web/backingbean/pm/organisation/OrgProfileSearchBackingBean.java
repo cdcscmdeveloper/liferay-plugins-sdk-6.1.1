@@ -76,8 +76,12 @@ public class OrgProfileSearchBackingBean extends
 
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
+		
+		//#26475 - add Approver value
+		//#26474 - add Publication Approver value
 		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())) {	//#26475 - add Approver value
+				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())	
+				|| getFacesScopes().hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())) {
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
@@ -181,10 +185,13 @@ public class OrgProfileSearchBackingBean extends
 		
 		//#26475 - start
 		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
-		
+
 		//#26474 -start-:::
+		log.info("::: resetOrgProfiles() 001 portletName: "+ portletName);
+		
 		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains("loa") || 
-				 portletName.toLowerCase().contains("createmanualsourcing"))) {
+				 portletName.toLowerCase().contains("createmanualsourcing") || 
+				 portletName.toLowerCase().contains("reviewmanualsourcing"))) {
 			 
 			log.info("::: resetOrgProfiles() portletName: "+ portletName);
 			//#26474 -end-:::
