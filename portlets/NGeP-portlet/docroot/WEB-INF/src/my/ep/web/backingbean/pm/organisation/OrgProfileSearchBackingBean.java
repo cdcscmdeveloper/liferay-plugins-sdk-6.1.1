@@ -77,7 +77,8 @@ public class OrgProfileSearchBackingBean extends
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
 		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())) {	//#26475 - add Approver value
+				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())	//#26475 - add Approver value
+				|| getFacesScopes().hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())) {	//#26474 - add Publication Approver value
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
