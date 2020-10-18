@@ -1309,7 +1309,30 @@ public class PurchaseInquiryBackingBean extends
 			// redirect to RequestNote screen
 			return "requestNoteMain";
 
-		} else {
+		} else if (StringUtils.equalsIgnoreCase("CANCELPI", action)) { //Start - #26129
+			
+			getManagedBean().setDisabledRemark(Boolean.FALSE);
+			validateRequiredRemark(prInquiry);
+			finalizeRemarks(prInquiry.getRemarks());
+			getPrInquirySO().updatePICurrentWorkflowStatus(prInquiry, DPStatusConstants.PRI_CANCELLED);
+			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
+			reqDTO.setPrInquiryDetail(prInquiry);
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			PrInquiryResDTO resDTO = getPrInquirySO().submitPrInquiryPrice(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700089, new String[] { getManagedBean().getScPrInquiry()
+						.getPrInquiryNo() }, Boolean.TRUE);
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+			return null;
+		} else {													   //End - #26129
 			finalizeRemarks(prInquiry.getRemarks());
 			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			reqDTO.setPrInquiryDetail(prInquiry);
@@ -2038,4 +2061,21 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 
+	// Start - #26129
+	private void validateRequiredRemark(ScPrInquiry prInquiryDetail) {
+		boolean newRemark = false;
+		if (prInquiryDetail != null) {
+			for (ScPRIRemark remark : prInquiryDetail.getRemarks()) {
+				// no new remark being insert
+				if (remark.getRemark() == null || remark.getRemark().isEmpty()) {
+					newRemark = true;
+				}
+			}
+		}
+
+		if (newRemark) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+		}
+	}
+	// End - #26129
 }
