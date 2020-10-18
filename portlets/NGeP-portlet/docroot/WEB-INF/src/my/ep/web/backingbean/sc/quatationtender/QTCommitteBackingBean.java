@@ -2345,7 +2345,8 @@ public class QTCommitteBackingBean extends
 		if(commType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
 			specCheck = Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId);
 		}else{
-			specCheck = isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+			//specCheck = isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+			specCheck = Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId);
 		}
 		return (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || specCheck);
 	}
