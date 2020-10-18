@@ -257,14 +257,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#26169 #38 - Start
 	private boolean isHasSupplierQualified;
 	//#26169 #38 - End
-	// #18685 - Start
+	// #18685 - Start 
 	private ScRemark pendingRecItemizedRemark;
 	private ScRemark pendingRecPackageRemark;
     // #25638 - Start.
-	private List<ScRemark> newSfRemark;
+	private List<ScRemark> newSfRemarks;
     // #25638 - End.
 	private List<ScRemark> scRemarks;
-	// #18685 - End
+	// #18685 - End 
 	
 	/**
 	 * @return the activeIndex
@@ -2153,7 +2153,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.previousPageUrl = previousPageUrl;
 	}
 
-	
 	/**
 	 * @return the evaluationReportIndex
 	 */
@@ -2208,7 +2207,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#26169 #38 - End
 	
-	// #18685 - Start 
+	// #18685 - Start
 	/**
 	 * @return the pendingRecItemizedRemark
 	 */
@@ -2239,20 +2238,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.pendingRecPackageRemark = pendingRecPackageRemark;
 	}
 	
-	/**
-     * @return the newSfRemark
-     */
-    public ScRemark getNewSfRemark() {
-      return newSfRemark;
-    }
-  
-    /**
-     * @param newSfRemark the newSfRemark to set
-     */
-    public void setNewSfRemark(ScRemark newSfRemark) {
-      this.newSfRemark = newSfRemark;
-    }
-
     /**
      * @return the scRemarks
      */
