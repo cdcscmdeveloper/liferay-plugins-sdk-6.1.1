@@ -448,6 +448,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				reqDTO.getScLoa().setLoaSignerDesig(designation);
 			}
 			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			
+			if (this.getManagedBean().getSelectedPtj() != null){
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
 			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -4796,6 +4800,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
 			}
+			
+			if (this.getManagedBean().getSelectedPtj() != null){
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
 			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -5005,6 +5013,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(scQt);
 			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			if (this.getManagedBean().getSelectedPtj() != null){
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
 			//#26474 -end-
 			
 			reqDTO.setScLoa(scLoa);
