@@ -425,6 +425,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractNGovtSignDate(scLoa);
 			updateContractDetails(scLoa);
 			validateContractDetails(scLoa);
+			validateContractAdmin(scLoa);  // #26474 validate contract admin
 
 			log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
@@ -447,6 +448,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				reqDTO.getScLoa().setLoaSignerDesig(designation);
 			}
 			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			
+			if (this.getManagedBean().getSelectedPtj() != null){
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
 			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -4772,6 +4777,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
 			}
+			
+			if (this.getManagedBean().getSelectedPtj() != null){
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
 			//#26474 - end
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
@@ -4981,6 +4990,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(scQt);
 			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			if (this.getManagedBean().getSelectedPtj() != null){
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
 			//#26474 -end-
 			
 			reqDTO.setScLoa(scLoa);
@@ -8496,6 +8508,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			throw new EpException(MessageConst.ERROR_760472, new String[] {scLoa.getContractDuration().toString()});
 		}
 	}
+	
+
+	// #26474 - start
+	private void validateContractAdmin(ScLoa scLoa) {
+		List<PmUser> pmUserList = getUsersByAgency();
+		if (CollectionUtils.isEmpty(pmUserList)) {
+			throw new EpException(MessageConst.ERROR_760512);
+		}
+	}
+	// #26474 - end
 	
 	/**
 	 * Get User Organization Profile by user id.
