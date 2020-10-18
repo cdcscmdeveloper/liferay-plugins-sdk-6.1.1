@@ -8,41 +8,54 @@
 	<style>
 		.firstCol {
 			width: 25%;
-			height: 240px;
-		}
-		.firstCol div, .secondCol div{
-			min-height: 100%;
+			min-width: 220px;
+			vertical-align: top;
+			height: auto;
 		}
 		.secondCol {
 			width: 75%;
-			height: 240px;
+			vertical-align: top;
+			height: auto;
 		}
 		.gridContainer{
 		    width: 100%;
 		}
+		.sp-centered{
+			text-align:center; 
+			display: block;
+		}
+		.history-member-table span > img{
+			margin-top: -4px;
+		}
 	</style>
 	<h:panelGrid columns="2" styleClass="gridContainer" columnClasses="firstCol, secondCol">
 		<p:panel id="historyPanelId" header="#{lbl['lbl.sc.history']}">
+			<ui:param name="historyPaginator" value="#{qTDetailBB.managedBean.committeeHistories}"/>
 			<p:dataTable id="historyTableId" styleClass=""
-				value="#{qTDetailBB.managedBean.committeeHistories.getModel()}" var="history" 
+				value="#{historyPaginator.model}" var="history" 
 				rowKey="#{history}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				selectionMode="single" selection="#{qTDetailBB.managedBean.selectedCommitteeHistory}">
-			<p:ajax event="rowSelect" listener="#{qTDetailBB.onSelectHistory()}" update="@([id$=historyMemberTableId])" />
-			<p:column headerText="#{lbl['lbl.sm.no']}">
-				<h:outputText value="#{index+1}" />
+			<p:ajax event="rowSelect" listener="#{qTDetailBB.onSelectHistory()}" update="@([id$=historyMemberPanelId])" />
+			<p:column>
+				<f:facet name="header" >
+      				<h:outputText value="#{lbl['lbl.sm.no']}" styleClass="sp-centered"/>
+   				</f:facet>
+				<h:outputText value="#{((historyPaginator.pageIndex-1)*5)+(index+1)}" styleClass="sp-centered"/>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.created.date']}">
-				<h:outputText value="#{history.createdDate}">
-				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			<p:column>
+			   	<f:facet name="header">
+      				<h:outputText value="#{lbl['lbl.sc.created.date']}" styleClass="sp-centered"/>
+   				</f:facet>
+				<h:outputText value="#{history.createdDate}" styleClass="sp-centered">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			</p:dataTable>
-			<ac:detachablePaginator loopId="historyTableId" paginatorObject="#{qTDetailBB.managedBean.committeeHistories}"/>
+			<ac:detachablePaginator minimal="true" loopId="historyPanelId" paginatorObject="#{qTDetailBB.managedBean.committeeHistories}"/>
 		</p:panel>
 		<p:panel id="historyMemberPanelId" header="#{qTDetailBB.managedBean.currentCommitteeDesc}">
-			<p:dataTable id="historyMemberTableId" styleClass=""
-				value="#{qTDetailBB.managedBean.selectedHistoryMember.getModel()}" var="member"
+			<p:dataTable id="historyMemberTableId" styleClass="history-member-table"
+				value="#{qTDetailBB.managedBean.selectedHistoryMember.model}" var="member"
 				rowIndexVar="index"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
 				<p:column headerText="#{lbl['lbl.sc.name']}">
 					<h:outputText value="#{member.memberName}" />

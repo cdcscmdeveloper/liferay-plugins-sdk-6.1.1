@@ -765,6 +765,12 @@ public class EvaluationMeetingBackingBean extends
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			Object object = this.getManagedBean().getPayLoad();
 			String QtNum = this.getManagedBean().getQt().getQtNo();
+			//#25037 Start
+			metReqDtO.setCommitteeModified(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()));
+			metReqDtO.setTaskId(this.getManagedBean().getTaskId());
+			metReqDtO.setTaskName(this.getManagedBean().getTaskName());
+			metReqDtO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			//#25037 End
 			MeetingResDTO meetingResDTO = meetingso.saveQTDtl(metReqDtO);
 			renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
@@ -894,7 +900,7 @@ public class EvaluationMeetingBackingBean extends
 			//#25037
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtApprovalRemarks())){
 				ScQtApprovalRemark remark = this.getManagedBean().getScQtApprovalRemarks().get(0);
-				if(remark.isBrandNew() && StringUtils.isNotEmpty(remark.getRemark())){
+				if(StringUtils.isNotEmpty(remark.getRemark())){
 					metReqDtO.setScQtApprovalRemark(remark);
 				}
 			}
@@ -1569,7 +1575,7 @@ public class EvaluationMeetingBackingBean extends
 							IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = prepareMeetingDtls();
 			checkCommitteeFormation(reqDTO);
-			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());
+			reqDTO.setCommitteeModified(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()));
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setTaskName(this.getManagedBean().getTaskName());//#25037
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -2050,7 +2056,8 @@ public class EvaluationMeetingBackingBean extends
 		ScCommitteeMemberHistory history = this.getManagedBean().getSelectedCommitteeHistory();
 		List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
 		CustomUtils.sortQtCommitteeMemberRole(list);
-		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
+		Paginator selectedHistoryMember = new Paginator(list);
+		this.getManagedBean().setMemberHistoryPaginator(selectedHistoryMember);	
 	}
 	
 	private ICommitteSO getCommitteeSO() {
@@ -2076,7 +2083,19 @@ public class EvaluationMeetingBackingBean extends
   
     }
 	private void prepareCommitteeHistory(ScQtCommittee qtCommittee){
-		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, true);
+		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
+		try{
+			if(CollectionUtils.isNotEmpty(histories)){
+				ScCommitteeMemberHistory history = histories.get(0);
+				@SuppressWarnings("unchecked")
+				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
+				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
+				//histories.remove(0);
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -2118,7 +2137,7 @@ public class EvaluationMeetingBackingBean extends
 		scCommittee.getScCommitteeMembers().addAll(this.getManagedBean().getCommitteeMemberActivity());
 		this.checkCommitteeFormation(reqDTO);
 
-		if(this.getCommitteeSO().checkIfCommitteeIsModified(scCommittee, scCommittee.getCommitteeId())){
+		if(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())){
 			if(StringUtils.isEmpty(this.getManagedBean().getScQtApprovalRemarks().get(0).getRemark())){
 				String message = MessageUtils.getMessage(MessageConst.ERROR_716025, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 				throw new EpException(message);
@@ -2166,6 +2185,25 @@ public class EvaluationMeetingBackingBean extends
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, message));
 	}
 
+	private boolean isCommitteeModified(List<ScCommitteeMember> currentList){
+		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
+		if(CollectionUtils.isEmpty(currentList) || CollectionUtils.isEmpty(previousList)){
+			throw new EpException("Should not be empty.");
+		}
+		String[] previousListArr = new String[previousList.size()];
+		String[] currentListArr = new String[currentList.size()];
+		for(int i=0;i<previousListArr.length;i++){
+			QtCommitteeMemberBean m = previousList.get(i);
+			previousListArr[i] = m.getIdentificationNo().concat(m.getMemberRole());
+		}
+		for(int i=0;i<currentListArr.length;i++){
+			ScCommitteeMember m = currentList.get(i);
+			currentListArr[i] = m.getIcPassport().concat(m.getMemberRole().getParameterCode());
+		}
+		Arrays.sort(previousListArr);  
+		Arrays.sort(currentListArr);  
+		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
+	}
 	//#25037-END
 
 }

@@ -105,8 +105,8 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable();reviseCANCELBtn.disable();" value="#{lbl['lbl.btn.yes']}"
-					oncomplete="reviceApprovalDlg.hide();"
+				<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();" value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviceApprovalDlg.hide();blockWidget.hide();"
 					action="#{approvalBackingBean.updateReviceBpmTask}" />
 				<p:commandButton widgetVar="reviseCANCELBtn" value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlg.hide();" type="button" />

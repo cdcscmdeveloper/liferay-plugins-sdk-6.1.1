@@ -1176,9 +1176,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 				}
-				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
-				String qtNo = qt.getQtNo();
-				successMessage(MessageConst.INFO_760505, new String[]{committeeType, procurementMode, qtNo}, true);
+				if(isCommitteeFormedFirstTime(qt.getQtId(), committeeType)){
+					successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+							getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+							qt.getQtNo(), true);
+				}else{
+					String procurementMode = this.getParameterDesc(qt.getProcurementMode());
+					String qtNo = qt.getQtNo();
+					successMessage(MessageConst.INFO_760505, new String[]{committeeType, procurementMode, qtNo}, true);
+				}
 			}
 			//#25037-END
 			else{

@@ -174,7 +174,7 @@
 				value="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"></ui:param>
 			<ac:confirmationPopup
 				id="#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}"
-				widget="dlgPerformDel" width="450" height="100"
+				widget="dlgPerformDel" loadingWidget="blockWidget" 
 				okAction="meetingBB.committeeDeleteAction"
 				title="#{lbl['lbl.sc.committee.member.list']}"
 				content="#{lbl['lbl.sc.dialog.confirm.message']}"
@@ -189,8 +189,7 @@
 		</div>
 		<ui:include src="addExistingCommittee.xhtml" />
 		<ac:confirmationPopup rendered="#{meetingBB.managedBean.finalBB != null}" id="confirmSubmitCommitteePopupId"
-			widget="confirmSubmitCommitteePopup" width="490"
-			height="100"
+			widget="confirmSubmitCommitteePopup" loadingWidget="blockWidget"
 			okAction="meetingBB.submitAction('SUBMIT')"
 			title="#{lbl['lbl.sc.confirmation']}"
 			content="#{lbl['lbl.sc.popup.sendproposalevalConfirm']}"/> 		
