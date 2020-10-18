@@ -100,14 +100,14 @@
 		
 				<p:commandButton
 						value="#{lbl['lbl.fl.yep.proceed']}" 
-						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}">
-						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" disabled="#{flOrderBB.managedBean.disable}">
+						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
 					</p:commandButton>
 					
 									<p:commandButton
 						value="#{lbl['lbl.fl.yep.carryForward']}" 
-						action="#{flOrderBB.carryForward(BpmOutcomeConstant.Proceed)}" disabled="#{flOrderBB.managedBean.disable}">
-						<f:param name="actionName" value="#{BpmOutcomeConstant.Proceed}" />
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" >
+						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
 			</c:if>
 					
