@@ -2302,14 +2302,19 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmSvTemplate svTemplate = getManagedBean().getSelectedAttachmentTemplate();
 			String subFolder = svTemplate.getSvTemplateId().toString();
 			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SITE_VISIT_REPORT_PATH) + subFolder + "/";
-			String fileName = String.valueOf((new Date()).getTime()) + "_" + event.getFile().getFileName();
-			
+			// #28672 START
+			String fileName = String.valueOf((new Date()).getTime()) + "_" + StringUtils.replace(event.getFile().getFileName(), " ", "-"); 
+			log.info("fatin test 1st:"+ fileName);
+			// #28672 END 
 			if(svTemplate.getSmAttachments() == null){
 				svTemplate.setSmAttachments(new ArrayList<SmAttachment>());
 			}
-			
+
 			SmAttachment attachment = new SmAttachment();
+			// #28672 START
 			attachment.setFileName(fileName);
+			log.info("fatin test 2nd:"+ fileName);
+			// #28672 END
 			attachment.setFilePath(filePath);
 			attachment.setDocId(svTemplate.getSvTemplateId());
 			attachment.setDocType(attachmentType);
