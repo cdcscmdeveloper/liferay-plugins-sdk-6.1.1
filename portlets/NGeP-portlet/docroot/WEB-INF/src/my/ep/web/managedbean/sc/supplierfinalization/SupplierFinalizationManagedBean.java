@@ -261,7 +261,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScRemark pendingRecItemizedRemark;
 	private ScRemark pendingRecPackageRemark;
     // #25638 - Start.
-	private List<ScRemark> newSfRemarks;
+	private List<ScRemark> newSfRemark;
     // #25638 - End.
 	private List<ScRemark> scRemarks;
 	// #18685 - End
