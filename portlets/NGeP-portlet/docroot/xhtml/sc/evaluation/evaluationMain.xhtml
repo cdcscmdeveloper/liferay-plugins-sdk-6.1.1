@@ -163,12 +163,12 @@
 
 		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
 		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
-			widget="confirmSubmitMeetingMainPopup" height="100%"
+			widget="confirmSubmitMeetingMainPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
 			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
 		<ac:confirmationPopup id="confirmUpdateAsAttendId"
-			widget="confirmUpdateAsAttendPopup" height="100%"
+			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
 			content="#{lbl['lbl.sc.popup.updateasattended']}" />
