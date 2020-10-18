@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1904,7 +1905,17 @@ if (CollectionUtils.isNotEmpty(
     }
 	public void prepareMemberUpdate(){
 		ScQtCommittee qtCommittee= this.getManagedBean().getScQtCommittee();
-		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, true);
+		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
+		try{
+			if(CollectionUtils.isNotEmpty(histories)){
+				ScCommitteeMemberHistory history = histories.get(0);
+				@SuppressWarnings("unchecked")
+				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
+				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
 	}
@@ -1925,7 +1936,7 @@ if (CollectionUtils.isNotEmpty(
 		scCommittee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		scCommittee.getScCommitteeMembers().addAll(this.getManagedBean().getCommitteeMembersList());
 		validateCommitteeMembers();
-		if(this.getCommitteeSO().checkIfCommitteeIsModified(scCommittee, scCommittee.getCommitteeId())){
+		if(isCommitteeModified(this.getManagedBean().getCommitteeMembersList())){
 			this.getManagedBean().setCommitteeModified(true);
 			if(StringUtils.isEmpty(this.getManagedBean().getQtCommitteeRemarks().get(0).getRemark())){
 				String message = MessageUtils.getMessage(MessageConst.ERROR_716025, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
@@ -1961,18 +1972,6 @@ if (CollectionUtils.isNotEmpty(
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-//		boolean isPtj = false;
-//		if (isChairPerson) {
-//			isPtj = orgProfileCheckExist(scqt, user, isPtj);
-//		}
-//		if ((isChairPerson && isPtj == false) || !isChairPerson) {
-//			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-//
-//			searchBean.getDataFilterBeans().add(
-//					new SearchFilterBean("pmParameter.parameterCode",
-//							SearchOperator.OPERATOR_NOT_IN.value(),
-//							recommendList));
-//		}
 		recommendList.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -1981,56 +1980,28 @@ if (CollectionUtils.isNotEmpty(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 		return items;
 	}
-//	private boolean orgProfileCheckExist(ScQt scqt, PmUser user, boolean isptj) {
-//		//PmOrgProfile orgProfile = scqt.getPmOrgProfile();
-//		PmOrgProfile orgProfile=null;
-//		try{
-//			
-//		orgProfile=retriveMinistryByOrgprofile(scqt
-//				.getPmOrgProfile().getOrgProfileId());
-//		if (null != user.getPmUserOrgs() && null!=orgProfile) {
-//			for (PmUserOrg userorg : user.getPmUserOrgs()) {
-//				log.debug("===user org record status==="
-//						+ userorg.isRecordStatus());
-//				//orgProfile.setOrgProfileId(273481L);
-//				log.debug("===qt PtjId===" + orgProfile.getOrgProfileId());
-//				if (userorg.isRecordStatus()
-//						&& null != userorg.getPmOrgProfile()) {
-//					PmOrgProfile localorgProfile=retriveMinistryByOrgprofile(userorg.getPmOrgProfile().getOrgProfileId());
-//					if(null!=localorgProfile && localorgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())){
-//					isptj = true;
-//					break;
-//					}
-//				}
-//
-//			}
-//		}
-//		}finally{
-//			
-//		}
-//		return isptj;
-//	}
-//
-//	private PmOrgProfile retriveMinistryByOrgprofile(Long orgProfileId){
-//		IOrgProfileSO	orgProfileSO=null;
-//		PmOrgProfile orgProfile=null;
-//		try{
-//			
-//			orgProfileSO= BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-//			if(null!=orgProfileId){
-//			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-//			reqDTO.setOrgProfileId(orgProfileId);
-//			OrgProfileResDTO resDTO = orgProfileSO
-//					.retrieveMinistryByOrgProfileId(reqDTO);
-//			if (resDTO.getPmOrgProfile() != null) {
-//			 orgProfile=resDTO.getPmOrgProfile();
-//			}
-//		}
-//		}finally{
-//			orgProfileSO=null;	
-//		}
-//		return orgProfile;
-//	}
+	
+	private boolean isCommitteeModified(List<ScCommitteeMember> currentList){
+		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
+		if(CollectionUtils.isEmpty(currentList) || CollectionUtils.isEmpty(previousList)){
+			throw new EpException("Should not be empty.");
+		}
+		String[] previousListArr = new String[previousList.size()];
+		String[] currentListArr = new String[currentList.size()];
+		for(int i=0;i<previousListArr.length;i++){
+			QtCommitteeMemberBean m = previousList.get(i);
+			String representativeType = m.getRepresentativeType() == null ? "": m.getRepresentativeType();
+			previousListArr[i] = m.getIdentificationNo().concat(m.getMemberRole()).concat(representativeType);
+		}
+		for(int i=0;i<currentListArr.length;i++){
+			ScCommitteeMember m = currentList.get(i);
+			String representativeType = m.getRepresentativeType() == null ? "": m.getRepresentativeType().getParameterCode();
+			currentListArr[i] = m.getIcPassport().concat(m.getMemberRole().getParameterCode()).concat(representativeType);
+		}
+		Arrays.sort(previousListArr);  
+		Arrays.sort(currentListArr);  
+		
+		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
+	}
 	//#25037-END
 }

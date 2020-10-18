@@ -21,12 +21,15 @@
 			<ui:param name="showHistory" value="#{qTDetailBB.managedBean.showHistory}" />
 	
 			<ui:include src="specificationCommitteeDetails.xhtml" />
-			<h:panelGroup id="buttons" layout="block" styleClass="ppRightBtn">
-				<p:commandButton value="#{!showHistory ? lbl['lbl.btn.view.history'] : lbl['lbl.btn.back']}" style="float: left !important; margin-top: 10px !important;"
-					action="#{qTDetailBB.navigateToViewHistory(qtCommitte, !showHistory)}"
-					update="scmemberInfoDtls, buttons"/>
+			<h:panelGrid id="buttons" columns="2" style="width: 100% !important;" cellpadding = "0">
+				<h:panelGroup layout="block">
+					<p:commandButton value="#{!showHistory ? lbl['lbl.btn.view.history'] : lbl['lbl.btn.back']}"
+						action="#{qTDetailBB.navigateToViewHistory(qtCommitte, !showHistory)}"
+						update="scmemberInfoDtls, buttons"/>
+				</h:panelGroup>
+				<h:panelGroup layout="block" styleClass="ppRightBtn">
 				<ui:fragment rendered="#{!showHistory}">
-					<c:if test="#{!isQTStatusChecklistAndAfter}">
+				<c:if test="#{!isQTStatusChecklistAndAfter}">
 					<p:commandButton value="#{lbl['lbl.btn.clone']}"
 						styleClass="BtnSpacing"
 						rendered="#{isCommitteeInfoEditable and isCommitteeCloneable}"
@@ -74,12 +77,13 @@
 				</c:if>
 				</ui:fragment>
 				</h:panelGroup>
+			</h:panelGrid>
 			<ui:param name="committeeAppointmentDeleteId"
 				value="committeeAppointmentDeleteId" />
 			<ac:confirmationPopup id="#{committeeAppointmentDeleteId}"
 				widget="committeeAppointmentDeletePopUp"
 				okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
-				width="40%" height="100"
+				loadingWidget="blockWidget" 
 				title="#{lbl['lbl.sc.qt.committee.appointment']}"
 				content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 				update="@form" />

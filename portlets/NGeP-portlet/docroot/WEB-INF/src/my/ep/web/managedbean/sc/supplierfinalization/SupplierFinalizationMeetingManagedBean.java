@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -91,6 +92,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> tempCommitteeMembers;
 	private boolean committeeModified;
 	private SupplierFinalizationBackingBean finalBB; 
+	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 	//#25037-END
 
 	/** 
@@ -653,6 +655,14 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 
 	public void setFinalBB(SupplierFinalizationBackingBean finalBB) {
 		this.finalBB = finalBB;
+	}
+	
+	public List<QtCommitteeMemberBean> getPrevCommitteeMembers() {
+		return prevCommitteeMembers;
+	}
+
+	public void setPrevCommitteeMembers(List<QtCommitteeMemberBean> prevCommitteeMembers) {
+		this.prevCommitteeMembers = prevCommitteeMembers;
 	}
 	//#25037-end
 

@@ -10,6 +10,7 @@
 	<cc:interface>
 		<cc:attribute name="paginatorObject" required="true" />
 		<cc:attribute name="loopId" required="true" />
+	    <cc:attribute name="minimal" default="false" required="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -18,7 +19,7 @@
 			rendered="#{cc.attrs.paginatorObject.recordsTotal>cc.attrs.paginatorObject.records}">
 			<h:outputText value="#{lbl['lbl.datatable.paginator.page']} #{cc.attrs.paginatorObject.pageIndex} / #{cc.attrs.paginatorObject.pages}" style="font-weight: bold !important;" />
 				&#160;&#160;&#160;
-				<p:commandLink
+				<p:commandLink rendered="#{!cc.attrs.minimal}"
 					styleClass="ui-paginator-first ui-state-default ui-corner-all"
 					action="#{cc.attrs.paginatorObject.goToPage(1)}" process="@this" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==1}">
 					<i class="ui-icon ui-icon-seek-first">p</i>
@@ -35,7 +36,7 @@
 				<p:commandLink styleClass="ui-paginator-next ui-state-default ui-corner-all" action="#{cc.attrs.paginatorObject.next()}" process="@this" oncomplete="updateForm();" partialSubmit="true"  disabled="#{cc.attrs.paginatorObject.pageIndex==cc.attrs.paginatorObject.pages}" >
 					<i class="ui-icon ui-icon-seek-next">p</i>	
 					</p:commandLink>
-				<p:commandLink  
+				<p:commandLink rendered="#{!cc.attrs.minimal}"
 					styleClass="ui-paginator-last ui-state-default ui-corner-all"
 					action="#{cc.attrs.paginatorObject.goToPage(cc.attrs.paginatorObject.pages)}" process="@this" oncomplete="updateForm();" partialSubmit="true" disabled="#{cc.attrs.paginatorObject.pageIndex==cc.attrs.paginatorObject.pages}">
 					<i class="ui-icon ui-icon-seek-end">p</i>		

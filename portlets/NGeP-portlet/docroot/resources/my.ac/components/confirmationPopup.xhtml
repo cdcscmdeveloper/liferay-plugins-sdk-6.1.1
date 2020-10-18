@@ -15,29 +15,44 @@
 		<cc:attribute name="widget" default="" />
 		<cc:attribute name="okAction" required="true" default="" />
 		<cc:attribute name="cancelAction" default="" />
-		<cc:attribute name="width" default="400" />
-		<cc:attribute name="height" default="200" />
+		<cc:attribute name="width" default="auto" />
+		<cc:attribute name="height" default="auto" />
 		<cc:attribute name="resetInput" default="" />
 		<cc:attribute name="okProcess" default="@this" />
 		<cc:attribute name="style" default="" />
 		<cc:attribute name="dialogCSS" default="" />
+		<cc:attribute name="loadingWidget" default=""/>
 	</cc:interface>
 
 	<cc:implementation>
 		<style>
 			#{cc.attrs.dialogCSS}
-			.ui-dialog .ui-dialog-content table td label {
-				text-align: center !important;
+			.confirm-ui-dialog{
+				max-width: 500px;
+				width: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table{
+				margin: auto;
+			}
+			.confirm-ui-dialog .ui-dialog-content table td label {
 				white-space: normal;
 				padding-left: 5px;
 				display: inline !important;
 				float: none !important;
 			}
+			.confirm-ui-dialog .ui-dialog-content{
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+			.confirm-ui-dialog .ui-dialog-content span img{
+				margin-top: -4px;
+			}
+		
 		</style>
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
 		<!-- <ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" /> -->
-		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
+		<p:dialog styleClass="confirm-ui-dialog" id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
 			header="#{confirmationheader}" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
 			closable="false" modal="true" style="#{cc.attrs.style}">
@@ -56,6 +71,14 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
+					<c:when test="#{not empty cc.attrs.loadingWidget}">
+						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
+						<p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+					</c:when>
 				    <c:when test="#{empty cc.attrs.resetInput}">
 				       <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 

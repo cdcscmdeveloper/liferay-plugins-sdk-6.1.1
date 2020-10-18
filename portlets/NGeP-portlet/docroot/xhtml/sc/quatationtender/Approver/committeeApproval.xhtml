@@ -16,7 +16,7 @@
 			<ui:param name="assertDisabledRole" value="#{approvalBackingBean.assertCommitteeMemberRoleIsDisabled(committeeapprover.memberRole.parameterCode)}"/>
 					<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}"
+					<p:selectBooleanCheckbox disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or approvalBackingBean.assertCommitteeMemberRoleIsDisabled('S')}"
 						value="#{qTDetailBB.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@form"
 							listener="#{qTDetailBB.selectAll(qTDetailBB.managedBean.templateSpecBean.selectAll, membersList.scCommitteeMembers)}" />
