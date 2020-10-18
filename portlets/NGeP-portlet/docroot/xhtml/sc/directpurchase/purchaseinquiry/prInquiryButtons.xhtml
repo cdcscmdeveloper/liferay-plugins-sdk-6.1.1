@@ -86,6 +86,24 @@
 							</p:confirmDialog>
 						</td>
 					</c:if>
+					<!-- 26129 - Start -->
+					<c:if test="#{isPendingSubmissionStatus}">
+						<td style="float: right;"><p:commandButton
+								value="#{lbl['lbl.btn.cancel']}" onclick="cdcp.show()" /> <p:confirmDialog
+								message="#{lbl['lbl.cancel.dialog.confirm.message']}"
+								header="#{lbl['lbl.cancel.details']}" severity="alert"
+								widgetVar="cdcp">
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"
+										actionListener="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
+										oncomplete="cdcp.hide();" id="cancelPurchaseInquiry"
+										partialSubmit="true" process="@this" immediate="true" />
+									<p:commandButton value="#{lbl['lbl.btn.no']}"
+										oncomplete="cdcp.hide();" />
+								</div>
+							</p:confirmDialog></td>
+					</c:if>
+					<!-- 26129 - End -->
 				</tr>
 			</table>
 		</c:if>
@@ -125,25 +143,6 @@
 							</p:commandButton>
 
 						</c:if></ui:repeat>
-				<!-- 26129 - Start -->
-				<c:if test="#{isPendingSubmissionStatus}">
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						onclick="cd.show()" style="float:right;" />
-					<p:confirmDialog
-						message="#{lbl['lbl.cancel.dialog.confirm.message']}"
-						header="#{lbl['lbl.cancel.details']}" severity="alert"
-						widgetVar="cd">
-						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}"
-								actionListener="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}"
-								oncomplete="cd.hide();" id="cancelPurchaseInquiry"
-								partialSubmit="true" process="@this" immediate="true" />
-							<p:commandButton value="#{lbl['lbl.btn.no']}"
-								oncomplete="cd.hide();" />
-						</div>
-					</p:confirmDialog>					
-				</c:if>
-				<!-- 26129 - End -->
 				<p:outputPanel id="spkiOutputPanel">
 					<ac:spkiPopup id="spkiPopup"
 						password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
