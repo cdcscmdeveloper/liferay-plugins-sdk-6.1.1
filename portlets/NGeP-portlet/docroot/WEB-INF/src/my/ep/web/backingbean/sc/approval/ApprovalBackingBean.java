@@ -1156,10 +1156,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public void gpkiSignAction(PmDigiSign digiSign) {
 		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), digiSign);
-		
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
-			
 			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
 				log.info("Publication Approval executed");
 				successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
@@ -1178,9 +1176,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 				}
-				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
-				String qtNo = qt.getQtNo();
-				successMessage(MessageConst.INFO_760505, new String[]{committeeType, procurementMode, qtNo}, true);
+				if(isCommitteeFormedFirstTime(qt.getQtId(), committeeType)){
+					successMessage(getMessgeConstant(this.getManagedBean().getAction()),
+							getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
+							qt.getQtNo(), true);
+				}else{
+					String procurementMode = this.getParameterDesc(qt.getProcurementMode());
+					String qtNo = qt.getQtNo();
+					successMessage(MessageConst.INFO_760505, new String[]{committeeType, procurementMode, qtNo}, true);
+				}
 			}
 			//#25037-END
 			else{

@@ -17,6 +17,7 @@
 			closable="true" severity="error,info" showSummary="false" />
 		<div align="left">
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
+				onclick="blockWidget.show();" 
 				styleClass="BtnSpacing"
 				action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
@@ -166,8 +167,7 @@
 			<ui:param name="confirmmeetingCommitteemembersDeleteId"
 				value="confirmmeetingCommitteemembersDeleteId"></ui:param>
 			<ac:confirmationPopup id="#{confirmmeetingCommitteemembersDeleteId}"
-				widget="confirmMeetingCommitteemembersDeletePopUp" width="490"
-				height="100"
+				widget="confirmMeetingCommitteemembersDeletePopUp" loadingWidget="blockWidget" 
 				okAction="evaluationMeetingBackingBean.deleteCommitteemembersDtls"
 				title="#{lbl['lbl.sc.committee.member.list']}"
 				content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
@@ -179,12 +179,12 @@
 			showAttachment="false" readonly="#{!isCommitteeUpdatable}"
 			/>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.validateCommitteeChanges()}" />
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
+			<p:commandButton onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.validateCommitteeChanges()}" />
+			<p:commandButton onclick="blockWidget.show();" value="#{lbl['lbl.btn.cancel']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
 		<ui:include src="addexistingcommittee.xhtml" />
 		<ac:confirmationPopup id="confirmChangeMemberListId"
-			height= "100%" widget="confirmChangeMemberListPopup"
+			widget="confirmChangeMemberListPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction= "evaluationMeetingBackingBean.navigateToUpdateMember('confirm')"
 			content="#{lbl['lbl.sc.popup.needcommitteeapprover']}" />

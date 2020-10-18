@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -140,6 +141,7 @@ import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -4811,4 +4813,47 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return roleCode;
 		}
 		//29194 - End
+		
+		//25037 - Start
+		public boolean isCommitteeFormedFirstTime(Long qtId, String committeeTypes){
+			
+			String[] specCommitteArr = new String[]{"SC"};
+			String[] evalCommitteArr = new String[]{"EC", "OC", "FEC", "TEC"};
+			
+			String[] committeeArr = committeeTypes.split("/");
+			Arrays.sort(committeeArr);
+			
+			String[] committeeToCheck = new String[0];
+			if(Arrays.asList(evalCommitteArr).containsAll(Arrays.asList(committeeArr))){
+				committeeToCheck = evalCommitteArr;
+			}else if(Arrays.asList(specCommitteArr).containsAll(Arrays.asList(committeeArr))){
+				committeeToCheck = specCommitteArr;
+			}
+		
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+			reqDTO.setQtId(qtId);
+			ScQtApproval approval =  this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+			approval = approval == null ? new ScQtApproval(): approval;
+			Map<String, Integer> map = new LinkedHashMap<String, Integer>();
+			for(String s: Arrays.asList(committeeToCheck)){
+				map.put(s, 0);
+			}
+			
+			boolean result = false;
+			if(CollectionUtils.isNotEmpty(approval.getScQtApprovalDtls()) && committeeToCheck.length>0){
+				for(ScQtApprovalRequest r: approval.getScQtApprovalDtls()){
+					String cType = r.getApprovalType().getParameterCode();
+					if(Arrays.asList(committeeToCheck).contains(cType)){
+						map.put(cType, map.get(cType) + 1);
+						if(map.get(cType) > 1){
+							result = true;
+							break;
+						}
+					}
+				}
+			}	
+			return !result;
+		}
+		//25037 - End
 }

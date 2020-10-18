@@ -3170,26 +3170,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				} else {
 					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
-					committeDataType = committeDataType==null ? new SCCommitteeDataType() : committeDataType;
-					boolean isReapproval = committeDataType.getReapproval()==null ? false: committeDataType.getReapproval();
-					this.getManagedBean().setReapproval(isReapproval);
-
-					if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) && committeDataType.getReapproval()) {
-						getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
-						String tabType = committeDataType.getCommitteeType();
-						tabType = tabType==null ? "": tabType;
-						List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
-						int i = 0;
-						for(TabBean tab: tabs){
-							if(tabType.equalsIgnoreCase(tab.getTabType())){
-								this.getManagedBean().setSelectedTabBean(tab);
-								this.getManagedBean().setSelectedTabIndex(i);
-								this.getManagedBean().setSelectedCommitteeTabIndex(i);
-							}else{
-								tab.setDisabled(true);
-							}
-							i++;
-						}
+					if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+						initCommitteeTabSingularReapproval(committeDataType);
 					}
 				}
 				
@@ -5442,6 +5424,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				initializeRemarksForCommitteeApproval();
+				initCommitteeTabSingularReapproval(payLoad);
 			}
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			break;
@@ -5990,9 +5973,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							committeeType = committeeType.concat("/");
 						}
 					}
-					String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
-					String qtNo = scQt.getQtNo();
-					successMessage(MessageConst.INFO_760504, new String[]{committeeType, procurementMode, qtNo}, true);
+					if(isCommitteeFormedFirstTime(scQt.getQtId(), committeeType)){
+						successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), true);
+					}else{
+						String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
+						String qtNo = scQt.getQtNo();
+						successMessage(MessageConst.INFO_760504, new String[]{committeeType, procurementMode, qtNo}, true);
+					}
 				}else{
 					successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
 							scQt.getQtNo(), Boolean.TRUE);
@@ -8966,7 +8953,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
     	if(this.getManagedBean().isShowHistory()){
     		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-    		List<ScCommitteeMemberHistory> histories = committeSO.getMergedHistory(scQtCommittee, true);
+    		List<ScCommitteeMemberHistory> histories = committeSO.getMergedHistory(scQtCommittee, false);
     		this.getManagedBean().setCommitteeHistories(new Paginator(histories));
     		this.getManagedBean().setCurrentCommitteeDesc(this.getParameterDesc(scQtCommittee.getScCommittee().getCommitteeType(), new FacesScopes().getUserLocale()));
     		this.getManagedBean().setSelectedHistoryMember(new Paginator(new ArrayList<QtCommitteeMemberBean>()));
@@ -8978,7 +8965,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
     	ScCommitteeMemberHistory history= this.getManagedBean().getSelectedCommitteeHistory();
 		List<QtCommitteeMemberBean> list =(List<QtCommitteeMemberBean>)(Object)history.deserializeList(history.getCommitteeMembers());
 		CustomUtils.sortQtCommitteeMemberRole(list);
-    	this.getManagedBean().setSelectedHistoryMember(new Paginator(list));
+    	Paginator selectedHistoryMember = new Paginator(list);
+    	this.getManagedBean().setSelectedHistoryMember(selectedHistoryMember);
     }
 	
 	public void assertSpecificationUpdateInProgress(boolean showPopup){
@@ -9102,6 +9090,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		
 		return modified;
+	}
+	private void initCommitteeTabSingularReapproval(Object payload){
+		if(payload==null){
+			throw new EpException("Payload should not be empty.");
+		}
+		SCCommitteeDataType committeeData = payload == null ? new SCCommitteeDataType(): (SCCommitteeDataType) payload;
+		boolean isReapproval = committeeData.getReapproval() == null ? false:  committeeData.getReapproval();
+		if(isReapproval){
+			getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
+			String tabType = committeeData.getCommitteeType() == null ? "": committeeData.getCommitteeType();
+			List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
+			int i = 0;
+			for(TabBean tab: tabs){
+				if(tabType.equalsIgnoreCase(tab.getTabType())){
+					this.getManagedBean().setSelectedTabBean(tab);
+					this.getManagedBean().setSelectedTabIndex(i);
+					this.getManagedBean().setSelectedCommitteeTabIndex(i);
+				}else{
+					tab.setDisabled(true);
+				}
+				i++;
+			}
+		}
 	}
     //#25037-end
 	
