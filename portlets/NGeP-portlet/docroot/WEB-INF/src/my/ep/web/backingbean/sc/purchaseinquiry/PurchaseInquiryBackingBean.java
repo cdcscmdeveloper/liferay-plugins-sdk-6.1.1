@@ -714,6 +714,17 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				ScRequestNote requestNote = requestNoteDtl.getScRequestNote();
 				SmSupplier smSupplier = scRequestSupplierItem.getSmSupplier();
+				
+				//Start - #26129
+				if (prInquiry.getCurrentStatus() != null) {
+					getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
+					PmStatus pmStatus = getManagedBean().getPriStatus();
+					if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
+							&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
+						validateRequiredRemark(prInquiry);
+					}
+				}							
+				//End - #26129
 				finalizeRemarks(prInquiry.getRemarks());
 
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
@@ -1310,8 +1321,6 @@ public class PurchaseInquiryBackingBean extends
 			return "requestNoteMain";
 
 		} else if (StringUtils.equalsIgnoreCase("CANCELPI", action)) { //Start - #26129
-			
-			getManagedBean().setDisabledRemark(Boolean.FALSE);
 			validateRequiredRemark(prInquiry);
 			finalizeRemarks(prInquiry.getRemarks());
 			getPrInquirySO().updatePICurrentWorkflowStatus(prInquiry, DPStatusConstants.PRI_CANCELLED);
@@ -2071,6 +2080,9 @@ public class PurchaseInquiryBackingBean extends
 					newRemark = true;
 				}
 			}
+			if (prInquiryDetail.getRemarks().size() == 0) {
+				newRemark = true;
+			}				
 		}
 
 		if (newRemark) {
