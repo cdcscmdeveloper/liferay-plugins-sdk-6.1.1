@@ -47,6 +47,24 @@
 							process="@this"
 							action="#{purchaseInquiryBackingBean.backToPrevious}" />
 					</td>
+					<!-- 26129 - Start -->
+					<c:if test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
+						<td style="float: right;"><p:commandButton
+								value="#{lbl['lbl.btn.cancel']}" onclick="cdcp.show()" /> <p:confirmDialog
+								message="#{lbl['lbl.cancel.dialog.confirm.message']}"
+								header="#{lbl['lbl.cancel.details']}" severity="alert"
+								widgetVar="cdcp">
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"
+										actionListener="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
+										oncomplete="cdcp.hide();" id="cancelPurchaseInquiry"
+										partialSubmit="true" process="@this" immediate="true" />
+									<p:commandButton value="#{lbl['lbl.btn.no']}"
+										oncomplete="cdcp.hide();" />
+								</div>
+							</p:confirmDialog></td>
+					</c:if>
+					<!-- 26129 - End -->
 					<td style="float:right;">
 						<p:commandButton
 							value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
@@ -91,25 +109,6 @@
 		</c:if>
 
 		<c:if test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
-			<!-- 26129 - Start -->
-			<c:if test="#{isPendingSubmissionStatus}">
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					onclick="cdcp.show()" />
-				<p:confirmDialog
-					message="#{lbl['lbl.cancel.dialog.confirm.message']}"
-					header="#{lbl['lbl.cancel.details']}" severity="alert"
-					widgetVar="cdcp">
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}"
-							actionListener="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
-							oncomplete="cdcp.hide();" id="cancelPurchaseInquiry"
-							partialSubmit="true" process="@this" immediate="true" />
-						<p:commandButton value="#{lbl['lbl.btn.no']}"
-							oncomplete="cdcp.hide();" />
-					</div>
-				</p:confirmDialog>
-			</c:if>
-			<!-- 26129 - End -->
 			<div class="ppRightBtn">
 				<c:if test="#{isPendingRnCreationStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.proceed']}"
