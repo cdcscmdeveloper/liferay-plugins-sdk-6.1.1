@@ -1615,7 +1615,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
 					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
-			reqDTO.setRoleCode(getUserRoleCode());
+			//29194 - Start
+			reqDTO.setRoleCode(getUserRoleCodeSQ());
+			//29194 - End
 			reqDTO.setTaskExpiredDate(pidExpDate);
 			reqDTO.setPidApprovers(pidApprovers);
 			
