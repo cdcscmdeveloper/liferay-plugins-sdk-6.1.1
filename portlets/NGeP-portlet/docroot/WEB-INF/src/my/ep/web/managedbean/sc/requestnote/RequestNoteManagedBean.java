@@ -23,6 +23,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -360,6 +361,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	// Refactor #18 - Start.
 	private String docStatus = "";
 	// Refactor #18 - End.
+	
+	// #28789 - start
+	private String normalAndTierPriceStr = StringUtils.EMPTY;
+	private List<CmPricing> completeCmPricingList;
+	private List<CmPricing> filteredCmPricingList;
+	// #28789 - end
 	
     /**
      * Instantiates a new request note managed bean.
@@ -2111,4 +2118,30 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.docStatus = docStatus;
 	}
 	// Refactor #18 - End.
+	
+	// #28789 - start
+	public String getNormalAndTierPriceStr() {
+		return normalAndTierPriceStr;
+	}
+
+	public void setNormalAndTierPriceStr(String normalAndTierPriceStr) {
+		this.normalAndTierPriceStr = normalAndTierPriceStr;
+	}
+
+	public List<CmPricing> getCompleteCmPricingList() {
+		return completeCmPricingList;
+	}
+
+	public void setCompleteCmPricingList(List<CmPricing> completeCmPricingList) {
+		this.completeCmPricingList = completeCmPricingList;
+	}
+
+	public List<CmPricing> getFilteredCmPricingList() {
+		return filteredCmPricingList;
+	}
+
+	public void setFilteredCmPricingList(List<CmPricing> filteredCmPricingList) {
+		this.filteredCmPricingList = filteredCmPricingList;
+	}
+	// #28789 - end
 }

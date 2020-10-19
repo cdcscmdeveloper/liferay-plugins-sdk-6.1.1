@@ -62,7 +62,9 @@
 							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
 							validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
-							<p:ajax partialSubmit="true" process="@this" update="@this" />
+							<p:ajax partialSubmit="true" process="@this" 
+								update="@this, addToCartId"
+								listener="#{requestNoteBackingBean.onChangePriceType()}" />
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 								maxIntegerDigits="10" />
@@ -82,9 +84,26 @@
 										value="#{requestNoteBackingBean.managedBean.priceType}">
 										<f:selectItems
 											value="#{requestNoteBackingBean.managedBean.priceTypes}" />
+										<p:ajax event="change" process="@this"
+											update="@this, addToCartId"
+											listener="#{requestNoteBackingBean.onChangePriceType()}" />
 									</p:selectOneMenu> <p:message id="priceTypeMsg" for="priceType" display="icon" /></td>
 								<td style="margin-top: -3px"><ac:iconTooltip
 										value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
+								<td><p:outputPanel id="priceTypeInfoPanel"
+										rendered="#{!empty requestNoteBackingBean.managedBean.priceType}">
+										<p:inputText disabled="true" style="font-weight: bold;"
+											value="#{requestNoteBackingBean.managedBean.normalAndTierPriceStr}"
+											size="5" rendered="#{requestNoteBackingBean.managedBean.priceType eq '01' or requestNoteBackingBean.managedBean.priceType eq '02' or requestNoteBackingBean.managedBean.priceType eq '03' or requestNoteBackingBean.managedBean.priceType eq '04'}">
+										</p:inputText>
+											<p:commandLink process="@this"
+												update=":#{p:component('supplierPricingInfoDlg')}"
+												oncomplete="supplierPricingInfoDlgVar.show();"
+												rendered="#{requestNoteBackingBean.managedBean.priceType eq '05' or requestNoteBackingBean.managedBean.priceType eq '06' or requestNoteBackingBean.managedBean.priceType eq '07' or requestNoteBackingBean.managedBean.priceType eq '08'}">
+												<p:graphicImage value="/css/images/design/ico-price.png"
+													id="zonePriceTblId" style="max-width: 16px;" />
+											</p:commandLink>
+									</p:outputPanel></td>
 							</tr>
 						</table>
 					</td>
@@ -172,5 +191,37 @@
 		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	  </p:blockUI>
 	<p:defaultCommand target="proceedBtn"></p:defaultCommand>
+	</p:dialog>
+	
+	<p:dialog id="supplierPricingInfoDlg"
+		widgetVar="supplierPricingInfoDlgVar" styleClass="pop_up_top"
+		modal="true" width="50%" resizable="false"
+		header="#{lbl['lbl.tpl.spec.content.price']}" closable="true">
+
+		<p:dataTable id="supplierPricingInfoTbl"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			var="priceItem" rowIndexVar="index" width="500"
+			value="#{requestNoteBackingBean.managedBean.filteredCmPricingList}">
+			<p:column headerText="#{lbl['lbl.rpt.zone']}">
+				<h:outputText
+					value="#{fn:toLowerCase(priceItem.cmSupplierZone.suppZoneName)}"
+					style="text-transform: capitalize;" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.from.qty']}"
+				rendered="#{requestNoteBackingBean.managedBean.priceType eq '07' or requestNoteBackingBean.managedBean.priceType eq '08'}">
+				<h:outputText value="#{priceItem.fromQty}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.to.qty']}"
+				rendered="#{requestNoteBackingBean.managedBean.priceType eq '07' or requestNoteBackingBean.managedBean.priceType eq '08'}">
+				<h:outputText value="#{priceItem.toQty}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.price.offered']}">
+				<h:outputText value="#{priceItem.price}">
+					<f:convertNumber groupingUsed="true" minFractionDigits="2"
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+
 	</p:dialog>
 </ui:composition>
