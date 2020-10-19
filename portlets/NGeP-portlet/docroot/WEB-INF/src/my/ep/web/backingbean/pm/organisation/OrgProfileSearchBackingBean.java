@@ -73,15 +73,21 @@ public class OrgProfileSearchBackingBean extends
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
 				.getPegaiPengawaProfileId());
 	}
-
+	
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
 		
 		//#26475 - add Approver value
-		//#26474 - add Publication Approver value
+		//#26474 - add Publication Approver & all FC Secretaries value	
 		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())	
-				|| getFacesScopes().hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())) {
+				|| getFacesScopes().hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
