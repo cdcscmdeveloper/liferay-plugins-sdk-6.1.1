@@ -16,7 +16,7 @@
 	<p:spacer height="15px" rendered="#{consolidationReportBackingBean.managedBean.itemized}"/>
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension']} " escape="false" />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
 		</c:if>
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />

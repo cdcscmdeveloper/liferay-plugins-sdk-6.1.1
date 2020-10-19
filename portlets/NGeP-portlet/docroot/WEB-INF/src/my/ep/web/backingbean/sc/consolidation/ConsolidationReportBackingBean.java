@@ -712,7 +712,9 @@ public class ConsolidationReportBackingBean extends
 		retrieveQTDetails();
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
-		initializeFinalizationUlasanRemarks();
+		// #18685 - Start.
+		//initializeFinalizationUlasanRemarks();
+        // #18685 - End.
 		//#21695 Farid start
 		retrieveSupplierOfferOrNotOffer();
 		//#21695 end
