@@ -1,5 +1,9 @@
 package my.ep.web.backingbean.sm.cancelregistration;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -130,12 +134,23 @@ public class CancelRegistrationBackingBean extends
 							if(resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_STATUS_ID)) ||
 									resDTO.getSmSupplier().getSmAppl().getPmStatus().getStatusId().equals(Long.valueOf(DbValueConst.PM_PENDING_ACTIVATON_ID)) || appl != null){//PM_STATTUS_ID=20199
 								
-								if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+								//#25474 - same message with basic account if appl was rejected by PO for more than 60 days
+								boolean poRejectFlag = false;
+								if(appl != null && appl.getSdoReceivedDate() != null){
+									Calendar c = new GregorianCalendar();
+									c.setTime(appl.getSdoReceivedDate());
+									c.add(Calendar.DATE, 60);
+									Date rejectedDate = c.getTime();
+									Date currentDate = new Date();
+									if(currentDate.before(rejectedDate)) poRejectFlag = true;
+								}								
+								
+								if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) && poRejectFlag) {
 									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
 									String msg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg.ApplStatus.Contractor",new String[] { accTypeStr });
 									getManagedBean().setConfirmationMsg(msg);
 									RequestContext.getCurrentInstance().execute("confirmDialog.show();");
-								}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+								}else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT) && poRejectFlag) {
 									accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant",null);
 									String mssg = SmCommonUtil.getMessage("lbl.sm.req.cancel.confirmation.msg.ApplStatus.Consulutent",new String[] { accTypeStr });
 									getManagedBean().setConfirmationMsg(mssg);
