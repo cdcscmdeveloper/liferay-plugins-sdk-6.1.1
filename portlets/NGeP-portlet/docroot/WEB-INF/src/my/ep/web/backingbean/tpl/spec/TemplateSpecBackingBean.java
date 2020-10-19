@@ -2260,8 +2260,32 @@ public class TemplateSpecBackingBean extends
 							if (userScore != null) {
 								totalScore = totalScore.add(userScore);
 						}
+							if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+									&& (autoScore != null || userScore != null 
+										|| autoScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+											|| autoScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+												&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)
+														|| userScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+													&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+														|| userScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+															&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0) {
 								totalMaxScore = totalMaxScore.add(specAnswer
 										.getTplSpecQuestion().getMaxScore());
+							}
+							
+							if(autoScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+									|| autoScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
+								specAnswer.setAutoScore(BigDecimal.valueOf(0));
+							}
+							if(userScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+									|| userScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
+								specAnswer.setUserScore(BigDecimal.valueOf(0));
+							}
 //END	
 				}else {
 							if (autoScore != null) {
@@ -3082,8 +3106,6 @@ public class TemplateSpecBackingBean extends
 				.getTplSpecEstimations();
 		TplSpecZone specZone = templateSpecBean.getSpecMaster()
 				.getTplSpecZone();
-		List<TplSpecZoneQty> sepcQty = tplSpecQuestion.getTplSpecZoneQties();
-		
 		List<TplSpecZoneDtl> specZoneDtls = null;
 		
 		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
@@ -3096,6 +3118,7 @@ public class TemplateSpecBackingBean extends
 			templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
 			} 
 		}
+				 
 		log.info("speczone "+specZone);
 		if (specZone != null) {
 			if (specZone.isBrandNew() || specZone.isModified()) {
