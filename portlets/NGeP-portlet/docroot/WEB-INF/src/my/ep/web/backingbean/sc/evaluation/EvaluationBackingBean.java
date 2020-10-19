@@ -14008,6 +14008,11 @@ private void retriveCommitteeRemarksList(){
 						reqDTO2.setCheckListId(newList.getQtChecklistId());
 						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
 						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						if(this.getManagedBean().getScQt().isZonal()){
+							for(TplSpecZoneDtl tplSpecZoneDtl: this.getManagedBean().getSpecZoneDtls()){
+								reqDTO2.setSpeZoneId(tplSpecZoneDtl.getSpecZoneId());
+							} 
+						}
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
 						
 						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
