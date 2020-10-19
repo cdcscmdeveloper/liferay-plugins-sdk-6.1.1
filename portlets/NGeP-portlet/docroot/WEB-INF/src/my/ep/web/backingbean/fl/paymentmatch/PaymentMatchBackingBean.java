@@ -287,20 +287,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			
 			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			
-			//28221 - start
-			if(!getManagedBean().isUserActive() && getManagedBean().getNewSupplierId() == null){
-				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(
-						"Supplier User "
-								+ getManagedBean().getUser().getUserName()
-								+ " is inactive. Please contact supplier for selection of new supplier user that will undertake the take to revise the invoice.");
-			}
-			if(getManagedBean().getNewSupplierId() != null){
-				reqDTO.setSupplierSubmittedItd(getManagedBean().getNewSupplierId());
-				reqDTO.setInvoice(getManagedBean().getPaymentAdvice().getFlInvoice());
-			}
-			//28221 - end
-			
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745013;
@@ -510,33 +496,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			getManagedBean().setTaxInvoice(resDTO.isTaxable());
 		}
-		
-		//28221 start
-		//WIP data patch
-		if (getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId() == null) {
-			getManagedBean().getPaymentAdvice().getFlInvoice()
-					.setSupplierSubmittedId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
-			getManagedBean().setNewSupplierId(getManagedBean().getPaymentAdvice().getFlInvoice().getCreatedBy());
-		}
 
-		IUserSO userSO;
-		try {
-			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
-
-			UserResDTO userResDTO = userSO.retrieveUserDtlById(userReqDTO);
-			getManagedBean().setUser(userResDTO.getPmUser());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		} finally {
-			userSO = null;
-		}
-		getSupplierStatus();
-		//28221 end
 	}
 	
 	/**
@@ -2605,43 +2565,4 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
-	//28221 -start
-		public void getSupplierStatus(){
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IPersonnelSO.class);
-			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-			personnelReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
-			PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByUserId(personnelReqDTO);
-			SmPersonnel currentPersonnel = personnelResDTO.getSmPersonnel();
-			
-			personnelReqDTO.setSmSupplierId(personnelResDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
-			for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-				if(personnel.getPersonnelId().equals(currentPersonnel.getPersonnelId())){
-					getManagedBean().setUserActive(true);
-				}
-			}
-		}
-		
-		public SelectItem[] showSupplierList(){
-			SelectItem[] items = null;
-			int i = 1;
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-			PersonnelResDTO personnelResDTO = new PersonnelResDTO();
-			
-			personnelReqDTO.setUserId(getManagedBean().getPaymentAdvice().getFlInvoice().getSupplierSubmittedId());
-			personnelResDTO = personnelSO.retrievePersonnelByUserId(personnelReqDTO);
-			
-			personnelReqDTO.setSmSupplierId(personnelResDTO.getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-			personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
-			
-			items = new SelectItem[personnelResDTO.getSmPersonnelList().size() + 1];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {
-			  items[i++] = new SelectItem(smPersonnel.getPmUser().getUserId(), smPersonnel.getPmUser().getUserName());
-			}
-			return items;
-		}
-	
 }
