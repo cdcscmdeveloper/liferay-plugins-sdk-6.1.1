@@ -4499,6 +4499,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setContractSignerUser(scLoa.getContractSigner());
 			getManagedBean().getScLoa().setLoaSignerDesig(scLoa.getContractSigner().getDesignation());
 		}
+		
+		if (this.getManagedBean().getSelectedPtj() == null){
+			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+			this.getManagedBean().setSelectedPtj(pmOrgProfile);
+		}
 		//#26474 - end
 		
 		// Actual Total Intended Price (RM)
@@ -5012,10 +5017,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//#26474 -start-
 			ScQt scQt = this.getManagedBean().getScQt();
 			reqDTO.setScQt(scQt);
-			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
-			if (this.getManagedBean().getSelectedPtj() != null){
-				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
-			}
+//			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+//			if (this.getManagedBean().getSelectedPtj() != null){
+//				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+//			}
 			//#26474 -end-
 			
 			reqDTO.setScLoa(scLoa);
