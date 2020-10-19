@@ -13164,8 +13164,75 @@ private void retriveCommitteeRemarksList(){
 				}//last group
 				this.getManagedBean().setDetachedPaginator(new Paginator(localCheckList));
 				log.info("paging--" + this.getManagedBean().getDetachedPaginator());
-			
+
 			}
+			//#25138 - get score type from scoreofferprice -start
+			for(ScQtCheckList newCheckList:resDTO.getCheckListResultBean().getResultList()){
+				
+				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+						.equalsIgnoreCase(newCheckList
+								.getDefinationType().getParameterCode())
+						&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION
+								.equalsIgnoreCase(newCheckList
+										.getDefinationType()
+										.getParameterCode())) {
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(newCheckList
+									.getDefinationType().getParameterCode())) {
+						if(SourcingConstants.FINANCIAL_DOCTYPE
+							.equalsIgnoreCase(newCheckList
+									.getDocCategory())){
+							
+							EvaluationReqDTO specDtls = new EvaluationReqDTO();
+							specDtls.setQtId(this.getManagedBean().getScQt().getQtId());
+							specDtls.setCheckListId(newCheckList.getQtChecklistId());
+							if (!this.getManagedBean().getScQt().isZonal()) {
+								if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+										.equalsIgnoreCase(this.getManagedBean()
+												.getCommitteeType())) {
+									if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+											.equalsIgnoreCase(this.getManagedBean()
+													.getCommitteeType())) {
+										specDtls.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+									} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+											.equalsIgnoreCase(this.getManagedBean()
+													.getCommitteeType())) {
+										if (this.getManagedBean().getScQt()
+												.isTechEvaluationReq()) {
+											specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+										} else {
+											specDtls.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+										}
+
+									}
+								} else {
+									if (this.getManagedBean().getScQt().isDemoRequired()) {
+										specDtls.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+									} else {
+										specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									}
+								}
+							}
+							EvaluationResDTO specdetails = evaluationSO
+									.retrieveFinSpecDetailsByCheckListId(specDtls);
+							
+							if(specdetails != null){
+								this.getManagedBean().setOfferScoreType(specdetails.getScoreOfferPrices()
+										.getScoreType().toString());
+								if (null != specdetails.getZones()
+										&& !specdetails.getZones().isEmpty()) {
+
+									this.getManagedBean().setSpecZoneDtls(specdetails
+											.getZones());
+								}
+							}
+						}
+						
+					}
+				}
+			}
+			//#25138 - get score type from scoreofferprice -end
+			
 			this.getManagedBean().setDetachedPaginatorTest(new Paginator(outerCheckList));
 			
 			if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
@@ -13202,6 +13269,11 @@ private void retriveCommitteeRemarksList(){
 						reqDTO2.setCheckListId(singleChecklist.getQtChecklistId());
 						reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
 						reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						if(this.getManagedBean().getScQt().isZonal()){
+							for(TplSpecZoneDtl tplSpecZoneDtl: this.getManagedBean().getSpecZoneDtls()){
+								reqDTO2.setSpeZoneId(tplSpecZoneDtl.getSpecZoneId());
+							} 
+						}
 						resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
 						
 						for(ScQtProposalChecklist proplist : resDTO2.getComplianceResultBean().getResultList()){
