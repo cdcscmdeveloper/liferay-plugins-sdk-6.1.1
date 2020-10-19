@@ -628,6 +628,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
         }
         
+        Collections.sort(tempOriginalPpItemList, new Comparator<PpProcurementItem>() {
+ 		    @Override
+ 		    public int compare(PpProcurementItem o1, PpProcurementItem o2) {
+ 		    	log.info("Compare ppItem by createdDate.. ");
+ 		    	log.info(o1.getProcurementItemId()+
+ 		    			"= "+o1.getCreatedDate()+
+ 		    			", "+o2.getProcurementItemId()+"= "+o2.getProcurementItemId()+
+ 		    			" => "+o1.getCreatedDate().compareTo(o2.getCreatedDate()));
+ 		        return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+ 		    }
+ 		});
+        
         // Debugging..
         log.info("tempOriginalPpItemList (reorderedList)..");
         for (PpProcurementItem ppit : tempOriginalPpItemList) {
