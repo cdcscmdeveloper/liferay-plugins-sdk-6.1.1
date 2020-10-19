@@ -52,7 +52,7 @@
 					
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:selectBooleanCheckbox disabled="#{!scQt.selectable}" id="selectAllItemsByItem" value="#{scQt.selected}">
-								<p:ajax listener="#{DOMaintenanceBackingBean.selectedQtId(scQt.qtId)}" update=":#{p:component('taskReassignBtn')},  :#{p:component('taskReassignSubmitBtn')}, :#{p:component('searchQTs')} " />
+								<p:ajax event="change" partialSubmit="true" onstart="doSearchBlockWidget.show()" oncomplete="doSearchBlockWidget.hide()" listener="#{DOMaintenanceBackingBean.selectedQtId(scQt.qtId)}" update=":#{p:component('taskReassignBtn')},  :#{p:component('taskReassignSubmitBtn')}, :#{p:component('searchQTs')} " />
 						</p:selectBooleanCheckbox>
 					</p:column>
 					
