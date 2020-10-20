@@ -2114,6 +2114,12 @@ public class SmApplicationBackingBean extends
 
 				SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 						.getSmAppl());
+				
+				//29356 start
+				SmApplicationUtil.validatePersonnelBeforeSave(
+						true, currentTab, getManagedBean());
+				//29356 end
+
 				//START SSM AUTO CALCULATE SHARE
 				if(getManagedBean().getSmAppl().isApplValidWithSsm()){
 					calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
@@ -7597,6 +7603,11 @@ public class SmApplicationBackingBean extends
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
+		
+		//29356 start
+		SmApplicationUtil.validatePersonnelBeforeSave(
+				true, currentTab, getManagedBean());
+		//29356 end
 
 		// try {
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
