@@ -1542,7 +1542,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 							.getManagedBean().getTaskName())
 					&& reqDTO.isCommitteeModified()) {
 				String procurementMode = this.getParameterDesc(getManagedBean().getScQt().getProcurementMode(), new FacesScopes().getUserLocale());
-				this.successMessage(MessageConst.TD_760513, new String[]{reqDTO.getCommitteType(), procurementMode, qtNo}, true);
+				String committeeName = this.getParameterDesc(ParameterConst.COMMITTE_TYPE, reqDTO.getCommitteType());
+				this.successMessage(MessageConst.TD_760513, new String[]{committeeName, procurementMode, qtNo}, true);
 			}else{
 				String submitMessage=	ResourceBundleUtils
 						.getMessage("lbl.sc.sf.meeting.submit.message",
@@ -1918,6 +1919,8 @@ if (CollectionUtils.isNotEmpty(
 		}
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
+		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
+		this.getManagedBean().setValidFor25037(isValidFor25037);
 	}
 	@SuppressWarnings("unchecked")
 	public void onSelectHistory() throws IOException{
@@ -1983,8 +1986,11 @@ if (CollectionUtils.isNotEmpty(
 	
 	private boolean isCommitteeModified(List<ScCommitteeMember> currentList){
 		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
-		if(CollectionUtils.isEmpty(currentList) || CollectionUtils.isEmpty(previousList)){
-			throw new EpException("Should not be empty.");
+		if(CollectionUtils.isEmpty(previousList)){
+			previousList = new ArrayList<QtCommitteeMemberBean>();
+		}
+		if(CollectionUtils.isEmpty(currentList)){
+			currentList = new ArrayList<ScCommitteeMember>();
 		}
 		String[] previousListArr = new String[previousList.size()];
 		String[] currentListArr = new String[currentList.size()];
