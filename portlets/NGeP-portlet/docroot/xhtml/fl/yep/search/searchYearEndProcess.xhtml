@@ -413,7 +413,7 @@
 							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							        	rendered="#{yearEndProcessBackingBean.isCarryForward(flYep.statusId) and flYep.phase eq '3'}"
 							        	icon="ui-icon-fl-cancel"
-							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'taskId', value:'#{flYep.yepTaskId}'}, {name:'orderN', value:'#{flYep.orderNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.carryForward}'} , {name:'phase', value:'#{flYep.phase}'} , {name:'statusDesc', value:'#{flYep.statusId}'}, {name:'progressStatus', value:'#{flYep.progressStatus}'}, {name:'carryForward', value:'#{flYep.carryForward}'}])"/>
 					
 					<!-- #28375- Ending Logan-->
 					<!-- #28374	Vinod Start -->
