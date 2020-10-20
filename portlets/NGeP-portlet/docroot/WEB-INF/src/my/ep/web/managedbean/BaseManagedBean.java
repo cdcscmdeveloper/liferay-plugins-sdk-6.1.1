@@ -110,6 +110,10 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25638 - Start		
 	private boolean displayReviseInstrn;
 	// #25638 - End	
+	//#25037-start
+	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
+	//#25037-end
+
 	
 	/**
 	 * @return the token
@@ -714,6 +718,14 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayReviseInstrn = displayReviseInstrn;
 	}
 	// #25638 - End
+
+	public boolean isValidFor25037() {
+		return validFor25037;
+	}
+
+	public void setValidFor25037(boolean validFor25037) {
+		this.validFor25037 = validFor25037;
+	}
 	
 	
 }
