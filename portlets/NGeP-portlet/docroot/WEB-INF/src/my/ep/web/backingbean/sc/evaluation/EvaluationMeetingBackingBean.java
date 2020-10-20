@@ -766,7 +766,10 @@ public class EvaluationMeetingBackingBean extends
 			Object object = this.getManagedBean().getPayLoad();
 			String QtNum = this.getManagedBean().getQt().getQtNo();
 			//#25037 Start
-			metReqDtO.setCommitteeModified(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()));
+			boolean modified = isCommitteeModified(this.getManagedBean()
+					.getCommitteeMemberActivity())
+					&& this.getManagedBean().isValidFor25037();
+			metReqDtO.setCommitteeModified(modified);
 			metReqDtO.setTaskId(this.getManagedBean().getTaskId());
 			metReqDtO.setTaskName(this.getManagedBean().getTaskName());
 			metReqDtO.setOutcome(BpmOutcomeConst.BPM_SAVE);
@@ -1575,7 +1578,10 @@ public class EvaluationMeetingBackingBean extends
 							IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = prepareMeetingDtls();
 			checkCommitteeFormation(reqDTO);
-			reqDTO.setCommitteeModified(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()));
+			boolean modified = isCommitteeModified(this.getManagedBean()
+					.getCommitteeMemberActivity())
+					&& this.getManagedBean().isValidFor25037();
+			reqDTO.setCommitteeModified(modified);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setTaskName(this.getManagedBean().getTaskName());//#25037
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -2114,6 +2120,8 @@ public class EvaluationMeetingBackingBean extends
 			}
 		});
 		this.getManagedBean().setScQtApprovalRemarks(remarkList);
+		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
+		this.getManagedBean().setValidFor25037(isValidFor25037);
 	}
 	
 	public boolean isCommitteeEditable(String taskName){
@@ -2164,11 +2172,12 @@ public class EvaluationMeetingBackingBean extends
 		String outcome = reqDTO.getOutcome();
 		String message = null;
 
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && this.getManagedBean().isValidFor25037()){
 			if(((Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName) 
 					|| Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(taskName)) && reqDTO.isCommitteeModified())
 					|| taskName.equals(SCProcessNameConst.REVISE_EVALUATION_MEETING)){
 				String committeeType = this.getManagedBean().getCommitteeType();
+				committeeType = StringUtils.isEmpty(committeeType) ? "" : this.getParameterDesc(ParameterConst.COMMITTE_TYPE, committeeType);
 				String procumentMode = this.getParameterDesc(qt.getProcurementMode());
 				message= MessageUtils.getMessage(MessageConst.INFO_760504, new String[]{committeeType, procumentMode, qt.getQtNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 			}
@@ -2187,8 +2196,11 @@ public class EvaluationMeetingBackingBean extends
 
 	private boolean isCommitteeModified(List<ScCommitteeMember> currentList){
 		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
-		if(CollectionUtils.isEmpty(currentList) || CollectionUtils.isEmpty(previousList)){
-			throw new EpException("Should not be empty.");
+		if(CollectionUtils.isEmpty(previousList)){
+			previousList = new ArrayList<QtCommitteeMemberBean>();
+		}
+		if(CollectionUtils.isEmpty(currentList)){
+			currentList = new ArrayList<ScCommitteeMember>();
 		}
 		String[] previousListArr = new String[previousList.size()];
 		String[] currentListArr = new String[currentList.size()];

@@ -1166,13 +1166,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25037-START
 			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
 				String committeeType = "";
+				String committeeNames = "";
 				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
 					int count = 0;
 					for(ScQtCommittee c: qt.getScQtCommittees()){
 						count++;
-						committeeType = committeeType.concat(c.getScCommittee().getCommitteeType().getParameterCode());
+						String code = c.getScCommittee().getCommitteeType().getParameterCode();
+						committeeType = committeeType.concat(code);
+						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
 						if(count<qt.getScQtCommittees().size()){
 							committeeType = committeeType.concat("/");
+							committeeNames = committeeNames.concat("/");
 						}
 					}
 				}
@@ -1183,7 +1187,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}else{
 					String procurementMode = this.getParameterDesc(qt.getProcurementMode());
 					String qtNo = qt.getQtNo();
-					successMessage(MessageConst.INFO_760505, new String[]{committeeType, procurementMode, qtNo}, true);
+					successMessage(MessageConst.INFO_760505, new String[]{committeeNames, procurementMode, qtNo}, true);
 				}
 			}
 			//#25037-END
@@ -1472,20 +1476,24 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (tenderResDTO.isSuccessful()) {
 			ScQt qt = tenderResDTO.getQtDetail();
 			if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
-				String committeeType = null;
+				String committeeType = "";
+				String committeeNames = "";
 				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
 					int count = 0;
 					for(ScQtCommittee c: qt.getScQtCommittees()){
 						count++;
-						committeeType = c.getScCommittee().getCommitteeType().getParameterCode();
+						String code = c.getScCommittee().getCommitteeType().getParameterCode();
+						committeeType = committeeType.concat(code);
+						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
 						if(count<qt.getScQtCommittees().size()){
 							committeeType = committeeType.concat("/");
+							committeeNames = committeeNames.concat("/");
 						}
 					}
 				}
 				String procurementMode = this.getParameterDesc(qt.getProcurementMode());
 				String qtNo = qt.getQtNo();
-				successMessage(MessageConst.INFO_760510, new String[]{committeeType, procurementMode, qtNo}, true);
+				successMessage(MessageConst.INFO_760510, new String[]{committeeNames, procurementMode, qtNo}, true);
 			}else{
 			successMessage(getMessgeConstant(this.getManagedBean().getAction()),
 					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
