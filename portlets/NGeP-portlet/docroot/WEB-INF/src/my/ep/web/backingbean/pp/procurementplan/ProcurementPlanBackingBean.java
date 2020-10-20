@@ -3046,7 +3046,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));
 					expenditureItem.setBrandNew(false);
-					this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
+					for(PpExpenditureItem delItem: epItems){
+						if(delItem.getExpenditureItemId() != null){
+							this.getManagedBean().getDeleteEpItemsB().add(expenditureItem);
+						}
+					}
+				
 					count++;
 			}
 		}
@@ -3103,7 +3108,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					expenditureItem.setBrandNew(false);
-					this.getManagedBean().getDeleteEpItemsT().add(expenditureItem);
+					for(PpExpenditureItem delItemT: epItems){
+						if(delItemT.getExpenditureItemId() != null){
+							this.getManagedBean().getDeleteEpItemsT().add(expenditureItem);
+						}
+					}
 					count++;
 				}
 			}
@@ -3159,7 +3168,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					expenditureItem.setBrandNew(false);
-					this.getManagedBean().getDeleteEpItemsP().add(expenditureItem);	
+					for(PpExpenditureItem delItemP: epItems){
+						if(delItemP.getExpenditureItemId() != null){
+							this.getManagedBean().getDeleteEpItemsP().add(expenditureItem);
+						}
+					}
 					count++;
 				}
 			}
@@ -3216,7 +3229,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));		
 					expenditureItem.setBrandNew(false);
-					this.getManagedBean().getDeleteEpItemsS().add(expenditureItem);
+					for(PpExpenditureItem delItemS: epItems){
+						if(delItemS.getExpenditureItemId() != null){
+							this.getManagedBean().getDeleteEpItemsS().add(expenditureItem);
+						}
+					}
 					count++;
 				}
 			}
@@ -3272,7 +3289,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					//log.info("[SIR#12802] - Set item status to 2");
 					expenditureItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));
 					expenditureItem.setBrandNew(false);
-					this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);	
+					for(PpExpenditureItem delItemH: epItems){
+						if(delItemH.getExpenditureItemId() != null){
+							this.getManagedBean().getDeleteEpItemsH().add(expenditureItem);
+						}
+					}
 					count++;
 				}
 			}
