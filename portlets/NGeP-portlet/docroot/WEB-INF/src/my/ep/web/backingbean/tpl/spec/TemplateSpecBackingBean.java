@@ -2182,123 +2182,64 @@ public class TemplateSpecBackingBean extends
 				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 						.equals(specMaster.getSpecTypeCode().getParameterCode());
 				boolean isPartial = templateSpecBean.getSpecMaster().getScQtDoc().getScQt().isPartial();
-				if(isFinancialSpec && isPartial){
-// condition for QTY ==0
-//for zonal
+				if(isFinancialSpec){
+// condition only for zonal quantity 0
+// non zonal cannot insert quantity 0
 					if (specAnswer.getTplSpecZoneQty()!=null 
-					&& specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
+							&& specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
 						if (specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
 								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
 								ParameterConst.SCORE_TYPE_AUTO.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
-							specAnswer.setAutoScore(BigDecimal.valueOf(0));
-							autoScore = BigDecimal.valueOf(0);
-							totalScore = totalScore.add(autoScore);
-							
-						}else if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
-								specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
-								ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
-							specAnswer.setUserScore(BigDecimal.valueOf(0));
-							userScore = BigDecimal.valueOf(0);
-							totalScore = totalScore.add(userScore);
-						}
-					}
-					
-							if (autoScore != null && autoScore.compareTo(BigDecimal.ZERO) > 0) {
-								totalScore = totalScore.add(autoScore);
-						}
-		
-							if (userScore != null && userScore.compareTo(BigDecimal.ZERO) > 0) {
-								totalScore = totalScore.add(userScore);
-						}
-// to add maxscore with conditions							
-							if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-									&& (autoScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| userScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 
-										|| autoScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-											|| autoScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-												&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)
-														|| userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-													&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-														|| userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-															&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-															|| autoScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-																|| userScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-																&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0 
-																	|| userScore != null && specAnswer.getTplSpecZoneQty()==null
-																		|| autoScore != null && specAnswer.getTplSpecZoneQty()==null) {
-								totalMaxScore = totalMaxScore.add(specAnswer
-										.getTplSpecQuestion().getMaxScore());
-							}
-// to set score to 0 if not offer							
-							if(autoScore == null &&  specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| autoScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-											|| autoScore == null && specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 
-												&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-								specAnswer.setAutoScore(BigDecimal.valueOf(0));
-							}
-							if(userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										|| userScore == null && specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 
-											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-								specAnswer.setUserScore(BigDecimal.valueOf(0));
-							}
-//END	
-				}else {		
-							
-							if (specAnswer.getTplSpecZoneQty()!=null 
-							&& specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
-								if (specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
-										specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
-										ParameterConst.SCORE_TYPE_AUTO.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
 									specAnswer.setAutoScore(BigDecimal.valueOf(0));
 									autoScore = BigDecimal.valueOf(0);
 									totalScore = totalScore.add(autoScore);
-								}else if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
-										specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
-										ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+							
+						}else if(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+									specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+								ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
 									specAnswer.setUserScore(BigDecimal.valueOf(0));
 									userScore = BigDecimal.valueOf(0);
 									totalScore = totalScore.add(userScore);
-								}
-								
-								totalMaxScore = totalMaxScore.add(specAnswer
-										.getTplSpecQuestion().getMaxScore());
-							}
-							if (autoScore != null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-									&& autoScore.compareTo(BigDecimal.ZERO) > 0
-										|| autoScore != null && specAnswer.getTplSpecZoneQty() == null) {
-								totalScore = totalScore.add(autoScore);
-							}
-			
-							if (userScore != null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-									&& userScore.compareTo(BigDecimal.ZERO) > 0
-										|| userScore != null && specAnswer.getTplSpecZoneQty() == null) {
-								totalScore = totalScore.add(userScore);
-							}
-							if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-									&& (autoScore != null && specAnswer.getTplSpecZoneQty() == null || userScore != null && specAnswer.getTplSpecZoneQty() == null)
-									|| autoScore != null && specAnswer.getTplSpecZoneQty() != null || userScore != null && specAnswer.getTplSpecZoneQty() != null) {
-								totalMaxScore = totalMaxScore.add(specAnswer
-										.getTplSpecQuestion().getMaxScore());
-							}
-							if(autoScore == null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| autoScore != null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-								specAnswer.setAutoScore(BigDecimal.valueOf(0));
-							}
-							if(userScore == null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| userScore != null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
-								specAnswer.setUserScore(BigDecimal.valueOf(0));
-							}
+						}
 					}
+//end					
+// condition zonal & non zonal Not Offer					
+					if(specAnswer.getTplSpecZoneQty()!=null 
+							&& !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
+								&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 
+									|| specAnswer.getTplSpecZoneQty()==null 
+										&& !specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
+													if (specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+															specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+															ParameterConst.SCORE_TYPE_AUTO.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+																specAnswer.setAutoScore(BigDecimal.valueOf(0));
+													}
+													if (specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode()!=null &&
+															specAnswer.getTplSpecQuestion().getScoreTypeCode() != null && 
+															ParameterConst.SCORE_TYPE_USER.equals(specAnswer.getTplSpecQuestion().getScoreTypeCode().getParameterCode())){
+																specAnswer.setUserScore(BigDecimal.valueOf(0));
+													}
+						}
+//end					
+					if (autoScore != null && autoScore.compareTo(BigDecimal.ZERO) > 0 
+							&& specAnswer.getTplSpecZoneQty()!=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
+								|| autoScore != null && specAnswer.getTplSpecZoneQty() == null){
+									totalScore = totalScore.add(autoScore);
+						}
+		
+					if (userScore != null && userScore.compareTo(BigDecimal.ZERO) > 0  
+							&& specAnswer.getTplSpecZoneQty()!=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))
+								|| userScore != null && specAnswer.getTplSpecZoneQty() == null){
+									totalScore = totalScore.add(userScore);
+						}
+					if(specAnswer.getTplSpecZoneQty()!=null 
+							&& !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0)) 
+								|| specAnswer.getTplSpecZoneQty() == null && !specAnswer.getTplSpecQuestion().getClQuantity().equals(new BigDecimal(0))){
+								totalMaxScore = totalMaxScore.add(specAnswer
+										.getTplSpecQuestion().getMaxScore());
+					}
+				}
 			}
 //#21695 Farid END 20/10/2020
 			totalScoreStr = totalScore.toString() + " / "
