@@ -5371,8 +5371,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setNormalAndTierPriceStr(normalTierTotalPriceSB.toString());
 		} else if (Arrays.asList(ParameterConst.PRICE_TYPE_TIER, ParameterConst.PRICE_TYPE_PROMOTION_TIER).contains(
 				getManagedBean().getPriceType())) {
+			if (itemQuantity == null) {
+				getManagedBean().setNormalAndTierPriceStr(null);
+				return;
+			}
 			BigDecimal fromQtyBD = BigDecimal.ZERO;
 			BigDecimal toQtyBD = BigDecimal.ZERO;
+			
 			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
 				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType) && (cmp.getPrice() != null)
 						&& cmp.getFromQty() != null && cmp.getToQty() != null) {
@@ -5381,11 +5386,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (itemQuantity.compareTo(fromQtyBD) >= 0 && itemQuantity.compareTo(toQtyBD) <= 0) {
 						normalTierTotalPriceSB.append(formatter.format(cmp.getPrice()).replace(
 								ParameterConst.CATEGORY_TYPE_READING_MATERIAL, " "));
-						getManagedBean().setNormalAndTierPriceStr(normalTierTotalPriceSB.toString());
 						break;
 					}
 				}
 			}
+			
+			if (normalTierTotalPriceSB.length() < 3) {
+				normalTierTotalPriceSB = new StringBuilder(ParameterConst.SKUNO);
+			}
+			
+			getManagedBean().setNormalAndTierPriceStr(normalTierTotalPriceSB.toString());
 		} else if (Arrays.asList(ParameterConst.PRICE_TYPE_ZONAL_STANDARD, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION,
 				ParameterConst.PRICE_TYPE_ZONAL_TIER, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER).contains(
 				selectedPriceType)) {
