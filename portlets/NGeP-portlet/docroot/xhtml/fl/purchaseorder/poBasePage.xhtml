@@ -106,7 +106,8 @@
 					
 									<p:commandButton
 						value="#{lbl['lbl.fl.yep.carryForward']}" 
-						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" >
+						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
+						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
 			</c:if>
