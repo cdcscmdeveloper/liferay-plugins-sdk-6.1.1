@@ -2303,9 +2303,6 @@ public class TemplateSpecBackingBean extends
 									userScore = BigDecimal.valueOf(0);
 									totalScore = totalScore.add(userScore);
 								}
-								
-								totalMaxScore = totalMaxScore.add(specAnswer
-										.getTplSpecQuestion().getMaxScore());
 							}
 							if (autoScore != null && specAnswer.getTplSpecZoneQty() != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
 									&& autoScore.compareTo(BigDecimal.ZERO) > 0
@@ -2320,7 +2317,8 @@ public class TemplateSpecBackingBean extends
 							}
 							if (specAnswer.getTplSpecQuestion().getMaxScore() != null
 									&& (autoScore != null && specAnswer.getTplSpecZoneQty() == null || userScore != null && specAnswer.getTplSpecZoneQty() == null)
-									|| autoScore != null && specAnswer.getTplSpecZoneQty() != null || userScore != null && specAnswer.getTplSpecZoneQty() != null) {
+										|| autoScore != null && specAnswer.getTplSpecZoneQty() != null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0)) 
+											|| userScore != null && specAnswer.getTplSpecZoneQty() != null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))) {
 								totalMaxScore = totalMaxScore.add(specAnswer
 										.getTplSpecQuestion().getMaxScore());
 							}
