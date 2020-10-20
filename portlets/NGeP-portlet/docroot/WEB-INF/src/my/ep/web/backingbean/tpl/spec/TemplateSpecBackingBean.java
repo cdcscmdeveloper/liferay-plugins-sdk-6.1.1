@@ -2177,7 +2177,7 @@ public class TemplateSpecBackingBean extends
 				BigDecimal autoScore = specAnswer.getAutoScore();
 				BigDecimal userScore = specAnswer.getUserScore();
 				
-//#21695 Farid Start ... 15/10/2020				
+//#21695 Farid Start ... 20/10/2020				
 				TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 				boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
 						.equals(specMaster.getSpecTypeCode().getParameterCode());
@@ -2212,33 +2212,39 @@ public class TemplateSpecBackingBean extends
 						}
 // to add maxscore with conditions							
 							if (specAnswer.getTplSpecQuestion().getMaxScore() != null
-									&& (autoScore != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| userScore != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 
-										|| autoScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+									&& (autoScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+									|| userScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0 
+										|| autoScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
 											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-											|| autoScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+											|| autoScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
 												&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0)
-														|| userScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+														|| userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
 													&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-														|| userScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+														|| userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
 															&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-															|| autoScore != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-																|| userScore != null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-																&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
+															|| autoScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
+																|| userScore != null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+																&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0 
+																	|| userScore != null && specAnswer.getTplSpecZoneQty()==null
+																		|| autoScore != null && specAnswer.getTplSpecZoneQty()==null) {
 								totalMaxScore = totalMaxScore.add(specAnswer
 										.getTplSpecQuestion().getMaxScore());
 							}
 // to set score to 0 if not offer							
-							if(autoScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+							if(autoScore == null &&  specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
 									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| autoScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
+									|| autoScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+											|| autoScore == null && specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 
+												&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
 								specAnswer.setAutoScore(BigDecimal.valueOf(0));
 							}
-							if(userScore == null &&  specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
+							if(userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
 									&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-									|| userScore == null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
-										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
+									|| userScore == null && specAnswer.getTplSpecZoneQty()!=null && specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 
+										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
+										|| userScore == null && specAnswer.getTplSpecQuestion().getClQuantity() != null && specAnswer.getTplSpecQuestion().getClQuantity().compareTo(BigDecimal.ZERO) > 0 
+											&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0){
 								specAnswer.setUserScore(BigDecimal.valueOf(0));
 							}
 //END	
@@ -2294,7 +2300,7 @@ public class TemplateSpecBackingBean extends
 							}
 					}
 			}
-//#21695 Farid END 12/8/2020
+//#21695 Farid END 20/10/2020
 			totalScoreStr = totalScore.toString() + " / "
 					+ totalMaxScore.toString();
 		}
