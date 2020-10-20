@@ -8279,6 +8279,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
 		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
+		meetingBB.renewSesionObject();
 		this.getManagedBean().setMeetingBB(meetingBB);
 		Long qtId = this.getManagedBean().getScQt().getQtId();
 		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());

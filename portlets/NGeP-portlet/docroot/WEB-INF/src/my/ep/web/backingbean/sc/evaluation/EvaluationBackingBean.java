@@ -13774,6 +13774,7 @@ private void retriveCommitteeRemarksList(){
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
 		EvaluationMeetingBackingBean meetingBB = new EvaluationMeetingBackingBean();
+		meetingBB.renewSesionObject();
 		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
 		meetingBB.getManagedBean().setEvalBB(this);
 		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());

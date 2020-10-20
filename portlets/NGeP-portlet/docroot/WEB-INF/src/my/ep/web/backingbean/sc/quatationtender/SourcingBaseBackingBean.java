@@ -60,6 +60,7 @@ import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -69,6 +70,10 @@ import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -95,6 +100,7 @@ import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
@@ -174,9 +180,11 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -4856,44 +4864,83 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		//25037 - Start
 		public boolean isCommitteeFormedFirstTime(Long qtId, String committeeTypes){
-			
-			String[] specCommitteArr = new String[]{"SC"};
-			String[] evalCommitteArr = new String[]{"EC", "OC", "FEC", "TEC"};
-			
-			String[] committeeArr = committeeTypes.split("/");
-			Arrays.sort(committeeArr);
-			
-			String[] committeeToCheck = new String[0];
-			if(Arrays.asList(evalCommitteArr).containsAll(Arrays.asList(committeeArr))){
-				committeeToCheck = evalCommitteArr;
-			}else if(Arrays.asList(specCommitteArr).containsAll(Arrays.asList(committeeArr))){
-				committeeToCheck = specCommitteArr;
+			Long[] specStatusArr = new Long[] { QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL };
+			Long[] evalStatusArr = new Long[] { QTStatusConst.QT_PENDING_BPK_APPROVAL, QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL};
+			Long[] statusIds = committeeTypes.equalsIgnoreCase("SC") ? specStatusArr: evalStatusArr;
+			String[] types = committeeTypes.equalsIgnoreCase("SC") ? new String[]{"SC"}: new String[]{"EC", "OC", "TEC", "FEC"};
+
+			boolean firstFormed = true;
+			IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO wReqDTO = new ScWorkFlowStatusReqDTO();
+			wReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			wReqDTO.setDocId(qtId);
+			List<ScWorkFlowStatus> wfStatusList = wfStatusSO.retrieveWorkFlowStatus(wReqDTO).getWorkFlowStatusList();
+			ScWorkFlowStatus anchorStatus = null;
+			if(CollectionUtils.isNotEmpty(wfStatusList)){
+				for(ScWorkFlowStatus wfs: wfStatusList){
+					if(Arrays.asList(statusIds).contains(wfs.getPmStatus().getStatusId())){
+						anchorStatus = wfs;
+						break;
+					}
+				}
 			}
-		
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
-			reqDTO.setQtId(qtId);
-			ScQtApproval approval =  this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
-			approval = approval == null ? new ScQtApproval(): approval;
-			Map<String, Integer> map = new LinkedHashMap<String, Integer>();
-			for(String s: Arrays.asList(committeeToCheck)){
-				map.put(s, 0);
-			}
-			
-			boolean result = false;
-			if(CollectionUtils.isNotEmpty(approval.getScQtApprovalDtls()) && committeeToCheck.length>0){
-				for(ScQtApprovalRequest r: approval.getScQtApprovalDtls()){
-					String cType = r.getApprovalType().getParameterCode();
-					if(Arrays.asList(committeeToCheck).contains(cType)){
-						map.put(cType, map.get(cType) + 1);
-						if(map.get(cType) > 1){
-							result = true;
-							break;
+
+			if(anchorStatus!=null){
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+				reqDTO.setQtId(qtId);
+				ScQtApproval approval =  this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+				approval = approval == null ? new ScQtApproval(): approval;
+
+				Map<String, ScQtApprovalRequest> map = new LinkedHashMap<String, ScQtApprovalRequest>();
+				String cid =  types[0].substring(0,1);
+				map.put(cid, null);
+				
+				if(CollectionUtils.isNotEmpty(approval.getScQtApprovalDtls())){
+					for(ScQtApprovalRequest r: approval.getScQtApprovalDtls()){
+						String type = r.getApprovalType().getParameterCode();
+						if(Arrays.asList(types).contains(type)){
+							if(map.get(cid)==null){
+								map.put(cid, r);
+							}else if(r.getCreatedDate().compareTo(map.get(cid).getCreatedDate())>0){
+								map.put(cid, r);
+							}
 						}
 					}
 				}
+				if(map.get(cid)!=null && anchorStatus!=null){
+					return map.get(cid).getCreatedDate().compareTo(anchorStatus.getCreatedDate())<0;
+				}
 			}	
-			return !result;
+			return firstFormed;
+		}
+		
+		public boolean validateSupportedTask(String docNo, Long validityId){
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			ICompositeValiditySO compositeSO = (ICompositeValiditySO)  BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+			
+			CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+			cReqDTO.setCompositeValidityId(validityId);
+			String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity().getMinCompositeVersion();
+			
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setDocNumber(docNo);
+			WorklistVO worklist = bpmSO.getTasksByDocNumber(reqDTO).getWorklistVO();
+			worklist = worklist == null ? new WorklistVO(): worklist;
+			String version = null;
+			if(CollectionUtils.isNotEmpty(worklist.getWorklistItem())){
+				for(WorklistItemVO i: worklist.getWorklistItem()){
+					if(StringUtils.isNotEmpty(i.getInstanceVersion())){
+						version = i.getInstanceVersion();
+						break;
+					}
+				}
+			}
+			if(version!=null){
+				return CustomUtils.compositeVersionComparator(version, minVersion)>=0;
+			}
+			return false;
 		}
 		//25037 - End
 }
