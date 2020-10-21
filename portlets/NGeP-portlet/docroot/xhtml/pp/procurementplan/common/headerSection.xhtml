@@ -32,11 +32,6 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 								<f:param name="disableValidation" value="true" />     
 							</p:commandButton>
 						</ui:repeat>
-						<p:commandButton id="cancelProcurementBtn" process="@this"
-							rendered="#{pPlanBackingBean.managedBean.flagCancelButton}"
-							value="#{lbl['lbl.btn.cancel']}"
-							onclick="dlgProcurementCancel.show()">
-						</p:commandButton>
 					</ui:define>
 				</ui:decorate>
 				<c:if
@@ -59,20 +54,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 						</td>		
 				</c:if>
 	    	</div>
-			<p:confirmDialog id="dlgProcurementCancel"
-				widgetVar="dlgProcurementCancel"
-				message="#{lbl['lbl.msg.confirm.cancel2']}" severity="alert"
-				header="#{lbl['lbl.msg.confirm.cancel2.header']}">
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-						partialSubmit="true" immediate="true"
-						action="#{pPlanBackingBean.savePlan('CANCEL')}"
-						oncomplete="dlgProcurementCancel.hide();" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						oncomplete="dlgProcurementCancel.hide();" />
-				</div>
-			</p:confirmDialog>
-		</div>
+	  	</div>
 	</p:outputPanel>
 	<div class="clear"></div>
 </ui:composition>
