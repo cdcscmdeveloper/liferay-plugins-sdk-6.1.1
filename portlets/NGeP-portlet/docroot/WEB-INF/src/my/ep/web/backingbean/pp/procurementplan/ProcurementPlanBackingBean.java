@@ -611,7 +611,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							}
 							
 							if (ppItem.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
-								log.info("Siapa yg dulu clone, kini original? "+ppItem.getProcurementTitle());
 								if (!ppItem.isCloneEnabled()) {
 									ppItem.setCloneEnabled(true);
 								}
