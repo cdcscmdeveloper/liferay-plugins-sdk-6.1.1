@@ -59,7 +59,7 @@
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
+			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{evaluationMeetingBackingBean.managedBean.validFor25037}"
 				styleClass="BtnSpacing" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('update')}"/>
 		</div>
 		<ac:confirmationPopup id="navigateConfirmationId"
