@@ -1851,9 +1851,7 @@ public class SmApplicationUtil {
 
 		}
 		//16052019 - SSM INTEGRATION CR #27219
-		//29356 if personnel section showerror = true return error
-		if ((showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser())
-				|| (showerror && currentTab == 2 || currentTab == 0)) {
+		if(showerror  && appl.isApplValidWithSsm() && managedBean.isSupplierUser()){
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
