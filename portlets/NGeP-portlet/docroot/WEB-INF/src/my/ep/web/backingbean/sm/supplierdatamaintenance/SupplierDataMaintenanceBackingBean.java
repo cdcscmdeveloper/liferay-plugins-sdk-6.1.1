@@ -882,7 +882,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				
 				// replace list table with latest supplier
 				SmApplRevisionReqDTO smApplReqDTO = new SmApplRevisionReqDTO();
-				getManagedBean().getSmSupplier().setCompanyName(null);
 				smApplReqDTO.setSmSupplier(getManagedBean().getSmSupplier());
 				smApplReqDTO.setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
 				smApplReqDTO.setDisplaySearchPage(true);
