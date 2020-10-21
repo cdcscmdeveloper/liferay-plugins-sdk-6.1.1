@@ -32,8 +32,8 @@
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" style="float:right;" process="@all"
-									partialSubmit="true" oncomplete="confirmSubmitMeetingPopup.show()" />
+									styleClass="ui-button" style="float:right;" process="@all" onclick="blockWidget.show();"
+									partialSubmit="true" oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();" />
 							</ui:fragment>
 						</ui:repeat>
 					</div> <ui:include

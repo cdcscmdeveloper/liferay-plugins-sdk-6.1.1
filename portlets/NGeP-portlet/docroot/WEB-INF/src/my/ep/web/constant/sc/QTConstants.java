@@ -257,4 +257,7 @@ public interface QTConstants {
 	
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	
+	//25037 QT Bpm Composite Version Validity ID
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	
 }
