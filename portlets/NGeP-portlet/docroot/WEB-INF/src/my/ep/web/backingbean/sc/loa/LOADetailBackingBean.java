@@ -3381,6 +3381,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		debugLogger("approveBeforeupdateBpmTaskAction");
+		
+		// #26770 - Start.
+        validateReportAttachment();
+        // #26770 - End.
+        
 		this.getManagedBean().setAction(outcome);
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
@@ -3409,6 +3414,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//20190405@asyrafhaziq - CR25062 - End
 	
+	// #26770 - Start.
+    /**
+    * 
+    */
+   private void validateReportAttachment() {
+     if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
+             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+                 if (report.getScLoaReportAttachment() == null) {
+                   throw new EpException(MessageConst.ERROR_775159);
+                 }
+                break;
+            }
+         }
+      }
+   }
+   // #26770 - End.
+   
 	/**
 	 * Enhancement #21694
 	 * Update bpm task action.
