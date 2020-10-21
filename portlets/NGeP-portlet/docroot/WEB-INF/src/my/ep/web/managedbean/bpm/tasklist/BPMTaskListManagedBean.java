@@ -1752,14 +1752,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
         reqDTO.setDocId(worklistItemVO.getDocId().longValue());
 		reqDTO.setFlDocNo(worklistItemVO.getPocoNo());
         IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-    	if(worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_CO)	||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_DN)){
+    	if(worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_CO)){
     		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
     		isHideTaskYEP = resDTO.getIsHideTaskYEP();
     		if(isHideTaskYEP.doubleValue()>0){
     			isHide = true;
     		}
     	}else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-   	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
+   	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
+   	    	||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_DN)){
     		reqDTO.setDocId(null);
     		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
     		isHideTaskYEP = resDTO.getIsHideTaskYEP();
