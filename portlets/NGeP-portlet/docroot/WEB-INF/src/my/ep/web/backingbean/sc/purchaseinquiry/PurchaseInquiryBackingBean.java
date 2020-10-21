@@ -2086,7 +2086,10 @@ public class PurchaseInquiryBackingBean extends
 		}
 
 		if (newRemark) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) 
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+			else
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Catatan" });
 		}
 	}
 	// End - #26129
