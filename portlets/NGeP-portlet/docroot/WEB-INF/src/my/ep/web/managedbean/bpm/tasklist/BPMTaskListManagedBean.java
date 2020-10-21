@@ -1732,7 +1732,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
     			isHide = true;
     		}
     	}else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-   	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)){
+   	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
+   	    	||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_DN)){
     		reqDTO.setDocId(null);
     		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
     		isHideTaskYEP = resDTO.getIsHideTaskYEP();
