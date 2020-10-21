@@ -8702,8 +8702,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						    .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 						    QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 							quationTenderReqDTO.setQtId(scQt.getQtId());
-							QuationTenderResDTO resDTO = detailSO.closeQTstatusForLOA(quationTenderReqDTO);
-							if(resDTO.isCloseQT() == true){
+							QuationTenderResDTO resDTOLOA = detailSO.closeQTstatusForLOA(quationTenderReqDTO);
+							if(resDTOLOA.isCloseQT() == true){
+							  isCloseQT = true; 
+							}
+							QuationTenderResDTO resDTOLOI = detailSO.closeQTstatusForLOI(quationTenderReqDTO);
+							if(resDTOLOI.isCloseQT() == true){
 							  isCloseQT = true; 
 							}
 						}
