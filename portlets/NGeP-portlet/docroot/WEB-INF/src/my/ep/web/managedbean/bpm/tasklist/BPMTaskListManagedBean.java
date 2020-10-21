@@ -1752,7 +1752,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
         reqDTO.setDocId(worklistItemVO.getDocId().longValue());
 		reqDTO.setFlDocNo(worklistItemVO.getPocoNo());
         IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-    	if(worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_CO)){
+    	if(worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_CO)	||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_DN)){
     		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
     		isHideTaskYEP = resDTO.getIsHideTaskYEP();
     		if(isHideTaskYEP.doubleValue()>0){
