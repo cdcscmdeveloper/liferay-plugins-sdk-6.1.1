@@ -2239,6 +2239,20 @@ public class TemplateSpecBackingBean extends
 								totalMaxScore = totalMaxScore.add(specAnswer
 										.getTplSpecQuestion().getMaxScore());
 					}
+				}else{
+// Technical score					
+					if (autoScore != null) {
+						totalScore = totalScore.add(autoScore);
+					}
+	
+					if (userScore != null) {
+						totalScore = totalScore.add(userScore);
+					}
+					if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+							&& (autoScore != null || userScore != null)) {
+						totalMaxScore = totalMaxScore.add(specAnswer
+								.getTplSpecQuestion().getMaxScore());
+					}
 				}
 			}
 //#21695 Farid END 20/10/2020
