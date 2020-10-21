@@ -3839,7 +3839,7 @@ public class EvaluationBackingBean extends
 						ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
 						if (null != amountScore) {
 									this.getManagedBean().setFinPackageScore(true);	
-							if(amountScore.getTotalScore().intValue() > this.getManagedBean()
+							if(amountScore.getTotalScore() != null && amountScore.getTotalScore().intValue() > this.getManagedBean()
 									.getWithInVarieance().intValue()){
 								this.getManagedBean().setFinPackageScore(false);
 								throw new EpException(MessageConst.ERROR_760201);
