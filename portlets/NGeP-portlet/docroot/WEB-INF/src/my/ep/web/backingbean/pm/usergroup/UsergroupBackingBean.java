@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -70,10 +69,11 @@ import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+
+import com.liferay.taglib.ui.GroupSearchTag;
 
 /**
  * @author DK
@@ -509,7 +509,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 //
 //			}
 //		}
-//		logger.info("groupUserList  :" + groupUserList.size());
+//		logger.info("groupUserList  :" + groupUserList.size());		
+		
 		this.getManagedBean().setOrgProfileId(orgProfileId);
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroup.getPmUserGroupUsers());
@@ -600,7 +601,18 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		debugLogger("saveUserGroup");
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
 		// userGroup.setRoleCode("FL_APPROVER");
-
+		
+		//#29225 get changes
+		if(this.getManagedBean().isUserSearch()){
+			for(PmUserGroupUser searchList : this.getManagedBean().getUserGroupUserSearch()){
+				for(PmUserGroupUser originList: userGroup.getPmUserGroupUsers()){
+					if(searchList.getUserGroupUserId() == originList.getUserGroupUserId()){
+						originList.setRecordStatusFlg(searchList.getRecordStatusFlg());
+					}
+				}
+			}
+		}
+		
 		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 
@@ -674,8 +686,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		if (userGroup.isBrandNew()) {
 			return NAV_TO_MAIN;
 		} else {
-			gotoMaintanance(resDTO.getUserGroup());
-			return "userGroupMaintenance";
+			return gotoMaintanance(resDTO.getUserGroup());
+			//return "userGroupMaintenance"; //#29225 duplicate return
 		}
 	}
 
@@ -833,7 +845,6 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				}
 			}
 		}
-
 	}
 
 	public void changeUserGroupStatus(List<PmUserGroupUser> pmUserGroupUsers) {
@@ -1283,17 +1294,20 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		String userName = getManagedBean().getUserName();
 		String identificationNo = getManagedBean().getIdentificationNo();
 		String statusFlag = getManagedBean().getRecordSearchStatusFlg();
+		List<PmUserGroupUser> firstLoad = this.getManagedBean().getUserGroups(); //#29225 save origin list
 		PmUserGroupUser groupUser = null;
 		
 		//logger.info("userName :"+userName+ ", id :"+identificationNo+", status :" + statusFlag);
 		
-		List<PmUserGroupUser> groupUsers = new ArrayList<PmUserGroupUser>();;
+		List<PmUserGroupUser> groupUsers = new ArrayList<PmUserGroupUser>();
 		if (!userName.isEmpty() || !identificationNo.isEmpty() || statusFlag!=null){
-			if (this.getManagedBean().isUserSearch()){
+			
+			//#29225 comment setter
+			/*if (this.getManagedBean().isUserSearch()){
 				this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
 			}else{
 				this.getManagedBean().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
-			}
+			}*/
 			
 			for (PmUserGroupUser groupUserSearch : this.getManagedBean().getUserGroups()) {
 				//logger.info("Loop : " + groupUserSearch.getPmUser().getUserName() + ", " + groupUserSearch.getPmUser().getIdentificationNo()
@@ -1351,28 +1365,36 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					groupUser.setRecordStatusFlg(groupUserSearch.getRecordStatusFlg());
 					groupUser.setApprovalLimit(groupUserSearch.getApprovalLimit());
 					groupUser.setBrandNew(groupUserSearch.isBrandNew());
-					//logger.info("insert : " + groupUser.getPmUser().getUserName() + ", " + groupUser.getPmUser().getIdentificationNo()
-					//		+ ", " + groupUser.getApprovalLimit() + "," + groupUser.getRecordStatusFlg()
-					//		+ ", " + groupUser.isBrandNew());
+					groupUser.setUserGroupUserId(groupUserSearch.getUserGroupUserId()); //#29225
+					logger.info("insert : " + groupUser.getPmUser().getUserName() + ", " + groupUser.getPmUser().getIdentificationNo()
+							+ ", " + groupUser.getApprovalLimit() + "," + groupUser.getRecordStatusFlg()
+							+ ", " + groupUser.isBrandNew());
 					groupUsers.add(groupUser);	
 				}
 			}
 			this.getManagedBean().setUserSearch(true);
-			this.getManagedBean().setUserGroups(groupUsers);
+			this.getManagedBean().setUserGroupUserSearch(groupUsers); //#29225 display search result 
+			//this.getManagedBean().setUserGroups(groupUsers);
 		}
-		else if (userName.isEmpty() && identificationNo.isEmpty() && statusFlag==null){
+		/*else if (userName.isEmpty() && identificationNo.isEmpty() && statusFlag==null){
 			if (this.getManagedBean().isUserSearch()){
 				this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
 			}else{
 				this.getManagedBean().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
 			}
+		}*/
+		else{
+			this.getManagedBean().setUserSearch(false);
+			this.getManagedBean().setUserGroups(firstLoad); //#29225 get origin
+			this.getManagedBean().setUserGroupUserSearch(new ArrayList<PmUserGroupUser>()); //#29225 reset searchList
 		}
 	}
 	public void userGroupUserReset() {
 		
-		if(this.getManagedBean().isUserSearch()){
+		//#29225 use isUserSearch as render property
+		/*if(this.getManagedBean().isUserSearch()){
 			this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
-		}	
+		}*/	
 		this.getManagedBean().setUserSearch(false);
 		this.getManagedBean().setUserName(null);
 		this.getManagedBean().setIdentificationNo(null);
