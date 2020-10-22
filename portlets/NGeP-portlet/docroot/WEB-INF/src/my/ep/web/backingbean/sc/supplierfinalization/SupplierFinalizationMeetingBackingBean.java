@@ -35,6 +35,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -195,6 +196,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 	}
 //End Header - QT Details
+	
+	
 	
 	
 	/**
@@ -1420,6 +1423,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 * @param outCome
 	 */
 	public void submitAction(String outCome) {
+		submitAction(outCome, null);
+	}
+	public void submitAction(String outCome, String navigateTo) {
 		
 		IQTMeetingSO meetingSO = null;
 		try {
@@ -1443,17 +1449,18 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setRoleCode(getCommitteeRoleCode());
 			
-			MeetingResDTO resDTO = meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
+			meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
-			if (StringUtils.isNotEmpty(this.getManagedBean().getTaskName())
-					&& SCProcessNameConst.FINALISE_FC_SELECTION.equals(this
-							.getManagedBean().getTaskName())
-					&& reqDTO.isCommitteeModified()) {
-				String procurementMode = this.getParameterDesc(getManagedBean().getScQt().getProcurementMode(), new FacesScopes().getUserLocale());
-				String committeeName = this.getParameterDesc(ParameterConst.COMMITTE_TYPE, reqDTO.getCommitteType());
-				this.successMessage(MessageConst.TD_760513, new String[]{committeeName, procurementMode, qtNo}, true);
+			String taskName = this.getManagedBean().getTaskName()==null ? "" : this.getManagedBean().getTaskName();
+			if (SCProcessNameConst.FINALISE_FC_SELECTION.equals(taskName) 
+					&& reqDTO.isCommitteeModified() 
+					&& StringUtils.isNotEmpty(navigateTo)) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				this.getManagedBean().getFinalBB().loadPreparationTabDetails();
+				this.getManagedBean().getFinalBB().getManagedBean().setPrepareActiveIndex(1);
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigateTo);
 			}else{
 				String submitMessage=	ResourceBundleUtils
 						.getMessage("lbl.sc.sf.meeting.submit.message",
@@ -1462,8 +1469,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 				String qtParam = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
 												  ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
 				commonMessageAcknowledmentPage(MessageConst.INFO_700070,submitMessage, qtParam);
+				renewSesionObject();
 			}
-			renewSesionObject();
 		} finally {
 			meetingSO = null;
 		}
@@ -1792,8 +1799,9 @@ if (CollectionUtils.isNotEmpty(
 				this.getManagedBean().setToken(finalBB.getManagedBean().getToken());
 				this.getManagedBean().setPayLoad(finalBB.getManagedBean().getPayLoad());
 				this.getManagedBean().setTaskId(finalBB.getManagedBean().getTaskId());
-				RequestContext.getCurrentInstance().execute("confirmSubmitCommitteePopup.show();");	
+				finalBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
 			}else{
+				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
 			}
 		}
@@ -1852,8 +1860,8 @@ if (CollectionUtils.isNotEmpty(
 		if(isCommitteeModified(this.getManagedBean().getCommitteeMembersList())){
 			this.getManagedBean().setCommitteeModified(true);
 			if(StringUtils.isEmpty(this.getManagedBean().getQtCommitteeRemarks().get(0).getRemark())){
-				String message = MessageUtils.getMessage(MessageConst.ERROR_716025, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-				throw new EpException(message);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
+						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}else{
 			String message = MessageUtils.getMessage(MessageConst.INFO_760506, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());

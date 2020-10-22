@@ -121,13 +121,14 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.role']}">
+						<ui:param name="filteredRoles" value="#{qTCommitteBackingBean.managedBean.roleFilterList}"/>
 						<p:selectOneMenu id="appaction"
 							value="#{existcommitteeuser.memberRoleId}"
 							style="width: 110px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-							<f:selectItems var="role"
-								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existcommitteeuser.PMP,qTDetailBB.managedBean.qt,existcommitteeuser)}"
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existcommitteeuser.PMP,qTDetailBB.managedBean.qt,existcommitteeuser, filteredRoles)}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" />
 							<p:ajax event="change" partialSubmit="true"/>

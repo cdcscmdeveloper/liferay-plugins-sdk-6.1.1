@@ -996,6 +996,9 @@ public class QTCommitteBackingBean extends
 	 *            the title name
 	 */
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
+		addCommitteMember(committee, titleName, null);
+	}
+	public void addCommitteMember(ScQtCommittee committee, String titleName, String taskName) {
 		debugLogger("addCommitteMember");
 
 		IPagingDataModel<PmUser> userSearCommitteeDataModel = getManagedBean()
@@ -1048,7 +1051,10 @@ public class QTCommitteBackingBean extends
 
 			if(Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation){
 				List<String> list = new ArrayList<String>();
-				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				taskName = taskName==null ? "":taskName;
+				if(!Arrays.asList(new String[]{SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE}).contains(taskName)){
+					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				}
 			    if(qtStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
 					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
 			    }
@@ -2067,7 +2073,7 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is FC editable
 	 */
 	public boolean isFCEditable() {
-		
+
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 		
@@ -2084,7 +2090,7 @@ public class QTCommitteBackingBean extends
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
 					QTStatusConst.QT_CONSOLIDATION_REPORT)) {
 				return !this.getManagedBean().isReadOnly();
-			} 
+			} 	
 		}else {
 			if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT)) {
 				return true;
@@ -2343,10 +2349,10 @@ public class QTCommitteBackingBean extends
 		//#25037
 		boolean specCheck = false;
 		if(commType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
-			specCheck = Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId);
+			specCheck = Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId) && this.getManagedBean().isValidFor25037();
 		}else{
 			//specCheck = isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-			specCheck = Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId);
+			specCheck = Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId) && this.getManagedBean().isValidFor25037();
 		}
 		return (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || specCheck);
 	}
@@ -2537,62 +2543,62 @@ public class QTCommitteBackingBean extends
 	}
 	}
 	//#25037
-		private Long getCurrentQtStatusId(){
-			Long status = null;
-			ScQt scQt = getManagedBean().getQt();
-			if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {
-				ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
-				if(wfStatus!=null){
-					this.getManagedBean().setCurrentQTStatus(wfStatus.getPmStatus().getStatusId());
-				}
+	private Long getCurrentQtStatusId(){
+		Long status = null;
+		ScQt scQt = getManagedBean().getQt();
+		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
+			if(wfStatus!=null){
+				this.getManagedBean().setCurrentQTStatus(wfStatus.getPmStatus().getStatusId());
 			}
-			status = this.getManagedBean().getCurrentQTStatus();
-			return status;
 		}
-		public boolean isCommitteeRoleEditable(PmParameter role){
-			String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
-			if(role!=null && StringUtils.isNotEmpty(committeeType)){
-				Long status = getCurrentQtStatusId();
-				status = status == null? new Long(0L): status;
-				if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
-					if(status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) 
-							|| status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ){
-						return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
-					}else if(status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
-						return Arrays.asList(new String[]{"C"}).contains(role.getParameterCode());
-					}
-				}else{
-					if(status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)){
-						return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
-					}else if(status.equals(QTStatusConst.QT_RE_EVALUATION) && getManagedBean().getQt()!=null){
-						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(committeeType, getManagedBean().getQt().getQtId());
-						if(wfStatus!=null){
-							Long cstatus = wfStatus.getPmStatus().getStatusId();
-							if(Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(cstatus) || 
-								Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(cstatus)){
-								return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
-							}
+		status = this.getManagedBean().getCurrentQTStatus();
+		return status;
+	}
+	public boolean isCommitteeRoleEditable(PmParameter role){
+		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
+		if(role!=null && StringUtils.isNotEmpty(committeeType)){
+			Long status = getCurrentQtStatusId();
+			status = status == null? new Long(0L): status;
+			if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+				if(status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) 
+						|| status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT) ){
+					return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
+				}else if(status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
+					return Arrays.asList(new String[]{"C"}).contains(role.getParameterCode());
+				}
+			}else{
+				if(status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)){
+					return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
+				}else if(status.equals(QTStatusConst.QT_RE_EVALUATION) && getManagedBean().getQt()!=null){
+					ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(committeeType, getManagedBean().getQt().getQtId());
+					if(wfStatus!=null){
+						Long cstatus = wfStatus.getPmStatus().getStatusId();
+						if(Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(cstatus) || 
+							Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(cstatus)){
+							return Arrays.asList(new String[]{"C","M"}).contains(role.getParameterCode());
 						}
 					}
 				}
 			}
-			return true;
 		}
-		
-		public boolean isCommitteeCloneable(){
-			String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
-			Long status = getCurrentQtStatusId();
-			status = status == null? new Long(0L): status;
-			if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
-				Long[] arrList = new Long[]{QTStatusConst.QT_PENDING_QT_SUBMISSION, new Long(0L)};
-				if(!Arrays.asList(arrList).contains(status)){
-					return false;
-				}				
-			}else {
-				if(!status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-					return false;
-				}
+		return true;
+	}
+	
+	public boolean isCommitteeCloneable(){
+		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
+		Long status = getCurrentQtStatusId();
+		status = status == null? 0L : status;
+		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+			Long[] arrList = new Long[]{QTStatusConst.QT_PENDING_QT_SUBMISSION, new Long(0L)};
+			if(!Arrays.asList(arrList).contains(status)){
+				return false;
+			}			
+		}else {
+			if(!status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+				return false;
 			}
-			return true;
 		}
+		return true;
+	}
 }

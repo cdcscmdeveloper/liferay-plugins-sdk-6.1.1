@@ -144,9 +144,6 @@
 						<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 							styleClass="header-spacing" id="memberListPanel"
 							toggleable="true">
-							<h:outputText styleClass="instruction"
-								value="#{lbl['lbl.sc.committee.member.list.instruction']}"
-								escape="false" />
 
 							<p:dataTable id="memberListTbl" var="committeeMember" widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
