@@ -5357,6 +5357,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		StringBuilder normalTierTotalPriceSB = new StringBuilder(ParameterConst.CATEGORY_TYPE_READING_MATERIAL);
 		getManagedBean().setPriceTypeStringFlag(Boolean.FALSE);
 		getManagedBean().setPriceTypeTableFlag(Boolean.FALSE);
+		getManagedBean().setFromAndToQuantityFlag(Boolean.FALSE);
 
 		if (Arrays.asList(ParameterConst.PRICE_TYPE_STANDARD, ParameterConst.PRICE_TYPE_PROMOTION).contains(
 				getManagedBean().getPriceType())) {
@@ -5408,6 +5409,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				selectedPriceType)) {
 			List<CmPricing> filterList = new ArrayList<>();
 			getManagedBean().setPriceTypeTableFlag(Boolean.TRUE);
+			if (Arrays.asList(ParameterConst.PRICE_TYPE_ZONAL_TIER, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)
+					.contains(selectedPriceType)) {
+				getManagedBean().setFromAndToQuantityFlag(Boolean.TRUE);
+			}
 			
 			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
 				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType)) {
