@@ -2385,15 +2385,28 @@ public class SupplierFinalizationBackingBean extends
 											committeeName, String.valueOf(totalIntendedPrice.intValue()) });
 				}
 			}
-			
-			//#26169 #66 -start-
+			//#26169 - START
 			if (getManagedBean().isSubmit() && 
 					!getManagedBean().isInitialDecisionFwdToBPK() &&
 						isRecommendByAward() && 					
 							(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 								.equals(decisionTypeCode))) {
 				String reasonType = getManagedBean().getScQtFinalization().getReason().getReasonCode();
-				log.info("Reason Code == "+reasonType);				
+				log.info("Reason Code == "+reasonType);
+				//#26169 - 21102020 , START
+				if(reasonType == null || reasonType == ""){
+					IReasonSO reasonSO = null;
+					try{
+						ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+						reasonReqDTO.setReasonId(getManagedBean().getScQtFinalization().getReason().getReasonId());
+						reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+						reasonType = reasonSO.retrieveReasonById(reasonReqDTO).getPmReason().getReasonCode();
+					}finally {
+						reasonSO = null;
+					}
+				}
+				log.info("Reason Code [after] == "+reasonType);	
+				//#26169 - 21102020 , END
 				if("2".equalsIgnoreCase(reasonType)){
 					boolean isOfferPriceExceed = checkSelectedSupplierOfferPriceIsExceedCommitteeAuthority(reqDTO.getScQtFinalization());
 					log.info("== IS SUPPLIER OFFER PRICE == "+isOfferPriceExceed);
