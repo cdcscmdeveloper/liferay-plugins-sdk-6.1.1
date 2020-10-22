@@ -403,6 +403,12 @@
 							        	rendered="#{yearEndProcessBackingBean.isAP58(flYep.statusId) and flYep.isAp58 == 1 and flYep.phase == 5}"
 							        	icon="ui-icon-amendment"
 							        	onclick="goToDetail([{name:'docType', value:'#{flYep.docType}'}, {name:'docId', value:'#{flYep.docId}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'buttonVal', value:'AP58'}, {name:'statusDesc', value:'#{flYep.statusId}'}])"/>
+							        	<p:menuitem value="#{lbl['lbl.btn.proceed']}"  
+							        	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							        	icon="ui-icon-amendment"
+							        	process="@this" update="flYepList"
+							        	rendered="#{flYep.isAp58 == null and flYep.phase == 5}"
+							        	onclick="hideYepResult([{name:'docType', value:'#{flYep.docType}'}, {name:'docNo', value:'#{flYep.docNo}'}, {name:'docId', value:'#{flYep.docId}'}])"/>
 					                    <!-- end 28377 -->		
 					                    
 					                    
@@ -428,6 +434,8 @@
 			</p:dataTable>
 			<p:remoteCommand action="#{yearEndProcessBackingBean.navigateToPage}"
 				name="goToDetail" />
+				<p:remoteCommand action="#{yearEndProcessBackingBean.hideYep}"
+				name="hideYepResult" />
 		</p:panel>
 		<!-- end result panel -->
 		<ac:lovPopup />
