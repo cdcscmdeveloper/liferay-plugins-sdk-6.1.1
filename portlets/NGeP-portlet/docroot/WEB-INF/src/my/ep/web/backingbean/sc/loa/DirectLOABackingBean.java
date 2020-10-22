@@ -7120,9 +7120,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 //		scLoa.setContractSigner(new PmUser());
-		// #24540 - Start.
+		// #26474 - Start.
 		//scLoa.setLoaSignerDesig(null);
-        // #24540 - End.
+        // #26474 - End.
 		
 		if (loaAmount != null) {
 			contractOverAllAmt   = overallCtAmountWithSST(loaAmount, scLoa.getSstAmt());
