@@ -7114,7 +7114,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 //		scLoa.setContractSigner(new PmUser());
-		scLoa.setLoaSignerDesig(null);
+		// #26474 - Start.
+		//scLoa.setLoaSignerDesig(null);
+        // #26474 - End.
 		
 		if (loaAmount != null) {
 			contractOverAllAmt   = overallCtAmountWithSST(loaAmount, scLoa.getSstAmt());
@@ -8486,6 +8488,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
+        //#26474 - start.
+		getManagedBean().setContractSignerUser(contractSignerUser);
+        //#26474 - end.
 
 	}
 	private boolean isFulfillmentTypeOneOffOrAsAndWhen(PmParameter fulfillmentType) {
