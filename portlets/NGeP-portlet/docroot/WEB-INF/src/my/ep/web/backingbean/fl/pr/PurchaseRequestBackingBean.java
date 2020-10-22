@@ -43,6 +43,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
@@ -79,6 +80,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -4782,10 +4785,22 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	public String getSkuDescription(ScRequestItem scRequestItem) {
 		String skuDesc = "";
-			if(scRequestItem.getCmItem().getCmSupplierItems() != null && scRequestItem.getCmItem().getCmSupplierItems().size() > 0){
-				skuDesc = scRequestItem.getCmItem().getCmSupplierItems().get(0).getSkuNumber();	
-			}
-			return skuDesc;
+		//		if(scRequestItem.getCmItem().getCmSupplierItems() != null && scRequestItem.getCmItem().getCmSupplierItems().size() > 0){
+		//		skuDesc = scRequestItem.getCmItem().getCmSupplierItems().get(0).getSkuNumber();	
+		//		
+		//}
+		//29396-start
+		CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+		
+		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+		skuDesc = catalogueResDTO.getSkuNumber();
+		//29396-end
+		
+		return skuDesc;
 	}
 
 	//24893 - start
