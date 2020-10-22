@@ -42,6 +42,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.yep.FlYepTasklist;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -94,6 +95,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	/*#28375 Logan*/
 	private String carryForward="";
 	private String Proceed="";
+	private FlYepTasklist checkcarryForward;
+	private String patCheck="";
 	private boolean disable;
 	private String buttonVal;
 	private String backToPrevious;
@@ -1524,6 +1527,21 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setDisable(boolean disable) {
 		this.disable = disable;
 	}
+	public FlYepTasklist getCheckcarryForward() {
+		return checkcarryForward;
+	}
+
+	public void setCheckcarryForward(FlYepTasklist checkcarryForward) {
+		this.checkcarryForward = checkcarryForward;
+	}
+	
+	public String getPatCheck() {
+		return patCheck;
+	}
+
+	public void setPatCheck(String patCheck) {
+		this.patCheck = patCheck;
+	}	
 	
 	/*#28375 - Ending Logan*/
 	
