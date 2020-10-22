@@ -422,7 +422,7 @@ public class SupplierFinalizationBackingBean extends
 				PREPARE_ACTIVE_INDEX_MEETING);
 	}
 
-	private void loadPreparationTabDetails() {
+	public void loadPreparationTabDetails() {
 		log.info("loadPreparationTabDetails");
 		Long qtId = getManagedBean().getScQt().getQtId();
 		String committeeType = getManagedBean().getCommitteeType();
