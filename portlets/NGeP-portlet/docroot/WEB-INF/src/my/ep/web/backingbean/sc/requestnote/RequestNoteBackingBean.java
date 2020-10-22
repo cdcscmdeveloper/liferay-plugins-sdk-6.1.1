@@ -5355,19 +5355,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		NumberFormat formatter= NumberFormat.getCurrencyInstance(myLocale); 
 		StringBuilder normalTierTotalPriceSB = new StringBuilder(ParameterConst.CATEGORY_TYPE_READING_MATERIAL);
+		getManagedBean().setPriceTypeStringFlag(Boolean.FALSE);
+		getManagedBean().setPriceTypeTableFlag(Boolean.FALSE);
 
 		if (Arrays.asList(ParameterConst.PRICE_TYPE_STANDARD, ParameterConst.PRICE_TYPE_PROMOTION).contains(
 				getManagedBean().getPriceType())) {
+			getManagedBean().setPriceTypeStringFlag(Boolean.TRUE);
+			
 			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
 				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType) && (cmp.getPrice() != null)) {
 					normalTierTotalPrice = normalTierTotalPrice.add(cmp.getPrice());
 				}
 			}
+			
 			if (normalTierTotalPrice.compareTo(BigDecimal.ZERO) == 0) {
 				normalTierTotalPriceSB.append(StringUtils.EMPTY);
 			} else {
 				normalTierTotalPriceSB.append(formatter.format(normalTierTotalPrice).replace(ParameterConst.CATEGORY_TYPE_READING_MATERIAL, " "));
 			}
+			
 			getManagedBean().setNormalAndTierPriceStr(normalTierTotalPriceSB.toString());
 		} else if (Arrays.asList(ParameterConst.PRICE_TYPE_TIER, ParameterConst.PRICE_TYPE_PROMOTION_TIER).contains(
 				getManagedBean().getPriceType())) {
@@ -5377,6 +5383,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			BigDecimal fromQtyBD = BigDecimal.ZERO;
 			BigDecimal toQtyBD = BigDecimal.ZERO;
+			getManagedBean().setPriceTypeStringFlag(Boolean.TRUE);
 			
 			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
 				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType) && (cmp.getPrice() != null)
@@ -5400,11 +5407,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ParameterConst.PRICE_TYPE_ZONAL_TIER, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER).contains(
 				selectedPriceType)) {
 			List<CmPricing> filterList = new ArrayList<>();
+			getManagedBean().setPriceTypeTableFlag(Boolean.TRUE);
+			
 			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
 				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType)) {
 					filterList.add(cmp);
 				}
 			}
+			
 			getManagedBean().setFilteredCmPricingList(filterList);
 		}
 	}

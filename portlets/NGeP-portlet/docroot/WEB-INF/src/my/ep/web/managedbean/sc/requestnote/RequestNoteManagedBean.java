@@ -366,6 +366,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private String normalAndTierPriceStr = StringUtils.EMPTY;
 	private List<CmPricing> completeCmPricingList;
 	private List<CmPricing> filteredCmPricingList;
+	private boolean priceTypeStringFlag = Boolean.FALSE;
+	private boolean priceTypeTableFlag = Boolean.FALSE;
 	// #28789 - end
 	
     /**
@@ -2142,6 +2144,22 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	public void setFilteredCmPricingList(List<CmPricing> filteredCmPricingList) {
 		this.filteredCmPricingList = filteredCmPricingList;
+	}
+	
+	public boolean isPriceTypeStringFlag() {
+		return priceTypeStringFlag;
+	}
+
+	public void setPriceTypeStringFlag(boolean priceTypeStringFlag) {
+		this.priceTypeStringFlag = priceTypeStringFlag;
+	}
+
+	public boolean isPriceTypeTableFlag() {
+		return priceTypeTableFlag;
+	}
+
+	public void setPriceTypeTableFlag(boolean priceTypeTableFlag) {
+		this.priceTypeTableFlag = priceTypeTableFlag;
 	}
 	// #28789 - end
 }
