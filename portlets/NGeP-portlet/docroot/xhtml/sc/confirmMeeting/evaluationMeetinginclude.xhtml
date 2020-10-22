@@ -115,10 +115,6 @@
 	</p:panel>
 	<p:panel id="evaluationConfirmMeetingCommitteemembersListPanel" header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.committee.member.list.instruction']}"
-			escape="false" />
-
 		<c:choose>
 			<c:when
 				test="#{evaluationMeetingBackingBean.managedBean.validFor25037}">
@@ -174,6 +170,7 @@
 				</div>
 			</c:when>
 			<c:otherwise>
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.committee.member.list.instruction']}" escape="false" />
 				<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					widgetVar="prepareCommittee" rows="10" rowIndexVar="index"

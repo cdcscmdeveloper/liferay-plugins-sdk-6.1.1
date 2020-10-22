@@ -92,6 +92,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -2147,8 +2148,8 @@ public class EvaluationMeetingBackingBean extends
 
 		if(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())){
 			if(StringUtils.isEmpty(this.getManagedBean().getScQtApprovalRemarks().get(0).getRemark())){
-				String message = MessageUtils.getMessage(MessageConst.ERROR_716025, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-				throw new EpException(message);
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
+						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}else{
 			String message = MessageUtils.getMessage(MessageConst.INFO_760506, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
