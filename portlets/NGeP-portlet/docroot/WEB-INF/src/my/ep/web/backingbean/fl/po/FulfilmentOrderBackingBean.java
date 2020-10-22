@@ -1101,7 +1101,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, 
-									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									new String[]{messagePrefix/*+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)*/+messageSuffix, docNo}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				} else {
 					throw new EpException(MessageConst.ERROR_700020);
