@@ -208,11 +208,11 @@
 					style="text-transform: capitalize;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.from.qty']}"
-				rendered="#{requestNoteBackingBean.managedBean.priceType eq '07' or requestNoteBackingBean.managedBean.priceType eq '08'}">
+				rendered="#{requestNoteBackingBean.managedBean.fromAndToQuantityFlag}">
 				<h:outputText value="#{priceItem.fromQty}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.to.qty']}"
-				rendered="#{requestNoteBackingBean.managedBean.priceType eq '07' or requestNoteBackingBean.managedBean.priceType eq '08'}">
+				rendered="#{requestNoteBackingBean.managedBean.fromAndToQuantityFlag}">
 				<h:outputText value="#{priceItem.toQty}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.price.offered']}">

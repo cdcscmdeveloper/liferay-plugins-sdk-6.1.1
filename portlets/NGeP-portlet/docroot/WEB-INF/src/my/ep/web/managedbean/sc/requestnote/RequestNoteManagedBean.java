@@ -368,6 +368,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private List<CmPricing> filteredCmPricingList;
 	private boolean priceTypeStringFlag = Boolean.FALSE;
 	private boolean priceTypeTableFlag = Boolean.FALSE;
+	private boolean fromAndToQuantityFlag = Boolean.FALSE;
 	// #28789 - end
 	
     /**
@@ -2160,6 +2161,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	public void setPriceTypeTableFlag(boolean priceTypeTableFlag) {
 		this.priceTypeTableFlag = priceTypeTableFlag;
+	}
+	
+	public boolean isFromAndToQuantityFlag() {
+		return fromAndToQuantityFlag;
+	}
+
+	public void setFromAndToQuantityFlag(boolean fromAndToQuantityFlag) {
+		this.fromAndToQuantityFlag = fromAndToQuantityFlag;
 	}
 	// #28789 - end
 }
