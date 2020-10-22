@@ -3,24 +3,33 @@
  */
 package my.ep.web.backingbean.sc.common;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.common.SupplierDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -44,6 +53,16 @@ public class SupplierDetailBackingBean extends
 
 	public SupplierDetailBackingBean() {
 	}
+	
+	// #11134 - start
+	/**
+	 * Pass a true = render BOD. Must set this before set ScQtProposal using setScQtProposal
+	 * @param hasBod
+	 */
+	public void setHasBod(boolean hasBod) {
+		this.getManagedBean().setHasBod(hasBod);
+	}
+	// #11134 - stop
 
 	/**
 	 * Get  Supplier GstDetails   based on Supplier.
@@ -107,6 +126,7 @@ public class SupplierDetailBackingBean extends
 				} else {
 					this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
 				}
+				
 
 			} finally {
 				qtSupplierSO = null;
@@ -117,6 +137,16 @@ public class SupplierDetailBackingBean extends
 		} else {
 			log.info("show supplier details from session.");
 		}
+		
+
+		// BOD 
+		// #11134 start
+		if(this.getManagedBean().isHasBod()
+				&& this.getManagedBean().getSmSupplier() != null){
+			showBoardofDirectors(this.getManagedBean().getSmSupplier());
+		}
+		// #11134 end
+		
 		this.getManagedBean().setHasQtProposal(false);
 	}
 	
@@ -148,6 +178,44 @@ public class SupplierDetailBackingBean extends
 			log.warn("scQtProposal is null.");
 		}
 	}
+	// #11134 - start
+	private void showBoardofDirectors(SmSupplier selectedSupplier) {
+		debugLogger("showBoardofDirectors");
+
+		if (selectedSupplier == null) {
+			return;
+		}
+		log.info("Supplier Name :: " + selectedSupplier.getCompanyName());
+
+		List<SmPersonnel> boardofDirectors = null;
+		IPersonnelSO personnelSO = null;
+		try {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(selectedSupplier.getSupplierId());
+			reqDTO.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
+
+			personnelSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+			PersonnelResDTO resDTO = personnelSO
+					.retrieveBordOfDirectors(reqDTO);
+			if (resDTO.isSuccessful()) {
+				boardofDirectors = resDTO.getSmPersonnelList();
+				if (CollectionUtils.isNotEmpty(boardofDirectors)) {
+					for (SmPersonnel smPersonnel : boardofDirectors) {
+						SmMofAccount smMofAccount = retriveMofAccountBySupplier(smPersonnel
+								.getSmAppl().getSmSupplier());
+						smPersonnel.getSmAppl().getSmSupplier()
+								.setSmMofAccount(smMofAccount);
+					}
+				}
+			}
+		} finally {
+			personnelSO = null;
+		}
+
+		getManagedBean().setBoardofDirectors(boardofDirectors);
+	}
+	// #11134 - end
 	
 	/**
 	 * method to handle reset data.
@@ -158,6 +226,7 @@ public class SupplierDetailBackingBean extends
 		this.getManagedBean().setMofNo(null);
 		this.getManagedBean().setSmApplId(null);
 		this.getManagedBean().setSupplierName(null);
+		this.getManagedBean().setBoardofDirectors(null); // #11134
 	}
 	
 }

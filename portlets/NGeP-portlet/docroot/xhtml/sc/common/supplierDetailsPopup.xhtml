@@ -12,7 +12,7 @@
 		position="center" header="#{lbl['lbl.sc.companyinfo']}" modal="true"
 		dynamic="true" styleClass="pop_up_top" width="950"
 		resizable="false">
-
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td><h:outputText value=" " /></td>
@@ -114,6 +114,36 @@
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}"
 						disabled="true" /></td>
 			</tr>
+			
+			<c:if test="#{supplierDetailBackingBean.managedBean.hasBod}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sf.board.of.directors']}" /></td>
+					<td colspan="2">
+						<p:dataTable var="smPersonnel"
+							value="#{supplierDetailBackingBean.managedBean.boardofDirectors}"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							rows="10">
+	
+							<p:column headerText="#{lbl['lbl.sc.mof.no']}"
+								style="width:20%; white-space:normal;">
+								<h:outputText
+									value="#{smPersonnel.smAppl.smSupplier.smMofAccount.mofNo}" />
+							</p:column>
+	
+							<p:column headerText="#{lbl['lbl.sc.company.name']}"
+								style="width:40%; white-space:normal;">
+								<h:outputText
+									value="#{smPersonnel.smAppl.smSupplier.companyName}" />
+							</p:column>
+	
+							<p:column headerText="#{lbl['lbl.sc.bod']}"
+								style="width:40%; white-space:normal;">
+								<h:outputText value="#{smPersonnel.name}" />
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+			</c:if>
 		</table>
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
