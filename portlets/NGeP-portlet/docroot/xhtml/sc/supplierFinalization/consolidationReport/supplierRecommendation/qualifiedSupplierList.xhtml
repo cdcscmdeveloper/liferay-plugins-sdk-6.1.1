@@ -74,6 +74,8 @@
 				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 								   process="@this" update="@([id$=suppDetailsPopupId])">
+   				   	 	<f:setPropertyActionListener value="#{true}"
+												   	 target="#{supplierDetailBackingBean.hasBod}" />
 						<f:setPropertyActionListener value="#{qualifiedSupp.qtEvaluationResult.scQtProposal}"
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
