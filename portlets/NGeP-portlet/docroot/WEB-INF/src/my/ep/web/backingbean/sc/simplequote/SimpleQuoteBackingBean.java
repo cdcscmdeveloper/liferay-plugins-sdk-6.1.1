@@ -2506,6 +2506,30 @@ public class SimpleQuoteBackingBean extends
 									new FacesScopes().getUserLocale())));
 
 		}
+		// #28536 - start
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			getGovtSellerCriteria();
+		} else {
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				List<ScQuoteSupplier> supplierRemoveList = new ArrayList<>();
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				for (ScQuoteSupplier supplier : getManagedBean().getSupplierList()) {
+					if (supplier.getSmSupplier() != null) {
+						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+						profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+						PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
+						if (pmOrgProfile.isGovtSeller()) {
+							supplierRemoveList.add(supplier);
+						}
+					}
+				}
+				getManagedBean().getSupplierList().removeAll(supplierRemoveList);
+			}
+			getSupplierListCriteria();
+		}
+		// #28536 - end
 	}
 
 	/**
@@ -4815,7 +4839,17 @@ public class SimpleQuoteBackingBean extends
 		.append("^").append(SupplierManagementConst.SUPP_TYPE_CONSULTANT)
 		.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 		.append("|");
-
+		
+		// #28536 - start
+		if (!getManagedBean().isG2GFlag()) {
+			criteria.append("smAppl.supplierType")
+					.append("^").append(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)
+					.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
+					.append("|");
+			criteria.append("pmOrgProfile.govtSeller^0").append("|");
+		}
+		// #28536 - end
+		
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
