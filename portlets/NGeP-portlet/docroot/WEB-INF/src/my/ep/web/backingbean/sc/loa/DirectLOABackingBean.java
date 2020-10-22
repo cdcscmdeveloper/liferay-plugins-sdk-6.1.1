@@ -8523,6 +8523,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
+        //#26474 - start.
+		getManagedBean().setContractSignerUser(contractSignerUser);
+		getManagedBean().getContractSignerUser().setDesignation(contractSignerUser.getDesignation());
+        //#26474 - end.
 
 	}
 	private boolean isFulfillmentTypeOneOffOrAsAndWhen(PmParameter fulfillmentType) {
