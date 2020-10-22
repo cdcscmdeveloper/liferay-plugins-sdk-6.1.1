@@ -90,17 +90,16 @@
 									</p:selectOneMenu> <p:message id="priceTypeMsg" for="priceType" display="icon" /></td>
 								<td style="margin-top: -3px"><ac:iconTooltip
 										value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
-								<td><p:outputPanel id="priceTypeInfoPanel"
-										rendered="#{!empty requestNoteBackingBean.managedBean.priceType}">
+								<td><p:outputPanel id="priceTypeInfoPanel">
 										<p:inputText disabled="true" style="font-weight: bold;"
 											value="#{requestNoteBackingBean.managedBean.normalAndTierPriceStr}"
 											size="5"
-											rendered="#{!empty requestNoteBackingBean.managedBean.normalAndTierPriceStr and (requestNoteBackingBean.managedBean.priceType eq '01' or requestNoteBackingBean.managedBean.priceType eq '02' or requestNoteBackingBean.managedBean.priceType eq '03' or requestNoteBackingBean.managedBean.priceType eq '04')}">
+											rendered="#{requestNoteBackingBean.managedBean.priceTypeStringFlag}">
 										</p:inputText>
 										<p:commandLink process="@this"
 											update=":#{p:component('supplierPricingInfoDlg')}"
 											oncomplete="supplierPricingInfoDlgVar.show();"
-											rendered="#{requestNoteBackingBean.managedBean.priceType eq '05' or requestNoteBackingBean.managedBean.priceType eq '06' or requestNoteBackingBean.managedBean.priceType eq '07' or requestNoteBackingBean.managedBean.priceType eq '08'}">
+											rendered="#{requestNoteBackingBean.managedBean.priceTypeTableFlag}">
 											<p:graphicImage value="/css/images/design/ico-price.png"
 												id="zonePriceTblId" style="max-width: 16px;" />
 										</p:commandLink>
