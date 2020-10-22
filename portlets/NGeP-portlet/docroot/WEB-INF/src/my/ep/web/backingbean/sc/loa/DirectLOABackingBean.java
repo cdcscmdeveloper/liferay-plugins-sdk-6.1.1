@@ -8525,7 +8525,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
         //#26474 - start.
 		getManagedBean().setContractSignerUser(contractSignerUser);
-		getManagedBean().getContractSignerUser().setDesignation(contractSignerUser.getDesignation());
         //#26474 - end.
 
 	}
