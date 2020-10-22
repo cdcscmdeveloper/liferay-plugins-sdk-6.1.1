@@ -3359,7 +3359,9 @@ public class SupplierFinalizationBackingBean extends
 	private void disableItemsNotRecommendedToHigherAuthority() {
 		log.info("disableItemsNotRecommendedToHigherAuthority");
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
-		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		//20200824@asyrafhaziq - 28841 - Start
+		ScQtFinalization scQtFinalization  = retrieveQtFinalization(getManagedBean().getScQt());
+		//20200824@asyrafhaziq - 28841 - End
 		List<ScQtRecommend> recommendList = scQtFinalization.getScQtRecommends();
 		
 		if (CollectionUtils.isNotEmpty(recommendList)) {
@@ -3405,6 +3407,39 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}		
 	}
+	
+	//20200824@asyrafhaziq - 28841 - Start
+	private ScQtFinalization retrieveQtFinalization(ScQt scQt) {
+		log.info("retrieveQtFinalization");
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+
+			PmUser user = new FacesScopes().getUserSessionBean();
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setScQt(scQt);
+			reqDTO.setLoggedInUserId(user.getUserId());
+
+			List<TplSpecZoneDtl> zoneDetails = 
+					getManagedBean().getZoneDetails();
+			reqDTO.setZoneDetails(zoneDetails);
+			reqDTO.setRefinalize(isQTRefinalized());
+
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+					.retrieveSupplierFinalizationDtls(reqDTO);
+			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+		if (scQtFinalization != null) {
+			return 	scQtFinalization;
+		}else {
+			return null;
+		}
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	//20200824@asyrafhaziq - 28841 - End
 	
 	/**
 	 * Method to retrieve Board of Directors Details pop up in supplier finalization
