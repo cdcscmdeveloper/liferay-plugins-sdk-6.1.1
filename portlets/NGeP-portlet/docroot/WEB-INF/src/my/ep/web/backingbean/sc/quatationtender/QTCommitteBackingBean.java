@@ -996,6 +996,9 @@ public class QTCommitteBackingBean extends
 	 *            the title name
 	 */
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
+		addCommitteMember(committee, titleName, null);
+	}
+	public void addCommitteMember(ScQtCommittee committee, String titleName, String taskName) {
 		debugLogger("addCommitteMember");
 
 		IPagingDataModel<PmUser> userSearCommitteeDataModel = getManagedBean()
@@ -1048,7 +1051,10 @@ public class QTCommitteBackingBean extends
 
 			if(Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation){
 				List<String> list = new ArrayList<String>();
-				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				taskName = taskName==null ? "":taskName;
+				if(!Arrays.asList(new String[]{SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE}).contains(taskName)){
+					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				}
 			    if(qtStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
 					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
 			    }
