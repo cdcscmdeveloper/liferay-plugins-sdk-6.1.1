@@ -239,10 +239,10 @@
 						    
 						    <!-- #25406 - Start -->
 						     <p:menuitem id="menuItemId7" value="#{lbl['lbl.ct.owner.management']}" icon="ui-icon-edit" 
-						          rendered="#{contractDetailsBackingBean.isApprover() and data.ctStatus == 1
+						          rendered="#{contractDetailsBackingBean.isApprover() and data.ctStatus == 1 and data.status == 1
 						          and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 						          			 and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)}" 
-									        process="@this" partialSubmit="true"
+								  process="@this" partialSubmit="true"
 								  disabled="#{data.assignedCtAdminFlag == 1}"
 						          action="#{contractDetailsBackingBean.gotoOwnerManagementPage(data.ctContract.contractId)}"
 						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
