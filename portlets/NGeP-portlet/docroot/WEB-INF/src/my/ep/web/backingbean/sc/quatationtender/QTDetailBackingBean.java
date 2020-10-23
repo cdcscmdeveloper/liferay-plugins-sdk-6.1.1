@@ -3016,6 +3016,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setSelectedTabBean(
 					committeTabs.get(this.getManagedBean()
 							.getSelectedCommitteeTabIndex()));
+			String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+			this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		}
 
 	}
@@ -5358,6 +5360,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
 
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
+		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 	}
 
 	/**
@@ -9047,8 +9051,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		Long statusId = wfStatus==null ? 0L: wfStatus.getPmStatus().getStatusId();
 
-		//boolean pending = false;
-				//Arrays.asList(completeArr).contains(statusId) && !this.getManagedBean().getRequestContent().isBrandNew();
 		this.getManagedBean().setDoaRequestEditable(true);
 		if(wfStatus == null){
 			FacesScopes fs = new FacesScopes();
