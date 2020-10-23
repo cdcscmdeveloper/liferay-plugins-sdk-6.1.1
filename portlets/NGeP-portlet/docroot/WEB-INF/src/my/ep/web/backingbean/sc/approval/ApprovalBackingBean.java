@@ -748,6 +748,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#25692-End
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
+					List<TabBean> cTabs = this.getManagedBean().getScCommitteeMemberTabList();
+					String currentCommitteeType = cTabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()).getTabType();
+					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), currentCommitteeType));
+				}
 				if(this.getManagedBean().isCommitteeReviseFlow()){
 					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
 					page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";				

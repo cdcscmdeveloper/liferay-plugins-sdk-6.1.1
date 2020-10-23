@@ -2556,8 +2556,8 @@ public class QTCommitteBackingBean extends
 		return status;
 	}
 	public boolean isCommitteeRoleEditable(PmParameter role){
-		String committeeType = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
-		if(role!=null && StringUtils.isNotEmpty(committeeType)){
+		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+		if(role!=null && StringUtils.isNotEmpty(committeeType) && role.getParameterCode()!=null){
 			Long status = getCurrentQtStatusId();
 			status = status == null? new Long(0L): status;
 			if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
