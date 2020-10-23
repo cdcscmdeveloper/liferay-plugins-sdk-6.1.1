@@ -5574,14 +5574,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		 PpProcurementItem original = items.get(idx);
 		 
 		 // For originals that were previously clones and this time they are used to clone new ones 
-		 if (original.isOriginal() && original.getFromPpItem() != null) {
-			 
-			 original.setOriginal(false);
-			 original.setCloned(false);
+		 if (!original.isOriginal() &&
+				 original.getFromPpItem() != null) {
 			 original.setBrandNew(false);
-			 original.setDisableForPindaan(true);
+			 original.setOriginal(true);
+			 original.setCloned(false);
 			 original.setCloneEnabled(true);
-			 this.getManagedBean().setModeEditable(false);
+			 this.getManagedBean().setModeEditable(true);
+			 original.setDisableForPindaan(false);
+			 this.getManagedBean().setDisable(false);
 		 }
 		 
 		 log.info("original= "+original.getProcurementTitle()+" ("+original.getProcurementItemId()
