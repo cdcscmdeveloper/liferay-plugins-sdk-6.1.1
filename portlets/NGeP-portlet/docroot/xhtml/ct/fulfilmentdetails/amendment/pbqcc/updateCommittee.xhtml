@@ -70,7 +70,7 @@
 					<ui:fragment rendered="#{ctUpdCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
 						<p:selectOneMenu id="updRoleSelMenu"
 						    value="#{ctUpdCommitteeVar.memberRole.parameterId}" 
-						     style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
+						     style="width: 110px;margin-bottom: 5px;" required="true" requiredMessage="#{lbl['lbl.ct.role.mandatory']}" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctUpdCommitteeVar)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"  
 							   update=":form:panelHeaderException, updCommitteeRepresentPnlGrp"
@@ -86,7 +86,7 @@
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
 				</f:facet>
 				<h:panelGroup id="updCommitteeRepresentPnlGrp">
-					<p:selectOneMenu  id="updRepresentativeTypeSelMenu" required="true"
+					<p:selectOneMenu  id="updRepresentativeTypeSelMenu" required="true" requiredMessage="#{lbl['lbl.ct.represent.type.mandatory']}"
 						value="#{ctUpdCommitteeVar.representativeType.parameterId}"
 						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctUpdCommitteeVar.memberRole.parameterId, ctUpdCommitteeVar.pnp)}"
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
