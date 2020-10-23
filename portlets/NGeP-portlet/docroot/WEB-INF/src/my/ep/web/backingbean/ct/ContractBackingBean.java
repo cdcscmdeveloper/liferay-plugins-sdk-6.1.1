@@ -174,6 +174,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
+	
+	//added for 28827 to check list of filter value
+	private List<CtAgency> filteredAgencies;	
+
 	static
 	{
 		months = new HashMap<String, String>();
@@ -3843,7 +3847,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{	//#28505 start
+	{	//#25703, #28505 start
 		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
 				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
@@ -3855,7 +3859,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		else {
 			return null;
 		}
-		//#28505 end
+		//#25703, #28505 end
 	}
 	
 	public String newProcurement(){
@@ -3878,4 +3882,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return null;
 	}
+	
+	//added for 28827
+	public List<CtAgency> getFilteredAgencies() {
+		return filteredAgencies;
+	}
+
+	public void setFilteredAgencies(List<CtAgency> filteredAgencies) {
+		this.filteredAgencies = filteredAgencies;
+	}
+	
 }  
