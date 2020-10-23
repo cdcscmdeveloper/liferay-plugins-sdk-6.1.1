@@ -2472,14 +2472,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	public boolean assertCommitteeMemberRoleIsDisabled(String memberRole){
+		if(memberRole==null){
+			return false;
+		}
 		Long qtStatus = null;
 		ScQt scQt = getManagedBean().getQt();
-		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {//prevent multiple request
+		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
 			if(wfStatus!=null){
-				qtStatus = wfStatus.getPmStatus().getStatusId();
+				this.getManagedBean().setCurrentQTStatus(wfStatus.getPmStatus().getStatusId());
 			}
 		}
+		qtStatus = this.getManagedBean().getCurrentQTStatus();
 		if(qtStatus!=null){
 			Long[] specDisabledRoleStatusArr = new Long[] {
 					QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
