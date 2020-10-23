@@ -748,6 +748,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#25692-End
 			}
 			else if(SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) ){
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
+					List<TabBean> cTabs = this.getManagedBean().getScCommitteeMemberTabList();
+					String currentCommitteeType = cTabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()).getTabType();
+					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), currentCommitteeType));
+				}
 				if(this.getManagedBean().isCommitteeReviseFlow()){
 					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
 					page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";				
@@ -2467,14 +2472,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	public boolean assertCommitteeMemberRoleIsDisabled(String memberRole){
+		if(memberRole==null){
+			return false;
+		}
 		Long qtStatus = null;
 		ScQt scQt = getManagedBean().getQt();
-		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {//prevent multiple request
+		if (this.getManagedBean().getCurrentQTStatus() == null && scQt!=null) {
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION,scQt.getQtId());
 			if(wfStatus!=null){
-				qtStatus = wfStatus.getPmStatus().getStatusId();
+				this.getManagedBean().setCurrentQTStatus(wfStatus.getPmStatus().getStatusId());
 			}
 		}
+		qtStatus = this.getManagedBean().getCurrentQTStatus();
 		if(qtStatus!=null){
 			Long[] specDisabledRoleStatusArr = new Long[] {
 					QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,

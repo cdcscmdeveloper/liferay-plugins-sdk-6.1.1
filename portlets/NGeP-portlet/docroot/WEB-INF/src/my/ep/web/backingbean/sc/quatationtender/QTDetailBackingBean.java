@@ -2986,6 +2986,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setSelectedTabBean(
 					committeTabs.get(this.getManagedBean()
 							.getSelectedCommitteeTabIndex()));
+			String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+			this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		}
 
 	}
@@ -5326,6 +5328,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
 
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
+		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 	}
 
 	/**
@@ -9105,20 +9109,31 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		SCCommitteeDataType committeeData = payload == null ? new SCCommitteeDataType(): (SCCommitteeDataType) payload;
 		boolean isReapproval = committeeData.getReapproval() == null ? false:  committeeData.getReapproval();
 		this.getManagedBean().setReapproval(isReapproval);
-		if(isReapproval){
+		if(isReapproval && this.getManagedBean().getQt()!=null){
 			getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
 			String tabType = committeeData.getCommitteeType() == null ? "": committeeData.getCommitteeType();
-			List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
-			int i = 0;
-			for(TabBean tab: tabs){
-				if(tabType.equalsIgnoreCase(tab.getTabType())){
-					this.getManagedBean().setSelectedTabBean(tab);
-					this.getManagedBean().setSelectedTabIndex(i);
-					this.getManagedBean().setSelectedCommitteeTabIndex(i);
-				}else{
-					tab.setDisabled(true);
+			IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+			ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			
+			if(wfStatus!=null){
+				Long statusId = wfStatus.getPmStatus().getStatusId();
+				if(!this.isStatusLessThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
+					List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
+					int i = 0;
+					for(TabBean tab: tabs){
+						if(tabType.equalsIgnoreCase(tab.getTabType())){
+							this.getManagedBean().setSelectedTabBean(tab);
+							this.getManagedBean().setSelectedTabIndex(i);
+							this.getManagedBean().setSelectedCommitteeTabIndex(i);
+						}else{
+							tab.setDisabled(true);
+						}
+						i++;
+					}
 				}
-				i++;
 			}
 		}
 	}

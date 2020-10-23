@@ -4902,5 +4902,36 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			return false;
 		}
+		
+		public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType){		
+			String[] arr = new String[0];
+			List<String> list = new ArrayList<String>();
+			if(scQt == null){
+				return arr;
+			}
+			IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+			reqDTO.setDocId(scQt.getQtId());
+			
+			ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+			if(wfStatus==null){
+				return arr;
+			}
+			Long statusId = wfStatus.getPmStatus().getStatusId();	
+			if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)){
+				if(Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)){
+					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)){
+						list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+					}
+				}	
+			}
+			if(CollectionUtils.isNotEmpty(list)){
+				arr = new String[list.size()];
+			    list.toArray(arr);
+			}		
+			return arr;
+		}
 		//25037 - End
 }
