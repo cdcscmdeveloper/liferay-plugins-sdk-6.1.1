@@ -96,9 +96,8 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.applicationstatus']}">
-					<h:outputText value="#{smAppl[6]}" rendered="#{not empty smAppl[6]}"/>
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl[6]}"/>
-				</p:column>
+					<h:outputText value="#{viewSuppProfileBackingBean.getStatusDescription(smAppl)}" />
+				</p:column>	
 				
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink onstart="blockWidget.show()"
