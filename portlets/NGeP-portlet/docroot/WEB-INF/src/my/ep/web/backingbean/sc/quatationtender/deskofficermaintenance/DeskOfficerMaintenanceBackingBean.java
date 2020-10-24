@@ -569,6 +569,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
                     PmCompositeValidity composite =  compositeSO.getCompositeByValidityId(compositeReqDTO).getPmCompositeValidity();
                     String doReassignCompositeVersion = composite.getMinCompositeVersion();
                     
+                    // #25627 - Start.
                     if(CollectionUtils.isNotEmpty(resDTO.getQtResultBean().getResultList())){
                       List<String> docNoList = null;
                       
@@ -612,6 +613,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
                          }
                        }
                     }
+                    // #25627 -End.
                 }
             qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
             return resDTO.getQtResultBean();
