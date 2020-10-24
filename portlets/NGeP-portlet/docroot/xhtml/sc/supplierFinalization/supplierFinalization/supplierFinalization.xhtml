@@ -188,7 +188,7 @@
 				<h:column>
 					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}" 
-						disabled="#{!isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+						disabled="#{isMofFinalization or !isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() }">
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
