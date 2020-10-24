@@ -1669,7 +1669,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param remarkList
 	 */
 	public void loadPlanRemark(List<PpRemark> remarkList) {
-		log.info("loadPlanRemark - Start");
+ 		log.info("loadPlanRemark - Start");
 		this.getManagedBean().setSelectedRemarks(remarkList);
 		
 		boolean newRemark = false;
@@ -1694,7 +1694,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		// for user to edit draft remark
 		if(newRemark){
-			// remark list is not null 
+				// remark list is not null 
 			if(!this.getManagedBean().getSelectedRemarks().isEmpty() && 
 					compareUserNameInsensitive(this.getManagedBean().getSelectedRemarks().get(0).getUserId())){
 				//if both statuses are null
@@ -1711,11 +1711,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						newRemark = false;
 				// if remark status == plan status
 				}else if(this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
+						 this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
+						 this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
 					this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
 					newRemark = false;
-				}
+				}else {
+					//24975@24102020@azza - start
+				  if(this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()!=null &&
+					  this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()!=(
+					  this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId()) &&
+					  this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId().equals(ProcurementPlanConst.PPE_PENDING_SUBMISSION) ||
+					  this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId().equals(ProcurementPlanConst.PPP_PENDING_SUBMISSION)){
+					  this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
+					  newRemark = false;
+						//24975@24102020@azza - end
+				   }	
+			   }
 			}
 		}
 
@@ -2025,7 +2036,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				){
 			
 			rejectReasons = new ArrayList<PpRejectReason>();
-			//25549 - start
+			//24975@24102020@azza - start
 			int itemIndex = 0;
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 				for(PpProcurementItem ppProcurementItem:ppPlan.getPpProcurementItems()){
@@ -2036,6 +2047,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							rejectReason.setDocId(ppProcurementItem.getProcurementItemId());
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 							rejectReasons.add(rejectReason);
+						}else{	
+							
+							List<PpRejectReason> PpRejectReasonDel = PpCommonUtil.retrieveRejectReason(ppProcurementItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+						    
+							for(PpRejectReason rejectReasonDel : PpRejectReasonDel){
+								 if(rejectReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())){
+									if(rejectReasonDel.getReasonDesc()!=null && rejectReason.getReasonDesc().isEmpty()){			
+										rejectReasonDel.setItemSeq(itemIndex);//&& rejectReason.isBrandNew() add this for phase 2
+										rejectReasonDel.setDocId(ppProcurementItem.getProcurementItemId());
+										rejectReasonDel.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+										rejectReasonDel.setReasonDesc(rejectReasonDel.getReasonDesc());
+										rejectReasonDel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+										rejectReasons.add(rejectReasonDel);
+									 }
+								 }
+							 }
 						}
 					}
 					itemIndex++;
@@ -2050,31 +2077,30 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 							rejectReasons.add(rejectReason);
 						}else{	
-							for(PpRejectReason rejectReasonDel : ppExpenditureItem.getPpRejectReasons()){
+							
+							List<PpRejectReason> PpRejectReasonDel = PpCommonUtil.retrieveRejectReason(ppExpenditureItem.getExpenditureItemId(), ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+										
+							for(PpRejectReason rejectReasonDel : PpRejectReasonDel){
 								 if(rejectReasonDel.getDocId().equals(ppExpenditureItem.getExpenditureItemId())){
-									if(rejectReasonDel.getReasonDesc().isEmpty()){			
-										ppExpenditureItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppExpenditureItem.getExpenditureItemId(), ParameterConst.DOCTYPE_PLAN_EXPENDITURE));
-												
+									 if(rejectReasonDel.getReasonDesc()!=null && rejectReason.getReasonDesc().isEmpty()){			
 										rejectReasonDel.setItemSeq(itemIndex);//&& rejectReason.isBrandNew() add this for phase 2
 										rejectReasonDel.setDocId(ppExpenditureItem.getExpenditureItemId());
 										rejectReasonDel.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 										rejectReasonDel.setReasonDesc(rejectReasonDel.getReasonDesc());
 										rejectReasonDel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 										rejectReasons.add(rejectReasonDel);
-									
 									 }
 								 }
 							 }
 						}
 					}
 					itemIndex++;
-					//25549 - end
 				}
 			}
 		}
 		return rejectReasons;
 	}
-	//24975@20301023 - end
+	//24975@24102020@azza - end
 
 	/**
 	 * get remark from managedbean
@@ -7225,9 +7251,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    		
 		    		
 		    		PpExpenditureItem clonedPpExpItem =  PpExpenditureItemList.get(index);
-		    		
-		    		//validateEpItem(paramCode); //Disabled this if no validation required at this stage
-		    		
+		    				
 		    	    newPpExItem.setCloned(true);
 		    		newPpExItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 		    		newPpExItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
@@ -7549,7 +7573,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			     }
 		      }
 	       }
-}
+        }
 	//25479 - end
 	//25549@azza20200827 - Start
 	public void onSelectCategoryClone(Long id){
@@ -7572,6 +7596,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200822 - End
+
 }
 
 
