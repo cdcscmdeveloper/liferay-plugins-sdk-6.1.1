@@ -427,7 +427,8 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setCommEndorsementTabIndex(-1);		
 			getManagedBean().setEndorsementReportActiveIndex(tabIndex++);
 			getManagedBean().setReverseTabIndex(-1);
-			getManagedBean().setSecretaryUser(true);			
+			getManagedBean().setSecretaryUser(true);	
+			getManagedBean().setMofFinalization(true);
 			
 			ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
 			getManagedBean().setEndorsementReport(endorsementReport); 
@@ -653,7 +654,7 @@ public class SupplierFinalizationBackingBean extends
 					new HashSet<ScQtEvaluationResultDtl>());
 		}	
 		// #25638 - Start
-		displayReviseInstrn(getManagedBean().getCommitteeList());
+		//displayReviseInstrn(getManagedBean().getCommitteeList());
 		// #25638 - End
 	}
 	
