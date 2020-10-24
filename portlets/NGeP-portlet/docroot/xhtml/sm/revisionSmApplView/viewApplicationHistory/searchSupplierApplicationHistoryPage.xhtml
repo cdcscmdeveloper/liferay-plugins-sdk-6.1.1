@@ -9,7 +9,7 @@
 
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_viewApplicationHistory_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.application.history']}");
+			$('#portlet_viewApplicationHistory_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supplier.application.history']}");			
 		</script>
 	</ui:define>
 	
@@ -24,7 +24,7 @@
 		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" />
 		
 		<p:panel header="#{lbl['lbl.sm.search.supp.appl.history']}" toggleable="true" id="searchSupplierProfilePanelId">
-			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
+			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationHistorySearchCriteria.xhtml" />
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId">
@@ -32,16 +32,38 @@
 			<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
 				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
-				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
+				rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId" >
+				
+				<f:facet name="header">
+					<h:outputStylesheet>
+					.ui-datatable .ui-datatable-header {
+		    			text-align: right;
+   		  				background: unset;
+           				border: 0px none;
+           				font-size: 100%;
+    					font-family: inherit;
+					}
+					</h:outputStylesheet>
+					<h:outputText value="#{lbl['lbl.sm.row.total']}: #{viewSuppProfileBackingBean.managedBean.smSupplierDataModel.getRowCount()}" />
+				</f:facet>
+				
 				<ac:paginator for="supplierApplHistoryDtId" />
 				
+				<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sm.row.no']}" />
+						</f:facet>
+						<h:outputText value="#{index + 1}"/>
+						
+				</p:column>
 				<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
 					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl[2] eq 'K'}"/>
 					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[2] eq 'J'}"/>
-					<h:outputText value="#{lbl['lbl.sm.basic']}" rendered="#{smAppl[2] ne 'K' and smAppl[2] ne 'J'}"/>
+					<h:outputText value="#{lbl['lbl.sm.basic']}" rendered="#{smAppl[2] eq 'B'}"/>
+					<h:outputText value="#{lbl['lbl.sm.g2g']}" rendered="#{smAppl[2] eq 'G'}"/>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" 
+				<p:column headerText="#{viewSuppProfileBackingBean.managedBean.searchAccountType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT ? lbl['lbl.sm.agency.name'] : lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" 
 					rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
 					<h:outputText value="#{smAppl[3]}" />
 				</p:column>
@@ -60,7 +82,7 @@
 				</p:column>
 		
 				<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
-					<h:outputText value="#{lbl['lbl.sm.appltype.basic']}" rendered="#{smAppl[1] eq 'O'}" />
+					<h:outputText value="#{smAppl[2] eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT ? lbl['lbl.sm.appltype.g2g']:lbl['lbl.sm.appltype.basic']}" rendered="#{smAppl[1] eq 'O'}" />
 					<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl[1] eq 'N'}" />
 					<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl[1] eq 'B'}" />
 					<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl[1] eq 'A'}" />

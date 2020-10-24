@@ -775,7 +775,13 @@ public class SmApplicationUtil {
 		} else if (sup.getBusinessType().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)) {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT;
-		} else {
+		} 
+		//25792 - start
+		else if(sup.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
+		}
+		//25792 - end
+		else {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN;
 		}
 	}

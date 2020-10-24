@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<h:panelGroup id="natureOfBusinessInfPanGrp">
+	<p:panel header="#{lbl['lbl.sm.nature.of.biz.hdr']}" toggleable="true" id="natureOfBusinessInfHdPan">
+	<p:outputPanel id="natureOfBusinessInfPan" layout="block">
+		
+			<p:dataTable var="supplierBusinessBean" widgetVar="natureOfBusinessInfoDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smSupplier.smSupplierBusinesses}"
+				rowKey="#{supplierBusinessBean}" rowIndexVar="index" id="natureOfBusinessDt" rows="10">
+				
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.row.total']}: #{viewSmApplBackingBean.managedBean.smSupplier.smSupplierBusinesses.size()}" />
+				</f:facet>
+				
+				<ac:paginator for="natureOfBusinessDt" />
+
+				<p:column headerText="#{lbl['lbl.sm.row.no']}">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.businessnature.code']}">
+					<h:outputText value="#{viewSmApplBackingBean.getBusinessNatureSection(supplierBusinessBean)} - #{supplierBusinessBean.pmBusinessNature.levelCode}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.natureofbusiness']}">
+					<h:outputText value="#{supplierBusinessBean.pmBusinessNature.levelName}" />
+				</p:column>	
+				<p:column headerText="#{lbl['lbl.sm.nature.of.biz.status']}">
+					<h:outputText
+						value="#{supplierBusinessBean.recordStatusFlg == 1 ? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}"/>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />			
+		</p:outputPanel>
+	</p:panel>	
+	</h:panelGroup>
+</ui:composition>

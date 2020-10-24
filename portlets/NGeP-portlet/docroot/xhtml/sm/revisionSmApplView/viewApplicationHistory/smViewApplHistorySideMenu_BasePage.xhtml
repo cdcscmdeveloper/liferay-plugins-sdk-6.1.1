@@ -27,7 +27,9 @@
 			
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/applicationHistoryHeaderInfo.xhtml" />
-				
+				<c:choose>
+				<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_BASIC 
+				and viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 				<ac:smPanel id="tt">
 					
 					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
@@ -91,6 +93,54 @@
 					</c:choose>
 
 				</ac:smPanel>
+				</c:when>
+				<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
+				<ac:smPanel id="tt">					
+					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step1ViewProfileSupplierInfo.xhtml" />
+					</c:if>
+					<c:choose>
+					<c:when test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1 and 
+					  viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step2ViewProfilePersonnelInfo.xhtml" />
+					</c:when>
+					<c:when test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1 and 
+					viewSmApplBackingBean.managedBean.smSupplier.businessType eq SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileCatalogueInfo.xhtml" />
+					</c:when>
+					</c:choose>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step3ViewProfileBankInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3 and 
+					viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step4ViewProfileNatureOfBizInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4 and 
+					viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileCatalogueInfo.xhtml" />
+					</c:if>
+				</ac:smPanel>
+				</c:when>	
+				<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
+				<ac:smPanel id="tt">					
+					<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step1ViewProfileSupplierInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step2ViewProfilePersonnelInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step3ViewProfileBankInfo.xhtml" />
+					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileCatalogueInfo.xhtml" />
+					</c:if>
+				</ac:smPanel>
+				</c:when>
+				</c:choose>			
 			</c:if>
 		</p:outputPanel>
 	</ui:define>
