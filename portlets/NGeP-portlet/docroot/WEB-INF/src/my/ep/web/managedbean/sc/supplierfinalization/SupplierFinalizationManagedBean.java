@@ -273,6 +273,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScRemark> scRemarks;
 	// #18685 - End 
 	
+	// #27502 - Start 
+	private boolean isMofFinalization;
+	// #27502 - Start 
 	/**
 	 * @return the activeIndex
 	 */
@@ -2340,8 +2343,19 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     public void setNewSfRemarks(List<ScRemark> newSfRemarks) {
       this.newSfRemarks = newSfRemarks;
     }
+
     // #25638 - End.
+
     //#18685 - End
+    
+	public boolean isMofFinalization() {
+		return isMofFinalization;
+	}
+
+	public void setMofFinalization(boolean isMofFinalization) {
+		this.isMofFinalization = isMofFinalization;
+	}
+
 }
 
 
