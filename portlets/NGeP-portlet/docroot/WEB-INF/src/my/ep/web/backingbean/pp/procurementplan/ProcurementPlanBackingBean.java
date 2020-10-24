@@ -1669,7 +1669,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param remarkList
 	 */
 	public void loadPlanRemark(List<PpRemark> remarkList) {
-		log.info("loadPlanRemark - Start");
+ 		log.info("loadPlanRemark - Start");
 		this.getManagedBean().setSelectedRemarks(remarkList);
 		
 		boolean newRemark = false;
@@ -1694,7 +1694,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		// for user to edit draft remark
 		if(newRemark){
-			// remark list is not null 
+				// remark list is not null 
 			if(!this.getManagedBean().getSelectedRemarks().isEmpty() && 
 					compareUserNameInsensitive(this.getManagedBean().getSelectedRemarks().get(0).getUserId())){
 				//if both statuses are null
@@ -1711,11 +1711,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						newRemark = false;
 				// if remark status == plan status
 				}else if(this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()!=null &&
-						this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
-								this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
+						 this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId().equals(
+						 this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId())){
 					this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
 					newRemark = false;
-				}
+				}else {
+					//24975@24102020@azza - start
+				  if(this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus()!=null &&
+					  this.getManagedBean().getSelectedPlan().getCurrentStatus().getWorkflowStatusId()!=(
+					  this.getManagedBean().getSelectedRemarks().get(0).getPpWorkflowStatus().getWorkflowStatusId()) &&
+					  this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId().equals(ProcurementPlanConst.PPE_PENDING_SUBMISSION) ||
+					  this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId().equals(ProcurementPlanConst.PPP_PENDING_SUBMISSION)){
+					  this.getManagedBean().getSelectedRemarks().get(0).setEditable(true);
+					  newRemark = false;
+						//24975@24102020@azza - end
+				   }	
+			   }
 			}
 		}
 
