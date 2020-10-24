@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -568,28 +569,52 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					PmCompositeValidity composite =  compositeSO.getCompositeByValidityId(compositeReqDTO).getPmCompositeValidity();
 					String doReassignCompositeVersion = composite.getMinCompositeVersion();
 					
+                    // #25627 - Start.
 					if(CollectionUtils.isNotEmpty(resDTO.getQtResultBean().getResultList())){
+                      List<String> docNoList = null;
+                      
 						for(ScQt qt :  resDTO.getQtResultBean().getResultList()){
-							BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-							bpmReqDTO.setDocNumber(qt.getQtNo());
-							BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-							qt.setSelectable(false);
+                          if (null == docNoList) {
+                            docNoList = new ArrayList<>();
+                          }
+                          docNoList.add(qt.getQtNo());
+                      }
+					  BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+                      bpmReqDTO.setDocNumberList(docNoList);
+                      bpmReqDTO.setLimit(1000);
+                      BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumberList(bpmReqDTO);
 
-							 if(bpmResDTO != null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
-								 String instanceVersion = null;
-								 for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
-									 if(StringUtils.isNotBlank(currentVO.getInstanceVersion())){
-										 instanceVersion = currentVO.getInstanceVersion();
-										 break;
-									 }
-								 }
-								 if(StringUtils.isNotBlank(instanceVersion) && compositeVersionComparator(instanceVersion, doReassignCompositeVersion)>=0){
+                      Map<String, WorklistItemVO> docNoWorkItemMap = null;
+					  if(bpmResDTO != null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
+						 for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
+                           if (null == docNoWorkItemMap) {
+                             docNoWorkItemMap = new HashMap<String, WorklistItemVO>();
+						   }
+                           
+                           if(StringUtils.isNotBlank(currentVO.getInstanceVersion()) && docNoWorkItemMap.get(currentVO.getDocNumber().trim()) == null){
+                             docNoWorkItemMap.put(currentVO.getDocNumber().trim(), currentVO);
+						   }
+                         }
+                       }
+
+                       if (null != docNoWorkItemMap && docNoWorkItemMap.size() > 0) {
+                         for(ScQt qt :  resDTO.getQtResultBean().getResultList()){
+                           qt.setSelectable(false);
+                           WorklistItemVO currentVO = docNoWorkItemMap.get(qt.getQtNo());
+                           if (null != currentVO) {
+                             if(StringUtils.isNotBlank(currentVO.getInstanceVersion()) && compositeVersionComparator(currentVO.getInstanceVersion(), doReassignCompositeVersion)>=0){
 									qt.setSelectable(true);
 								 }
 							 }
 						}
+                       } else {
+                         for(ScQt qt :  resDTO.getQtResultBean().getResultList()){
+                           qt.setSelectable(false);
+                         }
+                       }
 					}
-				}
+                    // #25627 -End.
+                }
 			qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
 			return resDTO.getQtResultBean();
 			}catch(Exception e){
