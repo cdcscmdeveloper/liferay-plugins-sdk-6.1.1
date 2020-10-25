@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -42,6 +43,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
@@ -78,6 +80,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -160,6 +164,7 @@ import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1368,6 +1373,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Pre render view.
 	 */
 	public void preRenderView() {
+		
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -4791,6 +4797,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}				
 		}	
 		return validDate;	
+	}
+	
+	public String getSkuDescription(ScRequestItem scRequestItem) {
+		String skuDesc = "";
+		//		if(scRequestItem.getCmItem().getCmSupplierItems() != null && scRequestItem.getCmItem().getCmSupplierItems().size() > 0){
+		//		skuDesc = scRequestItem.getCmItem().getCmSupplierItems().get(0).getSkuNumber();	
+		//		
+		//}
+		//29396-start
+		CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+		IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+		
+		catalogueReqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		catalogueReqDTO.setSupplierItemId(scRequestItem.getCmItem().getItemId());
+		catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+		CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSkuNumber(catalogueReqDTO);		
+		skuDesc = catalogueResDTO.getSkuNumber();
+		//29396-end
+		
+		return skuDesc;
 	}
 	
 	//12183 - Start
