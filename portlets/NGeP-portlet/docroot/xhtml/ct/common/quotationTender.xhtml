@@ -126,11 +126,9 @@
 							and ctBackingBean.newJustification()!= null}">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
 							</td>
-						<td colspan="3">
-						<p:inputTextarea autoResize="false" maxlength="1000"
-							disabled="true" rows="2" style="width:420px; margin-bottom:5px;"  
-							value="#{ctBackingBean.newJustification()}" />
-						</td>		
+							<td><p:inputText style="width:600px;" disabled="true"
+									value="#{ctBackingBean.newJustification()}" />
+							</td>
 						</h:panelGroup>					
 					</tr> 
 					<tr>
@@ -140,11 +138,9 @@
 						              or ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType != null }">
 							<td><p:outputLabel value="#{lbl['lbl.ct.proc.Justification']}" />
 							</td>
-						<td colspan="3">
-						<p:inputTextarea autoResize="false" maxlength="1000"
-							disabled="true" rows="2" style="width:420px; margin-bottom:5px;"  
-							value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType)}" />
-						</td>	
+							<td><p:inputText style="width:600px;" disabled="true"
+									value="#{ctBackingBean.getReasonDesc(ctBackingBean.managedBean.contractVer.ctContract.loa.justificationType)}" />
+							</td>
 						</h:panelGroup>					
 					</tr> 
 													
