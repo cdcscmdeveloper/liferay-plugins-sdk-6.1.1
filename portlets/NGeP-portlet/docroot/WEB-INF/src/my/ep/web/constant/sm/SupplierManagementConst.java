@@ -317,6 +317,10 @@ public class SupplierManagementConst {
 	public static final long PM_STAT_PENDING_PAYMENT = 20401;
 	public static final long PM_STAT_FAILED_PAYMENT = 20402;
 	public static final long PM_STAT_SUCCESS_PAYMENT = 20405;
+	
+	//26555 - START
+	public static final long PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT = 20400;
+	//26555 - END
 
 	// PO and Approver
 	public static final String PO_HQ = "UPS_PO";
@@ -1177,5 +1181,11 @@ public class SupplierManagementConst {
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
 	}
-//25792 - end	
+//25792 - end
+	
+	// 26555 -START
+	public long getPM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT() {
+		return PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT;
+	}
+	// 26555 -END
 }
