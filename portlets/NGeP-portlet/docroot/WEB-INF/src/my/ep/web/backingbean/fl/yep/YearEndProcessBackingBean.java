@@ -44,8 +44,10 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -76,6 +78,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 @ViewScoped
 public class YearEndProcessBackingBean extends
 		FulfilmentBaseBackingBean<YearEndProcessManagedBean> {
+	private static Logger log = EpLogger.getLogger(YearEndProcessBackingBean.class);
 
 	/**
 	 * 
@@ -757,5 +760,26 @@ public class YearEndProcessBackingBean extends
 				return true;
 			}
 		return false;
-	}    
+	}
+    public void hideYep(){
+    	log.info("inside hideyep");
+    	//String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
+		//String fulfilmentOrderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fulfilmentOrderId");
+		//String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
+		String docId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
+		//fulfilmentOrder.setFulfilmentOrderId(Long.parseLong(fulfilmentOrderId));
+		reqDTOflorder.setFlOrderId(Long.parseLong(docId));
+		//fulfilmentOrder.setDocType(docType);
+		//fulfilmentOrder.setDocNo(docNo);
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
+		reqDTO.setFulfilmentOrder(resDTO.getFlOrder());
+		fulfilmentOrderSO.hideYEPtasklist(reqDTO);
+    }
+// end 28377
 }
