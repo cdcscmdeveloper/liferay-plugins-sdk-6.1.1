@@ -42,7 +42,7 @@
 				<p:commandButton id="specificationcommitteeadd"
 					value="#{lbl['lbl.btn.add']}" process="@this" styleClass="BtnSpacing"
 					rendered="#{isCommitteeInfoEditable}"
-					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
+					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName, qTDetailBB.managedBean.taskName)}"
 					oncomplete="newspecificationcommittee.show();"
 					update="@(.scAddMember)" />
 	
