@@ -27,6 +27,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -44,6 +45,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -193,9 +196,15 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void retriveMeetingDetails(Long qtId) {
 		IQTMeetingSO qtMeetingSO;
+		IParameterSO parameterSO; //#26189
+		
 		try {
 			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			//#26189 -start-
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
+			//#26189 -end-
 			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
@@ -218,6 +227,33 @@ public class SupplierFinalizationMeetingBackingBean extends
 			if(scCommittee != null){
 				List<ScCommitteeMember> membersList = 
 							scCommittee.getScCommitteeMembers();
+				
+				// Start #26189:PK2.1 
+				if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) || 
+						committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					
+					for (ScCommitteeMember member : membersList) {
+						if(!ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
+								.equals(member.getMemberRole().getParameterCode())) {
+							
+							if(member.getRepresentativeType() == null && !ParameterConst.COMMITTEE_ROLE_SECRETARY
+									.equals(member.getMemberRole().getParameterCode())) {
+								ParameterReqDTO roleReqDTO = new ParameterReqDTO();
+								roleReqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+								roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+								
+								ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
+								member.setMemberRole(roleResDTO.getPmParameter());
+								
+								long memberRoleId = 378;
+								
+								member.setMemberRoleId(memberRoleId);
+							}
+						}
+					}
+				}
+				// End #26189:PK2.1
+				
 				if (CollectionUtils.isNotEmpty(membersList)) {
 					Collections.sort(membersList);
 					
@@ -1650,11 +1686,13 @@ if (CollectionUtils.isNotEmpty(
 									member.getRepresentativeType()
 										  		.getParameterCode()))) {
 					
-					throw new EpException(MessageConst.ERROR_100022, new String[]{
-							ResourceBundleUtils.getMessage("lbl.sc.representative.type", 
+					//#26189 -start-
+					throw new EpException(MessageConst.ERROR_760212, new String[]{
+							ResourceBundleUtils.getMessage("lbl.sc.please.select.representative.type", 
 						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
 						 			new FacesScopes().getUserLocale())
-					});						
+					});
+					//#26189 -end-
 				}
 			}
 		}
