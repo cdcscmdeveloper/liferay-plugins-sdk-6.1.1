@@ -1051,8 +1051,12 @@ public class QTCommitteBackingBean extends
 
 			if(Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation){
 				List<String> list = new ArrayList<String>();
-				taskName = taskName==null ? "":taskName;
-				if(!Arrays.asList(new String[]{SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE}).contains(taskName)){
+				if(QTStatusConst.QT_EVALUATION_PROPOSAL.equals(qtStatus)){
+					taskName = taskName==null ? "":taskName;
+					if(!Arrays.asList(new String[]{SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE}).contains(taskName)){
+						list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					}
+				}else{
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
 			    if(qtStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
@@ -2010,11 +2014,10 @@ public class QTCommitteBackingBean extends
 			return false;
 		} 
 		//25037-START
-//		else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus)
-//				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
-//						.equalsIgnoreCase(commType)) {
-//			return false;
-//		}
+		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) && 
+				ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+			return false;
+		}
 		//25037-END
 
 		return true;
