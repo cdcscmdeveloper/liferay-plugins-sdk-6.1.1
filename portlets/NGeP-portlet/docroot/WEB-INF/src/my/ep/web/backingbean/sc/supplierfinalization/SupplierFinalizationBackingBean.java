@@ -5503,7 +5503,6 @@ public class SupplierFinalizationBackingBean extends
 	public void reEvaluateByOptionEvent(String reEvaluateOption, boolean isSelected) {
 		log.info("reEvaluateByOptionEvent");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		String stageType="";
 		if (StringUtils.isNotBlank(
 					reEvaluateOption)) {
 			
@@ -5511,15 +5510,11 @@ public class SupplierFinalizationBackingBean extends
 			switch (reEvaluateOption) {
 				case "1" : 
 					scQtFinalization.setReEvaluateCompReq(isSelected);
-					stageType = "OC/TEC/FEC"; //25426
 				case "2" : 
 					scQtFinalization.setReEvaluateTechReq(isSelected);
-					stageType = "TEC/FEC"; //25426
 				case "3" : 
 					scQtFinalization.setReEvaluateFinReq(isSelected);
-					stageType = "FEC"; //25426
 			}
-			CheckInactiveCommiteeRole(scQtFinalization,stageType);
 		}
 	}
 	
