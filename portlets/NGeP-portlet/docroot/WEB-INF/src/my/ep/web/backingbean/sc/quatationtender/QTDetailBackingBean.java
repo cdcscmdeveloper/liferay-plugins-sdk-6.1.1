@@ -2992,8 +2992,29 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 					committeTabs.add(new TabBean(fcTitleName, tabType, null));
 				}
-			}// //#27502 - End
-		} 
+			}
+		} else {
+			if (scQt.getPmOrgProfile().getBpk() &&						
+					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
+				for (TabBean t : committeTabs) {
+					if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {	
+						newCommitteTabs.add(t);
+					} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {	
+						newCommitteTabs.add(t);
+					} 
+				}
+				
+				StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+				String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+				ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);				
+				newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+				
+				committeTabs = newCommitteTabs;
+			}//#27502 - End
+		}
 
 		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 
@@ -3405,21 +3426,37 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				
 			} else if (SCProcessNameConst.ASSIGN_FC_SECRETARY
 					.equalsIgnoreCase(taskName)) {
-				validateFCSecretaryDtl(qt.getFinalizationCommitte(), qt.getFinalizationSecratery());
 				
-				 committeSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								ICommitteSO.class);
-				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setToken(ctxToken);
-				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(payLoad);
-				committeReqDTO.setOutcome(outcome);
-				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
-				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-				committeReqDTO.setScQt(qt);
-				committeResDto = committeSO
-						.updateFinalizateSecrataryTask(committeReqDTO);
+				//#27502 - Start
+				if (scQt.getPmOrgProfile().getBpk()
+						&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
+					committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+					CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+					committeReqDTO.setToken(ctxToken);
+					committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+					committeReqDTO.setPayLoad(payLoad);
+					committeReqDTO.setOutcome(outcome);
+					committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+					committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+					committeReqDTO.setScQt(qt);
+					committeResDto = committeSO.updateFinalizateSecrataryTask(committeReqDTO);
+				}//#27502 - End
+				else {
+					validateFCSecretaryDtl(qt.getFinalizationCommitte(), qt.getFinalizationSecratery());
+
+					committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+					CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+					committeReqDTO.setToken(ctxToken);
+					committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+					committeReqDTO.setPayLoad(payLoad);
+					committeReqDTO.setOutcome(outcome);
+					committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
+					committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+					committeReqDTO.setScQt(qt);
+					committeResDto = committeSO.updateFinalizateSecrataryTask(committeReqDTO);
+				}
 
 			} else {
 				qtReqDTO.setToken(ctxToken);
