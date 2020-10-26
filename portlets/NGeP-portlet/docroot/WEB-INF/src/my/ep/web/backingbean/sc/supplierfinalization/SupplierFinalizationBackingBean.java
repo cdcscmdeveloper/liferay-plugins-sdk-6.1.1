@@ -4485,7 +4485,15 @@ public class SupplierFinalizationBackingBean extends
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setPmOrgProfile(getManagedBean().getScQt().getPmOrgProfile());
 			reqDTO.setCommitteeType(commType);
-
+			//#26169#109 - START
+			if(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(commType)){
+				PmOrgProfile currUserLoginOrgProfile = getPTJOrgProfileByLoginUser();
+				if(currUserLoginOrgProfile != null){
+					reqDTO.setOrgProfileId(currUserLoginOrgProfile.getOrgProfileId());
+					reqDTO.setIshigerCommitte(true);
+				}
+			}
+			//#26169 - END
 			CommitteResDTO resDTO = committeSO
 					.retrieveFcSecretaryUsersByCommType(reqDTO);
 
