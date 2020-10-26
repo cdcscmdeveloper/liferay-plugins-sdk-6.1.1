@@ -1963,7 +1963,10 @@ public class QTCommitteBackingBean extends
 			if (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return false;
-			} else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
+			} else if(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)
+					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+				return false;
+			}else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
 				} else if ((SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
 								&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
@@ -2013,12 +2016,6 @@ public class QTCommitteBackingBean extends
 						.equals(committeStatus)) {
 			return false;
 		} 
-		//25037-START
-		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) && 
-				ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
-			return false;
-		}
-		//25037-END
 
 		return true;
 
