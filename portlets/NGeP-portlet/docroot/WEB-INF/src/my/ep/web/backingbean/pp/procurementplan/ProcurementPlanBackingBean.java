@@ -2125,8 +2125,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 				remark = ppRemark;
 			}
-			
-		}
+		 }
 		return remark;
 	}
 	
@@ -7045,11 +7044,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				PpExpenditureItem PpExpenditureItemClone =  PpExpenditureItemList.get(j);
 
 				PpExpenditureItem ppExItem = new PpExpenditureItem();
-
+						    
 			    RequestContext.getCurrentInstance().execute("hideLovMsg();");
 			    
-			    
-	                ppExItem.setPmGlAccount(PpExpenditureItemClone.getPmGlAccount());
+		           ppExItem.setPmGlAccount(PpExpenditureItemClone.getPmGlAccount());
 	                ppExItem.setVotFundType(new PmParameter());
 	               // ppExItem.setBudgetAmt(PpExpenditureItemClone.getBudgetAmt());
 	               //ppExItem.setPlanAmt(PpExpenditureItemClone.getPlanAmt());
@@ -7181,7 +7179,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
             List<PpExpenditureItem> PpExpenditureItemList = null;
 			
-			
 			if (ParameterConst.VOT_MENGURUS.equals(this.getManagedBean().getParamExpenditure())) {
 				  log.info("B");			
 				 PpExpenditureItemList = this.getManagedBean().getClonePpExpenditureItemLs();
@@ -7248,7 +7245,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		    	 	
 		    	if (ppPlan.getPpExpenditureItems() != null && 
 		    			!ppPlan.getPpExpenditureItems().isEmpty()) {
-		    		
 		    		
 		    		PpExpenditureItem clonedPpExpItem =  PpExpenditureItemList.get(index);
 		    				
@@ -7347,8 +7343,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 idx -= 1;
 			 PpExpenditureItem original = items.get(idx);
 			 
+			 //24975@26102020 - start
+			 log.info("ExpCheckOriginalItem " + original.getExpenditureItemId() + original.isCloned() + original.isBrandNew());
 			 
-			 if (!(original.isCloned() && original.isBrandNew())) {	 
+			 if (!original.isCloned() && !original.isBrandNew()) {	
+				//24975@26102020 - end	 
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
@@ -7488,8 +7487,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					   Always disable Reason For Update for original ppItem*/
 					if (!ppItem.isOriginal()) {
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
-							 if (ppItem.getRecordStatusFlg() == 9){
-						            
+							 if (ppItem.getRecordStatusFlg() == 9){  
 								  ppItem.setCloneEnabled(true);
 								  ppItem.setDisableForPindaan(false);
 						          ppItem.setReasonForUpdateEnabled(true);
@@ -7596,7 +7594,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200822 - End
-
 }
 
 
