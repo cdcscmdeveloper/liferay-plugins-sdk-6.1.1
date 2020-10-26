@@ -11961,27 +11961,7 @@ public class SmApplicationUtil {
 				bean.getSelectedShareHolder().setDisableSemiProf(false);
 			}
 			
-			//#29315 - start
-			if (bean.getSelectedShareHolder().isProf()
-					|| bean.getSelectedShareHolder().isSemiProf()
-					|| bean.getSelectedShareHolder().isClerical()) {
-				bean.setFlagMandatoryEpfNo(true);
-				if (!EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmPersonnels())) {
-					for (SmPersonnel sp : bean.getSmAppl().getSmPersonnels()) {
-						if ( (!sp.getIdentificationNo().equalsIgnoreCase(bean.getSelectedShareHolder().getIdentificationNo()) 
-								&& StringUtils.isNotBlank(sp.getEpfNo())) 
-								&& ((bean.getSelectedShareHolder().isProf() && sp.isProf()) 
-										|| (bean.getSelectedShareHolder().isSemiProf() && sp.isSemiProf())
-										|| (bean.getSelectedShareHolder().isClerical() && sp.isClerical()))) {
-							bean.setFlagMandatoryEpfNo(false);
-							break;
-						}
-					}
-				}
-			} else {
-				bean.setFlagMandatoryEpfNo(false);
-			}
-			//#29315 - end
+			populateMandatoryEpfNo(bean);
 		}
 
 		if (bean.getSelectedShareHolder().getPersonnelId() != null
@@ -12029,6 +12009,11 @@ public class SmApplicationUtil {
 					.getSmAddress();
 			bean.setRoleStaffAndMailAddrReqd(isAddressReqdForRoleStaff(
 					bean.getSelectedShareHolder(), mailAddress));
+		}
+		
+		if (bean.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			populateMandatoryEpfNo(bean);
 		}
 	}
 
@@ -13865,4 +13850,28 @@ public class SmApplicationUtil {
 				return smAppl;
 			}
 			//END 25474
+	
+	//#29315 - start
+	public static void populateMandatoryEpfNo(SmApplicationManagedBean bean){
+		if (bean.getSelectedShareHolder().isProf()
+				|| bean.getSelectedShareHolder().isSemiProf()
+				|| bean.getSelectedShareHolder().isClerical()) {
+			bean.setFlagMandatoryEpfNo(true);
+			if (!EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmPersonnels())) {
+				for (SmPersonnel sp : bean.getSmAppl().getSmPersonnels()) {
+					if ( (!sp.getIdentificationNo().equalsIgnoreCase(bean.getSelectedShareHolder().getIdentificationNo()) 
+							&& StringUtils.isNotBlank(sp.getEpfNo())) 
+							&& ((bean.getSelectedShareHolder().isProf() && sp.isProf()) 
+									|| (bean.getSelectedShareHolder().isSemiProf() && sp.isSemiProf())
+									|| (bean.getSelectedShareHolder().isClerical() && sp.isClerical()))) {
+						bean.setFlagMandatoryEpfNo(false);
+						break;
+					}
+				}
+			}
+		} else {
+			bean.setFlagMandatoryEpfNo(false);
+		}
+	}
+	//#29315 - end
 }
