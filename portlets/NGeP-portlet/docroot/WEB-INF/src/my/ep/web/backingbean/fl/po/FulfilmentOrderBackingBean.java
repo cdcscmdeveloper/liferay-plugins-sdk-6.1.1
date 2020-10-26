@@ -2276,6 +2276,16 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+				//#29389 logan Start
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+									messageId = MessageConst.INFO_745024;
+								}
+								FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+										FacesMessage.SEVERITY_INFO, null,
+										MessageUtils.getMessage(messageId, 
+												new String[]{messagePrefix/*+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)*/+messageSuffix, docNo}, 
+												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				//#29389 logan End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_745016;
 				}
