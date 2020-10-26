@@ -267,9 +267,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
-		//28760 - start
-		generateCancelButton();
-		//28760 - end
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
@@ -2384,21 +2381,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 					}
 				}
-			}else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)){ //28760 - start
-				if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
-					if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
-						if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
-							throw new EpException(MessageConst.ERROR_775158);
-						}
-					}
-				}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
-					if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
-						if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
-							throw new EpException(MessageConst.ERROR_775158);
-						}
-					}
-				}
-			} //28760 - end
+			}
 			
 			if(!isItemRejected){
 				//overall remark is required
@@ -2609,12 +2592,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 		    }
-			
-			//28760 - start
-			if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
-				ppPlan.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-			}
-			//28760 - start
 
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
@@ -2682,9 +2659,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					messageId = MessageConst.INFO_723005;
-				}
+				} 
 				
 //				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 //					messageId = MessageConst.INFO_700008;
@@ -7619,33 +7594,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200822 - End
-	
-	//28760 - start
-	/** 
-	* generate cancel button rendered
-	 */
-	private void generateCancelButton(){
-		log.info("generateCancelButton - Start");
-		this.getManagedBean().setFlagCancelButton(false);
-		Long status =  this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
-		
-		if((ProcurementPlanConst.PPP_PENDING_REVISION.equals(status) && isRolePlanner())
-				|| (ProcurementPlanConst.PPE_PENDING_REVISION.equals(status) && isRolePlanner())
-				|| (ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(status) && isRolePlanner())
-				|| (ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status) && isRolePlanner())){
-			this.getManagedBean().setFlagCancelButton(true);
-		} else if((ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status) && isRoleVerifier())
-				|| (ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(status) && isRoleVerifier())){
-			this.getManagedBean().setFlagCancelButton(true);
-		} else if((ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status) && isRoleApprover())
-				|| (ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status) && isRoleApprover())
-				|| (ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(status) && isRoleApprover())
-				|| (ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(status) && isRoleApprover())){
-			this.getManagedBean().setFlagCancelButton(true);
-		}
-		log.info("generateCancelButton - End");
-	}
-	//28760 - end
 }
 
 
