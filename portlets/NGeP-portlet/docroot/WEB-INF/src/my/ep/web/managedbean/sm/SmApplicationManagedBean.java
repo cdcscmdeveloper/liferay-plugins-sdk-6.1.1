@@ -572,6 +572,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//26238
 	private Long disabledCategoryL3Id;
 	
+	//#29315
+	private boolean flagMandatoryEpfNo;
+	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4288,6 +4291,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSdoRemark(String sdoRemark) {
 		this.sdoRemark = sdoRemark;
+	}
+
+	public boolean isFlagMandatoryEpfNo() {
+		return flagMandatoryEpfNo;
+	}
+
+	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
+		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
 	}
 
 }
