@@ -278,7 +278,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		
 		getManagedBean().setDisplaySearchPage(false);
 		//28273: Disciplinary Action  - start - <26238>
-		if(selectedSmAppl.getSmSupplier().getTypeDisciplinaryAction() != null){
+		if(getManagedBean().getSmSupplier().getTypeDisciplinaryAction() != null){//26238 :Disciplinary Action - bug fix
 			getManagedBean().setAllowedToDoMaintenance(false);
 		}else {
 			setLoginUserAllowedToDoMaintenance();
