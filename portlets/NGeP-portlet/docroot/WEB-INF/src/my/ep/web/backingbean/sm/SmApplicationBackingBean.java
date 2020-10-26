@@ -6879,6 +6879,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
 		}
+		//#29315
+		getManagedBean().setFlagMandatoryEpfNo(false);
 		getManagedBean().setPopupAction("N");
 		SmApplicationUtil.initNewSmPersonnel(getManagedBean(), currentTab);
 
