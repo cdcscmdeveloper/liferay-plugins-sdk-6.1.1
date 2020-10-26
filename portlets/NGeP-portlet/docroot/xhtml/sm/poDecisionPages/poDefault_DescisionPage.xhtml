@@ -301,7 +301,8 @@
 					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();" 
 					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-					action="#{backingBean.cancelPOEscalationToApprover}" />
+					action="#{backingBean.cancelPOEscalationToApprover}"
+					partialSubmit="true" process="@this" />
 			</div>
 			<p:blockUI block="poEscalateBlockPanel" widgetVar="poEscalateBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
