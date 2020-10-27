@@ -9,6 +9,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 
     <h:panelGroup id="ppExpenditureBCloneid">
 		<p:panel  header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
+	    	<p:messages id="messageId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>		
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
@@ -60,7 +61,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:panel header="#{lbl['lbl.pp.result.plan']}" toggleable="true">
 		<p:dataTable tableStyleClass = "fixedTable" id="dtclonepitemsBsearchresults" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		    value="#{pPlanBackingBean.ppEpItemsDataModel}"  var="epItem" selection="#{pPlanBackingBean.managedBean.clonePpExpenditureItemLs}" rowKey="#{epItem.expenditureItemId}"
-				     width="50%" rows="10">
+				     width="50%" rows="10" rowStyleClass="#{pPlanBackingBean.disableDuplicateAccountId(epItem.pmGlAccount.glAccCode) ? 'ui-helper-hidden' : ''}">
 		    
 		      <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExB"/>
           	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}"  update=":form:btnSelectExB"/>
