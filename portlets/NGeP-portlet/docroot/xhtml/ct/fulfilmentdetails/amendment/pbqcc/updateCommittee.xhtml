@@ -72,7 +72,7 @@
 						    value="#{ctUpdCommitteeVar.memberRole.parameterId}" 
 						     style="width: 110px;margin-bottom: 5px;" required="true" requiredMessage="#{lbl['lbl.ct.role.mandatory']}" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctUpdCommitteeVar)}" />
-							<p:ajax event="valueChange" process="@form" partialSubmit="true"  
+							<p:ajax event="valueChange" process="@this" partialSubmit="true"  
 							   update=":form:panelHeaderException, updCommitteeTable"
 							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar)}"></p:ajax>
 							</p:selectOneMenu>
@@ -92,7 +92,7 @@
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{amendmentBackingBean.getRepresentativeDropdown()}" />
-							<p:ajax event="change" process="@this" update="updCommitteeRepresentPnlGrp" partialSubmit="true"
+							<p:ajax event="valueChange" process="@this" update="updCommitteeRepresentPnlGrp" partialSubmit="true"
 								listener="#{amendmentBackingBean.onChangeRepType(ctUpdCommitteeVar, ctUpdCommitteeVar.representativeType.parameterId)}"></p:ajax>
 					</p:selectOneMenu>
 				</h:panelGroup>
