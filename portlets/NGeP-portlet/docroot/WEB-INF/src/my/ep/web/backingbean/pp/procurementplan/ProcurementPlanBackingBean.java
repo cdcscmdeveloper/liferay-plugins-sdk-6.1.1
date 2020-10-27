@@ -630,6 +630,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								if (!ppItem.isDisableForPindaan()) {
 									ppItem.setDisableForPindaan(true);
 								}
+								if (ppItem.isEnableRevise()) {
+									ppItem.setEnableRevise(false);
+								}
 								log.info("isDisableForPindaan= "+ppItem.isDisableForPindaan()
 										+", isCloneEnabled= "+ppItem.isCloneEnabled());
 							}
@@ -806,6 +809,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						pp.setCloneEnabled(true);
 						pp.setDisableForPindaan(true);
 						pp.setStatusEnabled(true);
+						
+						if (pp.isEnableRevise()) {
+							pp.setEnableRevise(false);
+						}
+						
 					} else {
 						pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 						pp.setCloneEnabled(false);
@@ -825,6 +833,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				pp.setDisableForPindaan(false);
 				pp.setStatusEnabled(false);
 			}
+			
+			// Control revise checkbox in VO and PA screen
+			if (DbValueConst.RECORD_STATUS_ACTIVE == pp.getRecordStatusFlg()) {
+				pp.setEnableRevise(true);
+			}
+			
 			log.info("*******************************FINAL VALUES****************************************");
 			log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+
 					", getFromPpItem= "+pp.getFromPpItem());
@@ -1255,6 +1269,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setAllowAnotherPindaan(true);
 								}
 								log.info("allowAnotherPindaan for "+ ppItem.getProcurementTitle()+" is "+ppItem.isAllowAnotherPindaan());
+							}
+							
+							// Control revise checkbox in VO and PA screen
+							if (!ppItem.isBrandNew()) {
+								if (ppItem.getFromPpItem() == null) {
+									ppItem.setEnableRevise(true);
+								}
+							} else {
+								if (ppItem.getFromPpItem() != null) {
+									ppItem.setEnableRevise(true);
+								}
 							}
 						}
 					}
