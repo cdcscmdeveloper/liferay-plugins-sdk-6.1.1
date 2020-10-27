@@ -381,6 +381,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setModeReviewEditable(false);
 		this.getManagedBean().setModeEditable(false);
 		
+		if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
+				if (this.getManagedBean().getSelectedPlan().getPpProcurementItems() != null &&
+						this.getManagedBean().getSelectedPlan().getPpProcurementItems().size() > 0) {
+					for (PpProcurementItem pp : this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
+						pp.setViewMode(true);
+					}
+				}
+			}
+		}
+		
+		log.info("STATUS: " + status);
+		
 		if(!isRoleBPK()){
 	
 			
