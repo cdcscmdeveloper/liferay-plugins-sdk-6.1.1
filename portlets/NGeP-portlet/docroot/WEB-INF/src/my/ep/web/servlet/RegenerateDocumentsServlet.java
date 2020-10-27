@@ -23,6 +23,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.PasswordUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
@@ -71,7 +72,18 @@ public class RegenerateDocumentsServlet extends HttpServlet {
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(new Long(qtId));
+			
+			/*
+			 * TRACE HI-EXEC TIME
+			 * Development #29385
+			 */
+			long startTime = System.currentTimeMillis();
 			ScQt qt = qtDetailSO.retriveQTDetails(reqDTO).getQtDetail();
+			SLAUtils.getInstance().logHiExecInfo("QT","RegenerateDocumentsServlet.doGet", startTime);
+			/*
+			 * END
+			 */
+			
 			if(qt!=null){
 				bb.getManagedBean().setQt(qt);
 				bb.reGenerateDocuments(qt.getQtId(), QTFieldConst.FIELD_QT_VALIDITY_PERIOD);

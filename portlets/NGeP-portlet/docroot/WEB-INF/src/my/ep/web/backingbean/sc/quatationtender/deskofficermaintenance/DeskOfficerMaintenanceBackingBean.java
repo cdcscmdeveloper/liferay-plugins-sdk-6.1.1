@@ -86,6 +86,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -1117,7 +1118,18 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			for (Map.Entry<Long, PmUser> entry : this.getManagedBean().getQtNoDeskOfficerMap().entrySet()){
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(entry.getKey());
+				
+				/*
+				 * TRACE HI-EXEC TIME
+				 * Development #29385
+				 */
+				long startTime = System.currentTimeMillis();
 				resDTO = detailSO.retriveQTDetails(reqDTO);
+				SLAUtils.getInstance().logHiExecInfo("QT","DeskOfficerMaintenanceBackingBean.submitReassignmentForApproval", startTime);
+				/*
+				 * END
+				 */
+				
 				ScQt qt = resDTO.getQtDetail();
 			
 				reqDTO = null;

@@ -53,6 +53,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -138,7 +139,16 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 				tenderReqDTO.setBdgDtlsReq(true);
 				
 				QuationTenderResDTO tenderResDTO = null;
+				/*
+				 * TRACE HI-EXEC TIME
+				 * Development #29385
+				 */
+				long startTime = System.currentTimeMillis();
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+				SLAUtils.getInstance().logHiExecInfo("QT","QtMultipleCloneBackingBean.addToClone", startTime);
+				/*
+				 * END
+				 */
 				ScQt copyScqt = tenderResDTO.getQtDetail();
 				selectedScqt.setQtNo(copyScqt.getQtNo());
 				int i=0;
