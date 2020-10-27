@@ -2425,14 +2425,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			SCQuotationTenderDataType payload = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
 		    ScQt scQt = this.getManagedBean().getQt();
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmuserContactpersonList())){
-				Map<Long, String> map = new HashMap<Long, String>();
-				for(ScQtContactPerson p:this.getManagedBean().getPmuserContactpersonList()){
-					map.put(p.getUser().getUserId(), p.getUser().getLoginId());
-				}
-				this.getManagedBean().getRequestContent().setRequestContent(map);
+			if(CollectionUtils.isEmpty(this.getManagedBean().getPmuserContactpersonList())){
+				this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());
 			}
+
+			Map<Long, String> map = new HashMap<Long, String>();
+			for(ScQtContactPerson p:this.getManagedBean().getPmuserContactpersonList()){
+				map.put(p.getUser().getUserId(), p.getUser().getLoginId());
+			}
+			this.getManagedBean().getRequestContent().setRequestContent(map);
 			
 			reqDTO.setApproverAction(this.getManagedBean().getAction());
 			reqDTO.setPayLoad(payload);

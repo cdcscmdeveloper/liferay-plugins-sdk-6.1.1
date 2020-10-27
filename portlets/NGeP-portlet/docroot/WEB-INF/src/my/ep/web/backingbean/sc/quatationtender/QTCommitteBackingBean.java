@@ -1051,8 +1051,12 @@ public class QTCommitteBackingBean extends
 
 			if(Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation){
 				List<String> list = new ArrayList<String>();
-				taskName = taskName==null ? "":taskName;
-				if(!Arrays.asList(new String[]{SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE}).contains(taskName)){
+				if(QTStatusConst.QT_EVALUATION_PROPOSAL.equals(qtStatus)){
+					taskName = taskName==null ? "":taskName;
+					if(!Arrays.asList(new String[]{SCProcessNameConst.ASSIGN_FEC_COMMITTEE, SCProcessNameConst.ASSIGN_TEC_COMMITTEE}).contains(taskName)){
+						list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					}
+				}else{
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
 			    if(qtStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)){
@@ -1959,7 +1963,10 @@ public class QTCommitteBackingBean extends
 			if (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return false;
-			} else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
+			} else if(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)
+					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
+				return false;
+			}else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
 				} else if ((SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
 								&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
@@ -2009,13 +2016,6 @@ public class QTCommitteBackingBean extends
 						.equals(committeStatus)) {
 			return false;
 		} 
-		//25037-START
-//		else if (QTStatusConst.CMT_COMPLETED.equals(committeStatus)
-//				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
-//						.equalsIgnoreCase(commType)) {
-//			return false;
-//		}
-		//25037-END
 
 		return true;
 
@@ -2342,16 +2342,19 @@ public class QTCommitteBackingBean extends
 		}
 		return isPresent;
 	}
-	private boolean isEligibleStatusForBtns(Long statusId) {//#25037
-		return isEligibleStatusForBtns(statusId, "");
-	}
-	private boolean isEligibleStatusForBtns(Long statusId, String commType) {
-		//#25037
+	private boolean isEligibleStatusForBtns(Long statusId, String commType) {//#25037
 		boolean specCheck = false;
 		if(commType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
 			specCheck = Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId) && this.getManagedBean().isValidFor25037();
+			if(specCheck && this.getManagedBean().getQt()!=null){
+				ScQt scQt = this.getManagedBean().getQt();
+				ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,scQt.getQtId());
+				wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+				Long specStatusId = wfStatus.getPmStatus()==null ? 0L:wfStatus.getPmStatus().getStatusId();
+				Long[] specStatusArr = new Long[]{QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION};
+				specCheck = !Arrays.asList(specStatusArr).contains(specStatusId);
+			}
 		}else{
-			//specCheck = isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 			specCheck = Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId) && this.getManagedBean().isValidFor25037();
 		}
 		return (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || specCheck);
