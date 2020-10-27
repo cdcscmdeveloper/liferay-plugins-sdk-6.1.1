@@ -72,8 +72,8 @@
 						    value="#{ctUpdCommitteeVar.memberRole.parameterId}" 
 						     style="width: 110px;margin-bottom: 5px;" required="true" requiredMessage="#{lbl['lbl.ct.role.mandatory']}" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctUpdCommitteeVar)}" />
-							<p:ajax event="change" process="@form" partialSubmit="true"  
-							   update=":form:panelHeaderException, updCommitteeRepresentPnlGrp"
+							<p:ajax event="valueChange" process="@form" partialSubmit="true"  
+							   update=":form:panelHeaderException, updCommitteeTable"
 							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
