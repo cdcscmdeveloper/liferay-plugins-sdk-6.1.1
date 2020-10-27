@@ -119,6 +119,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -2604,7 +2605,16 @@ public class QTDocumentsBackingBean extends
 			qtReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			qtReqDTO.setBdgDtlsReq(true);
 			QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
+			/*
+			 * TRACE HI-EXEC TIME
+			 * Development #29385
+			 */
+			long startTime = System.currentTimeMillis();
 			qtResDTO = qtDtlSO.retriveQTDetails(qtReqDTO);
+			SLAUtils.getInstance().logHiExecInfo("QT","QTDocumentsBackingBean.generateKenyataanTawaranPembekalPdfFromVelocity", startTime);
+			/*
+			 * END
+			 */
 			ScQt scQt = qtResDTO.getQtDetail();
 			if (this.getManagedBean().getQt().isZonal()) {
 				if (scQt.getScQtSupplierCriteria() != null &&
