@@ -4609,7 +4609,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 			} else if (committeMember.getMemberRole() == null || committeMember.getMemberRoleId() == null) {
 				setTabValue("MET");
-				new EpException(MessageConst.ERROR_750025);
+				throw new EpException(MessageConst.ERROR_750025); //#29403
 			}
 		}
 		
@@ -6388,7 +6388,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getFilteredCommitteeMembers().clear();
 				}
 			}
-			
+			setTabValue("DCN"); //#29403
 			
 		}
 		/**
@@ -6466,19 +6466,33 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 * @throws Exception  if an exception occurred
 		 * @see    Exception
 		 */
-		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
-			if (parameterId == null || parameterId.intValue() == 0) {
-				return;
-			}
+		//#29403 start
+//		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
+		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember) throws Exception { 
+			
 			int counter = 0;
-			String parametercode = ParameterHelper.getInstance().getPmParameterById(parameterId).getParameterCode();
-			if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				for (CtCommitteeMember committeMember : getManagedBean().getUpdatedCommitteeMembers()) {  
-					if (committeMember.getMemberRole() != null && committeMember.getMemberRole().getParameterId() != null
-							&& committeMember.getMemberRoleId().longValue() == parameterId.longValue()) {
+			String curParameterCode = "";
+			
+			if (curCommitteeMember.getMemberRoleId() != null){
+				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
+			}else{
+				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId()).getParameterCode();
+			}
+			
+			if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				for (CtCommitteeMember allCommitteMember : getManagedBean().getUpdatedCommitteeMembers()) {
+					String allParameterCode = "";
+					if (curCommitteeMember.getMemberRoleId() != null){
+						allParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
+					}else{
+						allParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId()).getParameterCode();
+					}
+					
+					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
+							&& allParameterCode == curParameterCode) {
 						
-						if(committeMember.getRepresentativeType() != null && committeMember.getRepresentativeType().getParameterId() != null) {
-							committeMember.setRepresentativeType(null);
+						if(allCommitteMember.getRepresentativeType() != null && allCommitteMember.getRepresentativeType().getParameterId() != null) {
+							allCommitteMember.setRepresentativeType(null);
 						}
 						
 						counter++;
@@ -6486,13 +6500,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							throw new EpException(MessageConst.ERROR_750008);
 						}
 					}else{
-						if (parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || parametercode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
-							if(committeMember.getRepresentativeType() != null)
-								committeMember.getRepresentativeType().setParameterId(null);
+						if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
+							if(allCommitteMember.getRepresentativeType() != null)
+								allCommitteMember.getRepresentativeType().setParameterId(null);
 					}
 				}
 			}
 		}
+		//#29403 end
 		
 		/**
 		 * The method used to delete the selected meeting committee(s).
