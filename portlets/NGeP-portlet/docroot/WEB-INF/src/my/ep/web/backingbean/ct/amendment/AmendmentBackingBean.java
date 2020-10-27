@@ -6501,18 +6501,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					
 					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
-							&& allParameterCode == curParameterCode) {
-						
-						if(allCommitteMember.getRepresentativeType() != null && allCommitteMember.getRepresentativeType().getParameterId() != null) {
-							allCommitteMember.setRepresentativeType(null);
-						}
-						
-						counter++;
-						
-					}else{
-						if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
-							if(allCommitteMember.getRepresentativeType() != null)
-								allCommitteMember.getRepresentativeType().setParameterId(null);
+							&& allParameterCode == curParameterCode) {					
+						counter++;	
 					}
 				}
 			}
@@ -6664,13 +6654,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if(ctUpdatedMember.getPmUser().getUserId().equals(originalCtMember.getPmUser().getUserId())) {
 						if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
 							isFound = true;
-
-							if(ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
-								if(!originalCtMember.getRepresentativeType().getParameterId().equals
-										(ctUpdatedMember.getRepresentativeType().getParameterId())) {
-									isUpdateNeeded = true;
+							
+							//#29403 start
+							if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
+									&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+								if(ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
+									if(!originalCtMember.getRepresentativeType().getParameterId().equals
+											(ctUpdatedMember.getRepresentativeType().getParameterId())) {
+										isUpdateNeeded = true;
+									}
 								}
 							}
+							//#29403 end
+							
 							if(ctUpdatedMember.getMemberRole().getParameterId() != null) {
 								if(!originalCtMember.getMemberRole().getParameterId().equals 
 										(ctUpdatedMember.getMemberRole().getParameterId())) {
