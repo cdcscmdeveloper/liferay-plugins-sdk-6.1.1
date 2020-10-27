@@ -205,7 +205,7 @@
 		    </p:panel>
     </p:dialog>
 		<p:confirmDialog id="updLatestCommitteeDlg" widgetVar="updLatestCommitteeDlg" message="#{lbl['lbl.sc.update.based.on.attendance']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
+                           severity="alert"  closable="false" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
                   <div class="ppRightBtn">
                   <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form" 
 		              process="@this" partialSubmit="true" 
@@ -215,7 +215,7 @@
 		          </div>
             </p:confirmDialog>
             <p:confirmDialog id="validateLatestCommitteeDlg" widgetVar="validateLatestCommitteeDlg" message="#{lbl['lbl.sc.update.same.committee.member']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
+                           severity="alert"  closable="false" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
                   <div class="ppRightBtn">
                   <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form" oncomplete="validateLatestCommitteeDlg.hide();" />
 		          </div>
