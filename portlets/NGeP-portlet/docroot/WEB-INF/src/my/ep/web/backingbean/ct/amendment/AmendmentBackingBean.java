@@ -4357,7 +4357,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+//			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+			ctCommitteeMembers = getFilteredCommitteeMembers(); //#29403
 		} else {
 			ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 		}
@@ -4534,7 +4535,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+//			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+			ctCommitteeMembers = getFilteredCommitteeMembers(); //#29403
 		} else {
 			ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 		}
@@ -6492,12 +6494,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				for (CtCommitteeMember allCommitteMember : getManagedBean().getUpdatedCommitteeMembers()) {
+				for (CtCommitteeMember allCommitteMember : getFilteredCommitteeMembers()) {
 					String allParameterCode = "";
-					if (curCommitteeMember.getMemberRoleId() != null){
-						allParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
+					if (allCommitteMember.getMemberRoleId() != null){
+						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
 					}else{
-						allParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId()).getParameterCode();
+						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRole().getParameterId()).getParameterCode();
 					}
 					
 					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
