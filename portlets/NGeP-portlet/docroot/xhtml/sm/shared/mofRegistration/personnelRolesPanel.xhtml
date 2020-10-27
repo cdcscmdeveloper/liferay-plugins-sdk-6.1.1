@@ -205,7 +205,7 @@
 								<tr>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.prof}">
-											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, :#{p:component('equiPerDtlPan')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
@@ -221,7 +221,7 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableSemiProf}"
 											value="#{backingBean.managedBean.selectedShareHolder.semiProf}">
-											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, :#{p:component('equiPerDtlPan')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
 										</p:selectBooleanCheckbox></td>
@@ -238,7 +238,7 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || (backingBean.managedBean.selectedShareHolder.equityOwner and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
-										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
+										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog]), :#{p:component('equiPerDtlPan')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
 										</p:selectBooleanCheckbox>
 									</td>
