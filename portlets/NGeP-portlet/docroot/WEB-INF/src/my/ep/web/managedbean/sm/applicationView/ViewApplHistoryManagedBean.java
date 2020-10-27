@@ -51,6 +51,8 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
+	private SmMofAccount currMof;
+
 	//25792 - start
 	private Date currentDate = new Date();
 	private String searchAccountType;
@@ -351,6 +353,13 @@ public class ViewApplHistoryManagedBean extends
 		this.cancellationAttachment = cancellationAttachment;
 	}
 
+	public SmMofAccount getCurrMof() {
+		return currMof;
+	}
+
+	public void setCurrMof(SmMofAccount currMof) {
+		this.currMof = currMof;
+	}
 	//25792 - start
 	public Date getCurrentDate() {
 		return currentDate;
