@@ -747,6 +747,9 @@ public class YearEndProcessBackingBean extends
 		}
 
 		// end - 28377 razin
+		//29440 start
+		flOrderBB.getManagedBean().setFlOrderId(Long.valueOf(flDocId));
+		//29440 end
 		flOrderBB.getManagedBean().setYep(true);
 		return navgPage;
 	}
@@ -766,25 +769,5 @@ public class YearEndProcessBackingBean extends
 			}
 		return false;
 	}
-    public void hideYep(){
-    	log.info("inside hideyep");
-    	//String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
-		//String fulfilmentOrderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fulfilmentOrderId");
-		//String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
-		String docId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
-		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
-		//fulfilmentOrder.setFulfilmentOrderId(Long.parseLong(fulfilmentOrderId));
-		reqDTOflorder.setFlOrderId(Long.parseLong(docId));
-		//fulfilmentOrder.setDocType(docType);
-		//fulfilmentOrder.setDocNo(docNo);
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
-		reqDTO.setFulfilmentOrder(resDTO.getFlOrder());
-		fulfilmentOrderSO.hideYEPtasklist(reqDTO);
-    }
 // end 28377
 }
