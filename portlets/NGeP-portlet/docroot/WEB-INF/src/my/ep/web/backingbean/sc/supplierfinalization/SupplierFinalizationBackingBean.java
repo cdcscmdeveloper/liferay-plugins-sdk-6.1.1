@@ -2416,8 +2416,7 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
-			//#26169 #66 -end-
-
+			//#26169 - END
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			if ( (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 						.equals(currentStatusId) || 
@@ -4248,7 +4247,15 @@ public class SupplierFinalizationBackingBean extends
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setPmOrgProfile(getManagedBean().getScQt().getPmOrgProfile());
 			reqDTO.setCommitteeType(commType);
-
+			//#26169#109 - START
+			if(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(commType)){
+				PmOrgProfile currUserLoginOrgProfile = getPTJOrgProfileByLoginUser();
+				if(currUserLoginOrgProfile != null){
+					reqDTO.setOrgProfileId(currUserLoginOrgProfile.getOrgProfileId());
+					reqDTO.setIshigerCommitte(true);
+				}
+			}
+			//#26169 - END
 			CommitteResDTO resDTO = committeSO
 					.retrieveFcSecretaryUsersByCommType(reqDTO);
 
@@ -8329,6 +8336,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		
 		//#26169 #38- END
-
+		
 }
 // ***19336
