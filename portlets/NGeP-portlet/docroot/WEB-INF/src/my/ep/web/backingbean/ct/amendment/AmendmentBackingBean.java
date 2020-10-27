@@ -4526,6 +4526,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		boolean representativeOfficer = true;
 		boolean representativeDirector = true;
 		
+		//#29403 start
+		int chairpersonCount = 0;
+		//#29403 end
+		
 		
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
@@ -4550,6 +4554,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//#29403 end
 				
 				if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+					chairpersonCount++; //#29403
 					chairpersonRole = false;
 				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 					secretaryRole = false;
@@ -4619,6 +4624,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new String[]{ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
+		
+		//#29403 start
+		if (chairpersonCount>1){
+			setTabValue("MET");
+			throw new EpException(MessageConst.ERROR_750008);
+		}
+		//#29403 end
 		
 		//#26687 start
 		if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)
@@ -6496,15 +6508,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 						
 						counter++;
-						if (counter == 2) {
-							throw new EpException(MessageConst.ERROR_750008);
-						}
+						
 					}else{
 						if (curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) || curParameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER))
 							if(allCommitteMember.getRepresentativeType() != null)
 								allCommitteMember.getRepresentativeType().setParameterId(null);
 					}
 				}
+			}
+			if (counter > 1) {
+				throw new EpException(MessageConst.ERROR_750008);
 			}
 		}
 		//#29403 end
