@@ -12,7 +12,7 @@
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
    			<!-- 29430 -->
-			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide();return false;"
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" oncomplete="submissionConfirmDlg.hide()"
 					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
