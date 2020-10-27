@@ -348,6 +348,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				AttachreqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 				AttachreqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
 				resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
+			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_NONAP58_PROCEED)){
+				//29440 start
+				Long docId = this.getManagedBean().getFlOrderId();
+				log.info("29440: docid: "+docId);
+				FulfilmentReqDTO reqDTOnonAP58 = new FulfilmentReqDTO();
+				FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
+				reqDTOflorder.setFlOrderId(docId);
+				resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
+				reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+				resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
+				log.info("29440: "+resDTO.isSuccessful());
+				//29440 end
 			}
 			//end 28377			
 			if(resDTO.isSuccessful()) {
@@ -360,7 +372,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					messageId = MessageConst.INFO_700007;
 				}
 				//#28377 - razin
-				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_NONAP58_PROCEED)) {
 					messageId = MessageConst.INFO_700005;
 				}
 				//#28377 - end razin
@@ -385,9 +397,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				renewSesionObject();
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !hasFactoringUserRole()) {
+				if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !hasFactoringUserRole())) {
 					Map<String, String> paramMap = new HashMap<String, String>();
 					paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getOrderNo());
 					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -398,7 +410,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}else{
 						commonBackingBean.getManagedBean().setReportDisplayName(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER));
 					}
-					
 					commonBackingBean.getManagedBean().setParamMap(paramMap);
 					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 				}
@@ -1297,7 +1308,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole()) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole() || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_NONAP58_PROCEED)) {
 			if(hasFactoringUserRole()) {
 				validateFulfillmentOrder(outcome);
 			}
@@ -1314,7 +1325,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
-		} else {
+		}else {
 			validateFulfillmentOrder(outcome);
 			//28377 - uncomment function
 			setTextBeforeSign(outcome);
@@ -2376,4 +2387,14 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	}
 	
 //	28377 - end
+	  //29440 start
+	  public void proceedNonAP58(){
+	    	log.info("inside hideyep");
+	    	 try {
+				  signingAction(BpmOutcomeConst.BPM_NONAP58_PROCEED);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	    }
+	  //29440 end
 }
