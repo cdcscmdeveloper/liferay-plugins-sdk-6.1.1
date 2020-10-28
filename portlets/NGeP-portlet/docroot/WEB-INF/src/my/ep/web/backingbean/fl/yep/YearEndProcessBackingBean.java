@@ -2,6 +2,7 @@ package my.ep.web.backingbean.fl.yep;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,7 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -62,6 +65,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.yep.YearEndProcessManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -770,4 +774,21 @@ public class YearEndProcessBackingBean extends
 		return false;
 	}
 // end 28377
+    //29440 start
+    public void generateReport(String docType, String docNo) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		String reportName = ReportConst.FL_NGEP_PURCHASE_ORDER;
+		if(reportName!=null) {
+			try {
+				generateReport(reportName, paramMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new EpException("Report is not available for this document.");
+		}
+	}
+    //29440 end
 }
