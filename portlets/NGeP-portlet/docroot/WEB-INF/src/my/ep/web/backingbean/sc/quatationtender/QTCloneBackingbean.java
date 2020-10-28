@@ -112,6 +112,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -751,7 +752,16 @@ public class QTCloneBackingbean extends
 			
 			QuationTenderResDTO tenderResDTO = null;
 			ScQt scQt = this.getManagedBean().getQt();
+			/*
+			 * TRACE HI-EXEC TIME
+			 * Development #29385
+			 */
+			long startTime = System.currentTimeMillis();
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+			SLAUtils.getInstance().logHiExecInfo("QT","QTCloneBackingbean.addToClone", startTime);
+			/*
+			 * END
+			 */
 			ScQt copyScqt = tenderResDTO.getQtDetail();
 			
 			FacesContext context = FacesContext.getCurrentInstance();
