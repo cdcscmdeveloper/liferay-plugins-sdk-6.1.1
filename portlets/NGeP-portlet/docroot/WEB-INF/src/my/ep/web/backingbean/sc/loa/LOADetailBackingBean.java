@@ -511,6 +511,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// setting supplier proposal
 			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
 			
+			// #11134 - start
+			// Remarks
+			scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
+					scLoa.getCurrentStatus(),
+					scLoa.getScLoaRemarks(), ScLoaRemark.class));
+			// #11134 - end
+			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
 //			isSSTRegActive();
@@ -3695,6 +3702,34 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			//#29173 - remove old commented block
 		}
+		
+		// #11134 - Start
+		if(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			
+			boolean remarksEmpty = false;
+			
+			// check if remark is empty
+			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
+			if(CollectionUtils.isNotEmpty(scLoaRemarks)){
+				for(ScLoaRemark each : scLoaRemarks){
+					if(StringUtils.isEmpty(each.getRemark())){
+						remarksEmpty = true;
+						break;
+					}
+				}
+			}else {
+				remarksEmpty = true;
+			}
+			
+			//throw message
+			if(remarksEmpty){
+				throw new EpException(
+						MessageConst.ERROR_716024);
+				 // Remark is mandatory for rejection.
+			}
+		}
+		// #11134 -Start
 
 		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
 				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
