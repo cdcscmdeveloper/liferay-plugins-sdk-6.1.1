@@ -579,6 +579,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25138- total max score - end
 	//#25138 - set eval status
 	private Long evalStatus;
+	//#25138 - start 
+	private Boolean singleSpecQuestion;
+	
+	private List<ScQtCheckList> singleItemCheckList;
+	//#25138 - end
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3751,4 +3756,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evalStatus = evalStatus;
 	}
 	//#25138 - set eval status - end
+	//#25138 - start
+	public boolean getSingleSpecQuestion() {
+		return singleSpecQuestion;
+	}
+
+	public void setSingleSpecQuestion(boolean singleSpecQuestion) {
+		this.singleSpecQuestion = singleSpecQuestion;
+	}
+
+	public List<ScQtCheckList> getSingleItemCheckList() {
+		return singleItemCheckList;
+	}
+
+	public void setSingleItemCheckList(List<ScQtCheckList> singleItemCheckList) {
+		this.singleItemCheckList = singleItemCheckList;
+	}
+	//#25138 - end
 }
