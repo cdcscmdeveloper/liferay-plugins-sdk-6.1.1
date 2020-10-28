@@ -12,9 +12,8 @@
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
    			<!-- 29430 -->
-			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" oncomplete="submissionConfirmDlg.hide()"
-					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}">
-					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}" />
 				</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.proceed']}"
 				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
