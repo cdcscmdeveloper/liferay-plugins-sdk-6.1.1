@@ -2628,8 +2628,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}						
 				}
-				SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,statusBean);
-				SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(searchFilterBeanOr1,searchFilterBean1);
+				//SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,highAuthFilterBean);
+				SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(secretaryFilterBean,searchFilterBean1);
 				searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 				qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);					
 					
