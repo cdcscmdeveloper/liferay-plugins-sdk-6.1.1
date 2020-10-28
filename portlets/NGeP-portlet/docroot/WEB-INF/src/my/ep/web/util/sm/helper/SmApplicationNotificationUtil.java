@@ -43,8 +43,11 @@ public class SmApplicationNotificationUtil {
 			reqDTO.setPaymentMethods("FPX dan kad kredit");
 			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
 					smAppl, isPoUser));
-		} else if (smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+		} 
+		//10908
+		else if ((smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) && (reqDTO.getPoOrApproverDecision()
+				.equalsIgnoreCase("Reject"))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
 					smAppl, supplier, basicInfo, approvalRemarks,
 					supplierRemarks));
@@ -87,8 +90,6 @@ public class SmApplicationNotificationUtil {
 			reqDTO.setCompanyName(supplier.getCompanyName());
 			reqDTO.setApproverOrPoRemarks(applRejectionRemarks);
 			reqDTO.setMofNum(mofNo);
-			reqDTO.setApplSubmitDate(smAppl.getApplSubmitDate());
-			reqDTO.setApplNo(smAppl.getApplNo());
 
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
