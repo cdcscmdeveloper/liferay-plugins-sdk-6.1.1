@@ -336,6 +336,13 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	<p:outputPanel id="remarksPanel" rendered="#{isSupplierAckStatus}">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}"
+			showAttachment="false" 
+			readonly="false" />
+	</p:outputPanel>
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 
 </ui:composition>
