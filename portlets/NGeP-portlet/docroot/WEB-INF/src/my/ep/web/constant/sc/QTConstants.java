@@ -20,6 +20,11 @@ public interface QTConstants {
 	public static final String PUBLISH_DATE = "publishDate";
 	public static final String CLOSED_DATE = "closingDate";
 	public static final String STATUS = "";
+	
+	/* Enhancement 27668 START*/
+	public static final String FINALIZATION_SECRETARY_LOGIN_ID = "finalizationSecratery.loginId";
+	public static final String FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID = "finalization.higherSecretary.loginId";
+	/*  Enhancement 27668 END */
 
 	public static final String MAINTANANCE_PAGE_FULL = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
 	public static final String MAINTANANCE_PAGE = "quatationtendercreation";
