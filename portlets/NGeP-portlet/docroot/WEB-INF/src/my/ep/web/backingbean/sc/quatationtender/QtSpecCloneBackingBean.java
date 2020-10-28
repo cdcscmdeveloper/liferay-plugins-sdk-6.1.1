@@ -892,7 +892,7 @@ public class QtSpecCloneBackingBean extends
 		QuationTenderResDTO tenderResDTO = QtDetailsSO
 				.retriveQTDetails(tenderReqDTO);
 		SLAUtils.getInstance().logHiExecInfo("QT","QtSpecCloneBackingBean.addToClone", startTime);
-		/*	
+		/*
 		 * END
 		 */
 		FacesContext context = FacesContext.getCurrentInstance();
