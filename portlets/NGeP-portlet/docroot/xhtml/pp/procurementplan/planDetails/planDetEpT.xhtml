@@ -253,7 +253,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	          <!--25549@18092020 -->
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemarkT"
-			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable  or (epItem.recordStatusFlg eq 9)}">
+			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable}">
 					<p:graphicImage value="/css/images/design/edit.png"
 					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
 					<f:param name="disableValidation" value="" />
