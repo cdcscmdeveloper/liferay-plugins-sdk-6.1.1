@@ -45,7 +45,8 @@
 						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide();">
 						</p:commandButton>
 
-						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}" 
+						<!-- 29430 -->
+						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" onclick="submissionConfirmDlg.show()" 
 							rendered="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}" 
 							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
 							<f:param name="disableValidation" value="true" />
