@@ -776,7 +776,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param dirNo
 	 * @return BigDecimal
 	 */
-	private BigDecimal calculateDirectorPercentage(int dirNo){
+	public BigDecimal calculateDirectorPercentage(int dirNo){
 		BigDecimal convertedDirNo = BigDecimal.valueOf(dirNo);
 		BigDecimal ttlDirector = BigDecimal.valueOf(this.getManagedBean().getTotalBOD());
 		BigDecimal percentage = BigDecimal.valueOf(0.00);
@@ -794,7 +794,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param mgmtNo
 	 * @return BigDecimal
 	 */
-	private BigDecimal calculateMgmtPercentage(int mgmtNo){
+	public BigDecimal calculateMgmtPercentage(int mgmtNo){
 		BigDecimal convertedMgmtNo = BigDecimal.valueOf(mgmtNo);
 		BigDecimal ttlMgmt= BigDecimal.valueOf(this.getManagedBean().getTotalMgmt());
 		BigDecimal percentage = BigDecimal.valueOf(0.00);
@@ -803,8 +803,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			percentage = convertedMgmtNo.divide(ttlMgmt, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 		} catch (ArithmeticException e) {
 			percentage = new BigDecimal(0.00).setScale(2);
-		}
 
+		}
 		return percentage;
 	}
 
@@ -813,7 +813,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param workerNo
 	 * @return BigDecimal
 	 */
-	private BigDecimal calculateWorkerPercentage(int workerNo){
+	public BigDecimal calculateWorkerPercentage(int workerNo){
 		BigDecimal convertedWrkNo = BigDecimal.valueOf(workerNo);
 		BigDecimal ttlWorker= BigDecimal.valueOf(this.getManagedBean().getTotalWorker());
 		BigDecimal percentage = BigDecimal.valueOf(0.00);
@@ -831,7 +831,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param chequeSignatory
 	 * @return
 	 */
-	private BigDecimal calculatChequeSignatoryPercentage(int chequeSignatory){
+	public BigDecimal calculatChequeSignatoryPercentage(int chequeSignatory){
 		BigDecimal convertedCheqNo = BigDecimal.valueOf(chequeSignatory);
 		BigDecimal ttlCheqSign= BigDecimal.valueOf(this.getManagedBean().getTotalCheqSign());
 		BigDecimal percentage = BigDecimal.valueOf(0.00);
