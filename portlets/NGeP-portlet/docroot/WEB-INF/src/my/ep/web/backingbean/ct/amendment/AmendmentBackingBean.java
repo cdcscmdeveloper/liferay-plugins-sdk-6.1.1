@@ -6644,8 +6644,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 		public void validateLatestCommitteeMembers() {
-			getManagedBean().setUpdatedCommitteeMembers(getFilteredCommitteeMembers()); //#29403
-						
+			
 			List<CtCommitteeMember> outer = getManagedBean().getUpdatedCommitteeMembers();
 			List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 			boolean isUpdateNeeded = false;
