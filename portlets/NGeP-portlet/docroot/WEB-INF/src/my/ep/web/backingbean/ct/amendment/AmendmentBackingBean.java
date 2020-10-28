@@ -2446,7 +2446,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)
 				&& isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
-			preRejectContractAmendment(outcome);
+//			preRejectContractAmendment(outcome); //Removing
 			validateContractAmendment(outcome);	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
