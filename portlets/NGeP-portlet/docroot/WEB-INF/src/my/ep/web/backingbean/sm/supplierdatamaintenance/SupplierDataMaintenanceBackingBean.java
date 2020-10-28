@@ -794,8 +794,13 @@ public class SupplierDataMaintenanceBackingBean extends
 					SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
 					SmAppl latestAppl = resDTO.getSmAppl();
 					SmSupplier supplier = latestAppl.getSmSupplier();
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+
+					//26238 -  Disciplonary action - 29399 - start
+
+//					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForBackDate(supplier);
 					
+					//26238 -  Disciplonary action - 29399 - end
 					if(discList != null){
 						for(SmDisciplinaryAction disc : discList){
 							if(disc.getDisciplinaryActionId() != null 
