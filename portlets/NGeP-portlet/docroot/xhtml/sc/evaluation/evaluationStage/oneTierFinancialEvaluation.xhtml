@@ -23,7 +23,7 @@
 					
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
 					</c:if>
