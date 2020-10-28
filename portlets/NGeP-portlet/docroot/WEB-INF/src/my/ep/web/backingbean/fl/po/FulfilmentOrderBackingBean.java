@@ -348,18 +348,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				AttachreqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 				AttachreqDTO.setFulfilmentOrder(this.getManagedBean().getFulfilmentOrder());
 				resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
-			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_NONAP58_PROCEED)){
-				//29440 start
-				Long docId = this.getManagedBean().getFlOrderId();
-				log.info("29440: docid: "+docId);
-				FulfilmentReqDTO reqDTOnonAP58 = new FulfilmentReqDTO();
-				FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
-				reqDTOflorder.setFlOrderId(docId);
-				resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
-				reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
-				resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
-				log.info("29440: "+resDTO.isSuccessful());
-				//29440 end
 			}
 			//end 28377			
 			if(resDTO.isSuccessful()) {
@@ -372,7 +360,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					messageId = MessageConst.INFO_700007;
 				}
 				//#28377 - razin
-				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) && action.equalsIgnoreCase(BpmOutcomeConst.BPM_NONAP58_PROCEED)) {
+				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
 					messageId = MessageConst.INFO_700005;
 				}
 				//#28377 - end razin
@@ -1308,7 +1296,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole() || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_NONAP58_PROCEED)) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || hasFactoringUserRole()) {
 			if(hasFactoringUserRole()) {
 				validateFulfillmentOrder(outcome);
 			}
@@ -1362,7 +1350,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
+			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) ) {
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
@@ -2388,13 +2376,28 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	
 //	28377 - end
 	  //29440 start
-	  public void proceedNonAP58(){
+	  public String proceedNonAP58() throws IOException{
 	    	log.info("inside hideyep");
-	    	 try {
-				  signingAction(BpmOutcomeConst.BPM_NONAP58_PROCEED);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-	    }
+	    	Long docId = this.getManagedBean().getFlOrderId();
+			log.info("29440: docid: "+docId);
+			FulfilmentReqDTO reqDTOnonAP58 = new FulfilmentReqDTO();
+			FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
+			IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			reqDTOflorder.setFlOrderId(docId);
+			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
+			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
+			log.info("29440: "+resDTO.isSuccessful());
+			if(resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				
+			} else {
+				throw new EpException(MessageConst.ERROR_740017);
+			}	
+		}
 	  //29440 end
 }
