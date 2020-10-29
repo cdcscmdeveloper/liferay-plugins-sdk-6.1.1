@@ -130,12 +130,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						immediate="true" 
 						update="dtExpenditurePlanT" 
 						partialSubmit="true"
-						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!pPlanBackingBean.managedBean.selectedPlan.rejected)}">
+						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votTanggungan, pPlanBackingBean.managedBean.selectedPlan, index)}"
-				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!pPlanBackingBean.managedBean.selectedPlan.rejected)}"
+				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}"
 				      		update="@form"/>
 				      </h:graphicImage>
 				</p:commandLink>
