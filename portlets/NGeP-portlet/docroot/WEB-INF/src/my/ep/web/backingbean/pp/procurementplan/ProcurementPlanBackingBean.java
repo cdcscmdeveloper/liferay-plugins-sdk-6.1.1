@@ -644,10 +644,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItem.setCloneEnabled(true);
 								ppItem.setDisableForPindaan(true);
 								ppItem.setReasonForUpdateEnabled(true);
+								if (ppItem.isEnableRevise()) {
+									ppItem.setEnableRevise(false);
+								}
 							} else {
 								// The rest should retain the existing field logics
 								ppItem.setDisableForPindaan(false);
 								ppItem.setReasonForUpdateEnabled(true);
+								ppItem.setEnableRevise(true);
 							}
 						}
 					}
@@ -1333,6 +1337,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									",isEditable= " +ppItem.isEditable());
 							//25549@09102020 - end
 						}
+						log.info("item= "+ppItem.getProcurementTitle()+
+								"enableRevise= "+ppItem.isEnableRevise());
 					}
 					log.info("[SIR#12802] - Check item for approved status - End");
 				}				
@@ -3821,6 +3827,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		ppItem.setReviseReject(true);
 		ppItem.setOriginal(true);
 		//25549@09102020 - end
+		ppItem.setEnableRevise(true);
 
 		if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
 			//current year
@@ -5622,6 +5629,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 cloned.setCloneEnabled(false);
 			 cloned.setReasonForUpdateEnabled(false);
 			 cloned.setStatusEnabled(false);
+			 cloned.setEnableRevise(true);
 		 }
 		 
 		 log.info("cloned= "+cloned.getProcurementTitle()+" ("+cloned.getProcurementItemId()
@@ -5642,6 +5650,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 this.getManagedBean().setModeEditable(true);
 			 original.setDisableForPindaan(false);
 			 this.getManagedBean().setDisable(false);
+			 original.setEnableRevise(false);
+		 } else {
+			 original.setEnableRevise(true);
 		 }
 		 
 		 log.info("original= "+original.getProcurementTitle()+" ("+original.getProcurementItemId()
@@ -5658,6 +5669,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 original.setCloneEnabled(true);
 			 original.setReasonForUpdateEnabled(true);
 			 original.setStatusEnabled(true);
+			 
+			 if (original.isEnableRevise()) {
+			 	original.setEnableRevise(false);
+			 }
 		 }
 		 
 	}
