@@ -13,12 +13,17 @@
 		<cc:attribute name="showAll" default="true" />
 		<cc:attribute name="showUpgrade" default="false" />
 		<cc:attribute name="showG2g" default="false" />
+		<cc:attribute name="selectOne" default="false"/>
+		<cc:attribute name="compProfile" default="false"/>
 	</cc:interface>
 
 	<cc:implementation>
 		<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.regType}"
 			style="width:300px;">
-			<f:selectItems value="#{cc.attrs.bBean.retrieveRegType(cc.attrs.showAll,cc.attrs.showUpgrade)}"/>
+			<c:if test="#{cc.attrs.selectOne}">
+				<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+			</c:if>
+			<f:selectItems value="#{cc.attrs.bBean.retrieveRegType(cc.attrs.showAll,cc.attrs.showUpgrade,cc.attrs.compProfile)}"/>
 			<c:if test="#{cc.attrs.showG2g}">
 				<f:selectItem itemValue="#{SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}" itemLabel="#{lbl['lbl.rpt.g2g']}" />
 			</c:if>
