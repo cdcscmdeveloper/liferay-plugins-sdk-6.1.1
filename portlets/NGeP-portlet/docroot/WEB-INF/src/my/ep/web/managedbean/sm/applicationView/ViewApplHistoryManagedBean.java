@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -40,6 +41,13 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplOverlapCatVO> overlapCategoryVOList;
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
+	private SmMofAccount currMof;
+
+	//25792 - start
+	private Date currentDate = new Date();
+	private String searchAccountType;
+	//25792 - end
+		
 
 	public ViewApplHistoryManagedBean() {
 
@@ -81,16 +89,48 @@ public class ViewApplHistoryManagedBean extends
 
 		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
 				SmApplRevisionReqDTO reqDTO) {
-			reqDTO.setSmSupplier(getSearchSupplier());
-			reqDTO.setMofAccountNo(getSearchMofNo());
-			reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
-			reqDTO.setSupplierType(getSearchSuppType());
+			//25792 - start
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
-			reqDTO.setPmZoneId(getSearchPmZoneId());
-			reqDTO.setEpNo(getSearchEpNo());
-			reqDTO.setApplicationType(getSearchApplType());
-			reqDTO.setApplicationNo(getSearchApplNo());
-			reqDTO.setPmStatusId(getSearchApplStatusId());
+			if(getAccountType() != null) {
+				if(getAccountType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+					reqDTO.setEpNo(getSearchEpNo());
+					reqDTO.setApplicationType(getSearchApplType());
+					reqDTO.setApplicationNo(getSearchApplNo());
+					reqDTO.setPmStatusId(getSearchApplStatusId());
+				}
+				else if(getAccountType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+					reqDTO.setAgencyType(getAgencyType());
+					reqDTO.setAgencyName(getAgencyName());
+					reqDTO.setEpNo(getSearchEpNo());
+				}
+				else {					
+					reqDTO.setMofAccountNo(getSearchMofNo());
+					reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
+					reqDTO.setSupplierType(getSearchSuppType());
+					reqDTO.setPmZoneId(getSearchPmZoneId());
+					reqDTO.setEpNo(getSearchEpNo());
+					reqDTO.setApplicationType(getSearchApplType());
+					reqDTO.setApplicationNo(getSearchApplNo());
+					reqDTO.setPmStatusId(getSearchApplStatusId());
+				}
+				
+				reqDTO.setAccountType(getAccountType());
+			} else {
+				//#25792 START Changes Fix error Null Pointer
+				if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
+				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
+					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
+					
+				} else {
+					reqDTO.setAccountType("M");
+				}
+				//#25792 END Changes Fix error Null Pointer
+				reqDTO.setEpNo(getSearchSupplier().getEpNo());
+			}
+			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+			reqDTO.setSmSupplier(getSearchSupplier());
+			//25792 - end
 
 			ISearchResultBean<Object[]> retVal = SmServiceLookup
 					.getSmApplRevisionSO()
@@ -192,4 +232,26 @@ public class ViewApplHistoryManagedBean extends
 		this.cancellationAttachment = cancellationAttachment;
 	}
 
+	public SmMofAccount getCurrMof() {
+		return currMof;
+	}
+
+	public void setCurrMof(SmMofAccount currMof) {
+		this.currMof = currMof;
+	}
+	//25792 - start
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+	
+	public String getSearchAccountType() {
+		return searchAccountType;
+	}
+	public void setSearchAccountType(String searchAccountType) {
+		this.searchAccountType = searchAccountType;
+	}
+	//25792 - end
 }
