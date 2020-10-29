@@ -57,6 +57,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -99,6 +100,7 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.aut.SearchCondition;
@@ -2551,4 +2553,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	}
 	//END 27239
+	//25792 - start
+	public String getSAPVendorCode(String epNo, Long branchCode) {
+
+		IVendorCodeSO vendorCodeSO = (IVendorCodeSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IVendorCodeSO.class);
+
+		SmSapVendorCode smSAPVendorCode = vendorCodeSO.retrieveSapVendorCodeByEpNoAndBranchCode(epNo, branchCode);
+		if(smSAPVendorCode != null) {
+			return smSAPVendorCode.getSapVendorCode();
+		}
+		return "";
+	}
+	//25792 - end
 }

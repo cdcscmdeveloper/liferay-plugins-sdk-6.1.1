@@ -486,6 +486,17 @@ label.outputLabel-view-label {
 	font-family: inherit;
 }
 
+label.outputLabel-view-label2 {
+	display: inline-block;
+	text-align: right !important;
+	font-size: 12px;
+	font-weight: bold !important;
+	vertical-align: middle;
+	float: right;
+	padding: 0 10px 0 0;
+	font-family: inherit;
+}
+
 .outputLabel-view-label:AFTER{
 	content:" :";
 }

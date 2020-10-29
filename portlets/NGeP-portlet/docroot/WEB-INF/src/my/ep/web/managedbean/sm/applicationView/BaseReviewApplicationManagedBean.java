@@ -7,10 +7,21 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
+import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -47,9 +58,13 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.type.pm.RoleCode;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmCancelMofRemarksVO;
@@ -220,6 +235,34 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmRemark> approverRemarkList;
 	
 	private SmCancelMofRemarksVO cancelRemarkVO;
+	//25792 - start
+	private SmPersonnelAddress addressAsInIc;
+	private SmPersonnelAddress correspondenceAddress;
+	private PmDigiCert pmDigiCert;
+	private String accountType;
+	private String agencyTypeName;
+	private boolean isG2GSupplierAdmin;
+	private Long agencyType;
+	private String agencyName;
+	private String sapVendorCode;
+	private IPagingDataModel<CmSupplierItem> supplierItemSearchDataModel = new SupplierItemPagingDataModel(); 
+	private String catalogueInfoItemStatus;
+	private int catalogueInfoTabActiveIndex; 
+	private List<CmRequestCode> requestCodeList;
+	private boolean redirectToSupplierItemPage;
+	private CmSupplierItem selectedSupplierItem;
+	private int supplierItemDetailTabActiveIndex;
+	private int pricingTypeGroupTabActiveIndex;
+	private int pricingTypeTabActiveIndex;
+	private List<CmSupplierZone> supplierZoneList;
+	private int pendingApprovalSupplierItemSize;
+	private int approvedSupplierItemSize;
+	private int rejectedSupplierItemSize;
+	private int publishedSupplierItemSize;
+	private int expiredSupplierItemSize;
+	private int totalRecords;
+	private String applicationStatusDesc;
+	//25792 - end
 	
 	private boolean viewSupplierMaintenancePage; // #26639
 
@@ -316,14 +359,35 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public boolean isSearchCriteriaEmpty() {
 		boolean retVal = true;
-		if (StringUtils.isNotBlank(getSearchMofNo())
-				|| getSearchPmRegStatusId() != null
-				|| StringUtils.isNotBlank(getSearchSuppType())
-				|| (getSearchSupplier() != null && (StringUtils
-						.isNotBlank(getSearchSupplier().getCompanyName()) || StringUtils
-						.isNotBlank(getSearchSupplier().getRegNo())))) {
-			retVal = false;
+		//25792 -  start
+		if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getAccountType())) {
+			if (StringUtils.isNotBlank(getSearchEpNo())
+					|| StringUtils.isNotBlank(getSearchApplNo())
+					|| StringUtils.isNotBlank(getSearchApplType())
+					|| getSearchApplStatusId() != null
+					|| (getSearchSupplier() != null && (StringUtils
+							.isNotBlank(getSearchSupplier().getCompanyName()) || StringUtils
+							.isNotBlank(getSearchSupplier().getRegNo())))) {
+				retVal = false;
+			}
+		}else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getAccountType())) {
+			if (StringUtils.isNotBlank(getAgencyName()) || StringUtils.isNotBlank(getSearchEpNo())) {
+				retVal = false;
+			}
+		}else {
+			if (StringUtils.isNotBlank(getSearchMofNo())
+					|| getSearchPmRegStatusId() != null
+					|| StringUtils.isNotBlank(getSearchSuppType())
+					|| StringUtils.isNotBlank(getSearchApplNo())
+					|| StringUtils.isNotBlank(getSearchApplType())
+					|| getSearchApplStatusId() != null
+					|| (getSearchSupplier() != null && (StringUtils
+							.isNotBlank(getSearchSupplier().getCompanyName()) || StringUtils
+							.isNotBlank(getSearchSupplier().getRegNo())))) {
+				retVal = false;
+			}
 		}
+		//25792 - end
 		return retVal;
 	}
 
@@ -373,16 +437,39 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 				: searchSupplier.getCompanyName();
 		String searchRegno = searchSupplier == null ? StringUtils.EMPTY
 				: searchSupplier.getRegNo();
-		if (searchPmRegStatusId == null && StringUtils.isBlank(searchMofNo)
-				&& StringUtils.isBlank(searchEpNo)
-				&& StringUtils.isBlank(searchCompanyName)
-				&& StringUtils.isBlank(searchRegno)
-				&& StringUtils.isBlank(searchApplType)
-				&& searchApplStatusId == null
-				&& StringUtils.isBlank(searchApplNo)) {
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.search.criteria.atleast.one.field", null));
-		}
+		//25792 - start
+		if(!StringUtils.isBlank(accountType)) {
+			if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(accountType)) {
+				if (StringUtils.isBlank(searchEpNo)
+						&& StringUtils.isBlank(searchCompanyName)
+						&& StringUtils.isBlank(searchRegno)
+						&& StringUtils.isBlank(searchApplType)
+						&& searchApplStatusId == null
+						&& StringUtils.isBlank(searchApplNo)) {
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.search.criteria.atleast.one.field", null));
+				}
+			} else if(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(accountType)) {
+
+				if (StringUtils.isBlank(agencyName) && StringUtils.isBlank(searchEpNo)) {
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.search.criteria.atleast.one.field", null));
+				}			
+			}
+			else {
+				if (searchPmRegStatusId == null && StringUtils.isBlank(searchMofNo)
+						&& StringUtils.isBlank(searchEpNo)
+						&& StringUtils.isBlank(searchCompanyName)
+						&& StringUtils.isBlank(searchRegno)
+						&& StringUtils.isBlank(searchApplType)
+						&& searchApplStatusId == null
+						&& StringUtils.isBlank(searchApplNo)) {
+					throw new EpException(SmCommonUtil.getMessage(
+							"lbl.sm.search.criteria.atleast.one.field", null));
+				}				
+			}
+		} 
+		//25792 - end
 	}
 
 	public int getTabActiveIndex() {
@@ -1582,7 +1669,252 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setRemarkOverlappedId(Long remarkOverlappedId) {
 		this.remarkOverlappedId = remarkOverlappedId;
 	}
+	
+	//25792 - start
+		private class SupplierItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
+			public SupplierItemPagingDataModel() {
+				super("supplierItemTableId");
+				
+			}
+			@Override
+			protected ISearchResultBean<CmSupplierItem> pageChangeListener(
+					ISearchBean<CmSupplierItem> searchBean) {
+				
+				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+						.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+				try {
+					CatalogueBackingBean bb = new CatalogueBackingBean();
+					bb.getManagedBean().setExpiredTabPageSize(this.getPageSize());
+					
+					System.out.println("Supplier: " + getSmSupplier().getSupplierId());
+					System.out.println("CatalogueInfo: " + getCatalogueInfoItemStatus());
+					reqDTO.setSupplierId(getSmSupplier().getSupplierId());
+					reqDTO.setItemStatus(getCatalogueInfoItemStatus());
+					reqDTO.setSearchBean(searchBean);
+					CatalogueResDTO resDTO = catalogueSO
+							.searchCmSupplierItemByStatus(reqDTO);
+									
+					return resDTO.getSuppItemResultBean();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new SearchResultBean();
+				} finally {
+					catalogueSO = null;
+				}
+			}
+			
+		}
+		
+	
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	
+	public String getAgencyTypeName() {
+		return agencyTypeName;
+	}
+
+	public void setAgencyTypeName(String agencyTypeName) {
+		this.agencyTypeName = agencyTypeName;
+	}
+
+	public boolean isG2GSupplierAdmin() {
+		return isG2GSupplierAdmin;
+	}
+
+	public void setG2GSupplierAdmin(boolean isG2GSupplierAdmin) {
+		this.isG2GSupplierAdmin = isG2GSupplierAdmin;
+	}	
+	
+	public Long getAgencyType() {
+		return agencyType;
+	}
+	
+	public void setAgencyType(Long agencyType) {
+		this.agencyType = agencyType;
+	}
+	
+	public String getAgencyName() {
+		return agencyName;
+	}
+	
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
+	}
+	
+	public String getSapVendorCode() {
+		return sapVendorCode;
+	}
+
+	public void setSapVendorCode(String sapVendorCode) {
+		this.sapVendorCode = sapVendorCode;
+	}
+	
+	public SmPersonnelAddress getAddressAsInIc() {
+		return addressAsInIc;
+	}
+
+	public void setAddressAsInIc(SmPersonnelAddress addressAsInIc) {
+		this.addressAsInIc = addressAsInIc;
+	}
+	
+	public SmPersonnelAddress getCorrespondenceAddress() {
+		return correspondenceAddress;
+	}
+
+	public void setCorrespondenceAddress(SmPersonnelAddress correspondenceAddress) {
+		this.correspondenceAddress = correspondenceAddress;
+	}
+	
+	public PmDigiCert getPmDigiCert() {
+		return pmDigiCert;
+	}
+
+	public void setPmDigiCert(PmDigiCert pmDigiCert) {
+		this.pmDigiCert = pmDigiCert;
+	}
+	public String getCatalogueInfoItemStatus() {
+		return catalogueInfoItemStatus;
+	}
+	public void setCatalogueInfoItemStatus(String catalogueInfoItemStatus) {
+		this.catalogueInfoItemStatus = catalogueInfoItemStatus;
+	}
+	public int getCatalogueInfoTabActiveIndex() {
+		return catalogueInfoTabActiveIndex;
+	}
+	public void setCatalogueInfoTabActiveIndex(int catalogueInfoTabActiveIndex) {
+		this.catalogueInfoTabActiveIndex = catalogueInfoTabActiveIndex;
+	}
+
+	public IPagingDataModel<CmSupplierItem> getSupplierItemSearchDataModel() {
+		return supplierItemSearchDataModel;
+	}
+
+	public List<CmRequestCode> getRequestCodeList() {
+		return requestCodeList;
+	}
+
+	public void setRequestCodeList(List<CmRequestCode> requestCodeList) {
+		this.requestCodeList = requestCodeList;
+	}
+
+	public boolean isRedirectToSupplierItemPage() {
+		return redirectToSupplierItemPage;
+	}
+
+	public void setRedirectToSupplierItemPage(boolean redirectToSupplierItemPage) {
+		this.redirectToSupplierItemPage = redirectToSupplierItemPage;
+	}
+
+	public CmSupplierItem getSelectedSupplierItem() {
+		return selectedSupplierItem;
+	}
+
+	public void setSelectedSupplierItem(CmSupplierItem selectedSupplierItem) {
+		this.selectedSupplierItem = selectedSupplierItem;
+	}
+
+	public int getSupplierItemDetailTabActiveIndex() {
+		return supplierItemDetailTabActiveIndex;
+	}
+
+	public void setSupplierItemDetailTabActiveIndex(
+			int supplierItemDetailTabActiveIndex) {
+		this.supplierItemDetailTabActiveIndex = supplierItemDetailTabActiveIndex;
+	}
+
+	public int getPricingTypeGroupTabActiveIndex() {
+		return pricingTypeGroupTabActiveIndex;
+	}
+
+	public void setPricingTypeGroupTabActiveIndex(int pricingTypeGroupTabActiveIndex) {
+		this.pricingTypeGroupTabActiveIndex = pricingTypeGroupTabActiveIndex;
+	}
+
+	public int getPricingTypeTabActiveIndex() {
+		return pricingTypeTabActiveIndex;
+	}
+
+	public void setPricingTypeTabActiveIndex(int pricingTypeTabActiveIndex) {
+		this.pricingTypeTabActiveIndex = pricingTypeTabActiveIndex;
+	}
+
+	public List<CmSupplierZone> getSupplierZoneList() {
+		return supplierZoneList;
+	}
+
+	public void setSupplierZoneList(List<CmSupplierZone> supplierZoneList) {
+		this.supplierZoneList = supplierZoneList;
+	}
+
+	public int getPendingApprovalSupplierItemSize() {
+		return pendingApprovalSupplierItemSize;
+	}
+
+	public void setPendingApprovalSupplierItemSize(
+			int pendingApprovalSupplierItemSize) {
+		this.pendingApprovalSupplierItemSize = pendingApprovalSupplierItemSize;
+	}
+
+	public int getApprovedSupplierItemSize() {
+		return approvedSupplierItemSize;
+	}
+
+	public void setApprovedSupplierItemSize(int approvedSupplierItemSize) {
+		this.approvedSupplierItemSize = approvedSupplierItemSize;
+	}
+
+	public int getRejectedSupplierItemSize() {
+		return rejectedSupplierItemSize;
+	}
+
+	public void setRejectedSupplierItemSize(int rejectedSupplierItemSize) {
+		this.rejectedSupplierItemSize = rejectedSupplierItemSize;
+	}
+
+	public int getPublishedSupplierItemSize() {
+		return publishedSupplierItemSize;
+	}
+
+	public void setPublishedSupplierItemSize(int publishedSupplierItemSize) {
+		this.publishedSupplierItemSize = publishedSupplierItemSize;
+	}
+
+	public int getExpiredSupplierItemSize() {
+		return expiredSupplierItemSize;
+	}
+
+	public void setExpiredSupplierItemSize(int expiredSupplierItemSize) {
+		this.expiredSupplierItemSize = expiredSupplierItemSize;
+	}
+
+	public int getTotalRecords() {
+		return totalRecords;
+	}
+
+	public void setTotalRecords(int totalRecords) {
+		this.totalRecords = totalRecords;
+	}
+
+	public String getApplicationStatusDesc() {
+		return applicationStatusDesc;
+	}
+
+	public void setApplicationStatusDesc(String applicationStatusDesc) {
+		this.applicationStatusDesc = applicationStatusDesc;
+	}
+
+	//25792 - end	
+	
 	// #26639 - start
 	public boolean isViewSupplierMaintenancePage() {
 		return viewSupplierMaintenancePage;
