@@ -7291,6 +7291,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return  facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value());  //#27668
 	}
 	
+	/*
+	 * Enhancement #27668 START
+	 * To Cater FPB SECRETARY DROPDOWN LIST
+	 */
+	private boolean isFpbSecretary() {
+		FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());  
+	}
+	/*
+	 * Enhancement #27668 END
+	 */
+	
+	
 	/* Bug #27412 START - CHANGE PRIVATE TO PUBLIC TO ALLOWED METHOD CALLED FROM FRONT*/
 	public boolean isMofSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -7865,6 +7878,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//26259
 		boolean pbbSecretaryOnly = false; 
 		if (isPbbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
+			pbbSecretaryOnly = true;
+		}else if(isFpbSecretary() && !(isDeskOfficer() || isAuditor() || isMofSupplier())){
+			/*
+			 * Enhancement #27668 
+			 * TO CATER FPB SECRETARY DROPDOWN LIST
+			 */
 			pbbSecretaryOnly = true;
 		}
 		
