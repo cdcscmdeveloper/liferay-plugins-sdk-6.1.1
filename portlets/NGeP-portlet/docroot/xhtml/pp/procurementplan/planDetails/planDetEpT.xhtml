@@ -264,7 +264,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        	   	disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.cloneEnabled or epItem.statusEnabled}"> 
 	        	   	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	        	    <!--25549@18092020 -->
-	  	            <p:ajax event="change" update="dtExpenditurePlanT" partialSubmit="true"/>
+	  	           <p:ajax event="change"  update="dtExpenditurePlanT" listener="#{pPlanBackingBean.selectedSEptatus(ParameterConst.votTanggungan, epItem.recordStatusFlg, index)}" partialSubmit="true" />
 	          	</p:selectOneMenu> 
 	        </p:column>
 	        <p:column rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
