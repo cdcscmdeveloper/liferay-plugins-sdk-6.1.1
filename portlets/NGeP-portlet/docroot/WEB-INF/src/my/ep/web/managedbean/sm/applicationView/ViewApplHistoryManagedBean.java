@@ -41,7 +41,7 @@ public class ViewApplHistoryManagedBean extends
 	/**
 	 * 
 	 */
-	public static Logger log = Logger.getLogger(ViewApplHistoryManagedBean.class);
+	public static Logger log = Logger.getLogger(ViewApplHistoryManagedBean.class);//to be included for #25792
 	private static final long serialVersionUID = 1191700333390541593L;
 	private SmAppl selectedApplHistory;
 	private boolean claimTask;
@@ -103,7 +103,7 @@ public class ViewApplHistoryManagedBean extends
 					return getApplicationHistoryResultBean(reqDTO);
 				}
 			} catch (Exception ex) {
-				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage());
+				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage()); //to be included for #25792
 				return new SearchResultBean();
 			} 
 		}
@@ -239,7 +239,7 @@ public class ViewApplHistoryManagedBean extends
 				retVal.getResultList().addAll(resultListTemp);
 				
 			}catch(Exception e) {
-				e.printStackTrace();
+				log.error("File: ViewApplHistoryManagedBean Method: getApplicationHistoryResultBean Message: "+e.getMessage());//25792 - for log
 				throw new EpException(ExceptionUtils.getStackTrace(e));
 			}
 			return retVal;
