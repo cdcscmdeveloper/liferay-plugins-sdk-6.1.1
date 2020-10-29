@@ -6176,6 +6176,12 @@ public class SmApplicationUtil {
 	 */
 	public static void validateSpecialCategoryAssignedToFacility(
 			SmApplicationManagedBean bean) {
+		
+		// #29232 (harith) @start
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(bean.getSmAppl().getSmSupplier().getSupplierId());
+		// #29232 (harith) @end
+		
 		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 				.getSmSupplierCategories()) && !bean.isApproverUser()) {
 			SmSupplierCategoryFacility tmp = null;
@@ -6197,7 +6203,11 @@ public class SmApplicationUtil {
 										.getPmCategoryL3().getCategoryL3Id(),
 										fac.getSmSupplierCategoryFacilities(),
 										"pmCategoryL3");
-						if (tmp != null) {
+						
+						// #29232 (harith) @start
+						if (tmp != null || !SmServiceLookup.getMofRegistrationSO().alreadyMof(reqDTO)
+								.isValid()) {
+							// #29232 (harith) @end
 							exist = true;
 							break;
 						}
@@ -11097,8 +11107,8 @@ public class SmApplicationUtil {
 	 */
 	public static void assignSelShareHolderAddress(SmPersonnel shareHolderBean,
 			SmApplicationManagedBean bean) {
-		//#13320 - view only
-		if ((isPersonnelViewOnly(shareHolderBean) || bean.isDisAllowOwnerEdit())
+		//#13320 - view only && #29086
+		if (isPersonnelViewOnly(shareHolderBean) || bean.isDisAllowOwnerEdit()
 				&& shareHolderBean.getPersonnelId() != null) {
 			if (shareHolderBean.getSmPersonnelAddresses() != null
 					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
@@ -11715,6 +11725,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean, int currTab) {
 		shareHolderBean.setBumiFlgTrans(shareHolderBean.getBumiFlg());
 		shareHolderBean.setMuslimFlgTrans(shareHolderBean.getMuslimFlg());
+		//#29315
+		bean.setFlagMandatoryEpfNo(false);
 		if (bean.getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false, bean, currTab);
@@ -11810,7 +11822,8 @@ public class SmApplicationUtil {
 		// to determine whether shareholder for viewonly or edit
 		bean.setShowPersonnelViewOnly(SmApplicationUtil
 				.isPersonnelViewOnly(shareHolderBean));
-		if (bean.isShowPersonnelViewOnly()) {
+		//#29086
+		if (bean.isShowPersonnelViewOnly()|| bean.isDisAllowOwnerEdit()) {
 			bean.setSelectedShareholderIdentificationType(SmCommonUtil
 					.getParamDescriptionByLanguageAndPmParameter(bean
 							.getSelectedShareHolder().getIdentificationType()));
@@ -13840,4 +13853,28 @@ public class SmApplicationUtil {
 				return smAppl;
 			}
 			//END 25474
+	
+	//#29315 - start
+	public static void populateMandatoryEpfNo(SmApplicationManagedBean bean){
+		if (bean.getSelectedShareHolder().isProf()
+				|| bean.getSelectedShareHolder().isSemiProf()
+				|| bean.getSelectedShareHolder().isClerical()) {
+			bean.setFlagMandatoryEpfNo(true);
+			if (!EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmPersonnels())) {
+				for (SmPersonnel sp : bean.getSmAppl().getSmPersonnels()) {
+					if ( (!sp.getIdentificationNo().equalsIgnoreCase(bean.getSelectedShareHolder().getIdentificationNo()) 
+							&& StringUtils.isNotBlank(sp.getEpfNo())) 
+							&& ((bean.getSelectedShareHolder().isProf() && sp.isProf()) 
+									|| (bean.getSelectedShareHolder().isSemiProf() && sp.isSemiProf())
+									|| (bean.getSelectedShareHolder().isClerical() && sp.isClerical()))) {
+						bean.setFlagMandatoryEpfNo(false);
+						break;
+					}
+				}
+			}
+		} else {
+			bean.setFlagMandatoryEpfNo(false);
+		}
+	}
+	//#29315 - end
 }
