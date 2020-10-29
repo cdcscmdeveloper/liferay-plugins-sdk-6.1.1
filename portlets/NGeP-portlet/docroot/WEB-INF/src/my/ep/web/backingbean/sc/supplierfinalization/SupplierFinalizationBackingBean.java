@@ -7767,7 +7767,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode()))
 					|| (ParameterConst.WITH__SPEC_CHANGES
 							.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode()))){
-					if (isInactiveCommiteeRole(scQtFinalization, stageType)) {
+					if (isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) { //#25426#264
 						throw new EpException(MessageConst.ERROR_760486);
 					}
 				} 
@@ -7775,19 +7775,24 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			} else if (ParameterConst.DECISION_RE_EVALUATION
 				.equals(decisionTypeCode)) {
 				scQt = getManagedBean().getScQt();
-				if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType())) {
-					if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){								
-						//Checking on inactive EC Chairperson/Secretary/Member
-						if (isInactiveCommiteeRole(scQtFinalization, stageType)) {
-								throw new EpException(MessageConst.ERROR_760487);
+				if(null!=scQtFinalization.getReEvaluateCommitte() 
+						|| (!scQtFinalization.isReEvaluateCompReq()
+						&& !scQtFinalization.isReEvaluateTechReq()
+						&& !scQtFinalization.isReEvaluateFinReq())){	// #25426#264 if evaluationcommitee not selected						
+					if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType())) {
+						if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){								
+							//Checking on inactive EC Chairperson/Secretary/Member
+							if (isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {//#25426#264
+									throw new EpException(MessageConst.ERROR_760487);
+							}
 						}
 					}
-				}
-				else if (ParameterConst.EVALUATION_TYPES_TWO_TIER
-					.equals(scQt.getEvaluationType())) {
-					if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){
-						if (isInactiveCommiteeRole(scQtFinalization, stageType)) {
-								throw new EpException(MessageConst.ERROR_760488);
+					else if (ParameterConst.EVALUATION_TYPES_TWO_TIER
+						.equals(scQt.getEvaluationType())) {
+						if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){
+							if (isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {//#25426#264
+									throw new EpException(MessageConst.ERROR_760488);
+							}
 						}
 					}
 				}
@@ -7798,20 +7803,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}		
 	}
 	
-	public boolean isInactiveCommiteeRole(ScQtFinalization scQtFinalization, String stageType) {
+	public boolean isInactiveCommiteeRole(ScQtFinalization scQtFinalization, String stageType, String decisionTypeCode) { //#25426#264
 		Long qtId = Long.valueOf(scQtFinalization.getScQt().getQtId());
 		System.out.println("--isInactiveRole QTID "+qtId);	
 		ICommitteSO committeeSO = null;
 		try {
 			committeeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			boolean checkStatus = committeeSO.retrieveInactiveCommittesByQtId(qtId, stageType);
-			if (checkStatus) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			boolean checkStatus = committeeSO.retrieveInactiveCommittesByQtId(qtId, stageType, decisionTypeCode); //#25426#264
+			return checkStatus;
 		} finally {
 			committeeSO = null;
 		}
