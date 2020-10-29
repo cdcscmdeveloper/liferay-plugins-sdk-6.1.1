@@ -654,6 +654,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItem.setEnableRevise(true);
 							}
 						}
+						
+						if (ppItem.isRejected()) {
+							// Verf Officer and Plan Approval Officer should be able to untick revised item
+							if (!isRolePlanner() && !ppItem.isEnableRevise()) {
+								ppItem.setEnableRevise(true);
+							}
+						}
 					}
 				}
 		    }
