@@ -3135,12 +3135,37 @@ public class SmCommonUtil {
 	public static SmMofAccount getMofAccountBySuppIdAndSuppType(
 			Long supplierId, String suppType) {
 		SmMofAccount mofAcc = null;
-		if (supplierId != null && StringUtils.isNotBlank(suppType)) {
+		if (supplierId != null) {
 			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
 			reqDTO.setSupplierType(suppType);
 			reqDTO.setSupplierId(supplierId);
 			mofAcc = SmServiceLookup.getMofAccountSO()
 					.retriveMOFAccountBySupplierIdAndType(reqDTO)
+					.getMofAccount();
+		}
+		return mofAcc;
+	}
+	/**
+	 * Get previous SmMofAccount by Supplier Id and Supplier Type And ApplId
+	 * 
+	 * @param Long
+	 *            supplierId
+	 * @param String
+	 *            suppType
+	 * @return SmMofAccount
+	 */
+	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+	public static SmMofAccount getPreviousMofAccountBySuppIdAndSuppType(
+			Long supplierId,Long applId, String suppType,Integer recordStatus) {
+		SmMofAccount mofAcc = null;
+		if (supplierId != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierType(suppType);
+			reqDTO.setSupplierId(supplierId);
+			reqDTO.setApplId(applId);
+			reqDTO.setRecordStatus(recordStatus);
+			mofAcc = SmServiceLookup.getMofAccountSO()
+					.retrivePreviousMOFAccountBySupplierIdAndType(reqDTO)
 					.getMofAccount();
 		}
 		return mofAcc;
@@ -5786,6 +5811,12 @@ public class SmCommonUtil {
 		}
 	}
 	//25929 - end
+	
+	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+	public static MofAccountResDTO getMofAccountBySuppIdAndApplId(MofAccountReqDTO req) {
+		MofAccountResDTO mofAcc = SmServiceLookup.getMofAccountSO().retriveMOFAccountByApplId(req);
+		return mofAcc;
+		}
 	
 	//SSM INTEGRATION
 	public String verifyWithMyIdentity(String name, String identificationNo,
