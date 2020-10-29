@@ -20,7 +20,7 @@
 					<td class="tdContent" colspan="3">
 						<p:inputText id="gstRegNoId"  maxlength="12"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstRegNo}"
-							size="30" label="#{lbl['lbl.sm.gst.regno']}">
+							size="30" label="#{lbl['lbl.sm.gst.regno']}" disabled="#{isReadOnly}">
 							<p:ajax event="blur" update="pnlGstInfo" listener="#{registrationBackingBean.validateGstRegNo}" 
 								partialSubmit="true" process="@this"/>
 						</p:inputText>
@@ -39,7 +39,7 @@
 							navigator="true" required="#{registrationBackingBean.managedBean.gstFlag and !empty param['disableValidation']}" label="#{lbl['lbl.sm.gst.regdate']}"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstEffDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
+							disabled="#{!registrationBackingBean.managedBean.gstFlag || isReadOnly}"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" mindate="#{CommonConstants.GST_LAUNCH_DATE}">
 							<p:ajax event="dateSelect" process="@this" partialSubmit="true" update="gstEndDateCalId"/>
 						</p:calendar>
@@ -59,7 +59,7 @@
 							navigator="true" label="#{lbl['lbl.sm.gst.eff.end.date']}"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstEndDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  
-							disabled="#{!registrationBackingBean.managedBean.gstFlag}"
+							disabled="#{!registrationBackingBean.managedBean.gstFlag || isReadOnly}"
 							readonlyInput="true" size="30" showOn="button" 
 							mindate="#{registrationBackingBean.minGstEndDate}">
 							<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
