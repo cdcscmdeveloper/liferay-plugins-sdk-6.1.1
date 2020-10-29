@@ -162,6 +162,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
+			prepareMemberUpdate();//#25037
 
 			fc.getApplication().getNavigationHandler()
 			  .handleNavigation(fc, null, 
@@ -403,7 +404,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			committee.setQtCommitteRemarks(remarks);
 			this.getManagedBean().setQtCommitteeRemarks(remarks);
-			prepareMemberUpdate();//#25037
 		} finally {
 			qtMeetingSO = null;
 		}
@@ -1932,6 +1932,9 @@ if (CollectionUtils.isNotEmpty(
 		try{
 			if(CollectionUtils.isNotEmpty(histories)){
 				ScCommitteeMemberHistory history = histories.get(0);
+				if(histories.size()==1){
+					this.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+				}
 				@SuppressWarnings("unchecked")
 				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
 				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
