@@ -46,8 +46,7 @@ public class SmApplicationNotificationUtil {
 		} 
 		//10908
 		else if ((smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) && (reqDTO.getPoOrApproverDecision()
-				.equalsIgnoreCase("Reject"))) {
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
 					smAppl, supplier, basicInfo, approvalRemarks,
 					supplierRemarks));
