@@ -8,25 +8,56 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%;table-layout:fixed;">
 			<tr>
-				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
-				<td class="header-info-text"><c:if
-						test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'N'}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'A'}">#{lbl['lbl.sm.addnlCat.headerLbl']}</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'B'}">#{lbl['lbl.sm.bumi.headerLbl']}</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R'}">#{lbl['lbl.sm.appltype.renewmof']}</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'U'}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">#{lbl['lbl.sm.appltype.cancelmof']}</c:if>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.account.type']}" /></td>
+				<td class="header-info-text" style="vertical-align: top;">
+				<c:choose>
+					<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">#{lbl['lbl.sm.account.type.basic']}</c:when>
+					<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">#{lbl['lbl.sm.account.type.g2g']}</c:when>
+					<c:otherwise>#{lbl['lbl.sm.account.type.mof']}</c:otherwise>
+				</c:choose>	
 				</td>
-				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
-				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.applNo}</td>
-				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
-				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}</td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
+				<td class="header-info-text" style="vertical-align: top;">#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.companyName}</td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.accountstatus']}" /></td>
+				<td class="header-info-text" style="vertical-align: top;">
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusActive}">#{lbl['lbl.txt.active']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusSuspended}">#{lbl['lbl.txt.inactive']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusInProgress}">#{lbl['lbl.sm.account.status.inprogress']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusDeleted}">#{lbl['lbl.sm.account.status.deleted']}</c:if>
+				</td>
+			</tr>
+			<tr>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
+				<td class="header-info-text" style="vertical-align: top;"><c:if
+						test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeNewMof}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeAddCategory}">#{lbl['lbl.sm.addnlCat.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeBumi}">#{lbl['lbl.sm.bumi.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeRenewMof}">#{lbl['lbl.sm.appltype.renewmof']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeUpdateMof}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeCancelMof}">#{lbl['lbl.sm.appltype.cancelmof']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq SupplierMgmtConst.smApplicationTypeBasic}">#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT ? lbl['lbl.sm.appltype.g2g']:lbl['lbl.sm.appltype.basic']}</c:if>
+				</td>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+				<c:choose>
+				<c:when test="#{not empty viewSmApplBackingBean.managedBean.smAppl.applNo and viewSmApplBackingBean.managedBean.smAppl.applNo ne 'N/A'}">
+				<td class="header-info-text" style="vertical-align: top;">#{viewSmApplBackingBean.managedBean.smAppl.applNo}</td>
+				</c:when>
+				<c:otherwise><td class="header-info-text" style="vertical-align: top;">#{lbl['lbl.sm.no.available']}</td></c:otherwise>
+				</c:choose>
+				<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.applicationstatus']}" /></td>
+				<c:choose>
+				<c:when test="#{not empty viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}">
+				<td class="header-info-text" style="vertical-align: top;">#{viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc}</td>
+				<!-- viewSmApplBackingBean.managedBean.applicationStatusDesc -->
+				</c:when>
+				<c:otherwise><td class="header-info-text" style="vertical-align: top;">#{lbl['lbl.sm.no.available']}</td></c:otherwise>
+				</c:choose>
 			</tr>
 			<c:if test="#{not empty viewSmApplBackingBean.managedBean.rejectReason}">
 				<tr height="20"><td>&#160;</td></tr>
 				<tr>
 					<td style="vertical-align: baseline;"><h:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
-					<td style="word-wrap: break-word;" colspan="5">
+					<td class="header-info-text" style="word-wrap: break-word; vertical-align: top;" colspan="5">
 						<h:outputText value="#{viewSmApplBackingBean.managedBean.rejectReason}" 
 						escape="false" style="font-family: Arial;font-size: 12px;text-align: left !important;font-weight: normal !important;"/>
 					</td>
