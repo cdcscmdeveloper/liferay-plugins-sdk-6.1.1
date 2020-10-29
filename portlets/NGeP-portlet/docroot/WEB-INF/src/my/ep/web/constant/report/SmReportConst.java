@@ -134,6 +134,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_DISC_ACT_EXEC_SUMMARY_RPT_VAL = "SM_083";
 	public static final String SM_APPL_CLIENT_CHARTER_K = "SM_085";
 	public static final String SM_APPL_CLIENT_CHARTER_J = "SM_086";
+	public static final String SM_REG_COMPANY_IN_BASIC_G2G = "SM_087";
 	public static final String SM_SUPPLIER_PERFORMANCE_V_RPT_VAL = "SM_091";
 
 	// Screen fields constants
@@ -141,6 +142,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_ZONE_SABAH = "Sabah";
 	public static final String SM_ZONE_SARAWAK = "Sarawak";
 	public static final String SM_REG_TYPE_BASIC = "Basic";
+	public static final String SM_REG_TYPE_G2G = "G2G";
 	public static final String SM_REG_TYPE_MOF = "MOF";
 	public static final String SM_REG_TYPE_UPGRADE_BASIC_TO_MOF = "UPGRADE FROM BASIC TO MOF ACCOUNT";
 	public static final String SM_STATUS_ACTIVE = "Active";
@@ -188,6 +190,9 @@ public class SmReportConst implements Serializable {
 	
 	public static final String PENDING_SV_STATUS = "Pending Prepare Site Visit Report";
 	public static final String SV_COMPLETED_STATUS = "Site Visit Report Completed";
+	
+	public static final String REG_ACC_TYPE_BASIC = "B";
+	public static final String REG_ACC_TYPE_G2G = "G";
 	
 	// #27199 - start
 	public static final String SM_SUPPLIER_PERFORMANCE_COMP_1 = "PHARMANIAGA LOGISTICS SDN BHD";
@@ -237,6 +242,10 @@ public class SmReportConst implements Serializable {
 
 	public String getSM_REG_TYPE_MOF() {
 		return SM_REG_TYPE_MOF;
+	}
+
+	public String getSM_REG_TYPE_G2G() {
+		return SM_REG_TYPE_G2G;
 	}
 
 	public String getSM_REG_TYPE_UPGRADE_BASIC_TO_MOF() {
@@ -621,6 +630,14 @@ public class SmReportConst implements Serializable {
 
 	public int getCertStatusRejected() {
 		return CERT_STATUS_REJECTED;
+	}
+	
+	public String getRegAccTypeBasic() {
+		return REG_ACC_TYPE_BASIC;
+	}
+
+	public String getRegAccTypeG2g() {
+		return REG_ACC_TYPE_G2G;
 	}
 	
 	public static String getSmSupplierPerformanceVRptVal() {
