@@ -25,6 +25,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "viewApplHistoryMB")
 @SessionScoped
@@ -34,6 +35,7 @@ public class ViewApplHistoryManagedBean extends
 	/**
 	 * 
 	 */
+	public static Logger log = Logger.getLogger(ViewApplHistoryManagedBean.class);//to be included for #25792
 	private static final long serialVersionUID = 1191700333390541593L;
 	private SmAppl selectedApplHistory;
 	private boolean claimTask;
@@ -82,10 +84,9 @@ public class ViewApplHistoryManagedBean extends
 					return getApplicationHistoryResultBean(reqDTO);
 				}
 			} catch (Exception ex) {
+				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage()); //to be included for #25792
 				return new SearchResultBean();
-			} finally {
-				reqDTO = null;
-			}
+			} 
 		}
 
 		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
