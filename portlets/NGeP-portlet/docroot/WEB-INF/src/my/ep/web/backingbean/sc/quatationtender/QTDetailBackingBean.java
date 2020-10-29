@@ -1936,35 +1936,33 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			List<ScQtContactPerson> deskOfficerAdminList = this.getManagedBean().getPmuserContactpersonList();
 			List<ScQtContactPerson> contactList = new ArrayList<ScQtContactPerson>();
 
-			if (CollectionUtils.isNotEmpty(scQt.getRequestContents()) && this.getManagedBean().getRequestContent()!=null) { 
-				ScQtRequestContent requestContent = this.getManagedBean().getRequestContent();
-				if(!this.getManagedBean().isMaintanceFlow()){
-					requestContent.setRequireApproval(!this.getManagedBean().isSaveFlow());
-				}
-
-				deskOfficerAdminList = deskOfficerAdminList==null? new ArrayList<ScQtContactPerson>(): deskOfficerAdminList;
-
-				requestContent.setModified(isDOAListModified());
-			
-				if(requestContent.isModified()){
-					Map<Long, String> map = new HashMap<Long, String>();
-					for(ScQtContactPerson p:deskOfficerAdminList){
-						if(p.getUser().getUserId()==null){
-							throw new EpException(getMessageCommon("lbl.sc.required.select.doa"));
+			if(this.getManagedBean().isMaintanceFlow()){
+				if (CollectionUtils.isNotEmpty(scQt.getRequestContents()) && this.getManagedBean().getRequestContent()!=null ) { 
+					ScQtRequestContent requestContent = this.getManagedBean().getRequestContent();
+					deskOfficerAdminList = deskOfficerAdminList==null? new ArrayList<ScQtContactPerson>(): deskOfficerAdminList;
+					requestContent.setModified(isDOAListModified());
+					if(requestContent.isModified()){
+						requestContent.setRequireApproval(true);
+						Map<Long, String> map = new HashMap<Long, String>();
+						for(ScQtContactPerson p:deskOfficerAdminList){
+							if(p.getUser().getUserId()==null){
+								throw new EpException(getMessageCommon("lbl.sc.required.select.doa"));
+							}
+							map.put(p.getUser().getUserId(), p.getUser().getLoginId());
 						}
-						map.put(p.getUser().getUserId(), p.getUser().getLoginId());
-					}
-					
-					try {
-						requestContent.setRequestContent(map);
-					} catch (IOException e) {
-						throw new EpException(e.getMessage());
-					}
-				}else if(requestContent.isBrandNew()){
-					if(this.getManagedBean().isMaintanceFlow()){
-						scQt.getRequestContents().remove(requestContent);
+						try {
+							requestContent.setRequestContent(map);
+						} catch (IOException e) {
+							throw new EpException(e.getMessage());
+						}
+					}else if(requestContent.isBrandNew()){
+						if(this.getManagedBean().isMaintanceFlow()){
+							scQt.getRequestContents().remove(requestContent);
+						}
 					}
 				}
+			}else if(CollectionUtils.isNotEmpty(deskOfficerAdminList)){
+				contactList.addAll(deskOfficerAdminList);
 			}
 			if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
 				contactList.addAll(contactPersonsList);
@@ -3989,74 +3987,76 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					qtContactPerson.add(contactPerson);					
 				}
 				this.getManagedBean().setScQtContactPersons(qtContactPerson); 
-				//#25037
+				//#25037 - start
 				getDoaaRequestStatus();
-				ScQtRequestContent requestContent = null;
-				if(CollectionUtils.isNotEmpty(scQt.getRequestContents())){
-					for(ScQtRequestContent r: scQt.getRequestContents()){
-						if(r.getRequestType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){
-							requestContent = r;
-							break;
-						}
-					}
-				}else{
-					scQt.setRequestContents(new ArrayList<ScQtRequestContent>());
-				}
-				this.getManagedBean().setRequestContent(requestContent);
-				if (requestContent != null) {
-					ScQtApprovalRequest request = requestContent.getApprovalRequest();
-					if(request!=null){
-						String state = request.getApproverAction() == null ? ""
-								: request.getApproverAction().getParameterCode();
-						String[] actionArr = new String[] {
-								ParameterConst.APPROVAL_DECISION_TYPE_REJECTED,
-								ParameterConst.APPROVAL_DECISION_TYPE_APPROVED };
-						if (!Arrays.asList(actionArr).contains(state)) {
-							//log.info("---> request is in progress");
-							requestContent.setBrandNew(false);
-							requestContent.setRequireApproval(true);
-							requestContent.setSelectable(!state.equalsIgnoreCase(ParameterConst.APPROVAL_DECISION_TYPE_REVISED));
-							this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
-						}else{
-							//log.info("---> request is completed");
-							ScQtRequestContent newRequestContent = new ScQtRequestContent();
-							newRequestContent.setBrandNew(true);
-							newRequestContent.setScQt(scQt);
-							newRequestContent.setRequireApproval(false);
-							newRequestContent.setSelectable(true);
-							newRequestContent.setRequestType(this.getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES, ParameterConst.DOCTYPE_DOA_ASSIGNMENT));
-							this.getManagedBean().setRequestContent(newRequestContent);
-							scQt.getRequestContents().add(0, newRequestContent);
-							this.getManagedBean().setPmuserContactpersonList(
-									resDTO.getDeskOfficers().getResultList());
+				if(this.getManagedBean().isMaintanceFlow()){
+					ScQtRequestContent requestContent = null;
+					if(CollectionUtils.isNotEmpty(scQt.getRequestContents())){
+						for(ScQtRequestContent r: scQt.getRequestContents()){
+							if(r.getRequestType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){
+								requestContent = r;
+								break;
+							}
 						}
 					}else{
-						//log.info("---> save but no approval request");
-						requestContent.setBrandNew(false);
-						requestContent.setSelectable(true);
-						requestContent.setRequireApproval(false);
-						this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
+						scQt.setRequestContents(new ArrayList<ScQtRequestContent>());
 					}
-				} else {
-					//log.info("---> new all the way");
-					ScQtRequestContent newRequestContent = new ScQtRequestContent();
-					newRequestContent.setBrandNew(true);
-					newRequestContent.setScQt(scQt);
-					newRequestContent.setRequireApproval(false);
-					newRequestContent.setSelectable(true);
-					newRequestContent.setRequestType(this.getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES, ParameterConst.DOCTYPE_DOA_ASSIGNMENT));
-					this.getManagedBean().setRequestContent(newRequestContent);
-					scQt.getRequestContents().add(0, newRequestContent);
+					this.getManagedBean().setRequestContent(requestContent);
+					if (requestContent != null) {
+						ScQtApprovalRequest request = requestContent.getApprovalRequest();
+						if(request!=null){
+							String state = request.getApproverAction() == null ? ""
+									: request.getApproverAction().getParameterCode();
+							String[] actionArr = new String[] {
+									ParameterConst.APPROVAL_DECISION_TYPE_REJECTED,
+									ParameterConst.APPROVAL_DECISION_TYPE_APPROVED };
+							if (!Arrays.asList(actionArr).contains(state)) {
+								//log.info("---> request is in progress");
+								requestContent.setBrandNew(false);
+								requestContent.setRequireApproval(true);
+								requestContent.setSelectable(!state.equalsIgnoreCase(ParameterConst.APPROVAL_DECISION_TYPE_REVISED));
+								this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
+							}else{
+								//log.info("---> request is completed");
+								ScQtRequestContent newRequestContent = new ScQtRequestContent();
+								newRequestContent.setBrandNew(true);
+								newRequestContent.setScQt(scQt);
+								newRequestContent.setRequireApproval(false);
+								newRequestContent.setSelectable(true);
+								newRequestContent.setRequestType(this.getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES, ParameterConst.DOCTYPE_DOA_ASSIGNMENT));
+								this.getManagedBean().setRequestContent(newRequestContent);
+								scQt.getRequestContents().add(0, newRequestContent);
+								this.getManagedBean().setPmuserContactpersonList(
+										resDTO.getDeskOfficers().getResultList());
+							}
+						}else{
+							//log.info("---> save but no approval request");
+							requestContent.setBrandNew(false);
+							requestContent.setSelectable(true);
+							requestContent.setRequireApproval(false);
+							this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
+						}
+					} else {
+						//log.info("---> new all the way");
+						ScQtRequestContent newRequestContent = new ScQtRequestContent();
+						newRequestContent.setBrandNew(true);
+						newRequestContent.setScQt(scQt);
+						newRequestContent.setRequireApproval(false);
+						newRequestContent.setSelectable(true);
+						newRequestContent.setRequestType(this.getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES, ParameterConst.DOCTYPE_DOA_ASSIGNMENT));
+						this.getManagedBean().setRequestContent(newRequestContent);
+						scQt.getRequestContents().add(0, newRequestContent);
 
+						this.getManagedBean().setPmuserContactpersonList(resDTO.getDeskOfficers().getResultList());
+					}
+					if(this.getManagedBean().getPmuserContactpersonList()==null){
+						this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());
+					}
+					this.getManagedBean().setPrevDOAs(generateDOACompareStr(this.getManagedBean().getPmuserContactpersonList()));	
+				}else{
 					this.getManagedBean().setPmuserContactpersonList(resDTO.getDeskOfficers().getResultList());
 				}
-				if(this.getManagedBean().getPmuserContactpersonList()==null){
-					this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());
-				}
-				this.getManagedBean().setPrevDOAs(generateDOACompareStr(this.getManagedBean().getPmuserContactpersonList()));			
-				
-				//#25037
-
+				//#25037 end
 				QTScheduleDetailBackingBean backingBean = new QTScheduleDetailBackingBean();
 				if (this.getManagedBean().getQt().isSampleReq()
 						&& (null == this.getManagedBean()
@@ -4874,7 +4874,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		  new CreateQtBackingBean().retrieveZoneGeneralTreesPanel(scQt, specZoneDtls);
 		}
 		//20200210@asyrafhaziq_Bug #27381&#26694  - End
-				
+		
 		if (CollectionUtils.isNotEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl zone : specZoneDtls) {
 				if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
