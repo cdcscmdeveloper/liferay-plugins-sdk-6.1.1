@@ -1193,13 +1193,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 			this.getManagedBean().getSelectedPlan().setRejected(true);
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
-				
+						
 				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == epItem.getRecordStatusFlg() && epItem.isRejected()){
 						epItem.setEditable(true);
 						//25549@12102020 - start
 						epItem.setReviseReject(true);
 						//25549@12102020 - end
+						epItem.setDisableReviseItem(true);
 						this.getManagedBean().getSelectedPlan().setRejected(false);
 					}else{
 						epItem.setEditable(false);
@@ -1217,6 +1218,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//25549@12102020 - start
 							epItem.setReviseReject(true);
 							//25549@12102020 - end
+							epItem.setDisableReviseItem(true);
 						}else{
 							epItem.setEditable(false);
 							//25549@12102020 - start

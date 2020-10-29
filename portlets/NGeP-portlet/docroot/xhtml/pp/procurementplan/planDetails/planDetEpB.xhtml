@@ -131,12 +131,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						immediate="true" 
 						update="dtExpenditurePlanB" 
 						partialSubmit="true"
-						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!pPlanBackingBean.managedBean.selectedPlan.rejected)}">
+						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}">
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votMengurus, pPlanBackingBean.managedBean.selectedPlan, index)}"
-				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!pPlanBackingBean.managedBean.selectedPlan.rejected)}"
+				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}"
 				      		update="@form"/>
 				      </h:graphicImage>
 				</p:commandLink>
@@ -220,7 +220,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </ui:remove>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{epItem.cloneEnabled or epItem.statusEnabled or !pPlanBackingBean.managedBean.modeReviewEditable or epItem.disableRow}">
-			    	<p:ajax event="change" update="clEpReason"/>
+			    	<p:ajax event="change" update="clEpReason, addUpdateEpBInfo"/>
 			    </p:selectBooleanCheckbox>
 			    &#160;
 			   <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
