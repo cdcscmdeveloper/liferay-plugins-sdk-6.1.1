@@ -2587,13 +2587,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),SearchCondition.CONDITION_OR.value());
 
 				SearchFilterBean highAuthFilterBean = new SearchFilterBean(QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
-						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),SearchCondition.CONDITION_OR.value());
+						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),JoinType.LEFT);
 				SearchMultiFilterBean statusBean = null;
 				statusBean = new SearchMultiFilterBean(
 						highAuthFilterBean, 
 						new SearchFilterBean(
 								QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
-								SearchOperator.OPERATOR_IS_NOT_NULL.value(),
+								SearchOperator.OPERATOR_IS_NULL.value(),
 								null,
 								SearchCondition.CONDITION_OR.value()));
 				
@@ -2628,11 +2628,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}						
 				}
-				//SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,highAuthFilterBean);
-				SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(secretaryFilterBean,searchFilterBean1);
-				searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
-				qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);					
+				if(searchFilterBean1!=null){
+					SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,SearchCondition.CONDITION_OR.value(),statusBean);
+					SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(searchFilterBeanOr1,searchFilterBean1);
+					searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
+					qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);					
 					
+				}					
 			}
 
 			// Adding search filterbeans to searchbean.
