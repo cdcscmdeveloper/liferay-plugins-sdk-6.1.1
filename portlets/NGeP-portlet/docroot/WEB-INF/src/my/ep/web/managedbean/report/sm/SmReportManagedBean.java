@@ -66,6 +66,9 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	private List<CategoryRptVO> categoryLs;
 	private List<CategoryRptVO> selectedCategoryLs;
 	public String searchDate;
+	public String orgTypeCode;
+	public String orgTypeName;
+	public List<SelectItem> agencyTypeItems;
 
 
 	public String getDocumentType() {
@@ -443,5 +446,30 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setSearchDate(String searchDate) {
 		this.searchDate = searchDate;
 	}
+
+	public String getOrgTypeCode() {
+		return orgTypeCode;
+	}
+
+	public void setOrgTypeCode(String orgTypeCode) {
+		this.orgTypeCode = orgTypeCode;
+	}
+
+	public List<SelectItem> getAgencyTypeItems() {
+		return agencyTypeItems;
+	}
+
+	public void setAgencyTypeItems(List<SelectItem> agencyTypeItems) {
+		this.agencyTypeItems = agencyTypeItems;
+	}
+	
+	public String getOrgTypeName() {
+		return orgTypeName;
+	}
+
+	public void setOrgTypeName(String orgTypeName) {
+		this.orgTypeName = orgTypeName;
+	}
+	
 	
 }
