@@ -14,8 +14,9 @@
 
 
 
-
-
+  <!--2020717@azza - Enhancement27627 - Start -->		
+   <p:outputPanel id="normalpromotionPageID">
+  <!--2020717@azza - Enhancement27627 - End -->	
 	<p:panelGrid styleClass="tablePanel" style="width:100%;">
 		<f:facet name="header">
 			<p:row>
@@ -28,14 +29,21 @@
 				<p:column>
 							#{lbl['lbl.cm.end.date']}
 						</p:column>
+						
+				<!--20200520@akmal - Enhancement27627 - Start -->		
+				<p:column>
+							#{lbl['lbl.cm.action']}
+						</p:column>
+				<!--20200520@akmal - Enhancement27627 - End -->
 				
 			</p:row>
 
 		</f:facet>
 
-
-		<p:row>
-			
+		<!--20200520@akmal - Enhancement27627 - Start -->	
+		<p:row rendered="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+		<!--20200520@akmal - Enhancement27627 - End -->
+		
 			<p:column>
 				<p:inputText id="promotionPriceId" disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" maxlength="18" style="text-align:right">
@@ -60,17 +68,66 @@
 					</p:calendar>
 
 			</p:column>
+			
+			<!--20200520@akmal - Enhancement27627 - Start -->
+			<p:column>
+				<p:commandLink style="margin-left: 10px;"
+					title="#{lbl['lbl.btn.delete']}" oncomplete="confirmationDelete.show();"
+					action="#{catalogueBackingBean.setSingleItemToDelete(selectedSuppCat.supplierItemId)}"
+					disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}">
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					<f:param name="index" value="#{rowIndex}"></f:param>
+				</p:commandLink>
+
+			</p:column>
+			<!--20200520@akmal - Enhancement27627 - End -->
 
 		</p:row>
-
-
+		
+		
+		<!--20200520@akmal - Enhancement27627 - Start -->
+		<p:row rendered="#{!catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+			<p:column colspan="4">
+				#{lbl['lbl.datatable.msg.no.records.found']}
+			</p:column>
+		</p:row>
+		<!--20200520@akmal - Enhancement27627 - End -->
 
 	</p:panelGrid>
 
+	<!--20200520@akmal - Enhancement27627 - Start -->
+	<div align="right">
+	     <!--2020717@azza - Enhancement27627 - Start -->		
+			<p:commandButton id="addPromoButton" 
+				value="#{lbl['lbl.cm.add']}"
+				action="#{catalogueBackingBean.addNewPromotionPricing()}"
+				disabled="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem) or
+					unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
+				update="normalpromotionPageID" 
+				process="@this"></p:commandButton>
+		<!--2020717@azza - Enhancement27627 - End -->		
+	</div>
+	
+	<p:confirmDialog id="confirmDeleteId"
+			message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+			widgetVar="confirmationDelete">
+             <!--2020717@azza - Enhancement27627 - Start -->
+			<p:commandButton id="confirmID"
+				value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+				actionListener="#{catalogueBackingBean.deletePromotionPrice()}"
+				update="normalpromotionPageID" oncomplete="confirmationDelete.hide()" />
+			  <!--2020717@azza - Enhancement27627 - Start -->
+			<p:commandButton id="declineID"
+				value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+				onclick="confirmationDelete.hide()" />
 
-
-
-
+	</p:confirmDialog>
+	<!--20200520@akmal - Enhancement27627 - End -->
+	
+	<!--2020717@azza - Enhancement27627 - Start -->		
+	</p:outputPanel>
+	<!--2020717@azza - Enhancement27627 - End -->		
 
 
 </ui:composition>
