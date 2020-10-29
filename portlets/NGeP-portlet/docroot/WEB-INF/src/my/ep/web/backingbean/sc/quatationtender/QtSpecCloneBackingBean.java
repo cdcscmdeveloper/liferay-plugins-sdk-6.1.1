@@ -78,6 +78,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -883,9 +884,17 @@ public class QtSpecCloneBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setQtId(selected.getQtId());
+		/*
+		 * TRACE HI-EXEC TIME
+		 * Development #29385
+		 */
+		long startTime = System.currentTimeMillis();
 		QuationTenderResDTO tenderResDTO = QtDetailsSO
 				.retriveQTDetails(tenderReqDTO);
-		
+		SLAUtils.getInstance().logHiExecInfo("QT","QtSpecCloneBackingBean.addToClone", startTime);
+		/*
+		 * END
+		 */
 		FacesContext context = FacesContext.getCurrentInstance();
 		ELContext elContext = context.getELContext();
 		SpecificationBackingBean specificationBackingBean = (SpecificationBackingBean) elContext.getELResolver().getValue(elContext, null, "specificationBackingBean");

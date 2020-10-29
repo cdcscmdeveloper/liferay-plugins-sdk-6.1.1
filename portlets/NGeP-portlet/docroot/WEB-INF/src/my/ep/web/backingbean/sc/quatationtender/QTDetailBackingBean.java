@@ -224,6 +224,7 @@ import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -962,7 +963,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setMaintanceFlow(true);
 			reqDTO.setQtId(qtId);
+			
+			/*
+			 * TRACE HI-EXEC TIME
+			 * Development #29385
+			 */
+			long startTime = System.currentTimeMillis();
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
+			SLAUtils.getInstance().logHiExecInfo("QT","QTDetailBackingBean.editQuationTenderDetails", startTime);
+			/*
+			 * END
+			 */
 			ScQt selectedScQt = resDTO.getQtDetail();		
 
 			if (null == selectedScQt.getContractType()) {
@@ -4757,7 +4768,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						&& null != this.getManagedBean().getZoneGeneralTrees() && this
 								.getManagedBean().getZoneGeneralTrees()
 								.isEmpty())) {
+					/*
+					 * TRACE HI-EXEC TIME
+					 * Development #29385
+					 */
+					long startTime = System.currentTimeMillis();
 					tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+					SLAUtils.getInstance().logHiExecInfo("QT","QTDetailBackingBean.retrieveQuationTenderDetails", startTime);
+					/*
+					 * END
+					 */
 					if (tenderResDTO.getQtDetail() != null) {
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
