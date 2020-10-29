@@ -69,7 +69,11 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.mofno']}">
-					<h:outputText value="#{smAppl[8]}" />
+					<h:outputText value="#{smAppl[8]}" rendered="#{not empty smAppl[8]}"/>
+					<h:outputText value="#{viewSuppProfileBackingBean.managedBean.currMof.mofNo}" 
+						rendered="#{empty smAppl[8] and not empty viewSuppProfileBackingBean.managedBean.currMof}"/>
+					<h:outputText value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty smAppl[8] and empty viewSuppProfileBackingBean.managedBean.currMof}"/>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.epno']}">
