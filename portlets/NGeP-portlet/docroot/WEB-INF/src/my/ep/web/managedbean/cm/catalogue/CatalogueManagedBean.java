@@ -164,6 +164,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The price type tariff. */
 	private boolean priceTypeTariff = false;
+	
+	//20200929@akmal - Enhancement27627 - Start
+	/** Flag to check if item saved 1st before publish**/
+	private boolean isSavedFirst = false;
+	//20200929@akmal - Enhancement27627 - End
 
 	/** The unspsc. */
 	private CmUnspsc unspsc;
@@ -517,6 +522,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private TreeNode stateTree;
 	
 	private TreeNode[] selectedNodes;
+	
+	//201002@akmal - Bug29265 - Start
+	private boolean isPromoPriceExist = false;
+	//201002@akmal - Bug29265 - End
 	
 	//SSM integration
 	/** The current date. */
@@ -4247,4 +4256,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setMinDate(Date minDate) {
 		this.minDate = minDate;
 	}
+	
+	//20200929@akmal - Enhancement27627 - Start
+		public boolean isSavedFirst() {
+			return isSavedFirst;
+		}
+
+		public void setSavedFirst(boolean isSavedFirst) {
+			this.isSavedFirst = isSavedFirst;
+		}
+		//20200929@akmal - Enhancement27627 - End
+
+		//201002@akmal - Bug29265 - Start
+		public boolean isPromoPriceExist() {
+			return isPromoPriceExist;
+		}
+
+		public void setPromoPriceExist(boolean isPromoPriceExist) {
+			this.isPromoPriceExist = isPromoPriceExist;
+		}
+		//201002@akmal - Bug29265 - End
 }
