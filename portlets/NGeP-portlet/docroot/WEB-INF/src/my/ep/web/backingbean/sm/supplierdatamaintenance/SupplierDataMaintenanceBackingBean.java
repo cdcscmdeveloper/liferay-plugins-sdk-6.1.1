@@ -1946,6 +1946,11 @@ public class SupplierDataMaintenanceBackingBean extends
 				if (disc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					//27857: Disciplinary Action - start - 26238
 					if(!getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
+						
+						// 27815 - add disable button delete if edit DA - Start
+						getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+						// 27815 - add disable button delete if edit DA - End
+						
 						if(disc.isBlacklistOwner()){
 							getManagedBean().setBlacklistOwnerOrDirector(true);
 							getManagedBean().setBlacklistOwnerOrDirectorExist(true);
@@ -1961,13 +1966,13 @@ public class SupplierDataMaintenanceBackingBean extends
 							getManagedBean().setCancelCategoryCode(true);
 							getManagedBean().setCancelCategoryCodeExist(true);
 							
-							if(getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
-								// 27815 - add disable button delete if edit DA - Start
-								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
-								// 27815 - add disable button delete if edit DA - End
-							} else {
-								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
-							}
+							//if(getManagedBean().isEditDisciplinaryActionCheckBox()){ //29181: Disciplinary Action - change edit check box variable - 26238
+							// 27815 - add disable button delete if edit DA - Start
+							//	getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+							// 27815 - add disable button delete if edit DA - End
+							// } else {
+							//	getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
+							// }
 						}
 						if(disc.isSuspendRegistration()){
 							getManagedBean().setSuspendRegistration(true);
@@ -1989,10 +1994,17 @@ public class SupplierDataMaintenanceBackingBean extends
 							getManagedBean().setManufacturerStatusCancel(true);
 							getManagedBean().setManufacturerStatusCancelExist(true);
 							// 27815 - add disable button delete if edit DA - Start
-							getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+							//getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 							// 27815 - add disable button delete if edit DA - End
 						}
 					}else{
+						
+						// 27815 - add disable button delete if edit DA - Start
+						if(disc.isCancelCategory() || disc.isBumiputeraCancel() || disc.isManufacturerCancel()){
+								getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
+						}
+						// 27815 - add disable button delete if edit DA - End
+						
 						resetDisciplinaryActionSectionExist();
 						getManagedBean().setEditDisciplinaryActionCheckBox(true);//29181: Disciplinary Action - 26238
 						getManagedBean().setEditDisciplinaryAction(true);
