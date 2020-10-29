@@ -1499,6 +1499,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		this.getManagedBean().setCommitteeType(committeeType);
 		
 		retriveMeetingDetails(scQt.getQtId());
+		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
@@ -1548,6 +1549,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				FacesContext fc = FacesContext.getCurrentInstance();
 				this.getManagedBean().getFinalBB().loadPreparationTabDetails();
 				this.getManagedBean().getFinalBB().getManagedBean().setPrepareActiveIndex(1);
+				prepareMemberUpdate();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigateTo);
 			}else{
 				String submitMessage=	ResourceBundleUtils
