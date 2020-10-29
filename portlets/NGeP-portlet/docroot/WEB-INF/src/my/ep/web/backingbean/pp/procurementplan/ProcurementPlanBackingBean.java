@@ -7682,7 +7682,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			PpExpenditureItemList = this.getManagedBean().getEpItemsH();
 		 }
 				
-			
 	         PpExpenditureItem PpExpItem =  PpExpenditureItemList.get(index);
 			  if (Status == 9){
 			      log.info("setActionCloneEnabled " + "true");	
@@ -7690,11 +7689,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			     }else{
 			      log.info("setActionCloneEnabled " + "false");
 			      PpExpItem.setDisableRow(false); 
-			      }
-		    }
-	  
-    }
+			    }  
+		  }
+	    
+	     public void selectedPpStatus(Integer Status, Integer index) {
+			
+		      PpProcurementItem PpItem =  this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index);
+			  if (Status == 9){
+			      log.info("setActionCloneEnabled " + "true");	
+			      PpItem.setDisableRow(true);
+			     }else{
+			      log.info("setActionCloneEnabled " + "false");
+			      PpItem.setDisableRow(false); 
+			    }  
+	         }
+         }
 
-
-
-		
