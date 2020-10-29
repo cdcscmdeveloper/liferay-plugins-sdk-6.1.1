@@ -17,7 +17,9 @@
 			closable="true" severity="error,info" showSummary="false" />
 		<div align="left">
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				onclick="blockWidget.show();" 
+				onclick="blockWidget.show();"
+				oncomplete="blockWidget.hide();" 
+				process="@this" 
 				styleClass="BtnSpacing"
 				action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
@@ -182,8 +184,8 @@
 			showAttachment="false" readonly="#{!isCommitteeUpdatable}"
 			/>
 		<div align="right">
-			<p:commandButton onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.validateCommitteeChanges()}" />
-			<p:commandButton onclick="blockWidget.show();" value="#{lbl['lbl.btn.cancel']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
+			<p:commandButton process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.validateCommitteeChanges()}" />
+			<p:commandButton process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.cancel']}" disabled="#{!isCommitteeUpdatable}" action="#{evaluationMeetingBackingBean.navigateToUpdateMember('back')}" />
 		</div>
 		<ui:include src="addexistingcommittee.xhtml" />
 		<ac:confirmationPopup id="confirmChangeMemberListId"
