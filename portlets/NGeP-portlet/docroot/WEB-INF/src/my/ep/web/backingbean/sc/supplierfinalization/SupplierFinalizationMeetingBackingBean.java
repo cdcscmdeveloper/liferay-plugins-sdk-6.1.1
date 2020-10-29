@@ -1887,6 +1887,13 @@ if (CollectionUtils.isNotEmpty(
 				this.getManagedBean().setToken(finalBB.getManagedBean().getToken());
 				this.getManagedBean().setPayLoad(finalBB.getManagedBean().getPayLoad());
 				this.getManagedBean().setTaskId(finalBB.getManagedBean().getTaskId());
+				if(this.getManagedBean().getQtCommitteeRemarks()==null){
+					this.getManagedBean().setQtCommitteeRemarks(new ArrayList<ScQtCommitteRemarks>());
+				}
+				if(finalBB.getManagedBean().getCommitteeRemarkList()==null){
+					finalBB.getManagedBean().setCommitteeRemarkList(new ArrayList<ScQtCommitteRemarks>());
+				}
+				this.getManagedBean().getQtCommitteeRemarks().addAll(finalBB.getManagedBean().getCommitteeRemarkList());
 				finalBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
 			}else{
 				saveAction();
@@ -1895,7 +1902,16 @@ if (CollectionUtils.isNotEmpty(
 		}
 	}
     private void restoreUnconfirmChanges(){
-    	this.getManagedBean().getCommitteeMembersList().clear();
+	    if(this.getManagedBean().getCommitteeMembersList()==null){
+	    	this.getManagedBean().setCommitteeMembersList(new ArrayList<ScCommitteeMember>());
+	    }
+	    if(this.getManagedBean().getTempCommitteeMembers()==null){
+	    	this.getManagedBean().setTempCommitteeMembers(new ArrayList<ScCommitteeMember>());
+	    }
+	    if(this.getManagedBean().getDeletedCommitteeMembers()==null){
+	    	this.getManagedBean().setDeletedCommitteeMembers(new ArrayList<ScCommitteeMember>());
+	    }
+	    this.getManagedBean().getCommitteeMembersList().clear();
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getDeletedCommitteeMembers(), "getIcPassport");
 		List<ScCommitteeMember> remove = new ArrayList<ScCommitteeMember>();
     	for(ScCommitteeMember m: this.getManagedBean().getTempCommitteeMembers()){
@@ -1947,7 +1963,9 @@ if (CollectionUtils.isNotEmpty(
 		validateCommitteeMembers();
 		if(isCommitteeModified(this.getManagedBean().getCommitteeMembersList())){
 			this.getManagedBean().setCommitteeModified(true);
-			if(StringUtils.isEmpty(this.getManagedBean().getQtCommitteeRemarks().get(0).getRemark())){
+			List<ScQtCommitteRemarks> remarks = this.getManagedBean().getFinalBB()==null ? 
+					this.getManagedBean().getQtCommitteeRemarks() : this.getManagedBean().getFinalBB().getManagedBean().getCommitteeRemarkList();
+			if(StringUtils.isEmpty(remarks.get(0).getRemark())){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
