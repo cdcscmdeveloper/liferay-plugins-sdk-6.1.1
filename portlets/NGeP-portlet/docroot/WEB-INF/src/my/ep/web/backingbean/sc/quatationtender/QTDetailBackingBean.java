@@ -39,6 +39,7 @@ import javax.persistence.criteria.JoinType;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -2551,39 +2552,61 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					if ((isQTMaintenanceScreen() || isQTSearchScreen()) && !isPbbSecretary()) { //#27668
 						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 					}
-				}
+				}				
+					
+				 /* Enhancement #27668 -start-
+				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
+				 * AND WITH PTJ HIMSELF */
+				SearchFilterBean secretaryFilterBean = new SearchFilterBean(QTConstants.FINALIZATION_SECRETARY_LOGIN_ID,
+						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),SearchCondition.CONDITION_OR.value());
+
+				SearchFilterBean highAuthFilterBean = new SearchFilterBean(QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
+						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),SearchCondition.CONDITION_OR.value());
+				SearchMultiFilterBean statusBean = null;
+				statusBean = new SearchMultiFilterBean(
+						highAuthFilterBean, 
+						new SearchFilterBean(
+								QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
+								SearchOperator.OPERATOR_IS_NOT_NULL.value(),
+								null,
+								SearchCondition.CONDITION_OR.value()));
 				
 				PmOrgProfile ptjProfiles = qtnTenderSearchBean.getPtjProfile();
+				SearchFilterBean searchFilterBean1 = null;
 				if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
 					// Filter By - PTJ
-					searchFilterBean.add(new SearchFilterBean(
+					searchFilterBean1 = new SearchFilterBean(
 							"pmOrgProfile." + OrgProfileUtil
 								.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 							SearchOperator.OPERATOR_EQUALS.value(),
-							ptjProfiles.getOrgProfileId()));
+							ptjProfiles.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
 				} else {
 					// Filter By - PTJ Group
 					PmOrgProfile ptjGroupProfile = qtnTenderSearchBean.getPtjGroupProfile();
 					if (ptjGroupProfile != null && ptjGroupProfile.getOrgProfileId() != null) {
-						searchFilterBean.add(new SearchFilterBean(
+						searchFilterBean1 = new SearchFilterBean(
 								"pmOrgProfile." + OrgProfileUtil
 									.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 								SearchOperator.OPERATOR_EQUALS.value(),
-								ptjGroupProfile.getOrgProfileId()));
+								ptjGroupProfile.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
 					} else {
 						// Filter By - Ministry
 						PmOrgProfile ministryProfile = qtnTenderSearchBean.getMinistryProfile();
 						if (ministryProfile != null
 								&& ministryProfile.getOrgProfileId() != null) {	
-							searchFilterBean.add(new SearchFilterBean(
+							searchFilterBean1 = new SearchFilterBean(
 									"pmOrgProfile." + OrgProfileUtil
 										.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 									SearchOperator.OPERATOR_EQUALS.value(),
-									ministryProfile.getOrgProfileId()));
+									ministryProfile.getOrgProfileId(),SearchCondition.CONDITION_OR.value());
 						}
-					}
-					
+					}						
 				}
+				//SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,highAuthFilterBean);
+				SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(secretaryFilterBean,searchFilterBean1);
+				searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
+				qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);					
+				//Enhancement #27668 -end-	
 			}
 
 			// Adding search filterbeans to searchbean.
