@@ -26,7 +26,7 @@
       </c:choose>
 		<div align="left">
 			<p:commandButton widgetVar="backUpdate" value="#{lbl['lbl.btn.back']}"
-				styleClass="BtnSpacing"
+				styleClass="BtnSpacing" process="@this" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" 
 				action="#{meetingBB.navigateToUpdateMember('back')}" />
 		</div>
 		<div align="left" class="header-info header-spacing">
@@ -175,12 +175,21 @@
 				content="#{lbl['lbl.sc.dialog.confirm.message']}"
 				update="@([id$=memberListPanel])" />
 		</p:panel>
-		<ac:scRemarkAndAttachment
+		<c:choose>
+			<c:when test="#{not empty evalBB}">
+				<ac:scRemarkAndAttachment
+						remarkList="#{evalBB.managedBean.committeeRemarkList}"
+						showAttachment="false" />
+			</c:when>
+			<c:otherwise>
+				<ac:scRemarkAndAttachment
 						remarkList="#{meetingBB.managedBean.qtCommitteeRemarks}"
 						showAttachment="false" />
+			</c:otherwise>
+		</c:choose>
 		<div align="right">
-			<p:commandButton widgetVar="confirmUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
-			<p:commandButton widgetVar="cancelUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.cancel']}" action="#{meetingBB.navigateToUpdateMember('back')}" />
+			<p:commandButton process="@this" widgetVar="confirmUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.update']}" action="#{meetingBB.navigateToUpdateMember('confirm')}" />
+			<p:commandButton process="@this" widgetVar="cancelUpdate" oncomplete="blockWidget.hide()" onclick="blockWidget.show()" value="#{lbl['lbl.btn.cancel']}" action="#{meetingBB.navigateToUpdateMember('back')}" />
 		</div>
 		<ui:include src="addExistingCommittee.xhtml" />	
 	</ui:define>

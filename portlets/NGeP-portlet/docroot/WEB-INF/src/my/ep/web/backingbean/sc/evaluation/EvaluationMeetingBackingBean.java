@@ -2073,6 +2073,16 @@ public class EvaluationMeetingBackingBean extends
 	}
     
     private void restoreUnconfirmChanges(){
+    	if(this.getManagedBean().getCommitteeMemberActivity() == null){
+    		this.getManagedBean().setCommitteeMemberActivity(new ArrayList<ScCommitteeMember>());
+    	}
+    	if(this.getManagedBean().getRemoveCommitteeList() == null){
+    		this.getManagedBean().setRemoveCommitteeList(new ArrayList<ScCommitteeMember>());
+    	}
+    	if(this.getManagedBean().getTempCommitteeMembers() == null){
+    		this.getManagedBean().setTempCommitteeMembers(new ArrayList<ScCommitteeMember>());
+    	}
+    	
     	this.getManagedBean().getCommitteeMemberActivity().clear();
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getRemoveCommitteeList(), "getIcPassport");
 		List<ScCommitteeMember> remove = new ArrayList<ScCommitteeMember>();
@@ -2087,7 +2097,13 @@ public class EvaluationMeetingBackingBean extends
     	if(CollectionUtils.isNotEmpty(this.getManagedBean().getRemoveCommitteeList())){
     		this.getManagedBean().getRemoveCommitteeList().removeAll(remove);
     	}
-  
+    	String taskName = this.getManagedBean().getTaskName();
+    	if(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()) && isCommitteeEditable(taskName)){
+			if(StringUtils.isEmpty(this.getManagedBean().getScQtApprovalRemarks().get(0).getRemark())){
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
+						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		}
     }
 	private void prepareCommitteeHistory(ScQtCommittee qtCommittee){
 		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
