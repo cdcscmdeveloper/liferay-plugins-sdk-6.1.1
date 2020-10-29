@@ -2631,7 +2631,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(searchFilterBean1!=null){
 					SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,SearchCondition.CONDITION_OR.value(),statusBean);
 					SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(searchFilterBeanOr1,searchFilterBean1);
-					searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 					qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);					
 					
 				}					
