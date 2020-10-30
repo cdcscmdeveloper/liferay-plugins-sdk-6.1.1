@@ -174,12 +174,14 @@
 					styleClass="column-align-center">
 					<div align="left">
 						<h:outputText
-							value="#{amendmentBackingBean.getParameterDesc(index, data.memberRole)}" />
+							value="#{amendmentBackingBean.getUpdatedParameterDesc(data, index)}" />
 					</div>
 				</p:column>
 				<p:column style="width:15%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.represent.type']}"
-					styleClass="column-align-center">
+					styleClass="column-align-center"
+					rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
+				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
 					<div align="left">
 						<h:outputText
 							value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
