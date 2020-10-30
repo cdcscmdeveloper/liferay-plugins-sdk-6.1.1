@@ -16,6 +16,10 @@ public class SvoSiteVisitLocRptManagedBean extends SmReportManagedBean {
 	private static final long serialVersionUID = -8216956527603600956L;
 	private List<SelectItem> svoUserList;
 	private String svoUser;
+	//12625 start
+	private String svoApplicationStatus;
+	private String svoPerformSiteVisit;
+	//12625 end
 
 	public List<SelectItem> getSvoUserList() {
 		return svoUserList;
@@ -32,5 +36,24 @@ public class SvoSiteVisitLocRptManagedBean extends SmReportManagedBean {
 	public void setSvoUser(String svoUser) {
 		this.svoUser = svoUser;
 	}
+	
+	//12625 start
+	public String getSvoApplicationStatus() {
+		return svoApplicationStatus;
+	}
+
+	public void setSvoApplicationStatus(String svoApplicationStatus) {
+		this.svoApplicationStatus = svoApplicationStatus;
+	}
+
+	public String getSvoPerformSiteVisit() {
+		return svoPerformSiteVisit;
+	}
+
+	public void setSvoPerformSiteVisit(String svoPerformSiteVisit) {
+		this.svoPerformSiteVisit = svoPerformSiteVisit;
+	}
+	//12625 end
+	
 
 }
