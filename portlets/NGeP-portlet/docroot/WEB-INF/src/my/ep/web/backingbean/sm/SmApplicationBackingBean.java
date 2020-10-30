@@ -9089,10 +9089,8 @@ public class SmApplicationBackingBean extends
 			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
-					.getBasicInfo(), getManagedBean().isPoUser(),
-			getManagedBean().getSmSupplier(), getManagedBean()
-					.getSupplierRemarks(), getManagedBean()
-					.getApplnApprovalRemarks(), reqDTO);
+					.getMofNumber(), getManagedBean().getSupplierRemarks(),
+					 getManagedBean().getSmSupplier(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
