@@ -32,8 +32,10 @@ public class SmApplicationNotificationUtil {
 			SmSupplierBasicInfoVO basicInfo, boolean isPoUser,
 			SmSupplier supplier, String supplierRemarks,
 			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		
 		reqDTO.setBusinessRegNo(supplier.getRegNo());
 		reqDTO.setCompanyName(supplier.getCompanyName());
+		
 		if (smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| smAppl.getApplType().equalsIgnoreCase(
@@ -80,21 +82,23 @@ public class SmApplicationNotificationUtil {
 	 * @param reqDTO
 	 *            - ReviewApplicationReqDTO
 	 */
+	
+	//10908
 	public static void setRejectionNotificationParameters(SmAppl smAppl,
 			SmSupplierBasicInfoVO basicInfo, boolean isPoUser,
 			SmSupplier supplier, String supplierRemarks,
 			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		
 		reqDTO.setBusinessRegNo(supplier.getRegNo());
-		reqDTO.setCompanyName(supplier.getCompanyName()); {
-			
+		reqDTO.setCompanyName(supplier.getCompanyName()); 
 			if (smAppl.getApplType().equalsIgnoreCase(
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				reqDTO.setCategoryDescription(retriveRejectCancelRegistrationMessageForNotification(
+				reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
 						smAppl, supplier, basicInfo, approvalRemarks,
 						supplierRemarks));
 				// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
 			}
-		}
+
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
 					SupplierManagementConst.SM_STATE_NAME_SABAH)) {
@@ -109,7 +113,7 @@ public class SmApplicationNotificationUtil {
 						"lbl.sm.notifAddr.semunanjung", null));
 			}
 		}
-
+		reqDTO.setNotifLink("");
 	}
 
 	/**
