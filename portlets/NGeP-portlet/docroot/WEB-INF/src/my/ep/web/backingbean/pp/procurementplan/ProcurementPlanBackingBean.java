@@ -3134,6 +3134,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							expItem.setDisableReviseItem(true);
 							//25549@07102020 - start	
 							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
@@ -3190,6 +3191,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							expItem.setDisableReviseItem(true);
 
 					}
 				  }
@@ -3244,6 +3246,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							expItem.setDisableReviseItem(true);
 							//25549@07102020 - start	
 							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
@@ -3301,6 +3304,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							expItem.setDisableReviseItem(true);
 							//25549@07102020 - start	
 							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
@@ -3357,6 +3361,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							expItem.setEditable(false);
 							expItem.setJustificationEnabled(false);
 							expItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							expItem.setDisableReviseItem(true);
 							//25549@07102020 - start	
 							//expItem.getJustifications().get(0).setJustificationEnabled(false);
 							//25549@07102020 - end	
