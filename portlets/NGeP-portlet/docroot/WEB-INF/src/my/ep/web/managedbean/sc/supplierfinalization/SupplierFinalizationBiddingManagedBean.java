@@ -147,6 +147,10 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private boolean autoUpdate = Boolean.TRUE;
 	private List<ScQtFinalizationReport> documentList;
 	
+	// #27502 - Start
+	private boolean mofFinalization;
+	// #27502 - End
+	
 	/**
 	 * @return the onlineBiddingActiveIndex
 	 */
@@ -1243,6 +1247,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setDocumentList(List<ScQtFinalizationReport> documentList) {
 		this.documentList = documentList;
+	}
+
+	public boolean isMofFinalization() {
+		return mofFinalization;
+	}
+
+	public void setMofFinalization(boolean mofFinalization) {
+		this.mofFinalization = mofFinalization;
 	}
 
 }
