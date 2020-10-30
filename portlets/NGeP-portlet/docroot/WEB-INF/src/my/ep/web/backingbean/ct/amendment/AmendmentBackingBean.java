@@ -6395,17 +6395,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#29403 start
 		public void backToDecisionTab() {
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			if(!getManagedBean().isHasChanges()) {
-				//IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-				if(!getManagedBean().isHasChanges()) {
-					if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {	
-						getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
-					}
-				}
-				if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
-					getFilteredCommitteeMembers().clear();
+				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+					ContractReqDTO ctReqDTO = new ContractReqDTO();		
+					ContractResDTO ctResDTO = null;
+					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+					ctReqDTO.setAmendmentId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
+					ctResDTO = contractAmendmentSO.retrieveContractCommitteeMemberByAmendmentId(ctReqDTO);
+					getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());			
 				}
 			}
+			if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
+				getFilteredCommitteeMembers().clear();
+			}
+			
 			setTabValue("DCN"); //#29403
 			
 		}
@@ -6519,14 +6523,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 		
-		
+		//#29403 start
 		/**
 		 * The method used to get the parameter description by parameter.
 		 * with additional setting for secretary role.
 		 * Attendance is compulsory for secretary.
 		 * 
-		 * @param   index      the current record index
-		 * @param   parameter  the PmParameter instance
+		 * @param   index      the current record index (only used for secretary role)
+		 * @param   curCommitteeMember  the current committee member
 		 * @return  parameter description
 		 */
 		public String getUpdatedParameterDesc(CtCommitteeMember curCommitteeMember, int index) {
@@ -6555,7 +6559,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				strDescription = getParameterDesc(curParameter);
 			}
 			return strDescription;
-			//#26520 - end
 		}
 		//#29403 end
 		
