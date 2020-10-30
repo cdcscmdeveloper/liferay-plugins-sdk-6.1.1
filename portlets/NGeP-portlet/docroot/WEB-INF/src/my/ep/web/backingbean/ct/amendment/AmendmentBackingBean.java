@@ -14,7 +14,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,9 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -82,7 +78,6 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -113,7 +108,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -124,7 +118,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
 import my.ep.util.EpPropertiesUtils;
@@ -157,7 +150,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
 
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -166,8 +158,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -3972,7 +3962,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtCommitteeMember ctCommitteeMember = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
 			ctCommitteeMember = getManagedBean().getUpdatedCommitteeMembers().get(index);
-			parameter = ctCommitteeMember.getMemberRole(); //#29403
+			
+			//#29403 start
+			if (parameter == null){
+				parameter = ctCommitteeMember.getMemberRole(); 
+			}
+			//#29403 end
+			
 		} else {
 			ctCommitteeMember = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().get(index);
 		}
@@ -4361,7 +4357,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 		}
 		//26753 - end		
+		
+		
+		
 		for (CtCommitteeMember committeObj : ctCommitteeMembers) {//26753
+			
+			//#29403 start
+			if(committeObj.getMemberRole().getParameterId()!=null && committeObj.getMemberRole().getParameterCode()==null){
+				committeObj.setMemberRole(ParameterHelper.getInstance().getPmParameterById(committeObj.getMemberRole().getParameterId()));
+			}else if(committeObj.getMemberRole().getParameterId()==null 
+					&& committeObj.getMemberRole().getParameterCode()==null 
+					&& committeObj.getMemberRoleId()!=null){
+				committeObj.setMemberRole(ParameterHelper.getInstance().getPmParameterById(committeObj.getMemberRoleId()));
+			}
+			//29403 end
+			
 			if (committeObj.isAttended() && committeObj.getMemberRole().getParameterCode().equalsIgnoreCase(
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 				chairpersonRole = false;
@@ -6506,6 +6516,46 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (counter > 1) {
 				throw new EpException(MessageConst.ERROR_750008);
 			}
+		}
+		
+		
+		
+		/**
+		 * The method used to get the parameter description by parameter.
+		 * with additional setting for secretary role.
+		 * Attendance is compulsory for secretary.
+		 * 
+		 * @param   index      the current record index
+		 * @param   parameter  the PmParameter instance
+		 * @return  parameter description
+		 */
+		public String getUpdatedParameterDesc(CtCommitteeMember curCommitteeMember, int index) {
+			String strDescription = null;
+			PmParameter curParameter = null;
+			
+			if (curCommitteeMember.getMemberRoleId() != null){
+				curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId());
+			}else{
+				curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId());
+			}
+			
+			if (curParameter != null 
+					&& curParameter.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+				curCommitteeMember.setAttended(true);
+				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+					getManagedBean().getUpdatedCommitteeMembers().remove(index);
+					getManagedBean().getUpdatedCommitteeMembers().add(index, curCommitteeMember);
+				}else {	
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, curCommitteeMember);
+				}
+				strDescription = ResourceBundleUtils.getMessage("lbl.ct.secretary", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else {
+				strDescription = getParameterDesc(curParameter);
+			}
+			return strDescription;
+			//#26520 - end
 		}
 		//#29403 end
 		
