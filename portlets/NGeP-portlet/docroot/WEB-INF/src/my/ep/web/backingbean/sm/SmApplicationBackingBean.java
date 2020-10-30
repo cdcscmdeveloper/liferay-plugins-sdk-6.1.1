@@ -530,15 +530,6 @@ public class SmApplicationBackingBean extends
 							getManagedBean().setSmAppl(latestResubmitAppl);
 							getManagedBean().setSmSupplier(
 									latestResubmitAppl.getSmSupplier());
-							//#29086
-							if (!this.getManagedBean().getSmAppl().getApplType()
-									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-									&& !this.getManagedBean().getSmAppl().getApplType()
-											.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-									&& !this.getManagedBean().getSmAppl().getApplType()
-											.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-								SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
-							}
 							//#27232 - START SSM CHANGES FOR RESUBMIT
 							if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 								ssmIntegrationResubmit();
@@ -2270,7 +2261,6 @@ public class SmApplicationBackingBean extends
 
 				SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 						.getSmAppl());
-				
 				//START SSM AUTO CALCULATE SHARE
 				if(getManagedBean().getSmAppl().isApplValidWithSsm()){
 					calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
@@ -6879,8 +6869,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setIdentificationTypes(getPmIdTypeDropdownValues());
 		}
-		//#29315
-		getManagedBean().setFlagMandatoryEpfNo(false);
 		getManagedBean().setPopupAction("N");
 		SmApplicationUtil.initNewSmPersonnel(getManagedBean(), currentTab);
 
@@ -9098,11 +9086,13 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getApplnRejectionRemarks());
 			}
 		
-			SmApplicationNotificationUtil.setRejectionNotificationParameters(
+			//10908
+			SmApplicationNotificationUtil.setApprovalNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
-							.getBasicInfo().getMofNo(), getManagedBean()
-							.getApplnRejectionRemarks(), getManagedBean()
-							.getSmSupplier(), reqDTO);
+					.getBasicInfo(), getManagedBean().isPoUser(),
+			getManagedBean().getSmSupplier(), getManagedBean()
+					.getSupplierRemarks(), getManagedBean()
+					.getApplnApprovalRemarks(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
