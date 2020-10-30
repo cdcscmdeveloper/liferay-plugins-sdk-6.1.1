@@ -6963,6 +6963,7 @@ public class EvaluationBackingBean extends
 							financialCheckListStatusCheck();//#25138
 							//#25138 - one item only - start
 							if(this.getManagedBean().getSingleSpecQuestion()){
+								retriveFinancialEvaluationStagePackage();//#25138
 								retriveOneTierFinancialSupplierSummary();
 							}else{
 								retriveFinancialEvaluationStagePackage();//#25138-Ahmaa
@@ -14120,22 +14121,37 @@ private void retriveCommitteeRemarksList(){
 											ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 									EvaluationReqDTO reqDTO2 = new EvaluationReqDTO();
 									EvaluationResDTO resDTO2 = new EvaluationResDTO();
-									reqDTO2.setCheckListId(scQtCheckList.getQtChecklistId());
-									reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
-									reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									//#25138 - fix null for zonal - start 
 									if(this.getManagedBean().getScQt().isZonal()){
-										for(TplSpecZoneDtl tplSpecZoneDtl: this.getManagedBean().getSpecZoneDtls()){
-											reqDTO2.setSpeZoneId(tplSpecZoneDtl.getSpecZoneId());
-										} 
+										if(this.getManagedBean().getSpecZoneDtls()!=null){
+											for(TplSpecZoneDtl tplSpecZoneDtl: this.getManagedBean().getSpecZoneDtls()){
+												reqDTO2.setCheckListId(scQtCheckList.getQtChecklistId());
+												reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
+												reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+												reqDTO2.setSpeZoneId(tplSpecZoneDtl.getSpecZoneId());
+												resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
+												
+												List<ScQtProposalChecklist> scQtProposalChecklist = resDTO2.getComplianceResultBean().getResultList();
+												reqDTO2.setPropChecklist(scQtProposalChecklist);
+												reqDTO2.setSpecAnswer(tplSpecAnswer.getUserScore());
+												reqDTO2.setSingleItem(this.getManagedBean().getSingleSpecQuestion());
+												evaluationSO.saveUserScorePackageDetails(reqDTO2);
+											} 
+										}
+										
+									}else{
+										reqDTO2.setCheckListId(scQtCheckList.getQtChecklistId());
+										reqDTO2.setQtId(this.getManagedBean().getScQt().getQtId());
+										reqDTO2.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+										resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
+										
+										List<ScQtProposalChecklist> scQtProposalChecklist = resDTO2.getComplianceResultBean().getResultList();
+										reqDTO2.setPropChecklist(scQtProposalChecklist);
+										reqDTO2.setSpecAnswer(tplSpecAnswer.getUserScore());
+										reqDTO2.setSingleItem(this.getManagedBean().getSingleSpecQuestion());
+										evaluationSO.saveUserScorePackageDetails(reqDTO2);
 									}
-									resDTO2 = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO2);
-									
-									List<ScQtProposalChecklist> scQtProposalChecklist = resDTO2.getComplianceResultBean().getResultList();
-									reqDTO2.setPropChecklist(scQtProposalChecklist);
-									reqDTO2.setSpecAnswer(tplSpecAnswer.getUserScore());
-									reqDTO2.setSingleItem(this.getManagedBean().getSingleSpecQuestion());
-									evaluationSO.saveUserScorePackageDetails(reqDTO2);
-									
+									//#25138 - fix null for zonal - end
 								}
 							}
 							
