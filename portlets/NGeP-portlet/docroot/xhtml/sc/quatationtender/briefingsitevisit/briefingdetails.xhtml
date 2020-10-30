@@ -35,13 +35,13 @@
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.date.time']}" /> <p:outputLabel
+						<td><p:outputLabel value="#{lbl['lbl.sc.date.day.time']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="1">
 							<ac:dateTime id="briefdate"
 									mindate="#{qTBriefingSiteVisitBackingBean.handleBSVMinDate()}"
 									required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
-									label="#{lbl['lbl.sc.date.time']}"
+									label="#{lbl['lbl.sc.date.day.time']}"
 									value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
 									update="@this, @([id$=pday]) "  >									
 							</ac:dateTime>
