@@ -385,9 +385,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				renewSesionObject();
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !hasFactoringUserRole()) {
+				if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !hasFactoringUserRole())) {
 					Map<String, String> paramMap = new HashMap<String, String>();
 					paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getOrderNo());
 					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
@@ -398,7 +398,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					}else{
 						commonBackingBean.getManagedBean().setReportDisplayName(getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER));
 					}
-					
 					commonBackingBean.getManagedBean().setParamMap(paramMap);
 					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
 				}
@@ -1314,7 +1313,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
-		} else {
+		}else {
 			validateFulfillmentOrder(outcome);
 			//28377 - uncomment function
 			setTextBeforeSign(outcome);
@@ -1351,7 +1350,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)) {
+			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) ) {
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 
@@ -1636,9 +1635,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			sb.append(outcome+"|");
 			sb.append(getFacesScopes().getUserSessionBean().getIdentificationNo());
-			log.info("test:inside setTextBeforeSign: "+sb.toString());
 			getManagedBean().setTextBeforeSign(sb.toString());
-			log.info("test:inside after setTextBeforeSign: "+getManagedBean().getTextBeforeSign());
 		}
 	
 	/**
@@ -2378,4 +2375,29 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	}
 	
 //	28377 - end
+	  //29440 start
+	  public String proceedNonAP58() throws IOException{
+	    	log.info("inside hideyep");
+	    	Long docId = this.getManagedBean().getFlOrderId();
+			log.info("29440: docid: "+docId);
+			FulfilmentReqDTO reqDTOnonAP58 = new FulfilmentReqDTO();
+			FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
+			IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			reqDTOflorder.setFlOrderId(docId);
+			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
+			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
+			log.info("29440: "+resDTO.isSuccessful());
+			if(resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				
+			} else {
+				throw new EpException(MessageConst.ERROR_740017);
+			}	
+		}
+	  //29440 end
 }
