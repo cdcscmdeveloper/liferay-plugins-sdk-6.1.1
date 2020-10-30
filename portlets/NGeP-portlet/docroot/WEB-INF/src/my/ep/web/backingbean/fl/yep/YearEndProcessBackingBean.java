@@ -2,6 +2,7 @@ package my.ep.web.backingbean.fl.yep;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,7 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -62,6 +65,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.yep.YearEndProcessManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -197,6 +201,7 @@ public class YearEndProcessBackingBean extends
 			
 				for (PmStatusDesc statusDesc : statusDescs) {
 				
+				/*#28373 Vinod Added CO_PENDING_REVISION_INVOICE,PO_PENDING_REVISION_INVOICE,CO_PENDING_PAYMENT_QUERY and PO_PENDING_PAYMENT_QUERY*/
 				if(statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PARTIAL_FL)
@@ -212,7 +217,11 @@ public class YearEndProcessBackingBean extends
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED)
-					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)){
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)){
 					
 					statusDescsYep.add(statusDesc);
 				}
@@ -742,6 +751,9 @@ public class YearEndProcessBackingBean extends
 		}
 
 		// end - 28377 razin
+		//29440 start
+		flOrderBB.getManagedBean().setFlOrderId(Long.valueOf(flDocId));
+		//29440 end
 		flOrderBB.getManagedBean().setYep(true);
 		return navgPage;
 	}
@@ -761,25 +773,22 @@ public class YearEndProcessBackingBean extends
 			}
 		return false;
 	}
-    public void hideYep(){
-    	log.info("inside hideyep");
-    	//String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
-		//String fulfilmentOrderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fulfilmentOrderId");
-		//String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
-		String docId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docId");
-		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-		
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
-		//fulfilmentOrder.setFulfilmentOrderId(Long.parseLong(fulfilmentOrderId));
-		reqDTOflorder.setFlOrderId(Long.parseLong(docId));
-		//fulfilmentOrder.setDocType(docType);
-		//fulfilmentOrder.setDocNo(docNo);
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
-		reqDTO.setFulfilmentOrder(resDTO.getFlOrder());
-		fulfilmentOrderSO.hideYEPtasklist(reqDTO);
-    }
 // end 28377
+    //29440 start
+    public void generateReport(String docType, String docNo) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		String reportName = ReportConst.FL_NGEP_PURCHASE_ORDER;
+		if(reportName!=null) {
+			try {
+				generateReport(reportName, paramMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new EpException("Report is not available for this document.");
+		}
+	}
+    //29440 end
 }
