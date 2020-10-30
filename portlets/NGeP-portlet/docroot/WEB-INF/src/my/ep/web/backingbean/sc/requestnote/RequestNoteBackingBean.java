@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1954,6 +1956,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
 				// required validation
 				getManagedBean().setRequired(Boolean.TRUE);
+				// #28789 - start
+				getManagedBean().setCompleteCmPricingList(cmSupplierItem.getCmPricings());
+				onChangePriceType();
+				// #28789 - end
 			}
 		} else {
 			// remove after catalogue team had add the filtering in view.
@@ -5320,4 +5326,86 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return valid;
 	}
 	//12183 - End
+	
+	// #28789 - start
+	public void onChangePriceType() {
+		if (StringUtils.isBlank(getManagedBean().getPriceType())) {
+			return;
+		}
+
+		BigDecimal normalTierTotalPrice = BigDecimal.ZERO;
+		BigDecimal itemQuantity = getManagedBean().getRequestSupplierItem().getRequestNoteItem().getQuantity();
+		String selectedPriceType = getManagedBean().getPriceType();
+		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+		NumberFormat formatter= NumberFormat.getCurrencyInstance(myLocale); 
+		StringBuilder normalTierTotalPriceSB = new StringBuilder(ParameterConst.CATEGORY_TYPE_READING_MATERIAL);
+		getManagedBean().setPriceTypeStringFlag(Boolean.FALSE);
+		getManagedBean().setPriceTypeTableFlag(Boolean.FALSE);
+		getManagedBean().setFromAndToQuantityFlag(Boolean.FALSE);
+
+		if (Arrays.asList(ParameterConst.PRICE_TYPE_STANDARD, ParameterConst.PRICE_TYPE_PROMOTION).contains(
+				getManagedBean().getPriceType())) {
+			getManagedBean().setPriceTypeStringFlag(Boolean.TRUE);
+			
+			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
+				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType) && (cmp.getPrice() != null)) {
+					normalTierTotalPrice = normalTierTotalPrice.add(cmp.getPrice());
+				}
+			}
+			
+			if (normalTierTotalPrice.compareTo(BigDecimal.ZERO) == 0) {
+				normalTierTotalPriceSB.append(StringUtils.EMPTY);
+			} else {
+				normalTierTotalPriceSB.append(formatter.format(normalTierTotalPrice).replace(ParameterConst.CATEGORY_TYPE_READING_MATERIAL, " "));
+			}
+			
+			getManagedBean().setNormalAndTierPriceStr(normalTierTotalPriceSB.toString());
+		} else if (Arrays.asList(ParameterConst.PRICE_TYPE_TIER, ParameterConst.PRICE_TYPE_PROMOTION_TIER).contains(
+				getManagedBean().getPriceType())) {
+			if (itemQuantity == null) {
+				getManagedBean().setNormalAndTierPriceStr(null);
+				return;
+			}
+			BigDecimal fromQtyBD = BigDecimal.ZERO;
+			BigDecimal toQtyBD = BigDecimal.ZERO;
+			getManagedBean().setPriceTypeStringFlag(Boolean.TRUE);
+			
+			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
+				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType) && (cmp.getPrice() != null)
+						&& cmp.getFromQty() != null && cmp.getToQty() != null) {
+					fromQtyBD = BigDecimal.valueOf(cmp.getFromQty());
+					toQtyBD = BigDecimal.valueOf(cmp.getToQty());
+					if (itemQuantity.compareTo(fromQtyBD) >= 0 && itemQuantity.compareTo(toQtyBD) <= 0) {
+						normalTierTotalPriceSB.append(formatter.format(cmp.getPrice()).replace(
+								ParameterConst.CATEGORY_TYPE_READING_MATERIAL, " "));
+						break;
+					}
+				}
+			}
+			
+			if (normalTierTotalPriceSB.length() < 3) {
+				normalTierTotalPriceSB = new StringBuilder(ParameterConst.SKUNO);
+			}
+			
+			getManagedBean().setNormalAndTierPriceStr(normalTierTotalPriceSB.toString());
+		} else if (Arrays.asList(ParameterConst.PRICE_TYPE_ZONAL_STANDARD, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION,
+				ParameterConst.PRICE_TYPE_ZONAL_TIER, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER).contains(
+				selectedPriceType)) {
+			List<CmPricing> filterList = new ArrayList<>();
+			getManagedBean().setPriceTypeTableFlag(Boolean.TRUE);
+			if (Arrays.asList(ParameterConst.PRICE_TYPE_ZONAL_TIER, ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)
+					.contains(selectedPriceType)) {
+				getManagedBean().setFromAndToQuantityFlag(Boolean.TRUE);
+			}
+			
+			for (CmPricing cmp : getManagedBean().getCompleteCmPricingList()) {
+				if (StringUtils.equals(cmp.getPricingType(), selectedPriceType)) {
+					filterList.add(cmp);
+				}
+			}
+			
+			getManagedBean().setFilteredCmPricingList(filterList);
+		}
+	}
+	// #28789 - end
 }
