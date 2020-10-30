@@ -2584,12 +2584,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
 				 * AND WITH PTJ HIMSELF */
 				SearchFilterBean secretaryFilterBean = new SearchFilterBean(QTConstants.FINALIZATION_SECRETARY_LOGIN_ID,
-						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),SearchCondition.CONDITION_OR.value());
+						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),JoinType.LEFT);
+				
+				SearchMultiFilterBean secretartStatusBean = null;
+				secretartStatusBean = new SearchMultiFilterBean(
+						secretaryFilterBean, 
+						new SearchFilterBean(
+								QTConstants.FINALIZATION_SECRETARY_LOGIN_ID,
+								SearchOperator.OPERATOR_IS_NULL.value(),
+								null,
+								SearchCondition.CONDITION_OR.value()));
 
 				SearchFilterBean highAuthFilterBean = new SearchFilterBean(QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
 						SearchOperator.OPERATOR_EQUALS.value(), new FacesScopes().getUserSessionBean().getLoginId(),JoinType.LEFT);
-				SearchMultiFilterBean statusBean = null;
-				statusBean = new SearchMultiFilterBean(
+				SearchMultiFilterBean highAuthStatusBean = null;
+				highAuthStatusBean = new SearchMultiFilterBean(
 						highAuthFilterBean, 
 						new SearchFilterBean(
 								QTConstants.FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID,
@@ -2629,7 +2638,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}						
 				}
 				if(searchFilterBean1!=null){
-					SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretaryFilterBean,SearchCondition.CONDITION_OR.value(),statusBean);
+					SearchMultiFilterBean searchFilterBeanOr1 = new SearchMultiFilterBean(secretartStatusBean,SearchCondition.CONDITION_OR.value(),highAuthStatusBean);
 					SearchMultiFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(searchFilterBeanOr1,searchFilterBean1);
 					qtSearchBean.getDataFilterBeans().add(searchFilterBeanAnd2);					
 					
