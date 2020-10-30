@@ -118,7 +118,6 @@ import org.primefaces.model.MenuModel;
 /**
  * Implementation for supplier finalization by bidding
  * 
- * @author Faradiana Supplier Finalization online Bidding Backing Bean
  */
 @ManagedBean(name = "suppFinalBiddingBackingBean")
 @RequestScoped
@@ -147,6 +146,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 	/**
 	 * Default constructor
 	 */
+	
+	// #27502
+	private static boolean mofFinal = false;
+	
 	public SupplierFinalizationBiddingBackingBean() {
 
 	}
@@ -184,9 +187,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 					.handleNavigation(fc, null,
 							QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);
 			
+			// #27502 - Start			
+			if (null != dataType.getIsMofFinalization()) {
+				mofFinal = dataType.getIsMofFinalization();
+			}
+			
 			if (getManagedBean().isOnlineBiddingEscalation()) {		
 				navigateToBriefingPaperTab();
-			} else {
+			} else if(mofFinal){
+				getManagedBean().setMofFinalization(mofFinal);					
+				navigateToBriefingPaperTab();
+			} // #27502 - End
+			else {
 				navigateToBiddingFinalizationMeetingTab();
 			}				
 		} catch (Exception e) {
@@ -2445,6 +2457,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
 		if (getManagedBean().isOnlineBiddingEscalation()) {
 			return -1;
+		} else if(mofFinal){// #27502 - Start
+			return -1;
 		} else {
 			return ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX;
 		}
@@ -2456,7 +2470,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public int getOnlineBiddingActiveIndexSummary() {
 		int activeIndex;
-		if (getManagedBean().isOnlineBiddingEscalation()) {
+		if(mofFinal){// #27502 - Start
+			activeIndex = 2;
+		} else
+		if (this.getManagedBean().isOnlineBiddingEscalation()) {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
 		} else {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
@@ -2470,7 +2487,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingActiveIndexOnlineEndorsement
 	 */
 	public static int getOnlineBiddingActiveIndexOnlineEndorsement() {
-		return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT;
+		if (mofFinal) {// #27502 - Start
+			return -1;
+		} else {
+			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT;
+		}
 	}
 
 	/**
@@ -2478,7 +2499,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingActiveIndexOfflineEndorsement
 	 */
 	public static int getOnlineBiddingActiveIndexOfflineEndorsement() {
-		return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
+		if (mofFinal) {// #27502 - Start
+			return -1;
+		} else {
+			return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
+		}
 	}
 	
 	
@@ -2526,11 +2551,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 		 * Get the BriefingPaper Tab Details.and navigate to briefing paper tab.
 		 */
 	public void navigateToBriefingPaperTab() {
-
-		this.getManagedBean()
-				.setOnlineBiddingActiveIndex(
-						this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
-								: ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
+		if (mofFinal) {// #27502 - Start
+			this.getManagedBean().setOnlineBiddingActiveIndex(0);
+		} else {
+			this.getManagedBean().setOnlineBiddingActiveIndex(
+					this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
+							: ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
+		}
+		
 		retrieveBriefingPaper();
 	}
 	
@@ -2539,8 +2567,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingFinalizationMeetingActiveIndex
 	 */
 	public int getOnlineBiddinBriefingPaperActiveIndex() {
-		
-		if (getManagedBean().isOnlineBiddingEscalation()) {
+		if (mofFinal) {// #27502 - Start
+			return 0;
+		} else 
+			if (getManagedBean().isOnlineBiddingEscalation()) {
 			return ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING;
 		} else {
 			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING;
