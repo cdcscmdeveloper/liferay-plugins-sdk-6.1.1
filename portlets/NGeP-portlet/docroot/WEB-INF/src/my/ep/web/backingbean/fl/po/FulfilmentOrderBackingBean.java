@@ -2378,26 +2378,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	  //29440 start
 	  public String proceedNonAP58() throws IOException{
 	    	log.info("inside hideyep");
-	    	Long docId = this.getManagedBean().getFlOrderId();
-			log.info("29440: docid: "+docId);
-			FulfilmentReqDTO reqDTOnonAP58 = new FulfilmentReqDTO();
-			FulfilmentReqDTO reqDTOflorder = new FulfilmentReqDTO();
-			IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			reqDTOflorder.setFlOrderId(docId);
-			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
-			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
-			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
-			log.info("29440: "+resDTO.isSuccessful());
-			if(resDTO.isSuccessful()) {
-				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
-				renewSesionObject();
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-				
-			} else {
-				throw new EpException(MessageConst.ERROR_740017);
-			}	
-		}
+	    	 try {
+				  signingAction(BpmOutcomeConst.BPM_NONAP58_PROCEED);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	    }
 	  //29440 end
 }
