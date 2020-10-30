@@ -46,20 +46,11 @@ public class SmApplicationNotificationUtil {
 		} 
 		//10908 - approve cancel mof
 		else if ((smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) && (reqDTO.getPoOrApproverDecision()
-				.equalsIgnoreCase("Approve"))) {
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
 					smAppl, supplier, basicInfo, approvalRemarks,
 					supplierRemarks));
 			// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
-		}
-		//10908 - reject cancel mof
-		else if ((smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) && (reqDTO.getPoOrApproverDecision()
-				.equalsIgnoreCase("Reject"))) {
-			reqDTO.setCategoryDescription(retriveRejectCancelRegistrationMessageForNotification(
-					smAppl, supplier, basicInfo, approvalRemarks,
-					supplierRemarks));
 		}
 		
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
@@ -90,15 +81,19 @@ public class SmApplicationNotificationUtil {
 	 *            - ReviewApplicationReqDTO
 	 */
 	public static void setRejectionNotificationParameters(SmAppl smAppl,
-			String mofNo, String applRejectionRemarks, SmSupplier supplier,
-			ReviewApplicationReqDTO reqDTO) {
-		if (smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			reqDTO.setBusinessRegNo(supplier.getRegNo());
-			reqDTO.setCompanyName(supplier.getCompanyName());
-			reqDTO.setApproverOrPoRemarks(applRejectionRemarks);
-			reqDTO.setMofNum(mofNo);
-
+			SmSupplierBasicInfoVO basicInfo, boolean isPoUser,
+			SmSupplier supplier, String supplierRemarks,
+			String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		reqDTO.setBusinessRegNo(supplier.getRegNo());
+		reqDTO.setCompanyName(supplier.getCompanyName()); {
+			
+			if (smAppl.getApplType().equalsIgnoreCase(
+					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				reqDTO.setCategoryDescription(retriveRejectCancelRegistrationMessageForNotification(
+						smAppl, supplier, basicInfo, approvalRemarks,
+						supplierRemarks));
+				// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
+			}
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
