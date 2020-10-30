@@ -69,12 +69,14 @@
 				<ac:smReportDistrict bBean="#{svoSiteVisitLocRptBB}" />
 			</td>
 		</tr>
-
+		
 		<tr>
-			<td class="tdTitle"><p:outputLabel
-					value="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}" /></td>
-			<td class="tdContent"><ac:smReportDateFromT
-					bBean="#{svoSiteVisitLocRptBB}" /></td>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.expectedsitevisitrptdatefrom']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportDateFromTo bBean="#{svoSiteVisitLocRptBB}" />
+			</td>
 			<!-- 12625 add application status and perform site visit drop-down -->
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.application.status']}" /></td>
@@ -88,7 +90,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteReVisit']}"
 						itemValue="B">
 					</f:selectItem>
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
+			</td>
 		</tr>
 
 		<tr>
@@ -106,9 +109,11 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sv.after.approval']}"
 						itemValue="After ">
 					</f:selectItem>
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
+			</td>
 		</tr>
 		<!-- 12625 end  -->
+		</tr>
 	</table>
 	<br />
 	
