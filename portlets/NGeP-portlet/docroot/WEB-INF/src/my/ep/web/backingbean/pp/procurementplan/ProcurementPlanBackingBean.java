@@ -5663,7 +5663,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 original.setCloneEnabled(true);
 			 this.getManagedBean().setModeEditable(true);
 			 original.setDisableForPindaan(false);
-			 this.getManagedBean().setDisable(false);
+			 //this.getManagedBean().setDisable(false);
 			 original.setEnableRevise(false);
 		 } else {
 			 original.setEnableRevise(true);
