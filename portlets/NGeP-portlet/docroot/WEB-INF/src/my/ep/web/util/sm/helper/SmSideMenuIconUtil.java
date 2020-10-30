@@ -992,7 +992,16 @@ public class SmSideMenuIconUtil {
 								currPersonnel, new String[] { "shareAmt",
 										"sharePercentage", "softcert",
 										"softcertFlg", "epRole" });
-					} //24964					
+						//24964
+					} else {
+						// #29383 - start - 30/10/2020
+						retVal = EntityHelper.isObjectDifference(prevPersonnel,
+								currPersonnel, new String[] { "shareAmt",
+								"sharePercentage", "softcert",
+								"softcertFlg", "epRole" });
+					}
+					// #29383 - end - 30/10/2020
+					
 					
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
