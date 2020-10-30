@@ -9087,7 +9087,7 @@ public class SmApplicationBackingBean extends
 			}
 		
 			//10908
-			SmApplicationNotificationUtil.setApprovalNotificationParameters(
+			SmApplicationNotificationUtil.setRejectionNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
 					.getBasicInfo(), getManagedBean().isPoUser(),
 			getManagedBean().getSmSupplier(), getManagedBean()
