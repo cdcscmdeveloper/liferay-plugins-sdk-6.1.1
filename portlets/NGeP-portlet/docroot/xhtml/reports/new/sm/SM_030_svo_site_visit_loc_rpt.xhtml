@@ -81,6 +81,8 @@
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.application.status']}" /></td>
 			<td class="tdContent"><p:selectOneMenu
+					label="#{lbl['lbl.rpt.application.status']}"
+					id="smSVOApplicationStatus"
 					value="#{svoSiteVisitLocRptBB.managedBean.svoApplicationStatus}"
 					style="width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
@@ -100,6 +102,8 @@
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.perform.site.visit']}" /></td>
 			<td class="tdContent"><p:selectOneMenu
+					label="#{lbl['lbl.rpt.perform.site.visit']}"
+					id="smSVOPerformSiteVisit"
 					value="#{svoSiteVisitLocRptBB.managedBean.svoPerformSiteVisit}"
 					style="width:300px;">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
