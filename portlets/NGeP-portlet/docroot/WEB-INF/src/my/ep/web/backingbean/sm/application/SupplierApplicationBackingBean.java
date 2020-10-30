@@ -8188,14 +8188,12 @@ public class SupplierApplicationBackingBean extends
 						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 						getManagedBean().getApplnRejectionRemarks());
 			}
-			
+
 			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
-					.getBasicInfo(), getManagedBean().isPoUser(),
-			getManagedBean().getSmSupplier(), getManagedBean()
-					.getSupplierRemarks(), getManagedBean()
-					.getApplnApprovalRemarks(), reqDTO);
+					.getMofNumber(), getManagedBean().getSupplierRemarks(),
+					 getManagedBean().getSmSupplier(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
