@@ -162,6 +162,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
+			prepareMemberUpdate();//#25037
 
 			fc.getApplication().getNavigationHandler()
 			  .handleNavigation(fc, null, 
@@ -173,6 +174,93 @@ public class SupplierFinalizationMeetingBackingBean extends
 					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
+	
+	/**
+	 * Enhancement #21694
+	 * VIEW Committee
+	 * @param obj
+	 * 		instance of ScQtCommittee
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public void viewMeetingDetails(Object obj) {		
+		debugLogger("viewMeetingDetails");
+		String previousPageURL = QTConstants.FC_COORDINATE_MEETING_PAGE;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		ScQtMeeting scQtMeeting = null;
+		if(obj instanceof ScQtMeeting ){
+			scQtMeeting = (ScQtMeeting)obj;
+			preRenderViewForQtMeeting(scQtMeeting,previousPageURL);
+			
+		}		
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, QTConstants.VIEW_QT_COMMITTEE_PAGE);
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * VIEW Committee
+	 * @param obj
+	 * 		instance of ScQtCommittee
+	 * @param previousPageUrl
+	 * @return
+	 */
+	public void viewMeetingDetailsViewFinalization(Object obj) {		
+		debugLogger("viewMeetingDetailsFinalization");
+		String previousPageURL = QTConstants.FC_SUPPLIER_FINALIZATION_PAGE;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		ScQtMeeting scQtMeeting = null;
+		if(obj instanceof ScQtMeeting ){
+			scQtMeeting = (ScQtMeeting)obj;
+			preRenderViewForQtMeeting(scQtMeeting,previousPageURL);
+			
+		}		
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, QTConstants.VIEW_QT_COMMITTEE_PAGE);
+	}
+	
+	/**
+	 * Enhancement #21694 START 
+	 * Page navigation from  to qtDetailManageBean.backToPreviousPage
+	 */
+	public void backToPreviousReverse() {
+		debugLogger("backToPreviousReverse");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						getManagedBean().getBackToPreviousPage());
+	}
+	
+	/**
+	 * Enhancement #21694
+	 * @param ScQtMeeting
+	 */
+	public void preRenderViewForQtMeeting(ScQtMeeting scQtMeeting, String prevPageURL){
+		IQTMeetingSO qtMeetingSO;
+		getManagedBean().setBackToPreviousPage(prevPageURL);
+		getManagedBean().setPreviousCommitteeMembers(null);
+		try{
+			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			QuationTenderResDTO resDTO = new QuationTenderResDTO();
+			reqDTO.setMeetingId(scQtMeeting.getQtMeetingId());
+			if(null!=scQtMeeting.getQtMeetingId() && scQtMeeting.getQtMeetingId()>0L){
+				if(null!=reqDTO)
+					resDTO = qtMeetingSO.findPreviousCommitteeMembersByMeetingId(reqDTO); 
+					if(null!=resDTO && null!=resDTO.getPreviousCommitteeMembers() && !resDTO.getPreviousCommitteeMembers().isEmpty()){
+						getManagedBean().setPreviousCommitteeMembers(resDTO.getPreviousCommitteeMembers());
+					}
+			}
+		}finally{
+			qtMeetingSO = null;
+		}
+		
+	}
+	
+	
 
 	/**
 	 * Retrieve quotation/tender details corresponding to the qtId
@@ -316,7 +404,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			committee.setQtCommitteRemarks(remarks);
 			this.getManagedBean().setQtCommitteeRemarks(remarks);
-			prepareMemberUpdate();//#25037
 		} finally {
 			qtMeetingSO = null;
 		}
@@ -337,9 +424,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 			setUserDetails(meeting);
 
 			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
-			
+			meeting.setRecordStatusFlg(1);
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
+			
 		} finally{
 			
 		}
@@ -1411,6 +1499,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		this.getManagedBean().setCommitteeType(committeeType);
 		
 		retriveMeetingDetails(scQt.getQtId());
+		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
@@ -1460,6 +1549,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				FacesContext fc = FacesContext.getCurrentInstance();
 				this.getManagedBean().getFinalBB().loadPreparationTabDetails();
 				this.getManagedBean().getFinalBB().getManagedBean().setPrepareActiveIndex(1);
+				prepareMemberUpdate();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigateTo);
 			}else{
 				String submitMessage=	ResourceBundleUtils
@@ -1799,6 +1889,13 @@ if (CollectionUtils.isNotEmpty(
 				this.getManagedBean().setToken(finalBB.getManagedBean().getToken());
 				this.getManagedBean().setPayLoad(finalBB.getManagedBean().getPayLoad());
 				this.getManagedBean().setTaskId(finalBB.getManagedBean().getTaskId());
+				if(this.getManagedBean().getQtCommitteeRemarks()==null){
+					this.getManagedBean().setQtCommitteeRemarks(new ArrayList<ScQtCommitteRemarks>());
+				}
+				if(finalBB.getManagedBean().getCommitteeRemarkList()==null){
+					finalBB.getManagedBean().setCommitteeRemarkList(new ArrayList<ScQtCommitteRemarks>());
+				}
+				this.getManagedBean().getQtCommitteeRemarks().addAll(finalBB.getManagedBean().getCommitteeRemarkList());
 				finalBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
 			}else{
 				saveAction();
@@ -1807,7 +1904,16 @@ if (CollectionUtils.isNotEmpty(
 		}
 	}
     private void restoreUnconfirmChanges(){
-    	this.getManagedBean().getCommitteeMembersList().clear();
+	    if(this.getManagedBean().getCommitteeMembersList()==null){
+	    	this.getManagedBean().setCommitteeMembersList(new ArrayList<ScCommitteeMember>());
+	    }
+	    if(this.getManagedBean().getTempCommitteeMembers()==null){
+	    	this.getManagedBean().setTempCommitteeMembers(new ArrayList<ScCommitteeMember>());
+	    }
+	    if(this.getManagedBean().getDeletedCommitteeMembers()==null){
+	    	this.getManagedBean().setDeletedCommitteeMembers(new ArrayList<ScCommitteeMember>());
+	    }
+	    this.getManagedBean().getCommitteeMembersList().clear();
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getDeletedCommitteeMembers(), "getIcPassport");
 		List<ScCommitteeMember> remove = new ArrayList<ScCommitteeMember>();
     	for(ScCommitteeMember m: this.getManagedBean().getTempCommitteeMembers()){
@@ -1828,6 +1934,9 @@ if (CollectionUtils.isNotEmpty(
 		try{
 			if(CollectionUtils.isNotEmpty(histories)){
 				ScCommitteeMemberHistory history = histories.get(0);
+				if(histories.size()==1){
+					this.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+				}
 				@SuppressWarnings("unchecked")
 				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
 				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
@@ -1859,7 +1968,9 @@ if (CollectionUtils.isNotEmpty(
 		validateCommitteeMembers();
 		if(isCommitteeModified(this.getManagedBean().getCommitteeMembersList())){
 			this.getManagedBean().setCommitteeModified(true);
-			if(StringUtils.isEmpty(this.getManagedBean().getQtCommitteeRemarks().get(0).getRemark())){
+			List<ScQtCommitteRemarks> remarks = this.getManagedBean().getFinalBB()==null ? 
+					this.getManagedBean().getQtCommitteeRemarks() : this.getManagedBean().getFinalBB().getManagedBean().getCommitteeRemarkList();
+			if(StringUtils.isEmpty(remarks.get(0).getRemark())){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}

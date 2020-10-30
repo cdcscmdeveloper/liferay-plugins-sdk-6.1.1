@@ -19,6 +19,7 @@
 		<cc:attribute name="height" default="auto" />
 		<cc:attribute name="resetInput" default="" />
 		<cc:attribute name="okProcess" default="@this" />
+		<cc:attribute name="noProcess" default="@this" />
 		<cc:attribute name="style" default="" />
 		<cc:attribute name="dialogCSS" default="" />
 		<cc:attribute name="loadingWidget" default=""/>
@@ -102,12 +103,13 @@
 				    		partialSubmit="true" 
 				    		onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.cancelAction)}"
-							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}"
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" 
+							process="#{cc.attrs.noProcess}"
 						/>
 				    </c:when>
 				    <c:otherwise>
 				    	<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-							oncomplete="#{cc.attrs.widget}.hide();" />
+							oncomplete="#{cc.attrs.widget}.hide();" process="#{cc.attrs.noProcess}"/>
 				    </c:otherwise>
 				    </c:choose>
 				
