@@ -111,6 +111,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
@@ -4976,4 +4977,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return arr;
 		}
 		//25037 - End
+		
+		// #18685-Start.
+        /**
+         * @param finalizationReport
+         */
+        public void closeScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
+          IQTSuppFinalizationSO qtSuppFinalizationSO;
+
+          try {
+            qtSuppFinalizationSO = BusinessDelegate.getInstance()
+                .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+                        IQTSuppFinalizationSO.class);
+  
+            SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+            ScQtFinalization scQtFinalization = finalizationReport.getScQtFinalization();
+            if (scQtFinalization == null) {
+              scQtFinalization = new ScQtFinalization();
+            }
+            reqDTO.setScQtFinalization(scQtFinalization);
+            reqDTO.setQtReportId(finalizationReport.getQtReportId());
+            reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
+        
+            SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
+        
+            if (null != resDTO && null != resDTO.getScQtFinalizationReport()) {
+              int index = 0;
+              for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+                if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+                  getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
+                  getManagedBean().getSelectedBriefingReport().setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
+                  break;
+                }
+                index++;
+              }
+            }
+            
+          } finally {
+             qtSuppFinalizationSO = null;
+          }
+     }
+     // #18685-End.   
 }

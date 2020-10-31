@@ -134,10 +134,12 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" style="width: 8%;" 
 					action="#{suppFinalizationBackingBean.saveScQtFinalizationReport(suppFinalizationBackingBean.managedBean.selectedBriefingReport)}"
+					oncomplete="reportContentPopupDlg.hide();"
 					process="@this" partialSubmit="true"
 					disabled="#{!isSecretaryUser}"/>
 					
-				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" 
+				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;"
+					action="#{suppFinalizationBackingBean.closeScQtFinalizationReport(suppFinalizationBackingBean.managedBean.selectedBriefingReport)}" 
 					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
 			</div>			
 		</p:dialog>
