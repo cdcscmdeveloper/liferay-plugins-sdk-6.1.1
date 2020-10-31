@@ -778,12 +778,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void navigateToBiddingSummaryTab() {
 		int activeIndex;
-		if (getManagedBean().isOnlineBiddingEscalation()) {
-			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
+		if (mofFinal) {// #27502 - Start
+		  activeIndex = 1;
 		} else {
-			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
+    		if (getManagedBean().isOnlineBiddingEscalation()) {
+    			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
+    		} else {
+    			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
+    		}
 		}
-		
 		this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
 	}
 
@@ -2485,7 +2488,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public int getOnlineBiddingActiveIndexSummary() {
 		int activeIndex;
 		if(mofFinal){// #27502 - Start
-			activeIndex = 2;
+			activeIndex = 1;
 		} else
 		if (this.getManagedBean().isOnlineBiddingEscalation()) {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
