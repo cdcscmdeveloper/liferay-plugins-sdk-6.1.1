@@ -107,9 +107,16 @@
 					
 				</p:column>				
 	
+<ui:remove>
+		 #21695 Farid 
+		 only show total score if price new 0
+</ui:remove>
 				<p:column style="text-align:right;">
-					<h:outputText value="#{qualifiedSupp.totalScore}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					<h:outputText value="0" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
+					<h:outputText value="#{qualifiedSupp.totalScore}" rendered="#{qualifiedSupp.qtEvaluationResult.offeredPrice ne 0}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
 	
