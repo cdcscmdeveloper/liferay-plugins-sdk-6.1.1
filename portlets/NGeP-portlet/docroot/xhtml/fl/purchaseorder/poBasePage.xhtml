@@ -122,10 +122,12 @@
 					disabled="#{flOrderBB.managedBean.progressStatus eq '4'}"/>
 					</c:if>
 					<!-- #28374	Vinod End -->
-					
-					
+					<!-- start 29442 -->
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveCloseManual}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCloseManual}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 29442 -->
 					<!-- #28375- Ending -->
-					
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
@@ -146,7 +148,6 @@
 					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "NONAP58"}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- end 29440 -->
-					
 				</td>
 				</c:if>
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
