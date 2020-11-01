@@ -1341,7 +1341,7 @@ public class ConsolidationReportBackingBean extends
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
 
 //START farid #21695 exclude 0quantity for evaluate validation	
-				if (deskOfficerRank != null && !qualifiedSupp.getOfferedPrice().equals(new BigDecimal(0))) {
+				if (deskOfficerRank != null) {
 					int doRank = deskOfficerRank.intValue();
 					int evaluationRank = qualifiedSupp.getEvaluationRank();
 					if (evaluationRank != doRank
