@@ -107,7 +107,7 @@
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
-					  disabledSelection="#{!isMofFinalization and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  disabledSelection="#{isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser))}" />		
