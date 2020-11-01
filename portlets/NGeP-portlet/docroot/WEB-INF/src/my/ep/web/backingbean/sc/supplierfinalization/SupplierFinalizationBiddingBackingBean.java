@@ -147,8 +147,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * Default constructor
 	 */
 	
-	// #27502
+	// #27502 - Start
 	private static boolean mofFinal = false;
+	// #27502 - End
 	
 	public SupplierFinalizationBiddingBackingBean() {
 
@@ -189,12 +190,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			// #27502 - Start			
 			if (null != dataType.getIsMofFinalization()) {
-				mofFinal = dataType.getIsMofFinalization();
+				mofFinal = dataType.getIsMofFinalization();				
 			}
 			
 			if (getManagedBean().isOnlineBiddingEscalation()) {		
 				navigateToBriefingPaperTab();
 			} else if(mofFinal){
+				if(this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION)){					
+					getManagedBean().setMofSelection(true);	
+				}
 				getManagedBean().setMofFinalization(mofFinal);					
 				navigateToBriefingPaperTab();
 			} // #27502 - End
