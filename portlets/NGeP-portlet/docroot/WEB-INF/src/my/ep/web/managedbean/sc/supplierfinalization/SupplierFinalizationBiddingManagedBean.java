@@ -149,6 +149,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	// #27502 - Start
 	private boolean mofFinalization;
+	private boolean mofSelection;
 	// #27502 - End
 	
 	/**
@@ -1255,6 +1256,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 
 	public void setMofFinalization(boolean mofFinalization) {
 		this.mofFinalization = mofFinalization;
+	}
+
+	public boolean isMofSelection() {
+		return mofSelection;
+	}
+
+	public void setMofSelection(boolean mofSelection) {
+		this.mofSelection = mofSelection;
 	}
 
 }
