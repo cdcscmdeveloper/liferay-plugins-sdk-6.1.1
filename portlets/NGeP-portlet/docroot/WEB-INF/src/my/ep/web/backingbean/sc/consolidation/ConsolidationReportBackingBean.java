@@ -847,11 +847,10 @@ public class ConsolidationReportBackingBean extends
 					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
 				isOfferAll = true;	 
 			}
-//#21695 Farid Start 14/8/2020			
+//#21695 Farid Start 18/8/2020			
 			else if (getManagedBean().getScQt()
 					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)){
-				
-//#21695 Farid End 14/8/2020	
+	
 				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
 							.getOfferOrNotOfferSupplierResultBean().getResultList();
 						 
@@ -865,6 +864,8 @@ public class ConsolidationReportBackingBean extends
 						isOfferAll = true;	 
 					}
 			}
+			
+//#21695 Farid End 18/8/2020
 			 
 //             for (  Object[] paramsObjallSupplier : allSuppliers){
 //	              Long supplierId = ((BigDecimal) paramsObjallSupplier[0]).longValue();
@@ -1339,7 +1340,8 @@ public class ConsolidationReportBackingBean extends
 			for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
 
-				if (deskOfficerRank != null) {
+//START farid #21695 exclude 0quantity for evaluate validation	
+				if (deskOfficerRank != null && !qualifiedSupp.getOfferedPrice().equals(new BigDecimal(0))) {
 					int doRank = deskOfficerRank.intValue();
 					int evaluationRank = qualifiedSupp.getEvaluationRank();
 					if (evaluationRank != doRank
@@ -1384,6 +1386,7 @@ public class ConsolidationReportBackingBean extends
 					currentRank = doRank;
 					++totalRanksCount;
 				}
+// END				
 			}
 		}
 
