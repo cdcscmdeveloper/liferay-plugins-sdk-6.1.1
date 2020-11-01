@@ -1204,29 +1204,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						//25549@12102020 - end
 						epItem.setDisableReviseItem(true);
 						
-						this.getManagedBean().getSelectedPlan().setRejected(false);			
-						   
+						this.getManagedBean().getSelectedPlan().setRejected(false);			  
 					}else{
-						
 						epItem.setEditable(false);
 						//25549@12102020 - start
 						epItem.setReviseReject(false);
 						//25549@12102020 - end
 					}
-//				if(DbValueConst.RECORD_STATUS_DELETED == epItem.getRecordStatusFlg() && epItem.isRejected()){
-//					epItem.setEditable(true);
-//					//25549@12102020 - start
-//					epItem.setReviseReject(true);
-//					//25549@12102020 - end
-//					epItem.setDisableReviseItem(true);
-//					
-//					this.getManagedBean().getSelectedPlan().setRejected(false);
-//				}else{
-//					epItem.setEditable(false);
-//					//25549@12102020 - start
-//					epItem.setReviseReject(false);
-//					//25549@12102020 - end
-//				   }
 	     	}
 	
 				
@@ -7367,8 +7351,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				    newPpExItem.setJustifications(newJustifications);
 				    newPpExItem.setOriginal(false);
 		    		//25549@05102020 - end
-				  //25549@09102020 - start
+				    //25549@09102020 - start
 				    newPpExItem.setReviseReject(true);
+				    newPpExItem.setDisableReviseItem(true);
 				  //25549@09102020 - end
 		    			
 		    		log.info("Plan Id " + newPpExItem.getPpPlan().getPlanId());
@@ -7431,6 +7416,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 
 			 if (!original.isCloned() && !original.isBrandNew()) {	
 				//24975@26102020 - end	 
+				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+				 original.setCloneEnabled(true);
+				 original.setReasonForUpdateEnabled(true);
+				 original.setStatusEnabled(true);
+				 original.setDisableEditAccount(true);
+				 original.setJustificationEnabled(true);
+			 }else if (original.isCloned() && !original.isBrandNew()){
 				 original.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				 original.setCloneEnabled(true);
 				 original.setReasonForUpdateEnabled(true);
