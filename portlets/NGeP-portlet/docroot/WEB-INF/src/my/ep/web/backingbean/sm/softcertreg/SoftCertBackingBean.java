@@ -1063,9 +1063,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		boolean disableButton = true;
 
 		if (smPersonnel.getPmUser() != null
-				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED || smPersonnel
-						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || smPersonnel
-						.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ)) { //29027 add IS_SOFTCERT_REQ
+				&& SupplierManagementConst.SOFT_CERT_SHOW_INFORMATION.contains(smPersonnel.getSoftcertFlg())) { // 29027
 			getManagedBean().setRenderRevokeButton(true);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
