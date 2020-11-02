@@ -2473,7 +2473,63 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				}
 			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
-				for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
+				for(PpExpenditureItem epItem: this.getManagedBean().getEpItemsB()){
+					if(epItem.isRejected()){
+						isItemRejected = true;
+						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
+							if(epItem.getPpRejectReasons().get(0).isBrandNew()){
+								if(StringUtils.isBlank(epItem.getPpRejectReasons().get(0).getReasonDesc())){
+									throw new EpException(MessageConst.ERROR_730022);
+								}
+							}
+						}else{
+							throw new EpException(MessageConst.ERROR_730022);
+						}
+					}
+				}
+				for(PpExpenditureItem epItem: this.getManagedBean().getEpItemsT()){
+					if(epItem.isRejected()){
+						isItemRejected = true;
+						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
+							if(epItem.getPpRejectReasons().get(0).isBrandNew()){
+								if(StringUtils.isBlank(epItem.getPpRejectReasons().get(0).getReasonDesc())){
+									throw new EpException(MessageConst.ERROR_730022);
+								}
+							}
+						}else{
+							throw new EpException(MessageConst.ERROR_730022);
+						}
+					}
+				}
+				for(PpExpenditureItem epItem: this.getManagedBean().getEpItemsP()){
+					if(epItem.isRejected()){
+						isItemRejected = true;
+						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
+							if(epItem.getPpRejectReasons().get(0).isBrandNew()){
+								if(StringUtils.isBlank(epItem.getPpRejectReasons().get(0).getReasonDesc())){
+									throw new EpException(MessageConst.ERROR_730022);
+								}
+							}
+						}else{
+							throw new EpException(MessageConst.ERROR_730022);
+						}
+					}
+				}
+				for(PpExpenditureItem epItem: this.getManagedBean().getEpItemsS()){
+					if(epItem.isRejected()){
+						isItemRejected = true;
+						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
+							if(epItem.getPpRejectReasons().get(0).isBrandNew()){
+								if(StringUtils.isBlank(epItem.getPpRejectReasons().get(0).getReasonDesc())){
+									throw new EpException(MessageConst.ERROR_730022);
+								}
+							}
+						}else{
+							throw new EpException(MessageConst.ERROR_730022);
+						}
+					}
+				}
+				for(PpExpenditureItem epItem: this.getManagedBean().getEpItemsH()){
 					if(epItem.isRejected()){
 						isItemRejected = true;
 						if(epItem.getPpRejectReasons()!=null && !epItem.getPpRejectReasons().isEmpty()){
@@ -7870,16 +7926,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	//25549@azza20200827 - End
-	//25549@azza20200822 - Start
-	public void disableActiveStatus (Integer status){
-		log.info("status" + status);
-		if (status == 9){
-			this.getManagedBean().setDisable(true);
-		}else{
-			this.getManagedBean().setDisable(false);
-		}
-	}
-	//25549@azza20200822 - End
+
 	//200911@akmal - Enhancement27624 - Start
 	private void setScreenVariables(){
 		// check which screen to initialize for - Audit plan search, Plan Maintenance
