@@ -588,6 +588,12 @@ public class SupplierFinalizationBackingBean extends
 					scQtFinalization.getCurrentStatus(), 
 					scQtCommittee.getQtCommitteRemarks(),
 					ScQtCommitteRemarks.class);
+			if(CollectionUtils.isNotEmpty(remarks)){
+				for(ScQtCommitteRemarks r: remarks){
+					r.setEditable(false);
+				}
+				remarks.get(0).setEditable(true);
+			}
 			scQtCommittee.setQtCommitteRemarks(remarks);
 	
 			// Committee Remarks list
@@ -8035,6 +8041,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
 			meetingBB.retriveQTDetails(qtId);
 			meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+			meetingBB.prepareMemberUpdate();
 			meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
 			meetingBB.getManagedBean().setFinalBB(this);
 		}	
