@@ -23,10 +23,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:inputText style="display:none" id="hiddenGtEstAmt" styleClass="hiddenGtEstAmt" value="#{pPlanBackingBean.managedBean.ppTotalEst}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</p:inputText>
+		
+		<!-- 200911@akmal - Enhancement27624 - Start -->
+		<ui:include src="planDetSearch.xhtml"/>
+		<!-- 200911@akmal - Enhancement27624 - End -->
 
+		<!-- 200911@akmal - Enhancement27624 - Start -->
 	   	<p:dataTable id="dtProcurementPlan" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 	   		 var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}" rendered="#{ppItem.recordStatusFlg != 2}"
-		     rowIndexVar="index" rowKey="#{ppItem}">
+		     rowIndexVar="index" rowKey="#{ppItem}" rows="10">
+	     <!-- 200911@akmal - Enhancement27624 - End -->
 			<ac:paginator for="dtProcurementPlan" />
 			<p:columnGroup type="header">
 				<p:row>

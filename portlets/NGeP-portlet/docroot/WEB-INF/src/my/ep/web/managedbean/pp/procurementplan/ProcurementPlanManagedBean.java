@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.VPmGo;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
@@ -50,6 +51,11 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
+	//200911@akmal - Enhancement27624 - Start
+	private boolean isPlanDetailSearch;
+	private Long planId;
+	private List<VPmGo> vPmGolist;
+	//200911@akmal - Enhancement27624 - End
 	private String btnValue;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
@@ -1352,6 +1358,33 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.disable = disable;
 	}
 	//25549@18092020 - end
+
+	//200911@akmal - Enhancement27624 - Start
+	public boolean isPlanDetailSearch() {
+		return isPlanDetailSearch;
+	}
+
+	public void setPlanDetailSearch(boolean isPlanDetailSearch) {
+		this.isPlanDetailSearch = isPlanDetailSearch;
+	}
+
+	public Long getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(Long planId) {
+		this.planId = planId;
+	}
+
+	public List<VPmGo> getvPmGolist() {
+		if(vPmGolist==null) vPmGolist=new ArrayList<VPmGo>();
+		return vPmGolist;
+	}
+
+	public void setvPmGolist(List<VPmGo> vPmGolist) {
+		this.vPmGolist = vPmGolist;
+	}
+	//200911@akmal - Enhancement27624 - End
 
 	public boolean isFlagCancelButton() {
 		return flagCancelButton;

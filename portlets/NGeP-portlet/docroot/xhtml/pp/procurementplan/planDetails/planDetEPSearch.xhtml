@@ -1,0 +1,155 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	<!-- #27624 - NEW SEARCH CRITERIA   -->
+	<p:panel id="pPlanDetSearch">
+		<table class="ppTwoTable" style="width: 100%; padding-top: 10px;">
+			<!-- rendered on procurement plan screen -->
+			
+			
+			<tr>
+				<td style="width: 20%;"></td>
+				<td style="width: 30%;">
+				<table class="ppTwoTable">
+					
+						<!-- rendered on expenditure plan screen 
+						<p:outputLabel value="#{lbl['lbl.pp.category']}"></p:outputLabel>
+						<br/>
+						 button to lov GL Account 
+						<p:inputText></p:inputText>
+						
+						 datatable here -->
+					 <tr>
+						 <td>
+							 	<h:panelGroup id="ppEPGLACCSearchId">
+								<h:outputText  
+									value="Account Code" 
+									/>
+								&#160;
+								
+								
+								<p:commandLink id="ppEPGLACCSearchCL"
+									action="#{pmGoSearchBackingBean.initPmGoPopup}"
+									oncomplete="pmGoPopup.show();"
+									update="pPlanDetSearch, :form:glAccountCcId:goDoPanelId" >
+									<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									<f:param name="index" 	value="99" />
+									<f:param name="type" 	value="ePsearch" />
+									<f:param name="selectionMode" 	value="multiple" />
+									<f:param name="kptjId" 	value="#{pPlanBackingBean.retrieveKptjId()}" />
+									<f:param name="saveObject" 	value="pPlanBackingBean.managedBean.vPmGolist" />
+									<f:param name="update" 	value=":form:accCodeResult" />
+									<p:resetInput target=":form"></p:resetInput>
+								</p:commandLink>
+								  
+								</h:panelGroup>
+						 </td>
+					 </tr>
+					 <tr>
+					 	<td>
+					 	
+						 	<p:dataTable id="accCodeResult" 
+						 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+						 		styleClass="ppTablePlanItem" rows="5"
+						 		style="width: 400px; margin-left: auto;" 
+						 		var="pmGo" value="#{pPlanBackingBean.managedBean.vPmGolist}"
+								rendered="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">	
+								<p:column headerText="Account Code" style="width: 30%;">
+									<h:outputText value="#{pmGo.glAccCode}" />
+								</p:column>
+								<p:column headerText="Type Of Expenses" style="width: 70%;">
+									<h:outputText value="#{pmGo.desc}" />
+								</p:column>
+							</p:dataTable>
+							 
+						</td>
+					 </tr>
+				</table>		
+				</td>
+				<td style="width: 50%;">		
+					<table class="ppTwoTable">
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.pp.annual.plan.last.updated']}"></p:outputLabel>
+						</td>
+						<td>
+							<h:panelGrid columns="4">
+								<p:column>
+									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.fromdate']}"/>
+								</p:column>
+								<p:column>
+									<p:calendar rendered="true"
+									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateFrom}" readonlyInput="true"
+									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.todate']}"/>
+								</p:column>
+								<p:column>
+									<p:calendar rendered="true"
+									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateTo}" readonlyInput="true"
+									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+								</p:column>
+							</h:panelGrid>
+						</td>
+					</tr>	
+					<tr>
+						<td>
+						
+						</td>
+						<td>
+							<h:panelGrid columns="4">
+								<p:column>
+									<p:outputLabel value="#{lbl['lbl.pp.status']}"></p:outputLabel>
+								</p:column>
+								<p:column>
+									<p:selectOneMenu id="pDetStatusSearch" label="#{lbl['lbl.pp.status']}" 
+									styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planDetstatus}">
+									<f:selectItems value="#{pPlanBackingBean.getRecordStatusDropdownValues()}"/>
+									</p:selectOneMenu>
+								</p:column>
+								<p:column></p:column>
+								<p:column></p:column>
+							</h:panelGrid>
+						</td>
+					</tr>	
+					</table>	
+				</td>
+				
+			</tr>
+			
+		</table>
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.cm.search']}"
+				action="#{pPlanBackingBean.searchPlanDetails()}"
+				update="@form"
+				process="@form" 
+				id="searchButtonId">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				action="#{pPlanBackingBean.resetPlanDetailSearch()}"
+				update="@form"> 
+			</p:commandButton>
+		</div>
+		<!-- 
+		<ac:pmGoPopup 
+			id="glAccountCcEpId"
+			okAction="pPlanBackingBean.selectGlAccountAction"
+			 />
+		
+		<p:dialog id="GlAccSearchPopUp" widgetVar="GlAccSearchPopUp" closable="false" modal="true"
+			header="#GL Account" width="800" height="500">
+			<ui:include src="planGlAccPopup.xhtml"></ui:include>
+		</p:dialog>
+		-->
+		
+	</p:panel>			
+		
+
+</ui:composition>

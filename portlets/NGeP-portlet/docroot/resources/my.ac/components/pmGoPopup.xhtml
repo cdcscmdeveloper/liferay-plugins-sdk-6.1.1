@@ -108,9 +108,11 @@
 						</p:inputText>
 					</h:panelGrid>
 					<div class="ppRightBtn">
+					<!-- 200911@akmal - Enhancement27624 - Start -->
 						<p:commandButton id="searcbBtnId" widgetVar="ptjSearchBtnWV"
-							value="#{lbl['lbl.btn.search']}" update="pmGoDt"
+							value="#{lbl['lbl.btn.search']}" update="pmGoDt pmGoDtMultiple"
 							action="#{pmGoSearchBackingBean.searchGoView()}" process="@this" />
+					<!-- 200911@akmal - Enhancement27624 - End -->
 						<p:commandButton
 							value="#{lbl['lbl.btn.reset']}"
 							action="#{pmGoSearchBackingBean.resetAction()}"
@@ -123,7 +125,9 @@
 			</h:panelGroup>
 			<p:panel id="pmGoResultPnlId"
 				header="#{lbl['lbl.pm.organisation.result']}" toggleable="true">
-				<h:panelGroup id="resultPanel" style="width:100%;">
+				<!-- 200911@akmal - Enhancement27624 - Start -->
+				<h:panelGroup id="resultPanel" style="width:100%;" rendered="#{pmGoSearchBackingBean.managedBean.selectionMode == 'single'}">
+				<!-- 200911@akmal - Enhancement27624 - End -->
 					<p:dataTable id="pmGoDt" var="pmGo" rows="10"
 						selection="#{pmGoSearchBackingBean.managedBean.vPmGo}"
 						selectionMode="single"
@@ -143,6 +147,41 @@
 						</p:column>
 					</p:dataTable>
 				</h:panelGroup>
+				
+				<!-- 200911@akmal - Enhancement27624 - Start -->
+				<h:panelGroup id="resultPanelMultiple" style="width:100%;" rendered="#{pmGoSearchBackingBean.managedBean.selectionMode == 'multiple'}">
+					<p:remoteCommand name="PmGoPopulateSelection" partialSubmit="true" update="pmGoDtMultiple @([id$=slbtn])" actionListener="#{pmGoSearchBackingBean.populateSelectedItems()}" />
+					<p:dataTable id="pmGoDtMultiple" 
+						var="pmGo" 
+						rows="10"
+						selection="#{pmGoSearchBackingBean.selectedEntities}"
+						rowKey="#{pmGo.glAccCode}"
+						value="#{pmGoSearchBackingBean.pmGoDataModel}" 
+						rowIndexVar="rowIndex" 
+						lazy="true">
+						
+						<ac:paginator for="pmGoDtMultiple"></ac:paginator>
+						
+						<p:column selectionMode="multiple" styleClass="td-check-box-spacing" style="width :10%"/> 
+						<p:ajax event="rowSelectCheckbox" update="@([id$=slbtn])" listener="#{pmGoSearchBackingBean.onSelectRow}"/>
+						<p:ajax event="rowUnselectCheckbox" update="@([id$=slbtn])" listener="#{pmGoSearchBackingBean.onUnselectRow}"/>
+						<p:ajax event="rowSelect" update="@([id$=slbtn])" />   
+		                <p:ajax event="rowUnselect" update="@([id$=slbtn])" />  
+		                <p:ajax event="toggleSelect" update="@([id$=slbtn])" listener="#{pmGoSearchBackingBean.onToggleSelect}"/>
+		                <p:ajax event="page" listener="#{pmGoSearchBackingBean.onPageChange}" oncomplete="PmGoPopulateSelection()"/>
+						<p:column headerText="#{lbl['lbl.pm.go.search.acc.code']}"
+							style="width :30%">
+							<h:outputText value="#{pmGo.glAccCode}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.pm.go.search.desc']}"
+							style="width :60%">
+							<h:outputText value="#{pmGo.desc}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+				<!-- 200911@akmal - Enhancement27624 - End -->
+				
 				<table style="width: 100%;">
 				<tr>
 					<TD style="text-align: right;"><p:commandButton id="slbtn"

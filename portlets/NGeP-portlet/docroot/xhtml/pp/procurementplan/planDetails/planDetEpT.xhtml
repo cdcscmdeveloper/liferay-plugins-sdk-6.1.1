@@ -36,9 +36,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<div id="tGlAccErrMsgDiv" style="display:none;">
 			<p:messages id="tGlAccMsg" showDetail="true" autoUpdate="false" closable="true" showSummary="false" escape="false"/>
 		</div>
+		<!-- 200911@akmal - Enhancement27624 - Start -->
 	   	<p:dataTable id="dtExpenditurePlanT" styleClass="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		     var="epItem" value="#{pPlanBackingBean.managedBean.epItemsT}" rendered="#{epItem.recordStatusFlg != 2}"
-		     rowIndexVar="index" rowKey="#{epItem}">
+		     rowIndexVar="index" rowKey="#{epItem}" rows="10">
+	     <!-- 200911@akmal - Enhancement27624 - End -->
 			<ac:paginator for="dtExpenditurePlanT" />
 	    	<p:columnGroup type="header">
 				<p:row>
