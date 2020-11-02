@@ -3039,22 +3039,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (scQt.getPmOrgProfile().getBpk() &&						
 					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
 				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
-				for (TabBean t : committeTabs) {
-					if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {	
-						newCommitteTabs.add(t);
-					} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {	
-						newCommitteTabs.add(t);
-					} 
+				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+					for (TabBean t : committeTabs) {
+						if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
+							newCommitteTabs.add(t);
+						} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
+							newCommitteTabs.add(t);
+						}
+					}
+
+					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+					ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+					newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+
+					committeTabs = newCommitteTabs;
 				}
-				
-				StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
-				String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-				String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
-				ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);				
-				newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
-				
-				committeTabs = newCommitteTabs;
 			}//#27502 - End
 		}
 
