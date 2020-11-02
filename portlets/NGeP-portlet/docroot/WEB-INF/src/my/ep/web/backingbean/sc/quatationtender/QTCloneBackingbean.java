@@ -459,9 +459,8 @@ public class QTCloneBackingbean extends
 				}
 				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
 					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+					stats[stats.length-1]=QTStatusConst.BPK_PENDING_APPROVAL;
 				}
-				
-				
 				
 				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
 				qtSearchBean
@@ -1426,20 +1425,23 @@ public class QTCloneBackingbean extends
 					persons.add(copy);
 				}
 				this.getManagedBean().setPmuserContactpersonList(persons);
-			}else{
-				ScQtRequestContent requestContent=null;
-				if(!CollectionUtils.isEmpty(copyQt.getRequestContents())){
-					for(ScQtRequestContent r: copyQt.getRequestContents()){
-						if(r.getRequestType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){
-							requestContent = r;
-							break;
-						}
-					}
-				}
-				if(null!=requestContent){
-					this.getManagedBean().setPmuserContactpersonList(this.generateDOAFromRequestContent(requestContent, qt));
-				}
 			}
+			
+	// according to Salleh, no need to generate DOA from request content.		
+//			else{
+//				ScQtRequestContent requestContent=null;
+//				if(!CollectionUtils.isEmpty(copyQt.getRequestContents())){
+//					for(ScQtRequestContent r: copyQt.getRequestContents()){
+//						if(r.getRequestType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){
+//							requestContent = r;
+//							break;
+//						}
+//					}
+//				}
+//				if(null!=requestContent){
+//					this.getManagedBean().setPmuserContactpersonList(this.generateDOAFromRequestContent(requestContent, qt));
+//				}
+//			}
 			
 			
 			
@@ -1476,9 +1478,6 @@ public class QTCloneBackingbean extends
 
 			backingBean.getDeskOfficerAdminAssistant();	
 			//
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}finally{
 			detailSO=null;
 		}
@@ -2435,51 +2434,64 @@ public class QTCloneBackingbean extends
 		}
 	    
 	    
-	    PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
-		tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
-		StringBuilder fcTitleLabel = new StringBuilder(
-				"lbl.sc.finalization.committee.secretary.");
-		String fcTitleName = ResourceBundleUtils
-				.getMessage(fcTitleLabel.toString()
-							+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
 	    
-		if (fcSecretaryCode == null
-				|| fcSecretaryCode.getParameterId() == null) {
-			SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
-			if (fcSecretaries != null && fcSecretaries.length > 0) {
-				fcSecretaryCode = retrieveParameterById(Long
-						.valueOf(fcSecretaries[0].getValue().toString()));
-				;
-			} else {
-				fcSecretaryCode = null;
+	    if (scQt.getPmOrgProfile().getBpk() &&						
+				scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+			String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+			ScQtCommittee mofCommitte = cloneComitteee(scQt,copyScqt,tabType);			
+			committeTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+
+		}else{
+			//FC Tabs
+			PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+			tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+			StringBuilder fcTitleLabel = new StringBuilder(
+					"lbl.sc.finalization.committee.secretary.");
+			String fcTitleName = ResourceBundleUtils
+					.getMessage(fcTitleLabel.toString()
+								+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+		    
+			if (fcSecretaryCode == null
+					|| fcSecretaryCode.getParameterId() == null) {
+				SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
+				if (fcSecretaries != null && fcSecretaries.length > 0) {
+					fcSecretaryCode = retrieveParameterById(Long
+							.valueOf(fcSecretaries[0].getValue().toString()));
+					;
+				} else {
+					fcSecretaryCode = null;
+				}
 			}
+			
+			// Displaying the Secretary Details
+			if (fcSecretaryCode != null) {
+				
+				String fcSecretary = fcSecretaryCode.getParameterCode();
+
+				if (fcSecretary != null) {
+					if (fcSecretary
+							.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+						fcTitleLabel
+								.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+					} else {
+						fcTitleLabel
+								.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+					}
+					fcTitleName = ResourceBundleUtils.getMessage(
+							fcTitleLabel.toString().toLowerCase(),
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+				}
+			}
+			committeTabs.add(new TabBean(fcTitleName, tabType, null));
 		}
 		
-		// Displaying the Secretary Details
-		if (fcSecretaryCode != null) {
-			
-			String fcSecretary = fcSecretaryCode.getParameterCode();
-
-			if (fcSecretary != null) {
-				if (fcSecretary
-						.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
-					fcTitleLabel
-							.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
-				} else {
-					fcTitleLabel
-							.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
-				}
-				fcTitleName = ResourceBundleUtils.getMessage(
-						fcTitleLabel.toString().toLowerCase(),
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			}
-		}
-		committeTabs.add(new TabBean(fcTitleName, tabType, null));
-	    
-	    
+		//pass
 		this.getManagedBean()
 		.setScCommitteeMemberTabList(committeTabs);
 	    
