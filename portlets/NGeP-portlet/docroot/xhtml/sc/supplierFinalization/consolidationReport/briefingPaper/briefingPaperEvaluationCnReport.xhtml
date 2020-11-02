@@ -138,7 +138,8 @@
 					process="@this" partialSubmit="true" />
 			
 				<p:commandButton value="#{lbl['lbl.btn.close']}" style="width: 8%;" 
-					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" />
+					action="#{consolidationReportBackingBean.closeScQtFinalizationReport(consolidationReportBackingBean.managedBean.selectedBriefingReport)}"
+					oncomplete="reportContentPopupDlg.hide();" process="@this" partialSubmit="true" update="@this"/>
 			</div>			
 		</p:dialog>
 		
