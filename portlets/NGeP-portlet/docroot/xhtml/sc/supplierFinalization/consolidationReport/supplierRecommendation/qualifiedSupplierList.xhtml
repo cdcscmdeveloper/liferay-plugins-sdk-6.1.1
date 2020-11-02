@@ -152,13 +152,15 @@
 					<h:outputText value="" />
 				</p:column>
 				
-<!-- 				<p:column style="text-align:center;"> -->
-<!-- 					<p:commandLink action="#{consolidationReportBackingBean.showBoardofDirectors( -->
-<!-- 											 qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  -->
-<!-- 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();"> -->
-<!-- 						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" /> -->
-<!-- 	         		</p:commandLink>  -->
-<!-- 				</p:column> -->
+				<ui:remove> #11134
+					<p:column style="text-align:center;">
+						<p:commandLink action="#{consolidationReportBackingBean.showBoardofDirectors(
+	<!-- 											 qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  -->
+			         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+		         		</p:commandLink> 
+					</p:column>
+				</ui:remove>
 
 				<p:column style="text-align:center;">
 					<ui:remove>
