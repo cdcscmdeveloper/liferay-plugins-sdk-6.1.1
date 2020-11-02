@@ -74,11 +74,11 @@
 					style="width:25%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.date.time']}"
+				<p:column headerText="#{lbl['lbl.sc.date.day.time']}"
 					style="width:18%;white-space: normal;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
 						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT_WITH_DAY}" />
 					</h:outputText>
 				</p:column>
 
