@@ -107,10 +107,10 @@
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
-					  disabledSelection="#{(suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
+					  disabledSelection="#{isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser)}" />		
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser))}" />		
 		</p:dataTable>
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
