@@ -26,7 +26,10 @@
 				  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
 				  
 		<ui:param name="isMofFinalization"
-				  value="#{suppFinalBiddingBackingBean.managedBean.mofFinalization}" />		     				
+				  value="#{suppFinalBiddingBackingBean.managedBean.mofFinalization}" />		
+				  
+		<ui:param name="isMofSelection"
+				  value="#{suppFinalBiddingBackingBean.managedBean.mofSelection}" />		        				
 
 		<ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
