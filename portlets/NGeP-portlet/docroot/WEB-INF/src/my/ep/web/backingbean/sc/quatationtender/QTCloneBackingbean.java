@@ -442,6 +442,18 @@ public class QTCloneBackingbean extends
 				searchFilterBean.add(bean);
 			}
 			String status = cloneQtnTenderSearchBean.getQtStatus();
+			
+			Long[] stats= null;
+			Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
+			if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
+				stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_QT_SUBMISSION);
+			}
+			if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+				stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+				stats[stats.length-1]=QTStatusConst.BPK_PENDING_APPROVAL;
+			}
+			ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
+			
 			if (!StringUtils.isBlank(status)) {
 				qtSearchBean
 						.getDataFilterBeans()
@@ -452,26 +464,16 @@ public class QTCloneBackingbean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
-				Long[] stats= null;
-				Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
-				if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
-					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_QT_SUBMISSION);
-				}
-				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
-					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-					stats[stats.length-1]=QTStatusConst.BPK_PENDING_APPROVAL;
-				}
 				
-				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
-				qtSearchBean
-				.getDataFilterBeans()
-				.add(new SearchFilterBean(
-						"scQtStatus.pmStatus.statusId",
-						SearchOperator.OPERATOR_NOT_IN.value(), s));
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
+			qtSearchBean
+			.getDataFilterBeans()
+			.add(new SearchFilterBean(
+					"scQtStatus.pmStatus.statusId",
+					SearchOperator.OPERATOR_NOT_IN.value(), s));
 			// Filter by - ptj org profileId
 			qtSearchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.orgProfileId",
