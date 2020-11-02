@@ -241,7 +241,7 @@
 				</p:column>	
 				
 				<p:column style="text-align:left;">
-					<h:outputText value="supp remark here"/>
+					<h:outputText value=""/>
 				</p:column>			
 								
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
@@ -289,7 +289,7 @@
 <!-- 		               <p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" /> -->
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" 
-		               			  style="width:10%; white-space:normal;" />		               	
+		               			  style="width:10%; white-space:normal;"/>		               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -401,13 +401,13 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column style="text-align:center;">
-					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
-											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
-						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
-	         		</p:commandLink> 
-				</p:column>
+<!-- 				<p:column style="text-align:center;"> -->
+<!-- 					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors( -->
+<!-- 											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  -->
+<!-- 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();"> -->
+<!-- 						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" /> -->
+<!-- 	         		</p:commandLink>  -->
+<!-- 				</p:column> -->
 				
 				<p:column style="text-align:center;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
@@ -421,7 +421,7 @@
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<h:outputText value="supp remark here"/>
+					<h:outputText value=""/>
 				</p:column>	
 								
 				<ui:remove>
