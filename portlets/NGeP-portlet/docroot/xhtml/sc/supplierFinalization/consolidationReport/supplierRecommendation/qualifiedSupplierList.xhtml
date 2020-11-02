@@ -54,7 +54,9 @@
 		               		</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
-<!-- 	               		<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" /> -->
+ 	               		<ui:remove>
+ 	               		<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
+ 	               		</ui:remove>
 						<p:column rowspan="2" style="width:7%; white-space:normal;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
@@ -62,7 +64,9 @@
 								</f:facet>
 						</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
-<!-- 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" /> -->
+						<ui:remove>
+ 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
+ 		               	</ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		           	</p:row>
 		           	<p:row>
@@ -148,7 +152,7 @@
 				<ui:remove> #11134
 					<p:column style="text-align:center;">
 						<p:commandLink action="#{consolidationReportBackingBean.showBoardofDirectors(
-	<!-- 											 qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  -->
+	 											 qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  
 			         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
 							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
 		         		</p:commandLink> 
