@@ -111,6 +111,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		getManagedBean().setSelectedGoSoObjCode(null);
 		retrieveAccountType();
 		retrieveAccountClass();
+		//200911@akmal - Enhancement27624 - Start
+		selectedEntities.clear();
+		persistedEntities.clear();
+		//200911@akmal - Enhancement27624 - End
 		getPmGoDataModel().resetData();
 	}
 	
