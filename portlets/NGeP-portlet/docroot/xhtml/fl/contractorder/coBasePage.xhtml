@@ -140,6 +140,11 @@
 				</c:if>
 				<!-- #28374	Vinod End -->
 					<!-- 28377 -->
+					<!-- start 29442 -->
+					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveCloseManual}" 
+					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCloseManual}'
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- end 29442 -->
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
