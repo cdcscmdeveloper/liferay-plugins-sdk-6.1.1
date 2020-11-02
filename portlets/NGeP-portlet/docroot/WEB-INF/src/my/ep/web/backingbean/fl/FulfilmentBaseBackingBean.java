@@ -69,6 +69,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
@@ -760,25 +761,18 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					|| smDisciplinaryAction.isManufacturerCancel() 
 						|| smDisciplinaryAction.isBumiputeraCancel())/*28640 (add if new condition)*/{
 				List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-				
-				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
-				
-				SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
-				SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
-				Long supplierId = smDisciplinaryAction.getSmSupplier().getSupplierId();				
-				reqDTO.setSupplierId(supplierId);				
-				resDTO = supplierCategorySO.retrieveCancelCategoryDetails(reqDTO);	
-				List<Object[]> catList = resDTO.getResultList();
-				
+				//29456 - start // follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier))
+				List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(smDisciplinaryAction.getDisciplinaryActionId());
 				if(!EntityHelper.isCollectionEmpty(catList)
 						&& catList.size() > 0){
 					for(Object[] arr : catList){
-						DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-						String catCode = StringUtils.EMPTY;
-						catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-						catVo.setCategoryCode(catCode);	
-						catVoList.add(catVo);
+						if(smDisciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){//29456
+							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
+							String catCode = StringUtils.EMPTY;
+							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+							catVo.setCategoryCode(catCode);	
+							catVoList.add(catVo);
+						}//29456 - end						
 					}						
 					disciplinaryActionVO.setCategoryCodeList(catVoList);
 				}
