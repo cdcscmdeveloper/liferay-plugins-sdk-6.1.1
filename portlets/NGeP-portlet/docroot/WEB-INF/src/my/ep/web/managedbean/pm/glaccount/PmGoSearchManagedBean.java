@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.pm.glaccount;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -27,6 +29,11 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private boolean accTypeDisabled;
 	private boolean accClassDisabled;
 	private String selectedGoSoObjCode;
+	//200911@akmal - Enhancement27624 - Start
+	private String selectionMode;
+	private List<VPmGo> vPmGolist;
+	private String saveObject;
+	//200911@akmal - Enhancement27624 - End
 	
 	public PmGoSearchManagedBean(){
 		
@@ -213,6 +220,30 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	public void setSelectedGoSoObjCode(String selectedGoSoObjCode) {
 		this.selectedGoSoObjCode = selectedGoSoObjCode;
 	}
-	
+	//200911@akmal - Enhancement27624 - Start
+	public String getSelectionMode() {
+		return selectionMode;
+	}
+
+	public void setSelectionMode(String selectionMode) {
+		this.selectionMode = selectionMode;
+	}
+
+	public List<VPmGo> getvPmGolist() {
+		return vPmGolist;
+	}
+
+	public void setvPmGolist(List<VPmGo> vPmGolist) {
+		this.vPmGolist = vPmGolist;
+	}
+
+	public String getSaveObject() {
+		return saveObject;
+	}
+
+	public void setSaveObject(String saveObject) {
+		this.saveObject = saveObject;
+	}
+	//200911@akmal - Enhancement27624 - End
 	
 }

@@ -56,6 +56,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</tr>
 			<tr>
 				<th>
+				<!-- 200911@akmal - Enhancement27624 - Start -->
+					<p:outputLabel value="*" styleClass="mandatory" />
+				<!-- 200911@akmal - Enhancement27624 - End -->
 					<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
 				</th>
 				<td>
@@ -70,13 +73,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							<!-- <f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
 							<p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
 									update="somVotSearch"/> -->
-						<p:ajax event="change" process="@this" update="ppSearchTitle,@this,ppSearchStatus" 
+						<p:ajax event="change" process="@this" update="@this,ppSearchStatus" 
 							listener="#{pPlanBackingBean.changeSearchPlanType(pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode)}" /> 
 					</p:selectOneMenu>
 				</td>				
 			</tr>
 			<tr>
 				<th>
+				<!-- 200911@akmal - Enhancement27624 - Start -->
+					<p:outputLabel value="*" styleClass="mandatory" />
+				<!-- 200911@akmal - Enhancement27624 - End -->
 					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
 				</th>
 				<td>
@@ -95,6 +101,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:inputText size="27" styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
 				</td>
 			</tr>
+			<!-- 200911@akmal - Enhancement27624 - Start -->
+			<!-- 
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.pp.plan.title']}"/>
@@ -107,15 +115,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						value="#{pPlanBackingBean.managedBean.planSearchBean.planTitle}"/>
 				</td>				
 			</tr>
+			 -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.pp.plan.status']}" /></td>
 				<td><p:selectOneMenu id="ppSearchStatus" 
 						disabled="#{empty pPlanBackingBean.managedBean.planSearchBean.planType or empty pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode}" 
 						value="#{pPlanBackingBean.managedBean.planSearchBean.status}">
 								<f:selectItems
 									value="#{pPlanBackingBean.retrievePlanStatus()}" />
 				</p:selectOneMenu></td>
-					
+			<!-- 200911@akmal - Enhancement27624 - End -->
 					</tr>
 			<ui:remove>
 			<tr>
