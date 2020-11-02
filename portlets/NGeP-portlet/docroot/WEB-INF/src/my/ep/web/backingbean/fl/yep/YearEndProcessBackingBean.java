@@ -549,6 +549,10 @@ public class YearEndProcessBackingBean extends
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
 				||statusId.equals(FulfilmentStatusConst.PENDING_SUPPLIER_ACK)
 				||statusId.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE2)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)){
 				
 				return true;
@@ -769,6 +773,10 @@ public class YearEndProcessBackingBean extends
 				||statusId.equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE2)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)){
 				
 				return true;
