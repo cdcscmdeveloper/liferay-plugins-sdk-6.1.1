@@ -21,7 +21,7 @@
 		</p:blockUI>
 		
 		<!-- HEADER -->
-		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
+		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
 		<ui:param name="showGlpAlert" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplierCerts.size() > 0}" />
 		<ui:param name="applType" value="#{sdoReviewBackingBean.getsupplierApplTypeDesc(sdoReviewBackingBean.managedBean.smAppl.applType)}" />
@@ -152,7 +152,7 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 					<td class="tdContent"><p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}"
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							disabled="true" size="40" /></td>
 				</tr>
 
