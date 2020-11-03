@@ -2475,6 +2475,16 @@ public class QtSpecCloneBackingBean extends
 				
 			}
 			
+			if (null != this.getManagedBean().getQt() && null != this.getManagedBean().getQt().getContractType()){
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("contractType.parameterId");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getQt().getContractType().getParameterId());
+				searchFilterBean.add(bean);
+				
+			}
+			
 			if (null != this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getFulfilmentType()){
 				
 				SearchFilterBean bean = new SearchFilterBean();
