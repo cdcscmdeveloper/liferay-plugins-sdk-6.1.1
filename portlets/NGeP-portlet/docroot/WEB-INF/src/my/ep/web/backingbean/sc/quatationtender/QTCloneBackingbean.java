@@ -454,15 +454,18 @@ public class QTCloneBackingbean extends
 			}else{
 				Long[] stats= null;
 				Long statusId=this.getManagedBean().getQt().getQtStatus().getStatusId();
+				ArrayList<Long> s=null;
 				if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
 					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_QT_SUBMISSION);
+					s=new ArrayList<Long>(Arrays.asList(stats));
 				}
 				if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
 					stats=getStatuses(QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
-					stats[stats.length-1]=QTStatusConst.QT_PENDING_BPK_APPROVAL;
+					s=new ArrayList<Long>(Arrays.asList(stats));
+					s.add(QTStatusConst.QT_PENDING_BPK_APPROVAL);
 				}
 				
-				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
+				
 				qtSearchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean(
@@ -2644,6 +2647,12 @@ public class QTCloneBackingbean extends
 				parameterReqDTO
 						.setParameterCode(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
 
+			} else if (ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCE.equalsIgnoreCase(commType)) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO
+						.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+				parameterReqDTO
+						.setParameterCode(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCE);
 			}
 
 			parameterResDTO = parameterSO
