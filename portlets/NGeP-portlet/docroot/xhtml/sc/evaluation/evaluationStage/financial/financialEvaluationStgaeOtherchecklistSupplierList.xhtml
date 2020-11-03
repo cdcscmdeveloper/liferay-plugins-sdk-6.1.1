@@ -29,12 +29,12 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
 				style="width:25%;text-align:right;">
 				<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
 				style="width:25%">
 
 
