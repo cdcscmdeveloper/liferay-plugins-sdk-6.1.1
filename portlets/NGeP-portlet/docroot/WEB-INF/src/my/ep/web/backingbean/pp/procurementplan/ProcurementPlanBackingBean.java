@@ -629,9 +629,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								
 								if (!ppItem.isAllowAnotherPindaan()) {
 									ppItem.setCloneEnabled(false);
-									ppItem.setDisableForPindaan(true);
-									ppItem.setReasonForUpdateEnabled(false);
-									ppItem.setBrandNew(true);
+									ppItem.setDisableForPindaan(false);
+									ppItem.setReasonForUpdateEnabled(true);
+									ppItem.setBrandNew(false);
 								} else {
 									ppItem.setCloneEnabled(false);
 									ppItem.setDisableForPindaan(false);
@@ -686,12 +686,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							}
 						}
 						
-//						if (ppItem.isRejected()) {
-//							// Verf Officer and Plan Approval Officer should be able to untick revised item
-//							if (!isRolePlanner() && !ppItem.isEnableRevise()) {
-//								ppItem.setEnableRevise(true);
-//							}
-//						}
 					}
 				}
 		    }
