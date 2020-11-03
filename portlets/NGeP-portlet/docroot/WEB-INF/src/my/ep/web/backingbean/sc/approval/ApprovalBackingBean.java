@@ -2304,7 +2304,19 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		return inProgress;
 	}
-
+	
+	private void assertBriefingSiteVisitInProgress(Long qtId){
+		ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, qtId);
+		wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+		if(wfStatus.getPmStatus()!=null){
+			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
+			if (this.isQTStatusPublished(currentStatusId)){
+				this.getManagedBean().setOutComes(new String[]{}); 
+				FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.doaRequestExpired", null)));
+			}
+		}
+	}
+	
 	public void preRenderGenericApproval(){
 		SCQuotationTenderDataType obj = getBpmTaskDetails(SCQuotationTenderDataType.class, null);
 		Long requestId = obj.getRequestId();
@@ -2321,6 +2333,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_APPROVE)){
 					this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_APPROVE, BpmOutcomeConst.BPM_REVISE});//bypass reject not needed
 				}
+				assertBriefingSiteVisitInProgress(qtId);
 				QTScheduleDetailBackingBean scheduleBB = new QTScheduleDetailBackingBean();
 				List<ScQtApprovalRequest> requestList = getApprovalRequests(qtId, ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APPROVAL, "", Arrays.asList(new String[]{requestType}), "");
 				requestList = requestList==null ? new ArrayList<ScQtApprovalRequest>(): requestList;
@@ -2415,7 +2428,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	    		}
 	    	}
 		}catch(Exception e){
-			e.printStackTrace();
+			throw e;
 		}
 	}	
 	
@@ -2445,6 +2458,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.setQtdetail(scQt);
 			reqDTO.setTaskName(this.getManagedBean().getTaskName());
 			reqDTO.setRequestRemark(this.getManagedBean().getDoaaRequest().getAppRequestRemarks().get(0));
+			ScQtAppRequestRemark remark =  reqDTO.getRequestRemark();
+			String remarkStr = remark==null ? "": remark.getRemark();
+			
+			if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REVISE) && StringUtils.isEmpty(remarkStr)){
+				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
+						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
 			if (digiSign != null) {
 				updatePmDigiSignData(digiSign,
 						ParameterConst.DOCTYPE_DOA_ASSIGNMENT, reqDTO.getQtdetail()

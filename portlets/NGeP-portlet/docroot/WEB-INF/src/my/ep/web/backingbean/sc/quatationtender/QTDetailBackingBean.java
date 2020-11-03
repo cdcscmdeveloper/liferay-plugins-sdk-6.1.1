@@ -4033,7 +4033,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setScQtContactPersons(qtContactPerson); 
 				//#25037 - start
 				getDoaaRequestStatus();
-				if(this.getManagedBean().isMaintanceFlow()){
+				IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IScWorkFlowStatusSO.class);
+				ScWorkFlowStatusReqDTO stReqDTO = new ScWorkFlowStatusReqDTO();
+				stReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+				stReqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+				
+				ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(stReqDTO).getWorkFlowStatus();
+				wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+				Long statusId = wfStatus.getPmStatus()==null ? 0L: wfStatus.getPmStatus().getStatusId();
+
+				if(isQTStatusPublished(statusId)){
+					this.getManagedBean().setPmuserContactpersonList(resDTO.getDeskOfficers().getResultList());
+				}else if(this.getManagedBean().isMaintanceFlow()){
 					ScQtRequestContent requestContent = null;
 					if(CollectionUtils.isNotEmpty(scQt.getRequestContents())){
 						for(ScQtRequestContent r: scQt.getRequestContents()){
@@ -5383,6 +5396,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
 		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
+		
+		if(this.getManagedBean().isShowHistory() && Arrays.asList(new String[]{"EC", "OC", "TEC", "FEC"}).contains(committeeType)){
+			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
+		}
 	}
 
 	/**
