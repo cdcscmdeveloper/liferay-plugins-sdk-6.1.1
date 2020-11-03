@@ -3424,6 +3424,15 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>cancelLoaApproval-portlet</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>ctContractOwnerManagement</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
 		
 	<role-mapper>
 		<role-name>administrator</role-name>
