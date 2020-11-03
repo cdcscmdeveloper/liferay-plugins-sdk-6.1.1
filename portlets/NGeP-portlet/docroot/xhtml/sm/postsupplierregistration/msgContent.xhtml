@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
@@ -28,6 +29,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>	
+					
 		
 		<div align="left">
 			<table class="cTbl">
@@ -208,6 +210,7 @@
 																		src="/xhtml/sm/shared/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
 																</c:when>
 																<c:otherwise>
+																
 																	<ui:include
 																		src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 																</c:otherwise>
@@ -215,6 +218,7 @@
 														</c:when>
 		
 														<c:otherwise>
+														
 															<ui:include
 																src="/xhtml/sm/shared/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 														</c:otherwise>
@@ -236,6 +240,9 @@
 				</p:outputPanel>
 			
 			</c:if>
+			<ac:smOwnerSsmPopup bBean="#{postSupplierRegBB}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
+				btnOkLabel="#{lbl['lbl.btn.change']}" 
+				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		</p:outputPanel>
 	</ui:define>
 

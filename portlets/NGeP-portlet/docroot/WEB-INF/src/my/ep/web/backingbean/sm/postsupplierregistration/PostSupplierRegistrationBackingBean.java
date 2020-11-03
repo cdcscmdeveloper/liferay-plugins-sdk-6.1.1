@@ -310,7 +310,27 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				String path1 = currentStatusAndPath();
 				log.info("path1==================================="+path1);
 				if(path1 != null && (MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION))){
-					checkSSMValid(supplier);
+					//28454
+					if(path1.contains(RESUBMIT_APPLICATION)){
+						this.getManagedBean().setResubmitAppl(true);
+					}
+					log.info("pageNavigate------------"+path1);
+					checkSSMValid(supplier,this.getManagedBean());
+					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
+					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
+					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
+						proceed =false;
+						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+							this.getManagedBean().setPreRegistration(true);
+						}else{
+							this.getManagedBean().setPreRegistration(false);
+						}						
+						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+						SmCommonUtil.redirectToPage(
+								CONTENT_PAGE,
+								"",new String[] {""});
+					}
 				}				
 			}catch(Exception w){
 				log.info("Here done--"+w.getMessage());
