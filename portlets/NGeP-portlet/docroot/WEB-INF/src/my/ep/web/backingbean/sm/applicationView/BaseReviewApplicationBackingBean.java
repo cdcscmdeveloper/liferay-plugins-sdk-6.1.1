@@ -3762,7 +3762,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								
 								//29078 : Disciplinary Action - 26238 - start
 								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-								resDTO = SmServiceLookup.getBlacklistDirectorSO().retrievePersonBlacklistByIdentificationNO(reqDTO);
+								resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//29078 : Disciplinary Action - <26238>
 								if(resDTO != null && resDTO.getPersonBlacklist() != null){
 									blacklistOwner.setIcNo(personnel.getIdentificationNo());
 									blacklistownerDirectorList.add(blacklistOwner);
@@ -3780,10 +3780,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								&& personnelResDTO.getSmPersonnelList().size() > 0){
 							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isCancelRegistration()){
+								
+								//29078 : Disciplinary Action - 26238 - start
+								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+								resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//29078 : Disciplinary Action - <26238>
+								if(resDTO != null && resDTO.getPersonBlacklist() != null){
 									blacklistOwner.setIcNo(personnel.getIdentificationNo());
 									blacklistownerDirectorList.add(blacklistOwner);
 								}
+								//29078 : Disciplinary Action - 26238 - end
 							}
 							retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
 						}						
@@ -3799,7 +3804,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 								// Get blacklist by identification no
 								resDTO = SmServiceLookup.getBlacklistDirectorSO()
-										.retrievePersonBlacklistByIdentificationNO(reqDTO);
+										.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//29078 : Disciplinary Action - <26238>
 								if(resDTO != null && 
 										resDTO.getPersonBlacklist() != null){
 									blacklistOwner.setIcNo(personnel.getIdentificationNo());
