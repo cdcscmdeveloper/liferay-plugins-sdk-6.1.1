@@ -5908,7 +5908,12 @@ public class SmCommonUtil {
 	public static void ssmError(SsmResDTO resDTO){
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			throw new EpException(MessageConst.ERROR_SSM_70001);
+			//27214
+			if(resDTO.isPreRegistration()){
+				throw new EpException(MessageConst.ERROR_721086);
+			}else{
+				throw new EpException(MessageConst.ERROR_721078);
+			}			
 		case "70002":
 			throw new EpException(MessageConst.ERROR_SSM_70002);
 		case "70003":
