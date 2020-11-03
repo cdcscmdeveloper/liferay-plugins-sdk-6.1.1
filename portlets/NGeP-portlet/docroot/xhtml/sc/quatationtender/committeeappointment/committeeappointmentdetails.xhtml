@@ -51,7 +51,7 @@
 				<p:menuitem value="#{tabBean.titleName}"
 					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
 					partialSubmit="true"
-					update="@form"
+					update="@form, committeeTabListId"
 					process="@form"
 					disabled="#{tabBean.disabled}">
 					<c:if test="#{!empty tabBean.icon}">
@@ -61,7 +61,9 @@
 			</c:forEach>
 		</p:tabMenu>
 			
-		<ui:include src="committeeappointmenttabList.xhtml" />
+		<ui:fragment id="committeeTabListId">
+			<ui:include src="committeeappointmenttabList.xhtml" />
+		</ui:fragment>
 		
 	</p:panel>
 	<c:if test="#{qTDetailBB.managedBean.committeeAppointmentRemark}">
