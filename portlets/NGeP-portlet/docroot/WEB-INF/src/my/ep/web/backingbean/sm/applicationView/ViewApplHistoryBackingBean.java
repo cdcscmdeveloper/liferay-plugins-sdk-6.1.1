@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -41,8 +40,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
@@ -61,14 +58,11 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -77,15 +71,12 @@ import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
@@ -177,6 +168,7 @@ public class ViewApplHistoryBackingBean extends
 	/**
 	 * Pre-render for View Application History
 	 */
+	@SuppressWarnings("deprecation")
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
@@ -1444,5 +1436,12 @@ public class ViewApplHistoryBackingBean extends
 		}
 		//#27232 - END SSM CHANGES FOR RESUBMIT
 	}
+	
+	//28771 - start
+	public void onChangeSupportingDocumentMode(){
+		getManagedBean().searchSupplier();
+		
+	}
+	//28771 - end 
 	
 }

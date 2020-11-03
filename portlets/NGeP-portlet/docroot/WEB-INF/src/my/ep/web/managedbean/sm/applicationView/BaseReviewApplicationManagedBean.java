@@ -11,14 +11,12 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
-import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
@@ -69,11 +67,11 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.SmCancelMofRemarksVO;
-import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
+import my.ep.web.vo.SmCancelMofRemarksVO;
+import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -302,6 +300,18 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean disciplinaryAction;
 	//28281 - end 
 	
+	//28771 - start
+	private String supportingDocMode;
+	
+	public String getSupportingDocMode() {
+		return supportingDocMode;
+	}
+
+	public void setSupportingDocMode(String supportingDocMode) {
+		this.supportingDocMode = supportingDocMode;
+	}
+	//28771- end
+	
 	//26238 -  Disciplonary action - 28146
 	private boolean flagBlacklistCancel;
 	
@@ -486,6 +496,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 				: searchSupplier.getCompanyName();
 		String searchRegno = searchSupplier == null ? StringUtils.EMPTY
 				: searchSupplier.getRegNo();
+		
 		//25792 - start
 		if(!StringUtils.isBlank(accountType)) {
 			if(SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(accountType)) {
