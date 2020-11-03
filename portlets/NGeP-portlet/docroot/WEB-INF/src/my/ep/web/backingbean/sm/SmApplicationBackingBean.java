@@ -905,7 +905,8 @@ public class SmApplicationBackingBean extends
 						currSupp.getSupplierId(), applicationType);
 				
 				String labelNameVal = "";
-				if (rejectedAppl != null) {
+				//27951 - If from resubmit appl history/status no need display message
+				if (rejectedAppl != null && !this.getManagedBean().isPreRegistration()) {
 					FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							SmCommonUtil.getMessage("lbl.sm.supplier.promo.rejected",
 									new String[] { labelNameVal })));
