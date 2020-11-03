@@ -10,6 +10,13 @@
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
+	<ui:remove>
+		#13344 Start				
+	</ui:remove>
+ 	<ui:param name="isQTStatusPendingEvaluationCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst. QT_PENDING_PUBLICATION_APPROVAL)}" />
+	<ui:remove>
+		#13344 End				
+	</ui:remove>
 	<ui:param name="isClone1" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />	
 	<!-- 26095@hatta - start -->
@@ -46,6 +53,20 @@
 			<c:if test="#{qTDetailBB.approvalScreen and qTDetailBB.managedBean.readOnly}" >
 				
 				<div class="ppRightBtn">
+					<ui:remove>
+						#13344 Start				
+					</ui:remove>				
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+					action="#{qTDetailBB.saveQtCAApproval}" process="@form" partialSubmit="true"
+					onclick="blockWidget.show();"
+					oncomplete="blockWidget.hide();"
+					update="@form"
+					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or isQTStatusPendingEvaluationCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+					<ui:remove>
+						#13344 End					
+					</ui:remove>
+										
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
 					<ui:remove>
