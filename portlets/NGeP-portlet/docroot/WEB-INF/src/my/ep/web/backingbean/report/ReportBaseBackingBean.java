@@ -48,6 +48,18 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+//start #27472
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+//end #27472
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -424,4 +436,51 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 			throw new EpException(MessageConst.ERROR_REPORT_780017);
 		}
 	}
+	
+	//start 27472 add base columstyle
+	public CellStyle columnStyle(Workbook wb, 
+			CreationHelper createHelper,
+			Boolean isCellListHeader,
+			Boolean isBold, 
+			Boolean isHAlignCenter,
+			Boolean isHAlignRight,
+			Boolean isFormatDate,
+			Boolean isFormatDecimalNumber,
+			Boolean isWrapTxt,
+			Boolean isVAlignCenter
+			){
+		
+		Font contentFont = wb.createFont();
+		
+		contentFont.setFontHeightInPoints((short)10);  
+		contentFont.setFontName("Arial"); 
+		if(isBold)contentFont.setBold(true);
+		else contentFont.setBold(false);
+		
+		CellStyle cellStyle = wb.createCellStyle();
+		
+		if(isCellListHeader){
+			cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());  
+			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		}
+		if(isHAlignCenter && !isHAlignRight)cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		else if(isHAlignRight && !isHAlignCenter)cellStyle.setAlignment(HorizontalAlignment.RIGHT);
+		else if(!isHAlignRight && !isHAlignCenter) cellStyle.setAlignment(HorizontalAlignment.LEFT);
+		else cellStyle.setAlignment(HorizontalAlignment.CENTER);		
+		
+		if(isFormatDate)cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
+		if(isFormatDecimalNumber)cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("#,##0.00"));
+		if(isWrapTxt)cellStyle.setWrapText(true);
+		if(isVAlignCenter)cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		else cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
+
+		cellStyle.setFont(contentFont);
+		cellStyle.setBorderTop(BorderStyle.THIN);
+		cellStyle.setBorderBottom(BorderStyle.THIN);
+		cellStyle.setBorderLeft(BorderStyle.THIN);
+		cellStyle.setBorderRight(BorderStyle.THIN);
+		
+		return cellStyle;
+	}	
+	//end 27472
 }
