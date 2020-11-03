@@ -113,6 +113,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int  bondIndex = 113;
 	private int index;
 	private boolean trackingDiarySearch;
+	private PmOrgProfile selectedPtj;
+	private PmOrgProfile oldMinistryProfile;
 
 	/**
 	 * @return the taskName
@@ -1044,5 +1046,21 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 			}
 			return null;
 		}
+	}
+
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+
+	public PmOrgProfile getOldMinistryProfile() {
+		return oldMinistryProfile;
+	}
+
+	public void setOldMinistryProfile(PmOrgProfile oldMinistryProfile) {
+		this.oldMinistryProfile = oldMinistryProfile;
 	}
 }
