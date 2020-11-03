@@ -95,8 +95,10 @@
 					rendered="#{aprvdCatBean.recordStatusFlg eq 8 or aprvdCatBean.recordStatusFlg eq 6}" />
 				<h:outputText value="#{lbl['lbl.sm.status.active']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 1}" />
-				<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
+				<!-- #28764 START -->	
+				<h:outputText value="#{lbl['lbl.sm.status.reject']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 0}" />
+				<!-- #28764 END -->	
 				<h:outputText value="#{lbl['lbl.sm.deleted']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 9}" />
 				<h:outputText value="#{lbl['lbl.sm.status.cancel']}"
