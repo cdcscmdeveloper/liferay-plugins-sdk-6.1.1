@@ -1126,8 +1126,6 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-			prepareUpdateCommitteeMember();//#25037
-
 		} finally {
 			meetingSO = null;
 			evaluationSo = null;
@@ -8900,6 +8898,7 @@ private void retriveCommitteeRemarksList(){
 
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
+		prepareUpdateCommitteeMember();//#25037
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()

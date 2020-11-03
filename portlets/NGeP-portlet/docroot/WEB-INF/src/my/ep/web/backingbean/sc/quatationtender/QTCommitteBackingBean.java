@@ -1909,48 +1909,58 @@ public class QTCommitteBackingBean extends
 				
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (super.isQTStatusPublished(currentStatusId)) {
-				if (super.isQTStatusInBetween(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
-					if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)) {
-						Long qtId = scQt.getQtId();
-						
-						if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
-							if (ocWorkFlowStatus == null || (ocWorkFlowStatus.getDocId() != null && !ocWorkFlowStatus.getDocId().equals(qtId))) {
-								ocWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_OC_COMMITTE, qtId);	
-							}
-							
-							if (ocWorkFlowStatus != null) {
-								if (QTStatusConst.OC_COMPLETED.equals(ocWorkFlowStatus.getPmStatus().getStatusId())) {
-									return false;
-								}
-							}
-						} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
-							if (tecWorkFlowStatus == null || (tecWorkFlowStatus.getDocId() != null && !tecWorkFlowStatus.getDocId().equals(qtId))) {
-								tecWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_TEC_COMMITTE, qtId);
-							}
-							
-							if (tecWorkFlowStatus != null) {
-								if (QTStatusConst.TEC_COMPLETED.equals(tecWorkFlowStatus.getPmStatus().getStatusId())) {
-									return false;
-								}
-							}
-						} else {
-							return false;
-						}
-						
-					} else {
-						Date closingDate = this.getManagedBean().getQt().getClosingDate();
-						//Temporary fix on getDaysDifference . needs to look for some date api.
-						if (closingDate != null && 
-								DateUtils.getDaysDifference(new Date(),
-										DateUtils.setDefaultDateTime(closingDate))+1 <= 7 &&
-								(QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) || 
-										QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
-							return false;
-						}
+				Long[] allowedStatusAfterPublish = new Long[]{
+						QTStatusConst.QT_BRIEFING_SITE_VISIT,
+						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE,
+						QTStatusConst.QT_PROPOSAL_PREPARATION
+				};
+				if(!Arrays.asList(allowedStatusAfterPublish).contains(currentStatusId)){//#25037 
+					if(Arrays.asList(new String[]{"EC", "OC", "SC", "TEC", "FEC"}).contains(commType)){
+						return false;
 					}
-				} else {
-					return false;
 				}
+//				if (super.isQTStatusInBetween(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_EVALUATION_PROPOSAL)) {
+//					if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)) {
+//						Long qtId = scQt.getQtId();
+//						
+//						if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+//							if (ocWorkFlowStatus == null || (ocWorkFlowStatus.getDocId() != null && !ocWorkFlowStatus.getDocId().equals(qtId))) {
+//								ocWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_OC_COMMITTE, qtId);	
+//							}
+//							
+//							if (ocWorkFlowStatus != null) {
+//								if (QTStatusConst.OC_COMPLETED.equals(ocWorkFlowStatus.getPmStatus().getStatusId())) {
+//									return false;
+//								}
+//							}
+//						} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)) {
+//							if (tecWorkFlowStatus == null || (tecWorkFlowStatus.getDocId() != null && !tecWorkFlowStatus.getDocId().equals(qtId))) {
+//								tecWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_TEC_COMMITTE, qtId);
+//							}
+//							
+//							if (tecWorkFlowStatus != null) {
+//								if (QTStatusConst.TEC_COMPLETED.equals(tecWorkFlowStatus.getPmStatus().getStatusId())) {
+//									return false;
+//								}
+//							}
+//						} else {
+//							return false;
+//						}
+//						
+//					} else {
+//						Date closingDate = this.getManagedBean().getQt().getClosingDate();
+//						//Temporary fix on getDaysDifference . needs to look for some date api.
+//						if (closingDate != null && 
+//								DateUtils.getDaysDifference(new Date(),
+//										DateUtils.setDefaultDateTime(closingDate))+1 <= 7 &&
+//								(QTStatusConst.CMT_PENDING_SUBMISSION.equals(committeStatus) || 
+//										QTStatusConst.CMT_PENDING_REVISION.equals(committeStatus))) {
+//							return false;
+//						}
+//					}
+//				} else {
+//					return false;
+//				}
 				
 			} else if (!isEligibleStatusForBtns(currentStatusId, commType)) {//#25037
 				return false;
