@@ -584,6 +584,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	private List<ScQtCheckList> singleItemCheckList;
 	//#25138 - end
+	
+	private boolean scoringReq = false; //#25138
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3771,6 +3773,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setSingleItemCheckList(List<ScQtCheckList> singleItemCheckList) {
 		this.singleItemCheckList = singleItemCheckList;
+	}
+	 
+	public boolean isScoringReq() {
+		return scoringReq;
+	}
+
+	public void setScoringReq(boolean scoringReq) {
+		this.scoringReq = scoringReq;
 	}
 	//#25138 - end
 }
