@@ -308,8 +308,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			try{
 				
 				String path1 = currentStatusAndPath();
-				log.info("path1==================================="+path1);
-				if(path1 != null && (MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION))){
+				//27214
+				if(path1 != null && (MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION) || path1.contains(CATALOGUE_UPLOAD_PATH) || path1.contains(SOFT_CERT_PATH) || path1.contains(MOF_SOFTCERT_REQUEST) || path1.contains(CATALOGUE_MAINT))){
 					//28454
 					if(path1.contains(RESUBMIT_APPLICATION)){
 						this.getManagedBean().setResubmitAppl(true);
