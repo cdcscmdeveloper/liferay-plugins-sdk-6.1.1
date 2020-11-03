@@ -583,6 +583,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private Boolean singleSpecQuestion;
 	
 	private List<ScQtCheckList> singleItemCheckList;
+	
+	private int tabItemPackageIndex;
 	//#25138 - end
 	
 	private boolean scoringReq = false; //#25138
@@ -3781,6 +3783,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setScoringReq(boolean scoringReq) {
 		this.scoringReq = scoringReq;
+	}
+
+	public int getTabItemPackageIndex() {
+		return tabItemPackageIndex;
+	}
+
+	public void setTabItemPackageIndex(int tabItemPackageIndex) {
+		this.tabItemPackageIndex = tabItemPackageIndex;
 	}
 	//#25138 - end
 }
