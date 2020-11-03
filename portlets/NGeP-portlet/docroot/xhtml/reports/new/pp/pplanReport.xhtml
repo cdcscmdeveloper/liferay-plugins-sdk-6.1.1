@@ -125,7 +125,8 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.yearone']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td width="20%"><p:selectOneMenu id="ppYear"
+			<!-- #27472 change width 20% -> 30%-->
+			<td width="30%"><p:selectOneMenu id="ppYear"
 					label="#{lbl['lbl.rpt.yearone']}"
 					value="#{ppReportsBackingBean.managedBean.selectedYear}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -134,7 +135,19 @@
 						value="#{ppReportsBackingBean.generateCommonYearList()}"></f:selectItems>
 				</p:selectOneMenu> <p:message id="ppYearMsg" for="ppYear" display="icon"
 					showDetail="false" /></td>
-			<td width="50%" colspan="2"></td>
+			
+			<!-- #27472 start-->
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+			</td>
+			<td width="30%">
+				<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{ppReportsBackingBean.getDocumentTypeOptions()}" />
+				</p:selectOneMenu>
+			</td>
+			<!-- #27472 end-->
 
 
 		</tr>
@@ -157,7 +170,19 @@
 				</p:selectOneMenu>
 				<p:message id="ppYearMsg" for="ppYear" display="icon" showDetail="false" />
 			</td>
-			<td width="50%" colspan="2"></td>
+			
+			<!-- #27472 start-->
+			<td>
+				<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+			</td>
+			<td width="30%">
+				<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{ppReportsBackingBean.getDocumentTypeOptions()}" />
+				</p:selectOneMenu>
+			</td>
+			<!-- #27472 end-->
 		</tr>
 	</table>
 	</c:if>	
