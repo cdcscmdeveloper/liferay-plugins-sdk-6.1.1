@@ -2140,6 +2140,7 @@ public class EvaluationBackingBean extends
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		this.getManagedBean().setEvaluatioStageActiveIndex(1);
 		this.getManagedBean().setNonScoringActiveIndex(1);//#25138
+		this.getManagedBean().setTabItemPackageIndex(1);//#25138
 		try {
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
@@ -13097,6 +13098,7 @@ private void retriveCommitteeRemarksList(){
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 		this.getManagedBean().setEvaluatioStageActiveIndex(1);
 		this.getManagedBean().setNonScoringActiveIndex(1);
+		this.getManagedBean().setTabItemPackageIndex(2);//#25138
 		financialCheckListStatusCheck();//#25138
 		try {
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -13201,6 +13203,15 @@ private void retriveCommitteeRemarksList(){
 						System.out.println("checklistID->>"+proposalCheckList.getQtChecklistId());
 						
 					}
+					//#25138 -start
+					else{
+						if (proposalCheckList.isScoringReq()) {
+							outerCheckList
+									.add(checkStausForUploadNoActionCheckLists(
+											proposalCheckList, evalstage.get(0)));
+						}
+					}
+					//#25138 -end
 
 				}
 				if(innerCheckList!=null && innerCheckList.size()>0){
