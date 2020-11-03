@@ -633,7 +633,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setReasonForUpdateEnabled(false);
 									ppItem.setBrandNew(true);
 								} else {
-									ppItem.setCloneEnabled(true);
+									ppItem.setCloneEnabled(false);
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
 									ppItem.setBrandNew(false);
@@ -1326,6 +1326,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//25549@12102020 - start
 							ppItem.setReviseReject(true);
 							//25549@12102020 - end
+							
+							
+							log.info("originalfromppItem " + ppItem.isOriginal() + ppItem.getFromPpItem());
 						
 							if (!ppItem.isOriginal() && ppItem.getFromPpItem() != null) {
 								
@@ -4099,6 +4102,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						procurementItem.getProcurementItemId() != null) ||
 						(procurementItem.getProcurementItemId() != null && 
 						procurementItem.getFromPpItem() == null) ) {
+					procurementItem.setBrandNew(false);
 					procurementItem.setRecordStatusFlg(Integer.valueOf(DbValueConst.RECORD_STATUS_CANCELLED));				
 				}
 				
