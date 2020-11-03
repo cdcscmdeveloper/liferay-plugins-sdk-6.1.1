@@ -1437,9 +1437,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setSubmit(true);
 			
 			validateCommitteeMembers();
-			boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
-			if (!isValidationSuccessful) {
-				return;
+			if(StringUtils.isEmpty(navigateTo)){
+				boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
+				if (!isValidationSuccessful) {
+					return;
+				}
 			}
 			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());//#25037
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
@@ -1460,6 +1462,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 					&& StringUtils.isNotEmpty(navigateTo)) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				this.getManagedBean().getFinalBB().loadPreparationTabDetails();
+				this.getManagedBean().getFinalBB().prepareUpdateCommitteeMember();
 				this.getManagedBean().getFinalBB().getManagedBean().setPrepareActiveIndex(1);
 				prepareMemberUpdate();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigateTo);
