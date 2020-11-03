@@ -2287,27 +2287,19 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			
 			if(resDTO != null && resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700005;
+				String messageId = MessageConst.INFO_745024;//#29389 logan Changed INFO_700005 to INFO_745024
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				//#29389 logan Start
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 									messageId = MessageConst.INFO_745024;
-								}
-								FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-										FacesMessage.SEVERITY_INFO, null,
-										MessageUtils.getMessage(messageId, 
-												new String[]{messagePrefix/*+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)*/+messageSuffix, docNo}, 
-												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				//#29389 logan End
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					messageId = MessageConst.INFO_745016;
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+								new String[]{messagePrefix/*+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)*/+messageSuffix, docNo}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				//#29389 logan End
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
