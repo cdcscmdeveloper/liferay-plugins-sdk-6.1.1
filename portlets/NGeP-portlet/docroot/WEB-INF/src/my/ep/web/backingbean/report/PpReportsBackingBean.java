@@ -412,7 +412,13 @@ public class PpReportsBackingBean extends
 		if(StringUtils.isBlank(getManagedBean().getSelectedYear())){
 			throw new EpException(MessageConst.ERROR_REPORT_780030);
 		}
-		
+
+		//start #27472
+		if(StringUtils.isBlank(getManagedBean().getDocumentType())){
+			throw new EpException(MessageConst.ERROR_760444);
+		}
+		//end #27472
+
 		try {
 			rptRequestSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
