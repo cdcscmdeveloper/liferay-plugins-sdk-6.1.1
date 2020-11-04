@@ -150,6 +150,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -1038,45 +1039,40 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setScQtCommittee(resDTO.getQtCommittee());
 				if (null != resDTO.getQtCommittee()) {
 
-					if (null != resDTO.getQtCommittee()
-							.getCommitteeActivities()
-
-							&& !resDTO.getQtCommittee()
-									.getCommitteeActivities().isEmpty()) {
-
-						for (ScQtCommitteeActivity committeeActivity : resDTO
-								.getQtCommittee().getCommitteeActivities()) {
-							if (committeeActivity
-									.getScCommitteeMember()
-									.getMemberRole()
-									.getParameterCode()
-									.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-								if (!committeeActivity.isAttended()) {
-									committeeActivity.setAttended(true);
-								}
-
+					ScCommittee sccommittee = resDTO.getQtCommittee().getScCommittee();
+					if (CollectionUtils.isNotEmpty(resDTO.getQtCommittee().getCommitteeActivities())) {
+						
+						for (ScQtCommitteeActivity committeeActivity : resDTO.getQtCommittee().getCommitteeActivities()) {
+							ScCommitteeMember member = committeeActivity.getScCommitteeMember();
+							if (member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+								committeeActivity.setAttended(true);
 							}
 						}
-						Collections.sort(resDTO.getQtCommittee()
-								.getCommitteeActivities());
-						this.getManagedBean().setCommitteeMemberList(
-								resDTO.getQtCommittee()
-										.getCommitteeActivities());
-
-					}
-
-					else {
-
-						ScCommittee sccommittee = resDTO.getQtCommittee()
-								.getScCommittee();
+		    			Map<Object, Object> map = CustomUtils.listToMap(resDTO.getQtCommittee().getCommitteeActivities(), "getScCommitteeMember.getCommitteeMemberId");
+						List<ScQtCommitteeActivity> addedActivities = new ArrayList<ScQtCommitteeActivity>();
+		    			for (ScCommitteeMember member : sccommittee.getScCommitteeMembers()) {
+							if(map.get(member.getCommitteeMemberId())==null){//activity is not init, so we init
+								member.setScCommittee(sccommittee); 
+								setUserDetails(member);
+								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+								if (member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+									activity.setAttended(true);
+								}
+								activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
+								activity.setScCommitteeMember(member);
+								setUserDetails(activity);
+								addedActivities.add(activity);
+							}
+						}
+		    			resDTO.getQtCommittee().getCommitteeActivities().addAll(addedActivities);
+						Collections.sort(resDTO.getQtCommittee().getCommitteeActivities());
+						this.getManagedBean().setCommitteeMemberList(resDTO.getQtCommittee().getCommitteeActivities());
+					}else {
 						List<ScQtCommitteeActivity> localList = new ArrayList<ScQtCommitteeActivity>();
-						if (null != sccommittee.getScCommitteeMembers()
-								&& !sccommittee.getScCommitteeMembers()
-										.isEmpty()) {
-
-							for (ScCommitteeMember scCommitteeMember : sccommittee
-									.getScCommitteeMembers()) { //
-								scCommitteeMember.setScCommittee(sccommittee); //
+						
+						if (CollectionUtils.isNotEmpty(sccommittee.getScCommitteeMembers())) {
+							for (ScCommitteeMember scCommitteeMember : sccommittee.getScCommitteeMembers()) {
+								scCommitteeMember.setScCommittee(sccommittee); 
 								setUserDetails(scCommitteeMember);
 
 								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
