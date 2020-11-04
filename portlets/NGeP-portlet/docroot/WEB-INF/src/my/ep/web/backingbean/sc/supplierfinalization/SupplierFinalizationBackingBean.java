@@ -4994,8 +4994,7 @@ public class SupplierFinalizationBackingBean extends
 		scQtFinalization.setHigherAuthReq(false);
 		
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
-		getManagedBean().setFinalizationMethod(
-					finalizationMethod.getParameterCode());
+		getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
 		
 		Map<String,String[]> higherAuthoritiesMap 
 					= getManagedBean().getHigherAuthoritiesMap();
@@ -6057,6 +6056,10 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			this.getManagedBean().setItemCancelled(false);
 		}
+		
+		if (this.getManagedBean().getFinalizationMethod() == null) {//#27502, Throw error if 'Supplier Finalization Method' == null
+			throw new EpException(MessageConst.ERROR_760211);					
+		} 
 		
 		if (scQtRecommend.isDisabled() || 
 				scQtRecommend.isAwardedItem()) {
