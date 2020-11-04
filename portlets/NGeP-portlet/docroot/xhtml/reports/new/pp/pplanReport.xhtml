@@ -33,9 +33,9 @@
 				<p:outputLabel value="#{lbl['lbl.pp.ministry']}" /> 
 				<p:outputLabel id="ministryMandatory" rendered="#{ppReportsBackingBean.managedBean.ministryMandatory}" value="*" styleClass="mandatory" /> <!-- [#27197] -->
 			</td>
-			<!-- #27472 change colspan and size-->
+			<!-- #27472 change colspan-->
 			<td colspan="4"><ac:lov id="lovPpMinistry"
-					lovId="PM_ORG_PROFILE_REPORT" size="90" update="@form"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					disabled="#{ppReportsBackingBean.managedBean.disabledMinistryLov}"
 					readonly="true" headerText="#{lbl['lbl.pp.ministry']}"
 					value="#{ppReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
@@ -48,9 +48,9 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}"></p:outputLabel>
 			</td>
-			<!-- #27472 change colspan and size-->
+			<!-- #27472 change colspan-->
 			<td colspan="4"><ac:lov id="lovPpPegaWaiPengawal"
-					lovId="PM_ORG_PROFILE_REPORT" size="90" update="@form"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.pp.pegawai.pengawal']}" readonly="true"
 					disabled="#{ppReportsBackingBean.managedBean.selectedMinistry==null or ppReportsBackingBean.managedBean.disabledPegawaiLov}"
 					value="#{ppReportsBackingBean.managedBean.selectedPegawaiPengawal.pmOrgValidity.orgName}"
@@ -61,9 +61,9 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}"></p:outputLabel></td>
-			<!-- #27472 change colspan and size-->
+			<!-- #27472 change colspan-->
 			<td colspan="4"><ac:lov id="lovPpKumpulanPTJ"
-					lovId="PM_ORG_PROFILE_REPORT" size="90" update="@form"
+					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.pp.kumpulan.ptj']}" readonly="true"
 					disabled="#{ppReportsBackingBean.managedBean.selectedPegawaiPengawal==null or ppReportsBackingBean.managedBean.disabledKumpulanPTJLov}"
 					value="#{ppReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
@@ -75,9 +75,9 @@
 
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.pp.ptj']}"></p:outputLabel></td>
-			<!-- #27472 change colspan and size-->
+			<!-- #27472 change colspan-->
 			<td colspan="4"><ac:lov id="lovPpPTJ"
-					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="90"
+					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
 					headerText="#{lbl['lbl.pp.ptj']}" update="@form"
 					disabled="#{ppReportsBackingBean.managedBean.selectedKumpulanPTJ==null or ppReportsBackingBean.managedBean.disabledPTJLov}"
 					value="#{ppReportsBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
@@ -107,7 +107,7 @@
 				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.pp.procurement.method']}"></p:outputLabel></td>
 				<!-- #27472 change width-->
-				<td width="20%"><p:selectOneMenu id="somProcurementMethod"
+				<td width="15%"><p:selectOneMenu id="somProcurementMethod"
 						disabled="#{isPPDtlReport and ppReportsBackingBean.managedBean.procurementCatId==null}"
 						label="#{lbl['lbl.pp.procurement.method']}"
 						value="#{ppReportsBackingBean.managedBean.procurementTypeId}">
@@ -122,11 +122,11 @@
 
 				<!-- #27472 start-->
 				<c:if test="#{isPPBudgetAllocationAmendmentReport or (isPPSummReport and not isPPDtlReport)}">
-					<td width="20%">
+					<td width="15%">
 						<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td width="20%">
+					<td width="15%">
 						<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
@@ -134,10 +134,10 @@
 						</p:selectOneMenu>
 					</td>
 
-					<td width="20%"></td>
+					<td width="35%"></td>
 				</c:if>
 				<c:if test="#{not isPPBudgetAllocationAmendmentReport}}">
-					<td width="20%" colspan="3"></td>
+					<td width="35%" colspan="3"></td>
 					<!-- #27472 end-->
 				</c:if>
 			</tr>
@@ -149,18 +149,18 @@
 				<td width="20%"><p:outputLabel
 						value="#{isPPSummReport or isPPDtlReport ? lbl['lbl.pp.ppitem.status'] :  lbl['lbl.pp.epitem.status']}" /></td>
 				<!-- #27472 change width-->
-				<td width="20%"><p:selectOneMenu id="ppSearchStatus"
+				<td width="15%"><p:selectOneMenu id="ppSearchStatus"
 						value="#{ppReportsBackingBean.managedBean.status}">
 						<f:selectItems
 							value="#{ppReportsBackingBean.getActiveAndInactiveStatusOptions()}" />
 					</p:selectOneMenu></td>
 				<!-- #27472 start-->
 				<c:if test="#{not isPPSummReport or isPPDtlReport or isPESummReport or isPEDtlReport}">
-					<td width="20%">
+					<td width="15%">
 						<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td width="20%">
+					<td width="15%">
 						<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
@@ -168,7 +168,7 @@
 						</p:selectOneMenu>
 					</td>
 
-					<td width="20%"></td>
+					<td width="35%"></td>
 					<!-- #27472 end-->
 				</c:if>
 	
@@ -180,7 +180,7 @@
 			<td width="20%"><p:outputLabel value="#{lbl['lbl.rpt.yearone']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<!-- #27472 change width-->
-			<td width="20%"><p:selectOneMenu id="ppYear"
+			<td width="15%"><p:selectOneMenu id="ppYear"
 					label="#{lbl['lbl.rpt.yearone']}"
 					value="#{ppReportsBackingBean.managedBean.selectedYear}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
@@ -192,11 +192,11 @@
 
 			<!-- #27472 start-->
 			<c:if test="#{not isPPSummReport and not isPPDtlReport and not isPESummReport and not isPEDtlReport}">
-				<td width="20%">
+				<td width="15%">
 					<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td width="20%">
+				<td width="15%">
 					<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -204,7 +204,7 @@
 					</p:selectOneMenu>
 				</td>
 	
-				<td width="20%"></td>
+				<td width="35%"></td>
 				<!-- #27472 end-->
 			</c:if>
 
