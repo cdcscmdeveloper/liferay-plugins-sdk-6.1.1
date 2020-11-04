@@ -6,8 +6,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<style>
-		.committeeDtlTblCl th{
+		.committeeDtlTblCl th, .committeeDtlTblCl td{
 			width: auto;
+			min-width: 50px;
 			text-align: center !important;
             word-break: break-word !important;
             white-space: normal !important;
@@ -47,7 +48,7 @@
 				<h:outputText value="#{committeeDtl.scCommitteeMember.grade}" />
 			</p:column>
 
-			<p:column>
+			<p:column style="min-width: 50px !important;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}"/>
 					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -66,7 +67,7 @@
 									  	 committeeDtl.scCommitteeMember.representativeType)}" />
 			</p:column>
 				
-			<p:column>
+			<p:column style="min-width: 100px !important;">
 				<f:facet name="header">
 					<h:outputText  value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
 					<ac:iconTooltip id="attendanceTooltip" value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
