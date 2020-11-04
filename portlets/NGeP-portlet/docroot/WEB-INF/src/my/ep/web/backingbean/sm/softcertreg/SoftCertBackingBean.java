@@ -388,10 +388,26 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								RoleCode.SUPPLIER_TEMP.value())) {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
-					personnel.setFreeSoftCert(true);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 */
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
+                        RoleCode.MOF_SUPPLIER_USER.value())) {
+					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
+					amount = amount.add(amountPerPersonnel);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				} else {
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 */
 					personnel.setFreeSoftCert(true);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				}
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
@@ -433,6 +449,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		this.getManagedBean().setTotalPaymentAmount(
 				gst.add(amount).setScale(2, BigDecimal.ROUND_UP));
 		setPaymentBtnLbl();
+
 	}
 
 	/**
