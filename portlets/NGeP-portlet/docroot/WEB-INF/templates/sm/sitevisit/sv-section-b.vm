@@ -1,4 +1,8 @@
 #parse("templates/sm/sitevisit/shared/header.vm")
+#set($bumi = "Bumiputera")
+#set($nonBumi = "Non-Bumiputera")
+#set($nonMy = "Non-Malaysian")
+
 
 <table width='100%'>
 	<tr align='center' style="background-color: #3366ff;">
@@ -70,20 +74,39 @@
 				<td class="txtBold">Account No.</td>
 				<td>$bank.smSupplierBank.accountNo<br /></td>
 			</tr>
-						
+			
+			##14055 start - add cheque signatory status			
 			<tr>
 				<td class="txtBold">Cheque Signatory Name</td>
-				<td>
-					#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)
-						$velocityCount. $signatory.smPersonnel.name<br />
-					#end
-				</td>
+				#foreach($signatory in $bank.smSupplierBank.smChequeSignatories)										
+					<tr>
+						<td>$velocityCount. $signatory.smPersonnel.name</td>
+						<td class="sColTwentyPerc"></td>
+						<td width="20%" class="txtBold">Status</td>
+										
+						#if($signatory.smPersonnel.bumiFlg == 1)
+							<td>$bumi</td> 													
+						#elseif($signatory.smPersonnel.bumiFlg == 0 && $signatory.smPersonnel.pmCountry.countryCode ==	$malaysiaCode)
+							<td>$nonBumi</td> 												
+						#else
+							<td>$nonMy</td> 										
+						#end
+					</tr>															
+				#end				
 			</tr>
+			##14055 end
 						
 			<tr>
 				<td valign="top" class="txtBold">Terms and Conditions</td>
 				<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
 			</tr>
+			
+			##14055 start - change placement of the Remarks
+			<tr>
+				<td>Remarks:</td>
+				<td><p style="width: 200px;height: 50px;background: white;border:solid thin black;" /></td>
+			</tr>
+			##14055 end
 			
 			#*	
 			#if($review)
@@ -119,7 +142,7 @@
 	#if($review)
 		<tr>
 			<td class="txtBold" width="40%"><u>Check List</u></td>
-			<td class="txtBold"><u>Avaialble</u></td>
+			<td class="txtBold"><u>Available</u></td>
 			<td class="txtBold"><u>Remark</u></td>
 		</tr>
 		#if($financialCheckList.size() > 0)
