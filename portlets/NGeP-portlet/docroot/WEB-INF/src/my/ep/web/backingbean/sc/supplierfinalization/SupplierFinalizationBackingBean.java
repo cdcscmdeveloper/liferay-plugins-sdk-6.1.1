@@ -4146,8 +4146,8 @@ public class SupplierFinalizationBackingBean extends
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
 		getManagedBean().setFinalizationMethod(
 					finalizationMethod.getParameterCode());	
-		//TODO : Uncomment this
-		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType) || ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
+
+		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType)) {
 			createShortlistedSuppliersDataModel();
 		} else {
 			boolean isInitialDecisionFwdToBPK =
