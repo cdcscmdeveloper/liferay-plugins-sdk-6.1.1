@@ -50,7 +50,7 @@
 										process="@this" partialSubmit="true"
 										action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval,index,'EF')}" />
 								</ui:fragment>
-								<ui:fragment rendered="#{financialEval.scoringReq ne false and  (evaluationBackingBean.managedBean.evalStatus eq null and evaluationBackingBean.managedBean.evalStatus ne '60451')}"
+								<ui:fragment rendered="#{(financialEval.scoringReq ne false and evaluationBackingBean.managedBean.offerScoreType eq '2') and (evaluationBackingBean.managedBean.evalStatus eq null or evaluationBackingBean.managedBean.evalStatus ne '60451')}"
 								align="center">
 									<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 										process="@this" partialSubmit="true"
