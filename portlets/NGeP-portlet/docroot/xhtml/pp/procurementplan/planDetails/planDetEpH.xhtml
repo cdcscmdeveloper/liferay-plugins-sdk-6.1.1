@@ -132,13 +132,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						immediate="true" 
 						update="dtExpenditurePlanH" 
 						partialSubmit="true"
-						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}">
+						disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}"> <!-- 24975@azza - Start -->
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
 				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votAmanah, pPlanBackingBean.managedBean.selectedPlan, index)}"
 				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}"
-				      		update="@form"/>
+				      		update="@form"/> <!-- 24975@azza - End -->
 				      </h:graphicImage>
 				</p:commandLink>
 			  </p:column>
@@ -153,6 +153,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						/>
 					&#160;	
 					<!--25549@18092020 -->
+					<!-- 24975@azza -->
 					<p:commandLink id="glAccountSearchCL" 
 						partialSubmit="true"
 						disabled="#{!(epItem.brandNew) or epItem.disableEditAccount or (epItem.disableRow)}"
@@ -168,6 +169,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<f:param name="kptjId" 	value="#{pPlanBackingBean.retrieveKptjId()}" />
 						<p:resetInput target=":form"></p:resetInput>						
 					</p:commandLink>
+					<!-- 24975@azza -->
 					
 	       		<ui:remove><ac:lov id="lovGlAccount" lovId="PM_GL_ACCOUNT" size="10" 
 	       			update=":form:dtExpenditurePlanH :form:hGlAccMsg" 
@@ -187,6 +189,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column>
 	            <!--25549@18092020 -->
+	             <!--24975@azza - start -->
    				<p:inputText style="width:90%; " value="#{epItem.budgetAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itBudgetAmt" styleClass="amountRight" label="#{lbl['lbl.pp.total.approved.budget']}" 
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable) or (epItem.disableRow)}"
@@ -198,10 +201,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  				update=":form:hiddenGtBudgetAmtH, :form:hiddenGtNonAllocAmtH, otNonAllocAmt, itBudgetAmt,itBudgetAmtMsg" oncomplete="updateEpFooterH();" 
 		  				 />
 		  		</p:inputText>
+		  		  <!--24975@azza - end -->
 		  		<p:message id="itBudgetAmtMsg" for="itBudgetAmt" display="icon" />
 	        </p:column>
 	        <p:column>
 	         <!--25549@18092020 -->
+	           <!--24975@azza - satrt -->
    				<p:inputText style="width:90%" value="#{epItem.planAmt}" required="#{!empty param['disableValidation']}" 
 		  			id="itPlanAmt" styleClass="amountRight" label="#{lbl['lbl.pp.budget.spend.ep']}"
 		  			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and epItem.editable) or (epItem.disableRow)}"
@@ -212,6 +217,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem, ParameterConst.votAmanah)}"
 		  				update=":form:hiddenGtPlanAmtH, :form:hiddenGtNonAllocAmtH, otNonAllocAmt, itPlanAmt,itPlanAmtMsg" oncomplete="updateEpFooterH();"   />
 		  		</p:inputText>
+		  		  <!--24975@azza - end -->
 		  		<p:message id="itPlanAmtMsg" for="itPlanAmt" display="icon" />
 	        </p:column>
 	        <p:column styleClass="amountRight">
@@ -232,6 +238,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        	</p:column>
 	        </ui:remove>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
+	          <!--24975@azza - start -->
 			 <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}" disabled="#{(!epItem.disableReviseItem) or epItem.statusEnabled or !pPlanBackingBean.managedBean.modeReviewEditable or epItem.disableRow}">
 		    	<p:ajax event="change" update="clEpReason"/>
 			    </p:selectBooleanCheckbox>
@@ -241,13 +248,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
+	          <!--24975@azza - end -->
 	        <p:column style="text-align:center;">
 	          <!--25549@18092020 -->
+	            <!--24975@azza - start -->
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			    	 id="clEpJustification" disabled="#{epItem.disableRow}">
 					 <p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.selectable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />
 				</p:commandLink>
+				 <!--24975@azza - end -->
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 	            <!--25549@18092020 -->
