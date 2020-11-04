@@ -321,7 +321,8 @@ public class SvcSiteAssignBackingBean extends
 			}
 			
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(workFlowStatus.getCreatedBy());
+			//#29448
+			userReqDTO.setUserId(workFlowStatus.getSmAppl().getPoUserId());
 			PmUser processingOfficer = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
 			
 			if(processingOfficer != null){
