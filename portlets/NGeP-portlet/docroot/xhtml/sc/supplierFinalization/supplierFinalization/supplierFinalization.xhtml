@@ -418,6 +418,9 @@
 			<ui:param name="isBidding"
 				value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.finalizationMethod.parameterCode eq 'B' and 
 				!suppFinalizationBackingBean.managedBean.qtRefinalized}" />
+			<ui:remove> #11134 </ui:remove>
+			<ui:param name="haveSupplierRejection"
+				value="#{suppFinalizationBackingBean.managedBean.haveSupplierRejection}" />
 				
 				<td class="tdWidth" valign="top">
 					<h:panelGroup id="itemPanel" rendered="#{(suppFinalizationBackingBean.managedBean.recommendSupplier or 

@@ -276,6 +276,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #27502 - Start 
 	private boolean isMofFinalization;
 	// #27502 - Start 
+	
+	// #11134 - Start
+	private boolean haveSupplierRejection;
+	// #11134 - End
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2354,6 +2359,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setMofFinalization(boolean isMofFinalization) {
 		this.isMofFinalization = isMofFinalization;
+	}
+
+	public boolean isHaveSupplierRejection() {
+		return haveSupplierRejection;
+	}
+
+	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
+		this.haveSupplierRejection = haveSupplierRejection;
 	}
 
 }

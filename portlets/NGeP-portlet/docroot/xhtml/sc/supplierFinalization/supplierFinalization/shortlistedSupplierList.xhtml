@@ -110,7 +110,8 @@
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
 						</ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" />	               	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" 
+		               		rendered="#{haveSupplierRejection}"/>	               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -244,8 +245,8 @@
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
 				</p:column>	
 				
-				<p:column style="text-align:left;">
-					<h:outputText value=""/>
+				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
+					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
 				</p:column>			
 								
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
@@ -295,7 +296,7 @@
      		            </ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" 
-		               			  style="width:10%; white-space:normal;"/>		               	
+		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>		               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -428,8 +429,8 @@
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
 				</p:column>
 				
-				<p:column style="text-align:left;">
-					<h:outputText value=""/>
+				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
+					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
 				</p:column>	
 								
 				<ui:remove>
