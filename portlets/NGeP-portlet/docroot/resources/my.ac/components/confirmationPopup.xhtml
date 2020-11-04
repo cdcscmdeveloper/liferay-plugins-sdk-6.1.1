@@ -74,21 +74,21 @@
 				<c:choose>
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
 						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
-						<p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
 					</c:when>
 				    <c:when test="#{empty cc.attrs.resetInput}">
-				       <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+				       <p:commandButton id="yesWithResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
 				    </c:when>
 				    <c:otherwise>
-				        <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
@@ -99,7 +99,7 @@
 				</c:choose>
 				<c:choose>
 				    <c:when test="#{not empty cc.attrs.cancelAction}">
-				    	<p:commandButton value="#{lbl['lbl.btn.no']}"
+				    	<p:commandButton id="noWithActionId" value="#{lbl['lbl.btn.no']}"
 				    		partialSubmit="true" 
 				    		onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.cancelAction)}"
@@ -108,7 +108,7 @@
 						/>
 				    </c:when>
 				    <c:otherwise>
-				    	<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+				    	<p:commandButton id="noWithoutActionId" value="#{lbl['lbl.btn.no']}" immediate="true"
 							oncomplete="#{cc.attrs.widget}.hide();" process="#{cc.attrs.noProcess}"/>
 				    </c:otherwise>
 				    </c:choose>
