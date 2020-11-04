@@ -6,8 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<style>
-		.evalCommitteeDtlTblCl th{
+		.evalCommitteeDtlTblCl th, .evalCommitteeDtlTblCl td{
 			width: auto;
+			min-width: 50px;
 			text-align: center !important;
             word-break: break-word !important;
             white-space: normal !important;
@@ -45,7 +46,7 @@
 			<p:column headerText="#{lbl['lbl.sc.grade']}">
 				<h:outputText value="#{activity.scCommitteeMember.grade}"></h:outputText>
 			</p:column>
-			<p:column >
+			<p:column style="min-width: 50px !important;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 					<ac:iconTooltip id="pnp#{index}OC" value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -57,7 +58,7 @@
 				<h:outputText
 					value="#{evaluationBackingBean.getParameterDesc(activity.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
-			<p:column >
+			<p:column style="min-width: 100px !important;">
 				<f:facet name="header">
 					<h:outputText  value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
 					<ac:iconTooltip id="attendanceTooltip" value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
