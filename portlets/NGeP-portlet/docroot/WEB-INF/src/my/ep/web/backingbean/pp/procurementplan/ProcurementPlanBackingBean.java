@@ -1220,7 +1220,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}else 
 						if (DbValueConst.RECORD_STATUS_DELETED == epItem.getRecordStatusFlg() && epItem.isRejected()){
 						
-						epItem.setEditable(true);
+						epItem.setEditable(false);
 						//25549@12102020 - start
 						epItem.setReviseReject(true);
 						//25549@12102020 - end
@@ -1290,7 +1290,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					} else 
 						if (DbValueConst.RECORD_STATUS_DELETED == ppItem.getRecordStatusFlg() && ppItem.isRejected()){
 						
-							ppItem.setEditable(true);
+							ppItem.setEditable(false);
 						
 							ppItem.setReviseReject(true);
 					
@@ -3551,18 +3551,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epItems = this.getManagedBean().getEpItemsH();
 		}
 		for(PpExpenditureItem epItem: epItems){
-			log.info("totalEp " + epItem.getFromPpItem() + epItem.getRecordStatusFlg());
 			//25549@3102020 - start
-			if(epItem.getRecordStatusFlg()!= 9 && epItem.getFromPpItem() != null){
+		if (this.getManagedBean().isApprovedPlan()== false){
 			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
 			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
 		}else{
-			if(epItem.isOriginal()){
+		 if(this.getManagedBean().isApprovedPlan()== true){
+			 if(epItem.getRecordStatusFlg()!= 9){
 			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
 			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
-		}
+		  }
+	    }
 	  }
 	}
 	//25549@3102020 - end
