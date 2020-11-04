@@ -55,12 +55,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 			</tr>
 			<tr>
-				<th>
+				<td>
 				<!-- 200911@akmal - Enhancement27624 - Start -->
-					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputPanel id="addr1LabelId">
+						<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</p:outputPanel>
 				<!-- 200911@akmal - Enhancement27624 - End -->
-					<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
-				</th>
+					
+				</td>
 				<td>
 					<p:selectOneMenu id="somPlanType" label="#{lbl['lbl.pp.plan.type']}" 
 						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode}">
@@ -81,9 +84,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<tr>
 				<th>
 				<!-- 200911@akmal - Enhancement27624 - Start -->
-					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputPanel id="addr1LabelId">
+						<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</p:outputPanel>
 				<!-- 200911@akmal - Enhancement27624 - End -->
-					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
 				</th>
 				<td>
 					<p:selectOneMenu id="somPlanYearSearch" label="#{lbl['lbl.pp.plan.year']}" 
