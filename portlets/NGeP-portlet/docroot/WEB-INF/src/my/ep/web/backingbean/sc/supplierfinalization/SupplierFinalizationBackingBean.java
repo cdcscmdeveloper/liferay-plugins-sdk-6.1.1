@@ -98,9 +98,13 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -3688,8 +3692,8 @@ public class SupplierFinalizationBackingBean extends
 								&& specZoneId.equals(evaZoneId)
 								&& (recommendDtl.getRecordStatusFlg().equals(
 											DbValueConst.RECORD_STATUS_REJECTED))) {
-
-							resetSupplierSelectionAndDisable(evalResDtl);
+							// 11134 - add new param
+							resetSupplierSelectionAndDisable(recommendDtl, evalResDtl);
 							break;
 						}
 					}
@@ -3791,8 +3795,8 @@ public class SupplierFinalizationBackingBean extends
 									&& specZoneId == evaZoneId
 									&& (recommendDtl.getRecordStatusFlg().equals(
 												DbValueConst.RECORD_STATUS_REJECTED))) {
-
-								resetSupplierSelectionAndDisable(evalResultDtl);
+								//#11134 - add new param
+								resetSupplierSelectionAndDisable(recommendDtl, evalResultDtl);
 								break;
 							}
 						}
@@ -3802,12 +3806,181 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	private void resetSupplierSelectionAndDisable(
+	private void resetSupplierSelectionAndDisable(ScQtRecommendDtl recommendDtl,
 					ScQtEvaluationResultDtl evalResultDtl) {
 		log.info("resetSupplierSelectionAndDisable");
 		evalResultDtl.setSuppSelectionDisabled(true);
 		evalResultDtl.setShortListed(false);
+		// #11134 - start
+		populateSupplierRejectionRemark(recommendDtl, evalResultDtl);
+		if(!getManagedBean().isHaveSupplierRejection()){
+			boolean remarkExists = evalResultDtl.getSupplierRejectionRemark() != null
+					&& StringUtils.isNotBlank(evalResultDtl.getSupplierRejectionRemark().getRemark());
+			getManagedBean().setHaveSupplierRejection(remarkExists);
+		}
+		// #11134 - end
 	}
+	
+	//#11134 - start
+	private void populateSupplierRejectionRemark(ScQtRecommendDtl recommendDtl,
+			ScQtEvaluationResultDtl evalResultDtl){
+		log.info("populateSupplierRejectionRemark");
+		
+		List<ScLoiLoaItem> loiLoaItems = null;
+		
+		// 1.  get ScLoiLoaItem from recommendDtl
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+			// add param to reqDTO
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			String recommendDtlIdStr = Long.toString(recommendDtl.getRecommendDtlId());
+			reqDTO.setRecommendDtlIds(Arrays.asList(recommendDtlIdStr));
+			
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveLoiLoaByRecommendDtlIds(reqDTO);
+			
+			if(resDTO != null && resDTO.isSuccessful()){
+				loiLoaItems = resDTO.getScLoiLoaItemList();
+			}
+			
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+
+		if(CollectionUtils.isNotEmpty(loiLoaItems)){
+			
+			Comparator<BaseEntity> compByDateDesc =  new Comparator<BaseEntity>(){
+				@Override
+				public int compare(BaseEntity a, BaseEntity b) {
+					
+					// handle null for object
+					if(a == null && b == null) return 0;
+					if(a == null) return 1;
+					if(b == null) return -1;
+					
+					// handle null for variable
+					if(a.getCreatedDate() == null && b.getCreatedDate() == null) return 0;
+					if(a.getCreatedDate() == null) return 1;
+					if(b.getCreatedDate() == null) return -1;
+					
+					// date compare
+					return b.getCreatedDate().compareTo(a.getCreatedDate());
+				}
+			};
+			
+			//2.  find LOIs and LOAs, distinct, order by created date desc
+			List<ScLoi> loiList = new ArrayList<>();
+			List<ScLoa> loaList = new ArrayList<>();
+			
+			Set<Long> loiUniqueChecker = new HashSet<>();
+			Set<Long> loaUniqueChecker = new HashSet<>();
+			
+			// map and distict
+			for(ScLoiLoaItem each : loiLoaItems){
+				if(each.getScLoi() != null && loiUniqueChecker.add(each.getScLoi().getLoiId())){
+					loiList.add(each.getScLoi());
+				}
+				if(each.getScLoa() != null && loaUniqueChecker.add(each.getScLoa().getLoaId())){
+					loaList.add(each.getScLoa());
+				}
+			}
+			loiUniqueChecker.clear();
+			loaUniqueChecker.clear();
+			
+			// sort
+			Collections.sort(loiList, compByDateDesc);
+			Collections.sort(loaList, compByDateDesc);
+			
+			//3.  take Loi if find loi 1st, then take Loa(role Supplier).
+			
+			ScRemark supplierRejectionRemark = null;
+			List<ScRemark> flattenRemarks = new ArrayList<>();
+			
+			if(CollectionUtils.isNotEmpty(loiList)){
+				for(ScLoi each : loiList){
+					if(CollectionUtils.isNotEmpty(each.getScLoiRemarks())){
+						for(ScLoiRemark item : each.getScLoiRemarks()){
+							flattenRemarks.add(item);
+						}
+					}
+				}
+				
+			} else if(CollectionUtils.isNotEmpty(loaList)){
+				for(ScLoa each : loaList){
+					if(CollectionUtils.isNotEmpty(each.getScLoaRemarks())){
+						for(ScLoaRemark item : each.getScLoaRemarks()){
+							flattenRemarks.add(item);
+						}
+					}
+				}
+				
+			}
+			
+			if(CollectionUtils.isNotEmpty(flattenRemarks)){
+				
+				List<Long> userIds = new ArrayList<>();
+				for(ScRemark remark : flattenRemarks){
+					if(remark != null && remark.getCreatedBy() != null){
+						userIds.add(remark.getCreatedBy());
+					}
+				}
+				
+				// user id of supplier
+				userIds = getUserSupplierListByUserIds(userIds);
+				
+				for(ScRemark remark : flattenRemarks){
+					if(remark != null && remark.getCreatedBy() != null
+							&& userIds.contains(remark.getCreatedBy())){
+						supplierRejectionRemark = remark;
+						break;
+					}
+				}
+			}
+			//4.  get ScRemark -> set it to evalResultDtl
+			
+			evalResultDtl.setSupplierRejectionRemark(supplierRejectionRemark);
+		}
+			
+	}
+	
+	private List<Long> getUserSupplierListByUserIds(List<Long> userIds){
+		List<Long> result = new ArrayList<>();
+		
+		IUserSO userSO = null;
+		try{
+			userSO = BusinessDelegate.getInstance()
+					.getServiceObject(IUserSO.class);
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserIds(userIds);
+			reqDTO.setRoleCodes(Arrays.asList(RoleCode.BASIC_SUPPLIER_ADMIN.value(), 
+					RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+					RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value()));
+			
+			
+			UserResDTO resDTO = userSO.retrieveUserRoleListByUserIds(reqDTO);
+			
+			if(resDTO != null && resDTO.isSuccessful()){
+				List<PmUserRole> pmUserRoleList = resDTO.getUserRoleList();
+				
+				if(CollectionUtils.isNotEmpty(pmUserRoleList)){
+					for(PmUserRole each : pmUserRoleList){
+						if(each.getPmUserOrg() != null && each.getPmUserOrg().getPmUser() != null){
+							result.add(each.getPmUserOrg().getPmUser().getUserId());
+						}
+					}
+				}
+			}
+			
+		} finally {
+			userSO = null;
+		}
+		
+		return result;
+	}
+	// #11134 - end
 
 	private void disableAwardedItems(List<ScQtRecommend> scQtRecommends) {
 		log.info("disableAwardedItems");
@@ -3973,8 +4146,8 @@ public class SupplierFinalizationBackingBean extends
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
 		getManagedBean().setFinalizationMethod(
 					finalizationMethod.getParameterCode());	
-		
-		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType)) {
+		//TODO : Uncomment this
+		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType) || ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
 			createShortlistedSuppliersDataModel();
 		} else {
 			boolean isInitialDecisionFwdToBPK =
