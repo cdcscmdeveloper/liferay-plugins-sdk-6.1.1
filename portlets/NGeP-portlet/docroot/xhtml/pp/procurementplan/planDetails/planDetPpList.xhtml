@@ -113,9 +113,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				    </p:column>
 			 	</p:row>
 		 	</p:columnGroup>
+		 	
 			  <p:column>
 				<!-- [SIR#12802] - start -->	
 				  <!--25549@18092020 -->
+				<!--24975@azza - start -->
 				<p:selectBooleanCheckbox 
 				    id="checkbox"
 					disabled="#{ppItem.viewMode or !(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
@@ -137,9 +139,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				      </h:graphicImage>
 				</p:commandLink>
 			</p:column>
-			
+		    <!--24975@azza - end -->
+		    <!--24975@azza - start -->
 	        <p:column>	
-	          <!--25549@18092020 -->	
+	          <!--25549@18092020 -->
         		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
         			disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
@@ -159,9 +162,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		 		</p:inputTextarea>
 		 		<p:message id="itaPpDescMsg" for="itaPpDesc" display="icon" />  
 	        </p:column>
-
+	        <!--24975@azza - end -->
 	        <p:column>
 	        <!--25549@18092020 -->	
+	        	<!--24975@azza - start -->
        			<p:selectOneMenu id="somCategory" style="width:99%"
        				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
@@ -185,9 +189,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				</p:selectOneMenu>
 				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
-
+	         <!--24975@azza - end -->
 	        <p:column  style="white-space:nowrap;">
 	             <!--25549@18092020 -->
+	            <!--24975@azza - start -->
        			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
 	  				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 	  				mindate="#{pPlanBackingBean.minDate}" 
@@ -217,7 +222,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		  		</p:inputText>
 		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
 	        </p:column>
-
+	        <!--24975@azza - end -->
+	        <!--24975@azza - start -->
 	       <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
 			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!ppItem.enableRevise or !pPlanBackingBean.managedBean.modeReviewEditable or (ppItem.disableRow)}">
 			    	<p:ajax event="change" update="clPpReason"/>
@@ -249,7 +255,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	  	            listener="#{pPlanBackingBean.selectedPpStatus(ppItem.recordStatusFlg, index)}" partialSubmit="true" />           	
 	          	</p:selectOneMenu> 
 	        </p:column>
-
+	        <!--24975@azza - end -->
 	        <p:column  rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{ppItem.changedDate}" >
 					<f:convertDateTime
