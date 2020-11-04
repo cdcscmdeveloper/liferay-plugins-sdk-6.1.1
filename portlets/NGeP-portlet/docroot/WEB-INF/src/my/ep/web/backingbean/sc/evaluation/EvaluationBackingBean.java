@@ -1208,6 +1208,14 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setCheckListType(checkListType);
 			reqDTO.setCheckListId(checklist.getQtChecklistId());
 			reqDTO.setCompliance(null);
+			//#25138 - add evalstage in compliance - start
+			if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {				
+				reqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
+			}
+			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {				
+				reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+			}
+			//#25138 - add evalstage in compliance - end
 			/*
 			 * resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 			 * this.getManagedBean().setComplianceTechnicalProposalCheckList(
@@ -1233,7 +1241,7 @@ public class EvaluationBackingBean extends
 					new ComplianceSupplierPagingDataModel(
 							"complianceTechnicalSupplier", reqDTO
 									.getCheckListId(), reqDTO.getCompliance(),
-							null, null));
+							 null,reqDTO.getEvalStage()));//@25138
 		} finally {
 
 		}/*#25138-Ahmaa- Start*/
@@ -1675,7 +1683,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
-//		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
+		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -6878,6 +6886,7 @@ public class EvaluationBackingBean extends
 					}
 					if(outputTab == 3 && this.getManagedBean().getEvaluatioStageActiveIndex() != 2){
 						retriveFinancialEvaluationStage();
+						retriveNonScoringComplianceFinancial(true);//#25138
 						this.getManagedBean().setTabFinancialIndex(1);
 	
 					}
@@ -13973,9 +13982,6 @@ private void retriveCommitteeRemarksList(){
 			
 			this.getManagedBean().setComplianceTechnicalCheckList(scQtCheckList);
 			//#25138 - end
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getComplianceTechnicalCheckList())){
-			checklistSorting(this.getManagedBean().getComplianceTechnicalCheckList());
-			}
 		} finally {
 			evaluationSO = null;
 		}
@@ -14075,9 +14081,6 @@ private void retriveCommitteeRemarksList(){
 			scQtCheckList.addAll(localCheckList);
 			this.getManagedBean().setCompliancefinancialCheckList(scQtCheckList);
 			//#25138 - end
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCompliancefinancialCheckList())){
-				checklistSorting(this.getManagedBean().getCompliancefinancialCheckList());
-				}
 
 		} finally {
 			evaluationSO = null;
