@@ -6463,7 +6463,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (entry.getKey().equals(ctMember.getPmUser().getUserId())) {
 						chkDataDuplication = true;
 						if(ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType()) || ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType())) {
-							getManagedBean().getFilteredUpdatedCommitteeMembers().add(ctMember);
+							getManagedBean().getFilteredUpdatedCommitteeMembers().add(ctMember);							
 							if(ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType())) {
 								ctMember.setUpdateType(null);
 							} else {
@@ -6472,6 +6472,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 						break;
 					}
+					//#29403 start
+					if (ctMember.isSelectedCheckBox()){
+						ctMember.setSelectedCheckBox(false);
+					}
+					//#29403 end
 				}
 				if (!chkDataDuplication) {	
 					entry.getValue().setUpdateType(ContractConst.ADD_NEW_MEMBER);
@@ -6596,6 +6601,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								}
 							}
 						}
+						members.setSelectedCheckBox(false); //#29403
 					}
 					ctBackingBean.getManagedBean().setButtonHideActive(true);
 
@@ -6689,6 +6695,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.FALSE);
 			}
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			setTabValue("DCN"); //#29403
 		}
 		
 		public void validateLatestCommitteeMembers() {
