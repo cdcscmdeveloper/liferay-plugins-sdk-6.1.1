@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -16,6 +17,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -28,6 +30,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
@@ -951,4 +954,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 	}
+	//START 28765 - Replace Supplier Admin
+	private void initReplaceAdminSupportDoc() {
+		List<PmDocument> replaceAdminSuppDocList = new ArrayList<PmDocument>();
+		DocumentReqDTO reqDTO = null;					
+		Locale userLocale = new FacesScopes().getUserLocale();				
+		reqDTO = new DocumentReqDTO();
+		reqDTO.setUserLocale(userLocale);
+		replaceAdminSuppDocList = SmServiceLookup.getDocumentSO().retrieveReplaceAdminSuppDocuments(reqDTO)	.getDocumentList();	
+	}
+	//END 28765 - Replace Supplier Admin
 }
