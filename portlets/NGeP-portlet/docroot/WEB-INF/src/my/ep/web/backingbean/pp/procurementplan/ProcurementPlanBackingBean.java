@@ -4654,9 +4654,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		  } 
 		  if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
 			  isPlanYearEmpty = false;
+			//201105@akmal - 27624 - Start
+			  isEmpty = false;
+			//201105@akmal - 27624 - End
 		  }
 		  if(this.getManagedBean().getPlanSearchBean().getPlanType().getParameterCode()!=null){
 			  isPlanTypeEmpty = false;
+			//201105@akmal - 27624 - Start
+			  isEmpty = false;
+			//201105@akmal - 27624 - End
 		//200911@akmal - Enhancement27624 - End
 		  }
 		  if(this.getManagedBean().getPlanSearchBean().getVotType().getParameterId()!=null){
