@@ -979,7 +979,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 												.getCtContractAmount()
 												.getGstAmount()
 												.add(ctBackingBean.getManagedBean().getCtContractAmount()
-														.getContractAmount())));    
+														.getContractAmount())));  
+			// #29390 - Start
+			} else if (ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null && ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() == null ) {
+				ctBackingBean.getManagedBean().setGstTotalAmount
+							(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount().add
+							(ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount()));
+				
+			} else if (ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null && ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() == null) {
+					ctBackingBean.getManagedBean().setGstTotalAmount
+							(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount().add
+							(ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount()));
+			// #29390 - End	
 			}else{
 				ctBackingBean.getManagedBean().setGstTotalAmount(ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount());
 			}
