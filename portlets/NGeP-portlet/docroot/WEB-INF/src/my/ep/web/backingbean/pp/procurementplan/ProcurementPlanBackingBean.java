@@ -744,9 +744,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        log.info("Size getPpProcurementItems= "+ppItems.size()+
 	        		", size reorderedList= "+reorderedList.size());
 	        
-	        for (PpProcurementItem reorder : reorderedList) {
+	       /* for (PpProcurementItem reorder : reorderedList) {
 	        	log.info("reorderedList.title= "+reorder.getProcurementTitle());
-	        }
+	        }*/
 	        
 	        newPpItems = new ArrayList<PpProcurementItem>(reorderedList);
 	        
@@ -757,6 +757,23 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        this.getManagedBean().getSelectedPlan().setPpProcurementItems(newPpItems);
 	        log.info("Displaying ppItems for Plan No=  "+
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
+	        
+	       
+	        for (int n = 0; n < this.getManagedBean().getSelectedPlan().getPpProcurementItems().size(); n++) {
+	        	
+	        	 /* Check predecessor of each node, change Pencil to Note for reason update
+		         * and make the textarea disabled
+		         * */
+	        	if (n > 0) {
+	        		log.info("n= "+n+", curItem=  "+
+	        				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n).getProcurementTitle()+
+	    	        		", prevItem= "+this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n - 1).getProcurementTitle());
+	        		this.checkItemPredecessor(this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n),
+	        				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n - 1));
+	        	}
+	        
+	        }
+	        
         } else {
         	
         	log.info("The ProcurementItem list currently has no clones");
@@ -781,6 +798,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
         }
 
     }
+	
+	private void checkItemPredecessor(PpProcurementItem ppItem, PpProcurementItem prevPpItem) {
+		log.info("checkItemPredecessor");
+		if (!ppItem.isOriginal() && !ppItem.isCloneEnabled()) {
+    		if (prevPpItem.isCloneEnabled() && !prevPpItem.isAllowAnotherPindaan()) {
+    			prevPpItem.setChangePencilToNote(true);
+    			this.getManagedBean().setDisableReasonField(true);
+    		}
+    	}
+		
+	}
 	
 	private void resetPpProcurementItemFields() {
 		

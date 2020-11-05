@@ -241,7 +241,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <p:commandLink oncomplete="dlUpdateReasonWv.show();" action="#{pPlanBackingBean.retrievePpUpdateReasons(ppItem)}"
 			    	update=":form:dlUpdateReason" immediate="true" id="UpdateReason" 
 			    	disabled="#{ppItem.viewMode or (ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or (ppItem.disableRow)}">
-					<p:graphicImage value="/css/images/design/edit.png"
+					<p:graphicImage value="#{ppItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					disabled="#{ppItem.viewMode or (pPlanBackingBean.managedBean.modeEditable) or (pPlanBackingBean.managedBean.modeEditable) or !ppItem.reasonForUpdateEnabled}"/>
 				</p:commandLink>
 	        </p:column>
