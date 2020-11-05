@@ -121,7 +121,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{(complianceFinancial.definationType.parameterCode eq 'UP' or complianceFinancial.definationType.parameterCode eq 'NA') and (null ne complianceFinancial.pmEvalStatus and complianceFinancial.pmEvalStatus.statusId eq '60451')}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadCheckList(complianceFinancial,index,'F')}" />
+					action="#{evaluationBackingBean.complianceUploadCheckListNonScoring(complianceFinancial,index,'F')}" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{(complianceFinancial.definationType.parameterCode ne 'UP' and complianceFinancial.definationType.parameterCode ne 'NA') and complianceFinancial.scoringReq eq 'false' and  (null ne complianceFinancial.pmEvalStatus and complianceFinancial.pmEvalStatus.statusId eq '60451')}"
