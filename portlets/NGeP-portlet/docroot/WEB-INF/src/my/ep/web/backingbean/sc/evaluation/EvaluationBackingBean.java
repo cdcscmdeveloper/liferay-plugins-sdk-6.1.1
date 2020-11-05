@@ -2215,7 +2215,35 @@ public class EvaluationBackingBean extends
 											proposalCheckList, evalstage.get(0)));
 						}
 					}
-
+					//#25138 - get zones to pass to summary tab directly - start
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(proposalCheckList
+									.getDefinationType().getParameterCode())) {
+						if(SourcingConstants.FINANCIAL_DOCTYPE
+							.equalsIgnoreCase(proposalCheckList
+									.getDocCategory())){
+						
+							EvaluationReqDTO specDtls = new EvaluationReqDTO();
+							specDtls.setQtId(this.getManagedBean().getScQt().getQtId());
+							specDtls.setCheckListId(proposalCheckList.getQtChecklistId());
+							if (!this.getManagedBean().getScQt().isZonal()) {
+								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							}
+							EvaluationResDTO specdetails = evaluationSO
+									.retrieveFinSpecDetailsByCheckListId(specDtls);
+							
+							if(specdetails != null){
+								this.getManagedBean().setOfferScoreType(specdetails.getScoreOfferPrices()
+										.getScoreType().toString());
+								if (null != specdetails.getZones()
+										&& !specdetails.getZones().isEmpty()) {
+									this.getManagedBean().setSpecZoneDtls(specdetails
+											.getZones());
+								}
+							}
+						}
+					}
+					//#25138 - get zones to pass to summary tab directly - end
 				}
 
 				/*
