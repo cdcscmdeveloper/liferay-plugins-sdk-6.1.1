@@ -11384,6 +11384,14 @@ public class SpecificationBackingBean extends
 					localScQt.setScQtSpecificationRemarks(remarks);
 					spReqDTO.setScQt(localScQt);
 				}
+				// #25638 - Start.
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getCommitteeActivities())) {
+		            for (ScQtCommitteeActivity scQtCommitteeActivity : this.getManagedBean().getCommitteeActivities()) {
+		                scQtCommitteeActivity.setSignedOff(false);
+		            }
+		        }
+				spReqDTO.setCommitteActivities(this.getManagedBean().getCommitteeActivities());
+				// #25638 - End.
 
 			} else {
 

@@ -18,6 +18,17 @@
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
 			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{evaluationBackingBean.enableAutoUpdate()}"/>
+		
+		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
+			widget="confirmSubmitMeetingMainPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
+		<ac:confirmationPopup id="confirmUpdateAsAttendId"
+			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.popup.updateasattended']}" />
 
 
 		<ui:fragment
@@ -162,16 +173,6 @@
 		</c:if>
 
 		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
-		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
-			widget="confirmSubmitMeetingMainPopup" loadingWidget="blockWidget"
-			title="#{lbl['lbl.sc.confirmation']}"
-			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
-			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
-		<ac:confirmationPopup id="confirmUpdateAsAttendId"
-			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
-			title="#{lbl['lbl.sc.confirmation']}"
-			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
-			content="#{lbl['lbl.sc.popup.updateasattended']}" />
 	</ui:define>
 
 </ui:composition>
