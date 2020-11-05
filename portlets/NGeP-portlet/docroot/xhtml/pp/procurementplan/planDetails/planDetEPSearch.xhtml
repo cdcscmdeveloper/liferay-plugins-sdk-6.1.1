@@ -28,9 +28,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					 <tr>
 						 <td>
 							 	<h:panelGroup id="ppEPGLACCSearchId">
+							 	<!-- 201105@akmal - 27624 - Start -->
 								<h:outputText  
-									value="Account Code" 
+									value="#{lbl['lbl.fl.gosodo']}" 
 									/>
+								<!-- 201105@akmal - 27624 - End -->
 								&#160;
 								
 								
@@ -53,21 +55,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					 </tr>
 					 <tr>
 					 	<td>
-					 	
+					 	<!-- 201105@akmal - 27624 - Start -->
 						 	<p:dataTable id="accCodeResult" 
 						 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 						 		styleClass="ppTablePlanItem" rows="5"
 						 		style="width: 400px; margin-left: auto;" 
 						 		var="pmGo" value="#{pPlanBackingBean.managedBean.vPmGolist}"
 								rendered="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">	
-								<p:column headerText="Account Code" style="width: 30%;">
+								<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width: 30%;">
 									<h:outputText value="#{pmGo.glAccCode}" />
 								</p:column>
-								<p:column headerText="Type Of Expenses" style="width: 70%;">
+								<p:column headerText="#{lbl['lbl.pp.type.of.expenses']}" style="width: 70%;">
 									<h:outputText value="#{pmGo.desc}" />
 								</p:column>
 							</p:dataTable>
-							 
+						 <!-- 201105@akmal - 27624 - End -->
 						</td>
 					 </tr>
 				</table>		
