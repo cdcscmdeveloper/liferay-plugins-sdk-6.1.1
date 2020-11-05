@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.pm.organisation;
 
+//20201105@Jacky - Enhancement#28836 - Start
+import java.math.BigDecimal;
+//20201105@Jacky - Enhancement#28836 - End
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -34,6 +37,9 @@ import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+//20201105@Jacky - Enhancement#28836 - Start
+import my.ep.constant.fl.FulfilmentStatusConst;
+//20201105@Jacky - Enhancement#28836 - End
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -3294,62 +3300,42 @@ public class OrganisationBackingBean extends
 			getManagedBean().setSstSupplier(new SmSstSupplier());
 		}
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile()
-				.getOrgProfileId());
+		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile().getOrgProfileId());
 		reqDTO.setFetchGovtSeller(true);
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 
-		OrgProfileResDTO orgResDTO = orgProfileSO
-				.retrieveOrgDetailsByOrgId(reqDTO);
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
+		checkPendingStatus(orgProfile);
 
-		if (orgProfile.getSmSupplier() != null
-				&& getManagedBean().getOrgProfile().isGovtSeller()) {
+		if (orgProfile.getSmSupplier() != null && getManagedBean().getOrgProfile().isGovtSeller()) {
 			log.info("Supplier Test");
 			/*
 			 * this.getManagedBean().setSmSupplierBanks(
 			 * orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks());
 			 */
-			if (orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-					&& !orgProfile.getSmSupplier().getSmAppl()
-							.getSmSupplierBanks().isEmpty()) {
-				this.getManagedBean().setSmSupplierBanks(
-						new ArrayList<SmSupplierBank>());
-				for (SmSupplierBank supplierBank : orgProfile.getSmSupplier()
-						.getSmAppl().getSmSupplierBanks()) {
-					if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							|| supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-						this.getManagedBean().getSmSupplierBanks()
-								.add(supplierBank);
+			if (orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks() != null && !orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
+				this.getManagedBean().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+				for (SmSupplierBank supplierBank : orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+					if (supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || supplierBank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+						this.getManagedBean().getSmSupplierBanks().add(supplierBank);
 
 					}
 				}
 			}
 
-			log.info("Supplier Bank-----> "
-					+ orgProfile.getSmSupplier().getSmAppl()
-							.getSmSupplierBanks().size());
-			if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null
-					&& !orgProfile.getSmSupplier().getSmAppl()
-							.getSmPersonnels().isEmpty()) {
-				this.getManagedBean().setSmPersonnels(
-						new ArrayList<SmPersonnel>());
-				for (SmPersonnel personnel : orgProfile.getSmSupplier()
-						.getSmAppl().getSmPersonnels()) {
-					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							|| personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			log.info("Supplier Bank-----> "+ orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks().size());
+			if (orgProfile.getSmSupplier().getSmAppl().getSmPersonnels() != null && !orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().isEmpty()) {
+				this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
+				
+				for (SmPersonnel personnel : orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()) {
+					if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 						this.getManagedBean().getSmPersonnels().add(personnel);
-
 					}
 				}
 			}
 			// this.getManagedBean().setSmPersonnels(orgProfile.getSmSupplier().getSmAppl().getSmPersonnels());
-			log.info("Supplier Users ---->"
-					+ orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()
-							.size());
+			log.info("Supplier Users ---->" + orgProfile.getSmSupplier().getSmAppl().getSmPersonnels().size());
 
 			// if(orgProfile.getSmSupplier().getSmGstSuppliers() != null
 			// && !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
@@ -3381,18 +3367,12 @@ public class OrganisationBackingBean extends
 			// harris
 			ISupplierSstSO supplierSstSO = null;
 			try {
-				supplierSstSO = (ISupplierSstSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-								ISupplierSstSO.class);
+				supplierSstSO = (ISupplierSstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSstSO.class);
 				SupplierSstReqDTO sstReqDTO = new SupplierSstReqDTO();
-				sstReqDTO.setSupplierId(orgProfile.getSmSupplier()
-						.getSupplierId());
-				SupplierSstResDTO sstResDTO = supplierSstSO
-						.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
-				if (sstResDTO.isSuccessful()
-						&& sstResDTO.getSmSstSupplier() != null) {
-					getManagedBean().setSstSupplier(
-							sstResDTO.getSmSstSupplier());
+				sstReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
+				SupplierSstResDTO sstResDTO = supplierSstSO.retrieveSstInfoBySupplierIdAndBranchCode(sstReqDTO);
+				if (sstResDTO.isSuccessful() && sstResDTO.getSmSstSupplier() != null) {
+					getManagedBean().setSstSupplier(sstResDTO.getSmSstSupplier());
 				}
 
 			} finally {
@@ -3820,4 +3800,70 @@ public class OrganisationBackingBean extends
 	public static SelectItem[] getStatusList() {
 		return PmCommonUtil.getCommonStatusOptions();
 	}
+	
+	//20201105@Jacky - Enhancement#28836 - Start
+	public void disableActiveStatus(Integer status, Long supBankId){
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile().getOrgProfileId());
+		reqDTO.setFetchGovtSeller(true);
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
+		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
+		List<SmSupplierBank> suppBankList = getManagedBean().getSmSupplierBanks();
+		
+		if (status == 0){
+			for(SmSupplierBank suppBank: suppBankList){
+				if(suppBank.getSupplierBankId().equals(supBankId)){
+					List<BigDecimal> wfStatList = orgProfileSO.retrievePendingFulfilment(orgProfile.getOrgProfileId());
+					for(BigDecimal wfStat: wfStatList){
+						if(wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL
+								|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL
+								|| wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH
+								|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH
+								|| wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS
+								|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS
+								|| wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY
+								|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY
+								|| wfStat.longValue() == FulfilmentStatusConst.PO_AWAITING_1GFMAS
+								|| wfStat.longValue() == FulfilmentStatusConst.CO_AWAITING_1GFMAS
+								|| wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL
+								|| wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL
+								|| wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL
+								|| wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL){
+							suppBank.setRecordStatusFlg(1);
+							throw new EpException(MessageConst.ERROR_775216);
+						}
+					}	
+				}
+			}
+		}
+	}
+	
+	public void checkPendingStatus(PmOrgProfile orgProfile){
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		if(!getManagedBean().getOrgProfile().isGovtSeller()){
+			List<BigDecimal> wfStatList = orgProfileSO.retrievePendingFulfilment(orgProfile.getOrgProfileId());
+			for(BigDecimal wfStat: wfStatList){
+				if(wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL
+						|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL
+						|| wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH
+						|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH
+						|| wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS
+						|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS
+						|| wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY
+						|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY
+						|| wfStat.longValue() == FulfilmentStatusConst.PO_AWAITING_1GFMAS
+						|| wfStat.longValue() == FulfilmentStatusConst.CO_AWAITING_1GFMAS
+						|| wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL
+						|| wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL
+						|| wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL
+						|| wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL){
+					getManagedBean().getOrgProfile().setGovtSeller(true);
+					throw new EpException(MessageConst.ERROR_775215);
+				}
+			}
+		}
+	}
+	//20201105@Jacky - Enhancement#28836 - End
+
 }

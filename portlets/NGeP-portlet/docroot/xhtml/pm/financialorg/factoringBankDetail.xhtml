@@ -104,6 +104,13 @@
 					required="true" id="factoringBankStatusId">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getStatusOptions()}" />
+						<!-- 20201105@Jacky - Enhancement#28836 - Start -->
+						<p:ajax event="change" 
+						onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
+						listener="#{financialOrgBackingBean.disableBankActiveStatus(financialacc.recordStatusFlg, financialacc.financialAccId)}"
+						update="financialaccid" partialSubmit="true" process="@this"/>
+						<!-- 20201105@Jacky - Enhancement#28836 - End -->
 				</p:selectOneMenu>
 			</p:column>
 			

@@ -25,6 +25,10 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+//20201105@Jacky - Enhancement#28836 - Start
+import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
+//20201105@Jacky - Enhancement#28836 - End
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -33,6 +37,10 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+//20201105@Jacky - Enhancement#28836 - Start
+import my.ep.persistence.entity.ct.CtWorkflowStatus;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
+//20201105@Jacky - Enhancement#28836 - End
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -1274,6 +1282,11 @@ public class FinancialOrgBackingBean extends
 					getManagedBean().setShowFactoringBank(true);
 				}
 			}else{
+				//20201105@Jacky - Enhancement#28836 - Start
+				if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(typeParameter.getParameterCode())){					
+					checkFactoringCompanyPendingStatus(getManagedBean().getFinancialOrg().getFinancialOrgId(), desc, serviceTypeSet);
+				}
+				//20201105@Jacky - Enhancement#28836 - End
 				serviceTypeSet.remove(typeParameter.getParameterCode());
 				if(isExist){
 					selectedFinSvc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -1753,4 +1766,134 @@ public class FinancialOrgBackingBean extends
 		return CollectionUtils.isNotEmpty(userList) ? true : false;
 	}
 	
+	//20201105@Jacky - Enhancement#28836 - Start
+	public void disableFinancialActiveStatus(Integer status){
+		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		if (status == 0){
+			List<FlWorkflowStatus> flWfStatList = finanOrgSO.retrievePendingFulfilment(getManagedBean().getFinancialOrg().getFinancialOrgId());
+			for(FlWorkflowStatus wfStat: flWfStatList){
+				if(wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_AWAITING_1GFMAS)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_AWAITING_1GFMAS)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL)
+						|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL)){
+					getManagedBean().getFinancialOrg().setRecordStatusFlg(1);
+					throw new EpException(MessageConst.ERROR_775218);
+				}
+			}
+			List<CtWorkflowStatus> ctWfStatList = finanOrgSO.retrievePendingContract(getManagedBean().getFinancialOrg().getFinancialOrgId());
+			for(CtWorkflowStatus ctWfStat: ctWfStatList){
+				if(ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_SUBMISSION) 
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_ACKNOWLEDGEMENT)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_ENDORSEMENT)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_SUBMISSION)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_ENDORSEMENT)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_SUBMISSION)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_ACKNOWLEDGEMENT)
+						|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_ENDORSEMENT)){
+					getManagedBean().getFinancialOrg().setRecordStatusFlg(1);
+					throw new EpException(MessageConst.ERROR_775218);
+				}
+			}
+		}
+	}
+	
+	public void disableBankActiveStatus(Integer status, Long finAccId){
+		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		List<PmFinancialAcc> finAccList = getManagedBean().getFinancialOrg().getPmFinancialAccs();
+		if (status == 0){
+			for(PmFinancialAcc finAcc: finAccList){
+				if(finAcc.getFinancialAccId().equals(finAccId)){
+					List<FlWorkflowStatus> flWfStatList = finanOrgSO.retrievePendingFulfilment(getManagedBean().getFinancialOrg().getFinancialOrgId());
+					for(FlWorkflowStatus wfStat: flWfStatList){
+						if(wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_AWAITING_1GFMAS)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_AWAITING_1GFMAS)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL)
+								|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL)){
+							finAcc.setRecordStatusFlg(1);
+							throw new EpException(MessageConst.ERROR_775218);
+						}
+					}
+					List<CtWorkflowStatus> ctWfStatList = finanOrgSO.retrievePendingContract(getManagedBean().getFinancialOrg().getFinancialOrgId());
+					for(CtWorkflowStatus ctWfStat: ctWfStatList){
+						if(ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_SUBMISSION) 
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_ACKNOWLEDGEMENT)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_ENDORSEMENT)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_SUBMISSION)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_ENDORSEMENT)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_SUBMISSION)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_ACKNOWLEDGEMENT)
+								|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_ENDORSEMENT)){
+							getManagedBean().getFinancialOrg().setRecordStatusFlg(1);
+							throw new EpException(MessageConst.ERROR_775218);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void checkFactoringCompanyPendingStatus(Long orgId, PmParameterDesc desc, Set<String> serviceTypeSet){
+		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		List<FlWorkflowStatus> flWfStatList = finanOrgSO.retrievePendingFulfilment(orgId);
+		for(FlWorkflowStatus wfStat: flWfStatList){
+			if(wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_AWAITING_1GFMAS)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_AWAITING_1GFMAS)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL)
+					|| wfStat.getPmStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL)){
+				desc.setSelected(true);
+				getManagedBean().getServiceTypes().add("FC");
+				throw new EpException(MessageConst.ERROR_775217, new String[] {desc.getCodeName() + ""});
+			}
+		}
+		List<CtWorkflowStatus> ctWfStatList = finanOrgSO.retrievePendingContract(orgId);
+		for(CtWorkflowStatus ctWfStat: ctWfStatList){
+			if(ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_SUBMISSION) 
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_ACKNOWLEDGEMENT)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.RF_PENDING_ENDORSEMENT)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_SUBMISSION)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_ACKNOWLEDGEMENT)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.XF_PENDING_ENDORSEMENT)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_SUBMISSION)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_ACKNOWLEDGEMENT)
+					|| ctWfStat.getPmStatus().getStatusId().equals(ContractStatusConst.UF_PENDING_ENDORSEMENT)){
+				desc.setSelected(true);
+				getManagedBean().getServiceTypes().add("FC");
+				throw new EpException(MessageConst.ERROR_775217, new String[] {desc.getCodeName() + ""});
+			}
+		}
+	}
+	//20201105@Jacky - Enhancement#28836 - End
+
 }
