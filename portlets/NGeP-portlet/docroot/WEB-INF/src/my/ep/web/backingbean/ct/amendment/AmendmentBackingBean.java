@@ -6695,7 +6695,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.FALSE);
 			}
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
-			setTabValue("DCN"); //#29403
 		}
 		
 		public void validateLatestCommitteeMembers() {
@@ -6706,8 +6705,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			boolean isFound = false;
 			
 			for(CtCommitteeMember ctUpdatedMember: outer) {
+				//#29403 start
+				if(ctUpdatedMember.isSelectedCheckBox()){
+					ctUpdatedMember.setSelectedCheckBox(false);
+				}
+				//#29403 end
 				for(CtCommitteeMember originalCtMember: inner) {
 					if(ctUpdatedMember.getPmUser().getUserId().equals(originalCtMember.getPmUser().getUserId())) {
+
+						//#29403 start
+						if(originalCtMember.isSelectedCheckBox()){
+							originalCtMember.setSelectedCheckBox(false);
+						}
+						//#29403 end
+						
 						if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
 							isFound = true;
 							
@@ -6743,11 +6754,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				if(isUpdateNeeded) {
 					break;
-				}										
+				}
 			}
 			
 			//#29403 start
 			validateCommiteeMemberDetails();
+			setTabValue("DCN");
 			//#29403 end
 
 			if(isUpdateNeeded || !isFound) {
