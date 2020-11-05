@@ -321,7 +321,8 @@ public class SvcSiteAssignBackingBean extends
 			}
 			
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(workFlowStatus.getCreatedBy());
+			//#29448
+			userReqDTO.setUserId(workFlowStatus.getSmAppl().getPoUserId());
 			PmUser processingOfficer = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
 			
 			if(processingOfficer != null){
@@ -369,8 +370,7 @@ public class SvcSiteAssignBackingBean extends
 				if(personnel.getEpRole() != null){
 					if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
 						if(personnel.getPmUser() != null){
-							if(personnel.getPmUser().getUserId() != CommonConstants.SYSTEM_USER_ID && 
-									personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+							if(personnel.getPmUser().getUserId() != CommonConstants.SYSTEM_USER_ID && personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 								pmUser = personnel.getPmUser();
 								break;
 							}
@@ -379,7 +379,7 @@ public class SvcSiteAssignBackingBean extends
 				}
 			}
 		}
-				
+		
 		if(pmUser == null){
 			throw new EpException("MOF supplier admin not found");
 		}
