@@ -7,14 +7,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
 
 @Path("/sm")
 public class DowngradeExpMofPersonnelRest {
@@ -78,6 +78,14 @@ public class DowngradeExpMofPersonnelRest {
 				log.info("ChangeExpiredMofPersonnelToBasicJob updateMoFAcc -  Exception>>>>" + ex.getMessage()
 						+ "- supplier ID -" + mofAccount.getSmSupplier().getSupplierId());
 			}
+			
+			// #28800 START
+			try {
+				reqSO.sendEmailExpiredMOFToSupplier(schedulerReqDTO);
+			} catch (Exception ex){
+				log.info("sendEmailExpiredMOFToSupplier ERROR :: " +ex.getMessage());
+			}
+			// #28800 END
 		}
 		log.info("**********changeExpiredMofPersonnelToDeleted - END************");
 	}
