@@ -9344,11 +9344,12 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getApplnRejectionRemarks());
 			}
 		
+			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
-					getManagedBean().getSmAppl(), getManagedBean()
-							.getBasicInfo().getMofNo(), getManagedBean()
-							.getApplnRejectionRemarks(), getManagedBean()
-							.getSmSupplier(), reqDTO);
+					getManagedBean().getSmAppl(), getManagedBean().getSmSupplier(), 
+					getManagedBean().getBasicInfo(), getManagedBean()
+					.getSupplierRemarks(), getManagedBean()
+					.getApplnRejectionRemarks(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
@@ -9380,6 +9381,7 @@ public class SmApplicationBackingBean extends
 					.isApproverUser(), getManagedBean().isPoUser(),
 					getManagedBean().getSmAppl());
 
+			//10908
 			SmApplicationNotificationUtil.setApprovalNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getBasicInfo(), getManagedBean().isPoUser(),
