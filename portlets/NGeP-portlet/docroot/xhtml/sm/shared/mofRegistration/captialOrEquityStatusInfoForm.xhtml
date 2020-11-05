@@ -191,19 +191,7 @@
 							<p:panelGrid styleClass="tablePanel" style="width : 100%">
 								<p:row>
 									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
-									<!-- 28466 - start - add mandatory sign (*) for ROC -->
-									<p:column styleClass="tableheaderrow">
-										<c:choose>
-											<c:when
-												test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
-												<p:outputLabel value="*" styleClass="mandatory"
-													style="float:left;" />
-												<h:outputText value="#{lbl['lbl.sm.equiStatus.valTabHdr']}" />
-											</c:when>
-											<c:otherwise>#{lbl['lbl.sm.equiStatus.valTabHdr']}</c:otherwise>
-										</c:choose>
-									</p:column>
-									<!-- 28466 - end -->
+									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.valTabHdr']}</p:column>
 									<p:column styleClass="tableheaderrow">%</p:column>
 								</p:row>
 								<p:row>
