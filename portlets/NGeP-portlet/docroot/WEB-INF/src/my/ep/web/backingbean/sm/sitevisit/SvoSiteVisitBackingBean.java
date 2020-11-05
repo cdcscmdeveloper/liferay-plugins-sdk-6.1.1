@@ -2314,6 +2314,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
+		//#29430
+		refreshPage();
 	}
 	
 	/**
