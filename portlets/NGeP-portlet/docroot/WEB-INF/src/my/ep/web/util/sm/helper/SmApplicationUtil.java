@@ -11970,8 +11970,6 @@ public class SmApplicationUtil {
 			} else {
 				bean.getSelectedShareHolder().setDisableSemiProf(false);
 			}
-			
-			populateMandatoryEpfNo(bean);
 		}
 
 		if (bean.getSelectedShareHolder().getPersonnelId() != null
@@ -12019,11 +12017,6 @@ public class SmApplicationUtil {
 					.getSmAddress();
 			bean.setRoleStaffAndMailAddrReqd(isAddressReqdForRoleStaff(
 					bean.getSelectedShareHolder(), mailAddress));
-		}
-		
-		if (bean.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			populateMandatoryEpfNo(bean);
 		}
 	}
 
