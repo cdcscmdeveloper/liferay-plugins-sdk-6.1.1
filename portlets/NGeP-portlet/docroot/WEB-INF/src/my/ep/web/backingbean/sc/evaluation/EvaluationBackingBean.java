@@ -1204,14 +1204,7 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setCheckListType(checkListType);
 			reqDTO.setCheckListId(checklist.getQtChecklistId());
 			reqDTO.setCompliance(null);
-			//#25138 - add evalstage in compliance - start
-			/*if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {				
-				reqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
-			}
-			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {				
-				reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-			}*/
-			//#25138 - add evalstage in compliance - end
+		
 			/*
 			 * resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 			 * this.getManagedBean().setComplianceTechnicalProposalCheckList(
@@ -14298,4 +14291,90 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#25138 - one item only - end
+	 
+	/**
+	 * Technical compliance action.when you click compliance button in
+	 * compliance stage to get all the proposal submitted suppliers.
+	 * 
+	 * @param checklist
+	 *            (optional)
+	 * @param index
+	 *            (Mandatory)
+	 * @param checkListType
+	 *            (Mandatory)
+	 * @return navigate to proposal submitted supplier page.
+	 */
+	//#25138 - filter qualified supplier in technical & financial for compliance - start
+	public String complianceUploadCheckListNonScoring(ScQtCheckList checklist, int index,
+			String checkListType) {
+		ScQtFinalization finalization = retriveScQtFinalizationForReEvaluate();
+		if (null != finalization) {
+
+			if (finalization.isReEvaluateCompReq()) {
+
+				this.getManagedBean().setComplianceReEvaluateRequired(false);
+			} else {
+
+				this.getManagedBean().setComplianceReEvaluateRequired(true);
+			}
+		} else {
+
+			this.getManagedBean().setComplianceReEvaluateRequired(false);
+		}
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+		try {
+			this.getManagedBean().setScQtChecklist(checklist);
+			this.getManagedBean().setComplianceCheckListIndex(index);
+			this.getManagedBean().setCheckListType(checkListType);
+			reqDTO.setCheckListId(checklist.getQtChecklistId());
+			reqDTO.setCompliance(null);
+			//#25138 - add evalstage in compliance to filter qualified supplier in technical & financial - start
+			if(SourcingConstants.TECHINICAL_STAGE.equals(checkListType)){
+				reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
+			}
+			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {				
+				reqDTO.setEvalStage(SourcingConstants.TECHINICAL_STAGE);
+			}
+			//#25138 -  add evalstage in compliance to filter qualified supplier in technical & financial - end
+		
+			String title =this.getManagedBean().getScQtChecklist().getTitle();
+			if(title.equals(ParameterConst.CREDIT_FACILITIES_TITLE) ||
+					title.equals(ParameterConst.ASSET_FACILITIES_TITLE) || title.equals(ParameterConst.BANK_STATEMENT_GROUP_ID))
+			{
+				this.getManagedBean().setFP_Compliance(true);
+			}else{
+				this.getManagedBean().setFP_Compliance(false);
+			}
+			
+			this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
+					new ComplianceSupplierPagingDataModel(
+							"complianceTechnicalSupplier", reqDTO
+									.getCheckListId(), reqDTO.getCompliance(),
+							 null,reqDTO.getEvalStage()));//@25138
+		} finally {
+
+		}
+		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
+			if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {
+				
+				return "/xhtml/sc/evaluation/compliance/technicalComplianceEditSuppliers.xhtml";
+				
+			} else {
+				return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
+			
+			}
+			
+		}
+		else {
+			if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {
+				return "/xhtml/sc/evaluation/compliance/technicalComplianceViewSuppliers.xhtml";
+			
+			}else{
+				return "/xhtml/sc/evaluation/compliance/financialComplianceViewSuppliers.xhtml";
+			}
+			
+		}
+		
+	}
+	//#25138 - filter qualified supplier in technical & financial for compliance - end
 }
