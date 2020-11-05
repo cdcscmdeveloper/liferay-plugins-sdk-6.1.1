@@ -15,7 +15,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}" />
 				</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.proceed']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}"
 				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
 		</div>
 	</p:dialog>
