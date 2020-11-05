@@ -1722,7 +1722,8 @@ public class SmApplicationBackingBean extends
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM"};
+							// 28466 - add paid up capital
+							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM","paidUpCapital"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}
 						//#27165
@@ -1980,9 +1981,10 @@ public class SmApplicationBackingBean extends
 						}*/
 						// maybe here to put method to check with ssm
 						//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-							reCalculateCapitalPersonnel();
-						}
+						// 28466 - to maintain paid up capital from SSM
+						//if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+							//reCalculateCapitalPersonnel();
+						//}
 						//Remove equity/director personnel not exist in ssm
 						if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
 							Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
@@ -2402,11 +2404,12 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 						.getSmAppl());
 				//START SSM AUTO CALCULATE SHARE
-				if(getManagedBean().getSmAppl().isApplValidWithSsm()){
-					calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
-					setApplicationShareHolders(getManagedBean().getSmAppl().getSmPersonnels());
-					calculateCapital();
-				}
+				// 28466
+				//if(getManagedBean().getSmAppl().isApplValidWithSsm()){
+					//calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
+					//setApplicationShareHolders(getManagedBean().getSmAppl().getSmPersonnels());
+					//calculateCapital();
+				//}
 				//END SSM AUTO CALCULATE SHARE
 
 			}
@@ -3022,7 +3025,8 @@ public class SmApplicationBackingBean extends
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 					if (valid) {
 						log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
-						calculateCapital();
+						// 28466 - to maintain paid up capital from SSM
+						//calculateCapital();
 						SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
@@ -13487,14 +13491,15 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setNonBumiEquity(nonBumiputeraCapital);
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setBumiEquity(bumiputeraCapital);
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignerEquity(nonMalaysianCapital);
-			this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getBumiEquity()
-					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getNonBumiEquity())
-					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity())
-					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity())
-					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignerEquity())
-					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtEquity())
-					.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity())
-					.setScale(2, RoundingMode.HALF_UP));
+			// 28466 - to maintain paid up capital from SSM
+			//this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getBumiEquity()
+					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getNonBumiEquity())
+					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity())
+					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity())
+					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignerEquity())
+					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtEquity())
+					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity())
+					//.setScale(2, RoundingMode.HALF_UP));
 			
 			if(this.getManagedBean().getSmAppl().getSmEquityCompanies() != null){
 				for(SmEquityCompany company:this.getManagedBean().getSmAppl().getSmEquityCompanies()){
@@ -13611,7 +13616,8 @@ public class SmApplicationBackingBean extends
 				String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 			}else{
-				String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM"};
+				// 28466 - add paid up capital
+				String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM","paidUpCapital"};
 				EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 			}
 			//#27165
@@ -13825,9 +13831,10 @@ public class SmApplicationBackingBean extends
 			}*/
 			// maybe here to put method to check with ssm
 			//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
-			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-				reCalculateCapitalPersonnel();
-			}
+			// 28466 - to maintain paid up capital from SSM
+			//if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+				//reCalculateCapitalPersonnel();
+			//}
 			//Remove equity/director personnel not exist in ssm
 			if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
 				Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
