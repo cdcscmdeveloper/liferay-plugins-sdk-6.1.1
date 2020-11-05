@@ -3623,7 +3623,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		
 		RequestNoteResDTO requestNoteResDTO = null;
-		if (prSize == 1) {
+		//28878 - Start
+		if(prSize >= 1){
+			requestNoteReqDTO.setPurchaseRequestId(getManagedBean().getPurchaseRequestId());
+			log.info("Bug 28878: Start requestNoteReqDTO.getPurchaseRequestId : " + requestNoteReqDTO.getPurchaseRequestId());
+			getManagedBean().setLoginIdAssignees(getRequestNoteSO().getloginIdAssigneeSuppByPrId(requestNoteReqDTO));
+			log.info("Bug 28878: Start getRequestNoteSO().cancelPendingItemCodificationMulti");
+			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodificationMulti(requestNoteReqDTO, getManagedBean().getSelectedPrDtls(), getManagedBean().getLoginIdAssignees());
+			log.info("Bug 28878: End getRequestNoteSO().cancelPendingItemCodificationMulti");
+		}else if (prSize == 1) {
 			log.info("Bug 28878: Start getRequestNoteSO().cancelPendingItemCodification");
 			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
 			log.info("Bug 28878: End getRequestNoteSO().cancelPendingItemCodification");

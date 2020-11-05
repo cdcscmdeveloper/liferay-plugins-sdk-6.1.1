@@ -371,6 +371,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean fromAndToQuantityFlag = Boolean.FALSE;
 	// #28789 - end
 	
+	//28878 - Start
+	private List<String> loginIdAssignees;
+	private Long purchaseRequestId;
+	//28878 - End
+	
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2171,4 +2176,32 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.fromAndToQuantityFlag = fromAndToQuantityFlag;
 	}
 	// #28789 - end
+	
+	//28878 - Start
+	public List<String> getLoginIdAssignees(){
+		return loginIdAssignees;
+	}
+	
+	public void setLoginIdAssignees(List<String> loginIdAssignees){
+		this.loginIdAssignees = loginIdAssignees;
+	}
+	
+	/**
+	* Gets the purchase request id.
+	*
+	* @return the purchase request id
+	*/
+	public Long getPurchaseRequestId() {
+		return purchaseRequestId;
+	}
+
+	/**
+	* Sets the purchase request id.
+	*
+	* @param purchaseRequestId the new purchase request id
+	*/
+	public void setPurchaseRequestId(Long purchaseRequestId) {
+		this.purchaseRequestId = purchaseRequestId;
+	}
+	//28878 - End
 }
