@@ -1205,12 +1205,12 @@ public class EvaluationBackingBean extends
 			reqDTO.setCheckListId(checklist.getQtChecklistId());
 			reqDTO.setCompliance(null);
 			//#25138 - add evalstage in compliance - start
-			if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {				
+			/*if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {				
 				reqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
 			}
 			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {				
 				reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-			}
+			}*/
 			//#25138 - add evalstage in compliance - end
 			/*
 			 * resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
