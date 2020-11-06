@@ -116,7 +116,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 		setPersonnelSoftcertInformation(getManagedBean()
-				.getLoginUserPersonnelInfo());
+				.getLoginUserPersonnelInfo(), false); //29027
 		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "", null, null);
 	}
 
@@ -901,7 +901,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					}
 				}
 			}
-			setPersonnelSoftcertInformation(personnel);
+			setPersonnelSoftcertInformation(personnel, true);  //29027
 		}
 		setAlreadyHadFreeSoftcert();
 		setDisableFlUserRowSelection(personnels);
@@ -1056,7 +1056,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * 
 	 * @param smPersonnel
 	 */
-	private void setPersonnelSoftcertInformation(SmPersonnel smPersonnel) {
+	private void setPersonnelSoftcertInformation(SmPersonnel smPersonnel, Boolean isSoftcertManagement) {
 		String softcertValidityDate = SmCommonUtil.getMessage(
 				"lbl.sm.no.available", null);
 		String sofcertNo = SmCommonUtil.getMessage("lbl.sm.no.available", null);
@@ -1068,16 +1068,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
 					.getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setSmSupplier(getManagedBean().getLoginUserPersonnelInfo().getSmAppl().getSmSupplier()); //29027
 			reqDTO.setUserId(smPersonnel.getPmUser().getUserId());
 			SmSoftcertRequest softcertRequest = SmServiceLookup
 					.getPersonnelSO()
 					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
 							reqDTO).getSoftcertRequest();
-
-			if (softcertRequest != null && softcertRequest.getPmDigiCert() == null) {
-				softcertRequest = SmServiceLookup.getPersonnelSO()
-						.retrieveLatestPersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+			//29027 - start
+			if (softcertRequest != null && softcertRequest.getPmDigiCert() == null
+					&& (smPersonnel.getSoftcertFlg() == 3 && !isSoftcertManagement)) {
+				softcertRequest = SmServiceLookup
+						.getPersonnelSO()
+						.retrieveLatestPersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO,
+								smPersonnel.getSoftcertFlg(), isSoftcertManagement).getSoftcertRequest();
 			}
+			//29027 - end
 			
 			if (softcertRequest != null
 					&& softcertRequest.getPmDigiCert() != null) {
