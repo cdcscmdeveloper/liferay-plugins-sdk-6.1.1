@@ -1847,16 +1847,24 @@ public class PpReportsBackingBean extends
 		int cntPtj = 0;
 		
 		for(PmUserRole pur: roleList){
+			
+			//ministry level
 			if(pur.getPmRole().getRoleCode().equals(RoleCode.MINISTRY_ADMIN.value()) ||
 					pur.getPmRole().getRoleCode().equals(RoleCode.BPK_OFFICER.value()) ||
 					pur.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value()) ||
-					pur.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value()) ){
+					pur.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value()) ||
+					pur.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value()) ){
 				cntMinistry++;
 			}
+			//kumpPtj level
 			if(pur.getPmRole().getRoleCode().equals(RoleCode.JABATAN_ADMIN.value())){
 				cntKumpPtj++;
 			}
-			if(pur.getPmRole().getRoleCode().equals(RoleCode.PTJ_ADMIN.value())){
+			//ptj level
+			if(pur.getPmRole().getRoleCode().equals(RoleCode.PTJ_ADMIN.value())	|| 
+					pur.getPmRole().getRoleCode().equals(RoleCode.PLAN_OFFICER.value()) || 
+					pur.getPmRole().getRoleCode().equals(RoleCode.PLAN_VERFICATION_OFFICER.value()) || 
+					pur.getPmRole().getRoleCode().equals(RoleCode.PLAN_APPROVER.value())){
 				cntPtj++;
 			}
 		}
@@ -1864,7 +1872,7 @@ public class PpReportsBackingBean extends
 		if(cntMinistry>0 && cntKumpPtj>=0 && cntPtj >= 0)return 1;
 		else if(cntMinistry == 0 && cntKumpPtj>0 && cntPtj >= 0) return 2;
 		else if(cntMinistry == 0 && cntKumpPtj==0 && cntPtj >0) return 3;
-		else return 1;
+		else return 3;
 		
 	}
 	
