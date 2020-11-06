@@ -143,7 +143,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean disableSelectBtn = false;
 	private boolean disableSelectExpBtn = false;
 	private boolean disableSelectRow = false;
-	private boolean disableReasonField = false;
 
 	//End
 	
@@ -1393,14 +1392,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 	public void setFlagCancelButton(boolean flagCancelButton) {
 		this.flagCancelButton = flagCancelButton;
-	}
-	
-	public boolean isDisableReasonField() {
-		return disableReasonField;
-	}
-
-	public void setDisableReasonField(boolean disableReasonField) {
-		this.disableReasonField = disableReasonField;
 	}
 
 }

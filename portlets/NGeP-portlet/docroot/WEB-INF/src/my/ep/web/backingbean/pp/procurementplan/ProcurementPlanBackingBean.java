@@ -759,19 +759,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	        		this.getManagedBean().getSelectedPlan().getPlanNo());
 	        
 	       
-	        for (int n = 0; n < this.getManagedBean().getSelectedPlan().getPpProcurementItems().size(); n++) {
+	        for (PpProcurementItem pItem : this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
 	        	
-	        	 /* Check predecessor of each node, change Pencil to Note for reason update
-		         * and make the textarea disabled
+	        	 /* Check predecessors of each node, change Pencil to Note icon for update reason field
+		          * and make its textarea disabled
 		         * */
-	        	if (n > 0) {
-	        		log.info("n= "+n+", curItem=  "+
-	        				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n).getProcurementTitle()+
-	    	        		", prevItem= "+this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n - 1).getProcurementTitle());
-	        		this.checkItemPredecessor(this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n),
-	        				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(n - 1));
-	        	}
-	        
+        		this.checkItemPredecessor(pItem);
 	        }
 	        
         } else {
@@ -799,15 +792,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
     }
 	
-	private void checkItemPredecessor(PpProcurementItem ppItem, PpProcurementItem prevPpItem) {
+	private void checkItemPredecessor(PpProcurementItem ppItem) {
+		
 		log.info("checkItemPredecessor");
-		if (!ppItem.isOriginal() && !ppItem.isCloneEnabled()) {
-    		if (prevPpItem.isCloneEnabled() && !prevPpItem.isAllowAnotherPindaan() &&
-    				!prevPpItem.isReviseReject() && !prevPpItem.isRejected()) {
-    			prevPpItem.setChangePencilToNote(true);
-    			this.getManagedBean().setDisableReasonField(true);
-    		}
-    	}
+		
+		if (ppItem.isCloneEnabled() && !ppItem.isAllowAnotherPindaan() &&
+				!ppItem.isReviseReject() && !ppItem.isRejected()) {
+			log.info("curItem=  "+ppItem.getProcurementTitle());
+			ppItem.setChangePencilToNote(true);
+			
+			if (ppItem.getPpUpdateReasons() != null || 
+					!ppItem.getPpUpdateReasons().isEmpty()) {
+				PpUpdateReason updateReason = ppItem.getPpUpdateReasons().get(0);
+				updateReason.setDisableReasonField(true);
+			}
+		}
 		
 	}
 	
