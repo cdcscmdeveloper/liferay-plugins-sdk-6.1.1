@@ -802,7 +802,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private void checkItemPredecessor(PpProcurementItem ppItem, PpProcurementItem prevPpItem) {
 		log.info("checkItemPredecessor");
 		if (!ppItem.isOriginal() && !ppItem.isCloneEnabled()) {
-    		if (prevPpItem.isCloneEnabled() && !prevPpItem.isAllowAnotherPindaan()) {
+    		if (prevPpItem.isCloneEnabled() && !prevPpItem.isAllowAnotherPindaan() &&
+    				!prevPpItem.isReviseReject() && !prevPpItem.isRejected()) {
     			prevPpItem.setChangePencilToNote(true);
     			this.getManagedBean().setDisableReasonField(true);
     		}
