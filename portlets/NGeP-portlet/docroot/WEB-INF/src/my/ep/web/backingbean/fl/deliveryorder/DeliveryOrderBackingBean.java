@@ -1001,7 +1001,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			List <String> supplierDoNoList = null;
 			if(null != getManagedBean().getFlDeliveryOrder().getSupplierDoRef()){
 				//29234 start
-				if(getManagedBean().getFlDeliveryOrder().getSupplierDoRef() == null || getManagedBean().getFlDeliveryOrder().getSupplierDoRef().isEmpty()){
+				if(getManagedBean().getFlDeliveryOrder().getSupplierDoRef().isEmpty()){
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				//29234 end
