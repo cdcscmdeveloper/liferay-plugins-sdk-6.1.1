@@ -1945,12 +1945,9 @@ public class SmApplicationBackingBean extends
 							if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
 								this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
 							}
-							
-							for(SmSupplierBranch branch : ssmResDTO.getSmSupplierBranches()){
-								if(EntityHelper.getEntityBySinglePropertyFromList(branch.getBranchName(), this.getManagedBean().getSmAppl().getSmSupplierBranches(), "branchName") == null){
-									branch.setSmAppl(this.getManagedBean().getSmAppl());
-									this.getManagedBean().getSmAppl().getSmSupplierBranches().add(branch);
-								}
+							//#28900
+							for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
+								copyBranchFromSSM(branchSSM);
 							}
 						}
 						//SET BUSIESS NATURE
@@ -2077,6 +2074,30 @@ public class SmApplicationBackingBean extends
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
+	
+	//#28900- start
+	private void copyBranchFromSSM(SmSupplierBranch ssmBranch) {
+		boolean isExist = false;
+		ssmBranch.setSmAppl(getManagedBean().getSmAppl());
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierBranches())) {
+			isExist = true;
+			getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+			getManagedBean().getSmAppl().getSmSupplierBranches().add(ssmBranch);
+		} else {
+			for (SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+				if (ssmBranch.getBranchName().equals(branch.getBranchName()) && !branch.isCopy()) {
+					branch.setCopy(true);
+					branch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch.getSmAddress()));
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				ssmBranch.setCopy(true);
+				getManagedBean().getSmAppl().getSmSupplierBranches().add(ssmBranch);
+			}
+		}
+	}//#28900- end
 
 	/**
 	 * Delete pending mof application.
@@ -13802,11 +13823,8 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
 				}
 				
-				for(SmSupplierBranch branch : ssmResDTO.getSmSupplierBranches()){
-					if(EntityHelper.getEntityBySinglePropertyFromList(branch.getBranchName(), this.getManagedBean().getSmAppl().getSmSupplierBranches(), "branchName") == null){
-						branch.setSmAppl(this.getManagedBean().getSmAppl());
-						this.getManagedBean().getSmAppl().getSmSupplierBranches().add(branch);
-					}
+				for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
+					copyBranchFromSSM(branchSSM);
 				}
 			}
 			//SET BUSIESS NATURE
