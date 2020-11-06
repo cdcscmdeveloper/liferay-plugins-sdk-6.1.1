@@ -344,7 +344,7 @@ public class QTCloneBackingbean extends
 				searchFilterBean.add(bean);
 				
 			}
-			if (null != this.getManagedBean().getQt() && null != this.getManagedBean().getQt().getContractType()){
+			if (null != this.getManagedBean().getQt() && null != this.getManagedBean().getQt().getContractType()&& null != this.getManagedBean().getQt().getContractType().getParameterId()){
 				
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField("contractType.parameterId");
@@ -354,7 +354,7 @@ public class QTCloneBackingbean extends
 				
 			}
 			
-			if (null != this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getFulfilmentType()){
+			if (null != this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getFulfilmentType()&& null!=this.getManagedBean().getQt().getFulfilmentType().getParameterId()){
 				
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField("fulfilmentType.parameterId");
