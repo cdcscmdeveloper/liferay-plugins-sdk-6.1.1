@@ -355,7 +355,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		// Dynamically creating main tab menu
-		createMainMenuModel();
+		createMainMenuModel(scQt); //#27502
 	}
 	
 	
@@ -4913,9 +4913,9 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setMessage(null);
 	}
 
-	private void createMainMenuModel() {
-		log.info("createMainMenuModel");
-		MenuModel mainMenuModel = new DefaultMenuModel();
+	private void createMainMenuModel(ScQt scQt) { //#27502
+    l	log.info("createMainMenuModel");
+      	MenuModel mainMenuModel = new DefaultMenuModel();
 
 		boolean isBPKUser = false;
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
