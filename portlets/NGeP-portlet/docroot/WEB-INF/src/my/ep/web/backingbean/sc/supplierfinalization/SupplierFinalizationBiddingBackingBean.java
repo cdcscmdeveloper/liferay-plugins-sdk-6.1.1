@@ -118,7 +118,6 @@ import org.primefaces.model.MenuModel;
 /**
  * Implementation for supplier finalization by bidding
  * 
- * @author Faradiana Supplier Finalization online Bidding Backing Bean
  */
 @ManagedBean(name = "suppFinalBiddingBackingBean")
 @RequestScoped
@@ -147,6 +146,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	/**
 	 * Default constructor
 	 */
+	
+	// #27502 - Start
+	private static boolean mofFinal = false;
+	// #27502 - End
+	
 	public SupplierFinalizationBiddingBackingBean() {
 
 	}
@@ -184,9 +188,21 @@ public class SupplierFinalizationBiddingBackingBean extends
 					.handleNavigation(fc, null,
 							QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);
 			
+			// #27502 - Start			
+			if (null != dataType.getIsMofFinalization()) {
+				mofFinal = dataType.getIsMofFinalization();				
+			}
+			
 			if (getManagedBean().isOnlineBiddingEscalation()) {		
 				navigateToBriefingPaperTab();
-			} else {
+			} else if(mofFinal){
+				if(this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION)){					
+					getManagedBean().setMofSelection(true);	
+				}
+				getManagedBean().setMofFinalization(mofFinal);					
+				navigateToBriefingPaperTab();
+			} // #27502 - End
+			else {
 				navigateToBiddingFinalizationMeetingTab();
 			}				
 		} catch (Exception e) {
@@ -766,12 +782,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public void navigateToBiddingSummaryTab() {
 		int activeIndex;
-		if (getManagedBean().isOnlineBiddingEscalation()) {
-			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
+		if (mofFinal) {// #27502 - Start
+		  activeIndex = 1;
 		} else {
-			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
+    		if (getManagedBean().isOnlineBiddingEscalation()) {
+    			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
+    		} else {
+    			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
+    		}
 		}
-		
 		this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
 	}
 
@@ -2051,35 +2070,45 @@ public class SupplierFinalizationBiddingBackingBean extends
 		    || BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(outCome)) {
 		    String memberRole = null;
 		    boolean isAllMembersEndorsed = true;
-			for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
-				 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
-						 && null != committeeActivity.getScCommitteeMember().getMemberRole()) {
-				   
-				   if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-				     suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
-				   }
-				   
-				   if (committeeActivity.getScCommitteeMember().getPmUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
-				     if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-				       memberRole = RoleCode.QCA_MEMBER.value();
-				     } else if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-				       memberRole = RoleCode.QCA_CHAIRPERSON.value();
-				     } else  if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-	                   memberRole = RoleCode.QCA_SECRETARY.value();
-	                 }
-				   }
-				   
-				   if (isAllMembersEndorsed && ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
-                     if (!committeeActivity.isBiddingSignedOff()) {
-                       isAllMembersEndorsed = false;
-                     } 
-                   }
-				 }
-			 }
-			
-			if (isAllMembersEndorsed) {
-			  suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
+		    
+			if (getManagedBean().getCommitteeList() != null) { // #27502, Adding checking only
+				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+					if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+							&& null != committeeActivity.getScCommitteeMember().getMemberRole()) {
+
+						if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(committeeActivity.getScCommitteeMember()
+								.getMemberRole().getParameterCode())) {
+							suppFinalizationReqDTO.setPmUser(committeeActivity.getScCommitteeMember().getPmUser());
+						}
+
+						if (committeeActivity.getScCommitteeMember().getPmUser().getUserId().longValue() == new FacesScopes()
+								.getUserSessionBean().getUserId().longValue()) {
+							if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember()
+									.getMemberRole().getParameterCode())) {
+								memberRole = RoleCode.QCA_MEMBER.value();
+							} else if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(committeeActivity
+									.getScCommitteeMember().getMemberRole().getParameterCode())) {
+								memberRole = RoleCode.QCA_CHAIRPERSON.value();
+							} else if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(committeeActivity
+									.getScCommitteeMember().getMemberRole().getParameterCode())) {
+								memberRole = RoleCode.QCA_SECRETARY.value();
+							}
+						}
+
+						if (isAllMembersEndorsed
+								&& ParameterConst.COMMITTEE_ROLE_MEMBER.equals(committeeActivity.getScCommitteeMember()
+										.getMemberRole().getParameterCode())) {
+							if (!committeeActivity.isBiddingSignedOff()) {
+								isAllMembersEndorsed = false;
+							}
+						}
+					}
+				}
 			}
+			
+			if (isAllMembersEndorsed || mofFinal) { // #27502
+			  suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
+			} 
             suppFinalizationReqDTO.setScQt(getManagedBean().getScQt());
             suppFinalizationReqDTO.setScQtCommittee(getManagedBean().getScQtCommittee());
             suppFinalizationReqDTO.setChildDocId(getManagedBean().getScQt().getQtId());
@@ -2145,6 +2174,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					if (!atleastOneMeetingIsDone) {
 						epException = new EpException(MessageConst.ERROR_760292);
 					}
+				} else if(mofFinal){// #27502
+					epException = null;
 				} else {
 					epException = new EpException(MessageConst.ERROR_760291);
 				}
@@ -2155,16 +2186,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 					throw epException;
 				}
 				
-				try {
-					qtSuppFinalizationSO.validatePreparation(suppFinalizationReqDTO);
-				} catch (EpException epExcep) {
-					saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
-					getManagedBean().setMeetingActiveIndex(1);
-					throw epExcep;
-				} catch (Exception e) {
-					saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
-					getManagedBean().setMeetingActiveIndex(1);
-					throw e;
+				if (!mofFinal) {// #27502
+					try {
+						qtSuppFinalizationSO.validatePreparation(suppFinalizationReqDTO);
+					} catch (EpException epExcep) {
+						saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
+						getManagedBean().setMeetingActiveIndex(1);
+						throw epExcep;
+					} catch (Exception e) {
+						saveMeetingDetailsOnException(qtSuppFinalizationSO, suppFinalizationReqDTO);
+						getManagedBean().setMeetingActiveIndex(1);
+						throw e;
+					}
 				}
 			} else {
 				scQtCommittee = getManagedBean().getScQtCommittee();
@@ -2445,6 +2478,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
 		if (getManagedBean().isOnlineBiddingEscalation()) {
 			return -1;
+		} else if(mofFinal){// #27502 - Start
+			return -1;
 		} else {
 			return ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX;
 		}
@@ -2456,7 +2491,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public int getOnlineBiddingActiveIndexSummary() {
 		int activeIndex;
-		if (getManagedBean().isOnlineBiddingEscalation()) {
+		if(mofFinal){// #27502 - Start
+			activeIndex = 1;
+		} else
+		if (this.getManagedBean().isOnlineBiddingEscalation()) {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
 		} else {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
@@ -2470,7 +2508,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingActiveIndexOnlineEndorsement
 	 */
 	public static int getOnlineBiddingActiveIndexOnlineEndorsement() {
-		return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT;
+		if (mofFinal) {// #27502 - Start
+			return -1;
+		} else {
+			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT;
+		}
 	}
 
 	/**
@@ -2478,7 +2520,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingActiveIndexOfflineEndorsement
 	 */
 	public static int getOnlineBiddingActiveIndexOfflineEndorsement() {
-		return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
+		if (mofFinal) {// #27502 - Start
+			return -1;
+		} else {
+			return ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT;
+		}
 	}
 	
 	
@@ -2526,11 +2572,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 		 * Get the BriefingPaper Tab Details.and navigate to briefing paper tab.
 		 */
 	public void navigateToBriefingPaperTab() {
-
-		this.getManagedBean()
-				.setOnlineBiddingActiveIndex(
-						this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
-								: ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
+		if (mofFinal) {// #27502 - Start
+			this.getManagedBean().setOnlineBiddingActiveIndex(0);
+		} else {
+			this.getManagedBean().setOnlineBiddingActiveIndex(
+					this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
+							: ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
+		}
+		
 		retrieveBriefingPaper();
 	}
 	
@@ -2539,8 +2588,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingFinalizationMeetingActiveIndex
 	 */
 	public int getOnlineBiddinBriefingPaperActiveIndex() {
-		
-		if (getManagedBean().isOnlineBiddingEscalation()) {
+		if (mofFinal) {// #27502 - Start
+			return 0;
+		} else 
+			if (getManagedBean().isOnlineBiddingEscalation()) {
 			return ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING;
 		} else {
 			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING;
