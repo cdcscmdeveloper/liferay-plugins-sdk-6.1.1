@@ -2314,8 +2314,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
-		//#29430
-		refreshPage();
 	}
 	
 	/**
@@ -2652,4 +2650,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return false;
 	}
 	//#28774 - End
+	
+	//#29430 - refresh after download
+	public void refreshDownload(){
+		refreshPage();
+		getManagedBean().setActiveIndex(getManagedBean().getActiveIndex());
+	}
 }
