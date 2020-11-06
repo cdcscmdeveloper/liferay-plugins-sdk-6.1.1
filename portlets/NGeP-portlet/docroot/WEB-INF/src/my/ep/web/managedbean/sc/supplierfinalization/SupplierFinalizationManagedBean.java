@@ -223,6 +223,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int finalizationTabIndex;
 	private int commEndorsementTabIndex;
 	private int endorsementReportActiveIndex;
+	/*
+	 * Enhancement #21694 START
+	 */
+	private int reverseTabIndex;
+	private ScQtReverse scQtReverse;
+	private boolean isReversed = false;
+	/* Enhancement #21694 END*/
 	
 	private int evaluationStageId;
 	private String evaluationHeader;
