@@ -2945,10 +2945,12 @@ public class LOIDetailBackingBean extends
 				}
 			}
 
-			for(ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee().getMeetingAttendances()){
-				if(meetingAttendance.isSelected()
-						|| meetingAttendance != null){
-					multiLoiAttended = true;
+			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only
+				for (ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee()
+						.getMeetingAttendances()) {
+					if (meetingAttendance.isSelected() || meetingAttendance != null) {
+						multiLoiAttended = true;
+					}
 				}
 			}
 
