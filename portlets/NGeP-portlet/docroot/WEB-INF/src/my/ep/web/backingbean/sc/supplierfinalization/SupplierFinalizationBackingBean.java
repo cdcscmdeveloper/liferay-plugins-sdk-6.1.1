@@ -97,11 +97,6 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
-import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
-import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -137,6 +132,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -256,8 +252,7 @@ public class SupplierFinalizationBackingBean extends
 							.contains(this.getManagedBean().getTaskName())) {
 				prepareUpdateCommitteeMember();//#25037
 			}
-
-			
+						
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
@@ -281,9 +276,8 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setCommitteeType(dataType.getCommitteeType());
 		
 		retrieveQTDetails(qtId);
-
-		// #27502 -- Adding condition only
-		if (dataType.getFcDecision() != null && ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
+		
+		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
 				.equals(dataType.getFcDecision())) {
 			getManagedBean().setInitialDecisionFwdHighAuth(true);
 		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
@@ -361,7 +355,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 		
 		// Dynamically creating main tab menu
-		createMainMenuModel(scQt);
+		createMainMenuModel();
 	}
 	
 	
@@ -1158,7 +1152,6 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
 			SuppFinalizationReqDTO reqDTO = null;
-			ScQtCommittee scQtCommittee = null;
 			
 			//#27502 -Start
 			ScQt scQt = this.getManagedBean().getScQt();
@@ -1390,7 +1383,6 @@ public class SupplierFinalizationBackingBean extends
 						
 						}
 						processSuppliersBeforeSaving();
-						
 						if(!skipValidation){
 							if (!getManagedBean().isItemize()) {
 								validateByPackage();
@@ -3567,8 +3559,8 @@ public class SupplierFinalizationBackingBean extends
 								&& specZoneId.equals(evaZoneId)
 								&& (recommendDtl.getRecordStatusFlg().equals(
 											DbValueConst.RECORD_STATUS_REJECTED))) {
-							// 11134 - add new param
-							resetSupplierSelectionAndDisable(recommendDtl, evalResDtl);
+
+							resetSupplierSelectionAndDisable(evalResDtl);
 							break;
 						}
 					}
@@ -3619,8 +3611,8 @@ public class SupplierFinalizationBackingBean extends
 									&& specZoneId == evaZoneId
 									&& (recommendDtl.getRecordStatusFlg().equals(
 												DbValueConst.RECORD_STATUS_REJECTED))) {
-								//#11134 - add new param
-								resetSupplierSelectionAndDisable(recommendDtl, evalResultDtl);
+
+								resetSupplierSelectionAndDisable(evalResultDtl);
 								break;
 							}
 						}
@@ -4920,14 +4912,14 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setMessage(null);
 	}
 
-	private void createMainMenuModel(ScQt scQt) {
-      log.info("createMainMenuModel");
-      MenuModel mainMenuModel = new DefaultMenuModel();
+	private void createMainMenuModel() {
+		log.info("createMainMenuModel");
+		MenuModel mainMenuModel = new DefaultMenuModel();
 
-      boolean isBPKUser = false;
-      if (getManagedBean().isInitialDecisionFwdToBPK()) {
-          isBPKUser = true;
-      }
+		boolean isBPKUser = false;
+		if (getManagedBean().isInitialDecisionFwdToBPK()) {
+			isBPKUser = true;
+		}
 
       int tabIndex = 0;
       MenuItem menuItem = null;
@@ -4936,18 +4928,18 @@ public class SupplierFinalizationBackingBean extends
       // #27502 -- Start
       if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
 
-          // Briefing Paper Menu Item
-          menuItem = new MenuItem();
-          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
-                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-          menuItem.setStyle("width:15%;");
-          menuItem.setTransient(true);
-          menuItem.setPartialSubmit(true);
-          menuItem.setProcess("@form");
-          menuItem.setUpdate("@form");
-//        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
-          mainMenuModel.addMenuItem(menuItem);
+			// Briefing Paper Menu Item
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:15%;");
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+//			menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
 
           // Supplier Finalization Menu Item
           menuItem = new MenuItem();
@@ -5019,18 +5011,18 @@ public class SupplierFinalizationBackingBean extends
           menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (tabIndex++)) + "}]); ");
           mainMenuModel.addMenuItem(menuItem);
 
-          // Supplier Finalization Menu Item
-          menuItem = new MenuItem();
-          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
-                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-          menuItem.setStyle("width:20%;");
-          // menuItem.setDisabled(isQTMaintenanceScreen());
-          menuItem.setTransient(true);
-          menuItem.setPartialSubmit(true);
-          menuItem.setProcess("@form");
-          menuItem.setUpdate("@form");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
-          mainMenuModel.addMenuItem(menuItem);
+			// Supplier Finalization Menu Item
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.meeting.decision",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:20%;");
+			// menuItem.setDisabled(isQTMaintenanceScreen());
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
 
           // Supplier Finalization Committee Endorsement Menu Item
           if (!isBPKUser) {
@@ -5056,15 +5048,30 @@ public class SupplierFinalizationBackingBean extends
               mainMenuModel.addMenuItem(menuItem);
           }
 
-			}
-			/*
-			 * Enhancement #21694 END
-			 */
-		}
-		
-		this.getManagedBean().setMainMenuModel(mainMenuModel);
-	}	
+          /*
+           * Enhancement #21694 Supplier Finalization Menu Item
+           */
+          if (null != getManagedBean().getScQtReverse()) {
+              menuItem = new MenuItem();
+              menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.committee.reverseStatus",
+                      ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+              menuItem.setStyle("width:20%;");
+              // menuItem.setDisabled(isQTMaintenanceScreen());
+              menuItem.setTransient(true);
+              menuItem.setPartialSubmit(true);
+              menuItem.setProcess("@form");
+              menuItem.setUpdate("@form");
+              menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (tabIndex++)) + "}]); ");
+              mainMenuModel.addMenuItem(menuItem);
 
+          }
+          /*
+           * Enhancement #21694 END
+           */
+      }
+      
+      this.getManagedBean().setMainMenuModel(mainMenuModel);
+  }   
 
 	private void createZoneMenuModel() {
 		log.info("createZoneMenuModel");
