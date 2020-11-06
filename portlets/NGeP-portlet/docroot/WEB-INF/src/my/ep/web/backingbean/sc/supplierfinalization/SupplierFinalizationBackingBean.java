@@ -1152,6 +1152,7 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
 			SuppFinalizationReqDTO reqDTO = null;
+			ScQtCommittee scQtCommittee = null;
 			
 			//#27502 -Start
 			ScQt scQt = this.getManagedBean().getScQt();
