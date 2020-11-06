@@ -15,18 +15,8 @@
 	<ui:param name="isFulfilmentTypeScheduled" 
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
 	<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
-		
-<table>
-<tr>
-<!-- #21695 farid add instruction START -->
-	<td>
-		<h:outputText style="float: left;" styleClass="instruction" escape="false" value="#{lbl['lbl.tpl.qty.estimation.instruction']}" />
-	</td>
-<!-- #21695 END -->
-</tr>
-<tr>
-	<td>
-		<p:dataTable id="zoneEstimationTbl" widgetVar="tierQtyWidget"
+
+	<p:dataTable id="zoneEstimationTbl" widgetVar="tierQtyWidget"
 		var="tplSpecEstimation"
 		rowIndexVar="rowIndex"
 		value="#{templateSpecBean.selectedSpecQuestion.tplSpecEstimations}"
@@ -95,9 +85,9 @@
 			</f:facet>
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
-				required="true" maxlength="19"
+				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
-				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
+				disabled="#{!editable}">
 
 				<!-- #25039#152 start -->	
 				<f:converter converterId="dynamicNumberConverter" />
@@ -141,10 +131,4 @@
 
 		</p:column>
 	</p:dataTable>
-	</td>
-</tr>
-</table>
-
-
-	
 </ui:composition>
