@@ -1467,14 +1467,21 @@ public class SmCommonUtil {
 			compBasic.setTotalMember(new BigDecimal(0));
 		}
 		// 28466 - Skip recalculate paid up capital
-		//compBasic.setPaidUpCapital(compBasic.getBumiEquity()
-				//.add(compBasic.getNonBumiEquity())
-				//.add(compBasic.getLocalCompanyEquity())
-				//.add(compBasic.getForeignCompanyEquity())
-				//.add(compBasic.getForeignerEquity())
-				//.add(compBasic.getGovtEquity())
-				//.add(compBasic.getGovtUnitrustEquity())
-				//.setScale(2, RoundingMode.HALF_UP));
+		try {
+			if(!BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class).ssmActive()){
+				compBasic.setPaidUpCapital(compBasic.getBumiEquity()
+						.add(compBasic.getNonBumiEquity())
+						.add(compBasic.getLocalCompanyEquity())
+						.add(compBasic.getForeignCompanyEquity())
+						.add(compBasic.getForeignerEquity())
+						.add(compBasic.getGovtEquity())
+						.add(compBasic.getGovtUnitrustEquity())
+						.setScale(2, RoundingMode.HALF_UP));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
 
