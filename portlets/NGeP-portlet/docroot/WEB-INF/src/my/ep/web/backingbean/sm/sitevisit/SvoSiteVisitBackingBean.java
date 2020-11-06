@@ -2042,8 +2042,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 	/**
 	 * Refresh page - recreate view
-	 */
-	private void refreshPage() {
+	 */	//#29430
+	public void refreshPage() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String refreshpage = fc.getViewRoot().getViewId();
 		ViewHandler ViewH =fc.getApplication().getViewHandler();
@@ -2650,10 +2650,4 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return false;
 	}
 	//#28774 - End
-	
-	//#29430 - refresh after download
-	public void refreshDownload(){
-		refreshPage();
-		getManagedBean().setActiveIndex(getManagedBean().getActiveIndex());
-	}
 }
