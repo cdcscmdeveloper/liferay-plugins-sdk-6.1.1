@@ -1982,9 +1982,9 @@ public class SmApplicationBackingBean extends
 						// maybe here to put method to check with ssm
 						//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
 						// 28466 - to maintain paid up capital from SSM
-						//if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-							//reCalculateCapitalPersonnel();
-						//}
+						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && !this.getManagedBean().isSsmIntegrationActive()){
+							reCalculateCapitalPersonnel();
+						}
 						//Remove equity/director personnel not exist in ssm
 						if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
 							Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
@@ -2405,11 +2405,11 @@ public class SmApplicationBackingBean extends
 						.getSmAppl());
 				//START SSM AUTO CALCULATE SHARE
 				// 28466
-				//if(getManagedBean().getSmAppl().isApplValidWithSsm()){
-					//calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
-					//setApplicationShareHolders(getManagedBean().getSmAppl().getSmPersonnels());
-					//calculateCapital();
-				//}
+				if(getManagedBean().getSmAppl().isApplValidWithSsm()&& !this.getManagedBean().isSsmIntegrationActive()){
+					calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
+					setApplicationShareHolders(getManagedBean().getSmAppl().getSmPersonnels());
+					calculateCapital();
+				}
 				//END SSM AUTO CALCULATE SHARE
 
 			}
@@ -3026,7 +3026,9 @@ public class SmApplicationBackingBean extends
 					if (valid) {
 						log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
 						// 28466 - to maintain paid up capital from SSM
-						//calculateCapital();
+						if(!getManagedBean().isSsmIntegrationActive()){
+							calculateCapital();
+						}
 						SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
@@ -13494,14 +13496,16 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setBumiEquity(bumiputeraCapital);
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignerEquity(nonMalaysianCapital);
 			// 28466 - to maintain paid up capital from SSM
-			//this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getBumiEquity()
-					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getNonBumiEquity())
-					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity())
-					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity())
-					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignerEquity())
-					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtEquity())
-					//.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity())
-					//.setScale(2, RoundingMode.HALF_UP));
+			if(!this.getManagedBean().isSsmIntegrationActive()){
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getBumiEquity()
+						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getNonBumiEquity())
+						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity())
+						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignCompanyEquity())
+						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getForeignerEquity())
+						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtEquity())
+						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity())
+						.setScale(2, RoundingMode.HALF_UP));
+			}
 			
 			if(this.getManagedBean().getSmAppl().getSmEquityCompanies() != null){
 				for(SmEquityCompany company:this.getManagedBean().getSmAppl().getSmEquityCompanies()){
@@ -13834,9 +13838,9 @@ public class SmApplicationBackingBean extends
 			// maybe here to put method to check with ssm
 			//SmCommonUtil.getInstance().validateWithSSM(regNo,businessType,"");
 			// 28466 - to maintain paid up capital from SSM
-			//if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
-				//reCalculateCapitalPersonnel();
-			//}
+			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && !this.getManagedBean().isSsmIntegrationActive()){
+				reCalculateCapitalPersonnel();
+			}
 			//Remove equity/director personnel not exist in ssm
 			if(this.getManagedBean().getSmAppl().getSmPersonnels()!= null){
 				Iterator<SmPersonnel> iterPersonnel = this.getManagedBean().getSmAppl().getSmPersonnels().iterator();
