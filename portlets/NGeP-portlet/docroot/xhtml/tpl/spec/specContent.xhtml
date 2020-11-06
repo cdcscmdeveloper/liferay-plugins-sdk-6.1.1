@@ -17,7 +17,8 @@
 	<ui:param name="navToFirstPage" value="#{templateSpecId}questionTblWidget.paginator.setPage(0, false);" />
 	<ui:param name="navToNextPage" value="#{templateSpecId}nextBtnWG.getJQ().click();" />
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
-
+	<ui:param name="zoneEstimationPopup" value="#{templateSpecId}zoneEstimationPopup" />
+	
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
@@ -205,7 +206,34 @@
 						</div>			
 					</c:if>
 				</p:dialog>
-				
+
+				<p:dialog id="zoneEstimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{zoneEstimationPopup}" modal="true" width="800" height="auto" closable="false">				
+
+					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
+						<div style="height:250px;">
+							<h:panelGroup id="zoneEstimationPnl">
+								<p:messages id="zoneEstPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+								
+								<ui:include src="zoneEstimationCost.xhtml" />
+							</h:panelGroup>
+						</div>
+						
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+								action="#{templateSpecBackingBean.zoneEstCostOkAction(templateSpecBean)}"
+								partialSubmit="true"
+								process="@this, zoneEstimationPnl"
+								update="zoneEstimationPnl, @(.calcEstAmount), @(.indicativeBtn)"> <!--#25039#67 add indicativeBtn -->
+								<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.cancel']}" 
+								partialSubmit="true" process="@this" update="@this"
+								action="#{templateSpecBackingBean.zoneEstCostCancelAction(templateSpecBean)}"
+								oncomplete="#{zoneEstimationPopup}.hide()" rendered="#{editable}" />
+						</div>			
+					</c:if>
+				</p:dialog>
+
 				<ui:include src="zoneQtyPopup.xhtml" />
 			</c:if>
 			
