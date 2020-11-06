@@ -4914,7 +4914,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void createMainMenuModel(ScQt scQt) { //#27502
-    l	log.info("createMainMenuModel");
+    	log.info("createMainMenuModel");
       	MenuModel mainMenuModel = new DefaultMenuModel();
 
 		boolean isBPKUser = false;
