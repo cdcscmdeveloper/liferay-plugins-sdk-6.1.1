@@ -3347,6 +3347,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						item.setMinimumOrderQty(1);
 						ctContractItem.setMinimumOrderQty(1);
 					}
+					//Bug #28479 - Start
+					if ((getManagedBean().getContractVer().getContractVerId() == null)
+							&& (getManagedBean().getContractVer().getDocType()
+									.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+						item.setMinimumOrderQty(1);
+						ctContractItem.setMinimumOrderQty(1);
+						getManagedBean().setErr100033(true);
+						getManagedBean().setMinQtyCheck(true);
+					}
+					//Bug #28479 - End
 				}
 				throw new EpException(MessageConst.ERROR_100033,
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
@@ -3368,6 +3378,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					maxValue = maxQty.getMaxQuantity().doubleValue();				
 			}
 			if (ctContractItem.getMinimumOrderQty() > maxValue) {
+				//Bug #28479 - Start
+				if ((getManagedBean().getContractVer().getContractVerId() == null)
+						&& (getManagedBean().getContractVer().getDocType()
+								.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {					
+					getManagedBean().setErr100034(true);
+					getManagedBean().setMinQtyCheck(true);
+					ctContractItem.setMinimumOrderQty(1);
+				}
+				//Bug #28479 - End
 				throw new EpException(MessageConst.ERROR_100034);
 				
 			}

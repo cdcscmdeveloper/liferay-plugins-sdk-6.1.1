@@ -156,6 +156,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private List<ScLoa> bondDetail;
 	private boolean isExtendContract = false;
 	
+	// Start - 28479	
+	private boolean isErr100033 = false;
+	private boolean isErr100034 = false;
+	private boolean minQtyCheck = false;
+	// End - 28479	
 
 	/**
 	 * @return the fileDirectory
@@ -1343,6 +1348,27 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.notificationSetting = notificationSetting;
 	}
 	
+	// Start - 28479
+	public boolean isErr100033() {
+		return isErr100033;
+	}
+	public void setErr100033(boolean isErr100033) {
+		this.isErr100033 = isErr100033;
+	}
+	public boolean isErr100034() {
+		return isErr100034;
+	}
+	public void setErr100034(boolean isErr100034) {
+		this.isErr100034 = isErr100034;
+	}
+	public boolean isMinQtyCheck() {
+		return minQtyCheck;
+	}
+	public void setMinQtyCheck(boolean minQtyCheck) {
+		this.minQtyCheck = minQtyCheck;
+	}
+	
+	// End - 28479
 	
 
 }
