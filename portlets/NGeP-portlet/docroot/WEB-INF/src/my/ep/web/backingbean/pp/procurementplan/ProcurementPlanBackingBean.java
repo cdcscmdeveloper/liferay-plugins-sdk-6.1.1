@@ -4118,6 +4118,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						PpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 						PpItem.setAllowAnotherPindaan(true);
 						PpItem.setEnableRevise(true);
+						
+						// For update reason, change the icon back to Pencil if any 
+						if (PpItem.isChangePencilToNote()) {
+							PpItem.setChangePencilToNote(false);
+						}
+						if (PpItem.getPpUpdateReasons() != null || 
+								!PpItem.getPpUpdateReasons().isEmpty()) {
+							PpUpdateReason updateReason = PpItem.getPpUpdateReasons().get(0);
+							
+							if (updateReason.isDisableReasonField()) {
+								updateReason.setDisableReasonField(false);
+							}
+						}
+						
 				      }
 			       }	
 				}
