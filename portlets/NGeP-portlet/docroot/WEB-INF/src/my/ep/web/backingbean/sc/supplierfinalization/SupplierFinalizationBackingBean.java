@@ -3814,9 +3814,9 @@ public class SupplierFinalizationBackingBean extends
 		// #11134 - start
 		populateSupplierRejectionRemark(recommendDtl, evalResultDtl);
 		if(!getManagedBean().isHaveSupplierRejection()){
-//			boolean remarkExists = evalResultDtl.getSupplierRejectionRemark() != null
-//					&& StringUtils.isNotBlank(evalResultDtl.getSupplierRejectionRemark().getRemark());
-//			getManagedBean().setHaveSupplierRejection(remarkExists);
+			boolean remarkExists = evalResultDtl.getSupplierRejectionRemark() != null
+					&& StringUtils.isNotBlank(evalResultDtl.getSupplierRejectionRemark().getRemark());
+			getManagedBean().setHaveSupplierRejection(remarkExists);
 		}
 		// #11134 - end
 	}
@@ -3940,7 +3940,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			//4.  get ScRemark -> set it to evalResultDtl
 			
-//			evalResultDtl.setSupplierRejectionRemark(supplierRejectionRemark);
+			evalResultDtl.setSupplierRejectionRemark(supplierRejectionRemark);
 		}
 			
 	}
