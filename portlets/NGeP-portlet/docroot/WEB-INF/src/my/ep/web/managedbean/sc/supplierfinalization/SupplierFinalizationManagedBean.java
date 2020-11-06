@@ -2157,6 +2157,48 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the reverseTabIndex
+	 */
+	public int getReverseTabIndex() {
+		return reverseTabIndex;
+	}
+
+	/**
+	 * @param reverseTabIndex the reverseTabIndex to set
+	 */
+	public void setReverseTabIndex(int reverseTabIndex) {
+		this.reverseTabIndex = reverseTabIndex;
+	}
+
+	/**
+	 * @return the scQtReverse
+	 */
+	public ScQtReverse getScQtReverse() {
+		return scQtReverse;
+	}
+
+	/**
+	 * @param scQtReverse the scQtReverse to set
+	 */
+	public void setScQtReverse(ScQtReverse scQtReverse) {
+		this.scQtReverse = scQtReverse;
+	}
+
+	/**
+	 * @return the isReversed
+	 */
+	public boolean isReversed() {
+		return isReversed;
+	}
+
+	/**
+	 * @param isReversed the isReversed to set
+	 */
+	public void setReversed(boolean isReversed) {
+		this.isReversed = isReversed;
+	}
+
+	/**
 	 * @return the evaluationReportIndex
 	 */
 	public int getEvaluationReportIndex() {
