@@ -966,6 +966,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){ //DO maintenance by supplier
 			List <String> supplierDoNoList = null;
 			if(null != getManagedBean().getFlDeliveryOrder().getSupplierDoRef()){
+				//29234 start
+				if(getManagedBean().getFlDeliveryOrder().getSupplierDoRef() == null || getManagedBean().getFlDeliveryOrder().getSupplierDoRef().isEmpty()){
+					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+				//29234 end
 				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				supplierDoNoList = new ArrayList<String>();
 				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
