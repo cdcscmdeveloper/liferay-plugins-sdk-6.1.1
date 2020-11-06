@@ -9,15 +9,41 @@
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial}"  headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		</p:column>	
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 		</p:column>
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}" rendered="#{isScoringReq}">
-			</p:column>
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
-			</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}" rendered="#{isScoringReq}">
+		</p:column>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:200px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
+		</p:column>
 	</ui:define>
 	</ui:decorate>
 	
+	<p:column style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
+		<c:if test="#{!isZonal}">
+			<h:outputText value="#{question.tplSpecEstimations[0].indicativeUnitPrice}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+		</c:if>
+		<c:if test="#{isZonal}">
+			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
+				oncomplete="#{zoneEstimationPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+		</c:if>
+	</p:column>
+		<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+			rendered="#{isQuestionTypeItem}" disabled="true">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</p:inputText>
+	</p:column>
+
 	<p:column style="width:120px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
 		<f:facet name="footer">
 			<h:outputText id="totalEstAmount" 
