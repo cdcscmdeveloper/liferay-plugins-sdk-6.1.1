@@ -129,7 +129,13 @@
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{(complianceTech.definationType.parameterCode eq 'UP' or complianceTech.definationType.parameterCode eq 'NA') and (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadCheckList(complianceTech,index,'T')}" />
+					action="#{evaluationBackingBean.complianceUploadCheckListNonScoring(complianceTech,index,'T')}" />
+				
+				<p:commandButton value="#{lbl['lbl.btn.view']}"
+						rendered="#{(complianceTech.definationType.parameterCode ne 'UP' and complianceTech.definationType.parameterCode ne 'NA') and complianceTech.scoringReq eq 'false' and  (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
+						action="#{evaluationBackingBean.evaluateTechnicalEvaluation(complianceTech,index,'ET')}"
+						process="@this" partialSubmit="true" />
+				
 
 
 			</p:column>
