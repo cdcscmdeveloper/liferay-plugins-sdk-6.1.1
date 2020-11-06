@@ -11,6 +11,9 @@
  		<c:when test="#{qTDetailBB.managedBean.selectedTabBean.tabType eq SourcingConstants.committeTypeFinalization}">
  			<ui:include src="finalizationSecretaryDetails.xhtml" />
  		</c:when>
+ 		<c:when test="#{qTDetailBB.managedBean.selectedTabBean.tabType eq SourcingConstants.committeTypeMinistryFinance}">
+ 			<ui:include src="ministryOfFinance.xhtml" />
+ 		</c:when>
  		<c:otherwise>
  			<ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
  			<ui:param name="qtCommitte" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee}" />
