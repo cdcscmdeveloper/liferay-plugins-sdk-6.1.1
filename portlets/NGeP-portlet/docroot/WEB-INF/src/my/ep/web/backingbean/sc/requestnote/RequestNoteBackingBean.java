@@ -3523,6 +3523,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 */
 	public void cancelPendingItemCodificationDPM() {
+		log.info("cancelPendingItemCodificationDPM");
+		if(getManagedBean().getRequestNote() != null){
+			log.info("Bug 28878: RN doc no. : " + getManagedBean().getRequestNote().getRequestNoteNo());
+		}else{
+			log.info("Bug 28878: RN doc no. is NULL");
+		}
 		
 		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -3532,6 +3538,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
+			log.info("Bug 28878: docNo : " + prObj[1]);
 			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: " + DPStatusConstants.RN_PENDING_ITEM_CODIFICATION + " docType : " + ParameterConst.DOCTYPE_REQUEST_NOTE);
 		    ISearchBean<Object[]> prSearchBean =  new SearchBean<>();
 		    prSearchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), prObj[1]));
@@ -3540,10 +3547,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 		    searchReqDTO.setSourcingDocSearchBean(prSearchBean);
 		    ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		   
+		    
+		    log.info("Bug 28878: Start sourcingIntegrationSO.getCountOfActivePR");
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-				
+			log.info("Bug 28878: End sourcingIntegrationSO.getCountOfActivePR // prSize : " + prSize);
+			
+			log.info("Bug 28878: Start cancelRN");
 			cancelRN(prObj, prSize);
+			log.info("Bug 28878: End cancelRN");
 			
 			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
 			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
@@ -3597,9 +3608,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	@SuppressWarnings("unchecked")
 	private void cancelRN(Object[] prObj, int prSize) {
+		log.info("cancelRN");
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		
-		log.info("cancelPendingItemCodification");
 		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
@@ -3611,10 +3622,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		
 		RequestNoteResDTO requestNoteResDTO = null;
-		if (prSize == 1) {
+		//28878 - Start
+		if(prSize >= 1){
+			requestNoteReqDTO.setPurchaseRequestId(getManagedBean().getPurchaseRequestId());
+			log.info("Bug 28878: Start requestNoteReqDTO.getPurchaseRequestId : " + requestNoteReqDTO.getPurchaseRequestId());
+			getManagedBean().setLoginIdAssignees(getRequestNoteSO().getloginIdAssigneeSuppByPrId(requestNoteReqDTO));
+			log.info("Bug 28878: Start getRequestNoteSO().cancelPendingItemCodificationMulti");
+			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodificationMulti(requestNoteReqDTO, getManagedBean().getSelectedPrDtls(), getManagedBean().getLoginIdAssignees());
+			log.info("Bug 28878: End getRequestNoteSO().cancelPendingItemCodificationMulti");
+		}else if (prSize == 1) {
+			log.info("Bug 28878: Start getRequestNoteSO().cancelPendingItemCodification");
 			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
+			log.info("Bug 28878: End getRequestNoteSO().cancelPendingItemCodification");
 		} else {
+			log.info("Bug 28878: Start getRequestNoteSO().prepareTrackingDiaryDPM");
 			requestNoteResDTO = getRequestNoteSO().prepareTrackingDiaryDPM(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
+			log.info("Bug 28878: End getRequestNoteSO().prepareTrackingDiaryDPM");
 		}
 		
 		if (!requestNoteResDTO.isSuccessful()) {
