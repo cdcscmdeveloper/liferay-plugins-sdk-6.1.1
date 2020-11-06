@@ -667,7 +667,7 @@ public class YearEndProcessBackingBean extends
 				flOrderBB.getFactoringCompanyDtl();
 			}
 			if (buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW) || buttonVal.equalsIgnoreCase("CLOSEMANUAL")) {
-				log.info("29442: remark:"+resDTO.getRemarkList().get(0).getRemark());
+				//log.info("29442: remark:"+resDTO.getRemarkList().get(0).getRemark());
 				flBB.initializeRemarkAndAttachement(null, resDTO.getRemarkList(), resDTO.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
 			} else if (buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
@@ -730,7 +730,7 @@ public class YearEndProcessBackingBean extends
 			flOrderBB.getManagedBean().setBackToPrevious("searchYearEndProcess");
 
 			if (buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW) || buttonVal.equalsIgnoreCase("CLOSEMANUAL")) {
-				log.info("29442: remark:"+coResDTO.getRemarkList().get(0).getRemark());
+				//log.info("29442: remark:"+coResDTO.getRemarkList().get(0).getRemark());
 				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
 			} else if (buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
