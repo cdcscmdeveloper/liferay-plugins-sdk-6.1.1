@@ -78,6 +78,7 @@
 		<h:panelGroup id="fulfilmentPanelMsgId">
 			<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
 			<p:messages id="messages" showSummary="false" showDetail="true"  autoUpdate="#{contractDetailsBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
+			<p:messages id="messages2" showSummary="false" showDetail="true"  autoUpdate="#{ctBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn"/>
 			<p:tooltip id="headerTooltip" global="true" position="left center" targetPosition="right center" forSelector=".ui-state-error"/>
 	   </h:panelGroup>
 	   	<ui:include src="fulfilmentButtons.xhtml" />
