@@ -21,7 +21,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							<h:graphicImage styleClass="smallUserImage"  value="#{pPlanBackingBean.userImagePathWithDefaultImage(remarkVar.userId)}"  />
 						</td>
 						<td style="width:85%;white-space:normal;">
-							<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
+							<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>
 							<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
 								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 							</h:outputText>
@@ -30,12 +30,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<tr>
 						<td>
 							<!-- for phase 1 -->
+							  <!--24975@06112020azza - start -->
 							<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}"
-								disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
+								disabled="#{!pPlanBackingBean.managedBean.modeEditable or pPlanBackingBean.managedBean.disable}"
 								onkeyup="limitTextArea(this,1000);"
 								onkeydown="limitTextArea(this,1000);">								
 							</p:inputTextarea>  
-								
+							  <!--24975@06112020azza - end -->
+					
+							
+													
 							<!-- enable this for phase 2 and disable phase 1 section to test	
 							<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" 
 								disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
