@@ -821,7 +821,7 @@ public class PpReportsBackingBean extends
 					
 					itemList.put(m, new Object[]{
 						Integer.valueOf(m+1),
-						(String)row[2],Integer.valueOf((String)row[3]),(String)row[4],Integer.valueOf((String)row[5]),(String)row[6],(String)row[4],(String)row[8],
+						(String)row[2],Integer.valueOf((String)row[3]),(String)row[4],Integer.valueOf((String)row[5]),(String)row[6],(String)row[7],(String)row[8],
 						((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact(),((BigDecimal)row[10])
 					});
 				}
