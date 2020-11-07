@@ -3306,7 +3306,10 @@ public class OrganisationBackingBean extends
 
 		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
+		//20201105@Jacky - Enhancement#28836 - Start
 		checkPendingStatus(orgProfile);
+		//20201105@Jacky - Enhancement#28836 - End
+
 
 		if (orgProfile.getSmSupplier() != null && getManagedBean().getOrgProfile().isGovtSeller()) {
 			log.info("Supplier Test");
