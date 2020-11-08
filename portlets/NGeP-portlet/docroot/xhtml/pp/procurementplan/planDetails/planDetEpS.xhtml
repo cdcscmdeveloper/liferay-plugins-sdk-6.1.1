@@ -124,7 +124,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					disabled="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) or !epItem.selectable}" 
 				    value="#{epItem.deleted}"/>
 			<!-- #24975 -->
-			 <!--24975@azza - start -->
+			 <!--24975@07112020azza - start -->
 				<p:commandLink
 				        rendered="#{!(epItem.brandNew ? epItem.brandNew : epItem.selectable) and pPlanBackingBean.managedBean.modeEditable}"
 				        id="addUpdateEpBInfo" 
@@ -135,11 +135,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
 				     style="float:left; padding-left: 5px;" process="@this">
 				      <p:ajax event="click"
-				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votMengurus, pPlanBackingBean.managedBean.selectedPlan, index)}"
+				      		listener="#{pPlanBackingBean.addUpdateEpAllInfo(ParameterConst.votSetia, pPlanBackingBean.managedBean.selectedPlan, index)}"
 				      		disabled="#{epItem.cloneEnabled or epItem.disableForPindaan or epItem.disableRow or (!epItem.disableReviseItem)}"
 				      		update="@form"/>
 				      </h:graphicImage>
 				</p:commandLink>
+			<!--24975@07112020azza - end -->
 			</p:column>
 			 <!--24975@azza - end -->
 			<!-- [SIR#12802] - end -->
@@ -261,13 +262,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <!--24975@azza - start -->
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 	              <!--25549@18092020 -->
+	             <!--24975@06112020azza - start -->
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
-			    	update="@form"  immediate="true"  id="clEpRemarkS"
-			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
-					<p:graphicImage value="/css/images/design/edit.png"
-					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
-					<!--  <f:param name="disableValidation" value="" />-->
+			        update="@form"  immediate="true"  id="clEpRemarkS"
+			        disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
+				    <p:graphicImage value="#{epItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
+					<f:param name="disableValidation" value="" />
 				</p:commandLink>
+				  <!--24975@06112020azza - end -->
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
