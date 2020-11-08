@@ -3200,7 +3200,9 @@ public class EvaluationBackingBean extends
 									.getCommitteeType())) {
 						if (this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
-							reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						//#21695 START
+							reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						//END
 						} else {
 							reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 						}
@@ -3386,8 +3388,16 @@ public class EvaluationBackingBean extends
 									.getCommitteeType())) {
 						if (this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
-							zoneReqDto
-									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						//#21695 START	
+							if(this.getManagedBean().getEvaluationCheckListType().equalsIgnoreCase("FS")
+									&& this.getManagedBean().getScQt().isPartial()){
+								zoneReqDto
+								.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+							}else{
+								zoneReqDto
+								.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							}
+						//END	
 						} else {
 							zoneReqDto
 									.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
@@ -3444,6 +3454,11 @@ public class EvaluationBackingBean extends
 						this.getManagedBean().setOneTierFinancialActiveIndex(1);						
 						this.getManagedBean().setEvaluationCheckListType(
 							ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
+						//#21695 START
+						//set view package 
+						zoneReqDto
+						.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						//END
 					}
 				}
 				if (this.getManagedBean()
@@ -3720,7 +3735,13 @@ public class EvaluationBackingBean extends
 										.getCommitteeType())) {
 							if (this.getManagedBean().getScQt()
 									.isTechEvaluationReq()) {
-								specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								//#21695 Farid Start
+								if(this.getManagedBean().getScQt().isPartial()){
+									specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								}else{
+									specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								}
+								//END
 							} else {
 								specDtls.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 							}
@@ -3831,7 +3852,13 @@ public class EvaluationBackingBean extends
 			} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				if (this.getManagedBean().getScQt().isTechEvaluationReq()) {
-					return QTConstants.TECHNICAL_EVALUATION;
+					//#21695 FARID start
+					if(this.getManagedBean().getScQt().isPartial()){
+						return QTConstants.TECHNICAL_EVALUATION_BY_ITEM;
+					}else{
+						return QTConstants.TECHNICAL_EVALUATION;
+					}
+					//END
 				} else {
 					return SourcingConstants.COMPLAINCE_STAGE;
 				}
@@ -3938,8 +3965,16 @@ public class EvaluationBackingBean extends
 										.getCommitteeType())) {
 							if (this.getManagedBean().getScQt()
 									.isTechEvaluationReq()) {
-								zoneReqDto
-										.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+							//#21695 START
+							//set view
+								if(this.getManagedBean().getEvaluationCheckListType().equalsIgnoreCase("FS")){
+									zoneReqDto
+									.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								}else{
+									zoneReqDto
+									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								}
+							//END	
 							} else {
 								zoneReqDto
 										.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
@@ -11108,8 +11143,15 @@ private void retriveCommitteeRemarksList(){
 											.getCommitteeType())) {
 								if (this.getManagedBean().getScQt()
 										.isTechEvaluationReq()) {
-									finreqDTO
-											.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									//#21695 Farid Start
+									if(this.getManagedBean().getScQt().isPartial()){
+										finreqDTO
+											.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);	
+									}else{
+										finreqDTO
+											.setEvalStage(QTConstants.TECHNICAL_EVALUATION);	
+									}
+									//END
 								} else {
 									finreqDTO
 											.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
@@ -14360,8 +14402,14 @@ private void retriveCommitteeRemarksList(){
 			if(SourcingConstants.TECHINICAL_STAGE.equals(checkListType)){
 				reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 			}
-			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {				
-				reqDTO.setEvalStage(SourcingConstants.TECHINICAL_STAGE);
+			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {
+				//#21695 Farid Start
+				if(this.getManagedBean().getScQt().isPartial()){
+					reqDTO.setEvalStage(SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM);
+				}else{
+					reqDTO.setEvalStage(SourcingConstants.TECHINICAL_STAGE);
+				}
+				//END
 			}
 			//#25138 -  add evalstage in compliance to filter qualified supplier in technical & financial - end
 		
