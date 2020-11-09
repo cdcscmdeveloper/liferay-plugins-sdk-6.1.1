@@ -14,6 +14,7 @@ import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.DirOwnCeoOneCompRptManagedBean;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "dirOwnCeoOneCompRptBB")
 @ViewScoped
@@ -24,7 +25,8 @@ public class DirOwnCeoOneCompRptBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 6988130580818997228L;
-
+	public static Logger log = Logger.getLogger(DirOwnCeoOneCompRptBackingBean.class);
+	
 	public DirOwnCeoOneCompRptBackingBean() {
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setMofRegNoFrom(SmReportConst.SUPPL_CONSULT_MOF_NO);
@@ -60,6 +62,14 @@ public class DirOwnCeoOneCompRptBackingBean extends
 				df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
+		
+		//15174 - start
+		if (!StringUtils.isBlank(getManagedBean().getPersonnelName())){
+			params.put(SmReportConst. PARAM_PERSONNEL_NAME,getManagedBean()
+					.getPersonnelName());
+			log.info(getManagedBean().getPersonnelName());
+		}
+		//15174 - end
 
 		generateSmReport(params);
 	}
