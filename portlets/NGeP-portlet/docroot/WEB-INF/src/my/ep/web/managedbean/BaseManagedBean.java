@@ -23,8 +23,15 @@ import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.persistence.entity.sm.SmSupplier_;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
@@ -68,7 +75,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String statusDescFromSSM;
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
-		
+
 	private List<SmPersonnel> personnelsRole  = new ArrayList();
 	
 	// For sub title displayed in screen.
@@ -114,7 +121,147 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
 	//#25037-end
 
+
+	//27346-start 
+	private SmAppl smAppl;
+	private SmSupplier SmSupplier;
+	private List<SmPersonnel> personnelsDirector  = new ArrayList();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();   
+	private boolean disAllowOwnerEdit; 
+	private String businessTypeParamCode;
+	private List<SmPersonnel> personnelsOwner = new ArrayList();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
+	private SmCompanyBasic smCompanyBasic = null;
+	private boolean showDetailSSM; 
+	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList();
+	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList();
+	private SmAddress smAddress;
 	
+	
+	public boolean isShowDetailSSM() {
+		return showDetailSSM;
+	}
+
+	public void setShowDetailSSM(boolean showDetailSSM) {
+		this.showDetailSSM = showDetailSSM;
+	}
+
+	public List<SmPersonnel> getSmPersonnelDirectorSsm() {
+		return smPersonnelDirectorSsm;
+	}
+
+	public void setSmPersonnelDirectorSsm(List<SmPersonnel> smPersonnelDirectorSsm) {
+		this.smPersonnelDirectorSsm = smPersonnelDirectorSsm;
+	}
+
+	public List<SmPersonnel> getPersonnelsOwnerSsm() {
+		return personnelsOwnerSsm;
+	}
+
+	public void setPersonnelsOwnerSsm(List<SmPersonnel> personnelsOwnerSsm) {
+		this.personnelsOwnerSsm = personnelsOwnerSsm;
+	}
+
+	public SmAddress getSmAddress() {
+		return smAddress;
+	}
+
+	public void setSmAddress(SmAddress smAddress) {
+		this.smAddress = smAddress;
+	}
+
+	public SmCompanyBasic getSmCompanyBasic() {
+		return smCompanyBasic;
+	}
+
+	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
+		this.smCompanyBasic = smCompanyBasic;
+	}
+	
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
+
+	public SmSupplier getSmSupplier() {
+		return SmSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		SmSupplier = smSupplier;
+	}
+
+	public List<SmPersonnel> getPersonnelsDirector() {
+		return personnelsDirector;
+	}
+
+	public void setPersonnelsDirector(List<SmPersonnel> personnelsDirector) {
+		this.personnelsDirector = personnelsDirector;
+	}
+
+	public List<SmSupplierBranch> getSmSupplierBranchSsm() {
+		return smSupplierBranchSsm;
+	}
+
+	public void setSmSupplierBranchSsm(List<SmSupplierBranch> smSupplierBranchSsm) {
+		this.smSupplierBranchSsm = smSupplierBranchSsm;
+	}
+
+	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
+		return smEquityCompaniesSsm;
+	}
+
+	public void setSmEquityCompaniesSsm(List<SmEquityCompany> smEquityCompaniesSsm) {
+		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
+	}
+
+	public boolean isDisAllowOwnerEdit() {
+		return disAllowOwnerEdit;
+	}
+
+	public void setDisAllowOwnerEdit(boolean disAllowOwnerEdit) {
+		this.disAllowOwnerEdit = disAllowOwnerEdit;
+	}
+
+	public String getBusinessTypeParamCode() {
+		return businessTypeParamCode;
+	}
+
+	public void setBusinessTypeParamCode(String businessTypeParamCode) {
+		this.businessTypeParamCode = businessTypeParamCode;
+	}
+
+	public List<SmPersonnel> getPersonnelsOwner() {
+		return personnelsOwner;
+	}
+
+	public void setPersonnelsOwner(List<SmPersonnel> personnelsOwner) {
+		this.personnelsOwner = personnelsOwner;
+	}
+
+	public List<SmPersonnel> getPersonnelsSsm() {
+		return personnelsSsm;
+	}
+
+	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
+		this.personnelsSsm = personnelsSsm;
+	}
+
+	public List<SmSupplierBusiness> getSmSupplierBusinessSsm() {
+		return smSupplierBusinessSsm;
+	}
+
+	public void setSmSupplierBusinessSsm(
+			List<SmSupplierBusiness> smSupplierBusinessSsm) {
+		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
+	}
+	//27346-end
+
 	/**
 	 * @return the token
 	 */
