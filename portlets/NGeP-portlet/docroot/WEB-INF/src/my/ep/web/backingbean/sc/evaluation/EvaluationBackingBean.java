@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -3737,7 +3737,11 @@ public class EvaluationBackingBean extends
 									.isTechEvaluationReq()) {
 								//#21695 Farid Start && 25138
 								if(this.getManagedBean().getScQt().isPartial()){
-									specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+									if(this.getManagedBean().getTabItemPackageIndex() == 1){
+										specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+									}else{
+										specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									}
 								}else{
 									specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 								}
