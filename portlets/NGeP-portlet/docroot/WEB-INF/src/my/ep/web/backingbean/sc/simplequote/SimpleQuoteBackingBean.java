@@ -26,6 +26,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.persistence.Persistence;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,6 +58,7 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -581,6 +583,15 @@ public class SimpleQuoteBackingBean extends
 						getManagedBean().setNewableFlag(Boolean.FALSE);
 						getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 						scQuote.setPanelItem(selectedPanelItem);
+						PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance()
+								.getExternalContext().getSession(false);
+						Boolean treasuryCircularLinkClickedFlag = (Boolean) portletSession
+								.getAttribute("treasuryCircularLinkClickedFlag");
+						if (treasuryCircularLinkClickedFlag != null
+								&& treasuryCircularLinkClickedFlag.booleanValue() == true) {
+							isGeneralOrSpecific = Boolean.FALSE;
+						}
+						portletSession.removeAttribute("treasuryCircularLinkClickedFlag");
 						//#3761 - end
 					}
 
@@ -1109,7 +1120,7 @@ public class SimpleQuoteBackingBean extends
 				.getAttribute("templateSpecBackingBean");
 		if (templateSpecBackingBean == null) {
 			templateSpecBackingBean = new TemplateSpecBackingBean();
-		}
+		} 
 		
 		// CALL API TO CHECK PRODUCT OR SERVICE
 		if(extensionCode != null) {
@@ -1209,17 +1220,6 @@ public class SimpleQuoteBackingBean extends
 						productTemplateSpecBean);
 			}
 		}
-		
-		//#3761 - start
-		@SuppressWarnings("unchecked")
-		List<TplSpecQuestion> savedTplSpecQuestions = (List<TplSpecQuestion>) portletSession
-			.getAttribute("savedTplSpecQuestions");
-		if (CollectionUtils.isNotEmpty(savedTplSpecQuestions)) {
-			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecQuestions(savedTplSpecQuestions);
-			portletSession.removeAttribute("savedTplSpecQuestions");
-			return;
-		}
-		//#3761 - end
 	}
 
 	/**
@@ -2586,7 +2586,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
-			
+			getManagedBean().setSupplierList(getManagedBean().getScQuote().getScQuoteSuppliers());
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -2595,6 +2595,8 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 			getManagedBean().setByLocality(Boolean.FALSE);
 			templateSpecBackingBean.getManagedBean().setG2G(true);
+			getGovtSellerCriteria();
+			getManagedBean().setGovtSellers(getManagedBean().getScQuote().getScQuoteSuppliers());
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
@@ -4668,17 +4670,17 @@ public class SimpleQuoteBackingBean extends
 		.append("^").append(SupplierManagementConst.SUPP_TYPE_CONSULTANT)
 		.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 		.append("|");
-		
+
 		// #28536 - start
 		if (!getManagedBean().isG2GFlag()) {
 			criteria.append("smAppl.supplierType")
-					.append("^").append(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)
+					.append("^").append(SupplierManagementConst. SUPP_TYPE_GOVT_TO_GOVT)
 					.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 					.append("|");
 			criteria.append("pmOrgProfile.govtSeller^0").append("|");
 		}
 		// #28536 - end
-		
+
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
@@ -7596,6 +7598,15 @@ public class SimpleQuoteBackingBean extends
 					circularVerId = circularseqDTO.getCtPanelItem().getCtCircularVer().getCircularVerId();
 				}
 			}
+			
+			String outcome = null;
+			if (getManagedBean().getOutComes() == null || getManagedBean().getOutComes().length == 0) {
+				outcome = StringUtils.EMPTY;
+			} else {
+				outcome = BpmOutcomeConst.BPM_SAVE;
+			}
+			saveSimpleQuote(outcome);
+			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
@@ -7614,8 +7625,18 @@ public class SimpleQuoteBackingBean extends
 				ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
 				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext()
 						.getSession(false);
-				portletSession.setAttribute("savedTplSpecQuestions", getManagedBean().getProductTemplateSpecBean()
-					.getSpecMaster().getTplSpecQuestions());
+				if ((getManagedBean().getProductTemplateSpecBean() != null
+						&& getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null && CollectionUtils
+							.isNotEmpty(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions()))
+						|| (getManagedBean().getServiceTemplateSpecBean() != null
+								&& getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null && CollectionUtils
+									.isNotEmpty(getManagedBean().getServiceTemplateSpecBean().getSpecMaster()
+											.getTplSpecQuestions()))) {
+					portletSession.setAttribute("treasuryCircularLinkClickedFlag", Boolean.TRUE);
+				} else {
+					portletSession.setAttribute("treasuryCircularLinkClickedFlag", Boolean.FALSE);
+				}
+				
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/ct/circular/portal/panelCircularTab.xhtml");
