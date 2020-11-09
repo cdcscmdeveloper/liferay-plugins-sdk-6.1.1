@@ -2548,11 +2548,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();	
 		
 		//validate assistant officer
-		if(StringUtils.isBlank(svTask.getSmSvAssistantOfficer().getName())){
-			svTask.setSmSvAssistantOfficer(null);
+		//#28774 - Start
+		if(svTask.getSmSvAssistantOfficers()==null){
+			svTask.setSmSvAssistantOfficers(null);
 		}
+		//#28774 - End
 		if(svTask.getSmSvTemplate()!=null){
-			if(svTask.getSmSvTemplate().getSmSvInterviewees()== null || svTask.getSmSvTemplate().getSmSvInterviewees().size()<=0){
+			if(svTask.getSmSvTemplate().getSmSvInterviewees()== null || svTask.getSmSvTemplate().getSmSvInterviewees().isEmpty()){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
 						new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
 			}else{
