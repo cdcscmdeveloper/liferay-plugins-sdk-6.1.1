@@ -46,7 +46,7 @@
 			</h:inputText>
 		</h:panelGrid><!-- ahmaa-#25138 - end -->
 		<!-- ahmaa-#25138 - start -->
-		<p:panelGrid rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1'}" 
+		<p:panelGrid rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1' or evaluationBackingBean.managedBean.offerScoreType eq null}" 
 		 style="margin-top:5px;width:100%;"
 			styleClass="panelGridBorders tr, panelGridBorders td"><!-- ahmaa-#25138 - end -->
 			<f:facet name="header">
