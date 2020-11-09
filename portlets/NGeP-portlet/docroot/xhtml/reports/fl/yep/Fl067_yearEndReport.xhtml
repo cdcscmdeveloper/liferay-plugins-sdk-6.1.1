@@ -74,10 +74,10 @@
 			</td>
 			
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.yep.search.title']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.yep.search.title']}"/>
 			</td>
 			<td>
-				<p:inputText maxlength="35" rendered="#{!yepRptBB.managedBean.contractFlag}"
+				<p:inputText maxlength="35"
 					value="#{yepRptBB.managedBean.poTitle}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
@@ -105,18 +105,20 @@
 			</td>
 			
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
+				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
+				<p:outputLabel value="*" styleClass="mandatory"/>
 			</td>
 			
 			<td>
 			<div>
-				<p:selectOneMenu id="pOStatusId" required="true" rendered="#{!yepRptBB.managedBean.contractFlag}"
+				<p:selectOneMenu id="pOStatusId" required="true"
 								value="#{yepRptBB.managedBean.purchaseOrderStatus}"
 								style="width: 314px;">
 								<f:selectItems
 									value="#{yepRptBB.getStatusDropDownValues('PY')}" />
-								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>	
+								<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="0"></f:selectItem>
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									update=":form" />	
 							</p:selectOneMenu>
 			 </div>
 			</td>
@@ -131,13 +133,13 @@
 		<td>
 		</td>
 		<td>
-			<p:selectBooleanCheckbox  rendered="#{!yepRptBB.managedBean.contractFlag}"
+			<p:selectBooleanCheckbox 
 				value="#{yepRptBB.managedBean.checkAP58}" disabled="#{!yepRptBB.managedBean.ap58Flag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeAp58()}"
 				 process="@this" update=":form"></p:ajax>
 			</p:selectBooleanCheckbox>
-			<p:spacer width="2" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-			<h:outputText value="#{lbl['lbl.fl.yep.ap58a']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
+			<p:spacer width="2"/>
+			<h:outputText value="#{lbl['lbl.fl.yep.ap58a']}"/>
 		</td>
 		</tr>
 		
@@ -149,13 +151,13 @@
 		<td>
 		</td>
 		<td>
-			<p:selectBooleanCheckbox rendered="#{!yepRptBB.managedBean.contractFlag}"
+			<p:selectBooleanCheckbox
 				value="#{yepRptBB.managedBean.checkCFwd}" disabled="#{!yepRptBB.managedBean.cfwdFlag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeCarryFow()}"
 				 process="@this" update=":form"></p:ajax>
 				</p:selectBooleanCheckbox>
-				<p:spacer width="2" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-				<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" rendered="#{!yepRptBB.managedBean.contractFlag}"></h:outputText>
+				<p:spacer width="2"/>
+				<h:outputText value="#{lbl['lbl.fl.yep.carryFow']}" ></h:outputText>
 		</td>
 		</tr>
 		
@@ -167,13 +169,13 @@
 		<td>
 		</td>
 		<td>
-		<p:selectBooleanCheckbox rendered="#{!yepRptBB.managedBean.contractFlag}"
+		<p:selectBooleanCheckbox
 		value="#{yepRptBB.managedBean.checkCMP}" disabled="#{!yepRptBB.managedBean.cmpFlag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeCMPay()}" 
 				 process="@this" update=":form"></p:ajax>
 				</p:selectBooleanCheckbox>
-				<p:spacer width="2" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-				<h:outputText value="#{lbl['lbl.fl.yep.closedManPay']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>		
+				<p:spacer width="2"/>
+				<h:outputText value="#{lbl['lbl.fl.yep.closedManPay']}"/>		
 		</td>			
 		</tr>
 		
@@ -185,13 +187,13 @@
 		<td>
 		</td>
 		<td>
-		<p:selectBooleanCheckbox rendered="#{!yepRptBB.managedBean.contractFlag}"
+		<p:selectBooleanCheckbox
 				value="#{yepRptBB.managedBean.checkNAT}" disabled="#{!yepRptBB.managedBean.natFlag}">
 				<p:ajax event="change" partialSubmit="true" listener="#{yepRptBB.onChangeNATransaction()}" 
 				 process="@this" update=":form"></p:ajax>
 				</p:selectBooleanCheckbox>
-				<p:spacer width="2" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
-				<h:outputText value="#{lbl['lbl.fl.yep.nonActTrans']}" rendered="#{!yepRptBB.managedBean.contractFlag}"/>
+				<p:spacer width="2"/>
+				<h:outputText value="#{lbl['lbl.fl.yep.nonActTrans']}"/>
 		</td>	
 		</tr>
 		
