@@ -2605,7 +2605,7 @@ public class QtSpecCloneBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
-				Long[] stats= {60002L,60024L,60003L};
+				Long[] stats= {60002L,60024L,60003L,60027L};
 				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
 				qtSearchBean
 				.getDataFilterBeans()

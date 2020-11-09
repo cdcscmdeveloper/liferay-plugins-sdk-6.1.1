@@ -7,7 +7,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-<ui:param name="isClone" value="#{specificationBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}" />
+<ui:param name="isClone" value="#{specificationBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or specificationBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}" />
 	<h:panelGroup>
 		<ac:gpkiPopup
 			textBeforeSign="#{specificationBackingBean.textBeforeSign}"
