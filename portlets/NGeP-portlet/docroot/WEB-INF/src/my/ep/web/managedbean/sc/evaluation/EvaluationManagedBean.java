@@ -577,6 +577,17 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The total technical package max score. */
 	private String totalMaxScore;
 	//#25138- total max score - end
+	//#25138 - set eval status
+	private Long evalStatus;
+	//#25138 - start 
+	private Boolean singleSpecQuestion;
+	
+	private List<ScQtCheckList> singleItemCheckList;
+	
+	private int tabItemPackageIndex;
+	//#25138 - end
+	
+	private boolean scoringReq = false; //#25138
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3740,4 +3751,46 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.totalMaxScore = totalMaxScore;
 	}
 	//#25138- total max score - end
+	//#25138 - set eval status - start
+	public Long getEvalStatus() {
+		return evalStatus;
+	}
+
+	public void setEvalStatus(Long evalStatus) {
+		this.evalStatus = evalStatus;
+	}
+	//#25138 - set eval status - end
+	//#25138 - start
+	public boolean getSingleSpecQuestion() {
+		return singleSpecQuestion;
+	}
+
+	public void setSingleSpecQuestion(boolean singleSpecQuestion) {
+		this.singleSpecQuestion = singleSpecQuestion;
+	}
+
+	public List<ScQtCheckList> getSingleItemCheckList() {
+		return singleItemCheckList;
+	}
+
+	public void setSingleItemCheckList(List<ScQtCheckList> singleItemCheckList) {
+		this.singleItemCheckList = singleItemCheckList;
+	}
+	 
+	public boolean isScoringReq() {
+		return scoringReq;
+	}
+
+	public void setScoringReq(boolean scoringReq) {
+		this.scoringReq = scoringReq;
+	}
+
+	public int getTabItemPackageIndex() {
+		return tabItemPackageIndex;
+	}
+
+	public void setTabItemPackageIndex(int tabItemPackageIndex) {
+		this.tabItemPackageIndex = tabItemPackageIndex;
+	}
+	//#25138 - end
 }
