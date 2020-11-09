@@ -3046,7 +3046,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					this.getManagedBean().getSmSupplier().setCompanyName(ssmResDTO.getSmCompanyBasic().getCompanyName());
 					this.getManagedBean().getSmSupplier().setRegNo(regNo);
 					this.getManagedBean().getSmSupplier().setBusinessType(businesstype);
-					this.getManagedBean().setSmCompanyBasic(ssmResDTO.getSmCompanyBasic());
+					this.getManagedBean().setSmCompanyBasicSsm(ssmResDTO.getSmCompanyBasic());
 					this.getManagedBean().setSmAddress(ssmResDTO.getSmAddress());
 					this.getManagedBean().setShowDetailSSM(true);
 					// set owner n director n personnel

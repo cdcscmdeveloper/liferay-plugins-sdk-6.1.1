@@ -133,7 +133,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> personnelsOwner = new ArrayList();
 	private List<SmPersonnel> personnelsSsm  = new ArrayList();
 	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
-	private SmCompanyBasic smCompanyBasic = null;
+	private SmCompanyBasic smCompanyBasicSsm = null;
 	private boolean showDetailSSM; 
 	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList();
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList();
@@ -171,15 +171,15 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSmAddress(SmAddress smAddress) {
 		this.smAddress = smAddress;
 	}
-
-	public SmCompanyBasic getSmCompanyBasic() {
-		return smCompanyBasic;
-	}
-
-	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
-		this.smCompanyBasic = smCompanyBasic;
-	}
 	
+	public SmCompanyBasic getSmCompanyBasicSsm() {
+		return smCompanyBasicSsm;
+	}
+
+	public void setSmCompanyBasicSsm(SmCompanyBasic smCompanyBasicSsm) {
+		this.smCompanyBasicSsm = smCompanyBasicSsm;
+	}
+
 	public SmAppl getSmAppl() {
 		return smAppl;
 	}
