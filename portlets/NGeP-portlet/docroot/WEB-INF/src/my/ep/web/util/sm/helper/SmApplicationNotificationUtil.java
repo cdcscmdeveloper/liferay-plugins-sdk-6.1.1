@@ -1,5 +1,9 @@
 package my.ep.web.util.sm.helper;
 
+//10908
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -43,13 +47,13 @@ public class SmApplicationNotificationUtil {
 			reqDTO.setPaymentMethods("FPX dan kad kredit");
 			reqDTO.setCategoryDescription(retriveCategoryMessageForNotification(
 					smAppl, isPoUser));
-		} else if (smAppl.getApplType().equalsIgnoreCase(
-				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+		} else if ((smAppl.getApplType().equalsIgnoreCase(
+				ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
-					smAppl, supplier, basicInfo, approvalRemarks,
-					supplierRemarks));
+					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks));
 			// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
 		}
+		
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
 					SupplierManagementConst.SM_STATE_NAME_SABAH)) {
@@ -77,15 +81,20 @@ public class SmApplicationNotificationUtil {
 	 * @param reqDTO
 	 *            - ReviewApplicationReqDTO
 	 */
+	
+	//10908 - change to be same as approve 
 	public static void setRejectionNotificationParameters(SmAppl smAppl,
-			String mofNo, String applRejectionRemarks, SmSupplier supplier,
+			SmSupplier supplier, SmSupplierBasicInfoVO basicInfo, 
+			String supplierRemarks, String approvalRemarks,
 			ReviewApplicationReqDTO reqDTO) {
+
+		reqDTO.setBusinessRegNo(supplier.getRegNo());
+		reqDTO.setCompanyName(supplier.getCompanyName());
+		
 		if (smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			reqDTO.setBusinessRegNo(supplier.getRegNo());
-			reqDTO.setCompanyName(supplier.getCompanyName());
-			reqDTO.setApproverOrPoRemarks(applRejectionRemarks);
-			reqDTO.setMofNum(mofNo);
+			reqDTO.setCategoryDescription(retriveRejectCancelRegistrationMessageForNotification(
+					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks));
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
@@ -113,18 +122,19 @@ public class SmApplicationNotificationUtil {
 	 *            - SmApplicationManagedBean
 	 * @return String - notification message or table content
 	 */
+	//10908 - add approved date
 	public static String retriveCancelRegistrationMessageForNotification(
 			SmAppl smAppl, SmSupplier supplier,
-			SmSupplierBasicInfoVO basicInfo, String approvalRemarks,
-			String supplierRemarks) {
+			SmSupplierBasicInfoVO basicInfo, 
+			String supplierRemarks, String approvalRemarks) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveCancelRegistrationMessageForNotification *********");
-		sb.append("<table style=\"width:100%; border: 1px solid black;border-collapse: collapse;\">");
+		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
 		sb.append("<tr>");
-		sb.append("<td style=\"border: 1px solid black;\">")
+		sb.append("<td style=\"width:40%; border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol1",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(DateUtils.dateToString("dd-MMM-yyyy",
 						smAppl.getApplSubmitDate())).append("</td>");
@@ -133,15 +143,20 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol2",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(smAppl.getApplNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol9",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(sdf.format(new Date())).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol3",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(basicInfo.getMofNo()).append("</td>");
 		sb.append("</tr>");
@@ -149,7 +164,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol4",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getCompanyName()).append("</td>");
 		sb.append("</tr>");
@@ -157,7 +171,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol5",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(AddressUtils.getFullAddress(basicInfo.getAddress()
 						.getSmAddress())).append("</td>");
@@ -166,7 +179,6 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol6",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplierRemarks).append("</td>");
 		sb.append("</tr>");
@@ -174,15 +186,91 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol7",
 						null)).append("</td>");
-		sb.append("<td style=\"border: 1px solid black;\"> : </td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(approvalRemarks).append("</td>");
 		sb.append("</tr>");
 		sb.append("</table>");
 		return sb.toString();
-
 	}
-
+	
+	//10908 
+	public static String retriveRejectCancelRegistrationMessageForNotification(
+			SmAppl smAppl, SmSupplier supplier,
+			SmSupplierBasicInfoVO basicInfo, 
+			String supplierRemarks, String approvalRemarks) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		StringBuilder sb = new StringBuilder();
+		log.info("*********** retriveRejectCancelRegistrationMessageForNotification *********");
+		sb.append("<table style=\"width:40%; border: 1px solid black;border-collapse: collapse;\">");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol1",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(DateUtils.dateToString("dd-MMM-yyyy",
+						smAppl.getApplSubmitDate())).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol2",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(smAppl.getApplNo()).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol8",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(sdf.format(new Date())).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol3",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(basicInfo.getMofNo()).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol4",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getCompanyName()).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol10",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplier.getRegNo()).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol5",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(AddressUtils.getFullAddress(basicInfo.getAddress()
+						.getSmAddress())).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol6",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(supplierRemarks).append("</td>");
+		sb.append("</tr>");
+		sb.append("<tr>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol7",
+						null)).append("</td>");
+		sb.append("<td style=\"border: 1px solid black;\">")
+				.append(approvalRemarks).append("</td>");
+		sb.append("</tr>");
+		sb.append("</table>");
+		return sb.toString();
+	}
+	
 	/**
 	 * Set the tabular message for approval of registration or maintenance
 	 * application.This will be passed as a parameter for approval notification

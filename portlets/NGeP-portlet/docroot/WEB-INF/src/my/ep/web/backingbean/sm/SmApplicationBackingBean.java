@@ -714,7 +714,7 @@ public class SmApplicationBackingBean extends
 				 }
 			 }
 			//Bug 27022 - end
-			
+			 
 			 //3460 - Start
 			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 			//to resubmit application for applying new MOF registration
@@ -2974,7 +2974,7 @@ public class SmApplicationBackingBean extends
 					calcPersonnelListCount();
 					SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 							getManagedBean().getSmAppl(), getManagedBean()
-							.getPrevApprovedPersonnels(),
+									.getPrevApprovedPersonnels(),
 							getManagedBean().isDisAllowOwnerEdit());
 					/*#28458 - Start*/
 					if (getManagedBean().isDisAllowOwnerEdit()){
@@ -9113,7 +9113,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmSupplier().setBumi(false);
 				// #28534 END
 			}
-			
 		}
 		log.info("<<<<Appl type>>>>");
 		log.info(getManagedBean().getSmAppl().getApplType());
@@ -9360,11 +9359,13 @@ public class SmApplicationBackingBean extends
 						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 						getManagedBean().getApplnRejectionRemarks());
 			}
+		
+			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
-					getManagedBean().getSmAppl(), getManagedBean()
-							.getBasicInfo().getMofNo(), getManagedBean()
-							.getApplnRejectionRemarks(), getManagedBean()
-							.getSmSupplier(), reqDTO);
+					getManagedBean().getSmAppl(), getManagedBean().getSmSupplier(), 
+					getManagedBean().getBasicInfo(), getManagedBean()
+					.getSupplierRemarks(), getManagedBean()
+					.getApplnRejectionRemarks(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
@@ -9396,6 +9397,7 @@ public class SmApplicationBackingBean extends
 					.isApproverUser(), getManagedBean().isPoUser(),
 					getManagedBean().getSmAppl());
 
+			//10908
 			SmApplicationNotificationUtil.setApprovalNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getBasicInfo(), getManagedBean().isPoUser(),
@@ -11922,7 +11924,6 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//3460 - End
-
 
 	private void initMandatoryLicenseInfo(
 			List<SmApplSupportDoc> mandatoryLicenseDocs) {
