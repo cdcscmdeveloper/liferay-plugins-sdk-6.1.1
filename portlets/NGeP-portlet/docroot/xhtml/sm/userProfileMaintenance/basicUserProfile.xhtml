@@ -162,6 +162,33 @@
 								showSummary="true" showDetail="false" display="icon" />
 						</p:outputPanel></td>
 				</tr>
+<!-- #13208 - START -->
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.userprofile.department']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText id ="basicBUDep" label="#{lbl['lbl.sm.userprofile.department']}" 
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.department}"
+							size="35" required="true" maxlength="80" />
+						<p:message id="basicBUDepMsg" for="basicBUDep"
+							showSummary="true" showDetail="false" display="icon" />
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.userprofile.unit']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputText id ="basicBUSec" label="#{lbl['lbl.sm.userprofile.unit']}"
+						value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.sectionUnit}"
+						size="35" required="true"/>
+						<p:message id="basicBUSecMsg" for="basicBUSec"
+						showSummary="true" showDetail="false" display="icon"/>
+					</td>
+				</tr>
+<!-- #13208 - END -->
+				
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel

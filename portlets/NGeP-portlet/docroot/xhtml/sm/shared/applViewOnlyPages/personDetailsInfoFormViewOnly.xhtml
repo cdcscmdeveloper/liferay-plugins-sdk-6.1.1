@@ -49,6 +49,14 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.email']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.email}" /></td>
 					</tr>
+					<!-- #13208 - START -->
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.department']}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.department}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.unit']}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.sectionUnit}"/></td>
+					</tr>
+					<!-- #13208 - END -->
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.telno']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedPersonnel.phoneFull}" /></td>
