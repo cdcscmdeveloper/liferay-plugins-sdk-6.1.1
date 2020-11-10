@@ -112,6 +112,7 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25638 - End	
 	//#25037-start
 	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
+	private boolean committeModified;
 	//#25037-end
 
 	
@@ -725,6 +726,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setValidFor25037(boolean validFor25037) {
 		this.validFor25037 = validFor25037;
+	}
+
+	public boolean isCommitteModified() {
+		return committeModified;
+	}
+
+	public void setCommitteModified(boolean committeModified) {
+		this.committeModified = committeModified;
 	}
 	
 	

@@ -251,7 +251,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int evaluationReportIndex;
 	
 	//#25037-start
-	private boolean committeModified;
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
 	//#25037-end
@@ -2322,13 +2321,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     //#18685 - End
     
 	//#25037-start
-	public boolean isCommitteModified() {
-		return committeModified;
-	}
-
-	public void setCommitteModified(boolean committeModified) {
-		this.committeModified = committeModified;
-	}
+	
 
 	public List<ScCommitteeMember> getDeletedMemberList() {
 		return deletedMemberList;
