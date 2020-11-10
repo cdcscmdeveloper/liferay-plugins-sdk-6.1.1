@@ -277,7 +277,9 @@
 			<portlet id="supplierUserActivation"></portlet>
 
 			<portlet id="UserProfileMaintenance"></portlet>
-
+			<!-- #9569 START-->
+			<portlet id="MOFSupplierUserMaintenance"></portlet>
+			<!-- #9569 END-->
 			<portlet id="SmUserProfileMaintenance"></portlet>
 			<portlet id="TaskSummary"></portlet>
 			<portlet id="taskStatusSearch"></portlet>
