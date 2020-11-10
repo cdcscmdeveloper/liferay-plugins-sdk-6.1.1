@@ -17,14 +17,14 @@
 	<ui:define name="contentSection"> 
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-		<h:outputText rendered="#{supplierBusinessNatureBackingBean.managedBean.smAppl.applValidWithSsm}"	 styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer1']}" style="float: inherit" escape="false" ></h:outputText>
-		<h:commandLink rendered="#{supplierBusinessNatureBackingBean.managedBean.smAppl.applValidWithSsm}"	
+		<h:outputText  rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}" styleClass="splNotesFonts" value="#{lbl['lbl.sm.po.disclaimer1']}" style="float: inherit" escape="false" ></h:outputText>
+		<h:commandLink rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}"	
 				action="#{supplierBusinessNatureBackingBean.redirectToViewSSMInfo(supplierBusinessNatureBackingBean.managedBean.smSupplier.regNo,supplierBusinessNatureBackingBean.managedBean.smSupplier.businessType)}"
 				value="#{lbl['lbl.fl.instruction.here']}" 
 				styleClass="splNotesFonts" style="float: inherit" escape="false">
 				 <f:ajax execute="@form" render="@form" />
 				</h:commandLink>
-		<h:outputText rendered="#{supplierBusinessNatureBackingBean.managedBean.smAppl.applValidWithSsm}"	
+		<h:outputText rendered="#{supplierBusinessNatureBackingBean.managedBean.companyValidWithSSM}"
 				value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
 		
 		
