@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
@@ -152,6 +153,9 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private boolean mofSelection;
 	// #27502 - End
 	
+	//#25037 start
+	private SupplierFinalizationMeetingBackingBean meetingBB;
+	//#25037 end
 	/**
 	 * @return the onlineBiddingActiveIndex
 	 */
@@ -1264,6 +1268,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 
 	public void setMofSelection(boolean mofSelection) {
 		this.mofSelection = mofSelection;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
 	}
 
 }

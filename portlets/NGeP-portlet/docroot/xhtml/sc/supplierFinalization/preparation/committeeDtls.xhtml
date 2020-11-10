@@ -9,9 +9,11 @@
 		.committeeDtlTblCl th, .committeeDtlTblCl td{
 			width: auto;
 			min-width: 50px;
-			text-align: center !important;
             word-break: break-word !important;
             white-space: normal !important;
+		}
+		.committeeDtlTblCl th{
+			text-align: center !important;
 		}
 		.committeeDtlTblCl tr td:last-child{
 			width: auto;
@@ -78,13 +80,13 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{suppFinalMeetingBackingBean.managedBean.validFor25037}"
-				styleClass="BtnSpacing"
+				styleClass="BtnSpacing" onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
 		</div>
 	</p:panel>
 	
 	<ac:scRemarkAndAttachment
-		remarkList="#{suppFinalizationBackingBean.managedBean.committeeRemarkList}"
+		remarkList="#{suppFinalizationBackingBean.omitLatestRemarkForDisplay(suppFinalizationBackingBean.managedBean.committeeRemarkList)}"
 		readonly="#{suppFinalizationBackingBean.managedBean.readOnly}"
 		showAttachment="false" />
 

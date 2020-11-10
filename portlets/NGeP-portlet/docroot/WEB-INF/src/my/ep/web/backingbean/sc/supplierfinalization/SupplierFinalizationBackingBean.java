@@ -135,6 +135,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -231,7 +232,7 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
-		SuppFinalizationResDTO res2DTO = new SuppFinalizationResDTO();
+
 		qtSuppFinalizationSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
@@ -879,12 +880,23 @@ public class SupplierFinalizationBackingBean extends
 
 				// Committee Details
 				if (scQtCommittee != null) {
-					if (CollectionUtils.isNotEmpty(
-							scQtCommittee.getCommitteeActivities())) {
-						Collections.sort(scQtCommittee
-								.getCommitteeActivities());
-						this.getManagedBean().setCommitteeList(
-								scQtCommittee.getCommitteeActivities());
+					if (CollectionUtils.isNotEmpty(scQtCommittee.getCommitteeActivities())) {
+						Collections.sort(scQtCommittee.getCommitteeActivities());
+						
+						this.getManagedBean().setCommitteeList(scQtCommittee.getCommitteeActivities());
+						
+						Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeList(), "getScCommitteeMember.getCommitteeMemberId");
+						List<ScQtCommitteeActivity> missingActivities = new ArrayList<ScQtCommitteeActivity>();
+						for (ScCommitteeMember member : scQtCommittee.getScCommittee().getScCommitteeMembers()) {
+							if(map.get(member.getCommitteeMemberId())==null){
+								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+								activity.setScQtCommittee(scQtCommittee);
+								activity.setScCommitteeMember(member);
+								setUserDetails(activity);
+								missingActivities.add(activity);
+							}
+						}
+						this.getManagedBean().getCommitteeList().addAll(missingActivities);
 						
 						List<ScQtCommitteeActivity> committeeEndorsementList 
 								= this.getManagedBean().getCommitteeEndorsementList();
@@ -1358,23 +1370,27 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRefinalize(isQTRefinalized());
 			
 			//#27502- Adding condition only
-			if (!scQt.getPmOrgProfile().getBpk() &&						
-					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
+			if ((!scQt.getPmOrgProfile().getBpk() && 					
+					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT))
+					|| this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_FC_SELECTION)) {	//#25037 add new condition due to cannot save
 				saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 			}
+			prepareUpdateCommitteeMember();
 
-			String qtNo = getManagedBean().getScQt().getQtNo().toString();
-			String desc = ResourceBundleUtils.getMessage(
-					"lbl.sc.sf.supplier.finalization", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_700004,
-									new String[] { desc, qtNo },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			if(!skipValidation){
+				String qtNo = getManagedBean().getScQt().getQtNo().toString();
+				String desc = ResourceBundleUtils.getMessage(
+						"lbl.sc.sf.supplier.finalization", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_700004,
+										new String[] { desc, qtNo },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -1424,13 +1440,14 @@ public class SupplierFinalizationBackingBean extends
 		int prepareActiveIndex = this.getManagedBean().getPrepareActiveIndex();
 
 		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		
 		renewSessionAndRetrieve(activeIndex, resDTO);
 		setTaskDetails(activeIndex, prepareActiveIndex, taskId, outComes,
-				processName, currentStatusId);		
+				processName, currentStatusId, taskName);		
 	}
 	private SuppFinalizationReqDTO validateInfo(int index) {
 		return validateInfo(index, false);
@@ -1650,7 +1667,7 @@ public class SupplierFinalizationBackingBean extends
 
 	private void setTaskDetails(Integer activeIndex,
 			Integer prepareActiveIndex, String taskId, String[] outComes,
-			String processName, Long currentStatusId) {
+			String processName, Long currentStatusId, String taskName) {
 		log.info("setTaskDetails");
 		if (activeIndex != null) {
 			this.getManagedBean().setActiveIndex(activeIndex);
@@ -1662,6 +1679,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
+		this.getManagedBean().setTaskName(taskName);
 	}
 
 	private ScQtCommittee preparationDtlsInfo() {
@@ -2444,8 +2462,6 @@ public class SupplierFinalizationBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTSuppFinalizationSO.class);
 			}	
-			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteModified());
-			reqDTO.setToken(this.getManagedBean().getToken());
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 									.saveSupplierFinalization(reqDTO);
 			reloadData(resDTO);				

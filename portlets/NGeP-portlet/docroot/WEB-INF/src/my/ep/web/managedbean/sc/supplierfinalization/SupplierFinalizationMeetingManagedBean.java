@@ -21,6 +21,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingMember;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -92,6 +93,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> tempCommitteeMembers;
 	private boolean committeeModified;
 	private SupplierFinalizationBackingBean finalBB; 
+	private SupplierFinalizationBiddingBackingBean finalBiddingBB; 
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 	//#25037-END
 
@@ -663,6 +665,14 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 
 	public void setPrevCommitteeMembers(List<QtCommitteeMemberBean> prevCommitteeMembers) {
 		this.prevCommitteeMembers = prevCommitteeMembers;
+	}
+
+	public SupplierFinalizationBiddingBackingBean getFinalBiddingBB() {
+		return finalBiddingBB;
+	}
+
+	public void setFinalBiddingBB(SupplierFinalizationBiddingBackingBean finalBiddingBB) {
+		this.finalBiddingBB = finalBiddingBB;
 	}
 	//#25037-end
 

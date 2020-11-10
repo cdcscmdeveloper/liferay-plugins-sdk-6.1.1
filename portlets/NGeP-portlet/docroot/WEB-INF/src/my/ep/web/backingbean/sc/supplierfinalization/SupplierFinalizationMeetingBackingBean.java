@@ -1549,10 +1549,15 @@ public class SupplierFinalizationMeetingBackingBean extends
 					&& reqDTO.isCommitteeModified() 
 					&& StringUtils.isNotEmpty(navigateTo)) {
 				FacesContext fc = FacesContext.getCurrentInstance();
-				this.getManagedBean().getFinalBB().loadPreparationTabDetails();
-				this.getManagedBean().getFinalBB().prepareUpdateCommitteeMember();
-				this.getManagedBean().getFinalBB().getManagedBean().setPrepareActiveIndex(1);
-				prepareMemberUpdate();
+				if(this.getManagedBean().getFinalBB()!=null){
+					getManagedBean().getFinalBB().loadPreparationTabDetails();
+					getManagedBean().getFinalBB().prepareUpdateCommitteeMember();
+				}else{
+					getManagedBean().getFinalBiddingBB().retrieveCommitteeAndMeetingDetails(getManagedBean().getScQt().getQtId());
+					getManagedBean().getFinalBiddingBB().retrieveOnlineEndorsement();
+					getManagedBean().getFinalBiddingBB().getManagedBean().setOnlineBiddingActiveIndex(0);
+					getManagedBean().getFinalBiddingBB().prepareUpdateCommitteeMember();
+				}
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigateTo);
 			}else{
 				String submitMessage=	ResourceBundleUtils
@@ -1874,7 +1879,12 @@ if (CollectionUtils.isNotEmpty(
 	public void navigateToUpdateMember(String action){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SupplierFinalizationBackingBean finalBB = this.getManagedBean().getFinalBB();
-		String mainPage = (finalBB == null) ? "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml": "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
+		SupplierFinalizationBiddingBackingBean finalBiddingBB = this.getManagedBean().getFinalBiddingBB();
+		
+		String mainPage = "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml";
+		mainPage = finalBB == null ? mainPage:  "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
+		mainPage = finalBiddingBB == null ? mainPage : "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
+		
 		if(action.equalsIgnoreCase("back")){
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
@@ -1883,6 +1893,12 @@ if (CollectionUtils.isNotEmpty(
 	    		this.getManagedBean().setTempCommitteeMembers(new ArrayList<ScCommitteeMember>());
 	    		this.getManagedBean().getTempCommitteeMembers().addAll(this.getManagedBean().getCommitteeMembersList());
 	    	}
+			if(finalBB!=null){
+				finalBB.saveSupplierFinalization(true);
+			}else if(finalBiddingBB!=null){
+				finalBiddingBB.saveOnlineEndorsement(true);
+			};
+
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
 			validateCommitteeChanges();
@@ -1900,6 +1916,19 @@ if (CollectionUtils.isNotEmpty(
 				}
 				this.getManagedBean().getQtCommitteeRemarks().addAll(finalBB.getManagedBean().getCommitteeRemarkList());
 				finalBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
+			}else if(finalBiddingBB!=null){
+				finalBiddingBB.getManagedBean().setCommitteModified(this.getManagedBean().isCommitteeModified());
+				this.getManagedBean().setTaskName(finalBiddingBB.getManagedBean().getTaskName());
+				this.getManagedBean().setToken(finalBiddingBB.getManagedBean().getToken());
+				this.getManagedBean().setPayLoad(finalBiddingBB.getManagedBean().getPayLoad());
+				this.getManagedBean().setTaskId(finalBiddingBB.getManagedBean().getTaskId());
+				if(this.getManagedBean().getQtCommitteeRemarks()==null){
+					this.getManagedBean().setQtCommitteeRemarks(new ArrayList<ScQtCommitteRemarks>());
+				}
+				if(finalBiddingBB.getManagedBean().getCommitteeRemarkList()==null){
+					finalBiddingBB.getManagedBean().setCommitteeRemarkList(new ArrayList<ScQtCommitteRemarks>());
+				}
+				finalBiddingBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
 			}else{
 				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
@@ -1998,6 +2027,13 @@ if (CollectionUtils.isNotEmpty(
 				}
 			}
 		}
+		//#25037-satrt
+		if(activity.getMemberRole()!=null){
+			if(activity.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)){
+				activity.setRepresentativeType(null);
+			}
+		}
+		//#25037-end
 		this.getManagedBean().getCommitteeMembersList().remove(index);
 		this.getManagedBean().getCommitteeMembersList().add(index, activity);
 	}
