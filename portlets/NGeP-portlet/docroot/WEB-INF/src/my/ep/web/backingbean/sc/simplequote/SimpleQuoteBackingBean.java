@@ -493,6 +493,10 @@ public class SimpleQuoteBackingBean extends
 		ScQuote scQuote = getManagedBean().getScQuote();
 		boolean isPanelItemAdded = Boolean.FALSE;
 		boolean isZoneEventRequired = true;
+		// #3761 - start
+		PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		// #3761 - end
 		
 		if (scQuote == null) {
 			scQuote = new ScQuote();
@@ -583,8 +587,6 @@ public class SimpleQuoteBackingBean extends
 						getManagedBean().setNewableFlag(Boolean.FALSE);
 						getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 						scQuote.setPanelItem(selectedPanelItem);
-						PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance()
-								.getExternalContext().getSession(false);
 						Boolean treasuryCircularLinkClickedFlag = (Boolean) portletSession
 								.getAttribute("treasuryCircularLinkClickedFlag");
 						if (treasuryCircularLinkClickedFlag != null
@@ -798,6 +800,23 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setEditableFlag(Boolean.TRUE);
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+		
+		// #3761 - start
+		if (portletSession.getAttribute("savedScQuote") != null) {
+			ScQuote cloneScQuote = (ScQuote) portletSession.getAttribute("savedScQuote");
+			scQuote.setPanel(cloneScQuote.isPanel());
+			scQuote.setTitle(cloneScQuote.getTitle());
+			scQuote.setScQuoteAttachment(cloneScQuote.getScQuoteAttachment());
+			scQuote.setProcurementTypeCategory(cloneScQuote.getProcurementTypeCategory());
+			scQuote.setProcurementType(cloneScQuote.getProcurementType());
+			scQuote.setZonal(cloneScQuote.isZonal());
+			scQuote.setStartDate(cloneScQuote.getStartDate());
+			scQuote.setEndDate(cloneScQuote.getEndDate());
+			scQuote.setMultipleQuote(cloneScQuote.getMultipleQuote());
+			getDurationToolTip();
+			portletSession.removeAttribute("savedScQuote");
+		}
+		// #3761 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -7599,16 +7618,9 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 			
-			String outcome = null;
-			if (getManagedBean().getOutComes() == null || getManagedBean().getOutComes().length == 0) {
-				outcome = StringUtils.EMPTY;
-			} else {
-				outcome = BpmOutcomeConst.BPM_SAVE;
-			}
-			saveSimpleQuote(outcome);
-			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
+			
 			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
 				PanelBackingBean ppBB = new PanelBackingBean();
 				ppBB.getManagedBean().setSelectionOfZone(false);
@@ -7636,6 +7648,9 @@ public class SimpleQuoteBackingBean extends
 				} else {
 					portletSession.setAttribute("treasuryCircularLinkClickedFlag", Boolean.FALSE);
 				}
+				
+				ScQuote clonedScQuote = (ScQuote) getManagedBean().getScQuote().cloneEntity();
+				portletSession.setAttribute("savedScQuote", clonedScQuote);
 				
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
