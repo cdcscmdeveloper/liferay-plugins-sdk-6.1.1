@@ -94,22 +94,21 @@
 
 									<p:column style="text-align:center; width:7%">
 										<h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
-											rendered="#{notify.read eq '0'}" />
+											rendered="#{notify[12] eq '0'}" />
 									</p:column>
 
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
-										#{notify.sender.userName} <br />
+										#{notify[27]} <br />
 
 										<p:commandLink id="btnNotifyLink"
-											action="#{notifyBackingBean.selectedNotify}"
+											action="#{notifyBackingBean.selectedNotifys}"
 											update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable">
-												
-											<h:outputText 
-											     value="#{notifyBackingBean.getNotifyDashboardSubject(notify).length() gt 50 ? notifyBackingBean.getNotifyDashboardSubject(notify).substring(0,47).concat('...') : notifyBackingBean.getNotifyDashboardSubject(notify)}"></h:outputText>
-											
+
+											<h:outputText
+												value="#{notify[28].length() gt 50 ? notify[28].substring(0,47).concat('...') : notify[28]}"></h:outputText>
 											<f:setPropertyActionListener value="#{notify}"
-												target="#{notifyBackingBean.managedBean.selectedNotify}" />
+												target="#{notifyBackingBean.managedBean.selectedNotifys}" />
 
 										</p:commandLink>
 
@@ -118,13 +117,13 @@
 									<p:column headerText="#{lbl['lbl.portal.notify.datetime']}"
 										style="text-align: right;width:10%; padding:5px!important; ">
 
-										<h:outputText value="#{notify.createdDate}">
+										<h:outputText value="#{notify[5]}">
 											<f:convertDateTime pattern="dd-MM-yyyy" />
 										</h:outputText>
 
 										<br />
 
-										<h:outputText value="#{notify.createdDate}">
+										<h:outputText value="#{notify[5]}">
 											<f:convertDateTime pattern="hh:mm:ss a" />
 										</h:outputText>
 
