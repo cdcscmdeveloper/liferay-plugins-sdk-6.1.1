@@ -3039,13 +3039,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				this.getManagedBean().setCompanyValidWithSSM(false);
 				this.getManagedBean().setValidateWithSSM(true);
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-					this.getManagedBean().setSmSupplier(new SmSupplier());
+					this.getManagedBean().setCompanyValidWithSSM(true);
+					this.getManagedBean().setSmSupplierSsm(new SmSupplier());
 					/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 							.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 							: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
-					this.getManagedBean().getSmSupplier().setCompanyName(ssmResDTO.getSmCompanyBasic().getCompanyName());
-					this.getManagedBean().getSmSupplier().setRegNo(regNo);
-					this.getManagedBean().getSmSupplier().setBusinessType(businesstype);
+					this.getManagedBean().getSmSupplierSsm().setCompanyName(ssmResDTO.getSmCompanyBasic().getCompanyName());
+					this.getManagedBean().getSmSupplierSsm().setRegNo(regNo);
+					this.getManagedBean().getSmSupplierSsm().setBusinessType(businesstype);
 					this.getManagedBean().setSmCompanyBasicSsm(ssmResDTO.getSmCompanyBasic());
 					this.getManagedBean().setSmAddress(ssmResDTO.getSmAddress());
 					this.getManagedBean().setShowDetailSSM(true);

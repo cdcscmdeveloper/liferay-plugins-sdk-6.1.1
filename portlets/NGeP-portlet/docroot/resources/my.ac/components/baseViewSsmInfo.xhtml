@@ -34,7 +34,7 @@
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.companyname']} :"></h:outputLabel>
 				<h:outputText
-					value="#{cc.attrs.bBean.managedBean.smSupplier.companyName}"></h:outputText>
+					value="#{cc.attrs.bBean.managedBean.smSupplierSsm.companyName}"></h:outputText>
 
 				<!-- h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.regtype']} :">
@@ -44,7 +44,7 @@
 
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.txt.business.reg.no']} :"></h:outputLabel>
-				<h:outputText value="#{cc.attrs.bBean.managedBean.smSupplier.regNo}"></h:outputText>
+				<h:outputText value="#{cc.attrs.bBean.managedBean.smSupplierSsm.regNo}"></h:outputText>
 
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.estdate']} :"></h:outputLabel>
@@ -54,7 +54,7 @@
 				</h:outputText>
 
 				<c:if
-					test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'F'}">
+					test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
 					<h:outputLabel style="font-weight:bold"
 						value="#{lbl['lbl.sm.account.rob.expire']} :"></h:outputLabel>
 					<h:outputText 
@@ -86,7 +86,7 @@
 					value="#{cc.attrs.bBean.managedBean.smAddress.postcode}"></h:outputText>
 				
 				<!-- 27346 -->
-				<c:if test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'J'}">	
+				<c:if test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">	
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.country']} :"></h:outputLabel>
 				<h:outputText
@@ -117,7 +117,7 @@
 		</p:panel>
 
 		<c:if
-			test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'F'}">
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
 			<ui:include
 				src="/xhtml/sm/shared/onlinereg/viewSsmInformationBranchAc.xhtml" />
 		</c:if>
@@ -127,7 +127,7 @@
 			src="/xhtml/sm/shared/onlinereg/viewSsmInformationOwnerDirectorAc.xhtml" />
 		
 		<c:if
-			test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'J'}">	
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">	
 		<ui:include
 			src="/xhtml/sm/shared/onlinereg/viewSsmInformationCompanyEquityAc.xhtml" />
 		<ui:include
