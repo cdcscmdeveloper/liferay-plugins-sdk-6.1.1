@@ -63,6 +63,14 @@
 					<td><p:outputLabel value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" styleClass="outputLabel-view-label" id="equiPerIcNumLbl" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}" /></td>
 				</tr>
+<!-- #13208 - START -->				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.department']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.department}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.unit']}" styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.sectionUnit}" /></td>
+				</tr>
+<!-- #13208 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" styleClass="outputLabel-view-label" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"/></td>
