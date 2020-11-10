@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -214,8 +212,11 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setMaxScore(null);
 								}
 								
-								newSpecQuestion.setWeightageReq(false);
-								newSpecQuestion.setWeightage(null);
+								
+								//Danial - #8979 - no need to set setWeightageReq & setWeightage
+								
+								//newSpecQuestion.setWeightageReq(false);
+								//newSpecQuestion.setWeightage(null);
 								
 								if (prevNewSpecQuestion != null && TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newSpecQuestion.getQuestionType())) {
 									String prevQuestionType = prevNewSpecQuestion.getQuestionType();
@@ -375,7 +376,6 @@ public class TemplateSpecHelper {
 				
 				for (TplSpecEstimation specEstimation : specEstimations) {
 					try {
-						// TODO - clone only standard price type.
 						TplSpecEstimation newSpecEstimation = (TplSpecEstimation) BeanUtils.cloneBean(specEstimation);
 						
 						if (newSpecEstimation != null) {

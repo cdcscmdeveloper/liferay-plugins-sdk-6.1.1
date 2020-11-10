@@ -2536,6 +2536,7 @@ public class SpecificationBackingBean extends
 
 	}
 	
+	/*
 	private void populateFreqSchedules(List<ScQtSchedule> scheduleList){
 		if (!EntityHelper.isCollectionEmpty(scheduleList)) {
 
@@ -2593,7 +2594,9 @@ public class SpecificationBackingBean extends
 			}
 		}
 	}
+	*/
 	
+	/*
 	private void populateProgressivePayment(
 			List<ScQtProgressivePayment> progressivePayments) throws ParseException {
 		if (!EntityHelper.isCollectionEmpty(progressivePayments)) {
@@ -2629,6 +2632,7 @@ public class SpecificationBackingBean extends
 					progressivePayments);
 		}
 	}
+	*/
 
 	private String fulfilmentMonthlyDtls(String startdate) {
 		String startMonth = "";
@@ -3334,7 +3338,6 @@ public class SpecificationBackingBean extends
 						zoneTrees, null);
 
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
-					// TODO Code needs to be remove
 					setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
 					List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
 					for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
@@ -3357,7 +3360,6 @@ public class SpecificationBackingBean extends
 					}
 				}
 				qtSupplierCriteria.setScQt(scQt);
-				// TODO Need to remove below code...
 				setUserDetails(qtSupplierCriteria);
 				scQt.setScQtSupplierCriteria(qtSupplierCriteria);
 			}
@@ -3389,7 +3391,6 @@ public class SpecificationBackingBean extends
 			}
 
 			qtSupplierCriteria.setScQt(scQt);
-			// TODO Need to remove below code...
 			setUserDetails(qtSupplierCriteria);
 			scQt.setScQtSupplierCriteria(qtSupplierCriteria);
 
@@ -3440,7 +3441,6 @@ public class SpecificationBackingBean extends
 						.getQtZoneCriterias();
 				zoneCriteria.setScQtSupplierCriteria(scQt
 						.getScQtSupplierCriteria());
-				// TODO: Need to remove
 				setUserDetails(zoneCriteria);
 				List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
 				for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
@@ -12734,6 +12734,16 @@ public class SpecificationBackingBean extends
 					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
 							getManagedBean().getQt().isTechEvaluationReq(),
 							true);
+			
+			//Danial - #8979 - if partial, no need to set weightage
+			if(this.getManagedBean().getQt().isPartial()){
+				//set null
+				for(TplSpecQuestion q:specMaster.getTplSpecQuestions()){
+					q.setWeightageReq(false);
+					q.setWeightage(null);
+				}
+			}
+			
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 			if (getManagedBean().getQt().isZonal()) {
@@ -14515,7 +14525,6 @@ public class SpecificationBackingBean extends
 						zoneTrees, null);
 
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
-					// TODO Code needs to be remove
 					setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
 					List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
 					for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
@@ -14538,7 +14547,6 @@ public class SpecificationBackingBean extends
 					}
 				}
 				qtSupplierCriteria.setScQt(scQt);
-				// TODO Need to remove below code...
 				setUserDetails(qtSupplierCriteria);
 				scQt.setScQtSupplierCriteria(qtSupplierCriteria);
 			}
@@ -14566,7 +14574,6 @@ public class SpecificationBackingBean extends
 			 */
 
 			qtSupplierCriteria.setScQt(scQt);
-			// TODO Need to remove below code...
 			setUserDetails(qtSupplierCriteria);
 			scQt.setScQtSupplierCriteria(qtSupplierCriteria);
 
@@ -14613,7 +14620,6 @@ public class SpecificationBackingBean extends
 						.getQtZoneCriterias();
 				zoneCriteria.setScQtSupplierCriteria(scQt
 						.getScQtSupplierCriteria());
-				// TODO: Need to remove
 				setUserDetails(zoneCriteria);
 				List<TplSpecZoneDtl> zoneLocal = new ArrayList<TplSpecZoneDtl>();
 				for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
