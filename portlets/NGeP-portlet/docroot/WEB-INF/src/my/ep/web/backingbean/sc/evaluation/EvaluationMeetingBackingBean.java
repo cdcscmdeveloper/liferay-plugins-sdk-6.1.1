@@ -718,6 +718,21 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
+		//#25037 - start
+		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(), "getIcPassport");
+		List<ScCommitteeMember> listToSync = new ArrayList<ScCommitteeMember>();
+		
+		if(CollectionUtils.isNotEmpty(this.getManagedBean().getRemoveCommitteeList())){
+			for(ScCommitteeMember m: this.getManagedBean().getRemoveCommitteeList()){
+				if(map.get(m.getIcPassport())!=null){
+					m.setDeleted(false);
+					m.setSelected(false);
+					listToSync.add(m);
+				}
+			}
+			this.getManagedBean().getRemoveCommitteeList().removeAll(listToSync);
+		}
+		//#25037 - end		
 		RequestContext.getCurrentInstance().execute(
 				"newspecificationcommittee.hide()");
 	}

@@ -152,6 +152,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -4976,6 +4977,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			    list.toArray(arr);
 			}		
 			return arr;
+		}
+		
+		public List<ScQtCommitteRemarks> omitLatestRemarkForDisplay(List<ScQtCommitteRemarks> remarks){
+			List<ScQtCommitteRemarks> omittedList = new ArrayList<ScQtCommitteRemarks>();
+			if(CollectionUtils.isNotEmpty(remarks)){
+				for(ScQtCommitteRemarks r: remarks){
+					if(StringUtils.isNotEmpty(r.getRemark())){
+						if(r.isEditable() || r.isBrandNew()){
+							ScQtCommitteRemarks rn = new ScQtCommitteRemarks();
+							rn.setRemark(r.getRemark());
+							rn.setCreatedBy(r.getCreatedBy());
+							rn.setCreatedUser(r.getCreatedUser());
+							rn.setCreatedDate(r.getCreatedDate());
+							rn.setChangedDate(r.getChangedDate());
+							rn.setEditable(false);
+							rn.setBrandNew(false);
+							omittedList.add(rn);
+						}else{
+							omittedList.add(r);
+						}
+					}
+				}
+			}
+			return omittedList;
 		}
 		//25037 - End
 		
