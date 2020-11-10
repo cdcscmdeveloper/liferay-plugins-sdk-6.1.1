@@ -44,7 +44,7 @@
 				action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smSupplier.regNo,backingBean.managedBean.smSupplier.businessType)}"
 				value="#{lbl['lbl.fl.instruction.here']}" 
 				styleClass="splNotesFonts" style="float: inherit" escape="false">
-				 <f:ajax execute="@form" render="@form" />
+				<f:ajax execute="@this" render="@form"  />
 				</h:commandLink>
 					
 		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
