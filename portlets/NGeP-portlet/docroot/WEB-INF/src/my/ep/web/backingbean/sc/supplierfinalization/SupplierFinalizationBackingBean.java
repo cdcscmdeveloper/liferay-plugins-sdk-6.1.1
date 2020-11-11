@@ -659,7 +659,7 @@ public class SupplierFinalizationBackingBean extends
 					new HashSet<ScQtEvaluationResultDtl>());
 		}	
 		// #25638 - Start
-		//displayReviseInstrn(getManagedBean().getCommitteeList());
+		displayReviseInstrn(getManagedBean().getCommitteeList());
 		// #25638 - End
 	}
 	
