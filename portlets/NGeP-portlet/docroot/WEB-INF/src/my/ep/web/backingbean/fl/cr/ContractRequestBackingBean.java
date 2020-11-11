@@ -214,7 +214,6 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.jsoup.select.Evaluator.IsEmpty;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -4739,6 +4738,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
+				validateDeliveryAddress(action);//29401
 			}
 			
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -6802,6 +6802,32 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}		
 	}
 	//14650 end
+	
+	//29401-start
+	private void validateDeliveryAddress(String action) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			BigDecimal checkDelAddr = BigDecimal.ONE;
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+				if(flDeliveryAddress.getPmAddressId()!=null){
+					reqDTO.setPmOrgProfile(getManagedBean().getFlRequest().getIssuedOrgProfile());
+					reqDTO.setAddressId(flDeliveryAddress.getPmAddressId());
+					AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
+					checkDelAddr = resDTO.getCheckDelAddr();
+		    		if(checkDelAddr.doubleValue()==0){
+		    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_740068, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+		    			
+		    			break;
+		    		}					
+				}
+				
+			}
+		}
+	}
+	//29401-end
 }
 	
 
