@@ -11674,11 +11674,14 @@ public class SmApplicationUtil {
 		boolean existAsBranchPoc = false;
 		bean.setPersonType(personType);
 		for (SmPersonnel shr : bean.getSelectedShareHolders()) {
-			//#26050 - start
-			if (shr.getEpRole() != null && PmCommonUtil.isAnyPendingTask(shr.getPmUser().getLoginId())) {
-				throw new EpException(MessageConst.ERROR_770232);
-			}
-			//#26050 - end
+			//#29525-start
+			if (shr.getPmUser() != null) {
+				// #26050 - start
+				if (shr.getEpRole() != null && PmCommonUtil.isAnyPendingTask(shr.getPmUser().getLoginId())) {
+					throw new EpException(MessageConst.ERROR_770232);
+				}
+				// #26050 - end
+			} //#29525-end
 			if (shr.getEpRole() != null
 					&& (shr.getEpRole().equalsIgnoreCase(
 							RoleCode.SUPPLIER_TEMP.value())
