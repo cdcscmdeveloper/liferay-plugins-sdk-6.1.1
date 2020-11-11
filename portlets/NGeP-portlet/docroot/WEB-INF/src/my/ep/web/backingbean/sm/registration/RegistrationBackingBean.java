@@ -2531,7 +2531,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return false;
 		}
 		*/
-		return resDTO.getUserList().isEmpty() ? false : true;
+		return !resDTO.getUserList().isEmpty() ? false : true;
 		//#29114, CR 27382: Static Code Analysis End
 	}
 	
@@ -3247,8 +3247,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			bizNatureUniqueMap.put(ssb.getPmBusinessNature().getBusinessNatureId(), ssb.getPmBusinessNature());
 		}
 		
-		//String duplicateCode = null;
-		StringBuilder duplicateCode = new StringBuilder();
+		String duplicateCode = null;
+//		StringBuilder duplicateCode = new StringBuilder();
 		for(int i = 0; i < bisNatures.size(); i++) {
 			PmBusinessNature bn = (PmBusinessNature)bisNatures.get(i);
 			
@@ -3265,23 +3265,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				suppBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
 				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
 			} else {
-				if(duplicateCode == null || duplicateCode.equals("")) {
-					//duplicateCode = bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";
-					duplicateCode.append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
+				if(duplicateCode == null ) {
+					duplicateCode = bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";
+					//duplicateCode.append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
 					
 				} else {
-					//duplicateCode = duplicateCode + "  " + bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";  
-					duplicateCode.append(duplicateCode).append(" ").append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
+					duplicateCode = duplicateCode + "  " + bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";  
+					//duplicateCode.append(duplicateCode).append(" ").append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
 				}
 			}
 		
 		}
-		if(duplicateCode != null || duplicateCode.equals("")) {
+		if(duplicateCode != null) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_721223,
-									new String[] { duplicateCode.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+									new String[] { duplicateCode }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			
 		}
 	}
