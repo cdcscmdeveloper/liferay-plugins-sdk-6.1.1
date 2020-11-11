@@ -4344,7 +4344,7 @@ public class SmCommonUtil {
 			SsmResDTO resDTO = reqSO.ssmValidation(ssmReqDTO);
 			//only return company valid or not
 			//27329
-			if(true){
+			if(ssmReqDTO.isCheckOnly() || ssmReqDTO.isPreRegistration()){
 				
 				return resDTO;
 			}
