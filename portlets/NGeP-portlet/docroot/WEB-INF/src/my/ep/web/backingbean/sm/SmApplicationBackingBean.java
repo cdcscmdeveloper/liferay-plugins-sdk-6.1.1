@@ -2028,7 +2028,7 @@ public class SmApplicationBackingBean extends
 				
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
 	//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-						throw new EpException(MessageConst.ERROR_721070);
+						throw new EpException(MessageConst.ERROR_721078);
 					}
 				}
 			//}else if(fromBpm && this.getManagedBean().getSmSupplier() != null && getManagedBean().isSsmIntegrationActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
@@ -13905,7 +13905,7 @@ public class SmApplicationBackingBean extends
 	
 		if(!this.getManagedBean().isCompanyValidWithSSM()){
 //					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-			throw new EpException(MessageConst.ERROR_721070);
+			throw new EpException(MessageConst.ERROR_721078);
 		}else{
 			IMofRegistrationSO mofRegistrationSO = null;
 			//save smappl
