@@ -21,7 +21,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
-import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -38,9 +37,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
-//#13320 - Rahim
-import my.ep.dto.pm.common.division.DivisionReqDTO;
-import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -233,7 +229,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.populateStateByAddType("business", false);
 			this.getManagedBean().setFinancialOrgLs(retrieveFinancialOrgList());
 			this.retrieveIdentityTypeMap();
-			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
+			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());			
 		}
 		
 		//GST 
@@ -466,7 +462,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setHideButton(true);
 					throw new EpException(MessageConst.ERROR_721080);
 				}
-				//CR 27382: Static Code Analysis End	
+				//CR 27382: Static Code Analysis End				
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
 				switch(status){
@@ -584,7 +580,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				for(SmSupplierOwner owner:this.getManagedBean().getSmSuppOwners()){
 					if(owner.getNationality() == null){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
-					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
+					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC) 
 							&& !owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
@@ -1444,20 +1440,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					.getServiceObject("pm", IStateSO.class);
 			StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 			return resDTO.getStateList();
-		}
-
-		return null;
-	}
-	
-	//#13320 - Rahim
-	private List<PmDivision> retrievePmDivisionList(Long stateId) {
-		if(stateId != null){
-			DivisionReqDTO reqDTO = new DivisionReqDTO();
-			reqDTO.setStateId(stateId);
-			IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IDivisionSO.class);
-			DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
-			return resDTO.getDivisionList();
 		}
 
 		return null;
@@ -2541,7 +2523,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return false;
 		}
 		*/
-		return resDTO.getUserList().isEmpty() ? false : true;
+		return !resDTO.getUserList().isEmpty() ? false : true;
 		//#29114, CR 27382: Static Code Analysis End
 	}
 	
@@ -3093,7 +3075,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 		*/
-		if (!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1) {
+		if (!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) 
+				&& this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1) {
 			throw new EpException(MessageConst.ERROR_721011);
 		}
 		//CR 27382: Static Code Analysis End
@@ -3265,8 +3248,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			bizNatureUniqueMap.put(ssb.getPmBusinessNature().getBusinessNatureId(), ssb.getPmBusinessNature());
 		}
 		
-		//String duplicateCode = null;
-		StringBuilder duplicateCode = new StringBuilder();
+		String duplicateCode = null;
+//		StringBuilder duplicateCode = new StringBuilder();
 		for(int i = 0; i < bisNatures.size(); i++) {
 			PmBusinessNature bn = (PmBusinessNature)bisNatures.get(i);
 			
@@ -3283,23 +3266,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				suppBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
 				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
 			} else {
-				if(duplicateCode == null || duplicateCode.equals("")) {
-					//duplicateCode = bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";
-					duplicateCode.append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
+				if(duplicateCode == null ) {
+					duplicateCode = bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";
+					//duplicateCode.append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
 					
 				} else {
-					//duplicateCode = duplicateCode + "  " + bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";  
-					duplicateCode.append(duplicateCode).append(" ").append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
+					duplicateCode = duplicateCode + "  " + bn.getLevelCode() + " - " + bn.getLevelName() + "<br />";  
+					//duplicateCode.append(duplicateCode).append(" ").append(bn.getLevelCode()).append(" - ").append(bn.getLevelName()).append("<br />");
 				}
 			}
 		
 		}
-		if(duplicateCode != null || duplicateCode.equals("")) {
+		if(duplicateCode != null) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_721223,
-									new String[] { duplicateCode.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+									new String[] { duplicateCode }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			
 		}
 	}
