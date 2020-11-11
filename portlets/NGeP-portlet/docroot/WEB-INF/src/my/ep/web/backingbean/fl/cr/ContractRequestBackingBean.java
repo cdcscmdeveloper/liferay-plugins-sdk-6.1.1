@@ -6818,10 +6818,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
 					checkDelAddr = resDTO.getCheckDelAddr();
 		    		if(checkDelAddr.doubleValue()==0){
-		    			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_740068, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-		    			
-		    			break;
+		    			throw new EpException(MessageConst.ERROR_740068);
 		    		}					
 				}
 				
