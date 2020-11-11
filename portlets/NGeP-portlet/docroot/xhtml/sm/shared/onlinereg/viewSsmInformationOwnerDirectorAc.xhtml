@@ -60,7 +60,8 @@
 				<h:outputText
 					value="#{cc.attrs.bBean.getParameterDesc(varOwner1.identificationType)}" />
 			</p:column>
-
+			<c:if
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.nationality']}" />
@@ -109,7 +110,9 @@
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
 			</p:column>
-
+			</c:if>
+			<c:if
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
@@ -118,6 +121,7 @@
 					<f:convertNumber groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
 				</h:outputText>
 			</p:column>
+			</c:if>
 
 		</p:dataTable>
 	</p:panel>
@@ -171,7 +175,8 @@
 					<h:outputText
 						value="#{cc.attrs.bBean.getParameterDesc(varDirector.identificationType)}" />
 				</p:column>
-
+			<c:if
+				test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">		
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.nationality']}" />
@@ -220,6 +225,7 @@
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</h:outputText>
 				</p:column>
+				</c:if>
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
