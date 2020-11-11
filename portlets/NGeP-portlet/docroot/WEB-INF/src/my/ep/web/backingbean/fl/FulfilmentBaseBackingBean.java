@@ -826,7 +826,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 							// Get blacklist by identification no
 							resDTO = SmServiceLookup.getBlacklistDirectorSO()
-									.retrievePersonBlacklistByIdentificationNO(reqDTO);
+									.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//28790
 							if(resDTO != null && 
 									resDTO.getPersonBlacklist() != null){
 								blacklistOwner.setIcNo(personnel.getIdentificationNo());
