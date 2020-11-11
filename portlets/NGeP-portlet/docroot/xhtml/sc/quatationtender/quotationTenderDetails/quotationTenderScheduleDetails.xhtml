@@ -594,19 +594,6 @@
 	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" id="quotationTndrMainDeskOfficerAdminAssistantPanel"
 		toggleable="true">
 		<ui:param name="doaRequestContent" value ="#{qTDetailBB.managedBean.requestContent}"/>
-		<table style="width: 50%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-				<td><p:inputText value="#{qTDetailBB.getDoaaRequestStatus()}" size="50" readonly="true" disabled="true" /></td>
-				<td style="width: 20px">
-					<p:selectBooleanCheckbox rendered="#{qTDetailBB.managedBean.maintanceFlow or !isRequire}" disabled="#{!qTDetailBB.managedBean.doaRequestEditable or qTDetailBB.managedBean.pmuserContactpersonList.size()==0 or (!qTDetailBB.isDOAListModified() and doaRequestContent.brandNew) or !doaRequestContent.selectable}" value="#{doaRequestContent.requireApproval}"></p:selectBooleanCheckbox>
-				</td>
-				<td style="width: 102px">
-					<p:outputLabel rendered="#{qTDetailBB.managedBean.maintanceFlow or !isRequire}"  value="#{lbl['lbl.sc.qt.send.for.approval']}" style="word-wrap: break-word;width:100px;text-align:left;" />
-				</td>
-			</tr>
-
-		</table>
 		<p:dataTable id="doaTableId" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
