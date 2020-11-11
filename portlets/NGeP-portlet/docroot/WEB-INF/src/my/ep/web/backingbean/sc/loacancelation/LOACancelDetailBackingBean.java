@@ -2312,22 +2312,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	public void backToPrevious() {
 		log.info("backToPrevious");
 
-		// back to qt loa list
-		if(getManagedBean().getScQt() != null && getManagedBean().getSourceId() != null){
-			retrieveLOILOAList(getManagedBean().getSourceId());	
-		} else{
-			// back to dp loa list
-			if(getManagedBean().getSourceId() != null){
-				DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
-			}
-		}
-
 		getManagedBean().setEditFlag(Boolean.FALSE);
 		getManagedBean().setReadOnly(Boolean.FALSE);
 		getManagedBean().setSelectedTabIndex(0);
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/directpurchase/directPurchaseMaintenance.xhtml");
 	}
 
 	/**
