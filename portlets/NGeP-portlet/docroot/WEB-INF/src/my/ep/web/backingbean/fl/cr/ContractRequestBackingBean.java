@@ -4708,9 +4708,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
 					
 					if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
-						ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
-						ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//#25296
 						if(!ctContractAmount.isBondWaived()){
+							ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
 							if(!contractResp.isBondComplete()){
 								if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
 									throw new EpException(MessageConst.ERROR_740051);
@@ -4719,13 +4718,23 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								}
 							}
 						}else{//#25296
-								if(!contractBondWaiver.isBondWaiverPeriod()){
-									if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+							ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
+							if(!contractBondWaiver.isBondWaiverPeriod()){
+								//25296 - asyraf - to handle WIP transaction
+								if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+									if(contractBondWaiver.getCtBondWaiverDetailList() != null && !contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+										throw new EpException(MessageConst.ERROR_740066);
+									} else {
 										throw new EpException(MessageConst.ERROR_740051);
-									}else{
+									}									
+								}else{
+									if(contractBondWaiver.getCtBondWaiverDetailList() != null && !contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+										throw new EpException(MessageConst.ERROR_740067);
+									} else {
 										throw new EpException(MessageConst.ERROR_740052);
-									}
-								}													
+									}//25296 - end - asyraf									
+								}
+							}													
 						}// end #25296
 					}
 				validateSuspensionItems(action);
