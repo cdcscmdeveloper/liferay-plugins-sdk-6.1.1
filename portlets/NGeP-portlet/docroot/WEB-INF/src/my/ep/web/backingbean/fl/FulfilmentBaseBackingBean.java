@@ -803,11 +803,16 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				
 				if(smDisciplinaryAction.isCancelRegistration() 
 						&& !smDisciplinaryAction.isBlacklistOwner()){
+					//29579 - start
 					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
+							&& !personnelResDTO.getSmPersonnelList().isEmpty()){						
+						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+						BlacklistDirectorResDTO resDTO;
 						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-							if(personnel.isCancelRegistration()){
+							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
+							resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+							if(resDTO != null && resDTO.getPersonBlacklist() != null){//29579 - end
 								blacklistOwner.setIcNo(personnel.getIdentificationNo());
 								blacklistownerDirectorList.add(blacklistOwner);
 							}
@@ -818,15 +823,15 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				
 				if(smDisciplinaryAction.isBlacklistOwner()){
 					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
+							&& !personnelResDTO.getSmPersonnelList().isEmpty()){
 						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						BlacklistDirectorResDTO resDTO = null;
+						BlacklistDirectorResDTO resDTO;//28790
 						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 							// Get blacklist by identification no
 							resDTO = SmServiceLookup.getBlacklistDirectorSO()
-									.retrievePersonBlacklistByIdentificationNO(reqDTO);
+									.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//28790
 							if(resDTO != null && 
 									resDTO.getPersonBlacklist() != null){
 								blacklistOwner.setIcNo(personnel.getIdentificationNo());
