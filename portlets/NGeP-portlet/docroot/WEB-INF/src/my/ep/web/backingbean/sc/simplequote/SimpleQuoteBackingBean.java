@@ -2469,9 +2469,13 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("procTypeRadioButtonEvent");
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+		
+		getDurationToolTip();
+
 		//#29209 -Start
 		getDurationToolTip();
 		//#29209 - End
+
 		procurementTypeEvent();
 		
 		// when procurement type as pk7 selected 
@@ -7118,12 +7122,13 @@ public class SimpleQuoteBackingBean extends
 	 *
 	 * @param quote the quote
 	 */
+	//#29209 
 	private void validateQuote(ScQuote quote, boolean isSubmit){
 		Date startDate = quote.getStartDate();
 		Date endDate = quote.getEndDate();
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
 		
-		log.info("If dates selected this is showinh");
+		log.info("If dates selected this is showing");
 		if(startDate != null) {
 			BigDecimal maxDays = BigDecimal.ZERO;
 			BigDecimal minHours = BigDecimal.ZERO;
@@ -7131,30 +7136,32 @@ public class SimpleQuoteBackingBean extends
 			BigDecimal maxMinutes = BigDecimal.ZERO;
 			PmConfigRuleValue ruleValue = getDurationRuleValue();
 			int maxiDays = 0;
-			
-			//#29209 - Start
-			if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
-				minMinutes = ruleValue.getFromValue();
-				maxMinutes = ruleValue.getToValue();
-				minHours = minMinutes.divide(BigDecimal.valueOf(1440), 2, RoundingMode.HALF_UP);
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(3360), 2, RoundingMode.HALF_UP);
-				
+
+			BigDecimal maxMinutesss = new BigDecimal(4320);
+			BigDecimal minMinutesss = new BigDecimal(60);
+			if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+				minHours = minMinutesss.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
+				maxDays = maxMinutesss.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				log.info("------------> validQoute : minHours = "+ minHours);
+				log.info("------------> validQoute : maxDays = "+ maxDays);
 			}
-			//#29209 - END
 			else if (ruleValue != null) {
 				minMinutes = ruleValue.getFromValue();
 				maxMinutes = ruleValue.getToValue();
 				minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
 				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				log.info("------------> validQoute : minHours = "+ minHours);
+				log.info("------------> validQoute : maxDays = "+ maxDays);
 				log.info("If dates selected this is in rule value method");
 				log.info("value of min Hours = " + minHours);
 				log.info("value of max Days = " + maxDays);
 			}
-			if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
+			if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0 || maxMinutesss.compareTo(BigDecimal.valueOf(0.25)) >= 0 ) {
 				maxiDays = maxiDays + maxDays.intValue();
 				log.info("If dates selected this is maxminute");
 				log.info("value of maxi Days = " + maxiDays);
 			}
+			
 			getManagedBean().setMaxDate(DateUtils.addDays(startDate, maxiDays));
 			if (endDate != null && startDate != null) {
 				log.info("If dates selected this is endDate");
@@ -7162,21 +7169,38 @@ public class SimpleQuoteBackingBean extends
 						|| quote.getStartDate().equals(quote.getEndDate())) {
 					throw new EpException(MessageConst.ERROR_760164);
 				}
-
+				
 				BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
+				log.info("--------> showing diff "+ diff);
 				diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
 				
 				if(diff.compareTo(minMinutes) < 0){
+					log.info("-------In error minMinutes = " + minMinutes);
+					log.info("-------In error minHours = " + minHours);
 					throw new EpException(
 							MessageConst.ERROR_760429,
 							new String[] {minHours.toString()});
 				}
-				
-				if(diff.compareTo(maxMinutes) > 0){
+				if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+					if(diff.compareTo(maxMinutesss) > 0 ){
+					log.info("-----------> in second error = " + diff);
+					log.info("-----------> in second error = " + maxMinutesss);
+					
 					throw new EpException(
 							MessageConst.ERROR_760430,
 							new String[] {maxDays.toString()});
 				} 
+			}else{ 
+					if(diff.compareTo(maxMinutes) > 0){
+					log.info("-----------> in first error = " + diff);
+					log.info("-----------> in first error = " + maxMinutes);
+					
+					throw new EpException(
+							MessageConst.ERROR_760430,
+							new String[] {maxDays.toString()});
+				} 
+			} 
+				
 			} else {
 				if (isSubmit && (null == quote.getStartDate() ||  null == quote.getEndDate())) {
 					throw new EpException(MessageConst.ERROR_760388);
@@ -7205,24 +7229,24 @@ public class SimpleQuoteBackingBean extends
 	 */
 	//#29209
 	public String getDurationToolTip(){
-		
 		int maxDays = 0;
-		String min = null;
-		
+		String min = null;		
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
-		log.info("-------in get durationtooltip : procurementtype =" + procurementType);
+		log.info("------------in getDurationTooltip :procurementType= " +procurementType);
+		
 		if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
-		 
-				int mHours = 60;
-				int mxDays = 4320;
-				
-				maxDays = (mxDays/60)/24;
-				if(mHours % 60 != 0){
-					min = Double.toString((double)mHours/60);
-				}else{
-					min = Integer.toString(mHours/60);
-				}
-		}
+			int mHours = 60;
+			int mxDays = 4320;
+			
+			maxDays = (mxDays/60)/24;
+			if(mHours % 60 != 0){
+				min = Double.toString((double)mHours/60);
+			}else{
+				min = Integer.toString(mHours/60);
+			}
+		}	
+			
+	
 		else {
 			PmConfigRuleValue ruleValue = getDurationRuleValue();
 			if (ruleValue != null){
@@ -7237,6 +7261,7 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+
 		log.info("------in getDurationToolTip : min" + min);
 		log.info("------in getDurationToolTip : maxDays" + maxDays);
 				 String message = getMessage(
