@@ -8417,6 +8417,9 @@ public class SpecificationBackingBean extends
 			spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			spReqDTO.setUserLocale(facesScopes.getUserLocale());
 			IQTSpecSO specSO = getSpecSO();
+			// #25638 - Start.
+			spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
+			// #25638 - End.
 			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getScQt();
@@ -11063,7 +11066,9 @@ public class SpecificationBackingBean extends
 		specReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		specReqDTO.setUserLocale(facesScopes.getUserLocale());
 		IQTSpecSO specSO = getSpecSO();
-
+		// #25638 - Start.
+		specReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
+		// #25638 - End.
 		try {
 			resDTO = specSO.updateBPMAction(specReqDTO);
 
@@ -11426,6 +11431,9 @@ public class SpecificationBackingBean extends
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//25138 - ahmaa
+		// #25638 - Start.
+		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
+		// #25638 - End.
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
@@ -15004,6 +15012,9 @@ public class SpecificationBackingBean extends
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		//Bug #26214
 		spReqDTO.setAllowZeroVariance(true);
+		// #25638 - Start.
+		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
+		// #25638 - End.
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
