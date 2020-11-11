@@ -825,7 +825,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					if(personnelResDTO != null 
 							&& !personnelResDTO.getSmPersonnelList().isEmpty()){
 						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						BlacklistDirectorResDTO resDTO;
+						BlacklistDirectorResDTO resDTO;//28790
 						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
