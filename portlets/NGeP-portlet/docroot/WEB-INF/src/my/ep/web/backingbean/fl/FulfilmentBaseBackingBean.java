@@ -803,11 +803,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				
 				if(smDisciplinaryAction.isCancelRegistration() 
 						&& !smDisciplinaryAction.isBlacklistOwner()){
+					//29579 - start
 					if(personnelResDTO != null 
-							&& personnelResDTO.getSmPersonnelList().size() > 0){
-						//29579 - start
+							&& !personnelResDTO.getSmPersonnelList().isEmpty()){						
 						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						BlacklistDirectorResDTO resDTO = null;
+						BlacklistDirectorResDTO resDTO;
 						for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
 							BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 							reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
