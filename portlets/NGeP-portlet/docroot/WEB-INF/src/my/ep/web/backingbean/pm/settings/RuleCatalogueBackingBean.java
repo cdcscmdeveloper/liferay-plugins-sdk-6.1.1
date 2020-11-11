@@ -44,6 +44,9 @@ import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+/* 27827 - START */
+import my.ep.constant.pm.RuleTypeConst;
+/* 27827 - END */
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
@@ -88,6 +91,9 @@ import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+/* 27827 - START */
+import my.ep.persistence.entity.pm.common.PmZone;
+/* 27827 - END */
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
@@ -1592,6 +1598,34 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 			reqDTO.setRuleTypeList(ruleTypeList);
+			/* 27827 - START */
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setPmOrgProfiles(new ArrayList<PmOrgProfile>());
+			for(PmConfigRule cfRule: ruleTypeList){
+				if(cfRule.getRuleType().equals(RuleTypeConst.PTJ_CODE)){
+					for(PmConfigRuleValue cfRuleValue: cfRule.getConfigRuleValues()){
+						if(cfRuleValue.isBrandNew()){
+							orgProfileReqDTO.setOrgCode(cfRuleValue.getRuleValue());
+							PmOrgProfile orgValidity = orgProfileSO.retrieveOrgProfileByCode(orgProfileReqDTO).getPmOrgProfile();
+							orgProfileReqDTO.setOrgProfileId(orgValidity.getOrgProfileId());
+							OrgProfileResDTO orgProfId = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+							orgProfileReqDTO.setPmOrgProfile(orgProfId.getPmOrgProfile());
+							for(PmZone zone: getManagedBean().getZoneList()){
+								if(zone.getZoneId().equals(cfRuleValue.getZoneId())){
+									orgProfileReqDTO.getPmOrgProfile().getPmZone();
+									orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
+									orgProfileReqDTO.getPmOrgProfile().setBpk(true);
+									orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
+								}
+							}
+						}
+					}
+				}
+			}
+			OrgProfileResDTO orgProfResDTO = orgProfileSO.saveOrUpdatePmOrgProfileList(orgProfileReqDTO);
+			/* 27827 - END */
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
 			// clear the catch and retrive updated list from DB
 
@@ -1613,8 +1647,9 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 			// this.getManagedBean().setSelectedRuleType(list.get(0));
-
-			if (resDTO.isSuccessful()) {
+			/* 27827 - START */
+			if (resDTO.isSuccessful() && orgProfResDTO.isSuccessful()) {
+			/* 27827 - END */
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
