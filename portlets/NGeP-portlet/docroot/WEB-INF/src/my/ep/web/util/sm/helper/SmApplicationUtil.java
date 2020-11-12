@@ -6078,6 +6078,12 @@ public class SmApplicationUtil {
 	 */
 	public static void validateSpecialCategoryAssignedToFacility(
 			SmApplicationManagedBean bean) {
+		
+		// #29232 (harith) @start
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(bean.getSmAppl().getSmSupplier().getSupplierId());
+		// #29232 (harith) @end
+		
 		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 				.getSmSupplierCategories()) && !bean.isApproverUser()) {
 			SmSupplierCategoryFacility tmp = null;
@@ -6099,7 +6105,11 @@ public class SmApplicationUtil {
 										.getPmCategoryL3().getCategoryL3Id(),
 										fac.getSmSupplierCategoryFacilities(),
 										"pmCategoryL3");
-						if (tmp != null) {
+						
+						// #29232 (harith) @start
+						if (tmp != null || !SmServiceLookup.getMofRegistrationSO().alreadyMof(reqDTO)
+								.isValid()) {
+							// #29232 (harith) @end
 							exist = true;
 							break;
 						}
