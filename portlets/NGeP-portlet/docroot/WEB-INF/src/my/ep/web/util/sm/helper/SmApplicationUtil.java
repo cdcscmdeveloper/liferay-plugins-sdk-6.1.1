@@ -11584,6 +11584,8 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean bean, int currTab) {
 		shareHolderBean.setBumiFlgTrans(shareHolderBean.getBumiFlg());
 		shareHolderBean.setMuslimFlgTrans(shareHolderBean.getMuslimFlg());
+		//#29315
+		bean.setFlagMandatoryEpfNo(false);
 		if (bean.getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt(false, bean, currTab);
@@ -11825,6 +11827,8 @@ public class SmApplicationUtil {
 			} else {
 				bean.getSelectedShareHolder().setDisableSemiProf(false);
 			}
+			
+			populateMandatoryEpfNo(bean);
 		}
 
 		if (bean.getSelectedShareHolder().getPersonnelId() != null
@@ -11872,6 +11876,11 @@ public class SmApplicationUtil {
 					.getSmAddress();
 			bean.setRoleStaffAndMailAddrReqd(isAddressReqdForRoleStaff(
 					bean.getSelectedShareHolder(), mailAddress));
+		}
+		
+		if (bean.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			populateMandatoryEpfNo(bean);
 		}
 	}
 
@@ -13263,5 +13272,29 @@ public class SmApplicationUtil {
 		}
 	}
 	//24964 - end
-
+	
+	//#29315 - start
+		public static void populateMandatoryEpfNo(SmApplicationManagedBean bean){
+			if (bean.getSelectedShareHolder().isProf()
+					|| bean.getSelectedShareHolder().isSemiProf()
+					|| bean.getSelectedShareHolder().isClerical()) {
+				bean.setFlagMandatoryEpfNo(true);
+				if (!EntityHelper.isCollectionEmpty(bean.getSmAppl().getSmPersonnels())) {
+					for (SmPersonnel sp : bean.getSmAppl().getSmPersonnels()) {
+						if ( (!sp.getIdentificationNo().equalsIgnoreCase(bean.getSelectedShareHolder().getIdentificationNo()) 
+								&& StringUtils.isNotBlank(sp.getEpfNo())) 
+								&& ((bean.getSelectedShareHolder().isProf() && sp.isProf()) 
+										|| (bean.getSelectedShareHolder().isSemiProf() && sp.isSemiProf())
+										|| (bean.getSelectedShareHolder().isClerical() && sp.isClerical()))) {
+							bean.setFlagMandatoryEpfNo(false);
+							break;
+						}
+					}
+				}
+			} else {
+				bean.setFlagMandatoryEpfNo(false);
+			}
+		}
+		//#29315 - end
+		
 }
