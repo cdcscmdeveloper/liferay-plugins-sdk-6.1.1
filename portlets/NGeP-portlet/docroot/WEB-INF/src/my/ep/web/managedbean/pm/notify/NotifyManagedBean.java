@@ -44,6 +44,8 @@ public class NotifyManagedBean extends BaseManagedBean {
 
 	private String searchItem;
 	private String searchValue;
+	
+	private Object[] selectedNotifyObj;
 
 	public NotifyManagedBean() {
 		log.info("NotifyManagedBean inside ");
@@ -222,4 +224,14 @@ public class NotifyManagedBean extends BaseManagedBean {
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
 	}
+	
+	// #27009 -- start
+	public Object[] getSelectedNotifyObj() {
+		return selectedNotifyObj;
+	}
+
+	public void setSelectedNotifyObj(Object[] selectedNotifyObj) {
+		this.selectedNotifyObj = selectedNotifyObj;
+	}
+	// #27009 -- end
 }
