@@ -18,13 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td style="width: 30%;">
 				<table class="ppTwoTable">
 					
-						<!-- rendered on expenditure plan screen 
-						<p:outputLabel value="#{lbl['lbl.pp.category']}"></p:outputLabel>
-						<br/>
-						 button to lov GL Account 
-						<p:inputText></p:inputText>
-						
-						 datatable here -->
+						<!-- rendered on expenditure plan screen -->
 					 <tr>
 						 <td>
 							 	<h:panelGroup id="ppEPGLACCSearchId">
@@ -35,11 +29,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 								<!-- 201105@akmal - 27624 - End -->
 								&#160;
 								
-								
+								<!-- 201111@akmal - Enhancement27624 - Start -->
 								<p:commandLink id="ppEPGLACCSearchCL"
 									action="#{pmGoSearchBackingBean.initPmGoPopup}"
 									oncomplete="pmGoPopup.show();"
-									update="pPlanDetSearch, :form:glAccountCcId:goDoPanelId" >
+									update="pPlanDetSearch, :form:glAccountCcId:goDoPanelId" 
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}">
 									<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
 									<f:param name="index" 	value="99" />
 									<f:param name="type" 	value="ePsearch" />
@@ -49,7 +44,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<f:param name="update" 	value=":form:accCodeResult" />
 									<p:resetInput target=":form"></p:resetInput>
 								</p:commandLink>
-								  
+							  	<!-- 201111@akmal - Enhancement27624 - End -->
 								</h:panelGroup>
 						 </td>
 					 </tr>
@@ -86,17 +81,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.fromdate']}"/>
 								</p:column>
 								<p:column>
+								<!-- 201111@akmal - Enhancement27624 - Start -->
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateFrom}" readonlyInput="true"
-									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
+								<!-- 201111@akmal - Enhancement27624 - End -->
 								</p:column>
 								<p:column>
 									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.todate']}"/>
 								</p:column>
 								<p:column>
+								<!-- 201111@akmal - Enhancement27624 - Start -->
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateTo}" readonlyInput="true"
-									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
+								<!-- 201111@akmal - Enhancement27624 - End -->
 								</p:column>
 							</h:panelGrid>
 						</td>
@@ -111,10 +112,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<p:outputLabel value="#{lbl['lbl.pp.status']}"></p:outputLabel>
 								</p:column>
 								<p:column>
+								<!-- 201111@akmal - Enhancement27624 - Start -->
 									<p:selectOneMenu id="pDetStatusSearch" label="#{lbl['lbl.pp.status']}" 
-									styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planDetstatus}">
+									styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planDetstatus}"
+									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}">
 									<f:selectItems value="#{pPlanBackingBean.getRecordStatusDropdownValues()}"/>
 									</p:selectOneMenu>
+								<!-- 201111@akmal - Enhancement27624 - End -->
 								</p:column>
 								<p:column></p:column>
 								<p:column></p:column>
@@ -128,28 +132,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			
 		</table>
 		<div style="text-align: right;">
+		<!-- 201111@akmal - Enhancement27624 - Start -->
 			<p:commandButton value="#{lbl['lbl.cm.search']}"
+				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
 				action="#{pPlanBackingBean.searchPlanDetails()}"
 				update="@form"
 				process="@form" 
 				id="searchButtonId">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
 				action="#{pPlanBackingBean.resetPlanDetailSearch()}"
 				update="@form"> 
 			</p:commandButton>
+		<!-- 201111@akmal - Enhancement27624 - End -->
 		</div>
-		<!-- 
-		<ac:pmGoPopup 
-			id="glAccountCcEpId"
-			okAction="pPlanBackingBean.selectGlAccountAction"
-			 />
-		
-		<p:dialog id="GlAccSearchPopUp" widgetVar="GlAccSearchPopUp" closable="false" modal="true"
-			header="#GL Account" width="800" height="500">
-			<ui:include src="planGlAccPopup.xhtml"></ui:include>
-		</p:dialog>
-		-->
 		
 	</p:panel>			
 		

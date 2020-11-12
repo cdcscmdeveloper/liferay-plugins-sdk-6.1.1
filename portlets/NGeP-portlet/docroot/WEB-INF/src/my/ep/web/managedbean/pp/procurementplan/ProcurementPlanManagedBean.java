@@ -51,11 +51,12 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
-	//200911@akmal - Enhancement27624 - Start
+	//201111@akmal - Enhancement27624 - Start
 	private boolean isPlanDetailSearch;
 	private Long planId;
 	private List<VPmGo> vPmGolist;
-	//200911@akmal - Enhancement27624 - End
+	private boolean disablePlanSearchDet = false;
+	//201111@akmal - Enhancement27624 - End
 	private String btnValue;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
@@ -1359,7 +1360,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	}
 	//25549@18092020 - end
 
-	//200911@akmal - Enhancement27624 - Start
+	//201111@akmal - Enhancement27624 - Start
 	public boolean isPlanDetailSearch() {
 		return isPlanDetailSearch;
 	}
@@ -1384,7 +1385,15 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setvPmGolist(List<VPmGo> vPmGolist) {
 		this.vPmGolist = vPmGolist;
 	}
-	//200911@akmal - Enhancement27624 - End
+
+	public boolean isDisablePlanSearchDet() {
+		return disablePlanSearchDet;
+	}
+
+	public void setDisablePlanSearchDet(boolean disablePlanSearchDet) {
+		this.disablePlanSearchDet = disablePlanSearchDet;
+	}
+	//201111@akmal - Enhancement27624 - End
 
 	public boolean isFlagCancelButton() {
 		return flagCancelButton;
