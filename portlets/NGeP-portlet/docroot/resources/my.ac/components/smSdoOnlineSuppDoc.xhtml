@@ -46,17 +46,20 @@
 		
 			<p:column style="width:15%;white-space:normal;overflow: hidden !important;"
 				rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-				<ui:remove>
-				<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
-		            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
-		           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
-		        </p:commandLink>
-		        <br />
-		        </ui:remove>
-		        <h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
-		        	<a href="#{DocumentRepositoryUtils.baseRepo}#{suppDoc.smApplDocFiles[0].filePath}#{suppDoc.smApplDocFiles[0].fileName}">#{suppDoc.smApplDocFiles[0].fileName}</a>
-		        </h:panelGroup>
-		        
+				<!-- #28807 - Start -->
+				<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
+					<ui:remove>
+						<p:commandLink value="#{applDocs.fileName}" rendered="#{not empty suppDoc.smApplDocFiles}"  ajax="false"
+		            		action="#{sdoReviewBackingBean.downloadSuppDoc(applDocs.fileName,applDocs.filePath)}">
+		           			<p:fileDownload value="#{sdoReviewBackingBean.file}" />
+		        		</p:commandLink>
+		        	</ui:remove>
+		        	<h:panelGroup rendered="#{not empty suppDoc.smApplDocFiles}">
+		        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocs.filePath}#{applDocs.fileName}">#{applDocs.fileName}</a>
+		        	</h:panelGroup>
+					<br />
+				</ui:repeat>
+				<!-- #28807 - End -->		        
 	        </p:column>
 			
 			<p:column style="width:3% !important; white-space:normal;overflow: hidden !important;" >
