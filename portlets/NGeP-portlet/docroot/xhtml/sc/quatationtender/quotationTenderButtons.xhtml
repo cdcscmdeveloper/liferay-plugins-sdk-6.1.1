@@ -23,6 +23,9 @@
 	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
 	<!-- 26095@hatta - end -->
+	<!-- #25077 Start -->
+	<ui:param name="popUpBPKApprovalNeeded" value="#{qTDetailBB.checkSettingPopUpBPKApprovalNeeded()}" />
+	<!-- #25077 End -->
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -126,11 +129,18 @@
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone2}" />
+							<!-- #25077 Start -->
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								actionListener="#{qTDetailBB.checkPopUpBPKApprovalNeeded(true)}"
+								update="@([id$=#{bpkApprovalNeededId}])" 
+								rendered="#{popUpBPKApprovalNeeded}" />	
+							<!-- #25077 End -->
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2}" 
+								rendered="#{!isClone2 and !popUpBPKApprovalNeeded}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</c:when>
@@ -258,4 +268,30 @@
 			</div>
 		</p:dialog>
 		<!-- 26095@hatta - end -->
+		<!-- 25077 Start -->
+		<p:dialog id="bpkApprovalNeededId" widgetVar="bpkApprovalNeededDlg"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
+			height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+			    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="bpkApprovalNeededDlg.hide();submitConfirmPopUp2.show();" 
+					partialSubmit="true" process="@form" update="@form" />
+				</c:if>
+				 <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="bpkApprovalNeededDlg.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
+				</c:if>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="bpkApprovalNeededDlg.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<!-- 25077 End -->
 </ui:composition>
