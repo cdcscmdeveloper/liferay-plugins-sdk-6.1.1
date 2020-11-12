@@ -10,7 +10,8 @@
 	<ui:define name="contentSection">
 		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
-		<ui:param name="isSupplierAckStatus" value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isSupplierAckStatus" 
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scWorkFlowStatus.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		
 		<ui:include src="loiSupplierButtons.xhtml" />
 		<ui:include src="loiSupplierHeader.xhtml" />

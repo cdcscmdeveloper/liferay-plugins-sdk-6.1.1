@@ -93,6 +93,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiAttachment;
@@ -639,6 +640,14 @@ public class LOIDetailBackingBean extends
 				getQtProposalValidExpiredMessage(scQt);
 				
 				//generateDeclarationFromVelocity(scLoi, scQt);
+				
+				// #11134 - start
+				// Remarks
+				this.getManagedBean().getScLoi().setScLoiRemarks(initializeRemarks(
+						scLoi, 
+						scLoi.getScWorkFlowStatus(),
+						scLoi.getScLoiRemarks(), ScLoiRemark.class));
+				// #11134 - end
 				
 				return QTConstants.SUPPLIER_LOI_PAGE;
 			}
@@ -3846,6 +3855,34 @@ public class LOIDetailBackingBean extends
 				throw new EpException("No supplier contact address");
 			}
 		}
+		
+		// #11134 - Start
+				if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+						&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+					
+					boolean remarksEmpty = false;
+					
+					// check if remark is empty
+					List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
+					if(CollectionUtils.isNotEmpty(scLoiRemarks)){
+						for(ScLoiRemark each : scLoiRemarks){
+							if(StringUtils.isEmpty(each.getRemark())){
+								remarksEmpty = true;
+								break;
+							}
+						}
+					}else {
+						remarksEmpty = true;
+					}
+					
+					//throw message
+					if(remarksEmpty){
+						throw new EpException(
+								MessageConst.ERROR_716024);
+						 // Remark is mandatory for rejection.
+					}
+				}
+				// #11134 -end
 	}
 
 	/**
