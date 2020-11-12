@@ -36,8 +36,20 @@
 		</p:blockUI>
 
 		<ui:param name="mandatoryflg" value="true" />
-		
-		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+
+		 <h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
+					  value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+
+			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"	
+				action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smSupplier.regNo,backingBean.managedBean.smSupplier.businessType)}"
+				value="#{lbl['lbl.fl.instruction.here']}" 
+				styleClass="splNotesFonts" style="float: inherit" escape="false">
+				<f:ajax execute="@this" render="@form"  />
+				</h:commandLink>
+					
+		<h:outputText rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" 
+				value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+	
 		
 		<ac:smPanel id="tt">
 			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
@@ -403,5 +415,10 @@
 					widgetVar="uploadWV" showButtons="false" />
 			</p:dialog>
 		</ac:smPanel>
+		
+	<p:outputPanel id="detailSsm" rendered="#{backingBean.managedBean.showDetailSSM}">	
+		<ac:baseViewSsmInfo bBean="#{backingBean}" title="#{lbl['lbl.sm.view.ssm.infomation']}" dialogId="viewssminfo" />
+ 	</p:outputPanel> 
+ 	
 	</ui:define>
 </ui:composition>
