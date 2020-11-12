@@ -447,6 +447,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			getManagedBean().setSourcePage(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_CANCEL_MAIN_PAGE);
 		} catch (Exception e) {
@@ -2315,9 +2316,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		getManagedBean().setEditFlag(Boolean.FALSE);
 		getManagedBean().setReadOnly(Boolean.FALSE);
 		getManagedBean().setSelectedTabIndex(0);
-		
+		getManagedBean().setBackToPreviousPage(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/directpurchase/directPurchaseMaintenance.xhtml");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getSourcePage());
 	}
 
 	/**

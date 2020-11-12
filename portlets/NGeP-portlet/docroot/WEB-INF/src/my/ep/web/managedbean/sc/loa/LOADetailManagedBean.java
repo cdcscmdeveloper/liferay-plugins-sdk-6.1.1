@@ -269,6 +269,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<PmUser> loacancelapproverList;
 	
 	private PmUser loacancelapproverUser;
+	
+	private String sourcePage;
 	//end #22211
 	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
@@ -1641,6 +1643,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	 */
 	public void setValidatewitness(boolean isValidatewitness) {
 		this.isValidatewitness = isValidatewitness;
+	}
+
+	public String getSourcePage() {
+		return sourcePage;
+	}
+
+	public void setSourcePage(String sourcePage) {
+		this.sourcePage = sourcePage;
 	}
 
 }
