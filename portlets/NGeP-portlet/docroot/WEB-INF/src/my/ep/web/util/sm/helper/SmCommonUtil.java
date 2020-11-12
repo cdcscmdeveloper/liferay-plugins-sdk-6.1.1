@@ -1453,8 +1453,11 @@ public class SmCommonUtil {
 			compBasic.setAuthorizedCapital(new BigDecimal(0));
 		}
 		if (compBasic.getTotalShare() != null) {
-			compBasic.setTotalShare(compBasic.getTotalShare().setScale(2,
-					RoundingMode.HALF_UP));
+			// 28466 - recalculate total share
+			compBasic.setTotalShare(compBasic.getBumiEquity().add(compBasic.getNonBumiEquity())
+					.add(compBasic.getLocalCompanyEquity()).add(compBasic.getForeignCompanyEquity())
+					.add(compBasic.getForeignerEquity()).add(compBasic.getGovtEquity())
+					.add(compBasic.getGovtUnitrustEquity()).setScale(2, RoundingMode.HALF_UP));
 		} else {
 			compBasic.setTotalShare(new BigDecimal(0));
 		}
@@ -1463,14 +1466,22 @@ public class SmCommonUtil {
 		} else {
 			compBasic.setTotalMember(new BigDecimal(0));
 		}
-		compBasic.setPaidUpCapital(compBasic.getBumiEquity()
-				.add(compBasic.getNonBumiEquity())
-				.add(compBasic.getLocalCompanyEquity())
-				.add(compBasic.getForeignCompanyEquity())
-				.add(compBasic.getForeignerEquity())
-				.add(compBasic.getGovtEquity())
-				.add(compBasic.getGovtUnitrustEquity())
-				.setScale(2, RoundingMode.HALF_UP));
+		// 28466 - Skip recalculate paid up capital
+		try {
+			if(!BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class).ssmActive()){
+				compBasic.setPaidUpCapital(compBasic.getBumiEquity()
+						.add(compBasic.getNonBumiEquity())
+						.add(compBasic.getLocalCompanyEquity())
+						.add(compBasic.getForeignCompanyEquity())
+						.add(compBasic.getForeignerEquity())
+						.add(compBasic.getGovtEquity())
+						.add(compBasic.getGovtUnitrustEquity())
+						.setScale(2, RoundingMode.HALF_UP));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
 

@@ -2446,10 +2446,10 @@ public class SmApplicationUtil {
 				}
 				
 			}*/
-			if (managedBean
-					.getBusinessTypeVal()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
+			// 28466 - compare calculated total with paid up capital
+			if ((managedBean.getBusinessTypeVal().equalsIgnoreCase(
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT) || managedBean.getBusinessTypeVal()
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT))
 					&& appl.getSmCompanyBasic()
 							.getPaidUpCapital()
 							.compareTo(appl.getSmCompanyBasic().getTotalShare()) != 0) {
