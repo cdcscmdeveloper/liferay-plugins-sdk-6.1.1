@@ -10,7 +10,9 @@
 	
 	<p:panel>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}" escape="false" />
-	
+		<!-- #25077 Start -->
+	    <br /><h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.instruction']}" escape="false" />
+	    <!-- #25077 End -->
 		<p:dataTable id="otherreqdtlsid"
 			value="#{othersApprovalDtlsList.scQtApprovalDtls}"
 			var="otherrequestdetails" rowIndexVar="index" editable="true"
@@ -40,20 +42,51 @@
 				<p:message id="decisiontypeidMsg" for="decisiontypeid"
 					display="icon" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document']}">
-				<h:panelGroup id="otheruploadId">
-					<ac:scSingleFileUploadButton id="otherApprUploadBtn"
-						popupWidgetVar="otherApprUploadDlg"
-						attachment="#{otherrequestdetails.approvalRequestAttachement}"
-						readonly="#{createQtBB.managedBean.readOnly}"
-						deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFile"
-						rowIndex="#{index}">
-						<f:setPropertyActionListener for="actionEvent"
-							value="#{otherrequestdetails}"
-							target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
-					</ac:scSingleFileUploadButton>
-				</h:panelGroup>
-			</p:column>
+			<!-- #25077 Start -->
+				<c:choose>
+				    <c:when test="#{createQtBB.managedBean.maintanceFlow}">	
+				        <p:column headerText="#{lbl['lbl.sc.document']}">
+							 <p:dataGrid emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+									var="attachFile"
+									value="#{otherrequestdetails.approvalRequestAttachement}"
+									rowIndexVar="attachFileIndex" columns="1" style="width:100%">
+									<h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{createQtBB.downloadFile(attachFile)}" />
+								</p:dataGrid>
+						</p:column>	
+				    </c:when>
+				    <c:otherwise> 
+		                <p:column>
+					        <f:facet name="header">
+					            <c:if test="#{not empty othersApprovalDtlsList.scQtApprovalDtls and 
+							                   (createQtBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or
+							                   createQtBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
+						        <h:outputText value="* " styleClass="mandatory" />
+						      </c:if> 
+								<h:outputText value="#{lbl['lbl.sc.document']}" />
+							   <c:if test="#{not empty othersApprovalDtlsList.scQtApprovalDtls and 
+							                   (createQtBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or
+							                   createQtBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
+			                    <ac:iconTooltip value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.tooltip']}" />
+			                   </c:if> 
+							</f:facet>
+					        <h:panelGroup id="otheruploadId">
+								<ac:scSingleFileUploadButton id="otherApprUploadBtn"
+									popupWidgetVar="otherApprUploadDlg"
+									attachment="#{otherrequestdetails.approvalRequestAttachement}"
+									readonly="#{createQtBB.managedBean.readOnly}"
+									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFile"
+									rowIndex="#{index}">
+									<f:setPropertyActionListener for="actionEvent"
+										value="#{otherrequestdetails}"
+										target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
+								</ac:scSingleFileUploadButton>
+							</h:panelGroup>
+					    </p:column>	
+				    </c:otherwise>
+				</c:choose>
+				<!-- #25077 End -->
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
