@@ -114,37 +114,36 @@
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}"
 						disabled="true" /></td>
 			</tr>
-			
-			<c:if test="#{supplierDetailBackingBean.managedBean.hasBod}">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sf.board.of.directors']}" /></td>
-					<td colspan="2">
-						<p:dataTable var="smPersonnel"
-							value="#{supplierDetailBackingBean.managedBean.boardofDirectors}"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							rows="10">
-	
-							<p:column headerText="#{lbl['lbl.sc.mof.no']}"
-								style="width:20%; white-space:normal;">
-								<h:outputText
-									value="#{smPersonnel.smAppl.smSupplier.smMofAccount.mofNo}" />
-							</p:column>
-	
-							<p:column headerText="#{lbl['lbl.sc.company.name']}"
-								style="width:40%; white-space:normal;">
-								<h:outputText
-									value="#{smPersonnel.smAppl.smSupplier.companyName}" />
-							</p:column>
-	
-							<p:column headerText="#{lbl['lbl.sc.bod']}"
-								style="width:40%; white-space:normal;">
-								<h:outputText value="#{smPersonnel.name}" />
-							</p:column>
-						</p:dataTable>
-					</td>
-				</tr>
-			</c:if>
 		</table>
+		
+		<c:if test="#{supplierDetailBackingBean.managedBean.hasBod}">
+			<br/>
+			<div class="align-center">
+				<p:outputLabel value="#{lbl['lbl.sc.sf.board.of.directors']}" style="float:left;"/><br/><br/>
+				<p:dataTable var="smPersonnel"
+					value="#{supplierDetailBackingBean.managedBean.boardofDirectors}"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					rows="10">
+
+					<p:column headerText="#{lbl['lbl.sc.mof.no']}"
+						style="width:20%; white-space:normal;">
+						<h:outputText
+							value="#{smPersonnel.smAppl.smSupplier.smMofAccount.mofNo}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.company.name']}"
+						style="width:40%; white-space:normal;">
+						<h:outputText
+							value="#{smPersonnel.smAppl.smSupplier.companyName}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.bod']}"
+						style="width:40%; white-space:normal;">
+						<h:outputText value="#{smPersonnel.name}" />
+					</p:column>
+				</p:dataTable>
+			</div>
+		</c:if>
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
 				process="@this" immediate="true" onclick="suppDetailsPopup.hide()" />
