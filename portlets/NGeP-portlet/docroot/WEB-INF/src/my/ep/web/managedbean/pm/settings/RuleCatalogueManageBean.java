@@ -32,11 +32,11 @@ import my.ep.persistence.entity.pm.general.settings.gst.PmDaValidity;
 import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sm.SmSupplier;
-
 import my.ep.web.managedbean.BaseManagedBean;
 
-import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
+import org.apache.log4j.Logger;
 
 /**
  * Managed Bean for Rule Catalogue
@@ -50,6 +50,7 @@ import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(RuleCatalogueManageBean.class);
 	private Integer tabActiveIndex = 0;
 	private Integer feeExemptionIndex = 0;
 	private Integer thresholdIndex = 0;
@@ -71,7 +72,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmFeeExemption selectedFeeExemption;
 	private SmSupplier selectedSmSupplier;
 	private CtContractItem selectedCtContractItem;
-	// private List<SelectItem> typeCriteria;
 	private CmUnspsc selectedComodity;
 	private CmItem selectedCmItem;
 	private String cmItemName;
@@ -101,11 +101,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Long selectedMeasurement;
 	private Long selectedColor;
 	private Date currentDate = new Date();
-	// private List<PmDesignatedArea> designatedAreaList;
 	private List<PmDaValidity> daValidityList;
-	// private PmDesignatedArea selectedDesignatedArea;
 	private PmDaValidity selectedDaValidity;
-	// private List<PmDesignatedArea> deletedDesignatedAreaList;
 	private List<PmDaValidity> deletedDaValidityList;
 	private List<PmGstItem> taxableItemsForDA;
 	private List<PmGstItem> deletedTaxableItemsForDA;
@@ -121,10 +118,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmDaGst> deletedDaGstList;
 	private Map<String, Integer> thresholdIdToS2UnplannedMap = new HashMap<String, Integer>();
 	private Map<String, Integer> thresholdIdToBudgetSpentMap = new HashMap<String, Integer>();
-	// private boolean error1 = false;
-	// private boolean error2 = false;
-	// private boolean error3 = false;
-	// private boolean error4 = false;
 	private PmCategoryL3 selectedCategoryL3;
 	private PmOrgProfile currentActiveOrg;
 	private Integer deleteRowIndex;
@@ -227,18 +220,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 			List<PmFeeExemption> feeExemptionsForContract) {
 		this.feeExemptionsForContract = feeExemptionsForContract;
 	}
-
-
-	// public List<SelectItem> getTypeCriteria() {
-	// if (typeCriteria == null)
-	// typeCriteria = new ArrayList<SelectItem>();
-	// return typeCriteria;
-	// }
-	//
-	// public void setTypeCriteria(List<SelectItem> typeCriteria) {
-	// this.typeCriteria = typeCriteria;
-	// }
-
 	
 	/**
 	 * @return the deletedOrgAndItemFeeExemptions
@@ -856,7 +837,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 			Date date = formatter.parse(dateInString);
 			calendar.setTime(date);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return calendar.getTime();
 	}
