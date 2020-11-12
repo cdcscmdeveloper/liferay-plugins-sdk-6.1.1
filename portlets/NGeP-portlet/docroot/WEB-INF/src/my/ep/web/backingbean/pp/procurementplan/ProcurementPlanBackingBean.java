@@ -116,7 +116,6 @@ import org.primefaces.model.DualListModel;
 import com.liferay.portal.util.PortalUtil;
 //#24975
 
-
 /**
  * Backing Bean for Procurement Plan 
  * 
@@ -292,7 +291,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
 		//201111@akmal - Enhancement27624 - End
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
 	}
@@ -970,7 +969,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 						*/
 					} else {
-						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());
+						this.getManagedBean().setPpWorkflowStatus(ppPlan.getCurrentStatus());						
 						//check ppWorkflowStatus contains approved status
 						List <PpWorkflowStatus> ppWorkflowStatuses = retrievePpApprovedStatus(ppPlan);
 						if(ppWorkflowStatuses!=null && !ppWorkflowStatuses.isEmpty()){
@@ -1209,6 +1208,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void itemEditableMode(PpPlan ppPlan){
 		log.info("itemEditableMode");
+		
+		    //28760 - start
+			generateCancelButton(ppPlan);
+			//28760 - end
 				
 			this.getManagedBean().getSelectedPlan().setRejected(true);
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
@@ -1266,6 +1269,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if(ppPlan.getLastApprovedDt() != null) {
 					log.info("[SIR#12802] - Check item for approved status - Start");
 					log.info("[SIR#12802] - plan last approved date: " + ppPlan.getLastApprovedDt());
+					
+					//28760@11122020@azza - Start
+					this.getManagedBean().setFlagCancelButton(false);
+					//28760@11122020@azza - End
+					
+					log.info("[SIR#28760] - CancelFlag " + this.getManagedBean().isFlagCancelButton());
+
+					
 					for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 						log.info("[SIR#12802] - item ID: " + epItem.getExpenditureItemId());
 						log.info("[SIR#12802] - item created date: " + epItem.getCreatedDate());
@@ -1357,6 +1368,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if(ppPlan.getLastApprovedDt() != null) {
 					log.info("[SIR#12802] - Check item for approved status - Start");
 					log.info("[SIR#12802] - plan last approved date: " + ppPlan.getLastApprovedDt());
+					
+					//28760@11122020@azza - Start
+					this.getManagedBean().setFlagCancelButton(false);
+					//28760@11122020@azza - End
+					
+					log.info("[SIR#28760] - CancelFlag " + this.getManagedBean().isFlagCancelButton());
+
+					
+					
 					for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
 						log.info("[SIR#12802] - item ID: " + ppItem.getProcurementItemId());
 						log.info("[SIR#12802] - item created date: " + ppItem.getCreatedDate());
@@ -2538,7 +2558,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 				//24975@04112020@azza - End
-			}
+			}else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)){ //28760 - start
+				if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+					if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+						if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
+							throw new EpException(MessageConst.ERROR_775158);
+						}
+					}
+				}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+					if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+						if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
+							throw new EpException(MessageConst.ERROR_775158);
+						}
+					}
+				}
+			} //28760 - end
+			
 			
 			if(!isItemRejected){
 				//overall remark is required
@@ -2749,6 +2784,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 		    }
+			
+			//28760 -start
+			if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
+				ppPlan.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+				ppPlan.setCancel(DbValueConst.RECORD_STATUS_ACTIVE );
+			}else{
+				ppPlan.setCancel(DbValueConst.RECORD_STATUS_SUSPENDED );
+			}
+			//28760 -end
 
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
@@ -8093,6 +8137,41 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 	     }
 		//24975@04112020@azza - End
+	     
+	   //28760 - start
+	 	/** 
+	 	* generate cancel button rendered
+	 	 */
+	 	private void generateCancelButton(PpPlan ppPlan){
+	 		log.info("generateCancelButton - Start");
+	 		this.getManagedBean().setFlagCancelButton(false);
+	 		Long status =  this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
+	 		
+	 	
+	 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+	 			if((ProcurementPlanConst.PPE_PENDING_REVISION.equals(status))
+		 				|| (ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status))){
+		 			this.getManagedBean().setFlagCancelButton(true);
+		 		} else if((ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status))
+		 				|| (ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(status))){
+		 			this.getManagedBean().setFlagCancelButton(true);
+		 		}
+	 		}else{
+	 			if((ProcurementPlanConst.PPP_PENDING_REVISION.equals(status))
+		 				|| (ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(status))){
+		 			this.getManagedBean().setFlagCancelButton(true);
+		 		} else if((ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status))
+		 				|| (ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(status))){
+		 			this.getManagedBean().setFlagCancelButton(true);
+		 		} else if((ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status))
+		 				|| (ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(status))){
+		 			this.getManagedBean().setFlagCancelButton(true);
+		 		}
+	 		}
+	 		log.info("generateCancelButton - End");
+	 	}
+	 	//28760 - end
+	 	
 }
 	   
 
