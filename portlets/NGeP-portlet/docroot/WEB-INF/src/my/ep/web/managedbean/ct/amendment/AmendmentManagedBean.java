@@ -16,14 +16,20 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
+
+import com.liferay.compat.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -51,6 +57,7 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 
@@ -216,13 +223,28 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				
-				Long contractVerId=null;
+				Long contractVerId=null;				
+				log.info("ServiceListingPagingDataModel");
+				log.info("getTaskId : "+getTaskId());
+								
 				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
-				}else {
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId()) && getTaskId()== null){
+					
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 				}
+				//if contract from tasklist taskid != null
+				if(getTaskId()!= null){
+					
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+					log.info("tasklist screen  :: contractVer :: >>> "+contractVerId);
+				}else {
+					
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
+				}
+				
+				
 				  if(contractVerId!=null ){						
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 						searchBean.getDataFilterBeans().add(filterBean);
@@ -346,11 +368,24 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 			Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 			
 			Long contractVerId=null;
+			log.info("ContractListingPagingDataModel");
+			log.info("getTaskId : "+getTaskId());
+			
 			if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
+			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId()) && getTaskId()== null){
+				
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
+			}
+			//if contract from tasklist taskid != null
+			if(getTaskId()!= null){
+				
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+				log.info("tasklist screen  :: contractVer :: >>> "+contractVerId);
 			}else {
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+				
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 			}
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
