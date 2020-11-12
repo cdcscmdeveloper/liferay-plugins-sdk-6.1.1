@@ -76,7 +76,9 @@
 					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"
 					style="text-align:left" 
 					disabled="#{doDelAddress.suppDelOrdNoEnabled eq 'false' or createDOBackingBean.managedBean.orderDisabledForSdCheck eq true or doDelAddress.flTempDoAddr.delAddressSelected eq 'false'}"
-					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo">
+					onkeypress="if (event.keyCode == 13) { orderNo.jq.click(); return false; }" widgetVar="orderNo"
+					validatorMessage="#{lbl['lbl.txt.special.char']}">
+					<f:validateRegex pattern="^[a-zA-Z0-9~`!@#\$%\^&amp;\*\(\)_\-\+={\[\}\]\|\\:;&quot;'&lt;,>\.\?\/  ]*$" />
 					<p:ajax update="@this"/> </p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
 				<p:commandLink oncomplete="addRemarks.show();" id="addRemarkBtn"
