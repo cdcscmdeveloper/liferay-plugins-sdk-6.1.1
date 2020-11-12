@@ -70,30 +70,32 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							<p:outputLabel value="#{lbl['lbl.pp.invitation.date']}"></p:outputLabel>
 						</td>
 						<td>
-							<h:panelGrid columns="4">
-								<p:column>
-									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.fromdate']}"/>
-								</p:column>
-								<p:column>
-								<!-- 201111@akmal - Enhancement27624 - Start -->
-									<p:calendar rendered="true"
-									value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateFrom}" readonlyInput="true"
-									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
-								<!-- 201111@akmal - Enhancement27624 - End -->
-								</p:column>
-								<p:column>
-									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.todate']}"/>
-								</p:column>
-								<p:column>
-								<!-- 201111@akmal - Enhancement27624 - Start -->
-									<p:calendar rendered="true"
-									value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateTo}" readonlyInput="true"
-									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
-								<!-- 201111@akmal - Enhancement27624 - End -->
-								</p:column>
-							</h:panelGrid>
+							<table>
+								<tr>
+									<td style="width:44px; text-align:center;">
+										<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.fromdate']}"/>
+									</td>
+									<td>
+									<!-- 201111@akmal - Enhancement27624 - Start -->
+										<p:calendar rendered="true"
+										value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateFrom}" readonlyInput="true"
+										showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+										disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
+									<!-- 201111@akmal - Enhancement27624 - End -->
+									</td>
+									<td>
+										<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.todate']}"/>
+									</td>
+									<td>
+									<!-- 201111@akmal - Enhancement27624 - Start -->
+										<p:calendar rendered="true"
+										value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateTo}" readonlyInput="true"
+										showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+										disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
+									<!-- 201111@akmal - Enhancement27624 - End -->
+									</td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 					<tr>
@@ -101,50 +103,54 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							<p:outputLabel value="#{lbl['lbl.pp.annual.plan.last.updated']}"></p:outputLabel>
 						</td>
 						<td>
-							<h:panelGrid columns="4">
-								<p:column>
+							<table>
+							<tr>
+								<td style="width:44px; text-align:center;">
 									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.fromdate']}"/>
-								</p:column>
-								<p:column>
+								</td>
+								<td>
 								<!-- 201111@akmal - Enhancement27624 - Start -->
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateFrom}" readonlyInput="true"
 									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 								<!-- 201111@akmal - Enhancement27624 - End -->
-								</p:column>
-								<p:column>
+								</td>
+								<td>
 									<h:outputText value="#{lbl['lbl.pp.annual.plan.searchCriteria.todate']}"/>
-								</p:column>
-								<p:column>
+								</td>
+								<td>
 								<!-- 201111@akmal - Enhancement27624 - Start -->
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateTo}" readonlyInput="true"
 									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 								<!-- 201111@akmal - Enhancement27624 - End -->
-								</p:column>
-							</h:panelGrid>
+								</td>
+								</tr>
+							</table>
 						</td>
 					</tr>	
 					<tr>
 						<td></td>
 						<td>
-						<h:panelGrid columns="4">
-								<p:column>
+							<table>
+							<tr>
+								<td>
 									<p:outputLabel value="#{lbl['lbl.pp.status']}"></p:outputLabel>
-								</p:column>
-								<p:column>
+								</td>
+								<td>
 								<!-- 201111@akmal - Enhancement27624 - Start -->
 									<p:selectOneMenu id="pDetStatusSearch" label="#{lbl['lbl.pp.status']}" disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
 									styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planDetstatus}">
 									<f:selectItems value="#{pPlanBackingBean.getRecordStatusDropdownValues()}"/>
 									</p:selectOneMenu>
 								<!-- 201111@akmal - Enhancement27624 - End -->
-								</p:column>
-								<p:column></p:column>
-								<p:column></p:column>
-							</h:panelGrid>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							</table>
 						</td>
 					</tr>	
 					</table>	
