@@ -239,6 +239,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void preLoadingCreate(){
 		log.info("preLoadingCreate");
 		this.getManagedBean().setBackAllow(false);
+		//201111@akmal - Enhancement27624 - Start
+		this.getManagedBean().setDisablePlanSearchDet(true);
+		//201111@akmal - Enhancement27624 - End
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
@@ -285,9 +288,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
-		//200911@akmal - Enhancement27624 - Start
+		//201111@akmal - Enhancement27624 - Start
 		setScreenVariables();
-		//200911@akmal - Enhancement27624 - End
+		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
+		//201111@akmal - Enhancement27624 - End
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
@@ -7997,7 +8001,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public static void setMandatory(boolean isMandatory) {
 		ProcurementPlanBackingBean.isMandatory = isMandatory;
 	}
-	
 
 	public static String getPageType() {
 		return pageType;
