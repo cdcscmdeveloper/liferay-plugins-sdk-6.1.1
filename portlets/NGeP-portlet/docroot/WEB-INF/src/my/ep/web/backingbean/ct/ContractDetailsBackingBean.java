@@ -1718,9 +1718,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+		//#25406 - Start	
+		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
+		}else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome) 
+				&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+			validateRemarkCancel(outcome);
+			RequestContext.getCurrentInstance().execute("cancelComConfirmDlg.show()");
+			return null;
+		//#25406 - End
 		} else {
 			return this.saveContract(outcome);
 		}
@@ -3524,6 +3532,40 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		defaultMinistryPtjSearchValue();
 		FacesContext fc = FacesContext.getCurrentInstance();			
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_OWNER_MANAGEMENT_PAGE);	
+	}
+	//#25406 - End
+	
+	//#25406 - Start
+	/**
+	 * The method used for validating Remark Cancel Button.
+	 * A warning message will display on screen when Remark is null
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void validateRemarkCancel(String action) throws Exception {
+		
+		String remark = getManagedBean().getRemarkList().get(0).getRemark();
+		String agencyRemark = ctBB.getManagedBean().getContractVer().getAgencyRemarks().get(0).getRemark();
+		String zoneRemark = ctBB.getManagedBean().getContractVer().getZoneRemarks().get(0).getRemark();
+		String itemRemark = ctBB.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+		String deductionRemark = ctBB.getManagedBean().getContractVer().getDeductionRemarks().get(0).getRemark();
+		String scheduleRemark = ctBB.getManagedBean().getContractVer().getScheduleRemarks().get(0).getRemark();
+		String settingRemark = ctBB.getManagedBean().getContractVer().getSettingRemarks().get(0).getRemark();
+		String notificationRemark = ctBB.getManagedBean().getContractVer().getNotiSettingRemarks().get(0).getRemark();/*#26083 start - basri*/
+		if ((remark == null || remark.length() == 0) 
+				&& (agencyRemark == null || agencyRemark.length() == 0) 
+				&& (zoneRemark == null || zoneRemark.length() == 0)
+				&& (itemRemark == null || itemRemark.length() == 0) 
+				&& (deductionRemark == null || deductionRemark.length() == 0)
+				&& (scheduleRemark == null || scheduleRemark.length() == 0) 
+				&& (settingRemark == null || settingRemark.length() == 0)
+				&& (notificationRemark == null || notificationRemark.length() == 0)) {
+			getManagedBean().setSelectedTabIndex(0);
+			throwExceptions(MessageConst.ERROR_100064, "lbl.ct.remark");
+		}
+		
+
 	}
 	//#25406 - End
 }
