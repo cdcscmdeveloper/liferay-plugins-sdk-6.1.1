@@ -163,26 +163,39 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	// #27009 -- start
 	public void selectedNotifys() {
 		
-		debugLogger("=== selectedNotifys ===");
+		System.out.println("=== selectedNotifys ===");
 		
-		PmNotifyUser[] selectedNotifys = this.getManagedBean().getSelectedNotifys();
+		Object[] selectedNotifyObj = this.getManagedBean().getSelectedNotifyObj();
 		
-		debugLogger("IsRead[" + selectedNotifys[12].isRead() + "]");
+		Long notifyUserId = new Long(selectedNotifyObj[0].toString());
+		boolean readSelectedNotifyObj = Boolean.parseBoolean(String.valueOf(selectedNotifyObj[12]));
 		
-		if (!selectedNotifys[12].isRead()) {
+		System.out.println("notifyUserId= "+notifyUserId);
+		
+		PmNotifyUser selectedNotify = new PmNotifyUser();
+		
+		if (this.getManagedBean().getSelectedNotify() == null) {
+			// Retrieve notifyUser
+			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", INotifySO.class);
+
+			selectedNotify = reqSO.getPmNotifyUserByNotifyUserId(notifyUserId);
+		}
+		
+		if (!readSelectedNotifyObj) {
 		
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
 			
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
-			reqDTO.setPmNotifyUserObj(selectedNotifys);
+			reqDTO.setPmNotifyUser(selectedNotify);
 			
 			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
-			debugLogger("NotifyResDTO updateIsReadNotify["
+			System.out.println("NotifyResDTO updateIsReadNotify["
 					+ resDTO.isSuccessful() + "]");
 			
 			if (resDTO.isSuccessful()) {
-				selectedNotifys[12].setRead(true);
+				selectedNotify.setRead(true);
 			}
 		}
 	}
@@ -274,6 +287,10 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					}
 					
 					if (resDTO.isSuccessful()) {
+						for (int i = 0; i < resDTO.getNativeSearchResultBeanObj().getResultList().size(); i++) {
+							Object[] objects = (Object[]) resDTO.getNativeSearchList().get(i);
+							getManagedBean().setSelectedNotifyObj(objects);
+						}
 						return resDTO.getNativeSearchResultBeanObj();
 					}
 				}
