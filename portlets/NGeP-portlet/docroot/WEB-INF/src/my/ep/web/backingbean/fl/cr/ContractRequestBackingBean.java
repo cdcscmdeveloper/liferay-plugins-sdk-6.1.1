@@ -4722,13 +4722,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							if(!contractBondWaiver.isBondWaiverPeriod()){
 								//25296 - asyraf - to handle WIP transaction
 								if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-									if(contractBondWaiver.getCtBondWaiverDetailList() != null && !contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+									if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
 										throw new EpException(MessageConst.ERROR_740066);
 									} else {
 										throw new EpException(MessageConst.ERROR_740051);
 									}									
 								}else{
-									if(contractBondWaiver.getCtBondWaiverDetailList() != null && !contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+									if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
 										throw new EpException(MessageConst.ERROR_740067);
 									} else {
 										throw new EpException(MessageConst.ERROR_740052);
