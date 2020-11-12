@@ -1993,7 +1993,13 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-			reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+			//#25138, #21695 - start 
+			List<String> evalstage = new ArrayList<String>();
+			evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+			evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+			reqDTO.setResultStages(evalstage);
+			reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
+			//#25138, #21695 - end
 			evaluationSO.generateEvaluationSheet(reqDTO);
 		} finally {
 			evaluationSO = null;
@@ -13379,9 +13385,18 @@ private void retriveCommitteeRemarksList(){
 			//#25138 - filter auto score condition - Start
 			if(QTConstants.AUTO_SCORE.equalsIgnoreCase(this
 					.getManagedBean().getOfferScoreType())){
-				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-				reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+				//#25138, #21695 - start
+				EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+				evalReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				evalReqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				List<String> evalStage = new ArrayList<String>();
+				evalStage.add(QTConstants.TECHNICAL_EVALUATION);
+				evalStage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				evalReqDTO.setResultStages(evalStage);
+				if(this.getManagedBean().getScQt().isPartial()){
+					evalReqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
+				}
+				//#25138, #21695 - end
 				evaluationSO.generateEvaluationSheet(reqDTO);
 			
 			}
