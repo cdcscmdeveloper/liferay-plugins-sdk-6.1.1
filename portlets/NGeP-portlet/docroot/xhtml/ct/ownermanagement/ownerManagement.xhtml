@@ -337,17 +337,21 @@
            </h:panelGroup>
 	</p:dialog>	 
 	<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml"  />
-			<p:confirmDialog message="#{contractDetailsBackingBean.getCancelConfirmationContent(ctBackingBean.managedBean.contractVer.docType)}"
-			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			<p:confirmDialog message="#{lbl['lbl.ct.msg.confirm.com.remark']}"
+			severity="alert" widgetVar="cancelComConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
 					action="#{contractDetailsBackingBean.saveContract('CANCEL')}"
-					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					onstart="cancelComConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="cancelConfirmDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="cancelComConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{contractDetailsBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:confirmDialog>
 
