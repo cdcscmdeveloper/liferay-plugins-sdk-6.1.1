@@ -2,7 +2,9 @@ package my.ep.web.backingbean.sm.supportingdocinquiry;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,11 +18,16 @@ import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryReqDTO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -36,12 +43,19 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "supportingDocInquiryBackingBean")
 @RequestScoped
 public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingDocInquiryManagedBean> {
 
 	private static Logger log = Logger.getLogger(SupportingDocInquiryBackingBean.class);
+	//#11641 - Start
+	private int mandatoryCounter = 1;
+	private int nonMandatoryCounter = 1;
+	private boolean mandatoryEmpty = false;
+	private boolean nonMandatoryEmpty = false;
+	//#11641 - End
 
 	public SupportingDocInquiryBackingBean(){
 		SmCommonUtil.setMDCUserId();
@@ -172,6 +186,10 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			
+			//#11641 - START
+			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());
+			//#11641 - END
 
 			SupportingDocInquiryResDTO resDTO = reqSO.updateInquiry(reqDTO);
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
@@ -412,4 +430,140 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		return trckVO;
 
 	}
+	//#11641 - Start
+	public int getMandatoryCounter() {
+		return mandatoryCounter++;
+	}
+
+	public int getNonMandatoryCounter() {
+		return nonMandatoryCounter++;
+	}
+
+	public boolean isMandatoryEmpty() {
+		int mandatoryCount = 0;
+		for(SmApplSupportDocInquiry smApplSupportDocInquiry : this.getManagedBean().getSmApplInquiry().getSmApplSupportDocInquiries()){
+			if(smApplSupportDocInquiry.getPmDocument().isMandatory()){
+				mandatoryCount++;
+			}
+		}
+		if(mandatoryCount > 0){
+			mandatoryEmpty = false;
+		}else{
+			mandatoryEmpty = true;
+		}
+		return mandatoryEmpty;
+	}
+	
+	public boolean isNonMandatoryEmpty() {
+		int nonMandatoryCount = 0;
+		for(SmApplSupportDocInquiry smApplSupportDocInquiry : this.getManagedBean().getSmApplInquiry().getSmApplSupportDocInquiries()){
+			if(!smApplSupportDocInquiry.getPmDocument().isMandatory()){
+				nonMandatoryCount++;
+			}
+		}
+		if(nonMandatoryCount > 0){
+			this.nonMandatoryEmpty = false;
+		}else{
+			this.nonMandatoryEmpty = true;
+		}
+		return nonMandatoryEmpty;
+	}
+	
+	public void handleSupDocFileAttachment(FileUploadEvent event) {
+		log.info("********handleFileAttachment********");
+		if (event.getFile() != null) {
+			log.info("***** File attached *******"+ event.getFile().getFileName());
+			
+			if (getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().contains(this.getManagedBean().getSupportDoc())) {
+				log.info("******* Contains selected file ****");
+				String filePath = Calendar.getInstance().get(Calendar.YEAR)
+						+ "/SM/APPLICATION/"
+						+ this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo() + "/SD/";
+				SmApplSupportDoc doc = getManagedBean().getSupportDoc();
+
+				if (EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					SmApplicationUtil.setDefaultSmApplDocFiles(doc);
+				}
+				
+				SmApplDocFile smApplDocFile = new SmApplDocFile();
+				smApplDocFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+				smApplDocFile.setSmApplSupportDoc(doc);
+				smApplDocFile.setFilePath(filePath);
+				
+				doc.getSmApplDocFiles().add(smApplDocFile);
+				
+				for(int i=0; i<doc.getSmApplDocFiles().size(); i++){
+					if(doc.getSmApplDocFiles().get(i).getFileName()==null || 
+							doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
+						doc.getSmApplDocFiles().remove(i);
+					}
+				}
+				doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+
+				getManagedBean()
+						.getSmApplInquiry()
+						.getSmAppl()
+						.getSmApplSupportDocs()
+						.set(getManagedBean().getSmApplInquiry().getSmAppl()
+								.getSmApplSupportDocs()
+								.indexOf(getManagedBean().getSupportDoc()),
+								getManagedBean().getSupportDoc());
+
+				commonUploadFile(event, filePath);
+				
+				List<SmApplDocFile> smApplDocFiles = new ArrayList<SmApplDocFile>();
+				for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
+					if(smApplSupportDoc.equals(this.getManagedBean().getSupportDoc())){
+						if(smApplSupportDoc.getNewAddedFiles() != null){
+							smApplDocFiles = smApplSupportDoc.getNewAddedFiles();
+						}
+						
+						smApplDocFiles.add(smApplDocFile);
+						if(this.getManagedBean().getAddedDocFile() == null){
+							List<SmApplDocFile> newFile = new ArrayList<SmApplDocFile>();
+							newFile.add(smApplDocFile);
+							this.getManagedBean().setAddedDocFile(newFile);
+						}else{
+							this.getManagedBean().getAddedDocFile().add(smApplDocFile);
+						}
+						smApplSupportDoc.setNewAddedFiles(smApplDocFiles);
+					}
+				}
+			}
+		}
+	}
+
+	public void onDeleteSupDocFileAttachment(SmApplSupportDoc doc, int index, SmApplDocFile file) {
+		this.getManagedBean().setSupportDoc(doc);
+		this.getManagedBean().setAttachedFileIndex(index);
+		this.getManagedBean().setSmApplDocFile(file);
+		
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeleteSupDocDialog.show();");
+	}
+	
+	public void deleteSupDocFileAttachment() {
+		SmApplSupportDoc smApplSupportDoc = getManagedBean().getSupportDoc();
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
+	}
+	
+	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
+		this.getManagedBean().setAttachedFileIndex(index);
+		this.getManagedBean().setSupportDoc(doc);
+	}
+	
+	public String retrieveRemarkByDocId(PmDocument pmDocument){
+		String remark = null;
+		for(SmApplSupportDocInquiry smApplSupportDocInquiry : this.getManagedBean().getSmApplInquiry().getSmApplSupportDocInquiries()){
+			if(smApplSupportDocInquiry.getPmDocument().equals(pmDocument)){
+				remark = smApplSupportDocInquiry.getSdoRemarks();
+			}	
+		}
+		return remark;
+	}
+	//#11641 - END
 }
