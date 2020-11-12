@@ -534,8 +534,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> personnelsSsm  = new ArrayList();
 	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
 	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();	
-		
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();
+	//#29315
+	private boolean flagMandatoryEpfNo;
+	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4115,4 +4117,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSmEquityCompaniesSsm(List<SmEquityCompany> smEquityCompaniesSsm) {
 		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
 	}
+	
+	public boolean isFlagMandatoryEpfNo() {
+		return flagMandatoryEpfNo;
+	}
+
+	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
+		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
+	}
+	
 }
