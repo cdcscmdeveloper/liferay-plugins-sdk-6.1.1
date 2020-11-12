@@ -7174,13 +7174,25 @@ public class SimpleQuoteBackingBean extends
 				log.info("--------> showing diff "+ diff);
 				diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
 				
-				if(diff.compareTo(minMinutes) < 0){
+				if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+					if(diff.compareTo(minMinutesss) < 0){
+						log.info("-------In error minMinutes = " + minMinutes);
+						log.info("-------In error minHours = " + minHours);
+						throw new EpException(
+								MessageConst.ERROR_760429,
+								new String[] {minHours.toString()});
+					}
+				}
+				else{
+					if(diff.compareTo(minMinutes) < 0){
+				
 					log.info("-------In error minMinutes = " + minMinutes);
 					log.info("-------In error minHours = " + minHours);
 					throw new EpException(
 							MessageConst.ERROR_760429,
 							new String[] {minHours.toString()});
-				}
+					}
+				}		
 				if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
 					if(diff.compareTo(maxMinutesss) > 0 ){
 					log.info("-----------> in second error = " + diff);
