@@ -1709,19 +1709,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if("M".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE1))){//MOF Registration Fee
 				payType.add("MF");
 				payType.add("RF");
-				paymentTypeDesc.add("Bayaran Pendaftaran");
+				// 14203 - Change Bayaran Pendaftaran
+				paymentTypeDesc.add("Fi Pendaftaran MOF");
 			}
 			
 			if("P".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE2))){//Processing Fee
 				payType.add("PF");
 				payType.add("RPF");
-				paymentTypeDesc.add("Bayaran Proses");
+				// 14203 - Change Bayaran Proses
+				paymentTypeDesc.add("Fi Pemprosesan MOF");
 			}
 			
 			String paymentType = "";
 			if("S".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE3))){//Soft Certificate Fee
 				payType.add("SF");
-				paymentTypeDesc.add("Bayaran Sijil Digital");
+				// 14203 - Change Bayaran Sijil Digital
+				paymentTypeDesc.add("Fi Sijil Digital");
 			}
 			
 			for(int b=0; b<payType.size(); b++){
