@@ -222,7 +222,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				
+				// Start - #29507 Fixing
 				Long contractVerId=null;				
 				log.info("ServiceListingPagingDataModel");
 				log.info("getTaskId : "+getTaskId());
@@ -243,7 +243,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 				}
-				
+				// End - #29507 Fixing
 				
 				  if(contractVerId!=null ){						
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
@@ -368,6 +368,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 			Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 			
 			Long contractVerId=null;
+			// Start - #29507 Fixing
 			log.info("ContractListingPagingDataModel");
 			log.info("getTaskId : "+getTaskId());
 			
@@ -387,10 +388,12 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 			}
+			// End - #29507 Fixing
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+			  
 			
 		  if(contId!=null ) {
 				SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
