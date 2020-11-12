@@ -20,6 +20,7 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
@@ -51,6 +52,9 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
 	private SmMofAccount currMof;
+	//#11641 - Start
+	private SmApplInquiry selectedInquiryResponse;
+	//#11641 - End
 
 	//25792 - start
 	private Date currentDate = new Date();
@@ -383,4 +387,13 @@ public class ViewApplHistoryManagedBean extends
 		this.SearchDocumentMode = SearchDocumentMode;
 	}
 	//28771 - end
+	//#11641 - Start
+	public SmApplInquiry getSelectedInquiryResponse() {
+		return selectedInquiryResponse;
+	}
+
+	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+	//#11641 - End
 }
