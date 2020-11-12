@@ -30,5 +30,16 @@
 			</h:panelGroup>				
 			
 		</ui:repeat>
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}" id="cancelLoaBtn"
+			rendered="#{purchaseRequestListSize == 1 and loaId != null and loaStatusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"
+			action="#{lOACancelDetailBackingBean.cancelationLOA(loaId)}"
+			process="@form" update="@form" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();" />
+
+		<p:tooltip for="cancelLoaBtn">
+			<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip.loaprepare']}"
+				escape="false" />
+		</p:tooltip>
+
 	</div>
 </ui:composition>
