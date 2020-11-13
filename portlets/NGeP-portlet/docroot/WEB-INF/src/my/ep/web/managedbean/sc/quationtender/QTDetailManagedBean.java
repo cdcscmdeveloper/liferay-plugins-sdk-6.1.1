@@ -1690,6 +1690,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long currentQTStatus;
 
 	//#25037-END
+	//#25077 - Start
+	private ScQtApprovalRequest historyApprovalRequests;
+	//#25077 - End
 
 	public QTDetailManagedBean() {
 		log.info("inside ");
@@ -10524,6 +10527,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCurrentQTStatus(Long currentQTStatus) {
 			this.currentQTStatus = currentQTStatus;
 		}
+		//#25077 - Start
+		public ScQtApprovalRequest getHistoryApprovalRequests() {
+			return historyApprovalRequests;
+		}
+
+		public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
+			this.historyApprovalRequests = historyApprovalRequests;
+		}
+		//#25077 - End
 		
 		
 		//#25692 End
