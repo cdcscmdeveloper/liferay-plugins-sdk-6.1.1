@@ -2525,6 +2525,37 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	//#25037-END
+	//#25077 - Start
+		/**
+		 * Upload attachment for history others approval.
+		 */
+		public void handleHistoryOtherFileUpload(FileUploadEvent event)
+				throws FileNotFoundException, IOException {
+			if (event.getFile() != null) {
+				ScQtApprovalRequest scQtApprovalHistoryDtls = this.getManagedBean().getHistoryApprovalRequests();
+				ScQtApprovalReqAttachement approvalReqAttachement = scQtApprovalHistoryDtls.getApprovalRequestAttachement();
+				if (null == approvalReqAttachement) {
+					approvalReqAttachement = new ScQtApprovalReqAttachement();
+					approvalReqAttachement.setApprovalRequest(scQtApprovalHistoryDtls);
+				}
+				approvalReqAttachement.setDocNo(scQtApprovalHistoryDtls.getScQtApproval().getScQt().getQtNo());
+				uploadAttachment(event.getFile(), approvalReqAttachement);
+				scQtApprovalHistoryDtls.setApprovalRequestAttachement(approvalReqAttachement);
+			}
+		}
+		
+		/**
+		 * Delete attachment for history others approval.
+		 */
+		public void deleteHistoryOthersApprovalFile(BaseEntity delEntity) {
+			List<ScQtApprovalRequest> list = this.getManagedBean()
+					.getSelectedApprovalTabBean().getScQtApproval()
+					.getHistoryApprovalRequests();
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).setApprovalRequestAttachement(null);
+			}
+		}
+		//#25077 - End
 }
 
 // ***25692
