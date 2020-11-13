@@ -1271,6 +1271,7 @@ public class EvaluationBackingBean extends
 		if (proposalCheckList.getScQtCheckList().getTitle()
 				.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
 			retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
+			log.info("This is Pengesahan dari Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist());
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList);
 			proposalPage = detailBackingBean
 					.retrieveBankStmtDtls(this.getManagedBean().getComplianceQtProposalChecklist());
@@ -1278,6 +1279,7 @@ public class EvaluationBackingBean extends
 		if (proposalCheckList.getScQtCheckList().getTitle()
 				.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)")) {
 			retrieveAllFinancialChecklist("Aset dan Liabiliti (Dari Kunci Kira-kira)");
+			log.info("This is Kunci Kira-Kira Tahunan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist());
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList);
 			proposalPage = detailBackingBean
 					.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
@@ -1285,6 +1287,7 @@ public class EvaluationBackingBean extends
 		if (proposalCheckList.getScQtCheckList().getTitle()
 				.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar")) {
 			retrieveAllFinancialChecklist("Kemudahan Kredit (Overdraf, Pinjaman Bank)");
+			log.info("This is Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist());
 			retrieveComplianceUploadedProposalChecklist(proposalCheckList);
 			proposalPage = detailBackingBean
 					.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
