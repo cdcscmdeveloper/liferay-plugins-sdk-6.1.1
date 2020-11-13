@@ -26,6 +26,7 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_SERVICE_TYPE = "SERVICETYPEID";
 	public static final String PARAM_PM_FINORG_NAME = "FINORGNAME";
 	public static final String PARAM_PM_STATUS = "PSTATUS";
+	public static final String PARAM_PM_G2G = "PG2G"; //#28833 
 	public static final String PARAM_PM_ORG_NAME = "PORGNAME";
 	public static final String PARAM_PM_ORG_CODE = "PORGCODE";
 	public static final String PARAM_PM_ORG_CATEGORY = "PCATTYPE";
@@ -50,6 +51,8 @@ public class PmReportConst implements Serializable {
 	public static final String PM_BPK_USER_PROFILE_RPT_VAL = "PM_008";
 	public static final String PM_BPK_ADMIN_PROFILE_RPT_VAL = "PM_009";
 	public static final String PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL = "PM_010";
+	public static final String PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT = "PM_12"; // #28833 
+	
 
 	// Org Category values
 	public static final int ORG_CAT_FEDERAL_GOVT = 0;
@@ -129,6 +132,15 @@ public class PmReportConst implements Serializable {
 	public String getPmNoOfCpAndMrAccessApplicationRptVal() {
 		return PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL;
 	}
+	
+	// #28833  start
+	/**
+	 * @return the pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal
+	 */
+	public String getpmListOfPTJAllowedToApproveOtherPTJProcurementRptVal() {
+		return PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT;
+	}
+	// #28833  end
 
 	/**
 	 * @return the orgCatFederalGovt
