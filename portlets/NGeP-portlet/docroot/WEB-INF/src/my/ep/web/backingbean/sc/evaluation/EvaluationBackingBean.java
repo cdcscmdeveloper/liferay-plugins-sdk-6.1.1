@@ -7039,19 +7039,6 @@ public class EvaluationBackingBean extends
 
 						}else if(this.getManagedBean()
 								.getEvaluatioStageActiveIndex() == 2){
-							//#25138 # 25138 save item score for partial yes, not offer and qty 0 - start
-							if (null == this.getManagedBean().getScQt()
-							        .getFecEvaluationCheck()) {
-
-							    generateFinancialEvaluationresults();
-							    this.getManagedBean().getScQt()
-							            .setFecEvaluationCheck(2);
-							    EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-							    reqDTO.setScQt(this.getManagedBean().getScQt());
-							    evalResDTO = evaluationSo.saveReportDtls(reqDTO);
-							    this.getManagedBean().setScQt(evalResDTO.getScQt());
-							}
-							//#25138 # 25138 save item score for partial yes, not offer and qty 0 - end
 							retriveFinancialEvaluationStage();
 							retriveNonScoringComplianceFinancial(true);//#28856
 							financialSpecQuestionOneItem();//#25138 - one item only
