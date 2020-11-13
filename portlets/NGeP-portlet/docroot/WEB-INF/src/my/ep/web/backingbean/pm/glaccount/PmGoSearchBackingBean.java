@@ -355,6 +355,7 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	
 	public void okAction(String methodActionStr) {
 		log.info("pmGO - okAction");
+		//200911@akmal - Enhancement27624 - Start
 		if(this.getManagedBean().getSelectionMode().equals("single")){
 			if (StringUtils.isNotBlank(methodActionStr) && getManagedBean().getvPmGo() != null){
 				PmGlAccount glAccount = getManagedBean().getvPmGo().getGlAccount();
@@ -379,7 +380,6 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 				RequestContext.getCurrentInstance().execute("pmGoPopup.hide();");
 			}
 		}
-		//200911@akmal - Enhancement27624 - Start
 		else if(this.getManagedBean().getSelectionMode().equals("multiple")){
 			FacesContext context = FacesContext.getCurrentInstance();
 			String expressionString = this.getManagedBean().getSaveObject();
