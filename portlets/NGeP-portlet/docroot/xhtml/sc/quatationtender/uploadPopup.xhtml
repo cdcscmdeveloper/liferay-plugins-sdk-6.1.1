@@ -15,5 +15,10 @@
 		fileUploadListener="approvalBackingBean.handleOtherFileUpload"
 		readonly="#{createQtBB.managedBean.readOnly}"
 		update="@([id$=otheruploadId])" />
-
+	<!-- #25077 Start -->
+     <ac:scSingleFileUploadPopup widgetVar="otherHistoryApprUploadDlg"
+		fileUploadListener="approvalBackingBean.handleHistoryOtherFileUpload"
+		readonly="#{createQtBB.managedBean.readOnly}"
+		update="@([id$=historyOtheruploadId])" />
+    <!-- #25077 End -->
 </ui:composition>
