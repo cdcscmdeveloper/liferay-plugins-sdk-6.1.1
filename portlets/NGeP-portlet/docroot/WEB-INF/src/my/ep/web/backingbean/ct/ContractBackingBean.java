@@ -3341,13 +3341,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		log.info("Putra Check Uom Decimal :"+ctContractItem.getScRequestItem().getUom().getDecimalScale().toString() );
 		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
 		//Bug #28356 - Start
+		//#28479 - Start Putra
 		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
-			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 			if (ctContractItem.getMinimumOrderQty() <= 0) {
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 						item.setMinimumOrderQty(1);
 						ctContractItem.setMinimumOrderQty(1);
+						throw new EpException(MessageConst.ERROR_100033,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
+				}
+			}
 					//Bug #28479 - Start
 //					if ((getManagedBean().getContractVer().getContractVerId() == null)
 //							&& (getManagedBean().getContractVer().getDocType()
@@ -3356,30 +3362,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //						ctContractItem.setMinimumOrderQty(1);
 //						getManagedBean().setErr100033(true);
 //						getManagedBean().setMinQtyCheck(true);
-//					}
-					//Bug #28479 - End
-				throw new EpException(MessageConst.ERROR_100033,
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+					//Bug #28479 - End				
 			if (ctContractItem.getMinimumOrderQty() > 0) {
-				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId()))
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 				   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-				}
-			if (!item.getCtItemMaxQties().isEmpty()) {
-				Double maxValue = new Double(0);							
-				for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-					if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-						maxValue = maxQty.getMaxQuantity().doubleValue();				
-				}
-				if (item.getMinimumOrderQty() > maxValue) {
-					throw new EpException(MessageConst.ERROR_100034,
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-				}
-				
+								
+				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
+					Double maxValue = new Double(0);							
+					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
+					}
+					if (item.getMinimumOrderQty() > maxValue) {
+						throw new EpException(MessageConst.ERROR_100034,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
+						}
+					}
+				}//#28479 - End Putra
 			}
-			} 			
+		}
 //		}//28292 - null checker
 		// Start - 28292
 //		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
