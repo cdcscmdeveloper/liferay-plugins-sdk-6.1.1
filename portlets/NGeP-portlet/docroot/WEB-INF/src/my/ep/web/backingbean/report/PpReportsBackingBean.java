@@ -221,15 +221,6 @@ public class PpReportsBackingBean extends
 						getManagedBean().setDisabledMinistryLov(true);
 						getManagedBean().setDisabledKumpulanPTJLov(true);
 					}
-				//start #27472-auto load kump ptj
-				}else if(isJabatanAdmin()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
-					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));	
-					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanByOrgProfile(orgProfileId));
-					getManagedBean().setDisabledPegawaiLov(true);
-					getManagedBean().setDisabledMinistryLov(true);
-					getManagedBean().setDisabledKumpulanPTJLov(true);
-				//end #27472
 				}else if(isInternalAuditor()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 					getManagedBean().setDisabledMinistryLov(true);
@@ -1838,18 +1829,6 @@ public class PpReportsBackingBean extends
 		return titleReportCellStyle;
 	}
 
-	private PmUser getCurrentLogin(){
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser loginUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		new LogKey(loginUser.getUserId());
-		
-		return loginUser;
-	}
-		
 	private int findHigherRole(){
 		
 		if(getManagedBean().isDisabledMinistryLov() && getManagedBean().isDisabledPegawaiLov()
@@ -1963,34 +1942,4 @@ public class PpReportsBackingBean extends
 	}
 	//[#27197] - end
 
-	
-	//start #27472
-	
-	private boolean isJabatanAdmin(){
-		return getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value());
-	}
-	
-	/**
-	 * Retrieve jabatan by org profile.
-	 *
-	 * @param orgProfileId the org profile id
-	 * @return the pm org profile
-	 */
-	public PmOrgProfile retrieveJabatanByOrgProfile(Long orgProfileId) {
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(orgProfileId);
-		PmOrgProfile pmOrgProfile = profileSO.retrieveOrgProfileDtlByID(
-				reqDTO).getPmOrgProfile();
-		if (pmOrgProfile == null) {
-			pmOrgProfile = new PmOrgProfile();
-			pmOrgProfile.setOrgProfileId(-1L);
-		}
-		return pmOrgProfile;
-	}
-
-	//end #27472
 }
