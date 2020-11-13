@@ -124,7 +124,7 @@
 				<!-- #27472 start-->
 				<c:if test="#{isPPBudgetAllocationAmendmentReport or (isPPSummReport and not isPPDtlReport)}">
 					<td width="15%">
-						<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+						<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td width="15%">
@@ -158,7 +158,7 @@
 				<!-- #27472 start-->
 				<c:if test="#{not isPPSummReport or isPPDtlReport or isPESummReport or isPEDtlReport}">
 					<td width="15%">
-						<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+						<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td width="15%">
@@ -194,7 +194,7 @@
 			<!-- #27472 start-->
 			<c:if test="#{not isPPSummReport and not isPPDtlReport and not isPESummReport and not isPEDtlReport}">
 				<td width="15%">
-					<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+					<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td width="15%">
@@ -233,7 +233,7 @@
 
 			<!-- #27472 start-->
 			<td width="20%">
-				<p:outputLabel value="#{lbl['lbl.rpt.drpdown.documentTypelbl']}" />
+				<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td width="20%">
