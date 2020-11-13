@@ -239,7 +239,11 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					CodificationReqDTO reqDTO = new CodificationReqDTO();
 					reqDTO.setSearchBean(searchBean);
 
+					/*29403 Troubleshoot issue*/
+					log.info("Going to searchUNSPSC");
 					CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
+					log.info("End searchUNSPSC");
+					/*29403 Troubleshoot issue*/
 
 
 					return resDTO.getResultBean();
@@ -300,7 +304,11 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			throw new EpException(MessageConst.ERROR_715060);
 		}
 
+		/*29403 Troubleshoot issue*/
+		log.info("Going to getSearchDataModel");
 		this.getSearchDataModel().reloadData();
+		log.info("End getSearchDataModel");
+		/*29403 Troubleshoot issue*/
 	}
 	
 	public void extensionCodeSearch() {
