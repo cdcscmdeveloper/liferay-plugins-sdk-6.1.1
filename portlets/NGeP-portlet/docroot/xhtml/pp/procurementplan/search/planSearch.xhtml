@@ -55,15 +55,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 			</tr>
 			<tr>
-				<td>
 				<!-- 200911@akmal - Enhancement27624 - Start -->
+				<td>
 					<p:outputPanel id="planTypeId">
 						<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</p:outputPanel>
-				<!-- 200911@akmal - Enhancement27624 - End -->
-					
 				</td>
+				<!-- 200911@akmal - Enhancement27624 - End -->
 				<td>
 					<p:selectOneMenu id="somPlanType" label="#{lbl['lbl.pp.plan.type']}" 
 						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode}">
@@ -76,8 +75,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							<!-- <f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
 							<p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
 									update="somVotSearch"/> -->
+						<!-- 200911@akmal - Enhancement27624 - Start -->
 						<p:ajax event="change" process="@this" update="@this,ppSearchStatus" 
-							listener="#{pPlanBackingBean.changeSearchPlanType(pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode)}" /> 
+							listener="#{pPlanBackingBean.changeSearchPlanType(pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode)}" />
+						<!-- 200911@akmal - Enhancement27624 - End --> 
 					</p:selectOneMenu>
 				</td>				
 			</tr>
