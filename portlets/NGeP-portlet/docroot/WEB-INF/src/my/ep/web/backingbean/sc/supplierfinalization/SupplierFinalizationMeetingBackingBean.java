@@ -1442,6 +1442,15 @@ public class SupplierFinalizationMeetingBackingBean extends
 				if (!isValidationSuccessful) {
 					return;
 				}
+			}else{
+				IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+				SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
+				sfReqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+				sfReqDTO.setScQtCommittee(getManagedBean().getScQtCommittee());
+				sfReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				sfReqDTO.setSkipMeetingValidation(true);
+				qtSuppFinalizationSO.validateCoordinateMeeting(sfReqDTO);
 			}
 			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());//#25037
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
