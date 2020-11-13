@@ -47,6 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -69,7 +71,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -95,7 +96,7 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.Paginator;//25138
+import my.ep.helper.Paginator;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -129,7 +130,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinancialCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
@@ -148,6 +148,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -171,11 +172,9 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.batik.apps.svgbrowser.StatusBar;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.docx4j.docProps.variantTypes.Array;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -185,6 +184,7 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 import com.liferay.portal.util.PortalUtil;
+//25138
 
 /**
  * The Class EvaluationBackingBean.
@@ -1357,16 +1357,18 @@ public class EvaluationBackingBean extends
 					.getComplianceSampleItemListDM().getList();
 			ScQtSampleLable sampleLabel = null;
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
-				for (ScQtSampleItem sampleItem : sampleCompliance) {
+			/*	for (ScQtSampleItem sampleItem : sampleCompliance) {//#11104-start
 					if (null == sampleItem.getSubmissionStatus()
 							|| null == sampleItem.getSubmissionStatus()
 									.getParameterId()) {
-						throw new EpException(MessageConst.ERROR_760363);
+						//throw new EpException(MessageConst.ERROR_760363);
+						sampleItem.setSubmissionStatus(null);
 
 					}
-				}
+				}*///#11104-End
 				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
 				reqDTO.setSampleComplianceList(sampleCompliance);
+				reqDTO.setSampleLabel(this.getManagedBean().getScQtSampleLbl());
 			}
 			
 			// #26339 - Start
@@ -1392,6 +1394,19 @@ public class EvaluationBackingBean extends
 				}
 			}
 			// #26339 - End
+			if(null!=evaluationResDTO && null!=evaluationResDTO.getSampleLabel()){
+				
+			List<ScQtSampleLable> samplelableList=	getManagedBean().getComplianceSampleLblsupplierDM().getList();
+			int index=samplelableList.indexOf(this.getManagedBean().getScQtSampleLbl());
+			samplelableList.set(index, evaluationResDTO.getSampleLabel());
+			this.getManagedBean().setScQtSampleLbl(evaluationResDTO.getSampleLabel());
+			/*	for (ScQtSampleLable qtSampleLable : getManagedBean().getComplianceSampleLblsupplierDM().getList()) {
+					if (qtSampleLable.getSampleLableId().longValue() == evaluationResDTO.getSampleLabel().getSampleLableId().longValue()) {
+						int index=getManagedBean().getComplianceSampleLblsupplierDM().getList().indexOf(qtSampleLable);
+						getManagedBean().getComplianceSampleLblsupplierDM().getList().add(index, evaluationResDTO.getSampleLabel());
+					}
+			}*/
+			}
 			
 			if (null != sampleLabel) {
 				this.getManagedBean()
@@ -4315,6 +4330,7 @@ public class EvaluationBackingBean extends
 				if (resDTO.getItemResultBean().getTotalRecord() > 0) {
 					this.getManagedBean().setSampleItemList(
 							resDTO.getItemResultBean().getResultList());
+					getManagedBean().setItemSampleReq(resDTO.getItemResultBean().getResultList().get(0).getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().isSampleReq());//#11104
 				}
 
 				this.getManagedBean().setNoOfContractsProposalScore(null);
@@ -8361,6 +8377,22 @@ private void retriveCommitteeRemarksList(){
 			reqDtO.setProposalChecklist(qtProposalChecklist);
 			reqDtO.setPrpExperienceList(this.getManagedBean()
 					.getPrpCompanyExperienceList());
+			if(this.getManagedBean().isItemSampleReq()){//#11104-start
+				log.info("============displayitemsamplerequired===");
+			List<ScQtSampleItem> sampleItemlist=this.getManagedBean().getSampleItemList();
+			for(ScQtSampleItem item:sampleItemlist){
+				if(null==item.getUserScore()){
+				//throw new EpException("SampleItemScoremandatory");	
+				throw new EpException(MessageConst.ERROR_760517, new String[] {
+						ResourceBundleUtils
+						.getMessage("lbl.tpl.spec.content.user.score",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()),
+								item.getScRequestItem().getItemName() });
+				}
+			}
+			reqDtO.setSampleComplianceList(sampleItemlist);
+			}//#11104-End
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				reqDtO.setEvalStage(getEvaluationStageForTechnicalChecklist());
@@ -8414,6 +8446,7 @@ private void retriveCommitteeRemarksList(){
 		}
 
 	}
+
 
 	
 	/**
@@ -12375,14 +12408,15 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceSampleItemListDM().getList();
 
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
-				for (ScQtSampleItem sampleItem : sampleCompliance) {
+			/*	for (ScQtSampleItem sampleItem : sampleCompliance) {//#11104-start
 					if (null == sampleItem.getSubmissionStatus()
 							|| null == sampleItem.getSubmissionStatus()
 									.getParameterId()) {
-						throw new EpException(MessageConst.ERROR_760363);
+						//throw new EpException(MessageConst.ERROR_760363);
+						 sampleItem.setSubmissionStatus(null);
 
 					}
-				}
+				}*///#11104-End
 
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
@@ -12396,6 +12430,7 @@ private void retriveCommitteeRemarksList(){
 			evaluationSo = null;
 		}
 	}
+
 
 	
 	/**
@@ -14029,16 +14064,19 @@ private void retriveCommitteeRemarksList(){
 		try {
 			if (null != qtSampleLable) {
 				log.debug(this.getClass().getName() + ".sampleChecklistCompleted(): checking status for label ID: " + qtSampleLable.getSampleLableId());
-				List<ScQtSampleItem> sampleItemList = qtSampleLable.getSampleItems();
+				//List<ScQtSampleItem> sampleItemList = qtSampleLable.getSampleItems();//#11104
 				boolean statusCompleted = true;
-				if (CollectionUtils.isNotEmpty(sampleItemList)) {
+				/*if (CollectionUtils.isNotEmpty(sampleItemList)) {//#11104-start
 					for (ScQtSampleItem sampleItem : sampleItemList) {
 						if (null != sampleItem && null == sampleItem.getSubmissionStatus()) {
 							statusCompleted = false;
 							break;
 						}
 					}
-				}
+				}*/
+				if(null==qtSampleLable.getSampleLableStatus() || QTStatusConst.TS_PENDING_SUBMISSION.equals(qtSampleLable.getSampleLableStatus().getStatusId()) ){
+					statusCompleted = false;	
+				}//#11104-End
 				log.info(this.getClass().getName() + ".sampleChecklistCompleted(): status of label ID: " + qtSampleLable.getSampleLableId() + " : is : " + statusCompleted);
 				return statusCompleted;
 			}
@@ -14611,4 +14649,46 @@ private void retriveCommitteeRemarksList(){
 		
 	}
 	//#25138 - filter qualified supplier in technical & financial for compliance - end
+	
+	/**11104-start
+	 * Gets the sample submission dropdown values.display sample submission drop in compliance
+	 * Type Dropdown values.
+	 * 
+	 * @param type
+	 *            (String sampleType)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getSampleSubmissionDropDownValues(String sampleType) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> sampleList = new ArrayList<String>();
+		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE);
+		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE);
+		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), sampleList));
+
+		SelectItem[] sampleData = getDropdownValuesBySearchBean(
+				ParameterTypeConst.SAMPLE_SUBMISSION_STATUS, searchBean);
+		searchBean = null;
+		sampleList = null;
+		return sampleData;
+	}
+	/**11104-start
+	 * calculate sample item score in technical Item tab for supplier.
+	 * 
+	 */
+	public void sampleScoreCalculate(){
+		log.info("============sampleScoreCalculate=====");
+		BigDecimal sampleScore = BigDecimal.valueOf(0);
+		List<ScQtSampleItem> itemList=this.getManagedBean().getSampleItemList();
+		for(ScQtSampleItem  item:itemList){
+			if(null!=item.getUserScore()){
+				sampleScore=sampleScore.add(item.getUserScore());	
+			}
+		}
+		this.getManagedBean().getNoOfContractsProposalScore().setUserScore(sampleScore);
+	}//#11104_End
+
 }

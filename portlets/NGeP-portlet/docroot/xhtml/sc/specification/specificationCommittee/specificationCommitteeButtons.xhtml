@@ -114,8 +114,8 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-				    onclick="submitConfirmPopUp.hide(); blockWidget.show();"
-					oncomplete="blockWidget.hide();"
+				    onclick="blockWidget.show();"
+					oncomplete="submitConfirmPopUp2.hide(); blockWidget.hide();"
 					 partialSubmit="true" process="@form" update="@form" 
 					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
