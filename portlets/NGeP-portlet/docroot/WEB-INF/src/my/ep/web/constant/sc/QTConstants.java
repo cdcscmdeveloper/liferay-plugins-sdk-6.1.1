@@ -265,4 +265,11 @@ public interface QTConstants {
 	//25037 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
 	
+
+	//#11104
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="SpecCommitteMaintanance_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	
+	
 }

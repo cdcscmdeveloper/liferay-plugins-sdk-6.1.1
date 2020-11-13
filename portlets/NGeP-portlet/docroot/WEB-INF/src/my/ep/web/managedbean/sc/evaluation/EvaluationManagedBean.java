@@ -596,6 +596,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25138 - end
 	
 	private boolean scoringReq = false; //#25138
+	
+	private boolean itemSampleReq; //#11104-start
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3831,4 +3833,19 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.complianceQtProposalChecklist = complianceQtProposalChecklist;
 	}
 	//#28786 - end
+	
+	/**11104-start
+	 * @return the itemSampleReq
+	 */
+	public boolean isItemSampleReq() {
+		return itemSampleReq;
+	}
+
+	/**
+	 * @param itemSampleReq the itemSampleReq to set
+	 */
+	public void setItemSampleReq(boolean itemSampleReq) {
+		this.itemSampleReq = itemSampleReq;
+	}
+	//#11104-End
 }
