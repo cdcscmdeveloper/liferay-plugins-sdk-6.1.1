@@ -20,6 +20,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO; //#27472
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst; //#27472
@@ -27,6 +28,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO; //#27472
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
@@ -36,7 +38,6 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser; //#27472
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole; //#27472
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
 import my.ep.persistence.logging.LogKey; //#27472
 import my.ep.type.pm.OrganizationType;
@@ -50,6 +51,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.PpReportsManagedBean;
 import my.ep.web.util.AlphanumericSortUtil; //#27472
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
@@ -81,7 +83,6 @@ public class PpReportsBackingBean extends
 	private static final String NAV_TO_PPREPORT = "/xhtml/reports/new/pp/ppreportsmain.xhtml";
 	// list of report where Ministry search field is mandatory
 	public static final List<String> ppReportCodes = Arrays.asList(PpReportConst.PP_REPORTS_MINISTRY_IS_MANDATORY);	//[#27197]
-	public List<PmUserRole> userRoles; //#27472
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -224,7 +225,7 @@ public class PpReportsBackingBean extends
 				}else if(isJabatanAdmin()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));	
-					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanByOrgProfile(orgProfileId));
 					getManagedBean().setDisabledPegawaiLov(true);
 					getManagedBean().setDisabledMinistryLov(true);
 					getManagedBean().setDisabledKumpulanPTJLov(true);
@@ -556,8 +557,7 @@ public class PpReportsBackingBean extends
 	
 	//#27472 generate by report type
 	public void generateExcelPP(RPTRequestResDTO resDTO, String ministryName, LinkedHashMap<String, String> params){
-		getUserLoginRoles(); //get user roles for tab display purpose
-		int tier = findHigherRole(userRoles); //ministry 1,kumpPtj 2, ptj 3
+		int tier = findHigherRole(); //ministry 1,kumpPtj 2, ptj 3
 		String reportName = "";
 			
 		if(getManagedBean().getReportCode().equals(PpReportConst.PP_PROCUREMENT_DETAIL_RPT_VAL)){
@@ -1849,40 +1849,17 @@ public class PpReportsBackingBean extends
 		
 		return loginUser;
 	}
-	
-	private int findHigherRole(List<PmUserRole> roleList){
-		int cntMinistry = 0;
-		int cntKumpPtj = 0;
-		int cntPtj = 0;
 		
-		for(PmUserRole pur: roleList){
-			
-			//ministry level
-			if(pur.getPmRole().getRoleCode().equals(RoleCode.MINISTRY_ADMIN.value()) ||
-					pur.getPmRole().getRoleCode().equals(RoleCode.BPK_OFFICER.value()) ||
-					pur.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value()) ||
-					pur.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value()) ||
-					pur.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value()) ){
-				cntMinistry++;
-			}
-			//kumpPtj level
-			if(pur.getPmRole().getRoleCode().equals(RoleCode.JABATAN_ADMIN.value())){
-				cntKumpPtj++;
-			}
-			//ptj level
-			if(pur.getPmRole().getRoleCode().equals(RoleCode.PTJ_ADMIN.value())	|| 
-					pur.getPmRole().getRoleCode().equals(RoleCode.PLAN_OFFICER.value()) || 
-					pur.getPmRole().getRoleCode().equals(RoleCode.PLAN_VERFICATION_OFFICER.value()) || 
-					pur.getPmRole().getRoleCode().equals(RoleCode.PLAN_APPROVER.value())){
-				cntPtj++;
-			}
-		}
+	private int findHigherRole(){
 		
-		if(cntMinistry>0 && cntKumpPtj>=0 && cntPtj >= 0)return 1;
-		else if(cntMinistry == 0 && cntKumpPtj>0 && cntPtj >= 0) return 2;
-		else if(cntMinistry == 0 && cntKumpPtj==0 && cntPtj >0) return 3;
-		else return 3;
-		
+		if(getManagedBean().isDisabledMinistryLov() && getManagedBean().isDisabledPegawaiLov()
+				&& getManagedBean().isDisabledKumpulanPTJLov() && getManagedBean().isDisabledPTJLov())
+			return 3;
+		if(getManagedBean().isDisabledMinistryLov() && getManagedBean().isDisabledPegawaiLov()
+				&& getManagedBean().isDisabledKumpulanPTJLov())
+			return 2;
+		else
+			return 1;
 	}
 	
 	public void insertInCell(Workbook wb, CreationHelper createHelper, Map<Integer, Object[]> itemList,Sheet sheetItemList){
@@ -1922,10 +1899,6 @@ public class PpReportsBackingBean extends
 		return temp.toArray();
 	}
 	
-	public void getUserLoginRoles(){
-		userRoles = PmCommonUtil.getUserRolesByUserId(getCurrentLogin().getUserId());
-	}
-
 	public static SelectItem[] getDocumentTypeOptions() {
 		return PmCommonUtil.getDocumentTypeOption();
 	}
@@ -1996,14 +1969,28 @@ public class PpReportsBackingBean extends
 	private boolean isJabatanAdmin(){
 		return getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value());
 	}
-
-	public List<PmUserRole> getUserRoles() {
-		return userRoles;
-	}
-
-	public void setUserRoles(List<PmUserRole> userRoles) {
-		this.userRoles = userRoles;
-	}
 	
+	/**
+	 * Retrieve jabatan by org profile.
+	 *
+	 * @param orgProfileId the org profile id
+	 * @return the pm org profile
+	 */
+	public PmOrgProfile retrieveJabatanByOrgProfile(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile pmOrgProfile = profileSO.retrieveOrgProfileDtlByID(
+				reqDTO).getPmOrgProfile();
+		if (pmOrgProfile == null) {
+			pmOrgProfile = new PmOrgProfile();
+			pmOrgProfile.setOrgProfileId(-1L);
+		}
+		return pmOrgProfile;
+	}
+
 	//end #27472
 }
