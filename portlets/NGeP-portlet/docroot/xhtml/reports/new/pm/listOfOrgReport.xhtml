@@ -80,8 +80,8 @@
 						<p:ajax process="@this" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()" event="change"
 							partialSubmit="true"
-							update=":form:orgNameIt,:form:orgProfilePG"
-							listener="#{pmReportsBackingBean.onChangeOrgType()}" />
+							update=":form:orgNameIt,:form:orgProfilePG, @form" 
+							listener="#{pmReportsBackingBean.onChangeOrgType()}" /> <!-- #28833 -->
 					</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersList"
 						rendered="#{pmReportsBackingBean.managedBean.searchOrgCategory eq PmReportConst.orgCatOthers}"
 						styleClass="ppDropDownWidthL"
@@ -129,6 +129,19 @@
 						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 					</p:selectOneMenu></td>
 			</tr>
+			<!-- #28833 start -->
+			 <c:if test="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId == 2
+			 			or pmReportsBackingBean.managedBean.selectedOrgType.parameterId == 4
+			 			or pmReportsBackingBean.managedBean.selectedOrgType.parameterId == 5}">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.g2g']}"/></td>
+				<td><p:selectBooleanCheckbox id="isGovtSellerCheckBox"
+					value="#{pmReportsBackingBean.managedBean.govtSeller}">
+						<p:ajax event="change" partialSubmit="true" update="@form" />
+					</p:selectBooleanCheckbox></td>
+			</tr>
+			</c:if> 
+			<!-- #28833 end -->
 		</table>
 	</p:outputPanel>
 </ui:composition>

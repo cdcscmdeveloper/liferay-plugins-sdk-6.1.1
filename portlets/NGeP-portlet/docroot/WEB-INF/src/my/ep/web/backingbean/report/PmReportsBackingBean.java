@@ -268,11 +268,24 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
 		}
-
+		
 		if (getManagedBean().getStatus() != null) {
 			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
 					.toString());
 		}
+		
+		// 28833 start
+		
+		if (getManagedBean().getSelectedOrgType().getParameterId() == 2 ||
+		getManagedBean().getSelectedOrgType().getParameterId() == 4 ||
+		getManagedBean().getSelectedOrgType().getParameterId() == 5) {
+			String PG2G = "0";
+			if (getManagedBean().isGovtSeller()){
+				PG2G = "1";
+			}
+			map.put(PmReportConst.PARAM_PM_G2G, PG2G);
+		} 
+		// 28833 end
 	}
 
 	// User Profile List
