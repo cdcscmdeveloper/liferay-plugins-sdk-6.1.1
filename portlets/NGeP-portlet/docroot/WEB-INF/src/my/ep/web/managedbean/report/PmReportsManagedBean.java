@@ -35,6 +35,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String zoneName;
 	private List<PmZone> zoneList;
 	private Long status;
+	private boolean govtSeller; //#28833
 	private String contractNo;
 	private String contractPhyscialNo;
 	private String loaNo;
@@ -118,6 +119,24 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setStatus(Long status) {
 		this.status = status;
 	}
+	
+	//#28833 start ---------------
+	
+	/**
+	 * @return the govtSeller
+	 */
+	public boolean isGovtSeller() {
+		return govtSeller;
+	}
+
+	/**
+	 * @param govtSeller the govtSeller to set
+	 */
+	public void setGovtSeller(boolean govtSeller) {
+		this.govtSeller = govtSeller;
+	}
+	
+	//#28833 end -----------------
 
 	/**
 	 * @return the contractNo
