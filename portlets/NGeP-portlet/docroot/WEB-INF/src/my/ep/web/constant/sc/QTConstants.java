@@ -267,7 +267,7 @@ public interface QTConstants {
 	
 
 	//#11104
-	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="SpecCommitteMaintanance_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
 	
