@@ -451,11 +451,11 @@
 				<!-- #21695 farid 12/10/2020 -->
 								<c:when test="#{!isMaintenanceFlow and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION or scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION and !isReadOnly}">
 										<p:outputPanel id="partialPop">
-													<p:selectOneRadio  value="#{scQt.partial}">
+													<p:selectOneRadio  value="#{scQt.partial}" disabled="#{scQt.sampleReq}">
 														<f:selectItems
 															value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-														<p:ajax event="change" partialSubmit="true"
-															update="generalLocationList" process="@this" 
+														<p:ajax event="change" partialSubmit="true" 
+															update="@form,generalLocationList" process="@this" 
 															listener="#{createQtBB.partialChange}">
 														</p:ajax>
 														<p:ajax render="confirmDialog" ></p:ajax>
@@ -466,7 +466,7 @@
 													widgetVar="confirmDialogWidgetVar" closable="false" severity="alert">
 													<div class="ppRightBtn">
 														<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-														action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
+														action="#{createQtBB.partialChangePopUpYes}" oncomplete="confirmDialogWidgetVar.hide()"  update="@form,partialPop" process="@this" />
 														<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 														action="#{createQtBB.partialChangePopUpNo}" oncomplete="confirmDialogWidgetVar.hide()"  update="partialPop" process="@this" />
 															<h:inputHidden id="rowIndex"></h:inputHidden>
@@ -889,6 +889,26 @@
 					<td style="margin-top: -3px">
 						<ac:iconTooltip value="#{lbl['lbl.sc.spec.justification.procurement.value.tooltip']}" />
 					</td>
+				</tr>
+				<tr>
+				<h:panelGroup id="QuotationtenderGeneralSample">
+				<ui:fragment rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+					<td>
+					<p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" />
+				<p:outputLabel value="*" styleClass="mandatory"  />
+				</td>
+				<td>
+				<p:selectOneRadio value="#{scQt.sampleReq}" disabled="#{scQt.partial or isReadOnly}">
+				<f:selectItems
+			value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+			<p:ajax event="change" partialSubmit="true" listener="#{createQtBB.sampleChange}"
+			update="@form" process="@this"></p:ajax>
+			</p:selectOneRadio>
+			</td>
+			<td style="margin-top: -3px"><ac:iconTooltip
+			value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>	
+			</ui:fragment>	
+			</h:panelGroup>			
 				</tr>
 		</table>
 	</p:panel>
