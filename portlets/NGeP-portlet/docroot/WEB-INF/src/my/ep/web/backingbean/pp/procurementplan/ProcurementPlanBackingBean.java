@@ -1210,9 +1210,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("itemEditableMode");
 		
 		    //28760 - start
-			generateCancelButton(ppPlan);
-			//28760 - end
-				
+		if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+			 this.getManagedBean().setFlagCancelButton(false);
+		    }else{
+			  generateCancelButton(ppPlan);  
+		   }
+		   //28760 - end	
+		
 			this.getManagedBean().getSelectedPlan().setRejected(true);
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 						
@@ -8156,8 +8160,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 		log.info("generateCancelButton - Start");
 	 		this.getManagedBean().setFlagCancelButton(false);
 	 		Long status =  this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
+
 	 		
-	 	
 	 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
 	 			if((ProcurementPlanConst.PPE_PENDING_REVISION.equals(status))
 		 				|| (ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status))){
