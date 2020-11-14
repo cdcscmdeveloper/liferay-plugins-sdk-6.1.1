@@ -528,8 +528,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
 							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
 							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
-							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL))
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL)){
+						loaCancelDetailBackingBean.getManagedBean().setDpMaintenanceSource(Boolean.TRUE);
 						loaCancelDetailBackingBean.cancelationLOA(docId);
+					}
 					// End 22211
 					else
 						loaDetailBackingBean.viewLOA(docId);
