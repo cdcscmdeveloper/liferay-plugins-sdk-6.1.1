@@ -15,11 +15,16 @@
 						<td width="10%"><h:outputLabel
 								value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>						
 						<td style="width: 10%">
-				  			<p:commandLink value="#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
-							lbl['lbl.sc.system.generated'] :
-							lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
-				       			process="@this" partialSubmit="true" styleClass="blue_font"
-				       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+							<c:if test="#{lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
+					  			<p:commandLink value="#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
+								lbl['lbl.sc.system.generated'] :
+								lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
+					       			process="@this" partialSubmit="true" styleClass="blue_font"
+					       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+				       		</c:if>
+				       		<c:if test="#{!lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
+					  			#{lOACancelDetailBackingBean.managedBean.scLoa.loaNo}
+				       		</c:if>
 						</td>	
 						<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 						</td>
