@@ -1211,10 +1211,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		    //28760 - start
 		if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
-			 this.getManagedBean().setFlagCancelButton(false);
 		    }else{
 			  generateCancelButton(ppPlan);  
-		   }
+   		    }
 		   //28760 - end	
 		
 			this.getManagedBean().getSelectedPlan().setRejected(true);
