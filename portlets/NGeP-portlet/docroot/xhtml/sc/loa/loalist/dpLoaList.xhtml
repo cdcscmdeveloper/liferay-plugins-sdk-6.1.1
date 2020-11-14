@@ -14,11 +14,6 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:messages id="loaMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<ui:param name="purchaseRequestListSize" value="#{dpLOABackingBean.managedBean.purchaseRequestList.size()}" />
-		<ui:param name="loaId" value="#{dpLOABackingBean.managedBean.purchaseRequestList[0].scLoa.loaId}" />
-		<ui:param name="loaStatusId" value="#{dpLOABackingBean.managedBean.purchaseRequestList[0].scLoa.pmStatus.statusId}" />
-		
 		<ui:include src="dploaListButtons.xhtml" />
 		<ui:include src="dpLoaListHeader.xhtml" />
 		
