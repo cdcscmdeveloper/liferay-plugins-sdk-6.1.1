@@ -3781,6 +3781,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				this.getManagedBean().setSelectedApprovalTabBean(
 						tabBeans.get(selectedTabIndex));
+				// #13344 start - bind remark & attachment
+				this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getScQtApproval().getScQtApprovalAttachments());
+				this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalRemarks(this.getManagedBean().getScQtApproval().getScQtApprovalRemarks());
+				// #13344 end
 				this.getManagedBean().setScQtApproval(
 						this.getManagedBean().getSelectedApprovalTabBean()
 								.getScQtApproval());
@@ -9417,6 +9421,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			retrieveApprovalTabDtl();
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+			quationTenderReqDTO.setApproval(this.getManagedBean().getScQtApproval());
+			quationTenderReqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList()) ;
 			quationTenderReqDTO.setSaveFlow(true);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
 			QtAmendMentBean amendMentBean = getManagedBean().getAmendMentBean();
