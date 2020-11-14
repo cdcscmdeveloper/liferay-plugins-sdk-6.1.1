@@ -1,8 +1,12 @@
 package my.ep.web.backingbean.pm.glaccount;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.el.MethodExpression;
+import javax.el.ValueExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -39,6 +43,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
+import org.primefaces.event.data.PageEvent;
 
 import com.sun.faces.util.CollectionsUtils;
 
@@ -51,11 +59,15 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	 */
 	private static final long serialVersionUID = 1L;
 
-		private static Logger log = Logger.getLogger(PmGoSearchBackingBean.class);
+	private static Logger log = Logger.getLogger(PmGoSearchBackingBean.class);
 
 		// Paging for listing
 	private IPagingDataModel<VPmGo> pmGoDataModel = new PmGoPagingDataModel();
 
+	//200911@akmal - Enhancement27624 - Start
+	private List<VPmGo> selectedEntities;
+	private Map<String,VPmGo> persistedEntities = new HashMap<String,VPmGo>();
+	//200911@akmal - Enhancement27624 - End
 	
 	public PmGoSearchBackingBean() {
 
@@ -70,6 +82,15 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			String type = facesScopes.getParameter("type");
 			String update = facesScopes.getParameter("update");
 			Long kptjId = Long.parseLong(facesScopes.getParameter("kptjId"));
+			//200911@akmal - Enhancement27624 - Start
+			String selectionMode = facesScopes.getParameter("selectionMode");
+			if(selectionMode != null && selectionMode.equals("multiple"))
+				getManagedBean().setSelectionMode(selectionMode);
+			else
+				getManagedBean().setSelectionMode("single");
+			String saveObject = facesScopes.getParameter("saveObject");
+			getManagedBean().setSaveObject(saveObject);
+			//200911@akmal - Enhancement27624 - End
 			getManagedBean().setIndex(index);
 			getManagedBean().setType(type);
 			getManagedBean().setUpdate(update);
@@ -88,6 +109,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		getManagedBean().setSelectedGoSoObjCode(null);
 		retrieveAccountType();
 		retrieveAccountClass();
+		//200911@akmal - Enhancement27624 - Start
+		selectedEntities.clear();
+		persistedEntities.clear();
+		//200911@akmal - Enhancement27624 - End
 		getPmGoDataModel().resetData();
 	}
 	
@@ -328,28 +353,60 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	
 	public void okAction(String methodActionStr) {
 		log.info("pmGO - okAction");
-		if (StringUtils.isNotBlank(methodActionStr) && getManagedBean().getvPmGo() != null){
-			PmGlAccount glAccount = getManagedBean().getvPmGo().getGlAccount();
-			MethodExpression methodExp = null;
-			if(getManagedBean().getIndex() != null && StringUtils.isNotBlank(getManagedBean().getType())){
-				methodExp = FacesScopes
-		                .createMethodExpression(FacesContext.getCurrentInstance(),
-		                		methodActionStr, null,
-		                        new Class[] { PmGlAccount.class, Integer.class, String.class });
-				methodExp.invoke(
-						FacesContext.getCurrentInstance().getELContext(), 
-						new Object[]{glAccount,getManagedBean().getIndex(),getManagedBean().getType()});
-			}else{
-				methodExp = FacesScopes
-		                .createMethodExpression(FacesContext.getCurrentInstance(),
-		                		methodActionStr, null,
-		                        new Class[] { PmGlAccount.class });
-				methodExp.invoke(
-						FacesContext.getCurrentInstance().getELContext(), 
-						new Object[]{glAccount});
+		//200911@akmal - Enhancement27624 - Start
+		if(this.getManagedBean().getSelectionMode().equals("single")){
+			if (StringUtils.isNotBlank(methodActionStr) && getManagedBean().getvPmGo() != null){
+				PmGlAccount glAccount = getManagedBean().getvPmGo().getGlAccount();
+				MethodExpression methodExp = null;
+				if(getManagedBean().getIndex() != null && StringUtils.isNotBlank(getManagedBean().getType())){
+					methodExp = FacesScopes
+			                .createMethodExpression(FacesContext.getCurrentInstance(),
+			                		methodActionStr, null,
+			                        new Class[] { PmGlAccount.class, Integer.class, String.class });
+					methodExp.invoke(
+							FacesContext.getCurrentInstance().getELContext(), 
+							new Object[]{glAccount,getManagedBean().getIndex(),getManagedBean().getType()});
+				}else{
+					methodExp = FacesScopes
+			                .createMethodExpression(FacesContext.getCurrentInstance(),
+			                		methodActionStr, null,
+			                        new Class[] { PmGlAccount.class });
+					methodExp.invoke(
+							FacesContext.getCurrentInstance().getELContext(), 
+							new Object[]{glAccount});
+				}
+				RequestContext.getCurrentInstance().execute("pmGoPopup.hide();");
 			}
-			RequestContext.getCurrentInstance().execute("pmGoPopup.hide();");
 		}
+		else if(this.getManagedBean().getSelectionMode().equals("multiple")){
+			FacesContext context = FacesContext.getCurrentInstance();
+			String expressionString = this.getManagedBean().getSaveObject();
+			
+			if(!FacesScopes.isValueReference(expressionString)) {
+				expressionString = "#{" + expressionString + "}";
+			}
+			
+			if (StringUtils.isNotBlank(methodActionStr) && selectedEntities.size() > 0){
+				MethodExpression methodExp = null;
+				if(!persistedEntities.isEmpty()) selectedEntities = new ArrayList<VPmGo>(persistedEntities.values());
+				
+				ValueExpression valueExpression = context.getApplication().getExpressionFactory()
+						.createValueExpression(context.getELContext(),
+								expressionString, List.class);
+
+				valueExpression.setValue(context.getELContext(), selectedEntities);
+				
+				methodExp = FacesScopes
+		                .createMethodExpression(context,
+		                		methodActionStr, null,
+		                        new Class[] { List.class });
+				methodExp.invoke(
+						context.getELContext(), 
+						new Object[]{selectedEntities});
+				RequestContext.getCurrentInstance().execute("pmGoPopup.hide();");
+			}
+		}
+		//200911@akmal - Enhancement27624 - End
 	}
 
 	/**
@@ -440,5 +497,62 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		}
 		return items;
 	}
+
+	//200911@akmal - Enhancement27624 - Start
+	public void onSelectRow(SelectEvent event){
+		VPmGo value = (VPmGo) event.getObject();
+			String key = value.getGlAccCode();
+			if(!persistedEntities.containsKey(key)) 
+				persistedEntities.put(key, value);
+	}
+	
+	public void onUnselectRow(UnselectEvent event){
+		VPmGo value = (VPmGo) event.getObject();
+			String key = value.getGlAccCode();
+			if(persistedEntities.containsKey(key)) 
+				persistedEntities.remove(key);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void onToggleSelect(ToggleSelectEvent event){
+		List<VPmGo> templist = (List<VPmGo>) (!selectedEntities.isEmpty() ? selectedEntities : pmGoDataModel.getList());
+		for(VPmGo value : templist){
+				String key = value.getGlAccCode();
+				if(persistedEntities.containsKey(key)) 
+					persistedEntities.remove(key);
+				else
+					persistedEntities.put(key,value);
+		}
+	}
+	
+	public void onPageChange(PageEvent event){
+		// put selected into hashmap
+		for(VPmGo item : selectedEntities){
+			String key = item.getGlAccCode();
+			if(!persistedEntities.containsKey(key))
+				persistedEntities.put(key, item);
+		}
+	}
+	
+	public void populateSelectedItems(){
+		selectedEntities = new ArrayList<VPmGo>(persistedEntities.values()); 
+	}
+	
+	public List<VPmGo> getSelectedEntities() {
+		return selectedEntities;
+	}
+
+	public void setSelectedEntities(List<VPmGo> selectedEntities) {
+		this.selectedEntities = selectedEntities;
+	}
+
+	public Map<String,VPmGo> getPersistedEntities() {
+		return persistedEntities;
+	}
+
+	public void setPersistedEntities(Map<String,VPmGo> persistedEntities) {
+		this.persistedEntities = persistedEntities;
+	}
+	//200911@akmal - Enhancement27624 - End
 
 }
