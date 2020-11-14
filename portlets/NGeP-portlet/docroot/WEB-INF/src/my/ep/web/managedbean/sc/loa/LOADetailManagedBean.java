@@ -271,6 +271,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private PmUser loacancelapproverUser;
 	
 	private String sourcePage;
+	
+	private boolean dpMaintenanceSource = Boolean.FALSE;
 	//end #22211
 	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
@@ -1651,6 +1653,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setSourcePage(String sourcePage) {
 		this.sourcePage = sourcePage;
+	}
+
+	public boolean isDpMaintenanceSource() {
+		return dpMaintenanceSource;
+	}
+
+	public void setDpMaintenanceSource(boolean dpMaintenanceSource) {
+		this.dpMaintenanceSource = dpMaintenanceSource;
 	}
 
 }

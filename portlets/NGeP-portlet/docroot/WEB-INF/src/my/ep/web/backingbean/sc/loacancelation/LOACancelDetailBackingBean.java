@@ -447,7 +447,11 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			getManagedBean().setScQt(scLoa.getScQt());		
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
+			
+			if(getManagedBean().isDpMaintenanceSource()){
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			}
+			
 			getManagedBean().setSourcePage(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_CANCEL_MAIN_PAGE);
@@ -2313,11 +2317,14 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
-
-		getManagedBean().setEditFlag(Boolean.FALSE);
+		
+		if(getManagedBean().isDpMaintenanceSource()){
+			getManagedBean().setEditFlag(Boolean.FALSE);
+			getManagedBean().setBackToPreviousPage(null);
+		}
+		
 		getManagedBean().setReadOnly(Boolean.FALSE);
 		getManagedBean().setSelectedTabIndex(0);
-		getManagedBean().setBackToPreviousPage(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getSourcePage());
 	}
