@@ -2467,7 +2467,11 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("procTypeRadioButtonEvent");
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
-		
+
+		//#29209 -Start
+		getDurationToolTip();
+		//#29209 - End
+
 		procurementTypeEvent();
 		
 		// when procurement type as pk7 selected 
@@ -7121,7 +7125,16 @@ public class SimpleQuoteBackingBean extends
 		if(startDate != null) {
 			BigDecimal maxDays = BigDecimal.ZERO, minHours = BigDecimal.ZERO;
 			BigDecimal minMinutes = BigDecimal.ZERO, maxMinutes = BigDecimal.ZERO;
-			PmConfigRuleValue ruleValue = getDurationRuleValue();
+			//29209 - start
+			PmConfigRuleValue ruleValue = null;
+			String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+
+			if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+				ruleValue = getAdHocDurationValue();
+			} else {
+				ruleValue = getDurationRuleValue();
+			}
+			//29209 - end
 			int maxiDays = 0;
 			if (ruleValue != null) {
 				minMinutes = ruleValue.getFromValue();
@@ -7160,7 +7173,12 @@ public class SimpleQuoteBackingBean extends
 					throw new EpException(
 							MessageConst.ERROR_760430,
 							new String[] {maxDays.toString()});
-				} 
+				}
+			} else if (endDate == null){ //29209 - to set default date
+				maxMinutes = new BigDecimal(4320); // equals to 3 days
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
+				endDate = DateUtils.addDays(startDate, maxDays.intValue());
 			} else {
 				if (isSubmit && (null == quote.getStartDate() ||  null == quote.getEndDate())) {
 					throw new EpException(MessageConst.ERROR_760388);
@@ -7188,10 +7206,19 @@ public class SimpleQuoteBackingBean extends
 	 * @return the duration tool tip
 	 */
 	public String getDurationToolTip(){
-		PmConfigRuleValue ruleValue = getDurationRuleValue();
 		int maxDays = 0;
 		String min = null;
-		if (ruleValue != null) {
+		
+		//#29209 - start
+		PmConfigRuleValue ruleValue = null;
+		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();		
+		if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+			ruleValue = getAdHocDurationValue();
+		} else {
+			ruleValue = getDurationRuleValue();
+		}
+		//#29209 - start
+		if (ruleValue != null){
 			int mHours = ruleValue.getFromValue().intValue();
 			int mxDays = ruleValue.getToValue().intValue();
 			
@@ -7206,6 +7233,21 @@ public class SimpleQuoteBackingBean extends
 				"lbl.sc.sq.resp.duration.min.max", new String[] {min, Integer.toString(maxDays)});
 	}
 	
+	//#29209
+	/**
+	 * Get the duration value of Procurement Type Ad-Hoc
+	 * @return PmConfigRuleValue - to sync with other Procurement Type
+	 */
+	public PmConfigRuleValue getAdHocDurationValue(){
+		PmConfigRuleValue ruleValue = new PmConfigRuleValue();
+		
+		BigDecimal mHours = new BigDecimal(60); //equals to 1 hour
+		BigDecimal mxDays = new BigDecimal(4320); //equals to 3 days		
+		ruleValue.setFromValue(mHours);
+		ruleValue.setToValue(mxDays);
+
+		return ruleValue;
+	}
 	
 	/**
 	 * Get the counter of questions in Simple Quote
@@ -7619,4 +7661,97 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		//#3761 - end
+		
+		//#29209 - start
+		public void dateListenerDefault() {
+			ScQuote quote = getManagedBean().getScQuote();
+	
+			// validate quote
+			validateQuoteDefault(quote, false);
+			
+			// calculate duration
+			calculateDuration(quote);
+		}
+		
+		private void validateQuoteDefault(ScQuote quote, boolean isSubmit){
+			Date startDate = quote.getStartDate();
+			Date endDate = quote.getEndDate();
+			
+			if(startDate != null) {
+				BigDecimal maxDays = BigDecimal.ZERO, minHours = BigDecimal.ZERO;
+				BigDecimal minMinutes = BigDecimal.ZERO, maxMinutes = BigDecimal.ZERO;
+				//29209 - start
+				PmConfigRuleValue ruleValue = null;
+				String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
+
+				if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+					ruleValue = getAdHocDurationValue();
+				} else {
+					ruleValue = getDurationRuleValue();
+				}
+				//29209 - end
+				int maxiDays = 0;
+				if (ruleValue != null) {
+					minMinutes = ruleValue.getFromValue();
+					maxMinutes = ruleValue.getToValue();
+					minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
+					maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				}
+				if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
+					maxiDays = maxiDays + maxDays.intValue();
+				}
+				getManagedBean().setMaxDate(DateUtils.addDays(startDate, maxiDays));
+				if (endDate != null && startDate != null) {
+					if (endDate.before(startDate)
+							|| quote.getStartDate().equals(quote.getEndDate())) {
+						throw new EpException(MessageConst.ERROR_760164);
+					}
+
+					BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
+					diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+					/*
+					
+					BigDecimal twentyFour = BigDecimal.valueOf(24);
+					BigDecimal minutes = diff.divide(sixty.multiply(thousand), 2, RoundingMode.HALF_UP).remainder(sixty);
+					BigDecimal hours = diff.divide(sixty.multiply(sixty).multiply(thousand), 2, RoundingMode.HALF_UP).remainder(twentyFour);
+
+					BigDecimal days = diff.divide(twentyFour.multiply(sixty).multiply(sixty).multiply(thousand), 2, RoundingMode.HALF_UP);
+
+					BigDecimal one = BigDecimal.valueOf(1);*/
+					if(diff.compareTo(minMinutes) < 0){
+						throw new EpException(
+								MessageConst.ERROR_760429,
+								new String[] {minHours.toString()});
+					}
+					
+					if(diff.compareTo(maxMinutes) > 0){
+						throw new EpException(
+								MessageConst.ERROR_760430,
+								new String[] {maxDays.toString()});
+					}
+				} else {
+					if (isSubmit && (null == quote.getStartDate() ||  null == quote.getEndDate())) {
+						throw new EpException(MessageConst.ERROR_760388);
+					}
+				}
+				defaultEndDate();
+			}
+		}
+		
+		public void defaultEndDate() {
+			// validate quote
+			BigDecimal maxDays = BigDecimal.ZERO;
+			BigDecimal maxMinutes = BigDecimal.ZERO;
+			
+			if(getManagedBean().getScQuote() != null){
+				ScQuote quote = getManagedBean().getScQuote();			
+				
+				Date startDate = quote.getStartDate();
+				
+				maxMinutes = new BigDecimal(4320); // equals to 3 days
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
+			}			
+		}
+		//#29209 - end
 }
