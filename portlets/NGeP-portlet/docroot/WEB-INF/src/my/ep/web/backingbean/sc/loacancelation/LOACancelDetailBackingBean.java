@@ -3316,30 +3316,35 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		return validDate;	
 	}
 	
-	public void handleSuppDocFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
+	public void handleSuppDocFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleSuppDocFileUpload");
-		ScLoa scLoa = this.getManagedBean().getScLoa();
+
 		if (event.getFile() != null) {
-			// String attachmentDocType =
-			// getManagedBean().getAttachmentDocType();
 			ScAttachment scAttachment = null;
-			ScLoaSupportingDoc selectedScLoaSuppDoc = scLoa.getScLoaSupportingDocs().get(0);
+			ScLoa scLoa = this.getManagedBean().getScLoa();
 
-			ScLoaSupportingDocAttachment scLoaSupportingDocAttachment = selectedScLoaSuppDoc
-					.getScLoaSupportingDocAttachment();
-			if (null == scLoaSupportingDocAttachment) {
-				scLoaSupportingDocAttachment = new ScLoaSupportingDocAttachment();
-				scLoaSupportingDocAttachment
-						.setScLoaSupportingDoc(selectedScLoaSuppDoc);
-				selectedScLoaSuppDoc
-						.setScLoaSupportingDocAttachment(scLoaSupportingDocAttachment);
+			List<ScLoaSupportingDoc> scLoaSupportingDocs = scLoa.getScLoaSupportingDocs();
+			if (null == scLoaSupportingDocs) {
+				scLoaSupportingDocs = new ArrayList<ScLoaSupportingDoc>();
 			}
-			scLoaSupportingDocAttachment.setDocNo(selectedScLoaSuppDoc
-					.getScLoa().getLoaNo());
-			scAttachment = scLoaSupportingDocAttachment;
 
-			uploadAttachment(event.getFile(), scAttachment);
+			for (int i = 0; i < scLoaSupportingDocs.size(); i++) {
+				ScLoaSupportingDoc scLoaSupportingDoc = scLoaSupportingDocs.get(i);
+
+				ScLoaSupportingDocAttachment scLoaSupportingDocAttachment = scLoaSupportingDoc
+						.getScLoaSupportingDocAttachment();
+				if (null == scLoaSupportingDocAttachment) {
+					scLoaSupportingDocAttachment = new ScLoaSupportingDocAttachment();
+					scLoaSupportingDocAttachment.setScLoaSupportingDoc(scLoaSupportingDoc);
+					scLoaSupportingDoc.setScLoaSupportingDocAttachment(scLoaSupportingDocAttachment);
+				}
+
+				scLoaSupportingDocAttachment.setDocNo(scLoa.getLoaNo());
+				scLoaSupportingDocs.add(scLoaSupportingDocAttachment.getScLoaSupportingDoc());
+
+				scAttachment = scLoaSupportingDocAttachment;
+				uploadAttachment(event.getFile(), scAttachment);
+			}
 		}
 	}
 }
