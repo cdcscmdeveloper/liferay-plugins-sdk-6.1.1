@@ -43,9 +43,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:menuitem value="#{lbl['lbl.btn.view']}"  
 							     icon="ui-icon-view"
 							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionViewBtn,pPlanBackingBean.managedBean.trackingDiary)}"/>
+					   <!-- 200912@azza - Enhancement28760 - Start --> 
 						<p:menuitem value="#{lbl['lbl.btn.update']}"  
-							     icon="ui-icon-view" rendered="#{plan.updatable and not pPlanBackingBean.managedBean.trackingDiary}"
-							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionUpdateBtn,false)}"/>						
+							     icon="ui-icon-view" rendered="#{pPlanBackingBean.isApprovedMode(plan)}"
+							     action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId,ProcurementPlanConst.actionUpdateBtn,false)}"/>
+					  <!-- 200912@azza - Enhancement28760 - End --> 						
 			    		<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"								 
 								 icon="ui-icon-print" rendered="#{pPlanBackingBean.isApprovedMode(plan)}"
 								 action="#{pPlanBackingBean.generateReport(plan)}" />	
