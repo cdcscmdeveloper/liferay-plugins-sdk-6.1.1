@@ -155,6 +155,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean disable;
 	//25549@18092020 - end
 	
+	//28760 - start
+	private boolean flagCancelButton = false;
+	//28760 - end
+	
 	public ProcurementPlanManagedBean(){}
 
 	/**
@@ -1390,5 +1394,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.disablePlanSearchDet = disablePlanSearchDet;
 	}
 	//201111@akmal - Enhancement27624 - End
+    
+	//12112020@azza - 28760 - Start
+	public boolean isFlagCancelButton() {
+		return flagCancelButton;
+	}
 
+	public void setFlagCancelButton(boolean flagCancelButton) {
+		this.flagCancelButton = flagCancelButton;
+	}
+	//12112020@azza - 28760 - End
 }
