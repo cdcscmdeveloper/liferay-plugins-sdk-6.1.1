@@ -37,8 +37,11 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPendingPoWeightage;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
@@ -63,6 +66,12 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	private final static Logger log = Logger.getLogger(SdoReviewBackingBean.class);
 	private StreamedContent file;
 	private static final int inquiryTextLength = 2500;
+	//#11641 - Start
+	private int mandatoryCounter = 1;
+	private int nonMandatoryCounter = 1;
+	private boolean mandatoryEmpty = false;
+	private boolean nonMandatoryEmpty = false;
+	//#11641 - End
 	
 	public SdoReviewBackingBean() {
 		SmCommonUtil.setMDCUserId();
@@ -210,6 +219,40 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			reqDTO.setApplId(this.getManagedBean().getAppId());
 			reqDTO.setOutcome(resAction);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			
+			//#11641 - Start
+			this.getManagedBean().getSmApplInquiry().setApplInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_INQUIRY_SEQ"));
+			List<SmApplSupportDocInquiry> smApplSupportDocInquiries = new ArrayList<SmApplSupportDocInquiry>();
+			List<SmApplInquiryDocFile> smApplInquiryDocFiles = new ArrayList<SmApplInquiryDocFile>();
+			
+			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				
+				SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
+				smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
+				smApplSupportDocInquiry.setSdoRemarks(smApplSupportDoc.getInquiryRemark());
+				smApplSupportDocInquiry.setReceived(smApplSupportDoc.isInquiryReceived());
+				smApplSupportDocInquiry.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
+				smApplSupportDocInquiry.setApplSupportDocInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_SUPPDOC_INQUIRY_SEQ"));
+				
+				smApplSupportDoc.setInquiryRemark("");
+				smApplSupportDoc.setInquiryReceived(false);
+				
+				for(SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()){
+					
+					SmApplInquiryDocFile smApplInquiryDocFile = new SmApplInquiryDocFile();
+					smApplInquiryDocFile.setApplInquiryDocFileId(reqSO.retrieveSeqNextVal("SM_APPL_INQ_FILE_SEQ"));
+					smApplInquiryDocFile.setFileName(smApplDocFile.getFileName());
+					smApplInquiryDocFile.setFilePath(smApplDocFile.getFilePath());
+					smApplInquiryDocFile.setSmApplSupportDocInquiry(smApplSupportDocInquiry);
+					
+					smApplInquiryDocFiles.add(smApplInquiryDocFile);
+				}
+				
+				smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
+				smApplSupportDocInquiries.add(smApplSupportDocInquiry);
+			}
+			this.getManagedBean().getSmApplInquiry().setSmApplSupportDocInquiries(smApplSupportDocInquiries);
+			//#11641 - End
 			
 			String assignedPOName = "";
 			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
@@ -523,5 +566,62 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		pendingWeightage.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		reqDTO.setPendingPoWeightage(pendingWeightage);
 	}
+	
+	//#11641 - Start
+	public int getMandatoryCounter() {
+		return mandatoryCounter++;
+	}
 
+	public int getNonMandatoryCounter() {
+		return nonMandatoryCounter++;
+	}
+
+	public boolean isMandatoryEmpty() {
+		int mandatoryCount = 0;
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(suppDoc.getPmDocument().isMandatory()){
+				mandatoryCount++;
+			}
+		}
+		if(mandatoryCount > 0){
+			mandatoryEmpty = false;
+		}else{
+			mandatoryEmpty = true;
+		}
+		return mandatoryEmpty;
+	}
+	
+	public boolean isNonMandatoryEmpty() {
+		int nonMandatoryCount = 0;
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(!suppDoc.getPmDocument().isMandatory()){
+				nonMandatoryCount++;
+			}
+		}
+		if(nonMandatoryCount > 0){
+			this.nonMandatoryEmpty = false;
+		}else{
+			this.nonMandatoryEmpty = true;
+		}
+		return nonMandatoryEmpty;
+	}
+	
+	public void receivedStatus(SmApplSupportDoc smApplSupportDoc){
+		if(smApplSupportDoc.isInquiryReceived()){
+			for(SmApplSupportDoc smApplSupportDocs : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				if(smApplSupportDocs.equals(smApplSupportDoc)){
+					smApplSupportDocs.setInquiryReceived(false);
+					log.info("false");
+				}
+			}
+		}else{
+			for(SmApplSupportDoc smApplSupportDocs : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				if(smApplSupportDocs.equals(smApplSupportDoc)){
+					smApplSupportDocs.setInquiryReceived(true);
+					log.info("TRUE");
+				}
+			}
+		}
+	}
+	//#11641 - End
 }
