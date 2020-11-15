@@ -433,6 +433,10 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			}
 			if (approverUser == null) { 
 				approverUser = new PmUser();
+				
+				AwardSupplierResDTO resGetRNApprover  = getQtAwardSO().retrieveRequestNoteApproverByLoa(reqDTO2);
+				approverUser = resGetRNApprover.getApproverList().get(0);
+				
 			}
 			getManagedBean().setApproverUser(approverUser);
 					
