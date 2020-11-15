@@ -2469,8 +2469,6 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("procTypeRadioButtonEvent");
 
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
-		
-		getDurationToolTip();
 
 		//#29209 -Start
 		getDurationToolTip();
