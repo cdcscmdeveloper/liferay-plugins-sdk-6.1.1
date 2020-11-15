@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,14 +69,13 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
-import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.OrganizationType;
@@ -1079,7 +1077,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& ctBB.getManagedBean().getCtContractAmount().isBondExempted()
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& (ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName() == null 
-				|| ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName().equalsIgnoreCase(""))) {
+				|| ctBB.getManagedBean().getCtContractAmount().getBondExemptedFileName().equalsIgnoreCase(""))
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			getManagedBean().setSelectedTabIndex(0);
 			throwExceptions(MessageConst.ERROR_100022, "lbl.ct.bond.exempted.letter");
 		}
@@ -1111,12 +1110,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Validation for PID
 		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && 
 				ctBB.getManagedBean().getContractVer().getCtContractValue().isPid() && 
-				(ctBB.getManagedBean().getContractVer().getCtPidReasons() == null || ctBB.getManagedBean().getContractVer().getCtPidReasons().size() == 0)) {
+				(ctBB.getManagedBean().getContractVer().getCtPidReasons() == null || ctBB.getManagedBean().getContractVer().getCtPidReasons().size() == 0)
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			getManagedBean().setSelectedTabIndex(0);
 			throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pid.reason");
 		}
 		// Validation for PID Reason
-		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+		if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			if(ctBB.getManagedBean().getContractVer().getCtPidReasons() != null && ctBB.getManagedBean().getContractVer().getCtPidReasons().size() > 0 ){
 				for(CtPidReason reason : ctBB.getManagedBean().getContractVer().getCtPidReasons()){
 					if(reason.getPmReason() == null || reason.getPmReason().getReasonId() == null){
@@ -1137,7 +1137,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		// Validation for GST amount before GST Relief Due Date
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			if (ctBB.isBeforeGstReliefDueDate()
 					&& ctBB.imposedServiceTaxCondition()
 					&& ctBB.isLoaContractWithGst(ctBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
@@ -1163,7 +1164,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		// Validation for zone
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			ctBB.getZoneObjDetails();
 			if (ctBB.getManagedBean().getContractVer().getCtContractZones() != null) {
 				for (CtContractZone contractZone : ctBB.getManagedBean().getContractVer().getCtContractZones()) {
@@ -1239,18 +1240,43 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		//Validation for contract item details
 		//#28320 - During Notification Setting, no need to validate
-		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
+		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+			// Bug #28479 - Start
+
+//			if ((ctBB.getManagedBean().getContractVer().getContractVerId() == null)
+//					&& (ctBB.getManagedBean().getContractVer().getDocType()
+//							.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
+//				
+//				if (!ctBB.getManagedBean().isMinQtyCheck()) {
+//					for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
+//						ctBB.onChangeMinimumQty(item);
+//					}
+//				}
+//				ctBB.getManagedBean().setMinQtyCheck(false);
+//
+//				if (ctBB.getManagedBean().isErr100033()) {
+//					ctBB.getManagedBean().setErr100033(false);
+//					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
+//				}
+//				if (ctBB.getManagedBean().isErr100034()) {
+//					ctBB.getManagedBean().setErr100034(false);
+//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");
+//				}
+//			}
+									
+			// Bug #28479 - End
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
-				if (item.getMinimumOrderQty() <= 0) {
-					item.setMinimumOrderQty(1);
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-						setTabValue("IT");
-					} else {
-						setTabCentralValue("IT");
-					}
-					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
-				}
+//				if (item.getMinimumOrderQty() <= 0) {
+//				item.setMinimumOrderQty(1);
+//				if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+//					setTabValue("IT");
+//				} else {
+//					setTabCentralValue("IT");
+//				}
+//				throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
+//			}
 				
 				// Start - 28292
 				if (!item.getCtItemMaxQties().isEmpty()) {
@@ -1316,7 +1342,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//basri -  #28649 During Notification Setting, no need to validate 
 		if(ctBB.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 				&& ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
-				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
+				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
+				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 			if (ctBB.getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
 				ctBB.getManagedBean().getContractVer().setCtProgressivePayments(null);
 			} else {
@@ -2338,8 +2365,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} else {
 			reqDTO.setContractVerId(contractVerId);
 		}
-		// Fixing Bug #28550 - End		
-			
+		// Fixing Bug #28550 - End			
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
 		reqDTO.setViewOnly(true);
 		ctBB.getManagedBean().setViewContract(true);
