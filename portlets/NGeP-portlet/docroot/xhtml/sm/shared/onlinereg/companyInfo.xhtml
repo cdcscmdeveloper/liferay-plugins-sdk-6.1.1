@@ -310,7 +310,7 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="pnlCompInfo,divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
 					<!-- 13320 -->
@@ -318,13 +318,16 @@
 				<td></td>
 				<td></td>
 				<td class="tdTitle">
-					<h:panelGroup id="divisionLabelPanelId" rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionLabelPanelId">	
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
 						<p:outputLabel value="#{lbl['lbl.sm.division']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
 				<td class="tdContent">
-					<h:panelGroup id="divisionDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
+				<p:outputPanel id="divisionDropdownPanelId">
+					<ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}">
 						<p:selectOneMenu id="busDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
@@ -338,7 +341,8 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
 							update="busDistrict,busCity" />
 					</p:selectOneMenu>
-					</h:panelGroup>
+					</ui:fragment>
+				</p:outputPanel>
 				</td>
 			</tr>
 			<tr>
