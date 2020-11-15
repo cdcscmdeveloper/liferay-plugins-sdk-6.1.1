@@ -29,7 +29,7 @@
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
 									id="panelMsg" for="panel" display="icon" /> <ac:iconTooltip
 									value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
-																						
+									
 							<td style="padding-left: 20px;">
 							<div align="left">
 								<h:commandLink id="treasuryCircularLink"
@@ -117,7 +117,7 @@
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
-									<p:ajax event="change" update="@([id$=justId])"
+									<p:ajax event="change" update="@([id$=justId] , [id$=sqinfoId])"
 										listener="#{simpleQuoteBackingBean.procTypeRadioButtonEvent}"
 										process="@this" />
 								</p:selectOneRadio></td>
@@ -208,7 +208,7 @@
 						required="#{param['submitBtnPressed']=='1'}" disabled="#{!isEditable}"
 						label="#{lbl['lbl.sc.start.date']}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
-						postUpdateListener="simpleQuoteBackingBean.dateListener"
+						postUpdateListener="simpleQuoteBackingBean.dateListenerDefault"
 						modVal="15"
 						update="@([id$=sqinfoId])">
 					</ac:dateTime></td>
@@ -226,7 +226,9 @@
 					</ac:dateTime> </td>
 			</tr>
 			<tr>
-				<td style="text-align: end;"><ac:iconTooltip value="#{simpleQuoteBackingBean.getDurationToolTip()}" /><p:outputLabel value="#{lbl['lbl.sc.sq.duration']}" /></td>
+		
+				<td style="text-align: end;"><ac:iconTooltip value="#{simpleQuoteBackingBean.getDurationToolTip()}" /> 
+				<p:outputLabel value="#{lbl['lbl.sc.sq.duration']}" /></td>
 				<td colspan="3"><p:outputPanel autoUpdate="true"
 						id="durationId">
 						<p:inputText size="7"
@@ -244,6 +246,7 @@
 						</p:inputText>
 						<h:outputText value="#{lbl['lbl.sc.simple.quote.hours']}" style="font-weight:bold;margin-left: 3px;" />
 					</p:outputPanel></td>
+				
 			</tr>
 
 			<tr>
