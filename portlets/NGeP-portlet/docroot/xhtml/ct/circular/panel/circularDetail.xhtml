@@ -265,18 +265,23 @@
 			</div>			
 	</p:dialog>
 	
-	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg"  resizable="false"
-  		modal="true" width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-  		onShow="singleUploadListener(panelUploadWV);">
-   		<p:ajax event="close" />
-   		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
-     		sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
-    		fileUploadListener="#{panelBackingBean.fileUpload}"  multiple="false"
-       		allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="panelUploadWV"
-         	invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"  update="uploadCircularPg,uploadCircularPg1"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-         	label="#{lbl['lbl.btn.choose']}" oncomplete="uploadCircularDlg.hide();" >
-      	</p:fileUpload>
+	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" 
+			resizable="false" width="700px" height="350px" 
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" 
+				mode="advanced"  dragDropSupport="false"
+				multiple="true"
+			    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+				fileUploadListener="#{panelBackingBean.fileUpload}"  
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"  widgetVar="panelUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+				update="uploadCircularPg,uploadCircularPg1" 
+				label="#{lbl['lbl.btn.choose']}" 
+				uploadLabel="#{lbl['lbl.btn.upload.all']}"
+				cancelLabel="#{lbl['lbl.btn.remove.all']}" >
+		</p:fileUpload>
 		<f:facet name="footer">
    		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadCircularDlg.hide();" />
@@ -289,7 +294,7 @@
                  <div class="ppRightBtn">
 		             <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                   update=":form:uploadCircularPg,:form:uploadCircularPg1" 
-		                   action="#{panelBackingBean.deleteAttachFile()}" oncomplete="deleteAttachFile.hide();"/>
+		                   action="#{panelBackingBean.deleteAttachmentActionByIndex(panelBackingBean.managedBean.attachFileIndex)}" oncomplete="deleteAttachFile.hide();"/>
 			          <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteAttachFile.hide();" type="button" />
 		           </div>
           </p:confirmDialog>
