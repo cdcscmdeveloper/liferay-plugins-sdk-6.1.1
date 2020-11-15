@@ -2871,26 +2871,33 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	private void initiateRemark(List<CtRemark> remarks) {
 		boolean ctWorkflowStatusMatch = false;
-		if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus() != null) {
-			if (remarks.size()>0 && remarks.get(0).getCtWorkflowStatus() != null) {
-				if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus().getWorkflowStatusId() 
-						== remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-					ctWorkflowStatusMatch = true;
+		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
+		//start
+		if(!ctBB.getManagedBean().isViewContract() && !ctBB.getManagedBean().isNotificationSetting()){
+		//Bug #29446
+			if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus() != null) {
+				if (remarks.size()>0 && remarks.get(0).getCtWorkflowStatus() != null) {
+					if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus().getWorkflowStatusId() 
+							== remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+						ctWorkflowStatusMatch = true;
+					}
 				}
+			} else { // both also null
+				ctWorkflowStatusMatch = true;
 			}
-		} else { // both also null
-			ctWorkflowStatusMatch = true;
+	
+			if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+				remarks.add(0, remark);
+			}
+		//Bug #29446
 		}
-
-		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
-			remarks.add(0, remark);
-		}
+		//Bug #29446 - end
 	}
 
 	/**
