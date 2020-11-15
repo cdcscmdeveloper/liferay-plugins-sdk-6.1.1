@@ -3761,6 +3761,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				this.getManagedBean().setSelectedApprovalTabBean(
 						tabBeans.get(selectedTabIndex));
+				// #13344 start - bind remark & attachment
+				this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getScQtApproval().getScQtApprovalAttachments());
+				this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalRemarks(this.getManagedBean().getScQtApproval().getScQtApprovalRemarks());
+				// #13344 end
 				this.getManagedBean().setScQtApproval(
 						this.getManagedBean().getSelectedApprovalTabBean()
 								.getScQtApproval());
@@ -9388,6 +9392,44 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		return condition.toString();
 	} //#27668-End
+	
+	/**
+	 * #13344 Start : saveQtCAApproval
+	 * 
+	 * @return the string
+	 */
+	public void saveQtCAApproval() {
+		log.debug("saveQtCAApproval");
+		IQTDetailSO detailSO;
+		try {
+			this.getManagedBean().setSaveFlow(true);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			updateApprovalDetails(this.getManagedBean().getQt());
+			retrieveApprovalTabDtl();
+
+			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+			quationTenderReqDTO.setApproval(this.getManagedBean().getScQtApproval());
+			quationTenderReqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList()) ;
+			quationTenderReqDTO.setSaveFlow(true);
+			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
+			QtAmendMentBean amendMentBean = getManagedBean().getAmendMentBean();
+
+			quationTenderReqDTO.setQtdetail(qtDetails);
+			quationTenderReqDTO.setAmendMentBean(amendMentBean);
+			quationTenderReqDTO.setRoleCode(getUserRoleCode());
+
+			QuationTenderResDTO quationTenderResDTO = detailSO
+					.updateQtCAAprovalDetails(quationTenderReqDTO);
+			if (quationTenderResDTO.isSuccessful()) {	
+				successMessage(MessageConst.INFO_700090, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			}
+		} finally {
+			detailSO = null;
+		}
+	}
 	// 25077 - Start
 	public void checkPopUpBPKApprovalNeeded(boolean showPopup){
 		boolean checkBpkSetting = false;
