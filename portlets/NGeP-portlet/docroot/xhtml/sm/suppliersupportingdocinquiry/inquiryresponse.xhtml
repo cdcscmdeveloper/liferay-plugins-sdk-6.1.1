@@ -138,7 +138,7 @@
 					<h:inputTextarea value="#{supportingDocInquiryBackingBean.retrieveRemarkByDocId(table.pmDocument)}" disabled="true"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width : 65%;" rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width : 65%;text-align: center  !important;" rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 					<p:commandLink oncomplete="uploadDialogId.show();return false;"
 						process="@this" partialSubmit="true"
 						rendered="#{!table.pmDocument.hardCopyReq}"
