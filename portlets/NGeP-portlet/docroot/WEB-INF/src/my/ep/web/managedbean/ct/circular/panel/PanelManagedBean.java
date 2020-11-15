@@ -115,6 +115,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctPanelSupplier;
 	private SmMofAccount smMofAccount;
 	private List<CtCircularPidReason> ctCircularPidReasons;
+	
+	private int attachFileIndex;
 
 	/**
 	 * @return the circular
@@ -937,4 +939,19 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setFilterCircularVerList(List<CtCircularVer> filterCircularVerList) {
 		this.filterCircularVerList = filterCircularVerList;
 	}
+	
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}	
 }
