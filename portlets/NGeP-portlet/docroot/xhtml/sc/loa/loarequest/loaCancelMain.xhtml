@@ -43,11 +43,11 @@
 					<td><h:outputLabel value="#{lbl['lbl.sc.approverName']}" /></td>
 					<td><p:selectOneMenu id="approverNameId"
 							label="#{lbl['lbl.sc.approverName']}"
-							value="#{lOADetailBackingBean.managedBean.loacancelapproverUser.userId}"
+							value="#{lOACancelDetailBackingBean.managedBean.approverUser.userId}"
 							style="width:360px;" disabled="true" readonly="true">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
-								value="#{lOADetailBackingBean.managedBean.loacancelapproverList}"
+								value="#{lOACancelDetailBackingBean.managedBean.approverList}"
 								var="user" itemLabel="#{user.userName}"
 								itemValue="#{user.userId}" />
 							<p:ajax event="change" update="approverId" />
@@ -58,7 +58,9 @@
 		</p:panel>
 		<ac:scRemarkAndAttachment
 			remarkList="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}"
-			showAttachment="true" readonly="true" />
+			attachmentList ="#{lOADetailBackingBean.managedBean.scLoa.scLoaSupportingDocs}"
+			readonly="false" 
+			fileUploadListener="lOACancelDetailBackingBean.handleSuppDocFileUpload"/>
 
 		<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 			<p:dataTable id="apprHistTbl" var="scLoaApproval"

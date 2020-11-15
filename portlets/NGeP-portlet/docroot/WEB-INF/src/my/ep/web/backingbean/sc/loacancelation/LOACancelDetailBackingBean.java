@@ -110,6 +110,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
+import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDocAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
@@ -127,6 +129,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -924,7 +928,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		try{
 			String outcome = BpmOutcomeConst.BPM_LOA_CANCEL;
 			ScLoa scLoa = this.getManagedBean().getScLoa();	
-			PmUser approverUser = this.getManagedBean().getApproverUser();
+			PmUser approverUser = currentApprovalSession();
 			
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoad();		
@@ -2332,6 +2336,18 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getSourcePage());
 	}
+	
+	public PmUser currentApprovalSession(){
+		Long approverUserId = this.getManagedBean().getApproverUser().getUserId();
+		
+		UserReqDTO userReqDTO  = new UserReqDTO();
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		userReqDTO.setUserId(approverUserId);
+		PmUser approverUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+		
+		return approverUser;
+	}
 
 	/**
 	 * retrieving LOI LOA List from database.
@@ -3298,6 +3314,33 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			}	
 		}			
 		return validDate;	
+	}
+	
+	public void handleSuppDocFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		debugLogger("handleSuppDocFileUpload");
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		if (event.getFile() != null) {
+			// String attachmentDocType =
+			// getManagedBean().getAttachmentDocType();
+			ScAttachment scAttachment = null;
+			ScLoaSupportingDoc selectedScLoaSuppDoc = scLoa.getScLoaSupportingDocs().get(0);
+
+			ScLoaSupportingDocAttachment scLoaSupportingDocAttachment = selectedScLoaSuppDoc
+					.getScLoaSupportingDocAttachment();
+			if (null == scLoaSupportingDocAttachment) {
+				scLoaSupportingDocAttachment = new ScLoaSupportingDocAttachment();
+				scLoaSupportingDocAttachment
+						.setScLoaSupportingDoc(selectedScLoaSuppDoc);
+				selectedScLoaSuppDoc
+						.setScLoaSupportingDocAttachment(scLoaSupportingDocAttachment);
+			}
+			scLoaSupportingDocAttachment.setDocNo(selectedScLoaSuppDoc
+					.getScLoa().getLoaNo());
+			scAttachment = scLoaSupportingDocAttachment;
+
+			uploadAttachment(event.getFile(), scAttachment);
+		}
 	}
 }
 
