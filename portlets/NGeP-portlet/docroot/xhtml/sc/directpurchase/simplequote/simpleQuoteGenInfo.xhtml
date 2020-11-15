@@ -208,7 +208,7 @@
 						required="#{param['submitBtnPressed']=='1'}" disabled="#{!isEditable}"
 						label="#{lbl['lbl.sc.start.date']}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
-						postUpdateListener="simpleQuoteBackingBean.dateListener"
+						postUpdateListener="simpleQuoteBackingBean.dateListenerDefault"
 						modVal="15"
 						update="@([id$=sqinfoId])">
 					</ac:dateTime></td>
