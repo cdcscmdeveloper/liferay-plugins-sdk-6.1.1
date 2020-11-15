@@ -3340,7 +3340,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				}
 
 				scLoaSupportingDocAttachment.setDocNo(scLoa.getLoaNo());
-				scLoaSupportingDocs.add(scLoaSupportingDocAttachment.getScLoaSupportingDoc());
+				scLoaSupportingDocs.add(scLoaSupportingDoc);
 
 				scAttachment = scLoaSupportingDocAttachment;
 				uploadAttachment(event.getFile(), scAttachment);
