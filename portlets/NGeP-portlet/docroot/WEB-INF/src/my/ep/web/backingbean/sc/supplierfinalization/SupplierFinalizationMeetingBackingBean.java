@@ -1884,7 +1884,16 @@ if (CollectionUtils.isNotEmpty(
 	public void prepareMemberUpdate(){
 		ScQtCommittee qtCommittee= this.getManagedBean().getScQtCommittee();
 		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
+		List<ScCommitteeMemberHistory> legacyHistories = new ArrayList<ScCommitteeMemberHistory>();
 		try{
+			if(CollectionUtils.isNotEmpty(histories)){
+				for(ScCommitteeMemberHistory h: histories){
+					if(h.isLegacy()){
+						legacyHistories.add(h);
+					}
+				}
+				histories.removeAll(legacyHistories);//remove legacy history
+			}
 			if(CollectionUtils.isNotEmpty(histories)){
 				ScCommitteeMemberHistory history = histories.get(0);
 				if(histories.size()==1){
