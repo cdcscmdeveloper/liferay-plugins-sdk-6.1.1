@@ -263,6 +263,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			getManagedBean().getCircularVer().setCircularAttachments(resDTO.getCircularVer().getCircularAttachments());//#28713
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
@@ -2149,6 +2150,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @param index  file index of attachment list
 	 */
 	public void deleteAttachmentActionByIndex(int index) {
+		CtAttachment attachements =  getManagedBean().getCircularVer().getCircularAttachments().get(index);
+		if(attachements.getAttachmentId() != null){
+			ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+		}
 		this.getManagedBean().getCircularVer().getCircularAttachments().remove(index);
 	}
 	
