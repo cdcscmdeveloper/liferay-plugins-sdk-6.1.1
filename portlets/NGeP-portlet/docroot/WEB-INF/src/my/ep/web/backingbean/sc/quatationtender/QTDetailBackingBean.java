@@ -3762,8 +3762,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSelectedApprovalTabBean(
 						tabBeans.get(selectedTabIndex));
 				// #13344 start - bind remark & attachment
-				this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getScQtApproval().getScQtApprovalAttachments());
-				this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalRemarks(this.getManagedBean().getScQtApproval().getScQtApprovalRemarks());
+				// #29607 - add null pointer checking for remark & attachment
+				if (this.getManagedBean().getScQtApproval() != null) {
+					if (this.getManagedBean().getScQtApproval().getScQtApprovalAttachments() != null) {
+						this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getScQtApproval().getScQtApprovalAttachments());
+					}
+					if (this.getManagedBean().getScQtApproval().getScQtApprovalRemarks() != null) {
+						this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalRemarks(this.getManagedBean().getScQtApproval().getScQtApprovalRemarks());
+					}
+				}
 				// #13344 end
 				this.getManagedBean().setScQtApproval(
 						this.getManagedBean().getSelectedApprovalTabBean()
