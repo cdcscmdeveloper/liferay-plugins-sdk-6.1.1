@@ -86,5 +86,11 @@
 				rendered="#{suppFinalMeetingBackingBean.managedBean.validFor25037}"/>
 		</div>
 	</p:panel>
-
+	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
+		<ac:scRemarkAndAttachment
+		remarkList="#{suppFinalBiddingBackingBean.omitLatestRemarkForDisplay(suppFinalBiddingBackingBean.managedBean.committeeRemarkList)}"
+		showAttachment="false"
+		readonly="#{!suppFinalBiddingBackingBean.managedBean.secretaryUser}" 
+		header=""/>
+	</p:panel>
 </ui:composition>
