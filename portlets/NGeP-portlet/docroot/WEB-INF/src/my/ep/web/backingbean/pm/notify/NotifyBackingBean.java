@@ -174,19 +174,16 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		PmNotifyUser selectedNotify = new PmNotifyUser();
 		
+		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", INotifySO.class);
+		
 		if (this.getManagedBean().getSelectedNotify() == null) {
 			// Retrieve notifyUser
-			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", INotifySO.class);
-
 			selectedNotify = reqSO.getPmNotifyUserByNotifyUserId(notifyUserId);
 		}
 		
 		if (!readSelectedNotifyObj) {
 		
-			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", INotifySO.class);
-			
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
 			reqDTO.setPmNotifyUser(selectedNotify);
 			
