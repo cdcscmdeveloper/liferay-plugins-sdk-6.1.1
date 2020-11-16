@@ -1723,10 +1723,12 @@ public class EvaluationBackingBean extends
 					
 			for (ScQtProposalChecklist propCheck : resDTO.getSpecScoreBySupplier()) {
 				log.info("Proposal Checklist ID ===============>> " + propCheck.getQtProposalChecklistId());
+				log.info("Checklist ID ==============>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
 				if (this.getManagedBean().getComplianceQtChecklist().getQtChecklistId() == null) {
 					log.info("This thing you called 'this.getManagedBean().getComplianceQtChecklist().getQtChecklistId()' is null");
 				}
-				if(this.getManagedBean().getComplianceQtChecklist().getQtChecklistId() == propCheck.getScQtCheckList().getQtChecklistId()) {
+				if(this.getManagedBean().getComplianceQtChecklist().getQtChecklistId() == propCheck.getScQtCheckList().getQtChecklistId() 
+						|| this.getManagedBean().getComplianceQtChecklist().getTitle().equals(propCheck.getScQtCheckList().getTitle())) {
 					log.info("Masuk checking 'this.getManagedBean().setComplianceQtProposalChecklist(propCheck)'");
 					this.getManagedBean().setComplianceQtProposalChecklist(propCheck);
 				}
