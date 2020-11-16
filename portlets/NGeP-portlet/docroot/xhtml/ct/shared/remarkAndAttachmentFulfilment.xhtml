@@ -52,6 +52,8 @@
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex ? ctBackingBean.managedBean.contractVer.deductionAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex ? ctBackingBean.managedBean.contractVer.scheduleAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.attachement : null)))))}"
+				rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex ne contractDetailsBackingBean.managedBean.settingIndex or
+					contractDetailsBackingBean.managedBean.selectedTabIndex ne contractDetailsBackingBean.managedBean.notificationIndex}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
 				rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 				<table>
