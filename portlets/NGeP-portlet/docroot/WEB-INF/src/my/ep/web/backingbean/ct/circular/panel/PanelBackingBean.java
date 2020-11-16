@@ -254,6 +254,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			getManagedBean().getCircularVer().setCircularAttachments(resDTO.getCircularVer().getCircularAttachments());
 			initializeRemarks();
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
 
@@ -3238,6 +3239,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @param index  file index of attachment list
 	 */
 	public void deleteAttachmentActionByIndex(int index) {
+		CtAttachment attachements =  getManagedBean().getCircularVer().getCircularAttachments().get(index);
+		if(attachements.getAttachmentId() != null){
+			ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+		}
 		this.getManagedBean().getCircularVer().getCircularAttachments().remove(index);
 	}
 	
