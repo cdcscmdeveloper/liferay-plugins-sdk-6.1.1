@@ -2361,7 +2361,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_G2G_REPORT, paramMap);
 		} else {
 			paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
-			generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
+			// #29367 - start
+			if (getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED)) {
+				generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
+			} else {
+				generateReport(ReportConst.SM_SUPPLIER_UNREGIS_REPORT, paramMap);
+			}
+			// #29367 - end
 		}
 		//25792 - end
 	}
