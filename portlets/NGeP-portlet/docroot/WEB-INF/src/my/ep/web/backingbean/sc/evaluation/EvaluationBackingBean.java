@@ -1257,6 +1257,57 @@ public class EvaluationBackingBean extends
 		
 	}
 	
+	//#28786 - start
+	public String complianceUploadBasedOnSupp(
+			ScQtProposalChecklist proposalCheckList, String checkListType) {		
+		this.getManagedBean().setQtProposalChecklist(proposalCheckList);
+		this.getManagedBean().setCheckListType(checkListType);
+		
+		String proposalPage = null;
+		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
+		detailBackingBean.getManagedBean().setQt(
+				this.getManagedBean().getScQt());
+		
+		if (proposalCheckList.getScQtCheckList().getTitle()
+				.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
+			retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
+			log.info("This is Pengesahan dari Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+			retrieveComplianceUploadedProposalChecklist(proposalCheckList);
+			log.info("This is Pengesahan dari Institusi Kewangan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
+			proposalPage = detailBackingBean
+					.retrieveBankStmtDtls(this.getManagedBean().getComplianceQtProposalChecklist());
+		}
+		if (proposalCheckList.getScQtCheckList().getTitle()
+				.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)")) {
+			retrieveAllFinancialChecklist("Aset dan Liabiliti (Dari Kunci Kira-kira)");
+			log.info("This is Kunci Kira-Kira Tahunan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+			retrieveComplianceUploadedProposalChecklist(proposalCheckList);
+			log.info("This is Kunci Kira-Kira Tahunan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
+			proposalPage = detailBackingBean
+					.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
+		}
+		if (proposalCheckList.getScQtCheckList().getTitle()
+				.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar")) {
+			retrieveAllFinancialChecklist("Kemudahan Kredit (Overdraf, Pinjaman Bank)");
+			log.info("This is Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+			retrieveComplianceUploadedProposalChecklist(proposalCheckList);
+			log.info("This is Institusi Kewangan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
+			proposalPage = detailBackingBean
+					.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
+		}
+		
+		this.getManagedBean().setProposalPage(proposalPage);
+		
+		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
+			return "/xhtml/sc/evaluation/compliance/financialComplianceSupplierList.xhtml";
+		}
+		else {
+			return "/xhtml/sc/evaluation/compliance/financialComplianceNonScoring.xhtml";
+		}
+		
+	}
+	//#28786 - end
+	
 	/**
 	 * Sample compliance.when you click compliance button in sample tab to get
 	 * all the sample items
@@ -1443,11 +1494,26 @@ public class EvaluationBackingBean extends
 			EvaluationResDTO resDTO = new EvaluationResDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			//#28786 - start
+			List<ScQtProposalChecklist> technicalCompliance = new ArrayList<ScQtProposalChecklist>();
 
-			List<ScQtProposalChecklist> technicalCompliance = (List<ScQtProposalChecklist>) this
-					.getManagedBean()
-					.getComplianceTechnicalProposalCheckListDM().getList();
-			reqDTO.setCheckList(this.getManagedBean().getScQtChecklist());
+			if(null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("T")) {
+				technicalCompliance = (List<ScQtProposalChecklist>) this
+						.getManagedBean()
+						.getComplianceTechnicalProposalCheckListDM().getList();
+				reqDTO.setCheckList(this.getManagedBean().getScQtChecklist());
+			} else if(null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("F")) {
+				for(ScQtProposalChecklist proposalCheckList : this.getManagedBean()
+						.getComplianceTechnicalProposalCheckListDM().getList()) {
+					if(proposalCheckList == this.getManagedBean().getQtProposalChecklist()) {
+						technicalCompliance.add(proposalCheckList);
+					}
+				}
+				reqDTO.setCheckList(this.getManagedBean().getQtProposalChecklist().getScQtCheckList());
+			}
+			//#28786 - end
 
 			if (null != technicalCompliance && !technicalCompliance.isEmpty()) {
 				for (ScQtProposalChecklist proposalCheckList : technicalCompliance) {
@@ -1477,7 +1543,19 @@ public class EvaluationBackingBean extends
 
 				reqDTO.setComplianceList(technicalCompliance);
 			}
-
+			//#28786 - start
+			for (ScQtProposalChecklist propCheck : this.getManagedBean()
+														.getComplianceTechnicalProposalCheckListDM().getList()) {
+				if (propCheck.getScQtProposalChecklistAttachment() != null && (propCheck.getCompliance() == null || propCheck.getCompliance() == 2)) {
+					reqDTO.setEvalStgCompliance(false);
+					break;
+				} else if (propCheck.getScQtProposalChecklistAttachment() != null && propCheck.getCompliance() != null && propCheck.getCompliance() != 2) {
+					reqDTO.setEvalStgCompliance(true);
+				} else if (propCheck.getScQtProposalChecklistAttachment() == null) {
+					reqDTO.setEvalStgCompliance(true);
+				}
+			}
+			//#28786 - end
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
 					.getComplianceTechnicalCheckList();
@@ -1602,7 +1680,59 @@ public class EvaluationBackingBean extends
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
+	//#28786 - start
+	public void retrieveAllFinancialChecklist(String title) {
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = null;
+		try {
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+//			reqDTO.setCompliance(null);
+			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+			
+			for(ScQtCheckList checklistOfTitle : resDTO.getCheckListResultBean().getResultList()) {
+				log.info("Doc title =======================>>> " + checklistOfTitle.getTitle());
+				if(checklistOfTitle.getTitle().equals(title)) {
+					this.getManagedBean().setComplianceQtChecklist(checklistOfTitle);
+				}
+			}
+
+		} finally {
+			evaluationSO = null;
+		}
+	}
 	
+	public void retrieveComplianceUploadedProposalChecklist(ScQtProposalChecklist proposalCheckList) {
+		
+		IQTEvaluationSO evaluationSO = null;
+		EvaluationResDTO resDTO = new EvaluationResDTO();
+
+		try {			
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
+			reqDTO.setQtId(this.getManagedBean().getScQtChecklist().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			reqDTO.setDocDefinationKey(this.getManagedBean().getComplianceQtChecklist().getDefinationType().getParameterCode());
+			reqDTO.setQtproposalId(proposalCheckList.getScQtProposal().getQtProposalId());
+			resDTO = evaluationSO.retrieveSpecScore(reqDTO);
+					
+			for (ScQtProposalChecklist propCheck : resDTO.getSpecScoreBySupplier()) {
+				log.info("Proposal Checklist ID ===============>> " + propCheck.getQtProposalChecklistId());
+				if(propCheck.getScQtCheckList().getQtChecklistId() == this.getManagedBean().getComplianceQtChecklist().getQtChecklistId()) {
+					this.getManagedBean().setComplianceQtProposalChecklist(propCheck);
+				}
+			}
+			
+		} finally {
+			evaluationSO = null;
+		}
+	}
+	//#28786 - end
 	/**
 	 * Evaluation backaction.user clicks back button in compliance stage and
 	 * evaluation stage.
@@ -1645,6 +1775,17 @@ public class EvaluationBackingBean extends
 
 	}
 	
+	//#28786 - start
+	public String complianceFinancialBackaction() {
+		this.getManagedBean().setTechindex(-1);
+		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
+			return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
+		}
+		else {
+			return "/xhtml/sc/evaluation/compliance/financialComplianceViewSuppliers.xhtml";
+		}
+	}
+	//#28786 - start
 	
 	/**
 	 * Technical spec backaction.
