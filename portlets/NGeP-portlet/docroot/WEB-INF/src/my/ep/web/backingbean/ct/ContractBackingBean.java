@@ -3341,6 +3341,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		// Start - 28292
+			//#28479 - Start Putra
 //		CommonUtils commonUtils = new CommonUtils();
 //		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
 //				.getScRequestItem().getUom().getUomCode());
@@ -3428,7 +3429,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //		
 //		contractItemSO.updateItemSearchService(reqDTO);
 //Bug #28356 - End		
-		
+			//#28479 - End Putra		
 		
 	}
 
