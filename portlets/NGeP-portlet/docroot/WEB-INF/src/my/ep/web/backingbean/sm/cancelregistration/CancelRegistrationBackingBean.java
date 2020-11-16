@@ -37,6 +37,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
@@ -139,7 +140,8 @@ public class CancelRegistrationBackingBean extends
 								if(appl != null && appl.getSdoReceivedDate() != null){
 									Calendar c = new GregorianCalendar();
 									c.setTime(appl.getSdoReceivedDate());
-									c.add(Calendar.DATE, 60);
+									int maxResubmissionDays = SmRuleHelper.getInstance().getApplicationResubmissionDays();
+									c.add(Calendar.DATE, maxResubmissionDays);
 									Date rejectedDate = c.getTime();
 									Date currentDate = new Date();
 									if(currentDate.before(rejectedDate)) poRejectFlag = true;
