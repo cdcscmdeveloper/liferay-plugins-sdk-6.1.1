@@ -274,6 +274,7 @@
 					     				and data.status == 1
 					     				and data.ctStatus == 1 
 					     				and data.ctContract.recordStatusFlg==1
+					     				and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 					     				and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId,(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.ct.admin'] : lbl['lbl.ct.remove.ct.admin'])}"
 					     		onStart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
