@@ -226,6 +226,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			resDTO = circularSO.retrieveCircularVerById(reqDTO);
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
+			
 
 			if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
 				getManagedBean().setCircularExtension(true);
@@ -263,6 +264,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
+			
 			getManagedBean().getCircularVer().setCircularAttachments(resDTO.getCircularVer().getCircularAttachments());//#28713
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
@@ -774,8 +777,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		fileOuputStream.close();
 		
 		//#28713-start
-		getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
-		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));
+		/*getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
+		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));*/
 		CtAttachment attachment = new CtAttachment();
 		
 		if(event.getComponent().getId().equalsIgnoreCase("uploadContractId")){

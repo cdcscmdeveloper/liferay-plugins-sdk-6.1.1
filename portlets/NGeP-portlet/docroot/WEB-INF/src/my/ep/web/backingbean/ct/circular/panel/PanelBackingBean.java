@@ -1772,8 +1772,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			fileOuputStream.close();
 			
 			//#28713 start basri
-			getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
-			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));
+			/*getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
+			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));*/
 			CtAttachment attachment = new CtAttachment();
 			if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
 				
