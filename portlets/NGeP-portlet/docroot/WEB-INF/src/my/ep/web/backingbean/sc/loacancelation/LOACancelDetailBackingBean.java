@@ -112,6 +112,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDocAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
@@ -933,6 +934,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoad();		
 			validateRequiredApprover(approverUser,scLoa);
+			validateRequiredAttachment();
 			PmUser user = PmCommonUtil.retrieveUserById(approverUser.getUserId(), false);    
 						
 			awardDataType.setApprover(user.getLoginId());
@@ -3316,36 +3318,38 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		return validDate;	
 	}
 	
-	public void handleSuppDocFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
-		debugLogger("handleSuppDocFileUpload");
-
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
-			ScLoa scLoa = this.getManagedBean().getScLoa();
+			ScLoa scLoa = getManagedBean().getScLoa();
+			ScLoaCancelAttachment attachment = new ScLoaCancelAttachment();
 
-			List<ScLoaSupportingDoc> scLoaSupportingDocs = scLoa.getScLoaSupportingDocs();
-			if (null == scLoaSupportingDocs) {
-				scLoaSupportingDocs = new ArrayList<ScLoaSupportingDoc>();
+			List<ScLoaCancelAttachment> attachments = scLoa.getScLoaCancelAttachments();
+			if (null == attachments) {
+				attachments = new ArrayList<ScLoaCancelAttachment>();
+				scLoa.setScLoaCancelAttachments(attachments);
 			}
-
-			for (int i = 0; i < scLoaSupportingDocs.size(); i++) {
-				ScLoaSupportingDoc scLoaSupportingDoc = scLoaSupportingDocs.get(i);
-
-				ScLoaSupportingDocAttachment scLoaSupportingDocAttachment = scLoaSupportingDoc
-						.getScLoaSupportingDocAttachment();
-				if (null == scLoaSupportingDocAttachment) {
-					scLoaSupportingDocAttachment = new ScLoaSupportingDocAttachment();
-					scLoaSupportingDocAttachment.setScLoaSupportingDoc(scLoaSupportingDoc);
-					scLoaSupportingDoc.setScLoaSupportingDocAttachment(scLoaSupportingDocAttachment);
-				}
-
-				scLoaSupportingDocAttachment.setDocNo(scLoa.getLoaNo());
-				scLoaSupportingDocs.add(scLoaSupportingDoc);
-
-				scAttachment = scLoaSupportingDocAttachment;
-				uploadAttachment(event.getFile(), scAttachment);
-			}
+			attachment.setScLoa(scLoa);
+			attachment.setDocNo(scLoa.getLoaNo());
+			attachments.add(attachment);
+			uploadAttachment(event.getFile(), attachment);
 		}
+
 	}
+	
+	public void validateRequiredAttachment() {
+		List<ScLoaCancelAttachment> attachments = getManagedBean().getScLoa().getScLoaCancelAttachments();
+		boolean noAttachment = false;
+
+		if (null == attachments) {
+			noAttachment = true;
+		}
+
+		if (noAttachment) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { "Attachment" });
+		}
+
+	}
+	
+	
 }
 
