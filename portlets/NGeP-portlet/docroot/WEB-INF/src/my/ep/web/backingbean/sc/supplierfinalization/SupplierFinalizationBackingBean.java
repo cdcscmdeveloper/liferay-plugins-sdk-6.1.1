@@ -544,7 +544,7 @@ public class SupplierFinalizationBackingBean extends
 					new HashSet<ScQtEvaluationResultDtl>());
 		}	
 		// #25638 - Start
-		//displayReviseInstrn(getManagedBean().getCommitteeList());
+		displayReviseInstrn(getManagedBean().getCommitteeList());
 		// #25638 - End
 	}
 	
@@ -2017,7 +2017,11 @@ public class SupplierFinalizationBackingBean extends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(currentStatusId) || 
-				QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(currentStatusId)) {
+				QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(currentStatusId)
+				// #25638 - Start.
+				|| QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(currentStatusId)
+				// #25638 - End.
+		        ) {
 			this.getManagedBean().setSubmit(true);
 		}
 
