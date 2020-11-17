@@ -603,6 +603,11 @@ public class PmReportsBackingBean extends
 		getManagedBean().setSelectedAccessType(null);
 		getManagedBean().setApplicantName(null);
 		getManagedBean().setSelectedApplicationStatus(null);
+		//shafie - #28833 - start
+		getManagedBean().setSelectedMinistry(null);
+		getManagedBean().setSelectedKumpulanPTJ(null);
+		getManagedBean().setSelectedPTJ(null);
+		//shafie - #28833 - end
 
 	}
 
