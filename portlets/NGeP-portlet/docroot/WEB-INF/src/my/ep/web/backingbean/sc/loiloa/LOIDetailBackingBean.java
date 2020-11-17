@@ -6185,18 +6185,18 @@ public class LOIDetailBackingBean extends
 		return this.getManagedBean().isReadOnly();
 	}
 	
-	// #25638 - Start
+	// #25638 - Start  
 	/**
 	 * @return
 	 */
 	public boolean isPendingNegotiationStatus() {
 	  Long statusId  = getManagedBean().getCurrentStatusId();
       if (null != statusId && (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION.equals(statusId.longValue()) 
-          || QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(statusId.longValue()))) {
+          || QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.equals(statusId.longValue()))) {
         return true;
 	  } else {
 	    return false;
 	  }
 	}
-	// #25638 - End
+	// #25638 - End 
 }
