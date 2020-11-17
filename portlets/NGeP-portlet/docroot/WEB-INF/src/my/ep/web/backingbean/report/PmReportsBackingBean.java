@@ -30,6 +30,7 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -56,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -74,6 +76,8 @@ public class PmReportsBackingBean extends
 
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
+	
+	private static final String CAP_CHAR = "^";
 
 	private static Map<Long, Object> orgTypeMapper;
 	
@@ -207,6 +211,11 @@ public class PmReportsBackingBean extends
 		case PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL:
 			constructPm010Map(map);
 			break;
+			//shafie - #28833 - start
+		case PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT:
+			constructPm012Map(map);
+			break;
+			//shafie - #28833 - end
 		default:
 			throw new EpException("Report not found.");
 
@@ -276,10 +285,10 @@ public class PmReportsBackingBean extends
 		
 		// 28833 start
 		
-		if (getManagedBean().getSelectedOrgType().getParameterId() == 2 ||
-		getManagedBean().getSelectedOrgType().getParameterId() == 4 ||
-		getManagedBean().getSelectedOrgType().getParameterId() == 5) {
-			String PG2G = "0";
+		if (getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_MINISTRY ||
+		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
+		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
+			String PG2G = "0"; 
 			if (getManagedBean().isGovtSeller()){
 				PG2G = "1";
 			}
@@ -435,7 +444,27 @@ public class PmReportsBackingBean extends
 					getManagedBean().getStatus() == 1 ? "Active" : "Inactive");
 		}
 	}
-
+	
+	//#28833 -start
+	//List of PTJ allowed to approve other PTJ's procurement
+	private void constructPm012Map(LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedMinistry() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_MINISTRY, 
+					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
+		}
+		
+		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_KUMPULAN_PTJ, 
+					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
+		}
+		
+		if (getManagedBean().getSelectedPTJ() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
+					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+		}
+	}		
+	//shafie - #28833 -end
+	
 	//No of Company Profile and Market Research Access Application
 	private void constructPm010Map(LinkedHashMap<String, String> map) {
 		if (getManagedBean().getSelectedOrgType() != null && 
@@ -463,6 +492,8 @@ public class PmReportsBackingBean extends
 				map.put(PmReportConst.PARAM_PM_ACCESS_TYPE, accessType);
 			}
 		}
+		
+		
 		
 		if(getManagedBean().getSelectedApplicationStatus() != null){			
 			if(getManagedBean().getSelectedApplicationStatus().longValue() == 
@@ -663,6 +694,7 @@ public class PmReportsBackingBean extends
 		}
 	}
 
+	//shafie - #28833 - start
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("recordStatus^1");
@@ -730,6 +762,152 @@ public class PmReportsBackingBean extends
 
 		return sb.toString();
 	}
+	public String constuctConditionFieldsForPTJGroup() {
+
+		StringBuffer parentOrgProfile = new StringBuffer();
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile
+				.getOrgProfileId() : null;
+		if (null != MinistryOrgProfileId) {
+			String minLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
+			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
+			if (minLevel != null && ptjGrpLevel != null) {
+				int ministryLevel = Integer.valueOf(minLevel);
+				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int orgLevel = ministryLevel - ptjGroupLevel;
+
+				for (int i = 0; i < orgLevel; i++) {
+					parentOrgProfile.append("parentOrgProfile.");
+				}
+				parentOrgProfile.append("orgProfileId");
+				parentOrgProfile.append(CAP_CHAR);
+				parentOrgProfile.append(MinistryOrgProfileId);
+			}
+		} else {
+			parentOrgProfile.append("  ");
+		}
+		return parentOrgProfile.toString();
+	}
+	
+	public String constuctConditionFieldsForPTJ() {
+
+		String parentOrgProfile = null;
+		
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
+		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
+		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
+		if (null != PTJGroupOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ CAP_CHAR + PTJGroupOrgProfileId;
+		} else if (null != MinistryOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ CAP_CHAR + MinistryOrgProfileId;
+		} else {
+			parentOrgProfile = "";
+		}
+		return parentOrgProfile;
+	}
+	
+	
+	
+	/**
+	 * To construct Ministry condition fields for LOV
+	 * 
+	 * @return String
+	 */
+	public String constructMinistryConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.MINISTRY.value());
+		sb.append("|recordStatus^1");
+		return sb.toString();
+	}
+	
+	/**
+	 * To construct Kumpulan PTJ condition fields for LOV
+	 * 
+	 * @return String
+	 */
+	public String constructKumpulanPTJConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DEPARTMENT.value());		
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.DEPARTMENT.value(),OrganizationType.MINISTRY.value()));
+		sb.append("^");
+		sb.append(getManagedBean().getSelectedMinistry().getOrgProfileId());
+		return sb.toString();
+	}
+	
+	/**
+	 * To construct PTJ condition fields for LOV
+	 * 
+	 * @return String
+	 */
+	public String constructPTJConditionFields() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(OrganizationType.DIVISION.value());
+		sb.append("|recordStatus^1");
+		sb.append("|");
+		sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+		sb.append("^");
+		sb.append(getManagedBean().getSelectedKumpulanPTJ().getOrgProfileId());		
+		return sb.toString();
+	}
+	
+	/**
+	 * Post Action Listener : to set PTJ in PmSearchBean after PTJ has been selected in LOV
+	 */	
+	public void updateSearchCriteria(BaseEntity entity) {
+		log.info("updateSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPmSearchBean()
+				.setPtj(orgProfile);
+	}
+	
+	/**
+	 * Post Action Listener : to set Kumpulan PTJ in PmSearchBean after Kumpulan PTJ has been selected in LOV
+	 */	
+	public void updateKPTJSearchCriteria(BaseEntity entity) {
+		log.info("updateKPTJSearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPmSearchBean()
+				.setKptj(orgProfile);
+		
+		resetPtjOrgProfile();
+	}
+		
+	/**
+	 * Post Action Listener : to set Ministry in PmSearchBean after Ministry has been selected in LOV
+	 */	
+	public void updateMinistrySearchCriteria(BaseEntity entity) {
+		log.info("updateMinistrySearchCriteria");
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getPmSearchBean()
+				.setMinistry(orgProfile);
+		
+		resetPtjGroupOrgProfile(); 
+	}
+	
+	public void resetPtjGroupOrgProfile() {
+		this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());		
+		this.getManagedBean().getPmSearchBean().setKptj(null);
+		resetPtjOrgProfile();
+	}
+	
+	
+	public void resetPtjOrgProfile() {
+		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());		
+		this.getManagedBean().getPmSearchBean().setPtj(null);
+	}
+	
+	
+	//shafie - #28833 - end 
 
 	/**
 	 * retrieve all org type into mapper
