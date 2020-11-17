@@ -13,14 +13,14 @@
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="title" required="true" />
 		<cc:attribute name="dialogId" required="true" />
-		<cc:attribute name="height" default="650" />
-		<cc:attribute name="width" default="650" />
+		<cc:attribute name="height" default="400px" />
+		<cc:attribute name="width" default="400px" />
 	</cc:interface>
 
 	<cc:implementation>
 		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
 			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
-			height="cc.attrs.height" width="cc.attrs.width"
+			height="#{cc.attrs.height}" width="#{cc.attrs.width}"
 			resizable="true" style="display: block;">
 			
 			<div id="#{cc.attrs.dialogId}ContentDiv"
