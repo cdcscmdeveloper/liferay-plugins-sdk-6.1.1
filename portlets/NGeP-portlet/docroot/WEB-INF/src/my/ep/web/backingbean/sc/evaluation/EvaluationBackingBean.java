@@ -1267,6 +1267,7 @@ public class EvaluationBackingBean extends
 		SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
 		detailBackingBean.getManagedBean().setQt(
 				this.getManagedBean().getScQt());
+		detailBackingBean.getManagedBean().setReadOnly(true);
 		
 		if (proposalCheckList.getScQtCheckList().getTitle()
 				.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
@@ -1543,6 +1544,7 @@ public class EvaluationBackingBean extends
 
 				reqDTO.setComplianceList(technicalCompliance);
 			}
+			
 			//#28786 - start
 			for (ScQtProposalChecklist propCheck : this.getManagedBean()
 														.getComplianceTechnicalProposalCheckListDM().getList()) {
@@ -1555,6 +1557,7 @@ public class EvaluationBackingBean extends
 					reqDTO.setEvalStgCompliance(true);
 				}
 			}
+			log.info("This is the value of EvalStgCompliance in reqDTO ==: " + reqDTO.isEvalStgCompliance());
 			//#28786 - end
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			List<ScQtCheckList> qtCheckLists = getManagedBean()
