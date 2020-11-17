@@ -109,6 +109,12 @@
 					test="#{PmReportConst.pmNoOfCpAndMrAccessApplicationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/noOfCPandMRAccsApplicationReport.xhtml"></ui:include>
 				</c:when>
+				<!-- #28833 start -->
+				<c:when
+					test="#{PmReportConst.pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/listOfPTJAllowedToApproveOtherPTJProcurementReport.xhtml"></ui:include>
+				</c:when>
+				<!-- #28833 end -->
 				<c:otherwise>
         			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>
