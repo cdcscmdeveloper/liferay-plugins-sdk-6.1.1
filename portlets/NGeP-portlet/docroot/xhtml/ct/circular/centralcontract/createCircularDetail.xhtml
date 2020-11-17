@@ -90,14 +90,8 @@
 							action="#{centralContractBackingBean.setCentralDetailsValue()}" 
 							rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>	
 					 			
-					 			<h:commandLink action="#{centralContractBackingBean.commonDownload(
-						  			centralContractBackingBean.managedBean.circularVer.circularFilePath, centralContractBackingBean.managedBean.circularVer.circularFileName)}" 
-				 	  				rendered="#{centralContractBackingBean.managedBean.circularVer.circularFilePath != null}"
-				 					styleClass="blue_font" value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" />
-					 			
 					 			 <p:dataGrid id="copyAgreement" value="#{centralContractBackingBean.retrieveAttachmentList()}"
 									var="attachAggreement" rowIndexVar="attachAggreementIndex" columns="1" style="width:100%"
-									rendered="#{centralContractBackingBean.managedBean.circularVer.circularFileName == null}"
 									emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
 									<table>
 										
