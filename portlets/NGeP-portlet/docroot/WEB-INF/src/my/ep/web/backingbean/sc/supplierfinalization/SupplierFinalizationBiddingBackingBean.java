@@ -2144,6 +2144,9 @@ public class SupplierFinalizationBiddingBackingBean extends
             suppFinalizationReqDTO.setChildDocType(ParameterConst.DOCTYPE_QUOTATION);
             suppFinalizationReqDTO.setRoleCode(memberRole);
             suppFinalizationReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+            // #25638 - Start.
+            suppFinalizationReqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
+            // #25638 - End.
 		} else {
 		    suppFinalizationReqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
 			suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
