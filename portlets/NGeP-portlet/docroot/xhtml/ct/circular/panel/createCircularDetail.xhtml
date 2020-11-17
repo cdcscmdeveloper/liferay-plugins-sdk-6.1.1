@@ -72,10 +72,17 @@
 			         <h:panelGroup id="uploadCircularPg">
 		 			<h:panelGrid columns="5">
 				  		<p:commandButton icon="ui-icon-upload" update="uploadCircularPg, uploadCircularDlg"
-							action="#{panelBackingBean.setPanelDetailsValue()}" disabled="#{panelBackingBean.managedBean.viewContract}"/>	
+							action="#{panelBackingBean.setPanelDetailsValue()}" 
+							rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
+							
+								<h:commandLink action="#{panelBackingBean.commonDownload(
+						  			panelBackingBean.managedBean.circularVer.circularFilePath, panelBackingBean.managedBean.circularVer.circularFileName)}" 
+				 	  				rendered="#{panelBackingBean.managedBean.circularVer.circularFilePath != null}"
+				 					styleClass="blue_font" value="#{panelBackingBean.managedBean.circularVer.circularFileName}" />
 					 		
 					 			 <p:dataGrid id="copyAgreement" value="#{panelBackingBean.retrieveAttachmentList()}"
 									var="attachAggreement" rowIndexVar="attachAggreementIndex" columns="1" style="width:100%"
+									rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null}"
 									emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
 									<table>
 										<tr>
