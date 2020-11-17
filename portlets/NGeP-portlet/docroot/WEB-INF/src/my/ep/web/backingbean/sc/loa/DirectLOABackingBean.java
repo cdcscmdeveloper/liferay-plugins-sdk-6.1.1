@@ -2261,15 +2261,34 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.setScLoiLoa(scLoiLoa);
 			}
 		}
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance()
+		
+		// #29451 -- #26247 -- Start.
+		checkDA(scLoa);
+		// #29451 -- #26247 -- End.
+	}
+
+	// #29451 -- #26247 -- Start.
+	/**
+	 * @param scLoa
+	 */
+	private void checkDA(ScLoa scLoa) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
 			
-		if (null != qtSuppFinalizationSO) {
-			SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			if (null != qtSuppFinalizationSO) {
+				SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
+				scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			}
+		} finally {
+			qtSuppFinalizationSO = null;
 		}
+		
 	}
+	// #29451 -- #26247 -- End.
 	
 	
 	
@@ -4480,7 +4499,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getEstimatedPrice() != null) {
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
-
+		
+		// #29451 -- #26247 -- Start.
+		checkDA(scLoa);
+		// #29451 -- #26247 -- End.
+		
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
 		this.getManagedBean().setSupplierHQPersonnel(
