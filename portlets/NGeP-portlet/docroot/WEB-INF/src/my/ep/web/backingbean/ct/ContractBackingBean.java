@@ -3318,13 +3318,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		// Start - 28292
-		CommonUtils commonUtils = new CommonUtils();
-		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
-				.getScRequestItem().getUom().getUomCode());
-		DecimalFormat formatter = new DecimalFormat(minValue);
-		String result = formatter.format(ctContractItem.getMinimumOrderQty());
-		ctContractItem.setMinimumOrderQty(Double.parseDouble(result));
+			//#28479 - Start Putra
+//		CommonUtils commonUtils = new CommonUtils();
+//		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
+//				.getScRequestItem().getUom().getUomCode());
+//		DecimalFormat formatter = new DecimalFormat(minValue);
+//		String result = formatter.format(ctContractItem.getMinimumOrderQty());
+//		ctContractItem.setMinimumOrderQty(Double.parseDouble(result));
 		// End - 28292
+		log.info("Putra Check Uom Decimal :"+ctContractItem.getScRequestItem().getUom().getDecimalScale().toString() );
+		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
+		//Bug #28356 - Start
 		//#28479 - Start Putra
 		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
 			if (ctContractItem.getMinimumOrderQty() <= 0) {
@@ -3351,39 +3355,50 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 				   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-								
-				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-					Double maxValue = new Double(0);							
-					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-							maxValue = maxQty.getMaxQuantity().doubleValue();				
-					}
-					if (item.getMinimumOrderQty() > maxValue) {
-						throw new EpException(MessageConst.ERROR_100034,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-						}
-					}
+				   break;
+				   //#28479 - Start remove Code (related to #28292)
+//				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
+//					Double maxValue = new Double(0);							
+//					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+//						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+//							maxValue = maxQty.getMaxQuantity().doubleValue();				
+//					}
+//					if (item.getMinimumOrderQty() > maxValue) {
+//						throw new EpException(MessageConst.ERROR_100034,
+//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
+//						}
+//					}
+				 //#28479 - End remove Code (related to #28292)
 				}//#28479 - End Putra
 			}
 		}
 //		}//28292 - null checker
 		// Start - 28292
-		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
-			Double maxValue = new Double(0);							
-			for (CtItemMaxQty maxQty : ctContractItem.getCtItemMaxQties()) {
-				if (maxValue < maxQty.getMaxQuantity().doubleValue())
-					maxValue = maxQty.getMaxQuantity().doubleValue();				
-			}
-			if (ctContractItem.getMinimumOrderQty() > maxValue) {
-				throw new EpException(MessageConst.ERROR_100034);
-				
-			}
+//		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
+//			Double maxValue = new Double(0);							
+//			for (CtItemMaxQty maxQty : ctContractItem.getCtItemMaxQties()) {
+//				if (maxValue < maxQty.getMaxQuantity().doubleValue())
+//					maxValue = maxQty.getMaxQuantity().doubleValue();				
+//			}
+//			if (ctContractItem.getMinimumOrderQty() > maxValue) {
+//				//Bug #28479 - Start
+//				if ((getManagedBean().getContractVer().getContractVerId() == null)
+//						&& (getManagedBean().getContractVer().getDocType()
+//								.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {					
+//					getManagedBean().setErr100034(true);
+//					getManagedBean().setMinQtyCheck(true);
+//					ctContractItem.setMinimumOrderQty(1);
+//				}
+//				//Bug #28479 - End
+//				throw new EpException(MessageConst.ERROR_100034);
+//				
+//			}
 			
-		}
 		}
 		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
+		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
 		
 //		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
 //		reqDTO.setCtContactItem(ctContractItem);
@@ -3393,7 +3408,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //		
 //		contractItemSO.updateItemSearchService(reqDTO);
 //Bug #28356 - End		
-		
+			//#28479 - End Putra		
 		
 	}
 
