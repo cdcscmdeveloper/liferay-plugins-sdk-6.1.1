@@ -17547,7 +17547,9 @@ public class SpecificationBackingBean extends
 	// END CR:#25633
 	
 	
-	
+	/*11104_start
+	 * sample checklist cretaed during sample radio button select.
+	 */
 	public  void  createsampleChecklist(){
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean()
 				.getScQtCheckSt2techProposal();
@@ -17604,18 +17606,31 @@ public class SpecificationBackingBean extends
 		checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 
 	}
-	
+	/***11104-start
+	 * 
+	 * sample template questions view during click on view action in templatespec in sample.
+	 * @param templateChecklist
+	 * @return(String)
+	 */
 	public String sampleTemplateView(ScQtCheckList templateChecklist){
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		retriveSampleSpecmaster(templateChecklist,null);
 		scoringPopUpAction(null);
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";		
 	}
-	
+	/**** 11104-start
+	 * 
+	 * sample view back action method
+	 * @return
+	 */
 	public String sampleViewBackAction(){
 		return "/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";			
 	}
-	
+	/**** 11104-start
+	 * retrive samplespecmaster and questions during click on view  and search button in sample related spec.
+	 * @param templateChecklist
+	 * @param itemName
+	 */
 	public void retriveSampleSpecmaster(ScQtCheckList templateChecklist,String itemName){
 		this.getManagedBean().setSampleCheckList(templateChecklist);
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
@@ -17638,7 +17653,11 @@ public class SpecificationBackingBean extends
 		templateSpecBean.setSpecMaster(this.getManagedBean().getSampleCheckList().getScQtDoc()
 				.getTplSpecMaster());	
 	}
-
+/***11104-start
+ * display samplequantityerror in sample checkbox selected for sample item.
+ * @param itemName
+ * @return(String sampleError)
+ */
 public String sampleQuantityError(String itemName){
 	log.info("====sampleQuantityError===");
 String message=	ResourceBundleUtils.getMessage("lbl.sc.qt.spec.sample.quantity.error",
@@ -17649,7 +17668,11 @@ String message=	ResourceBundleUtils.getMessage("lbl.sc.qt.spec.sample.quantity.e
 }
 return null;
 }
-
+/****11104-start
+ * display scoresetting dropdown values in sample screen.
+ * @param scoreTyp
+ * @return( SelectItem[])
+ */
 public SelectItem[] getDropDownSampleScoreType(String scoreTyp){	
 	List<String> ScoreTypes = new ArrayList<String>();
 	ScoreTypes.add(ParameterConst.SCORE_TYPE_USER);
@@ -17672,6 +17695,10 @@ public SelectItem[] getDropDownSampleScoreType(String scoreTyp){
 	}
 	return items;
 }
+/***11104-start
+ * sample required checkbox selection for sample item.
+ * @param specQuestion
+ */
 public void sampleRequiredChange(TplSpecQuestion specQuestion){
 	IParameterSO parameterSo = null;
 	log.info("sampleRequiredChange==="+specQuestion.isSampleReq());
@@ -17697,7 +17724,10 @@ public void sampleRequiredChange(TplSpecQuestion specQuestion){
 	
 	
 }
-
+/****11104-start
+ * scoring action for sample item.
+ * @param specQuestion
+ */
 public void scoringPopUpAction(TplSpecQuestion specQuestion){
 List<TplSpecQuestion> specSampleQuestionList=	this.getManagedBean().getSampleCheckList().getScQtDoc()
 	.getTplSpecMaster().getTplSpecQuestions();
@@ -17715,7 +17745,11 @@ if(null!=specQuestion){
 	RequestContext.getCurrentInstance().execute("samplescoringSetPopup.hide()");
 }
 }
-
+/**** 11104-start
+ * sample items save and complete action for sample itmes.
+ * @param actionRender
+ * @return(String)
+ */
 public String saveSampleTemplateSpecDetails(boolean actionRender){
 log.info("===========saveSampleTemplateSpecDetails====="+actionRender);
 List<TplSpecQuestion> samplequestionList= this.getManagedBean().getSampleCheckList().getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
@@ -17767,11 +17801,17 @@ successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.qt.sampel.tech
 }
 return null;	
 }
-
+/***11104-start
+ * reset item name in sample search scrren.
+ */
 public void resetSampleItem(){
 	log.info("=======resetSampleItem======");
 this.getManagedBean().setSampleItemName(" ");	
 }
+/*** 11104-start
+ * validate sample items quantity and score during complete action.
+ * @param specQuestions
+ */
 private void validateSampleItems(List<TplSpecQuestion> specQuestions){
 	if(CollectionUtils.isNotEmpty(specQuestions)){
 		for(TplSpecQuestion question:specQuestions){
@@ -17811,7 +17851,10 @@ private void validateSampleItems(List<TplSpecQuestion> specQuestions){
 		
 	}
 }
-
+/***11104-start
+ * check sample checkist required or not based on sample radio selection.
+ * @param allTechnicalChecklist
+ */
 private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 if(null!=allTechnicalChecklist){
 	boolean specChecklist=false;
