@@ -130,9 +130,9 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<!-- #28833 start -->
-			 <c:if test="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId == 2
-			 			or pmReportsBackingBean.managedBean.selectedOrgType.parameterId == 4
-			 			or pmReportsBackingBean.managedBean.selectedOrgType.parameterId == 5}">
+			 <c:if test="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId eq PmReportConst.orgTypeMinistry
+			 			or pmReportsBackingBean.managedBean.selectedOrgType.parameterId eq PmReportConst.orgTypeKumpulanPTJ
+			 			or pmReportsBackingBean.managedBean.selectedOrgType.parameterId eq PmReportConst.orgTypePTJ}">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.g2g']}"/></td>
 				<td><p:selectBooleanCheckbox id="isGovtSellerCheckBox"
