@@ -186,16 +186,20 @@ public class SupplierFinalizationBiddingBackingBean extends
 			displayReviseInstrn(getManagedBean().getCommitteeList());
 			// #25638 - End
 			
-			prepareUpdateCommitteeMember();//#25037
+			// #27502 - Start			
+			if (null != dataType.getIsMofFinalization()) {
+				mofFinal = dataType.getIsMofFinalization();
+			}
+			
+			if(!mofFinal){// #27502 - Excluded if MOF
+				prepareUpdateCommitteeMember();//#25037
+			}
+			
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);
+							QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);			
 			
-			// #27502 - Start			
-			if (null != dataType.getIsMofFinalization()) {
-				mofFinal = dataType.getIsMofFinalization();				
-			}
 			
 			if (getManagedBean().isOnlineBiddingEscalation()) {		
 				navigateToBriefingPaperTab();

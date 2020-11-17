@@ -2988,7 +2988,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if (fcSecretaries != null && fcSecretaries.length > 0) {
 							fcSecretaryCode = retrieveParameterById(Long
 									.valueOf(fcSecretaries[0].getValue().toString()));
-							;
 						} else {
 							fcSecretaryCode = null;
 						}
@@ -3017,7 +3016,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (scQt.getPmOrgProfile().getBpk() &&						
 					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
 				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
-				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) 
+						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) 
+						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_APPROVAL)) {
 					for (TabBean t : committeTabs) {
 						if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
 							newCommitteTabs.add(t);
@@ -5810,7 +5811,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retrieveDocumentTabDtl();
 				} else{
 					retrieveScheduleTabDtl();
-					removeMofTab();//#27502
+					//removeMofTab();//#27502
 				}
 				
 				break;
@@ -5858,45 +5859,46 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	/*
 	 * remove MOF Tab at status 'Pending Committee Formation Approval' when clicking on 'Committee Aproval' side Tab
 	 * #27502
+	 * Removed bocoz not used anymore
 	 */
-	private void removeMofTab() {
-		ScQt scQt = this.getManagedBean().getQt();
-
-		if (scQt.getPmOrgProfile().getBpk()
-				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
-				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
-
-			List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
-			List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
-			for (TabBean t : committeTabs) {
-				if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
-					newCommitteTabs.add(t);
-				}
-				committeTabs = newCommitteTabs;
-			}
-
-			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
-
-			for (TabBean tabBean : committeTabs) {
-				if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType()) && tabBean
-						.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId()
-						.equals(QTStatusConst.CMT_COMPLETED))
-						|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType())
-								&& scQt.getFinalizationCommitte() != null
-								&& scQt.getFinalizationCommitte().getParameterId() != null
-								&& scQt.getFinalizationSecratery() != null && scQt.getFinalizationSecratery()
-								.getUserId() != null)) {
-					tabBean.setIcon("ui-icon-endorse");
-				}
-			}
-			if (!committeTabs.isEmpty()) {
-				this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
-				String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-				this.getManagedBean().setRoleFilterList(
-						getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
-			}
-		}
-	}
+//	private void removeMofTab() {
+//		ScQt scQt = this.getManagedBean().getQt();
+//
+//		if (scQt.getPmOrgProfile().getBpk()
+//				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
+//				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
+//
+//			List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
+//			List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
+//			for (TabBean t : committeTabs) {
+//				if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
+//					newCommitteTabs.add(t);
+//				}
+//				committeTabs = newCommitteTabs;
+//			}
+//
+//			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
+//
+//			for (TabBean tabBean : committeTabs) {
+//				if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType()) && tabBean
+//						.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId()
+//						.equals(QTStatusConst.CMT_COMPLETED))
+//						|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType())
+//								&& scQt.getFinalizationCommitte() != null
+//								&& scQt.getFinalizationCommitte().getParameterId() != null
+//								&& scQt.getFinalizationSecratery() != null && scQt.getFinalizationSecratery()
+//								.getUserId() != null)) {
+//					tabBean.setIcon("ui-icon-endorse");
+//				}
+//			}
+//			if (!committeTabs.isEmpty()) {
+//				this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
+//				String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
+//				this.getManagedBean().setRoleFilterList(
+//						getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
+//			}
+//		}
+//	}
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
 		return isQTStatusInBetween(currentStatusId,
