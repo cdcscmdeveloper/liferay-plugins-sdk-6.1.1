@@ -34,6 +34,9 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
+/* 27827 - START */
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+/* 27827 - END */
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
@@ -61,6 +64,9 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
+/* 27827 - START */
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+/* 27827 - END */
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -84,6 +90,9 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
+/* 27827 - START */
+import my.ep.type.aut.SearchCondition;
+/* 27827 - END */
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -2861,15 +2870,27 @@ public class TaskReassignmentBackingBean extends
 		case ProfileManagementConst.REASSIGN_TYPE_PTJ_AND_BPK:
 			//11 - Include PTJ & BPK
 			
-			List<String> paramcodes=new ArrayList<String>();
-			paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
-			paramcodes.add(ParameterConst.ORG_TYPE_BPK);
+			List<Long> paramcodes=new ArrayList<Long>();
+			paramcodes.add(orgProfileId); // same org profile id
+			paramcodes.add(getMinistryByOrgProfileId(orgProfileId)); // PTJ under same ministry
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
-							"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_IN.value(), 
-							paramcodes));
+					"pmUserOrgs.pmOrgProfile.orgProfileId",
+					SearchOperator.OPERATOR_IN.value(),
+					paramcodes));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					true));
+					
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					"1000904",
+					SearchCondition.CONDITION_OR.value()));
+			
 			break;
 		/* 27827 - END */
 		default:
@@ -3828,5 +3849,22 @@ public class TaskReassignmentBackingBean extends
 		}		
 		return isBpkAdmin;			
 	}
+	
+	/* 27827 - START */
+	public Long getMinistryByOrgProfileId(Long orgProfileId) {
+		Long orgCode = 0L;
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			orgCode = orgProfile.getOrgProfileId();
+		} else {
+			log.info("Ministry not found : " + orgProfileId);
+			orgCode = 0L;
+		}
+		return orgCode;
+	}
+	/* 27827 - END */
 	
 }
