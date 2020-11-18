@@ -2568,7 +2568,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				//overall remark is required
 				remarkIsRequired();
 			}
-
+			
 		}else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)){ //28760 - start
 			log.info("remark cancel button " + this.getManagedBean().getSelectedRemarks().get(0).getRemark());
 
@@ -7820,7 +7820,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			   numberOfClones.add(expenditureItems.get(i).getExpenditureItemId());
 			   clonedEpItems.put(expenditureItems.get(i),
 					 expenditureItems.get(i - 1));
-			   
+			  			   
 			 //25479 - start
 			   log.info("Original getRemarks = "+expenditureItems.get(i - 1).
 						 getExpenditureItemId()+", Remarks= "+
@@ -7829,15 +7829,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					   expenditureItems.get(i - 1).getPpRemarks().isEmpty()
 					|| expenditureItems.get(i - 1).getPpRemarks().get(0)==null
 					|| StringUtils.isBlank(expenditureItems.get(i- 1).getPpRemarks().get(0).getRemark())){
+				    expenditureItems.get(i - 1).setRemarkValue(true);
 				   throw new EpException(MessageConst.ERROR_730035);
 			   }
 			   
 			   CheckDuplicatePpExpenditureItems(epItems);
 			 //25479 - end	
-			   
-			   
 		 }
-	 
 
 		 PpExpenditureItem clonedEpItem = new PpExpenditureItem();
 		 
@@ -8184,6 +8182,38 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 		log.info("generateCancelButton - End");
 	 	}
 	 	//28760 - end
+//	 	private List <PpRemark> getAllUpdateReason(PpPlan ppPlan){
+//			log.info("getAllUpdateReason");
+//
+//			List <PpRemark> itemRemarks =  new ArrayList<PpRemark>();
+//               if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+//				int itemIndex = 0;
+//					for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
+//						if(ppExpenditureItem.getPpRemarks()!=null && !ppExpenditureItem.getPpRemarks().isEmpty()){
+//							for (PpRemark ppRemark : ppExpenditureItem.getPpRemarks())
+//							 if(ppRemark!=null && !StringUtils.isBlank(ppRemark.getRemark())){ //&& itemRemark.isBrandNew() add this for phase 2
+//								ppRemark.setViewMode(true);
+//								if(itemRemark.getRoleCode() ==null || StringUtils.isBlank(itemRemark.getRoleCode().getRoleCode())){
+//									log.info("set setRemarkRole");
+//									PmRole roleCode = new PmRole();
+//									//24975@041112020@azza - Start
+//									roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
+//									//24975@041112020@azza - End
+//									//roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
+//									//roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
+//									itemRemark.setRoleCode(roleCode);
+//									itemRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
+//								}
+//								itemRemarks.add(itemRemark);
+//							}
+//						itemIndex++;
+//						}
+//					}
+////				}
+//			}
+//			
+//			return itemRemarks;
+//		}
 	 	
 }
 	   
