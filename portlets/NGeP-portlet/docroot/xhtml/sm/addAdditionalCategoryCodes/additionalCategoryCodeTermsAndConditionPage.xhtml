@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<ui:define name="resourceSection">
@@ -45,10 +46,13 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="addCmdBtn"
 					action="#{backingBean.proceedToApplication('A')}"
-					update="addnlCatCodesMsgs"
+					update="addnlCatCodesMsgs,@form"
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
+			<ac:smOwnerSsmPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
+				btnOkLabel="#{lbl['lbl.btn.change']}" 
+				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		</p:panel>
 	</ui:define>
 </ui:composition>

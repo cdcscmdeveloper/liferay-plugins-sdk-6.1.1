@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
@@ -239,6 +240,9 @@
 				</p:outputPanel>
 			
 			</c:if>
+			<ac:smOwnerSsmPopup bBean="#{postSupplierRegBB}" title="#{lbl['lbl.sm.term.and.condition.header']}" dialogId="ownerChecking" 
+				btnOkLabel="#{lbl['lbl.btn.change']}" 
+				btnCancelLabel="#{lbl['lbl.btn.cancel']}"/>
 		</p:outputPanel>
 	</ui:define>
 
