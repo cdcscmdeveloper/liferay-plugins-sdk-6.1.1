@@ -1,0 +1,122 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_smCancelRegistration_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.cancel.preRegistration']}");
+		</script>
+	</ui:define>
+	
+	<ui:define name="contentSection">
+	
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	
+	<p:panel header="#{lbl['lbl.sm.supplier.account.preRegistration.details']}" id="accDetailsPanelId">
+	
+		<table>
+			<tr>
+				<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register.basic']}" 
+				rendered="#{cancelRegistrationBackingBean.managedBean.accType == SupplierManagementConst.STYPE_BASIC}"/>
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register.MofContractor']}" 
+				rendered="#{cancelRegistrationBackingBean.managedBean.accType == SupplierManagementConst.STYPE_CONTRACTOR}"/>
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register.MofConsultent']}" 
+				rendered="#{cancelRegistrationBackingBean.managedBean.accType == SupplierManagementConst.STYPE_CONSULTANT}"/></td>
+			</tr>
+			
+			<tr><td colspan="2" height="15">&#160;</td></tr>
+			
+			<p:outputPanel rendered="#{not empty cancelRegistrationBackingBean.managedBean.accType}">
+			</p:outputPanel>
+			<p:outputPanel>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.businessregno']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<p:inputText id="businessRegNo"
+							label="#{lbl['lbl.sm.businessregno']}"
+							required="true"
+							value="#{cancelRegistrationBackingBean.managedBean.businessRegNo}"
+							size="35" maxlength="20"  />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.companyname']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<p:inputText id="companyName"
+							label="#{lbl['lbl.sm.companyname']}"
+							required="true"
+							value="#{cancelRegistrationBackingBean.managedBean.companyName}"
+							size="100"  />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel 
+							value="#{lbl['lbl.sm.person.cancel.suppAdmin.idno']}" /><p:outputLabel 
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<p:inputText id="suppAdminIdentificationNo"
+							label="#{lbl['lbl.sm.person.cancel.suppAdmin.idno']}"
+							required="true"
+							value="#{cancelRegistrationBackingBean.managedBean.suppAdminIdentificationNo}"
+							size="35" maxlength="15" >
+						</p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel 
+							value="#{lbl['lbl.sm.cancel.reason']}" /><p:outputLabel 
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<p:inputTextarea id="adminCancelReason"
+							label="#{lbl['lbl.sm.cancel.reason']}"
+							autoResize="false"
+							required="true"
+							value="#{cancelRegistrationBackingBean.managedBean.cancellationReason}"
+							cols="41" maxlength="2000" >
+						</p:inputTextarea>
+					</td>
+				</tr>
+	
+			</p:outputPanel>
+			
+		</table>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.cancel.preRegistration']}" 
+				action="#{cancelRegistrationBackingBean.cancelPreRegistraction}"
+				update="@all" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+		</div>
+		
+		
+		<p:confirmDialog id="confirmDialog" closable="true"
+			message="#{cancelRegistrationBackingBean.managedBean.confirmationMsg}"
+			header="#{lbl['lbl.sm.userprofile.confirmation']}" severity="alert"
+			widgetVar="confirmDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" update="@form,:#{p:component('messages')}"
+					action="#{cancelRegistrationBackingBean.cancelDeleteAction}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+				
+				
+			</div>
+		</p:confirmDialog>
+	
+	</p:panel>
+	
+	</ui:define>
+</ui:composition>
