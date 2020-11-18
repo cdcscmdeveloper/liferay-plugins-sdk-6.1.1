@@ -523,6 +523,15 @@ public class SmApplicationBackingBean extends
 							getManagedBean().setSmAppl(latestResubmitAppl);
 							getManagedBean().setSmSupplier(
 									latestResubmitAppl.getSmSupplier());
+							//#29086
+							if (!this.getManagedBean().getSmAppl().getApplType()
+									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+									&& !this.getManagedBean().getSmAppl().getApplType()
+											.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+									&& !this.getManagedBean().getSmAppl().getApplType()
+											.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+								SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
+							}
 							//#27232 - START SSM CHANGES FOR RESUBMIT
 							if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupplier().getRegNo(),this.getManagedBean().getSmSupplier().getBusinessType())){
 								ssmIntegrationResubmit();
