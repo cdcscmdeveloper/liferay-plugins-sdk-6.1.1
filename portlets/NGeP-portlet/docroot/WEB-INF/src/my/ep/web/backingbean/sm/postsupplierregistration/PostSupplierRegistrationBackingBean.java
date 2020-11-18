@@ -1121,6 +1121,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		//List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
 		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 		softCertStatus = currentPersonnel.getSoftcertFlg();
+		log.info("supplier.getBusinessType()>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+supplier.getBusinessType());
 		boolean isG2G = supplier.getBusinessType().
 				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
 		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
