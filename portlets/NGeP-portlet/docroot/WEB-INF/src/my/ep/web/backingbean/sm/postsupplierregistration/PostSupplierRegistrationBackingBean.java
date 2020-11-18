@@ -1170,7 +1170,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				
 				getManagedBean().setFlowStatus(2);
 			}
-			
+			log.info("softCertStatus---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+softCertStatus);
 			if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 				log.info(">>>CHange ROle for SUpplier Temp<<");
 				changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
