@@ -104,6 +104,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    </p:column>
 				    <p:column width="5%" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 				    	<f:facet name="header">
+				    	    <h:outputText value="* " styleClass="mandatory" />  <!-- 24975@16112020 -->
 					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
 					    </f:facet>
 				    </p:column>
@@ -262,7 +263,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	       	<!--24975@azza - start -->
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 	          <!--25549@18092020 -->
-	            <!--24975@06112020azza - start -->
+	            <!--24975@18112020azza - start -->
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemarkT"
 			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
@@ -270,7 +271,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
 					<f:param name="disableValidation" value="" />
 				</p:commandLink>
-				  <!--24975@06112020azza - end -->
+				  <p:graphicImage
+				    rendered="#{epItem.indicator}"
+				    value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+				  <!--24975@18112020azza - end -->
 	        </p:column>
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
