@@ -3345,7 +3345,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		List<ScLoaCancelAttachment> attachments = getManagedBean().getScLoa().getScLoaCancelAttachments();
 		boolean noAttachment = false;
 
-		if (null == attachments) {
+		if ((null == attachments) || (!CollectionUtils.isNotEmpty(attachments))) {
 			noAttachment = true;
 		}
 
