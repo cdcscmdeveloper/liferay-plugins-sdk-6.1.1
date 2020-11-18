@@ -452,9 +452,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			getManagedBean().setApproverList(userResDTO.getUserList());	
 			
-			getManagedBean().setScLoa(scLoa3);
-			getManagedBean().setScQt(scLoa.getScQt());		
-			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			
 			if(getManagedBean().isDpMaintenanceSource()){
@@ -3335,6 +3332,14 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 
 	}
+	
+	public void deleteUploadFile() {
+		log.debug("deleteUploadFile - START");
+		getManagedBean().getScLoa().setScLoaCancelAttachments(null);
+		log.debug("deleteUploadFile - END");
+	}
+	
+	
 	
 	public void validateRequiredAttachment() {
 		List<ScLoaCancelAttachment> attachments = getManagedBean().getScLoa().getScLoaCancelAttachments();
