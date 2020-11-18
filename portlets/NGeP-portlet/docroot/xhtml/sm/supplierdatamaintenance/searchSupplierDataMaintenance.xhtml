@@ -56,12 +56,13 @@
 						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
 						<!-- bug #28278 -START @harith -->
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG}" />	
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST}" />	
-						<!-- bug #29156 -START -->
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted2']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />	
+						<!-- 26238 -  Disciplonary action - 29156 START @akmal -->
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST}" />	
+						
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted2']} (#{smSupplier.smAppl.applNo})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />	
 						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted3']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />	
-						<!-- bug #29156 -END -->		
+						<!-- 26238 -  Disciplonary action - 29156  -END -->		
 					    <!-- bug #28278 -END -->
 					</p:column>
 					
