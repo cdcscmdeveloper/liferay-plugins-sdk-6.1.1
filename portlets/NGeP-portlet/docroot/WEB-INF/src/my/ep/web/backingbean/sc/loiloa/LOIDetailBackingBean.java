@@ -2527,6 +2527,19 @@ public class LOIDetailBackingBean extends
 					.getStatusId().longValue();
 
 			parseLOIDetails(scLoi, outcome);
+			
+			// remove empty remark - start
+			List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
+			List<ScLoiRemark> finalScLoiRemarks = new ArrayList<>();
+			if(CollectionUtils.isNotEmpty(scLoiRemarks)){
+				for(ScLoiRemark each : scLoiRemarks){
+					if(!StringUtils.isEmpty(each.getRemark())){
+						finalScLoiRemarks.add(each);
+					}
+				}
+			}
+			scLoi.setScLoiRemarks(finalScLoiRemarks);
+			// remove empty remark - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO

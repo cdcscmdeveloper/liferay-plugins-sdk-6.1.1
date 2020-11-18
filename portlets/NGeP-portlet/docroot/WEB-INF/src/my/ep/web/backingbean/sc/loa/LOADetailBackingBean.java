@@ -3228,6 +3228,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						scLoa.getLoaId(), scLoa.getLoaNo());
 			}
 		}
+		
+		// remove empty remark - start
+		List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
+		List<ScLoaRemark> finalScLoaRemarks = new ArrayList<>();
+		if(CollectionUtils.isNotEmpty(scLoaRemarks)){
+			for(ScLoaRemark each : scLoaRemarks){
+				if(!StringUtils.isEmpty(each.getRemark())){
+					finalScLoaRemarks.add(each);
+				}
+			}
+		}
+		scLoa.setScLoaRemarks(finalScLoaRemarks);
+		// remove empty remark - end
 
 		validateLOADetails(scLoa, outcome);
 
