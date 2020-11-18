@@ -378,21 +378,21 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	
 	//27951
-		public boolean isPreRegistration() {
-			return preRegistration;
-		}
+	public boolean isPreRegistration() {
+		return preRegistration;
+	}
 
-		public void setPreRegistration(boolean preRegistration) {
-			this.preRegistration = preRegistration;
-		}
+	public void setPreRegistration(boolean preRegistration) {
+		this.preRegistration = preRegistration;
+	}
 
-		public SsmResDTO getSsmResDTO() {
-			return ssmResDTO;
-		}
+	public SsmResDTO getSsmResDTO() {
+		return ssmResDTO;
+	}
 
-		public void setSsmResDTO(SsmResDTO ssmResDTO) {
-			this.ssmResDTO = ssmResDTO;
-		}
+	public void setSsmResDTO(SsmResDTO ssmResDTO) {
+		this.ssmResDTO = ssmResDTO;
+	}
 
 	public boolean isCheckRoleSSM() {
 		return checkRoleSSM;
