@@ -2945,6 +2945,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (ctBB.getManagedBean().isViewContract()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.view.contract",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			//#25406
+		}  else if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.owner.management",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.maintenance",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
