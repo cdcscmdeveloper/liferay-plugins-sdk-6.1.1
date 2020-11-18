@@ -446,7 +446,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			getManagedBean().setApproverUser(approverUser);
 					
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(getUserRoleCode(scLoa3.getScLoiLoa().getDocType()));
+			userReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
 			userReqDTO.setOrgProfileId(scLoa3.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
 			
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
