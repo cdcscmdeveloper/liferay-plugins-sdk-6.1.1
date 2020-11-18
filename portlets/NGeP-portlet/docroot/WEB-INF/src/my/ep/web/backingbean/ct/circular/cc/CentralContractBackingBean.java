@@ -5,6 +5,7 @@ package my.ep.web.backingbean.ct.circular.cc;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;//#28713
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -225,6 +226,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			resDTO = circularSO.retrieveCircularVerById(reqDTO);
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
+			
 
 			if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
 				getManagedBean().setCircularExtension(true);
@@ -262,6 +264,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
+			
+			getManagedBean().getCircularVer().setCircularAttachments(resDTO.getCircularVer().getCircularAttachments());//#28713
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
@@ -770,9 +775,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
-
+		
+		//#28713-start
+		/*getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
+		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));*/
+		CtAttachment attachment = new CtAttachment();
+		
 		if(event.getComponent().getId().equalsIgnoreCase("uploadContractId")){
-			CtAttachment attachment = new CtAttachment();
+			
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
@@ -780,12 +790,27 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			getManagedBean().getCircularVer().getContractAttachments().add(attachment);
 		} else {
-			getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
-			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
+			
+			attachment.setFileName(item.getFileName());
+			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			getManagedBean().getCircularVer().getCircularAttachments().add(attachment);
+			////#28713-end
 		}
 	}
 
+	//#28713-start
+	/**
+	 * The method used to retreive   attachments from the circularattachment.
+	 */
+	public List<CtAttachment> retrieveAttachmentList()
+	{
+		return getManagedBean().getCircularVer().getCircularAttachments();
+	}
+	//#28713-end
+	
 	/**
 	 * The method used to navigate to central circular screen.
 	 * 
@@ -2120,7 +2145,26 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().getCircularVer().setCircularFilePath(null);
 		getManagedBean().getCircularVer().setCircularFileName(null);
 	}
-
+	
+	//#28713-start
+	/**
+	 * The method used to delete attachment from the list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteAttachmentActionByIndex(int index) {
+		CtAttachment attachements =  getManagedBean().getCircularVer().getCircularAttachments().get(index);
+		if(attachements.getAttachmentId() != null){
+			ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+		}
+		this.getManagedBean().getCircularVer().getCircularAttachments().remove(index);
+	}
+	
+	public void setAttachmentIndex(int attachmentIndex){
+		this.getManagedBean().setAttachFileIndex(attachmentIndex);
+	}
+	//#28713-end
+	
 	/**
 	 * Method to set boolean value for checkbox 
 	 * @param pass ajax event type
@@ -2176,4 +2220,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 		return false;
 	}
+	
+	//#28713-start
+	/**
+	 * The method used to download the attached file.
+	 * 
+	 * @param  attachment   an object of attached file
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
+	 */
+	public void downloadFile(CtAttachment attachment) throws IOException {
+		commonDownload(attachment.getFilePath(), attachment.getFileName());
+	}
+	//#28713-end
+
 }

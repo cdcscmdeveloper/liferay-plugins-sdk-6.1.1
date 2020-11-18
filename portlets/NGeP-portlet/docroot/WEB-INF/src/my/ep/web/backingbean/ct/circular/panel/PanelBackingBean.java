@@ -5,6 +5,7 @@ package my.ep.web.backingbean.ct.circular.panel;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;//#28713 start basri
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -253,6 +254,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			getManagedBean().getCircularVer().setCircularAttachments(resDTO.getCircularVer().getCircularAttachments());
 			initializeRemarks();
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList(RoleCode.BPK_PQ_APPROVER.value()));
 
@@ -879,6 +881,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 
+	
+	//#28713 start basri
+	/**
+	 * The method used to retrieve circular attachment from the circularAttachment.
+	 */
+	public List<CtAttachment> retrieveAttachmentList()
+	{
+		return getManagedBean().getCircularVer().getCircularAttachments();
+	}
+	//end
+	
 	/**
 	 * This  method used to initialize approver list
 	 */
@@ -1757,8 +1770,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try (FileOutputStream fileOuputStream = new FileOutputStream(filePath)) {
 			fileOuputStream.write(item.getContents());
 			fileOuputStream.close();
+			
+			//#28713 start basri
+			/*getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
+			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));*/
+			CtAttachment attachment = new CtAttachment();
 			if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
-				CtAttachment attachment = new CtAttachment();
+				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
@@ -1766,10 +1784,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
 			} else {
-				getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
-				getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
-			}
+				
+				attachment.setFileName(item.getFileName());
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedUser(facesScopes.getUserSessionBean());
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);
+			}//end
 		}
 		/*
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
@@ -3198,4 +3220,34 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		*/
 		return getDropdownValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
 	}
+	
+	//#28713 start basri
+	/**
+	 * The method used to download the attached file.
+	 * 
+	 * @param  attachment   an object of attached file
+	 * @throws IOException  if an input or output exception occurred
+	 * @see    IOException
+	 */
+	public void downloadFile(CtAttachment attachment) throws IOException {
+		commonDownload(attachment.getFilePath(), attachment.getFileName());
+	}
+	
+	/**
+	 * The method used to delete attachment from the list.
+	 * 
+	 * @param index  file index of attachment list
+	 */
+	public void deleteAttachmentActionByIndex(int index) {
+		CtAttachment attachements =  getManagedBean().getCircularVer().getCircularAttachments().get(index);
+		if(attachements.getAttachmentId() != null){
+			ctBB.getManagedBean().getDeleteAttachmentList().add(attachements);
+		}
+		this.getManagedBean().getCircularVer().getCircularAttachments().remove(index);
+	}
+	
+	public void setAttachmentIndex(int attachmentIndex){
+		this.getManagedBean().setAttachFileIndex(attachmentIndex);
+	}
+	//end
 }
