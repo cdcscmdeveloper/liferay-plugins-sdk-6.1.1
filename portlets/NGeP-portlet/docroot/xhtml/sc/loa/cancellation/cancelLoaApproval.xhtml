@@ -79,7 +79,8 @@
 		<ui:include src="/xhtml/sc/loa/cancellation/cancelLoaReqDetail.xhtml" />
 		<ac:scRemarkAndAttachment
 			remarkList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaRemarks}"
-			showAttachment="true"
-			readonly="false" />
+			attachmentList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaCancelAttachments}"
+			readonly="false" 
+			fileUploadListener="lOACancelDetailBackingBean.handleFileUpload"/>
 	</ui:define>
 </ui:composition>
