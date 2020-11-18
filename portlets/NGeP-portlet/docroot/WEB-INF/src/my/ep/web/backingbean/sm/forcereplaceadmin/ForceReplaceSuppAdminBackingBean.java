@@ -41,7 +41,6 @@ import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.ReplaceSupplierAdminUploadSuppDocVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FileUploadEvent;
@@ -656,12 +655,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void initDefaultNewAdmin() {
 		//#28765 - Start
-		//deleteUploadReplaceSupplierAdminDocSession();
-		//if (EntityHelper.isCollectionEmpty(getManagedBean()
-		//		.getReplacesupplieradminUploadSuppDocList())) {
-		//	getManagedBean().setReplacesupplieradminUploadSuppDocList(
-		//			new ArrayList<ReplaceSupplierAdminUploadSuppDocVO>());
-		//}
 		initReplaceAdminSupportDoc();
 		//#28765 - End
 		if (!getManagedBean().isExistingUser()) {
@@ -1053,37 +1046,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 	public void confirmDeclare(){
 		RequestContext.getCurrentInstance().execute("groupDeleteConfirm.show()"); 
 	}
-	public void assignSelectedSupportDoc(SmPersonnel smPersonnel,
-			SmReplaceSupplierAdminDoc doc) {
-		List<SmReplaceSupplierAdminDoc> replacesupplieradminDocList = new ArrayList<SmReplaceSupplierAdminDoc>();
-		replacesupplieradminDocList.add(doc);
-		ReplaceSupplierAdminUploadSuppDocVO selectedSuppDoc = new ReplaceSupplierAdminUploadSuppDocVO();
-		selectedSuppDoc.setPersonnel(smPersonnel);
-		selectedSuppDoc.setSuppDocList(replacesupplieradminDocList);
-		getManagedBean().setSelectedSuppDoc(selectedSuppDoc);
-	}
-	public void assignSelectedSmSoftcertDocFile(SmPersonnel smPersonnel,
-			SmReplaceSupplierAdminDoc doc, int index) {
-		List<SmReplaceSupplierAdminDoc> softcertDocList = new ArrayList<SmReplaceSupplierAdminDoc>();
-		softcertDocList.add(doc);
-		ReplaceSupplierAdminUploadSuppDocVO selectedSuppDoc = new ReplaceSupplierAdminUploadSuppDocVO();
-		selectedSuppDoc.setPersonnel(smPersonnel);
-		selectedSuppDoc.setSuppDocList(softcertDocList);
-		this.getManagedBean().setAttachedFileIndex(index);
-		getManagedBean().setSelectedSuppDoc(selectedSuppDoc);
-	}
-	private void deleteUploadReplaceSupplierAdminDocSession() {
-		if (getManagedBean().getReplacesupplieradminUploadSuppDocList() != null
-				&& !getManagedBean().getReplacesupplieradminUploadSuppDocList().isEmpty()) {
-			for (Iterator<ReplaceSupplierAdminUploadSuppDocVO> it = getManagedBean()
-					.getReplacesupplieradminUploadSuppDocList().iterator(); it.hasNext();) {
-				ReplaceSupplierAdminUploadSuppDocVO docVO = it.next();
-				if (!isExistInSelectedPersonnel(docVO.getPersonnel())) {
-					it.remove();
-				}
-			}
-		}
-	}
 	private boolean isExistInSelectedPersonnel(SmPersonnel personnel) {
 		boolean exist = false;
 		for (SmPersonnel selectedPersonnel : getManagedBean()
@@ -1114,27 +1076,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 			//getManagedBean().setSmReplaceSupplierAdminDocs();
 			SmCommonUtil.processUpload(filePath, event,docFile.getFileName());
 			RequestContext.getCurrentInstance().execute("uploadDialog.hide()");
-		}
-	}
-	private void setSelectedSuppDocToMainList() {
-		Iterator<ReplaceSupplierAdminUploadSuppDocVO> docVOIter = getManagedBean()
-				.getReplacesupplieradminUploadSuppDocList().iterator();
-		while (docVOIter.hasNext()) {
-			ReplaceSupplierAdminUploadSuppDocVO docVO = docVOIter.next();
-			if (docVO
-					.getPersonnel()
-					.getIdentificationNo()
-					.equals(getManagedBean().getSelectedSuppDoc()
-							.getPersonnel().getIdentificationNo())) {
-
-				docVO.getSuppDocList().set(
-						docVO.getSuppDocList().indexOf(
-								getManagedBean().getSelectedSuppDoc()
-										.getSuppDocList().get(0)),
-						getManagedBean().getSelectedSuppDoc().getSuppDocList()
-								.get(0));
-
-			}
 		}
 	}
 	public void deleteSupDocFileAttachment() {
