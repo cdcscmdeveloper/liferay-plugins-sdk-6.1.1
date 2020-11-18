@@ -5,7 +5,8 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:ac="http://ac.my/jsf/composite/cc">
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
 	
 	<script type="text/javascript">
 		/*
@@ -257,17 +258,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemark"
 			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
-				   <p:graphicImage value="#{epItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					 <p:graphicImage value="#{epItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					  disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
-				 <f:param name="disableValidation" value="" />
+					<f:param name="disableValidation" value="" />
 				</p:commandLink>
-				<p:graphicImage
-				    rendered="#{epItem.indicator}"
-				    value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
-			  <!--24975@16112020azza - end -->
+			       <p:graphicImage
+				     rendered="#{epItem.indicator}"
+				     value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+				  <!--24975@18112020azza - end -->
 	        </p:column>
 	        <p:column>
-	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" stylestatus="width:99%"
+	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
 	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.cloneEnabled or epItem.statusEnabled}"> 
 	        		<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
 	        	    <!--25549@18092020 -->
@@ -345,7 +346,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	            onclick="cloneExpenditureBPopUp.show();"
 	            rendered="#{pPlanBackingBean.isRolePlanner()}"/>
 			    <p:tooltip id="toolTipB" for="btnClone" value="#{lbl['lbl.pp.clone.year.tooltip']}"
-                   position="bottom"/>
+                    position="bottom"/>
 		 <!-- end -->
 		     &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanB" 
