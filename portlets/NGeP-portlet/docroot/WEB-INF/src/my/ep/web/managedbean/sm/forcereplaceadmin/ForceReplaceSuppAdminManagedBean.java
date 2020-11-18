@@ -14,7 +14,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.ReactivateSupplierVO;
 //#28765 - Start
 import java.util.ArrayList;
-import my.ep.web.vo.ReplaceSupplierAdminUploadSuppDocVO;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
@@ -59,9 +58,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private int bypassFlag3;
 	private boolean bypassFlag;
 	private List<SmPersonnel> replacesupplieradminSelectList;
-	public List<ReplaceSupplierAdminUploadSuppDocVO> replacesupplieradminUploadSuppDocList;
 	public List<PmDocument> replacesuppadminUploadSuppDocList;
-	private ReplaceSupplierAdminUploadSuppDocVO selectedSuppDoc;
 	private List<SmReplaceSupplierAdminDoc> smReplaceSupplierAdminDocs = new ArrayList();
 	private int attachedFileIndex;
 	private String fileDirectory;
@@ -296,24 +293,11 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	public void setReplaceSupplierAdminSelectList(List<SmPersonnel> replacesupplieradminSelectList) {
 		this.replacesupplieradminSelectList = replacesupplieradminSelectList;
 	}
-	public ReplaceSupplierAdminUploadSuppDocVO getSelectedSuppDoc() {
-		return selectedSuppDoc;
-	}
-	public void setSelectedSuppDoc(ReplaceSupplierAdminUploadSuppDocVO selectedSuppDoc) {
-		this.selectedSuppDoc = selectedSuppDoc;
-	}
 	public int getAttachedFileIndex() {
 		return attachedFileIndex;
 	}
 	public void setAttachedFileIndex(int attachedFileIndex) {
 		this.attachedFileIndex = attachedFileIndex;
-	}
-	public List<ReplaceSupplierAdminUploadSuppDocVO> getReplacesupplieradminUploadSuppDocList() {
-		return replacesupplieradminUploadSuppDocList;
-	}
-	public void setReplacesupplieradminUploadSuppDocList(
-			List<ReplaceSupplierAdminUploadSuppDocVO> replacesupplieradminUploadSuppDocList) {
-		this.replacesupplieradminUploadSuppDocList = replacesupplieradminUploadSuppDocList;
 	}
 	public List<PmDocument> getReplacesuppadminUploadSuppDocList() {
 		return replacesuppadminUploadSuppDocList;
