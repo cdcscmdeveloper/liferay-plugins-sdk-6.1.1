@@ -1558,7 +1558,8 @@ public class SmApplicationBackingBean extends
 						//START #27239
 						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						FacesScopes facesScope = new FacesScopes();
-						if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+						//START 28454
+						//if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							
 							//START NEW CHANGES POPUP OWNER UPDATE ROLE							
 							List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
@@ -1593,7 +1594,8 @@ public class SmApplicationBackingBean extends
 								}
 							}
 							
-						}
+						//}
+						//END 28454
 						// #26734 END
 						//END #27239
 						//CHECK EQUITY OWNER EXIST IN SSM TO DISABLE CHECKBOX
