@@ -2873,24 +2873,46 @@ public class TaskReassignmentBackingBean extends
 			List<Long> paramcodes=new ArrayList<Long>();
 			paramcodes.add(orgProfileId); // same org profile id
 			paramcodes.add(getMinistryByOrgProfileId(orgProfileId)); // PTJ under same ministry
+			
+			log.info("session user : " + getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()));
+			log.info("session user2 : " + getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()));
+			log.info("session user3 : " + getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
+			
+			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				
+				log.info("----- BETWEEN 3 ADMINS -----");
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+						"pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_IN.value(),
+						paramcodes));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						true));
+			} else {
+				log.info("----- OTHER 3 ADMINS -----");
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+						"pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_IN.value(),
+						paramcodes));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						true));
+						
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						1000904L,
+						SearchCondition.CONDITION_OR.value()));
+			}
 
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-					"pmUserOrgs.pmOrgProfile.orgProfileId",
-					SearchOperator.OPERATOR_IN.value(),
-					paramcodes));
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
-					SearchOperator.OPERATOR_EQUALS.value(),
-					true));
-					
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
-					SearchOperator.OPERATOR_EQUALS.value(),
-					"1000904",
-					SearchCondition.CONDITION_OR.value()));
-			
 			break;
 		/* 27827 - END */
 		default:
