@@ -79,8 +79,6 @@
 		     <ui:include src="amendmentHeader.xhtml" />
 		  </h:panelGroup>
 		 
-	<!--  <c:choose>
-		<c:when test="#{!amendmentBackingBean.managedBean.updateCommittee}">-->
 	<ui:fragment rendered="#{!amendmentBackingBean.managedBean.updateCommittee}">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
@@ -288,13 +286,9 @@
 		</tr>
 		</table>
 		</ui:fragment>
-		<!-- </c:when>
-		<c:otherwise>-->
 		<ui:fragment rendered="#{amendmentBackingBean.managedBean.updateCommittee}">
 			<ui:include src="pbqcc/committeeList.xhtml" />
 		</ui:fragment>
-		<!--  </c:otherwise>
-	</c:choose>-->
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
