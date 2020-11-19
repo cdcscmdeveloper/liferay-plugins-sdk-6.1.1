@@ -182,7 +182,9 @@
 						disabled="#{paymentMatchBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}"
 						required="false"
-						label="#{lbl['lbl.fl.payment.match.payment.desc']}">
+						label="#{lbl['lbl.fl.payment.match.payment.desc']}"
+						validatorMessage="#{lbl['lbl.fl.payment.match.payment.desc']} - #{lbl['lbl.txt.special.char']}">
+						<f:validateRegex pattern="^[a-zA-Z0-9~`!@#\$%\^&amp;\*\(\)_\-\+={\[\}\]\|\\:;&quot;'&lt;,>\.\?\/  ]*$" />
 						<p:ajax update="@this"/>
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.desc']}"/></td>
