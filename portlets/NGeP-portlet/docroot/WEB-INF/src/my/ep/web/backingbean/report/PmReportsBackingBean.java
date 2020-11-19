@@ -77,7 +77,7 @@ public class PmReportsBackingBean extends
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
 	
-	private static final String CAP_CHAR = "^";
+	private static final String CAP_CHAR = "^"; // shafie - #28833
 
 	private static Map<Long, Object> orgTypeMapper;
 	
@@ -699,7 +699,6 @@ public class PmReportsBackingBean extends
 		}
 	}
 
-	//shafie - #28833 - start
 	public String constructConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("recordStatus^1");
@@ -735,8 +734,9 @@ public class PmReportsBackingBean extends
 					getFacesScopes().hasRoleUser(
 							RoleCode.MINISTRY_ADMIN.value()) ||
 							getFacesScopes().hasRoleUser(
-									RoleCode.AUDITOR_INTERNAL.value()), getFacesScopes()
-							.hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
+									RoleCode.AUDITOR_INTERNAL.value()),
+					getFacesScopes().hasRoleUser(
+							RoleCode.JABATAN_ADMIN.value()),
 					getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
 		} else if (PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL
 				.equals(getManagedBean().getReportCode())) {
@@ -767,6 +767,8 @@ public class PmReportsBackingBean extends
 
 		return sb.toString();
 	}
+	
+	//shafie - #28833 - start
 	public String constuctConditionFieldsForPTJGroup() {
 
 		StringBuffer parentOrgProfile = new StringBuffer();
@@ -806,24 +808,55 @@ public class PmReportsBackingBean extends
 		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
 		if (null != PTJGroupOrgProfileId) {
 			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
-					+ CAP_CHAR + PTJGroupOrgProfileId;
+					+ CAP_CHAR + PTJGroupOrgProfileId + ("|groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
 		} else if (null != MinistryOrgProfileId) {
 			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ CAP_CHAR + MinistryOrgProfileId;
+					+ CAP_CHAR + MinistryOrgProfileId + ("|groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
 		} else {
-			parentOrgProfile = "";
+			parentOrgProfile = ("groupOrgType^") + ParameterConst.ORG_AUTH_TYPE_ORG_GROUP;
 		}
+
 		return parentOrgProfile;
 	}
 	
+	public boolean isMinistryJabatanAdmin(){
+		boolean Admin = false;
+
+		if(getFacesScopes().hasRoleUser(
+				RoleCode.MINISTRY_ADMIN.value()) ||
+			getFacesScopes().hasRoleUser(
+				RoleCode.JABATAN_ADMIN.value())){
+			Admin = true;
+			
+			SetSelectedMinistryforMinistryJabatanAdmin();			
+		}
+		return Admin;
+	}
 	
+	public void SetSelectedMinistryforMinistryJabatanAdmin(){
+		List<PmUserOrg> userOrgList = PmCommonUtil
+				.retrieveActiveOrgWithoutRole(getFacesScopes()
+						.getUserSessionBean().getUserId(), false);
+		
+		if (userOrgList == null || userOrgList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770105);
+			
+		}
+
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
+		Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+		
+		getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+	}
 	
 	/**
 	 * To construct Ministry condition fields for LOV
 	 * 
 	 * @return String
 	 */
-	public String constructMinistryConditionFields() {
+	public String constructMinistryConditionFields() {		
 		StringBuilder sb = new StringBuilder();
 		sb.append("orgTypeCode.parameterCode^");
 		sb.append(OrganizationType.MINISTRY.value());
