@@ -1005,6 +1005,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 		
 			//parseLOADetails(scLoa, outcome);
+			parseApprovalDetails(scLoa, outcome);
 
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -1239,7 +1240,24 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 
 	}
-
+	
+	private void parseApprovalDetails(ScLoa scLoa, String outcome) {
+		
+			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+			String action = null;
+			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_APPROVED.value();
+			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_REJECTED.value();
+			}
+			if(null != action){
+				scLoaApproval.setApproverAction(action);
+				scLoaApproval.setApproverActionDate(new Date());
+				scLoa.setScLoaApproval(scLoaApproval);
+			}
+		
+	}
+		
 	/**
 	 * Parses the loa details.
 	 *
