@@ -865,6 +865,9 @@ public class PurchaseInquiryBackingBean extends
 		reqDTO.setOutcome(getManagedBean().getAction());
 		reqDTO.setTaskId(getManagedBean().getTaskId());
 		reqDTO.setPmDigiSign(pmDigiSign);
+		//#26129 - Start
+		reqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
+		//#26129 - End
 
 		PrInquiryResDTO resDTO = getPrInquirySO().submitPrInquiryPrice(reqDTO);
 		if (resDTO.isSuccessful()) {
