@@ -253,7 +253,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		boolean ctWorkflowStatusMatch = false;
 		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
 		//start
-		if(!getManagedBean().isViewContract() && !getManagedBean().isNotificationSetting()){
+		if(!getManagedBean().isViewContract()){
 		//Bug #29446
 			if (ctWorkflowStatus != null) {
 				if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
