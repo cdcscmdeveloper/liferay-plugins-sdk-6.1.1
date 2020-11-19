@@ -738,6 +738,12 @@ public class SupplierFinalizationBackingBean extends
 					r.setEditable(false);
 				}
 				remarks.get(0).setEditable(true);
+				Collections.sort(remarks, new Comparator<ScQtCommitteRemarks>() {
+					public int compare(ScQtCommitteRemarks o1, ScQtCommitteRemarks o2) {
+					      if (o1.getCreatedDate() == null || o2.getCreatedDate() == null) return 0;
+					      return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+					 }
+				});
 			}
 			scQtCommittee.setQtCommitteRemarks(remarks);
 	

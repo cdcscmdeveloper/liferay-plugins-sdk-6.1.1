@@ -1923,6 +1923,7 @@ if (CollectionUtils.isNotEmpty(
 				if(finalBB.getManagedBean().getCommitteeRemarkList()==null){
 					finalBB.getManagedBean().setCommitteeRemarkList(new ArrayList<ScQtCommitteRemarks>());
 				}
+				this.getManagedBean().getQtCommitteeRemarks().clear();
 				this.getManagedBean().getQtCommitteeRemarks().addAll(finalBB.getManagedBean().getCommitteeRemarkList());
 				finalBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
 			}else if(finalBiddingBB!=null){
@@ -1937,6 +1938,8 @@ if (CollectionUtils.isNotEmpty(
 				if(finalBiddingBB.getManagedBean().getCommitteeRemarkList()==null){
 					finalBiddingBB.getManagedBean().setCommitteeRemarkList(new ArrayList<ScQtCommitteRemarks>());
 				}
+				this.getManagedBean().getQtCommitteeRemarks().clear();
+				this.getManagedBean().getQtCommitteeRemarks().addAll(finalBiddingBB.getManagedBean().getCommitteeRemarkList());
 				finalBiddingBB.getManagedBean().getMeetingBB().submitAction(BpmOutcomeConst.BPM_SUBMIT, mainPage);
 			}else{
 				saveAction();
@@ -2018,8 +2021,12 @@ if (CollectionUtils.isNotEmpty(
 		validateCommitteeMembers();
 		if(isCommitteeModified(this.getManagedBean().getCommitteeMembersList())){
 			this.getManagedBean().setCommitteeModified(true);
-			List<ScQtCommitteRemarks> remarks = this.getManagedBean().getFinalBB()==null ? 
-					this.getManagedBean().getQtCommitteeRemarks() : this.getManagedBean().getFinalBB().getManagedBean().getCommitteeRemarkList();
+			List<ScQtCommitteRemarks> remarks = this.getManagedBean().getQtCommitteeRemarks();
+			if(this.getManagedBean().getFinalBB()!=null){
+				remarks = this.getManagedBean().getFinalBB().getManagedBean().getCommitteeRemarkList();
+			}else if(this.getManagedBean().getFinalBiddingBB()!=null){
+				remarks = this.getManagedBean().getFinalBiddingBB().getManagedBean().getCommitteeRemarkList();
+			}	
 			if(StringUtils.isEmpty(remarks.get(0).getRemark())){
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage(
 						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
