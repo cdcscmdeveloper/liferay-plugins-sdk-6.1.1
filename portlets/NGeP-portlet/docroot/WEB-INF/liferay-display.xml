@@ -149,6 +149,7 @@
 			<portlet id="scSupplierFinalizationEndorsement"/>
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
+            <portlet id="cancelLoaApproval"></portlet>
             <portlet id="QTSupplierAcceptance" />
             <portlet id="BusinessOwner"></portlet>
             <portlet id="ReviewPurchaseInquiry"></portlet>
@@ -332,6 +333,7 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
+		<portlet id="travellingTicketingSystemMaintenance"></portlet>
 
 		<portlet id="smResubmitApplication"></portlet>
 		<portlet id="paymentResponse"></portlet>
