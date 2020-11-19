@@ -261,9 +261,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					
 					getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 					getManagedBean().setSearchStatusId(null);
-				} else {
-					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-					docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 				}
 				//end - #22211
 			}
