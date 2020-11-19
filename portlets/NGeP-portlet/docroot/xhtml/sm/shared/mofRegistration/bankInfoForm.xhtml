@@ -202,6 +202,7 @@
 							value="#{lbl['lbl.sm.bankDtls.acctPurpose']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
@@ -255,6 +256,7 @@
 							value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="60"
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankBranch']}"
 							id="smBankBranchName"
