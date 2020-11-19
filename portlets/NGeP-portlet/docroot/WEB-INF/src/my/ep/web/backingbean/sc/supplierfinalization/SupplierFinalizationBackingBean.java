@@ -1308,20 +1308,22 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+			}
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+						getManagedBean().getConsolidationBriefingPaperReportList());
+			}
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			// #18685 - End
+			
 			//#27502- Adding condition only
 			if (!scQt.getPmOrgProfile().getBpk() &&						
 					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
-				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-					scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-				}
-				// #18685 - Start
-				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
-						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
-					getManagedBean().getNewBriefingPaperReportList().addAll(
-							getManagedBean().getConsolidationBriefingPaperReportList());
-				}
-				// #18685 - End
-				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+				
 				if (!skipValidation) {
 					validateFinalizationReports(reqDTO);
 				}
