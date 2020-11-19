@@ -2874,15 +2874,9 @@ public class TaskReassignmentBackingBean extends
 			paramcodes.add(orgProfileId); // same org profile id
 			paramcodes.add(getMinistryByOrgProfileId(orgProfileId)); // PTJ under same ministry
 			
-			log.info("session user : " + getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()));
-			log.info("session user2 : " + getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()));
-			log.info("session user3 : " + getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
-			
 			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-				
-				log.info("----- BETWEEN 3 ADMINS -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
 						"pmUserOrgs.pmOrgProfile.orgProfileId",
@@ -2894,7 +2888,6 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_EQUALS.value(),
 						true));
 			} else {
-				log.info("----- OTHER 3 ADMINS -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
 						"pmUserOrgs.pmOrgProfile.orgProfileId",
