@@ -673,14 +673,14 @@ public class PurchaseInquiryBackingBean extends
 				SmSupplier smSupplier = scRequestSupplierItem.getSmSupplier();
 				
 				//Start - #26129
-				if (prInquiry.getCurrentStatus() != null) {
-					getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
-					PmStatus pmStatus = getManagedBean().getPriStatus();
-					if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
-							&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
-						validateRequiredRemark(prInquiry);
-					}
-				}							
+//				if (prInquiry.getCurrentStatus() != null) {
+//					getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
+//					PmStatus pmStatus = getManagedBean().getPriStatus();
+//					if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
+//							&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
+//						validateRequiredRemark(prInquiry);
+//					}
+//				}							
 				//End - #26129
 				finalizeRemarks(prInquiry.getRemarks());
 
