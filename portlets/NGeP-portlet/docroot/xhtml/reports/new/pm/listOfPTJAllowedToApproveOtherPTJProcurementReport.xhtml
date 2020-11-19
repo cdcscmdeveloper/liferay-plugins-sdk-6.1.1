@@ -13,6 +13,7 @@
 						value="#{lbl['lbl.pm.org.ptj.search.ministry']}" /></th>
 				<td>
 					<ac:lov id="minstryPtjsearch" lovId="PM_ORG_PROFILE_MINSTRY"
+						disabled = "#{pmReportsBackingBean.ministryJabatanAdmin}"
 						headerText="#{lbl['lbl.pm.org.ptj.search.ministry']}" update="@form"
 						saveObject="pmReportsBackingBean.managedBean.selectedMinistry"
 						value="#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
