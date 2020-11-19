@@ -3268,7 +3268,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtId = quationDataType.getQtId().longValue();
 				// retrieveFinalizationSecratryDtl(qtId);
 				retrieveQuationTenderDetails(new Long(qtId));
-				retrieveScheduleTabDtl();
 				ScQt scQt = this.getManagedBean().getQt();
 				if (scQt.getObtainSpecialApproval() != null
 						&& scQt.getObtainSpecialApproval()) {

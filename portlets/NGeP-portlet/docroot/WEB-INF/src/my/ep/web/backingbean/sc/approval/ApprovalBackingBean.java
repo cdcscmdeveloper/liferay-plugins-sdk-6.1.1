@@ -2311,7 +2311,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if(wfStatus.getPmStatus()!=null){
 			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
 			if (this.isQTStatusPublished(currentStatusId)){
-				this.getManagedBean().setOutComes(new String[]{}); 
+				this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_REJECT}); 
 				FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.doaRequestExpired", null)));
 			}
 		}
@@ -2330,9 +2330,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		try{
 			if(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.equals(requestType)){
-				if(taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_APPROVE)){
-					this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_APPROVE, BpmOutcomeConst.BPM_REVISE});//bypass reject not needed
-				}
 				assertBriefingSiteVisitInProgress(qtId);
 				QTScheduleDetailBackingBean scheduleBB = new QTScheduleDetailBackingBean();
 				List<ScQtApprovalRequest> requestList = getApprovalRequests(qtId, ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APPROVAL, "", Arrays.asList(new String[]{requestType}), "");
@@ -2477,6 +2474,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_APPROVE), "INFO_760518");
 			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_REVISE), "INFO_760519");
 			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_SUBMIT), "INFO_760520");
+			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_REJECT), "INFO_760521");
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			String msgCode = msgMap.get(reqDTO.getDocType().concat(reqDTO.getApproverAction()));
