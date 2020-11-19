@@ -5026,19 +5026,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
             reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
         
             SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-        
+            // 18685 - Start.
             if (null != resDTO && null != resDTO.getScQtFinalizationReport()) {
-              int index = 0;
-              for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-                if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
-                  getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
-                  getManagedBean().getSelectedBriefingReport().setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
-                  break;
-                }
-                index++;
-              }
+            	if (SourcingConstants.UDPUPBM_REPORT.equals(resDTO.getScQtFinalizationReport().getTitle())) {
+            		List<ScQtFinalizationReport> reportList = new LinkedList<>();
+            		resDTO.getScQtFinalizationReport().setScQtFinalization(scQtFinalization);
+            		reportList.add(resDTO.getScQtFinalizationReport());
+            		getManagedBean().setNewBriefingPaperReportList(reportList);
+            		getManagedBean().setSelectedBriefingReport(resDTO.getScQtFinalizationReport());
+            	} else {
+            		int index = 0;
+                    for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+                      if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+                        getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
+                        getManagedBean().getSelectedBriefingReport().setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
+                        break;
+                      }
+                      index++;
+                    }
+            	}
             }
-            
+            // 18685 - End.
           } finally {
              qtSuppFinalizationSO = null;
           }
