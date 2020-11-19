@@ -153,8 +153,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
@@ -247,30 +249,40 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 
 		boolean ctWorkflowStatusMatch = false;
-		if (ctWorkflowStatus != null) {
-			if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
-				if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-					ctWorkflowStatusMatch = true;
+		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
+		//start
+		if(!getManagedBean().isViewContract() && !getManagedBean().isNotificationSetting()){
+		//Bug #29446
+			if (ctWorkflowStatus != null) {
+				if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
+					if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+						ctWorkflowStatusMatch = true;
+					}
 				}
+			} else { // both also null
+				ctWorkflowStatusMatch = true;
 			}
-		} else { // both also null
-			ctWorkflowStatusMatch = true;
-		}
-
-		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			PmUser pmUser = facesScopes.getUserSessionBean();
-			remark.setCreatedBy(pmUser.getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(pmUser);
+	
+			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				PmUser pmUser = facesScopes.getUserSessionBean();
+				remark.setCreatedBy(pmUser.getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(pmUser);
+				getManagedBean().setRemarkList(remarkList);
+				getManagedBean().getRemarkList().add(0, remark);
+			} else {
+				getManagedBean().setRemarkList(remarkList);
+			}
+			getManagedBean().setAttachmentList(attachmentList);
+		//Bug #29446
+		} else if (getManagedBean().isViewContract()){
 			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().getRemarkList().add(0, remark);
-		} else {
-			getManagedBean().setRemarkList(remarkList);
+			getManagedBean().setAttachmentList(attachmentList);
 		}
-		getManagedBean().setAttachmentList(attachmentList);
+		//Bug #29446 - end
 	}	
 	
 	

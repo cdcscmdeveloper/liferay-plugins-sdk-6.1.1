@@ -669,4 +669,18 @@
 		</p:confirmDialog>
 
 	</p:panel>
+	
+	<!-- Bug #29466 -->
+	<!-- start -->
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{ctBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" style="float:none;text-align:center"/></td>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" style="float:none;text-align:center"/></td>
+			</tr>
+			<ui:include src="../shared/remarkAndAttachmentFulfilment.xhtml" />
+		</table>
+	</p:panel>
+	<!-- end -->
 </ui:composition>
