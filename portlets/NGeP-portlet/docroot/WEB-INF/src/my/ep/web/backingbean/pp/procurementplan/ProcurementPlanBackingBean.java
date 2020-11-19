@@ -2587,6 +2587,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		} //28760 - end
 		
+		//24975@19112020 - start
+		checkUpdateForReasonIndicator(ppPlan);
+		//24975@19112020 - end
+		
 		log.info("validationPlanSubmit - END");
 		return false;
 		
@@ -7836,7 +7840,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					 expenditureItems.get(i - 1));
 			  			   
 			 //25479 - start
-			   log.info("Original getRemarks = "+expenditureItems.get(i - 1).
+			   /*log.info("Original getRemarks = "+expenditureItems.get(i - 1).
 						 getExpenditureItemId()+", Remarks= "+
 						 expenditureItems.get(i - 1).getPpRemarks());
 			   if(expenditureItems.get(i - 1).getPpRemarks()!=null && 
@@ -7846,7 +7850,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				    expenditureItems.get(i - 1).setIndicator(true);
 				   throw new EpException(MessageConst.ERROR_730035);
 			   }
-			   
+			   */
 			   CheckDuplicatePpExpenditureItems(epItems);
 			 //25479 - end	
 		 }
@@ -8196,39 +8200,84 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 		log.info("generateCancelButton - End");
 	 	}
 	 	//28760 - end
-//	 	private List <PpRemark> getAllUpdateReason(PpPlan ppPlan){
-//			log.info("getAllUpdateReason");
-//
-//			List <PpRemark> itemRemarks =  new ArrayList<PpRemark>();
-//               if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
-//				int itemIndex = 0;
-//					for(PpExpenditureItem ppExpenditureItem:ppPlan.getPpExpenditureItems()){
-//						if(ppExpenditureItem.getPpRemarks()!=null && !ppExpenditureItem.getPpRemarks().isEmpty()){
-//							for (PpRemark ppRemark : ppExpenditureItem.getPpRemarks())
-//							 if(ppRemark!=null && !StringUtils.isBlank(ppRemark.getRemark())){ //&& itemRemark.isBrandNew() add this for phase 2
-//								ppRemark.setViewMode(true);
-//								if(itemRemark.getRoleCode() ==null || StringUtils.isBlank(itemRemark.getRoleCode().getRoleCode())){
-//									log.info("set setRemarkRole");
-//									PmRole roleCode = new PmRole();
-//									//24975@041112020@azza - Start
-//									roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
-//									//24975@041112020@azza - End
-//									//roleCode.setRoleCode(RoleCode.PLAN_OFFICER.value());
-//									//roleCode.setRoleCode(RoleCode.PLAN_EXPEN_OFFICER.value());
-//									itemRemark.setRoleCode(roleCode);
-//									itemRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
-//								}
-//								itemRemarks.add(itemRemark);
-//							}
-//						itemIndex++;
-//						}
-//					}
-////				}
-//			}
-//			
-//			return itemRemarks;
-//		}
-	 	
+		// 28760 - end
+
+		// 24975@19112020 - start
+		public void checkUpdateForReasonIndicator(PpPlan ppPlan) {
+			log.info("start checkUpdateForReasonIndicator");
+																
+			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+
+				List<PpProcurementItem> procurementItems = null;
+				List<PpProcurementItem> ppItemIndicator = new ArrayList<PpProcurementItem>();
+
+				if (ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()) {
+
+					procurementItems = ppPlan.getPpProcurementItems();
+
+					if (procurementItems.size() > 1) {
+						int indicatorIndex = 0;
+						for (int i = 0; i < procurementItems.size(); i++) {
+							if (procurementItems.get(i).isClonedItem()) {
+								log.info("Original getUpdateReason = " + procurementItems.get(i - 1).getProcurementItemId()
+										+ ", Reason= "
+										+ procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc());
+								if (procurementItems.get(i - 1).getPpUpdateReasons() != null
+										&& procurementItems.get(i - 1).getPpUpdateReasons().isEmpty()
+										|| procurementItems.get(i - 1).getPpUpdateReasons().get(0) == null
+										|| StringUtils.isBlank(procurementItems.get(i - 1).getPpUpdateReasons().get(0)
+												.getReasonDesc())
+										|| procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc()
+												.equals("\u200B")) {
+									PpProcurementItem setIndicator = procurementItems.get(i - 1);
+									setIndicator.setIndicator(true);
+									ppItemIndicator.add(setIndicator);
+									indicatorIndex++;
+								}
+							}
+						}
+						if (indicatorIndex > 0) {
+							throw new EpException(MessageConst.ERROR_730035);
+						}
+					}
+				} else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+
+					List<PpExpenditureItem> expenditureItems = null;
+					List<PpExpenditureItem> ppEpItemIndicator = new ArrayList<PpExpenditureItem>();
+
+					if (ppPlan.getPpExpenditureItems() != null && !ppPlan.getPpExpenditureItems().isEmpty()) {
+
+						expenditureItems = ppPlan.getPpExpenditureItems();
+
+						if (expenditureItems.size() > 1) {
+							int indicatorIndex = 0;
+							for (int i = 0; i < expenditureItems.size(); i++) {
+								if (expenditureItems.get(i).isCloned() == true) {
+
+									log.info("Original getRemarks = " + expenditureItems.get(i - 1).getExpenditureItemId()
+											+ ", Remarks= " + expenditureItems.get(i - 1).getPpRemarks());
+									if (expenditureItems.get(i - 1).getPpRemarks() != null
+											&& expenditureItems.get(i - 1).getPpRemarks().isEmpty()
+											|| expenditureItems.get(i - 1).getPpRemarks().get(0) == null
+											|| StringUtils.isBlank(expenditureItems.get(i - 1).getPpRemarks().get(0)
+													.getRemark())) {
+										PpExpenditureItem setIndicator = expenditureItems.get(i - 1);
+										setIndicator.setIndicator(true);
+										ppEpItemIndicator.add(setIndicator);
+										indicatorIndex++;
+									}
+								}
+							}
+							if (indicatorIndex > 0) {
+								throw new EpException(MessageConst.ERROR_730035);
+							}
+						}
+					}
+				}
+			}
+			log.info("start checkUpdateForReasonIndicator");
+		}
+		// 24975@19112020 - start 	
 }
 	   
 
