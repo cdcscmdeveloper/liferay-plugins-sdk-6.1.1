@@ -216,7 +216,7 @@
 						</p:panel>
 					</h:panelGroup> 
 					<ac:scRemarkAndAttachment
-						remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
+						remarkList="#{suppFinalMeetingBackingBean.omitLatestRemarkForDisplay(suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks)}"
 						showAttachment="false" /> 
 					</td>
 				</td>
