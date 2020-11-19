@@ -6811,11 +6811,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		public List<CtCommitteeMember> getFilteredOriginalCommitteeMembers() {
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
-			for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-				if(member.getUpdateType() == null || ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
-					filteredCommitteeMembers.add(member);
+			//#29403 start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null){
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
+					for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+						if(member.getUpdateType() == null || ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+							filteredCommitteeMembers.add(member);
+						}
+					}
 				}
 			}
+			//#29403 end
+			
 			return filteredCommitteeMembers;
 		}
 		
