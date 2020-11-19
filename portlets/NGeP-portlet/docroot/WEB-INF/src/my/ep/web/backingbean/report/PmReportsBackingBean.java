@@ -846,9 +846,15 @@ public class PmReportsBackingBean extends
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		
-		Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
+		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+			getManagedBean().setSelectedMinistry(pmOrgProfile);
+			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
+		}
+		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+		}
 		
-		getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 	}
 	
 	/**
