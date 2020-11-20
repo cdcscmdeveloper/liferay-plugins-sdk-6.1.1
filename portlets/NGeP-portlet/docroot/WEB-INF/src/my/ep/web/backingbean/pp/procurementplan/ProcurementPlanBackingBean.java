@@ -3292,9 +3292,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975@06112020@azza - Start
 							expItem.setChangePencilToNote(false);
 							//24975@06112020@azza - End
+							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 								expItem.setIndicator(false);
 							}
+							// 24975@20112020 - End
 					      }
 				       }	
 					}
@@ -3352,9 +3354,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975@06112020@azza - Start
 							expItem.setChangePencilToNote(false);
 							//24975@06112020@azza - End
+							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 							   expItem.setIndicator(false);
 							}
+							// 24975@20112020 - End
 					     }
 				      }
 				  }
@@ -3412,9 +3416,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975@06112020@azza - Start
 							expItem.setChangePencilToNote(false);
 							//24975@06112020@azza - End
+							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 							   expItem.setIndicator(false);
 						}
+							// 24975@20112020 - End
 					 }
 				  }
 				}
@@ -3473,9 +3479,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975@06112020@azza - Start
 							expItem.setChangePencilToNote(false);
 							//24975@06112020@azza - End
+							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 							   expItem.setIndicator(false);
 						   }
+							// 24975@20112020 - End
 					   }
 				    }
 				}
@@ -3533,9 +3541,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975@06112020@azza - Start
 							expItem.setChangePencilToNote(false);
 							//24975@06112020@azza - End
+							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 							   expItem.setIndicator(false);
 							}
+							// 24975@20112020 - End
 					    }
 				    }
 				}
@@ -3688,8 +3698,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //				epItem.setPpRemarks(PpCommonUtil.retrieveRemark(epItem.getExpenditureItemId(), ParameterConst.DOCTYPE_PLAN_EXPENDITURE));
 			}
 		}
-		epItem.setIndicator(false);
 		loadEpItemRemarks(epItem);
+		//24975@20112020 - start
+		if (epItem.isIndicator() == true){
+			epItem.setIndicator(false);
+		}
+		//24975@20112020 - End
 	}
 	/**
 	 * Initial or load item remarks
@@ -4222,6 +4236,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							}
 						}
 						
+							// 24975@20112020 - Start
+							if (PpItem.isIndicator() == true) {
+								PpItem.setIndicator(false);
+							}
+							// 24975@20112020 - End
 				      }
 			       }	
 				}
@@ -6077,6 +6096,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 		loadUpdateReasons(ppItem.getPpUpdateReasons());
 		//loadUpdateReasons(ppItem);
+		//24975@20112020 - start
+		if(ppItem.isIndicator() == true){
+			ppItem.setIndicator(false);
+		}
+		//24975@20112020 - End
 	}
 
 	/**
