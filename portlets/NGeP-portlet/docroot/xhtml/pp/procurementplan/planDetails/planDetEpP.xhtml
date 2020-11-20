@@ -263,9 +263,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	         <!--24975@azza - end -->
-	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
+	         <!--24975@20112020azza - start -->
+	        <p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 	              <!--25549@18092020 -->
-	              <!--24975@18112020azza - start -->
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemarkP"
 			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
@@ -278,6 +278,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 				 <!--24975@18112020azza - end -->
 	        </p:column>
+	         <!--24975@20112020azza - end -->
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
 	        		   disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.cloneEnabled or epItem.statusEnabled}">  
