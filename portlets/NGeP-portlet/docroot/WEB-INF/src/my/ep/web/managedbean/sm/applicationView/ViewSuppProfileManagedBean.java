@@ -234,6 +234,8 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSupplierType(getSearchSuppType());
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			reqDTO.setPmZoneId(getSearchPmZoneId());
+			//28237
+			reqDTO.setDisplaySearchPage(true);
 			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveSupplierBySearchCriteria(reqDTO)
 					.getSupplierResultBean();
