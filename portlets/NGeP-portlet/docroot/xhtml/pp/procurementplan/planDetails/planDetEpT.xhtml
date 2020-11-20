@@ -260,9 +260,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:commandLink>
 	        </p:column>
 	       	<!--24975@azza - end -->
-	       	<!--24975@azza - start -->
-	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
-	            <!--24975@18112020azza - start -->
+	       	 <!--24975@20112020azza - start -->
+	        <p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	update="@form"  immediate="true"  id="clEpRemarkT"
 			    	disabled="#{epItem.brandNew ? epItem.brandNew : epItem.selectable or epItem.disableRow}">
@@ -273,8 +272,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				  <p:graphicImage
 				    rendered="#{epItem.indicator}"
 				    value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
-				  <!--24975@18112020azza - end -->
 	        </p:column>
+	          <!--24975@20112020azza - end -->
 	        <p:column>
 	        	<p:selectOneMenu value="#{epItem.recordStatusFlg}" style="width:99%"
 	        	   	disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or epItem.cloneEnabled or epItem.statusEnabled}"> 
@@ -282,7 +281,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	  	           <p:ajax event="change"  update="dtExpenditurePlanT" listener="#{pPlanBackingBean.selectedSEptatus(ParameterConst.votTanggungan, epItem.recordStatusFlg, index)}" partialSubmit="true" />
 	          	</p:selectOneMenu> 
 	        </p:column>
-	        <!--24975@azza - end -->
 	        <p:column rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{epItem.changedDate}">
 					<f:convertDateTime
