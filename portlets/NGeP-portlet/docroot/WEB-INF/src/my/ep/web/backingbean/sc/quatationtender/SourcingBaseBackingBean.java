@@ -4376,6 +4376,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<ScQtFinalizationReport> scQtFinalizationReportList = this.getManagedBean().getNewBriefingPaperReportList();
 		if (null != scQtFinalizationReportList && scQtFinalizationReportList.size() > 0) {
 			String reportNames = "";
+			// #18685 - Start.
+			resetUnSavedReportContent(scQtFinalizationReportList);
+			// #18685 - End.
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
@@ -4414,6 +4417,49 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+	
+	// #18685 - Start.
+	/**
+	 * @param scQtFinalizationReportList
+	 */
+	public void resetUnSavedReportContent(
+			List<ScQtFinalizationReport> scQtFinalizationReportList) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO;
+		List<Long> qtReportIds = new ArrayList<Long>();
+		
+		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+			qtReportIds.add(scQtFinalizationReport.getQtReportId());
+		}
+
+		try {
+		    qtSuppFinalizationSO = BusinessDelegate.getInstance()
+		        .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+		                IQTSuppFinalizationSO.class);
+		    SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		    ScQtFinalization scQtFinalization = this.getManagedBean().getNewBriefingPaperReportList().get(0).getScQtFinalization();
+		    if (scQtFinalization == null) {
+		      scQtFinalization = new ScQtFinalization();
+		    }
+		    reqDTO.setScQtFinalization(scQtFinalization);
+		    reqDTO.setQtReportIdList(qtReportIds);
+		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
+		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
+		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
+		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
+		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+		    				continue repLoop;
+		    			}
+		    		}
+		    	}
+		    }
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	// #18685 - End.
 	
 	/**
 	 * this method is used to save the userInput type popup window content in reports tab.
@@ -4981,24 +5027,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
             if (scQtFinalization == null) {
               scQtFinalization = new ScQtFinalization();
             }
+            // 18685 - Start.
             reqDTO.setScQtFinalization(scQtFinalization);
-            reqDTO.setQtReportId(finalizationReport.getQtReportId());
+            List<Long> qtReportIds = new ArrayList<Long>();
+            qtReportIds.add(finalizationReport.getQtReportId());
+            reqDTO.setQtReportIdList(qtReportIds);
             reqDTO.setDocumentCategory(finalizationReport.getDocCategory());
         
             SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-        
-            if (null != resDTO && null != resDTO.getScQtFinalizationReport()) {
-              int index = 0;
-              for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
-                if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
-                  getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
-                  getManagedBean().getSelectedBriefingReport().setReportContent(resDTO.getScQtFinalizationReport().getReportContent());
-                  break;
-                }
-                index++;
-              }
-            }
             
+            if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+            		&& resDTO.getScQtFinalizationReports().size() > 0) {
+            	ScQtFinalizationReport scQtFinalizationReport = resDTO.getScQtFinalizationReports().get(0);
+            	int index = 0;
+                for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
+                  if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
+                    getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(scQtFinalizationReport.getReportContent());
+                    //getManagedBean().getSelectedBriefingReport().setReportContent(scQtFinalizationReport.getReportContent());
+                    break;
+                  }
+                  index++;
+                }
+            }
+            // 18685 - End.
           } finally {
              qtSuppFinalizationSO = null;
           }
