@@ -6790,22 +6790,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		public List<CtCommitteeMember> getFilteredCommitteeMembers() {
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
-			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-				for(CtCommitteeMember member: getManagedBean().getUpdatedCommitteeMembers()) {
-					if(member.getUpdateType() == null || (member.getUpdateType() != null 
-							&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()) 
-							&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()))) {
-						filteredCommitteeMembers.add(member);
+			if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()!=null){ //#29403
+				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+					for(CtCommitteeMember member: getManagedBean().getUpdatedCommitteeMembers()) {
+						if(member.getUpdateType() == null || (member.getUpdateType() != null 
+								&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()) 
+								&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()))) {
+							filteredCommitteeMembers.add(member);
+						}
+					}
+				} else {
+					for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+						if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {							
+							filteredCommitteeMembers.add(member);
+						}
 					}
 				}
-			} else {
-				for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-					if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {							
-						filteredCommitteeMembers.add(member);
-					}
-				}
-			}
-			
+			} //#29403
 			return filteredCommitteeMembers;
 		}
 		
