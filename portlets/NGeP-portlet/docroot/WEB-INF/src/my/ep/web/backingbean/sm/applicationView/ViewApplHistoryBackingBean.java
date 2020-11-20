@@ -129,9 +129,11 @@ public class ViewApplHistoryBackingBean extends
 		if (!StringUtils.isBlank(outputPageType)
 				&& outputPageType
 						.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)) {
+			//START - #28870 
 			getManagedBean().getTrackingDiary().setTrackingDiaryParam(
 					SmTrackingDiaryConst.SM_DEFAULT_DOC_TYPE,
-					getManagedBean().getSmAppl().getApplId(), false);
+					getManagedBean().getSmAppl().getApplId(), getManagedBean().isSupplierUser() ? true : false);
+			//END - #28870
 			getManagedBean().getTrackingDiary().getManagedBean()
 					.getSearchTrackingDiaryDataModel().reloadData();
 		}
