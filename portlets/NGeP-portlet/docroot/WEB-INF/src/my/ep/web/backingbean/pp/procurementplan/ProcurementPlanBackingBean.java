@@ -7829,75 +7829,77 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 original.setJustificationEnabled(true);
 			 }
 		}
-		 //24975@04112020@azza - end
-	   public void ChekDuplicatePpItemClone(List<PpExpenditureItem> epItems) {
-		 
- 
-		 CheckDuplicatePpExpenditureItems(epItems);
-	
-         List<PpExpenditureItem> expenditureItems = null;
-         Map<PpExpenditureItem, PpExpenditureItem> clonedEpItems = 
-         new HashMap<PpExpenditureItem, PpExpenditureItem>();
-   
-         if (epItems != null && !epItems.isEmpty()) {
-    
-	         expenditureItems = epItems;
-	         
-	        log.info("Size of expenditureItems= "+epItems.size());
-	 
-	        List<Long> numberOfClones = new ArrayList<Long>();
-	 
-	    if (expenditureItems.size() > 1) {
-		    for (int i = 0; i < expenditureItems.size(); i++) {		    	
-		    	
-			   log.info("expenditureId clone " + expenditureItems.get(i).isCloned());	
-				
-			   if (expenditureItems.get(i).isCloned()== true){
-			 
-			   log.info("Cloned procurementItemId= "+expenditureItems.get(i).
-					 getExpenditureItemId()+", brandNew= "+expenditureItems.get(i).isBrandNew());
 
-			   log.info("Original expenditureItems= "+expenditureItems.get(i - 1).
-					 getExpenditureItemId()+", brandNew= "+expenditureItems.get(i - 1).isBrandNew());
-			   numberOfClones.add(expenditureItems.get(i).getExpenditureItemId());
-			   clonedEpItems.put(expenditureItems.get(i),
-					 expenditureItems.get(i - 1));
-			  			   
-			 //25479 - start
-			   /*log.info("Original getRemarks = "+expenditureItems.get(i - 1).
-						 getExpenditureItemId()+", Remarks= "+
-						 expenditureItems.get(i - 1).getPpRemarks());
-			   if(expenditureItems.get(i - 1).getPpRemarks()!=null && 
-					   expenditureItems.get(i - 1).getPpRemarks().isEmpty()
-					|| expenditureItems.get(i - 1).getPpRemarks().get(0)==null
-					|| StringUtils.isBlank(expenditureItems.get(i- 1).getPpRemarks().get(0).getRemark())){
-				    expenditureItems.get(i - 1).setIndicator(true);
-				   throw new EpException(MessageConst.ERROR_730035);
-			   }
-			   */
-			   CheckDuplicatePpExpenditureItems(epItems);
-			 //25479 - end	
-		 }
+	// 24975@04112020@azza - end
+	//24975@20112020 - Start
+	public void ChekDuplicatePpItemClone(List<PpExpenditureItem> epItems) {
 
-		 PpExpenditureItem clonedEpItem = new PpExpenditureItem();
-		 
-		 //Should not allow multiple updates
-		 log.info("Saiz numberOfClones= "+numberOfClones.size());
-			 for (Map.Entry<PpExpenditureItem, PpExpenditureItem> clonedExpItem : clonedEpItems.entrySet()) {
-				 
-				 clonedEpItem = clonedExpItem.getKey();
-				 
-				 if (!expenditureItemValueChanges(clonedEpItem,clonedExpItem.getValue())) {
-					 throw new EpException(MessageConst.ERROR_730033);
-				 }
-		      }
-	       }
-	     }
-       }
+		CheckDuplicatePpExpenditureItems(epItems);
+
+		List<PpExpenditureItem> expenditureItems = null;
+		Map<PpExpenditureItem, PpExpenditureItem> clonedEpItems = new HashMap<PpExpenditureItem, PpExpenditureItem>();
+
+		if (epItems != null && !epItems.isEmpty()) {
+
+			expenditureItems = epItems;
+
+			log.info("Size of expenditureItems= " + epItems.size());
+
+			List<Long> numberOfClones = new ArrayList<Long>();
+			List<PpExpenditureItem> ppEpItemIndicator = new ArrayList<PpExpenditureItem>();
+
+			if (expenditureItems.size() > 1) {
+				int indicatorIndex = 0;
+				for (int i = 0; i < expenditureItems.size(); i++) {
+
+					log.info("expenditureId clone " + expenditureItems.get(i).isCloned());
+
+					if (expenditureItems.get(i).isCloned() == true) {
+
+						log.info("Cloned procurementItemId= " + expenditureItems.get(i).getExpenditureItemId()
+								+ ", brandNew= " + expenditureItems.get(i).isBrandNew());
+
+						log.info("Original expenditureItems= " + expenditureItems.get(i - 1).getExpenditureItemId()
+								+ ", brandNew= " + expenditureItems.get(i - 1).isBrandNew());
+						numberOfClones.add(expenditureItems.get(i).getExpenditureItemId());
+						clonedEpItems.put(expenditureItems.get(i), expenditureItems.get(i - 1));
+
+						log.info("Original getRemarks = " + expenditureItems.get(i - 1).getExpenditureItemId()
+								+ ", Remarks= " + expenditureItems.get(i - 1).getPpRemarks());
+						if (expenditureItems.get(i - 1).getPpRemarks() != null
+								&& expenditureItems.get(i - 1).getPpRemarks().isEmpty()
+								|| expenditureItems.get(i - 1).getPpRemarks().get(0) == null
+								|| StringUtils.isBlank(expenditureItems.get(i - 1).getPpRemarks().get(0).getRemark())) {
+							PpExpenditureItem setIndicator = expenditureItems.get(i - 1);
+							setIndicator.setIndicator(true);
+							ppEpItemIndicator.add(setIndicator);
+							indicatorIndex++;
+						}
+					}
+				}
+				if (indicatorIndex > 0) {
+					throw new EpException(MessageConst.ERROR_730035);
+				}
+
+				CheckDuplicatePpExpenditureItems(epItems);
+			}
+
+			PpExpenditureItem clonedEpItem = new PpExpenditureItem();
+
+			// Should not allow multiple updates
+			log.info("Saiz numberOfClones= " + numberOfClones.size());
+			for (Map.Entry<PpExpenditureItem, PpExpenditureItem> clonedExpItem : clonedEpItems.entrySet()) {
+
+				clonedEpItem = clonedExpItem.getKey();
+
+				if (!expenditureItemValueChanges(clonedEpItem, clonedExpItem.getValue())) {
+					throw new EpException(MessageConst.ERROR_730033);
+				}
+			}
+		}
 	}
-
-   
-   
+	//24975@20112020 - End
+     
 	private boolean expenditureItemValueChanges(PpExpenditureItem clonedItem, 
 			PpExpenditureItem originalItem) {
 	    
@@ -8226,82 +8228,49 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 	//28760 - end
 		// 28760 - end
 
-		// 24975@19112020 - start
-		public void checkUpdateForReasonIndicator(PpPlan ppPlan) {
-			log.info("start checkUpdateForReasonIndicator");
-																
-			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+	// 24975@19112020 - start
+	public void checkUpdateForReasonIndicator(PpPlan ppPlan) {
+		log.info("start checkUpdateForReasonIndicator");
 
-				List<PpProcurementItem> procurementItems = null;
-				List<PpProcurementItem> ppItemIndicator = new ArrayList<PpProcurementItem>();
+		if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
 
-				if (ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()) {
+			List<PpProcurementItem> procurementItems = null;
+			List<PpProcurementItem> ppItemIndicator = new ArrayList<PpProcurementItem>();
 
-					procurementItems = ppPlan.getPpProcurementItems();
+			if (ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()) {
 
-					if (procurementItems.size() > 1) {
-						int indicatorIndex = 0;
-						for (int i = 0; i < procurementItems.size(); i++) {
-							if (procurementItems.get(i).isClonedItem()) {
-								log.info("Original getUpdateReason = " + procurementItems.get(i - 1).getProcurementItemId()
-										+ ", Reason= "
-										+ procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc());
-								if (procurementItems.get(i - 1).getPpUpdateReasons() != null
-										&& procurementItems.get(i - 1).getPpUpdateReasons().isEmpty()
-										|| procurementItems.get(i - 1).getPpUpdateReasons().get(0) == null
-										|| StringUtils.isBlank(procurementItems.get(i - 1).getPpUpdateReasons().get(0)
-												.getReasonDesc())
-										|| procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc()
-												.equals("\u200B")) {
-									PpProcurementItem setIndicator = procurementItems.get(i - 1);
-									setIndicator.setIndicator(true);
-									ppItemIndicator.add(setIndicator);
-									indicatorIndex++;
-								}
+				procurementItems = ppPlan.getPpProcurementItems();
+
+				if (procurementItems.size() > 1) {
+					int indicatorIndex = 0;
+					for (int i = 0; i < procurementItems.size(); i++) {
+						if (procurementItems.get(i).isClonedItem()) {
+							log.info("Original getUpdateReason = " + procurementItems.get(i - 1).getProcurementItemId()
+									+ ", Reason= "
+									+ procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc());
+							if (procurementItems.get(i - 1).getPpUpdateReasons() != null
+									&& procurementItems.get(i - 1).getPpUpdateReasons().isEmpty()
+									|| procurementItems.get(i - 1).getPpUpdateReasons().get(0) == null
+									|| StringUtils.isBlank(procurementItems.get(i - 1).getPpUpdateReasons().get(0)
+											.getReasonDesc())
+									|| procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc()
+											.equals("\u200B")) {
+								PpProcurementItem setIndicator = procurementItems.get(i - 1);
+								setIndicator.setIndicator(true);
+								ppItemIndicator.add(setIndicator);
+								indicatorIndex++;
 							}
-						}
-						if (indicatorIndex > 0) {
-							throw new EpException(MessageConst.ERROR_730035);
 						}
 					}
-				} else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
-
-					List<PpExpenditureItem> expenditureItems = null;
-					List<PpExpenditureItem> ppEpItemIndicator = new ArrayList<PpExpenditureItem>();
-
-					if (ppPlan.getPpExpenditureItems() != null && !ppPlan.getPpExpenditureItems().isEmpty()) {
-
-						expenditureItems = ppPlan.getPpExpenditureItems();
-
-						if (expenditureItems.size() > 1) {
-							int indicatorIndex = 0;
-							for (int i = 0; i < expenditureItems.size(); i++) {
-								if (expenditureItems.get(i).isCloned() == true) {
-
-									log.info("Original getRemarks = " + expenditureItems.get(i - 1).getExpenditureItemId()
-											+ ", Remarks= " + expenditureItems.get(i - 1).getPpRemarks());
-									if (expenditureItems.get(i - 1).getPpRemarks() != null
-											&& expenditureItems.get(i - 1).getPpRemarks().isEmpty()
-											|| expenditureItems.get(i - 1).getPpRemarks().get(0) == null
-											|| StringUtils.isBlank(expenditureItems.get(i - 1).getPpRemarks().get(0)
-													.getRemark())) {
-										PpExpenditureItem setIndicator = expenditureItems.get(i - 1);
-										setIndicator.setIndicator(true);
-										ppEpItemIndicator.add(setIndicator);
-										indicatorIndex++;
-									}
-								}
-							}
-							if (indicatorIndex > 0) {
-								throw new EpException(MessageConst.ERROR_730035);
-							}
-						}
+					if (indicatorIndex > 0) {
+						throw new EpException(MessageConst.ERROR_730035);
 					}
 				}
 			}
-			log.info("start checkUpdateForReasonIndicator");
 		}
-		// 24975@19112020 - start 	
+		log.info("End checkUpdateForReasonIndicator");
+	    // 24975@19112020 - start
+	}		
 }
 	   
 
