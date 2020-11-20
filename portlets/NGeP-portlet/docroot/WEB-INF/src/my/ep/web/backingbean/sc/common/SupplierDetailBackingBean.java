@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.sc.common;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -30,6 +32,7 @@ import my.ep.web.managedbean.sc.common.SupplierDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 
 /**
@@ -207,12 +210,14 @@ public class SupplierDetailBackingBean extends
 						smPersonnel.getSmAppl().getSmSupplier()
 								.setSmMofAccount(smMofAccount);
 					}
+					
+					Collections.sort(boardofDirectors, boardOfDirectorComparator);
 				}
 			}
 		} finally {
 			personnelSO = null;
 		}
-
+		
 		getManagedBean().setBoardofDirectors(boardofDirectors);
 	}
 	// #11134 - end
@@ -228,5 +233,16 @@ public class SupplierDetailBackingBean extends
 		this.getManagedBean().setSupplierName(null);
 		this.getManagedBean().setBoardofDirectors(null); // #11134
 	}
+	
+	private static Comparator<SmPersonnel> boardOfDirectorComparator = new Comparator<SmPersonnel>() {
+
+		@Override
+		public int compare(SmPersonnel o1, SmPersonnel o2) {
+			String a = o1.getSmAppl().getSmSupplier().getCompanyName();
+			String b = o2.getSmAppl().getSmSupplier().getCompanyName();
+			return CompareToBuilder.reflectionCompare(a, b);
+		}
+		
+	};
 	
 }
