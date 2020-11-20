@@ -133,6 +133,8 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
 		}
 		
+		setCurrentActiveOrg(); //#28833 - shafie
+		
 	}
 
 	public void generatePmReport() {
@@ -821,7 +823,7 @@ public class PmReportsBackingBean extends
 	
 	public boolean isMinistryJabatanAdmin(){
 		boolean Admin = false;
-
+		
 		if(getFacesScopes().hasRoleUser(
 				RoleCode.MINISTRY_ADMIN.value()) ||
 			getFacesScopes().hasRoleUser(
@@ -839,12 +841,15 @@ public class PmReportsBackingBean extends
 						.getUserSessionBean().getUserId(), false);
 		
 		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);
-			
+			throw new EpException(MessageConst.ERROR_770105);			
 		}
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
+		getManagedBean().setSelectedMinistry(pmOrgProfile);
+		this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
+		this.getManagedBean().getSelectedMinistry().getPmOrgValidity().setOrgName(pmOrgProfile.getPmOrgValidity().getOrgName());
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(pmOrgProfile);
@@ -992,6 +997,18 @@ public class PmReportsBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
+		//#28833 -shafie -start
+		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+			getManagedBean().setSelectedMinistry(pmOrgProfile);
+			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
+		}
+		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+		}
+		//#28833 -shafie -end
+		
 	}
 
 	public void searchRoleMatrix() {
