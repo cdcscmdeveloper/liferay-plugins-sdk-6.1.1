@@ -848,8 +848,8 @@ public class PmReportsBackingBean extends
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-			getManagedBean().setSelectedMinistry(pmOrgProfile);
-			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 		}
 		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
