@@ -14,19 +14,19 @@
 							<p:dataTable id="tableUpload" var="upload" rowIndexVar="index" widgetVar="tableUploadWidget"
 							value="#{forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs}" rowKey="#{rowKeyObj}">
 							<ac:paginator for="tableUpload" />
-								<p:column style="width : 25%;white-space: normal !important;">
+								<p:column style="width : 5%;white-space: normal !important;">
 									<f:facet name="header">
 										<h:outputText value="#{lbl['lbl.sm.no']}" />
 									</f:facet>
 									<h:outputText value="1" />
 								</p:column>
-								<p:column style="width : 25%;white-space: normal !important;">
+								<p:column style="width : 50%;white-space: normal !important;">
 									<f:facet name="header">
 										<h:outputText value="#{lbl['lbl.sm.gst.document.desc']}" />
 									</f:facet>
 								<h:outputText value="#{upload.pmDocument.docName}" />
 								</p:column>
-								<p:column style="width : 25%;white-space: normal !important; align:left">
+								<p:column style="width : 20%;white-space: normal !important; align:left">
 									<f:facet name="header">
 										<!-- #28765 -->
 										<h:outputText value="*" styleClass="mandatory" /><h:outputText value="#{lbl['lbl.sm.gst.upload.doc']}" />
