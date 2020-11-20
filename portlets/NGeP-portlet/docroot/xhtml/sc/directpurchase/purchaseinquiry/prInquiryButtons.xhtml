@@ -21,6 +21,15 @@
 		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
 		
      <!-- 20190417@asyrafhaziq_12095 - End -->
+     
+     <!-- 26129 - Start -->
+     <ui:param name="cancelPiPendingSubmission" value="cancelPiPendingSubmission" />
+	 <ac:cancelRejectPopup id="#{cancelPiPendingSubmission}" widget="cancelPiPendingSubmission" width="30%"
+		height="100"
+		okAction="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
+		title="#{lbl['lbl.cancel.details']}"
+		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+     <!-- 26129 - End -->
 		
 
 	<div>
@@ -49,20 +58,10 @@
 					</td>
 					<!-- 26129 - Start -->
 					<c:if test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
-						<td style="float: right;"><p:commandButton
-								value="#{lbl['lbl.btn.cancel']}" onclick="cdcp.show()" /> <p:confirmDialog
-								message="#{lbl['lbl.cancel.dialog.confirm.message']}"
-								header="#{lbl['lbl.cancel.details']}" severity="alert"
-								widgetVar="cdcp">
-								<div class="ppRightBtn">
-									<p:commandButton value="#{lbl['lbl.btn.yes']}"
-										actionListener="#{purchaseInquiryBackingBean.requisitionerAction('CANCELPI')}"
-										oncomplete="cdcp.hide();" id="cancelPurchaseInquiry"
-										partialSubmit="true" process="@this" immediate="true" />
-									<p:commandButton value="#{lbl['lbl.btn.no']}"
-										oncomplete="cdcp.hide();" />
-								</div>
-							</p:confirmDialog></td>
+						<td style="float: right;">
+							<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+								update="@this" styleClass="ui-button" onclick="cancelPiPendingSubmission.show();"/>
+						</td>
 					</c:if>
 					<!-- 26129 - End -->
 					<td style="float:right;">
@@ -96,7 +95,8 @@
 								<div class="ppRightBtn">
 									<p:commandButton value="#{lbl['lbl.btn.yes']}"
 										actionListener="#{purchaseInquiryBackingBean.submitPrInquiryDtl('')}"
-										onclick="cd.hide();" id="saveId"
+										onclick="cd.hide();" onstart="blockWidget.show();"
+										oncomplete="blockWidget.hide();" id="saveId"
 										partialSubmit="true" process="@all" immediate="true" update="@form"/>
 									<p:commandButton value="#{lbl['lbl.btn.no']}"
 										onclick="cd.hide();" />
