@@ -996,8 +996,8 @@ public class PmReportsBackingBean extends
 		
 		//#28833 -shafie -start
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-			getManagedBean().setSelectedMinistry(pmOrgProfile);
-			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 		}
 		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
