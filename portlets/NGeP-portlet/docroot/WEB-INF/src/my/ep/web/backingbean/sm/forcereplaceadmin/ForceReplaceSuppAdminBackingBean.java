@@ -1219,16 +1219,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),
 				"epRole");
 		
-		if (admin!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && appl!=null) {
-			getManagedBean().setBypassFlag2(1);
-		} else if (	admin!=null && 
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) 
-				&& 
-				activeAppl==null
-			) {
-				getManagedBean().setBypassFlag1(1);
-		} else if (	admin!=null && 
-				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && 
+		if (	admin!=null && 
+				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && activeAppl!=null && 
 				activeAppl.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTERED) && 
 				getManagedBean().getSmSupplier().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE && 
 				(
@@ -1237,6 +1229,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)) {
 			getManagedBean().setBypassFlag1(1);
+		} else if (	admin!=null && 
+				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
+				activeAppl==null && appl==null
+			) {
+				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+				getManagedBean().setBypassFlag1(1);
+		} else if (activeAppl==null && admin!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && appl!=null) {
+			getManagedBean().setBypassFlag2(1);
 		} else if ((   admin!=null &&
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)  
 				&& 
