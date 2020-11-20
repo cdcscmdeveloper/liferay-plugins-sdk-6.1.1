@@ -2647,7 +2647,9 @@ public class TaskReassignmentBackingBean extends
 			filteredAdminRoles.add("JABATAN_ADMIN");
 			filteredAdminRoles.add("MINISTRY_ADMIN");
 			filteredAdminRoles.add("PTJ_ADMIN");
-			//filteredAdminRoles.add("BPK_ADMIN");
+			/* 27827 - START */
+			filteredAdminRoles.add("BPK_ADMIN");
+			/* 27827 - END */
 			
 
 			searchBean.getDataFilterBeans().add(
@@ -2870,27 +2872,35 @@ public class TaskReassignmentBackingBean extends
 		case ProfileManagementConst.REASSIGN_TYPE_PTJ_AND_BPK:
 			//11 - Include PTJ & BPK
 			
-			List<Long> paramcodes=new ArrayList<Long>();
-			paramcodes.add(orgProfileId); // same org profile id
-			paramcodes.add(getMinistryByOrgProfileId(orgProfileId)); // PTJ under same ministry
+			List<String> paramcodes=new ArrayList<String>();
+			paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
+			paramcodes.add(ParameterConst.ORG_TYPE_BPK);
 			
 			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-						"pmUserOrgs.pmOrgProfile.orgProfileId",
-						SearchOperator.OPERATOR_IN.value(),
-						paramcodes));
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						orgProfileId));
 				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						true));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmZone.zoneId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						1L));
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						orgProfileId));
 			} else {
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-						"pmUserOrgs.pmOrgProfile.orgProfileId",
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
 						SearchOperator.OPERATOR_IN.value(),
 						paramcodes));
 				
@@ -2898,6 +2908,11 @@ public class TaskReassignmentBackingBean extends
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						true));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmZone.zoneId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						1L));
 						
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
