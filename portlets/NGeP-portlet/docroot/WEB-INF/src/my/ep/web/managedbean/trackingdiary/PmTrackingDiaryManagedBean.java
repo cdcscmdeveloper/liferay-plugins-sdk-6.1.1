@@ -1040,18 +1040,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 
 			if (isSearchBeanEmpty) {  
-                 //#Bug 28870 -START  --Disabling isFilterBySupplier()--
-//				if (isFilterBySupplier() ) { 
-			     //#Bug 28870 -END
+				if (isFilterBySupplier() ) { 
 					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true); 
-
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
 						reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
-					log.info("supplier id: "+ reqDTO.getSupplierId());
 					}
-//				}
+				}
 
-				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
 					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
