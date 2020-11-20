@@ -2886,7 +2886,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		boolean ctWorkflowStatusMatch = false;
 		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
 		//start
-		if(!ctBB.getManagedBean().isViewContract() && !ctBB.getManagedBean().isNotificationSetting()){
+		if(!ctBB.getManagedBean().isViewContract()){
 		//Bug #29446
 			if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus() != null) {
 				if (remarks.size()>0 && remarks.get(0).getCtWorkflowStatus() != null) {
@@ -2959,7 +2959,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		} else {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.maintenance",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		}
+		} 
 		return portletTitle;
 	}
 
