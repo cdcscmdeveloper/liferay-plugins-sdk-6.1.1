@@ -1868,7 +1868,7 @@ public class SmApplicationUtil {
 
 		}
 		//16052019 - SSM INTEGRATION CR #27219
-		if(showerror  && appl.isApplValidWithSsm() && managedBean.isSupplierUser()){
+		if (showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser() && appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			if (currentTab != -1) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 			}
