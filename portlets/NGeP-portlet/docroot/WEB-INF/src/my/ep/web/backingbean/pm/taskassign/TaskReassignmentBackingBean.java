@@ -2879,6 +2879,7 @@ public class TaskReassignmentBackingBean extends
 			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				log.info("----- in 3 role -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
 						SearchOperator.OPERATOR_EQUALS.value(),
@@ -2894,11 +2895,13 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_EQUALS.value(),
 						1L));
 			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+				log.info("----- in 1 role -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						orgProfileId));
 			} else {
+				log.info("----- in else role -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
 						SearchOperator.OPERATOR_IN.value(),
