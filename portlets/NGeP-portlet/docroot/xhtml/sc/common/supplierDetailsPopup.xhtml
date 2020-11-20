@@ -123,7 +123,8 @@
 				<p:dataTable var="smPersonnel"
 					value="#{supplierDetailBackingBean.managedBean.boardofDirectors}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rows="10">
+					rows="10" >
+					<ac:paginator for="smPersonnel" />
 
 					<p:column headerText="#{lbl['lbl.sc.mof.no']}"
 						style="width:20%; white-space:normal;">
