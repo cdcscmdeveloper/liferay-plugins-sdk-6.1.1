@@ -5495,8 +5495,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @return
 	 */
 	public boolean checkDisciplinaryActionForQTCat() {
-		if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-			if (null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
+		if (null != this.getManagedBean().getQt() && StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
+			if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
+					&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
 				// #28338 - Start.
 				List<SmDisciplinaryAction> resultList = null;
 				SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
