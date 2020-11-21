@@ -2502,7 +2502,7 @@ public class TaskReassignmentBackingBean extends
 										}
 									}
 								}else{
-									log.info("[#25018] generateUserResultBean for reassignType:" + reassignType);
+									log.info("[#25018] #27827 generateUserResultBean for reassignType else :" + reassignType);
 									resultBean = generateUserResultBean(searchBean, task,reassignType,roleList,vo);
 								}
 								
@@ -2543,6 +2543,7 @@ public class TaskReassignmentBackingBean extends
 								    //[#22117]
 								    //remove from list if login user has role BPK administrator
 								    if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+								    	log.info("#27827 effect x?");
 								    	log.info("[#22117] BPK admin login id: " + getFacesScopes().getUserSessionBean().getLoginId());
 								    	if(users.containsKey(getFacesScopes().getUserSessionBean().getLoginId())) {
 								    		users.remove(getFacesScopes().getUserSessionBean().getLoginId());
@@ -3016,7 +3017,9 @@ public class TaskReassignmentBackingBean extends
 			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
 			
 			/* 27827 - START */
-			log.info("resultBean : "+ resultBean);
+			log.info("#27827 resultBean : " + resultBean);
+			log.info("#27827 resultBean.getResultList() : " + resultBean.getResultList());
+			log.info("#27827 resultBean.getTotalRecord() :  " + resultBean.getTotalRecord());
 			/* 27827 - END */
 		}
 		log.info("isSearched:: "+isSearched);
