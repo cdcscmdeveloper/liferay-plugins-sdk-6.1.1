@@ -1126,9 +1126,11 @@ public class TaskReassignmentBackingBean extends
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
 						loginId = getManagedBean().getResultUser().getLoginId();
+						log.info("#27827 loginId null recheck back : " + loginId);
 					}
 				} 
 				if (loginId != null && loginId.length() > 0) {
+					log.info("#27827 loginId not null : " + loginId);
 					if (statusIds != null && !statusIds.isEmpty()) {
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 								.getServiceObject(IBpmSO.class);
@@ -1211,6 +1213,8 @@ public class TaskReassignmentBackingBean extends
 			} finally {
 				bpmSO = null;
 			}
+
+			log.info("#27827 resultBean record getWorklistItems : " + resultBean.getTotalRecord());
 			return resultBean;
 		}
 
@@ -1728,6 +1732,7 @@ public class TaskReassignmentBackingBean extends
 		} catch (Exception e) {
 			throw e;
 		}
+		log.info("#27827 availableUser : " + this.getManagedBean().getAvailableUsers());
 		log.info("redirectToTaskReassign - End");
 		RequestContext.getCurrentInstance()
 				.execute("dlTaskReassignment.show()");
@@ -1845,6 +1850,7 @@ public class TaskReassignmentBackingBean extends
 				vo.setDocType(resDTO.getDocType());
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setRoleList(StringUtils.isNotBlank(resDTO.getRoleCode()) ? new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())) : new ArrayList<String>());
+				log.info("#27827 : retrieveSourcingTaskReassignmentDetail roleList : " + vo.getRoleList());
 				vo.setUserGroupId(resDTO.getUserGroupId());
 				
 			}
@@ -2111,6 +2117,7 @@ public class TaskReassignmentBackingBean extends
 			statusSO = null;
 		}
 		statusRoles.add(RoleCode.BPK_ADMIN.value()); // # 10927
+		log.info("#27827 retrieveAvailableRoles statusRoles : " + statusRoles);
 		return statusRoles;
 	}
 
@@ -2412,6 +2419,7 @@ public class TaskReassignmentBackingBean extends
 				log.info("[#25018] isBulkReassign? " + getManagedBean().isBulkReassign());
 				//[#25018]
 				if(getManagedBean().isSingleReassign()){
+					log.info("#27827 if isBulkReassign false");
 				//WorklistItemVO task = getManagedBean().getSelectedTask();
 					tasks.add(getManagedBean().getSelectedTask());
 					getManagedBean().setTasksReassignmentVO(null); //[#25018] newly added
