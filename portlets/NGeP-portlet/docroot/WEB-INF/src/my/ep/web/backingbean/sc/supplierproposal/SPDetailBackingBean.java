@@ -5495,84 +5495,95 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @return
 	 */
 	public boolean checkDisciplinaryActionForQTCat() {
-		if (null != this.getManagedBean().getQt() && StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-			if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
-					&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
-				// #28338 - Start.
-				List<SmDisciplinaryAction> resultList = null;
-				SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-				supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
-				SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-				
-				if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
-					resultList = dataRes.getSmDisciplinaryActions();
-					List<String> catCodeList = null;
+		log.debug("Entered inside " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
+		if (null != this.getManagedBean().getQt()) {
+			if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
+				log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for QT No. : " + this.getManagedBean().getQt().getQtNo());
+				if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
+						&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
+					log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for Supplier ID : " + getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
+					// #28338 - Start.
+					List<SmDisciplinaryAction> resultList = null;
+					SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+					supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
+					SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
 					
-					for(SmDisciplinaryAction disciplinaryAction: resultList){
-						if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-								|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-								|| disciplinaryAction.isBumiputeraCancel()){
-							this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-							return true;
-						} else if(disciplinaryAction.isCancelCategory()){
-							if (null == catCodeList) {
-								catCodeList = new ArrayList<>();
-							}
-							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
-							
-							if(!EntityHelper.isCollectionEmpty(catList)
-									&& catList.size() > 0){
-								for(Object[] arr : catList){
-									String catCode = StringUtils.EMPTY;
-									catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-									catCodeList.add(catCode);
-								}						
-							}
-						}
-					}
-					
-					if (CollectionUtils.isNotEmpty(catCodeList)) {
-						IQTDetailSO QtDetailsSO;
-						QuationTenderResDTO tenderResDTO;
+					if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
+						resultList = dataRes.getSmDisciplinaryActions();
+						List<String> catCodeList = null;
 						
-						try {
-							QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-							QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-							// tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-							tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-							
-							tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-							
-							if (!this.getManagedBean().getQt().isPanel()) {
-								List<ScQtCategory> categoryResults = tenderResDTO
-										.getCategories();
-								if (CollectionUtils.isNotEmpty(categoryResults)) {
-									for (ScQtCategory category : categoryResults) {
-										String scQtCatCode = category.getPmCategoryL1().getCategoryL1Code().toString() 
-												+ category.getPmCategoryL2().getCategoryL2Code().toString() 
-												+ category.getPmCategoryL3().getCategoryL3Code().toString() ;
-										if (catCodeList.contains(scQtCatCode)) {
-											this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-											return true;
-										}
-									}
-									this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
+						for(SmDisciplinaryAction disciplinaryAction: resultList){
+							if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
+									|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
+									|| disciplinaryAction.isBumiputeraCancel()){
+								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
+								log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
+								return true;
+							} else if(disciplinaryAction.isCancelCategory()){
+								if (null == catCodeList) {
+									catCodeList = new ArrayList<>();
+								}
+								List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
+								
+								if(!EntityHelper.isCollectionEmpty(catList)
+										&& catList.size() > 0){
+									for(Object[] arr : catList){
+										String catCode = StringUtils.EMPTY;
+										catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
+										catCodeList.add(catCode);
+									}						
 								}
 							}
-						} finally {
-							QtDetailsSO=null;
 						}
+						
+						if (CollectionUtils.isNotEmpty(catCodeList)) {
+							IQTDetailSO QtDetailsSO;
+							QuationTenderResDTO tenderResDTO;
+							
+							try {
+								QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+								QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+								// tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+								tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
+								
+								tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+								
+								if (!this.getManagedBean().getQt().isPanel()) {
+									List<ScQtCategory> categoryResults = tenderResDTO
+											.getCategories();
+									if (CollectionUtils.isNotEmpty(categoryResults)) {
+										for (ScQtCategory category : categoryResults) {
+											String scQtCatCode = category.getPmCategoryL1().getCategoryL1Code().toString() 
+													+ category.getPmCategoryL2().getCategoryL2Code().toString() 
+													+ category.getPmCategoryL3().getCategoryL3Code().toString() ;
+											if (catCodeList.contains(scQtCatCode)) {
+												this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
+												log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
+												return true;
+											}
+										}
+										this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
+										log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
+									}
+								}
+							} finally {
+								QtDetailsSO=null;
+							}
+						}
+					} else {
+						this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
+						log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
 					}
-				} else {
-					this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
+					// #28338 - End.
 				}
-				// #28338 - End.
+			}
+			else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
+				log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA already present for QT No. : " + this.getManagedBean().getQt().getQtNo());
+				return true;
 			}
 		}
-	else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-			return true;
-		}
+		log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
 		return false;
 	}
 	
