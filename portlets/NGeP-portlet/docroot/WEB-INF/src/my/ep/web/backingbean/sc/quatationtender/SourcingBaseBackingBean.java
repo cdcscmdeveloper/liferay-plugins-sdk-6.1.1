@@ -62,6 +62,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -103,6 +104,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
@@ -5050,6 +5053,35 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		//25037 - End
 		
+		/*
+		 * To check if Application fall under MOF Central Contract flows
+		 * #27502		 
+		 */
+		public boolean isBpkCentralContract(ScQt scQt) {
+			boolean isBpkCentralContract = false;
+			boolean isSbhOrSrwk = false;
+			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+			for (PmParameter p : resDTO.getFinalizationSecratry()) {
+				if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+						|| p.getParameterCode().equalsIgnoreCase(
+								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+					isSbhOrSrwk = true;
+				}
+			}
+			
+			if (scQt.getPmOrgProfile().getBpk() &&						
+					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+				return isBpkCentralContract = true;
+			}
+
+			return isBpkCentralContract;
+		}
+
+		
 		// #18685-Start.
         /**
          * @param finalizationReport
@@ -5095,4 +5127,5 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
           }
      }
      // #18685-End.   
+
 }
