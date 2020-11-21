@@ -3013,11 +3013,11 @@ public class TaskReassignmentBackingBean extends
 			// Order by user name
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 			
+			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
+			
 			/* 27827 - START */
 			log.info("resultBean : "+ resultBean);
 			/* 27827 - END */
-			
-			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
 		}
 		log.info("isSearched:: "+isSearched);
 		return resultBean;
