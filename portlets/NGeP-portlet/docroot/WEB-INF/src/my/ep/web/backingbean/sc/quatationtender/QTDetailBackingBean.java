@@ -2869,6 +2869,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 committeTabs=null;
 		 }
 		Long qtId = scQt.getQtId();
+		
+		//#27502 -Start	
+		boolean isBpkCentralContract = false;
+		isBpkCentralContract = isBpkCentralContract(scQt);
+		//#27502 -End
+		
 		if (null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt()
 					.getEvaluationType();
@@ -2990,22 +2996,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							fecCommitte));
 				}
 				
-				//#27502 -Start
-				if (scQt.getPmOrgProfile().getBpk() &&						
-						scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+				//#27502 -Start				
+				if (isBpkCentralContract) {
 					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
 					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
-					ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);				
+					ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
 					committeTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
 
 				} else {
 					// FC tab
 					PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
 					tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
-					StringBuilder fcTitleLabel = new StringBuilder(
-							"lbl.sc.finalization.committee.secretary.");
+					StringBuilder fcTitleLabel = new StringBuilder("lbl.sc.finalization.committee.secretary.");
 					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString()
 							+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -3038,9 +3042,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					committeTabs.add(new TabBean(fcTitleName, tabType, null));
 				}
 			}
-		} else {
-			if (scQt.getPmOrgProfile().getBpk() &&						
-					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+		} else {		
+			if (isBpkCentralContract) {
 				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
 				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) 
 						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) 
@@ -3091,6 +3094,39 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 	}
+	
+//	public boolean isBpkCentralContract(ScQt scQt) {
+//		boolean isBpkCentralContract = false;
+//		boolean isSbhOrSrwk = false;
+//		//String committeType = null;
+//		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//				ICommitteSO.class);
+//		CommitteReqDTO reqDTO = new CommitteReqDTO();
+//		reqDTO.setQtId(scQt.getQtId());
+//		CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+//		for (PmParameter p : resDTO.getFinalizationSecratry()) {
+//			if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+//					|| p.getParameterCode().equalsIgnoreCase(
+//							ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+//				isSbhOrSrwk = true;
+//			}
+//		}
+//		
+//		if (scQt.getPmOrgProfile().getBpk() &&						
+//				scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+//			return isBpkCentralContract = true;
+//		}
+//
+////		boolean isSbhOrSrwkPtj = committeSO.isSbhOrSrwkPtj(committeType, scQt.getPmOrgProfile().getOrgProfileId());
+////
+////		if (scQt.getPmOrgProfile().getBpk()
+////				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
+////				&& !isSbhOrSrwkPtj) {
+////			return isBpkCentralContract = true;
+////		}
+//
+//		return isBpkCentralContract;
+//	}
 
 	/**
 	 * Retrieve finalization committee types.
@@ -3476,8 +3512,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.equalsIgnoreCase(taskName)) {
 				
 				//#27502 - Start
-				if (scQt.getPmOrgProfile().getBpk()
-						&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
+				boolean isBpkCentralContract = false;
+				isBpkCentralContract = isBpkCentralContract(scQt);
+				if (isBpkCentralContract) {	
 					committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 					CommitteReqDTO committeReqDTO = new CommitteReqDTO();
@@ -5826,8 +5863,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(isMaintancePendingChklistStatus){
 					retrieveDocumentTabDtl();
 				} else{
-					retrieveScheduleTabDtl();
-					//removeMofTab();//#27502
+					retrieveScheduleTabDtl();					
 				}
 				
 				break;
@@ -5870,51 +5906,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
-	}
-	
-	/*
-	 * remove MOF Tab at status 'Pending Committee Formation Approval' when clicking on 'Committee Aproval' side Tab
-	 * #27502
-	 * Removed bocoz not used anymore
-	 */
-//	private void removeMofTab() {
-//		ScQt scQt = this.getManagedBean().getQt();
-//
-//		if (scQt.getPmOrgProfile().getBpk()
-//				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
-//				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)) {
-//
-//			List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
-//			List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
-//			for (TabBean t : committeTabs) {
-//				if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
-//					newCommitteTabs.add(t);
-//				}
-//				committeTabs = newCommitteTabs;
-//			}
-//
-//			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
-//
-//			for (TabBean tabBean : committeTabs) {
-//				if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType()) && tabBean
-//						.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId()
-//						.equals(QTStatusConst.CMT_COMPLETED))
-//						|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean.getTabType())
-//								&& scQt.getFinalizationCommitte() != null
-//								&& scQt.getFinalizationCommitte().getParameterId() != null
-//								&& scQt.getFinalizationSecratery() != null && scQt.getFinalizationSecratery()
-//								.getUserId() != null)) {
-//					tabBean.setIcon("ui-icon-endorse");
-//				}
-//			}
-//			if (!committeTabs.isEmpty()) {
-//				this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
-//				String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-//				this.getManagedBean().setRoleFilterList(
-//						getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
-//			}
-//		}
-//	}
+	}	
 
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
 		return isQTStatusInBetween(currentStatusId,

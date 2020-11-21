@@ -281,9 +281,11 @@ public class SupplierFinalizationBackingBean extends
 			 // #27502 -- Start
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(qtId);
+			ScQt scQt = getManagedBean().getScQt();
+			boolean isBpkCentralContract = false;
+			isBpkCentralContract = isBpkCentralContract(scQt);
 			
-			if (!qtBackingBean.getManagedBean().getQt().getPmOrgProfile().getBpk()
-					&& !qtBackingBean.getManagedBean().getQt().getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			if (!isBpkCentralContract) {
 						prepareUpdateCommitteeMember();//#25037
 			}
 			// #27502 -- End
@@ -410,6 +412,8 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();	
+		boolean isBpkCentralContract = false;
+		isBpkCentralContract = isBpkCentralContract(scQt);
 		// #27502 -- END
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -424,7 +428,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setEndorsementReportActiveIndex(-1);	
 			
 			// #27502 -- Start
-		} else if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+		} else if (isBpkCentralContract) {
 			getManagedBean().setPreparationTabIndex(-1);
 			getManagedBean().setEvaluationReportIndex(-1);
 			getManagedBean().setReportTabIndex(tabIndex++);
@@ -1294,8 +1298,9 @@ public class SupplierFinalizationBackingBean extends
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 			scQt = qtBackingBean.getManagedBean().getQt();
-			if (scQt.getPmOrgProfile().getBpk() &&						
-					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {			
+			boolean isBpkCentralContract = false;
+			isBpkCentralContract = isBpkCentralContract(scQt);
+			if (isBpkCentralContract) {			
 				reqDTO = validateInfo(1, skipValidation);
 			} else {	//#27502 - END		
 				// Save Preparation and Supplier finalization tab(s) data
@@ -1328,8 +1333,7 @@ public class SupplierFinalizationBackingBean extends
 			// #18685 - End
 			
 			//#27502- Adding condition only
-			if (!scQt.getPmOrgProfile().getBpk() &&						
-					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {	
+			if (isBpkCentralContract) {	
 				
 				if (!skipValidation) {
 					validateFinalizationReports(reqDTO);
@@ -1378,9 +1382,8 @@ public class SupplierFinalizationBackingBean extends
 					getManagedBean().isInitialDecisionFwdHighAuth());
 			reqDTO.setRefinalize(isQTRefinalized());
 			
-			//#27502- Adding condition only
-			if ((!scQt.getPmOrgProfile().getBpk() && 					
-					!scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT))
+			//#27502- Adding condition only			 
+			if (!isBpkCentralContract
 					|| this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_FC_SELECTION)) {	//#25037 add new condition due to cannot save
 				saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 			}
@@ -5309,7 +5312,9 @@ public class SupplierFinalizationBackingBean extends
       String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
       
       // #27502 -- Start
-      if (scQt.getPmOrgProfile().getBpk() && scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)) {
+      boolean isBpkCentralContract = false;
+      isBpkCentralContract = isBpkCentralContract(scQt);
+      if (isBpkCentralContract) {
 
           // Briefing Paper Menu Item
           menuItem = new MenuItem();
