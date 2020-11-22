@@ -116,7 +116,7 @@
 						id="financialAssetsAndLiabilityUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfContracts.userScore}" maxlength="18" required="true"
-						disabled="#{pageDisable or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}" style="text-align:right"
+						disabled="#{pageDisable}" style="text-align:right"
 						rendered="#{ checklistScoreType eq '2'}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -158,7 +158,7 @@
 						id="financialAssetsLiabilityCurrentRatio" maxlength="18"
 						style="text-align:right" required="true"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						value="#{noOfYears.userScore}" disabled="#{pageDisable or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
+						value="#{noOfYears.userScore}" disabled="#{pageDisable}"
 						rendered="#{companyScoreType eq '2'}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
