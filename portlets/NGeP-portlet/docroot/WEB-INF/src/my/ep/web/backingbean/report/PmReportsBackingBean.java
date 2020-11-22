@@ -30,7 +30,7 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
-import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.EpPropertiesConst; //#28833 -shafie
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -57,7 +57,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
+import my.ep.util.EpPropertiesUtils; //#28833 -shafie
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -830,12 +830,12 @@ public class PmReportsBackingBean extends
 				RoleCode.JABATAN_ADMIN.value())){
 			Admin = true;
 			
-			SetSelectedMinistryforMinistryJabatanAdmin();			
+			setSelectedMinistryforMinistryJabatanAdmin();			
 		}
 		return Admin;
 	}
 	
-	public void SetSelectedMinistryforMinistryJabatanAdmin(){
+	public void setSelectedMinistryforMinistryJabatanAdmin(){
 		List<PmUserOrg> userOrgList = PmCommonUtil
 				.retrieveActiveOrgWithoutRole(getFacesScopes()
 						.getUserSessionBean().getUserId(), false);
