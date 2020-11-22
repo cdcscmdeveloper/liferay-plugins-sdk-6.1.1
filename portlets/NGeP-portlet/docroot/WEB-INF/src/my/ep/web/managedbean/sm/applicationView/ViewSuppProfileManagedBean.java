@@ -14,6 +14,8 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -55,6 +57,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
 
+	private SmSupplierBank[] selectedSuppBanks;
 	//13320-Start
 	private List<SelectItem> businessDivisionLs;
 	private List<SelectItem> residentialDivisionLs;
@@ -311,7 +314,14 @@ public class ViewSuppProfileManagedBean extends
 	public void setOldRegStatusId(Long oldRegStatusId) {
 		this.oldRegStatusId = oldRegStatusId;
 	}
+	public SmSupplierBank[] getSelectedSuppBanks() {
+		return selectedSuppBanks;
+	}
 
+	public void setSelectedSuppBanks(SmSupplierBank[] selectedSuppBanks) {
+		this.selectedSuppBanks = selectedSuppBanks;
+	}
+	
 	public List<SelectItem> getBusinessDivisionLs() {
 		return businessDivisionLs;
 	}
