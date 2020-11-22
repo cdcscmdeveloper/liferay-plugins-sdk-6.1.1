@@ -79,7 +79,7 @@ public class DisciplinaryActionRest {
 							List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
 							SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
 						}
-						if(cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()){
+						if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
 							cancelRegBlacklist.getSmSupplier();
 							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
 						}
