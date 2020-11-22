@@ -15,11 +15,16 @@
 						<td width="10%"><h:outputLabel
 								value="#{lbl['lbl.sc.loiloa.loa.no']}" /></td>						
 						<td style="width: 10%">
-				  			<p:commandLink value="#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
-							lbl['lbl.sc.system.generated'] :
-							lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
-				       			process="@this" partialSubmit="true" styleClass="blue_font"
-				       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+							<c:if test="#{lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
+					  			<p:commandLink value="#{lOACancelDetailBackingBean.managedBean.scLoa.brandNew ?
+								lbl['lbl.sc.system.generated'] :
+								lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
+					       			process="@this" partialSubmit="true" styleClass="blue_font"
+					       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+				       		</c:if>
+				       		<c:if test="#{!lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
+					  			#{lOACancelDetailBackingBean.managedBean.scLoa.loaNo}
+				       		</c:if>
 						</td>	
 						<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 						</td>
@@ -34,12 +39,17 @@
 						<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 						</td>
 						<td class="header-info-text">
-							#{lOACancelDetailBackingBean.getStatusDescById(lOACancelDetailBackingBean.managedBean.scLoa.pmStatus.statusId)}
+							<c:if test="#{!lOACancelDetailBackingBean.isSqStillValid()}">
+								#{lOACancelDetailBackingBean.getStatusDescById(DPStatusConstants.SQ_EXPIRED)}
+							</c:if>
+							<c:if test="#{lOACancelDetailBackingBean.isSqStillValid()}">
+								#{lOACancelDetailBackingBean.getStatusDescById(lOACancelDetailBackingBean.managedBean.scLoa.pmStatus.statusId)}
+							</c:if>
 						</td>
 					</tr>
 					<tr>
 						<td width="10%"><h:outputLabel
-								value="#{lbl['lbl.sc.qtn.no']}" /></td>
+								value="#{lbl['lbl.sc.document.no']}" /></td>
 						<td class="header-info-text">
 							#{lOACancelDetailBackingBean.managedBean.scLoa.scQuote.quoteNo}</td>
 						<td width="10%"><h:outputLabel

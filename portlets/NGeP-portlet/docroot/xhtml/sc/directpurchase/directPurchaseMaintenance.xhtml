@@ -168,15 +168,25 @@
 						<h:outputText value="#{lbl['lbl.sc.supplier.name']}" />
 					</f:facet>
 
-					<h:outputText value="#{Obj[3]}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}"
-						style="white-space: normal;word-wrap: break-word;" />
+					<c:choose>
+						<c:when
+							test="#{directPurchaseBackingBean.managedBean.documentTypeDesc == ParameterConst.loaTitle}">
+							<h:outputText value="#{Obj[8]}"
+								style="white-space: normal;word-wrap: break-word;" />
+						</c:when>
+						<c:otherwise>
+							<h:outputText value="#{Obj[3]}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}"
+								style="white-space: normal;word-wrap: break-word;" />
+						</c:otherwise>						
+					</c:choose>
+
 				</p:column>
 
 				<p:column width="12%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.status']}" />
 					</f:facet>
-					#{directPurchaseBackingBean.getStatusDescById(Obj[4])}
+					#{directPurchaseBackingBean.getDocStatus(Obj)}
 				</p:column>
 
 				<p:column width="5%" style="text-align: center;">

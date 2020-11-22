@@ -53,8 +53,9 @@
 		</p:panel>
 		<ac:scRemarkAndAttachment
 			remarkList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaRemarks}"
-			showAttachment="true"
-			readonly="false" />
+			attachmentList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaCancelAttachments}"
+			readonly="false" 
+			fileUploadListener="lOACancelDetailBackingBean.handleFileUpload"/>
 
 		<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 			<p:dataTable id="apprHistTbl" var="scLoaApproval"
