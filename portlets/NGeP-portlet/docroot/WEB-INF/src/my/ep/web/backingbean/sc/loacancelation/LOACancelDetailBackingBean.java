@@ -12,17 +12,11 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -30,28 +24,20 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
-import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
-import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -64,24 +50,14 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
-import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
-import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -89,36 +65,24 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScActor;
-import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
-import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
-import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
@@ -129,39 +93,24 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
-import my.ep.persistence.entity.sm.SmCompanyBasic;
-import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
-import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
-import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.loa.*;
-import my.ep.web.bean.sc.common.ItemBean;
-import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.format.AttachmentDefaultFormat;
-import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
@@ -171,17 +120,12 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -432,21 +376,27 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			}
 			if (approverUser == null) { 
 				approverUser = new PmUser();
+				
+				AwardSupplierResDTO resGetRNApprover  = getQtAwardSO().retrieveRequestNoteApproverByLoa(reqDTO2);
+				approverUser = resGetRNApprover.getApproverList().get(0);
+				
 			}
 			getManagedBean().setApproverUser(approverUser);
 					
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(getUserRoleCode(scLoa3.getScLoiLoa().getDocType()));
+			userReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
 			userReqDTO.setOrgProfileId(scLoa3.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
 			
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			getManagedBean().setApproverList(userResDTO.getUserList());	
 			
-			getManagedBean().setScLoa(scLoa3);
-			getManagedBean().setScQt(scLoa.getScQt());		
-			
 			FacesContext fc = FacesContext.getCurrentInstance();
+			
+			if(getManagedBean().isDpMaintenanceSource()){
 			getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			}
+			
+			getManagedBean().setSourcePage(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_CANCEL_MAIN_PAGE);
 		} catch (Exception e) {
@@ -914,11 +864,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		try{
 			String outcome = BpmOutcomeConst.BPM_LOA_CANCEL;
 			ScLoa scLoa = this.getManagedBean().getScLoa();	
-			PmUser approverUser = this.getManagedBean().getApproverUser();
+			PmUser approverUser = currentApprovalSession();
 			
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoad();		
 			validateRequiredApprover(approverUser,scLoa);
+			validateRequiredAttachment();
 			PmUser user = PmCommonUtil.retrieveUserById(approverUser.getUserId(), false);    
 						
 			awardDataType.setApprover(user.getLoginId());
@@ -992,6 +943,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 		
 			//parseLOADetails(scLoa, outcome);
+			parseApprovalDetails(scLoa, outcome);
 
 			// if reject, remove the new witness
 			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -1226,7 +1178,24 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 
 	}
-
+	
+	private void parseApprovalDetails(ScLoa scLoa, String outcome) {
+		
+			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+			String action = null;
+			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_APPROVED.value();
+			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_REJECTED.value();
+			}
+			if(null != action){
+				scLoaApproval.setApproverAction(action);
+				scLoaApproval.setApproverActionDate(new Date());
+				scLoa.setScLoaApproval(scLoaApproval);
+			}
+		
+	}
+		
 	/**
 	 * Parses the loa details.
 	 *
@@ -2311,23 +2280,28 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
-
-		// back to qt loa list
-		if(getManagedBean().getScQt() != null && getManagedBean().getSourceId() != null){
-			retrieveLOILOAList(getManagedBean().getSourceId());	
-		} else{
-			// back to dp loa list
-			if(getManagedBean().getSourceId() != null){
-				DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
-				dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
-			}
+		
+		if(getManagedBean().isDpMaintenanceSource()){
+			getManagedBean().setEditFlag(Boolean.FALSE);
+			getManagedBean().setBackToPreviousPage(null);
 		}
-
-		getManagedBean().setEditFlag(Boolean.FALSE);
+		
 		getManagedBean().setReadOnly(Boolean.FALSE);
 		getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getBackToPreviousPage());
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getSourcePage());
+	}
+	
+	public PmUser currentApprovalSession(){
+		Long approverUserId = this.getManagedBean().getApproverUser().getUserId();
+		
+		UserReqDTO userReqDTO  = new UserReqDTO();
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		userReqDTO.setUserId(approverUserId);
+		PmUser approverUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+		
+		return approverUser;
 	}
 
 	/**
@@ -3262,5 +3236,81 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 	}
 	/* 19336#99 - end */
+	
+	/**
+	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
+	 */
+	public boolean isSqStillValid(){		
+		
+		Boolean validDate = true;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
+
+		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+
+		if(scQuote != null){
+			
+			Date currentDate = new Date();
+			Date closingDate = scQuote.getEndDate();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.clear(); 
+			cal.setTime(closingDate);
+			cal.add(Calendar.DATE, sqTimeValidity); //add 60days to closing/end date
+			
+			if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
+				if(currentDate.compareTo(cal.getTime()) >= 0){
+					validDate = false;
+					sqExpiredMessageFlag = true;
+				}
+			}	
+		}			
+		return validDate;	
+	}
+	
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			ScLoaCancelAttachment attachment = new ScLoaCancelAttachment();
+
+			List<ScLoaCancelAttachment> attachments = scLoa.getScLoaCancelAttachments();
+			if (null == attachments) {
+				attachments = new ArrayList<ScLoaCancelAttachment>();
+				scLoa.setScLoaCancelAttachments(attachments);
+			}
+			attachment.setScLoa(scLoa);
+			attachment.setDocNo(scLoa.getLoaNo());
+			attachments.add(attachment);
+			uploadAttachment(event.getFile(), attachment);
+		}
+
+	}
+	
+	public void deleteUploadFile() {
+		log.debug("deleteUploadFile - START");
+		getManagedBean().getScLoa().setScLoaCancelAttachments(null);
+		log.debug("deleteUploadFile - END");
+	}
+	
+	
+	
+	public void validateRequiredAttachment() {
+		List<ScLoaCancelAttachment> attachments = getManagedBean().getScLoa().getScLoaCancelAttachments();
+		boolean noAttachment = false;
+
+		if ((null == attachments) || (!CollectionUtils.isNotEmpty(attachments))) {
+			noAttachment = true;
+		}
+
+		if (noAttachment) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { "Attachment" });
+		}
+
+	}
+	
+	
 }
 

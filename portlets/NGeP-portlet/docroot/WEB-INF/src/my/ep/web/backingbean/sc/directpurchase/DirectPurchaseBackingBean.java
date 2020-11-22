@@ -29,13 +29,11 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -51,7 +49,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
@@ -69,12 +66,10 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
@@ -102,8 +97,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-
-import org.primefaces.context.RequestContext;
+//#22211
 // TODO: Auto-generated Javadoc
 
 /**
@@ -135,12 +129,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		//#22211 - End
 
 		if (isGovernment() || isDeskOfficer()) {
+			getDefaultDocumentValues(); //#22211
 			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
-			getDefaultDocumentValues();
+			/*getDefaultDocumentValues();*/ //#22211
 			
 		} else if (isSupplier()) {
 			getDocumentTypes(Boolean.FALSE, Boolean.TRUE);
@@ -248,8 +243,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			}
 			
 			if (isMaintenance) {
-				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-				docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+				//start - #22211
+				if (isRnApprover() && isDeskOfficer()) {
+					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+					docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+				} else if (isRnApprover()) {
+					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				} else if (isDeskOfficer()) {
+					docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+					
+					getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+					getManagedBean().setSearchStatusId(null);
+				}
+				//end - #22211
 			}
 			
 			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
@@ -456,14 +462,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
 		
 		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
-			if(isRnApprover()){
+			//Start - #22211
+			/*if(isRnApprover()){
 				this.viewDpMaintenance(dpObj);
 			}
 			else{
 				RequestContext.getCurrentInstance().execute("RnAppAlert.show()");
-			}			
+			}*/
+			
+			this.viewDpMaintenance(dpObj);
+			//End - #22211			
 		} else {
-			if(isDeskOfficer()){
+			//if(isDeskOfficer()){ #22211 - comment out conditional statement 
 				log.info("viewMaintenance");
 				long docId = (long) dpObj[0];
 				String docNo = (String) dpObj[1];
@@ -508,8 +518,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
 							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
 							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
-							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL))
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL)){
+						loaCancelDetailBackingBean.getManagedBean().setDpMaintenanceSource(Boolean.TRUE);
 						loaCancelDetailBackingBean.cancelationLOA(docId);
+					}
 					// End 22211
 					else
 						loaDetailBackingBean.viewLOA(docId);
@@ -517,10 +529,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
 					loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
 				}
+			/*
+			#22211 - start comment out conditional statement 	
 			}
 			else{
 				RequestContext.getCurrentInstance().execute("DOAlert.show()");
 			}
+			#22211 - end comment out conditional statement   
+			*/			
 		}
 	}
 	

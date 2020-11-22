@@ -14,6 +14,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -269,6 +270,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<PmUser> loacancelapproverList;
 	
 	private PmUser loacancelapproverUser;
+	
+	private String sourcePage;
+	
+	private boolean dpMaintenanceSource = Boolean.FALSE;
+	
+	private List<ScLoaCancelAttachment> scLoaCancelAttachments;
 	//end #22211
 	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
@@ -1643,6 +1650,29 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.isValidatewitness = isValidatewitness;
 	}
 
+	public String getSourcePage() {
+		return sourcePage;
+	}
+
+	public void setSourcePage(String sourcePage) {
+		this.sourcePage = sourcePage;
+	}
+
+	public boolean isDpMaintenanceSource() {
+		return dpMaintenanceSource;
+	}
+
+	public void setDpMaintenanceSource(boolean dpMaintenanceSource) {
+		this.dpMaintenanceSource = dpMaintenanceSource;
+	}
+
+	public List<ScLoaCancelAttachment> getScLoaCancelAttachments() {
+		return scLoaCancelAttachments;
+	}
+
+	public void setScLoaCancelAttachments(List<ScLoaCancelAttachment> scLoaCancelAttachments) {
+		this.scLoaCancelAttachments = scLoaCancelAttachments;
+	}
 }
 
 

@@ -36,7 +36,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -56,6 +55,11 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestScoped
 public class BPMTaskListBackingBean extends
 BaseBackingBean<BPMTaskListManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 	
