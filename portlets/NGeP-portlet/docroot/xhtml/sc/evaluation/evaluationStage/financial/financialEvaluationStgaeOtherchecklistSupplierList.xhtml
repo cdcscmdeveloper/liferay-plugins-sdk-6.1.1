@@ -29,12 +29,12 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:25%;text-align:right;">
 				<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
+			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
 				style="width:25%">
 
 
@@ -46,7 +46,8 @@
 			<p:column style="width:30%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
-					
+					<ac:iconTooltip id="action#{row}FOC"
+						value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
 				</f:facet>
 
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
