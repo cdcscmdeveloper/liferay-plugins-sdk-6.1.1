@@ -99,7 +99,9 @@
 			<!-- ***25692 - end -->
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
-				<p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
+			 <!--  	
+			 danial #25635 - rollback 22/11/2020
+			 <p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
@@ -107,7 +109,7 @@
 											process="@this" partialSubmit="true" update="pnlid2"
 											action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 											title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />	
-				
+				-->
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onclick="blockWidget.show();"

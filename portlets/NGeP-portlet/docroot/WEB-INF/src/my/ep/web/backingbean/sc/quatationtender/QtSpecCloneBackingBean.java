@@ -1763,8 +1763,9 @@ public class QtSpecCloneBackingBean extends
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 		
 							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
-							this.getManagedBean().setTechnicalItemScoreSetting(
-									settings);
+							// danial #25635 - rollback 22/11/2020
+							//this.getManagedBean().setTechnicalItemScoreSetting(
+							//		settings);
 						
 					}
 					
@@ -1814,7 +1815,8 @@ public class QtSpecCloneBackingBean extends
 				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
-				technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
+				// danial #25635 - rollback 22/11/2020
+				//technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
 				
 			}
 		
@@ -1954,15 +1956,18 @@ public class QtSpecCloneBackingBean extends
 				int value2 = technicalItem.getOverallOtherTechnical() != null ? technicalItem
 						.getOverallOtherTechnical().intValue() : 0;
 				int local = value1 + value2;
-				this.getManagedBean().setTechnicalItemScore(
-						new BigDecimal(local));
-				if ((null != this.getManagedBean().getTechnicalItemScore())
-						&& (this.getManagedBean().getTechnicalItemScore()
-								.intValue() < 100 || this.getManagedBean()
-								.getTechnicalItemScore().intValue() > 100)) {
-					throw new EpException(MessageConst.ERROR_760257);
+				
+			//	danial #25635 - rollback 22/11/2020
+				
+			//	this.getManagedBean().setTechnicalItemScore(
+			//			new BigDecimal(local));
+			//	if ((null != this.getManagedBean().getTechnicalItemScore())
+				//		&& (this.getManagedBean().getTechnicalItemScore()
+					//			.intValue() < 100 || this.getManagedBean()
+					//			.getTechnicalItemScore().intValue() > 100)) {
+			//		throw new EpException(MessageConst.ERROR_760257);
 
-				}
+				//}
 			}
 
 		} finally {
