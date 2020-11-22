@@ -18,57 +18,16 @@
 
 
 </style>
-		<p:messages id="financialEvaluationmsgId" autoUpdate="true"
-			closable="true" showDetail="true" showSummary="false"
-			severity="error, info">
-		</p:messages>
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
-		</p:blockUI>
-		<!-- #25138-Ahmaa-Start -->
+
 		<h:panelGroup>
 			<table width="100%" class="BtnSpacing">
 				<tr>
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
-							action="#{evaluationBackingBean.evaluationBackaction}" />
-				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
-							evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-							evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
-				<p:commandButton
-						value="#{lbl['lbl.btn.save']}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
-						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
-						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{evaluationBackingBean.saveUserScoreDtls}" />
-				</c:if>
-			
-				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
-							evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-							evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
-					<p:commandButton
-						value="#{lbl['lbl.btn.save']}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
-						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
-						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{evaluationBackingBean.saveUserScoreDtls}" />	
-				</c:if>
-				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
-							!evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:commandButton
-						value="#{lbl['lbl.btn.save']}"
-						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.offerScoreType eq '1'
-						or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
-						style="float:right;" update="@all" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();"
-						action="#{evaluationBackingBean.saveUserScoreDtls}" /> 		
-				</c:if>
-				</td>
+							action="#{evaluationBackingBean.evaluationBackaction}" /></td>
 				</tr>
 			</table>
-		</h:panelGroup><!-- #25138-Ahmaa-End-->
+		</h:panelGroup>
 
 		<ui:include src="/xhtml/sc/evaluation/evaluationHeader.xhtml" />
 
@@ -83,9 +42,9 @@
 		<h:panelGroup>
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 16%;" class="sidemenutd" valign="top"><p:remoteCommand 
+					<td style="width: 16%;" class="sidemenutd" valign="top"><p:remoteCommand id="zoneRemote"
 							name="specTabChange" update="@form" partialSubmit="true"
-							process="@form" action="#{evaluationBackingBean.specTabChange}" />
+							process="@this" action="#{evaluationBackingBean.specTabChange}" />
 
 						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
 							activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
@@ -97,39 +56,10 @@
 							<ui:param name="finSpecofferPrice"
 								value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
 
-							<!-- #25138-Ahmaa-Start -->
-							<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
-								evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-								evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '0'}">
-								<ui:include src="financialSpecEvaluationStageSupplierList.xhtml"></ui:include>
-								
-							</c:if>
-							<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
-								evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-								evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
-								<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
-							
-							</c:if>
-							<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
-								evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-								evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
-								<ui:include src="financialSpecEvaluationStageSupplierList.xhtml"></ui:include>
-								
-							</c:if>
-							<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' and 
-								evaluationBackingBean.managedBean.scQt.techEvaluationReq and 
-								evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
-								<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
-							
-							</c:if>
-							<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and 
-							!evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-								<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include> 
-							
-							</c:if>
-							<!-- #25138-Ahmaa-End -->
-						</p:outputPanel>
-					</td>
+
+
+							<ui:include src="finSpecSupplierOfferPriceList.xhtml"></ui:include>
+						</p:outputPanel></td>
 				</tr>
 			</table>
 		</h:panelGroup>
