@@ -78,7 +78,7 @@
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
 		  </h:panelGroup>
-	<h:panelGroup rendered="#{!amendmentBackingBean.managedBean.updateCommittee}">
+	<h:panelGroup rendered="#{!amendmentBackingBean.managedBean.updateCommittee} id="amendmentMainTabRender">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
@@ -285,7 +285,7 @@
 		</tr>
 		</table>
 		</h:panelGroup>
-		<h:panelGroup rendered="#{amendmentBackingBean.managedBean.updateCommittee}">
+		<h:panelGroup rendered="#{amendmentBackingBean.managedBean.updateCommittee}"  id="amendmentCommiteeUpdateRender">
 			<ui:include src="pbqcc/committeeList.xhtml" />
 		</h:panelGroup>
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
