@@ -82,7 +82,7 @@
 					<tr>
 						<td>$velocityCount. $signatory.smPersonnel.name</td>
 						<td class="sColTwentyPerc"></td>
-						<td class="txtBold">Status</td>
+						<td width="20%" class="txtBold">Status</td>
 										
 						#if($signatory.smPersonnel.bumiFlg == 1)
 							<td>$bumi</td> 													
@@ -103,8 +103,12 @@
 			
 			##14055 start - change placement of the Remarks
 			<tr>
-				<td>Remarks:</td>
-				<td><p style="width: 200px;height: 50px;background: white;border:solid thin black;" /></td>
+				<td class="txtBold">Remarks:</td>
+				
+				##29645 start - display remark data
+				<td><p style="width: 200px;height: 50px;background: white;border:solid thin black;">$!bank.remark</p></td>
+				##29645 end
+				
 			</tr>
 			##14055 end
 			
