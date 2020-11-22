@@ -72,6 +72,9 @@ public abstract class BaseManagedBean implements Serializable {
 	//28454
 	private boolean resubmitAppl = false;
 	private boolean showPopup = false;
+	
+	//17906
+	private String displayMessageBank;
 
 	/**
 	 * @return the token
@@ -375,6 +378,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setPersonnelsRole(List<SmPersonnel> personnelsRole) {
 		this.personnelsRole = personnelsRole;
+	}
+	
+	public String getDisplayMessageBank() {
+		return displayMessageBank;
+	}
+
+	public void setDisplayMessageBank(String displayMessageBank) {
+		this.displayMessageBank = displayMessageBank;
 	}
 	
 	//27951
