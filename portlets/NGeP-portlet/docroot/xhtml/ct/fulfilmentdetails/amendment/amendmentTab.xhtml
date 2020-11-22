@@ -70,15 +70,17 @@
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
-
+		<c:if test="#{!amendmentBackingBean.managedBean.updateCommittee}">
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
-
+		</c:if>
 		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
 		  </h:panelGroup>
-	<h:panelGroup rendered="#{!amendmentBackingBean.managedBean.updateCommittee}" id="amendmentMainTabRender">
+		 
+	<c:choose>
+		<c:when test="#{!amendmentBackingBean.managedBean.updateCommittee}">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
@@ -284,10 +286,11 @@
 			</td>
 		</tr>
 		</table>
-		</h:panelGroup>
-		<h:panelGroup rendered="#{amendmentBackingBean.managedBean.updateCommittee}"  id="amendmentCommiteeUpdateRender">
+		</c:when>
+		<c:otherwise>
 			<ui:include src="pbqcc/committeeList.xhtml" />
-		</h:panelGroup>
+		</c:otherwise>
+	</c:choose>
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
