@@ -5495,6 +5495,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @return
 	 */
 	public boolean checkDisciplinaryActionForQTCat() {
+		//#27233#note-36 for #26247 -start-
 		log.debug("Entered inside " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
 		if (null != this.getManagedBean().getQt()) {
 			if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
@@ -5584,6 +5585,8 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}
 		}
 		log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
+		//#27233#note-36 for #26247 -end-
+		
 		return false;
 	}
 	
