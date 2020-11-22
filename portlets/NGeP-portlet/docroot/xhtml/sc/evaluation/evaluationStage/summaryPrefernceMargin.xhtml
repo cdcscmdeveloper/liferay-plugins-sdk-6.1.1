@@ -4,11 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-
-
-
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel toggleable="true">
 		<f:facet name="header">
@@ -33,16 +29,11 @@
 				<h:outputText value="#{prefQualSupplier.evalRank}"></h:outputText>
 			</p:column>
 
-
-
-
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:10%; text-align:center;">
 
 				<h:outputText
 					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-
-
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
@@ -50,11 +41,12 @@
 				<h:outputText value="#{prefQualSupplier.totalScore}"></h:outputText>
 			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:15%">
-				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-																	  		fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
-			</p:column> -->
+
+				<h:outputText
+					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
 				style="width:15%; text-align:right;">
@@ -66,7 +58,7 @@
 
 			</p:column>
 
-			<!-- <p:column style="width:15%; text-align:right;">
+			<p:column style="width:15%; text-align:right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
 					<ac:iconTooltip id="summaryPrefMargin#{row}"
@@ -78,9 +70,9 @@
 				</h:outputText>
 
 
-			</p:column> -->
+			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.difference.perc']}"
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
 				style="width:15%; text-align:right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
@@ -93,9 +85,9 @@
 				</h:outputText>
 
 
-			</p:column> -->
+			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.pref.margin']}"
+			<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
 				style="width:25%; text-align:right;">
 
 				<h:outputText
@@ -106,7 +98,7 @@
 				</h:outputText>
 
 
-			</p:column> -->
+			</p:column>
 
 
 		</p:dataTable>
@@ -129,11 +121,6 @@
 		</table>
 
 	</p:panel>
-
-
-
-
-
 
 	<p:panel toggleable="true">
 		<f:facet name="header">
@@ -164,41 +151,27 @@
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
-			<!-- <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:25%">
-				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-																	  		fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
-			</p:column> -->
 
-
+				<h:outputText
+					value="#{disQualifiedSupplier.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi ? 'Bumi' : 'Non Bumi'}"></h:outputText>
+			</p:column>
 		</p:dataTable>
 		<p:spacer height="10px" />
 
 		<table>
 
 			<tr>
-				<td style="width: 230px; text-align:center"><h:outputLabel
+				<td style="width: 230px;"><h:outputLabel
 						value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:center"
+						style="text-align:right"
 						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
 			</tr>
 
 		</table>
 
 	</p:panel>
-	
-<!-- #21695 Start Farid -->
-<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">			
-		<p:panel toggleable="true">
-			<f:facet name="header">
-			<h:outputText
-				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.package.stage']}" />
-			<ac:iconTooltip
-				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.package.stage.tooltip']}" />
-		   </f:facet>		
-				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
-		</p:panel>
-</c:if>		
-<!-- #21695 End Farid -->			
+
 </ui:composition>

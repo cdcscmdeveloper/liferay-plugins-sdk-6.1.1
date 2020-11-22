@@ -113,14 +113,13 @@
 					target="#{templateSpecBean.specComponentId}"
 					value="#{templateSpecId}" />
 			</p:commandButton>
-<!-- #21695 FARID tooltip -->
 			<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
 				style="background-color:transparent !important; border:0px none;"
 				action="#{templateSpecBackingBean.zoneQtyPopupAction(templateSpecBean)}"
 				partialSubmit="true" process="@this"
 				update="@([id$=zoneQtyPopup])"
 				rendered="#{isQuestionTypeItem and !empty templateSpecBean.specMaster.tplSpecZone and templateSpecBean.specMaster.qtyByZone}"
-				title="#{lbl['lbl.tpl.qty.instruction.tooltip']}">
+				title="#{lbl['lbl.tpl.spec.zone.qty.tooltip']}">
 				<f:setPropertyActionListener
 					target="#{templateSpecBean.selectedSpecQuestion}"
 					value="#{question}" />

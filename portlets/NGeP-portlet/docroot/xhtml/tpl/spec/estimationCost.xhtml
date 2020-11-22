@@ -31,7 +31,6 @@
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 			</f:facet>
-<!-- START #21695 farid -->
 			<!-- #25039 ruzaimah (REOPEN 51) Begin - only editable for non QT tranx -->	
 			<!-- #25039 #162 - Begin - disabled QT tranx 
 				disabled="#{editable}" change to "true"-->
@@ -58,7 +57,6 @@
 			</c:if>
 			<!--#25039 ruzaimah (REOPEN 162) End -->
 			<!--#25039 ruzaimah (REOPEN 51) End -->
-<!--END #21695 farid -->	
 			<p:message id="estCostMsg" for="estCost" display="icon" />
 		</p:column>
 	</p:dataTable>

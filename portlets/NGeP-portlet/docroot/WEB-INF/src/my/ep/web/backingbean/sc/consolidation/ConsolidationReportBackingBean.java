@@ -715,11 +715,8 @@ public class ConsolidationReportBackingBean extends
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
 		// #18685 - Start.
-		//initializeFinalizationUlasanRemarks();
-        // #18685 - End.
-		//#21695 Farid start
-		retrieveSupplierOfferOrNotOffer();
-		//#21695 end
+				//initializeFinalizationUlasanRemarks();
+		        // #18685 - End.
 	}
 
 	private void setZoneAndTabIndexOnException(boolean isItemized,
@@ -827,71 +824,7 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
-//#21695 Farid Start
-	private void retrieveSupplierOfferOrNotOffer() {
-		ScQt scQt = getManagedBean().getScQt();
-		IQTEvaluationSO evaluationSO = null;
 
-		try {
-			
-			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTEvaluationSO.class);
-
-			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>(); 
-			reqDTO.setNotOfferSupplierSearchBean(searchBean);
-			boolean isOfferAll = false;	 
-			
-			
-			if (getManagedBean().getScQt()
-					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY__ITEM)){
-				isOfferAll = true;	 
-			}
-//#21695 Farid Start 18/8/2020			
-			else if (getManagedBean().getScQt()
-					.getEvaluateBy().equalsIgnoreCase(SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM)){
-	
-				 List <Object[]> allSuppliers = evaluationSO.retrieveOfferOrNotOfferSuppliers(reqDTO)
-							.getOfferOrNotOfferSupplierResultBean().getResultList();
-						 
-				 List <Object[]> suppliersNotOffer = evaluationSO.retrieveSummaryNotOfferSuppliers(reqDTO)
-								.getNotOfferSupplierResultBean().getResultList();
-					
-				 log.info("allSuppliers size " +  allSuppliers.size());
-				 log.info("suppliersNotOffer size " +  suppliersNotOffer.size());
-						
-				 if ( allSuppliers.size() == suppliersNotOffer.size() && allSuppliers.size() != 0 && suppliersNotOffer.size() != 0 ){
-						isOfferAll = true;	 
-					}
-			}
-			
-//#21695 Farid End 18/8/2020
-			 
-//             for (  Object[] paramsObjallSupplier : allSuppliers){
-//	              Long supplierId = ((BigDecimal) paramsObjallSupplier[0]).longValue();
-//	              
-//	              for (  Object[] paramsObjsuppliersNotOffer : suppliersNotOffer){
-//	            	  
-//		              Long notOfferSupplierId = ((BigDecimal) paramsObjsuppliersNotOffer[0]).longValue();
-//		              
-//		              if (supplierId == notOfferSupplierId){
-//		            	  
-//		            	  isAllOffer = false;
-//		            	  
-//		              }
-//				 }
-//	         
-//			 }
-			
-			 getManagedBean().setOfferAll(isOfferAll);
-		} finally {
-			evaluationSO = null;
-		}
-	}
-//#21695 Farid end
-	
 	private void retrieveSupplierFinalizationDtls() {
 		ScQt scQt = getManagedBean().getScQt();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -1342,7 +1275,6 @@ public class ConsolidationReportBackingBean extends
 			for (QtEvaluationResultDtlBean qualifiedSupp : qualifiedSupplierBeans) {
 				BigDecimal deskOfficerRank = qualifiedSupp.getDeskOfficerRank();
 
-//START farid #21695 exclude 0quantity for evaluate validation	
 				if (deskOfficerRank != null) {
 					int doRank = deskOfficerRank.intValue();
 					int evaluationRank = qualifiedSupp.getEvaluationRank();
@@ -1388,7 +1320,6 @@ public class ConsolidationReportBackingBean extends
 					currentRank = doRank;
 					++totalRanksCount;
 				}
-// END				
 			}
 		}
 

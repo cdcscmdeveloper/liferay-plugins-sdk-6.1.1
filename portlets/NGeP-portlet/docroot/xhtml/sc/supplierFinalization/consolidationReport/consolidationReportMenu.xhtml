@@ -7,8 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-<!-- #21695 Farid Start 
-	added is no all supplier-->
+
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
@@ -30,8 +29,6 @@
 			value="#{consolidationReportBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />
 		<ui:param name="hasPresentationDemo"
 			value="#{consolidationReportBackingBean.managedBean.scQt.demoRequired}" />
-		<ui:param name="isNoAllOffer"
-			value="#{consolidationReportBackingBean.managedBean.offerAll}" />
 		<p:messages id="consolidationReportErr" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
@@ -73,7 +70,7 @@
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.packagewise']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(1)}"
 				process="@form" update="@form" partialSubmit="true"
-				style="width:150px;" disabled="#{isNoAllOffer}">
+				style="width:150px;" disabled="#{itemOnly}">
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.consolidation.report.itemized']}"
 				actionListener="#{consolidationReportBackingBean.onTabMenuChangeAction(2)}"

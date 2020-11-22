@@ -252,10 +252,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The evaluation summary dis qual suppliers. */
 	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM;
 	
-	/** The evaluation summary not offer suppliers. */
-	private IPagingDataModel<Object[]> notOfferSupplierDM;
-	
-	
 	/** The summary item list. */
 	private List<ScRequestItem> summaryItemList;
 
@@ -280,9 +276,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The offer price item. */
 	private ScQtScoreOfferPrice offerPriceItem;
 	
-	/** The offer price score type. */
-	private String offerScoreType;//#25138
-
 	/** The endorscommittee member list. */
 	private List<ScQtCommitteeActivity> endorscommitteeMemberList;
 
@@ -469,8 +462,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int passingScore;
 
 	private String financialSummaryView;
-	/** #21695 Farid */
-	private String technicalSummaryView;
 
 	private String roleCode;
 
@@ -512,90 +503,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
 	
-	//#25138-Ahmaa-Start
-	/** The total user score. */
-	private String totalUserScore;
-	
-	/** The total auto score. */
-	private String totalAutoScore;
-	
-	/** The financial user package score*/
-	private BigDecimal userPackageScore;
-	
-	/** The total score. */
-	private String totalScore;
-	
-	private String maxScore;
-	
-	private ScQtProposalAmount qtProposalAmount; 
-	
- 	/** The non-scoring compliance active index. */
-    private int nonScoringActiveIndex;
-    
-    private List<ScQtProposalChecklist> scqtProposalChecklist;
-    
-    /** The list check list. */
-    private List<ScQtCheckList> newchecklist;
-    
-    /** The total template score by supplier. */
-	private String totalTemplateScoreBySupplier;
-	
-	private BigDecimal proposalId;
-	
-	/** The spec item list. */
-    private List<TplSpecQuestion> questionItemList;
-    
-    /** The spec item scoring list. */
-    private List<TplSpecMaster> specMasterList;
-    
-    private String scoreOfferType;
-    
-    private IPagingDataModel<Object[]> complianceTechnicalProposalCheckListDMPackage;
-    
-    private Paginator detachedPaginator;
-    
-    private Paginator detachedPaginatorTest;
-    
-    private List<ScQtProposalChecklist> evaluationStgPkgPropCheckList;
-    
-    private List<ScQtCheckList> evaluationStgPkgTechnicalCheckList;
-    
-    private List<TplSpecQuestion> specQuestionList;
-    
-    private Integer supplierNo;
-    
-	private int tabTechnicalIndex;
-	
-	private int tabFinancialIndex;
-	
-	private Boolean finPackageScore;
-
-    //#25138-Ahmaa-End
-	
-	//#21695 Farid-start
-	private Boolean checkTecSpecNotOffer;
-	//#21695 end
-	
 	//#25037-START
 	private EvaluationMeetingBackingBean meetingBB;
 	//#25037-END
-	//#25138- total max score- start 
-	private Boolean isScoringReq;
-	
-	/** The total technical package max score. */
-	private String totalMaxScore;
-	//#25138- total max score - end
-	//#25138 - set eval status
-	private Long evalStatus;
-	//#25138 - start 
-	private Boolean singleSpecQuestion;
-	
-	private List<ScQtCheckList> singleItemCheckList;
-	
-	private int tabItemPackageIndex;
-	//#25138 - end
-	
-	private boolean scoringReq = false; //#25138
 	
 	private boolean itemSampleReq; //#11104-start
 	/**tabIndex
@@ -3058,21 +2968,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setFinancialSummaryView(String financialSummaryView) {
 		this.financialSummaryView = financialSummaryView;
 	}
-/** #21695 Farid */	
-	/**
-	 * @return the technicalSummaryView
-	 */
-	public String getTechnicalSummaryView() {
-		return technicalSummaryView;
-	}
-
-	/**
-	 * @param technicalSummaryView
-	 *            the technicalSummaryView to set
-	 */
-	public void setTechnicalSummaryView(String technicalSummaryView) {
-		this.technicalSummaryView = technicalSummaryView;
-	}
 
 	/**
 	 * @return the roleCode
@@ -3499,220 +3394,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.reportsToBeRemovedList = reportsToBeRemovedList;
 	}
 
-	/**
-	 * @return the offerScoreType
-	 */
-	public String getOfferScoreType() {//#25138 - start
-		return offerScoreType;
-	}
-
-	/**
-	 * @param offerScoreType the offerScoreType to set
-	 */
-	public void setOfferScoreType(String offerScoreType) {
-		this.offerScoreType = offerScoreType;
-	}//#25138 - end
-	
 	public boolean isFP_Compliance() {
 		return isFP_Compliance;
 	}
 
 	public void setFP_Compliance(boolean isFP_Compliance) {
 		this.isFP_Compliance = isFP_Compliance;
-	}
-	
-	//#25138-Ahmaa-Start
-	public String getTotalUserScore() {
-		return totalUserScore;
-	}
-
-	public void setTotalUserScore(String totalUserScore) {
-		this.totalUserScore = totalUserScore;
-	}
-
-	public String getTotalAutoScore() {
-		return totalAutoScore;
-	}
-
-	public void setTotalAutoScore(String totalAutoScore) {
-		this.totalAutoScore = totalAutoScore;
-	}
-
-	public String getTotalScore() {
-		return totalScore;
-	}
-
-	public void setTotalScore(String totalScore) {
-		this.totalScore = totalScore;
-	}
-
-	public ScQtProposalAmount getQtProposalAmount() {
-		return qtProposalAmount;
-	}
-
-	public void setQtProposalAmount(ScQtProposalAmount qtProposalAmount) {
-		this.qtProposalAmount = qtProposalAmount;
-	}
-
-	public int getNonScoringActiveIndex() {
-		return nonScoringActiveIndex;
-	}
-
-	public void setNonScoringActiveIndex(int nonScoringActiveIndex) {
-		this.nonScoringActiveIndex = nonScoringActiveIndex;
-	}
-
-	public List<ScQtProposalChecklist> getScqtProposalChecklist() {
-		return scqtProposalChecklist;
-	}
-
-	public void setScqtProposalChecklist(List<ScQtProposalChecklist> scqtProposalChecklist) {
-		this.scqtProposalChecklist = scqtProposalChecklist;
-	}
-
-	public List<ScQtCheckList> getNewchecklist() {
-		return newchecklist;
-	}
-
-	public void setNewchecklist(List<ScQtCheckList> newchecklist) {
-		this.newchecklist = newchecklist;
-	}
-
-	public String getTotalTemplateScoreBySupplier() {
-		return totalTemplateScoreBySupplier;
-	}
-
-	public void setTotalTemplateScoreBySupplier(String totalTemplateScoreBySupplier) {
-		this.totalTemplateScoreBySupplier = totalTemplateScoreBySupplier;
-	}
-
-	public BigDecimal getProposalId() {
-		return proposalId;
-	}
-
-	public void setProposalId(BigDecimal proposalId) {
-		this.proposalId = proposalId;
-	}
-
-	public List<TplSpecQuestion> getQuestionItemList() {
-		return questionItemList;
-	}
-
-	public void setQuestionItemList(List<TplSpecQuestion> questionItemList) {
-		this.questionItemList = questionItemList;
-	}
-
-	public List<TplSpecMaster> getSpecMasterList() {
-		return specMasterList;
-	}
-
-	public void setSpecMasterList(List<TplSpecMaster> specMasterList) {
-		this.specMasterList = specMasterList;
-	}
-
-	public String getScoreOfferType() {
-		return scoreOfferType;
-	}
-
-	public void setScoreOfferType(String scoreOfferType) {
-		this.scoreOfferType = scoreOfferType;
-	}
-
-	public IPagingDataModel<Object[]> getComplianceTechnicalProposalCheckListDMPackage() {
-		return complianceTechnicalProposalCheckListDMPackage;
-	}
-
-	public void setComplianceTechnicalProposalCheckListDMPackage(
-			IPagingDataModel<Object[]> complianceTechnicalProposalCheckListDMPackage) {
-		this.complianceTechnicalProposalCheckListDMPackage = complianceTechnicalProposalCheckListDMPackage;
-	}
-
-	public Paginator getDetachedPaginator() {
-		return detachedPaginator;
-	}
-
-	public void setDetachedPaginator(Paginator detachedPaginator) {
-		this.detachedPaginator = detachedPaginator;
-	}
-
-	public List<ScQtProposalChecklist> getEvaluationStgPkgPropCheckList() {
-		return evaluationStgPkgPropCheckList;
-	}
-
-	public void setEvaluationStgPkgPropCheckList(List<ScQtProposalChecklist> evaluationStgPkgPropCheckList) {
-		this.evaluationStgPkgPropCheckList = evaluationStgPkgPropCheckList;
-	}
-
-	public List<ScQtCheckList> getEvaluationStgPkgTechnicalCheckList() {
-		return evaluationStgPkgTechnicalCheckList;
-	}
-
-	public void setEvaluationStgPkgTechnicalCheckList(List<ScQtCheckList> evaluationStgPkgTechnicalCheckList) {
-		this.evaluationStgPkgTechnicalCheckList = evaluationStgPkgTechnicalCheckList;
-	}
-
-	public List<TplSpecQuestion> getSpecQuestionList() {
-		return specQuestionList;
-	}
-
-	public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
-		this.specQuestionList = specQuestionList;
-	}
-
-	public String getMaxScore() {
-		return maxScore;
-	}
-
-	public void setMaxScore(String maxScore) {
-		this.maxScore = maxScore;
-	}
-
-	public Paginator getDetachedPaginatorTest() {
-		return detachedPaginatorTest;
-	}
-
-	public void setDetachedPaginatorTest(Paginator detachedPaginatorTest) {
-		this.detachedPaginatorTest = detachedPaginatorTest;
-	}
-
-	public Integer getSupplierNo() {
-		return supplierNo;
-	}
-
-	public void setSupplierNo(Integer supplierNo) {
-		this.supplierNo = supplierNo;
-	}
-
-	public BigDecimal getUserPackageScore() {
-		return userPackageScore;
-	}
-
-	public void setUserPackageScore(BigDecimal userPackageScore) {
-		this.userPackageScore = userPackageScore;
-	}
-
-	public int getTabTechnicalIndex() {
-		return tabTechnicalIndex;
-	}
-
-	public void setTabTechnicalIndex(int tabTechnicalIndex) {
-		this.tabTechnicalIndex = tabTechnicalIndex;
-	}
-
-	public int getTabFinancialIndex() {
-		return tabFinancialIndex;
-	}
-
-	public void setTabFinancialIndex(int tabFinancialIndex) {
-		this.tabFinancialIndex = tabFinancialIndex;
-	}
-
-	public Boolean getFinPackageScore() {
-		return finPackageScore;
-	}
-
-	public void setFinPackageScore(Boolean finPackageScore) {
-		this.finPackageScore = finPackageScore;
 	}
 
 	//#25037
@@ -3724,85 +3411,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.meetingBB = meetingBB;
 	}
 	//#25037-end
-
-	//#25138-Ahmaa-End
-// #21695 farid	start
-	public IPagingDataModel<Object[]> getNotOfferSupplierDM() {
-		return notOfferSupplierDM;
-	}
-
-	public void setNotOfferSupplierDM(
-			IPagingDataModel<Object[]> notOfferSupplierDM) {
-		this.notOfferSupplierDM = notOfferSupplierDM;
-	}
-
-	public Boolean getCheckTecSpecNotOffer() {
-		return checkTecSpecNotOffer;
-	}
-
-	public void setCheckTecSpecNotOffer(Boolean checkTecSpecNotOffer) {
-		this.checkTecSpecNotOffer = checkTecSpecNotOffer;
-	}
-	// #21695 farid	end		
-	//#25138- total max score -start
-	public Boolean getIsScoringReq() {
-		return isScoringReq;
-	}
-
-	public void setIsScoringReq(Boolean isScoringReq) {
-		this.isScoringReq = isScoringReq;
-	}
-
-	public String getTotalMaxScore() {
-		return totalMaxScore;
-	}
-
-	public void setTotalMaxScore(String totalMaxScore) {
-		this.totalMaxScore = totalMaxScore;
-	}
-	//#25138- total max score - end
-	//#25138 - set eval status - start
-	public Long getEvalStatus() {
-		return evalStatus;
-	}
-
-	public void setEvalStatus(Long evalStatus) {
-		this.evalStatus = evalStatus;
-	}
-	//#25138 - set eval status - end
-	//#25138 - start
-	public boolean getSingleSpecQuestion() {
-		return singleSpecQuestion;
-	}
-
-	public void setSingleSpecQuestion(boolean singleSpecQuestion) {
-		this.singleSpecQuestion = singleSpecQuestion;
-	}
-
-	public List<ScQtCheckList> getSingleItemCheckList() {
-		return singleItemCheckList;
-	}
-
-	public void setSingleItemCheckList(List<ScQtCheckList> singleItemCheckList) {
-		this.singleItemCheckList = singleItemCheckList;
-	}
-	 
-	public boolean isScoringReq() {
-		return scoringReq;
-	}
-
-	public void setScoringReq(boolean scoringReq) {
-		this.scoringReq = scoringReq;
-	}
-
-	public int getTabItemPackageIndex() {
-		return tabItemPackageIndex;
-	}
-
-	public void setTabItemPackageIndex(int tabItemPackageIndex) {
-		this.tabItemPackageIndex = tabItemPackageIndex;
-	}
-	//#25138 - end
 	
 	//#28786 - start
 	/**
