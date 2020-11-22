@@ -24,6 +24,11 @@ public class ProfileManagementSearchBean implements Serializable {
 	private Long appStatusId;
 	private String identificationNo;
 	private String userName;
+	//shafie - #28833 -start
+	private PmOrgProfile ptj;
+	private PmOrgProfile ministry;
+	private PmOrgProfile kptj;
+	//shafie - #28833 -start
 	
 	public ProfileManagementSearchBean(){}
 
@@ -124,4 +129,58 @@ public class ProfileManagementSearchBean implements Serializable {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	
+	//shafie - #28833- start
+	
+	/**
+	 * @return the ministry
+	 */
+	public PmOrgProfile getMinistry() {
+		if (ministry == null)
+			ministry = new PmOrgProfile();
+		return ministry;
+	}
+		
+	
+	/**
+	 * @param ministry
+	 *            the ministry to set
+	 */
+	public void setMinistry(PmOrgProfile ministry) {
+		this.ministry = ministry;	
+	}
+	
+	/**
+	 * @return the kptj
+	 */
+	public PmOrgProfile getKptj() {
+		return kptj;
+	}
+
+	/**
+	 * @param kptj
+	 *            the kptj to set
+	 */
+	public void setKptj(PmOrgProfile kptj) {
+		this.kptj = kptj;
+	}
+	
+	/**
+	 * @return the ptj
+	 */
+	public PmOrgProfile getPtj() {
+		if (ptj == null)
+			ptj = new PmOrgProfile();
+		return ptj;
+	}
+
+	/**
+	 * @param ptj
+	 *            the ptj to set
+	 */
+	public void setPtj(PmOrgProfile ptj) {
+		this.ptj = ptj;
+	}
+	
+	//shafie - #28833- end
 }
