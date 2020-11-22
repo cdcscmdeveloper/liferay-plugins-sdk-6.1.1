@@ -2880,11 +2880,7 @@ public class TaskReassignmentBackingBean extends
 		/* 27827 - START */
 		case ProfileManagementConst.REASSIGN_TYPE_PTJ_AND_BPK:
 			//11 - Include PTJ & BPK
-			
-			List<String> paramcodes=new ArrayList<String>();
-			paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
-			paramcodes.add(ParameterConst.ORG_TYPE_BPK);
-			
+
 			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
@@ -2911,12 +2907,16 @@ public class TaskReassignmentBackingBean extends
 						orgProfileId));
 			} else {
 				log.info("----- in else role -----");
+				List<String> paramcodes=new ArrayList<String>();
+				paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
+				paramcodes.add(ParameterConst.ORG_TYPE_BPK);
+				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
 						SearchOperator.OPERATOR_IN.value(),
 						paramcodes));
 				
-				searchBean.getDataFilterBeans().add(
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						true));
@@ -2930,7 +2930,7 @@ public class TaskReassignmentBackingBean extends
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						1000904L,
-						SearchCondition.CONDITION_OR.value()));
+						SearchCondition.CONDITION_OR.value()));*/
 			}
 
 			break;
