@@ -3095,38 +3095,38 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 	}
 	
-//	public boolean isBpkCentralContract(ScQt scQt) {
-//		boolean isBpkCentralContract = false;
-//		boolean isSbhOrSrwk = false;
-//		//String committeType = null;
-//		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//				ICommitteSO.class);
-//		CommitteReqDTO reqDTO = new CommitteReqDTO();
-//		reqDTO.setQtId(scQt.getQtId());
-//		CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
-//		for (PmParameter p : resDTO.getFinalizationSecratry()) {
-//			if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-//					|| p.getParameterCode().equalsIgnoreCase(
-//							ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-//				isSbhOrSrwk = true;
-//			}
-//		}
-//		
-//		if (scQt.getPmOrgProfile().getBpk() &&						
-//				scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+	public boolean isBpkCentralContract(ScQt scQt) {
+		boolean isBpkCentralContract = false;
+		boolean isSbhOrSrwk = false;
+		//String committeType = null;
+		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				ICommitteSO.class);
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(scQt.getQtId());
+		CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+		for (PmParameter p : resDTO.getFinalizationSecratry()) {
+			if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+					|| p.getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+				isSbhOrSrwk = true;
+			}
+		}
+		
+		if (scQt.getPmOrgProfile().getBpk() &&						
+				scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+			return isBpkCentralContract = true;
+		}
+
+//		boolean isSbhOrSrwkPtj = committeSO.isSbhOrSrwkPtj(committeType, scQt.getPmOrgProfile().getOrgProfileId());
+//
+//		if (scQt.getPmOrgProfile().getBpk()
+//				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
+//				&& !isSbhOrSrwkPtj) {
 //			return isBpkCentralContract = true;
 //		}
-//
-////		boolean isSbhOrSrwkPtj = committeSO.isSbhOrSrwkPtj(committeType, scQt.getPmOrgProfile().getOrgProfileId());
-////
-////		if (scQt.getPmOrgProfile().getBpk()
-////				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
-////				&& !isSbhOrSrwkPtj) {
-////			return isBpkCentralContract = true;
-////		}
-//
-//		return isBpkCentralContract;
-//	}
+
+		return isBpkCentralContract;
+	}
 
 	/**
 	 * Retrieve finalization committee types.
@@ -4875,39 +4875,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("retrieveQuationTenderDetails, @qtId"+qtId);
 		if (null != qtId) {
 			
-			
-// #21695 - Farid Start 30/7/2020			
-			log.info("ReportBackingBean-retriveUserRoleByUserId");
-			IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			List<String> authoriztionList=new ArrayList<String>();
-			if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-				// reqDTO.setUserId((long) 240500);
-				reqDTO.setLanguageCode(ReportConst.ENG_LANG);
-				UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-				List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-				if (CollectionUtils.isNotEmpty(roleDesc)) {
-					for (PmRoleDesc pmRoleDesc : roleDesc) {
-						pmRoleDesc.getPmRole().getRoleCode();
-						if (!authoriztionList.contains(pmRoleDesc.getPmRole()
-								.getRoleCode())) {
-							authoriztionList.add(pmRoleDesc.getPmRole()
-									.getRoleCode());
-						}
-						
-						RoleCode[] r = {RoleCode.SC_SECRETARY};
-						if (userHasRole(r)){
-							getManagedBean().setSecretaryValidate(true);
-						};
-//						if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
-//							getManagedBean().setSecretaryValidate(true);
-//						}
-					}
-				}
-			}
-//#21695 - Farid End 30/7/2020
 			
 			// this.getManagedBean().setActiveIndex(0);
 			IQTDetailSO QtDetailsSO;
