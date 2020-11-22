@@ -1129,33 +1129,11 @@ public class SPDetailBackingBean extends
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
 								}	//#28785-End
-//#21695 farid IN MONITORING START	
 								
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
-								
-								}else if (specAnswer.getRatePerUom() != null
-											&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-									answers.add(specAnswer);
-								
-								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-								answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
-								answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
-								answers.add(specAnswer);
-							
-								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
-								answers.add(specAnswer);
-//#21695 farid IN MONITORING END	
-							}else{
+								}else{
 									specAnswer.setDeleted(true);
 									toDeleteZoneAnswers.add(specAnswer);
 								}
@@ -1187,21 +1165,13 @@ public class SPDetailBackingBean extends
 						.getSpecAnswerList();
 			}
             if(answers == null || answers.size() == 0){
-            	for(TplSpecAnswer answer:answers){
-//farid start #21695 to allow item has 0 qty and 0 price
-            	if(answer.getRatePerUom().equals(0) && answer.getTplSpecZoneQty()!= null){
-                	throw new EpException(MessageConst.ERROR_760463);
-            		}
-//farid end #21695            	
-            	}
+            	throw new EpException(MessageConst.ERROR_760463);	
 			} else {
             	for(TplSpecAnswer answer:answers){
 					if (isCompleted) {
-//farid start #21695 to allow item has 0 qty and 0 price
-						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty()!= null) {
+						if (answer.getRatePerUom() == null || answer.getRatePerUom().equals(0)) {
 							throw new EpException(MessageConst.ERROR_760464);
 						}
-//farid end #21695
 					}
             		//added because of Bug #17772, please do not remove or change the order of if statements
             		if(answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)){
@@ -1300,12 +1270,7 @@ public class SPDetailBackingBean extends
 			if (isCompleted) {
 				processResponseException(answers);
 			}
-			/** #21695 Farid */				
-			if(scQt != null
-					&& scQt.isZonal()){
-				proposalReqDTO.setTplSpecZoneQties(answers.get(0).getTplSpecQuestion().getTplSpecZoneQties());
-				}	
-			
+
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(this.getManagedBean().getQt());
@@ -1332,14 +1297,10 @@ public class SPDetailBackingBean extends
 				TplSpecQuestion tplSpecQuestion = answer.getTplSpecQuestion();
 				PmParameter answerType = tplSpecQuestion.getAnswerTypeCode();
 				String answerTypeCode = answerType != null ? answerType.getParameterCode() : null;
-//#21695 Farid allow complete if not offer, respond will be null and disabled			
-				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()) && answer.getOffer() !=null && answer.getOffer() == true 
-						||ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()) && answer.getOffer() == null)
-					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null && answer.getOffer() !=null && answer.getOffer() == true
-							|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null && answer.getOffer() == null))) {
+				if ((ParameterConst.ANSWER_TYPE_TEXT.equalsIgnoreCase(answerTypeCode) && StringUtils.isEmpty(answer.getAnswerText()))
+					|| (ParameterConst.ANSWER_TYPE_DROPDOWN.equalsIgnoreCase(answerTypeCode) && answer.getAnswerCompliance() == null)) {
 						throw new EpException(MessageConst.ERROR_760480);
 				}
-//#21695 end				
 			}
 		}
 	}
@@ -2600,22 +2561,14 @@ public class SPDetailBackingBean extends
 		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		SmSupplier smSupplier = new SmSupplier();
-		//#21695 Farid Start
-		ScQt scQT = this.getManagedBean().getQt();
-		//#21695 Farid End
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
-		//#21695 Farid Start
-		templateSpecBackingBean.getManagedBean().setScQt(scQT);
-		//#21695 Farid End
+		templateSpecBackingBean.getManagedBean().setScQt(
+				this.getManagedBean().getQt());
 		templateSpecBackingBean.getManagedBean().setDocType(
 				ParameterConst.DOCTYPE_QUOTATION);
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
-		//#21695 Farid Start
-		if (scQT.isZonal()) {
-		populateZoneDetailIntoTreeNode(templateSpecBean);
-		}
-		//#21695 Farid END
+
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
 	}
 
@@ -3074,11 +3027,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			templateSpecBean.setSpecMaster(specMaster);
 			templateSpecBean.setContentType(reqDTO.getContentType());
 			templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-			templateSpecBean.setSelectedSpecQuestion(null);
-//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
-			this.getManagedBean().getTemplateSpecBackingBean()
-			.calcAllSpecAnswerTotalAmount(templateSpecBean);
-//#21695 Farid end				
+			templateSpecBean.setSelectedSpecQuestion(null);		
 			this.getManagedBean().getTemplateSpecBackingBean()
 					.calcGrandTotalAmount(templateSpecBean);
 			if (getManagedBean().getQt().isZonal()) {
@@ -5614,63 +5563,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		}
 	//#25089@hatta - end
 		
-
-		//#21695 farid	start display tree node
-			private void populateZoneDetailIntoTreeNode( TemplateSpecBean templateSpecBean) {
-				
-				TplSpecZone specZone = templateSpecBean.getSpecMaster().getTplSpecZone();
-				List<TplSpecZoneDtl> specZoneDtls = null;
-				List<TreeNode> zoneGeneralTrees = getManagedBean().getZoneGeneralTrees();
-				
-				if (specZone != null) {
-						ISpecZoneLocSO specZoneLocSO;
-						try {
-							specZoneLocSO = BusinessDelegate.getInstance()
-									.getServiceObject(
-											ModuleCodeConst.COMMON_COMPONENT,
-											ISpecZoneLocSO.class);
-
-							SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-							reqDTO.setDocType(specZone.getDocType());
-							reqDTO.setDocId(specZone.getDocId());
-
-							// Get zone details list from db.
-							SpecZoneLocResDTO resDTO = specZoneLocSO
-									.retrieveZoneDtlAndLocByDocIdNType(reqDTO);
-
-							specZoneDtls = resDTO.getZonesList();
-						} finally {
-							specZoneLocSO = null;
-						}
-					}
-				
-				if (zoneGeneralTrees == null) {
-					zoneGeneralTrees = new ArrayList<TreeNode>();
-					getManagedBean().setZoneGeneralTrees(zoneGeneralTrees);
-				} else {
-					zoneGeneralTrees.clear();	
-				}
-				
-				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
-					for (TplSpecZoneDtl zone : specZoneDtls) {
-					
-						if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
-							List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
-							
-							for (TplSpecZoneLoc specLoc : zone.getTplSpecZoneLocs()) {
-								if (specLoc.isZonalLocation()) {
-									specZoneLocs.add(specLoc);
-								}
-							}
-								zoneGeneralTrees.add(
-										LocationSingleton.getInstance().constuctTreeNode(
-												zone, specZoneLocs));
-							}
-					}
-				}
-				log.info("habisss");
-			}
-		//#21695 farid end
 //#28792-start			
 private void validateFinacialProposalAttachments(boolean validationSuspend){
 	
