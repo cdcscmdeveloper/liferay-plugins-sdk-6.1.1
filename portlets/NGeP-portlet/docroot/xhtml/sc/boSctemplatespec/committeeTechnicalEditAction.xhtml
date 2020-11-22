@@ -149,8 +149,7 @@ label.ui-button>span.ui-button-text {
 						<td>
 							<table>
 								<tr>
-								<!-- #farid #21695 disable start -->
-									<td><p:selectOneRadio disabled="#{specificationBackingBean.managedBean.specItemWeightageRequired or specificationBackingBean.managedBean.qt.partial}"
+									<td><p:selectOneRadio disabled="true"
 											value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
 											<f:selectItems
 												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
@@ -159,7 +158,7 @@ label.ui-button>span.ui-button-text {
 											<p:ajax event="change" partialSubmit="true" process="@this"
 												listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
 
-										</p:selectOneRadio></td>	<!-- #farid #21695 disable end -->	
+										</p:selectOneRadio></td>
 									<td style="margin-top: -3px"><ac:iconTooltip
 											value="#{lbl['lbl.sc.spec.item.weightage.tooltip']}" /></td>
 								</tr>
@@ -202,7 +201,33 @@ label.ui-button>span.ui-button-text {
 
 			</p:panel>
 
+			<p:panel header="Process specification data (Import/ Export)"
+				toggleable="false">
+				<table>
+					<tr align="left">
+					<ac:iconTooltip value="#{lbl['lbl.spec.tooltip.import']}" />
+				<p:spacer width="60" />
+					<ac:iconTooltip value="#{lbl['lbl.spec.tooltip.export']}" />
+						<td><p:commandButton value="#{lbl['lbl.btn.import']}" id="getFile" ajax="false"
+								action="#{specificationBackingBean.handleFileUploadImport}" disabled="#{facesContext.validationFailed or specificationBackingBean.checkTplSpecQuestion()}"/>
+							
+								
+								</td>
+									
+						<td><p:fileUpload id="uploader" value="filerUp"
+								fileUploadListener="#{specificationBackingBean.handleFileUploadExport}"
+								ajax="false" label="#{lbl['lbl.btn.export']}" showButtons="false" auto="true"
+								oncomplete="test()"/>
+								
+					
+								
+								</td>
+											
+					</tr>
+				</table>
 
+				<p:growl id="messages" showDetail="true" />
+			</p:panel>
 
 		</h:panelGroup>
 	</ui:define>

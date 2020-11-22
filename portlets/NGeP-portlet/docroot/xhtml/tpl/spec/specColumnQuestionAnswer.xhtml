@@ -86,7 +86,7 @@
 				</f:facet>
 
 			</p:column>
-				<p:column rowspan="#{specificationrequired ? 2 : 1}" style="width:170px;white-space:normal">
+				<p:column rowspan="#{specificationrequired ? 2 : 1}" style="width:100px;white-space:normal">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}" />
@@ -134,7 +134,7 @@
 		</p:row>
 	</p:columnGroup>
 
-	<p:column style="width:170px;">
+	<p:column style="width:100px;">
 
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="qty"
@@ -166,13 +166,12 @@
 					target="#{templateSpecBean.specComponentId}"
 					value="#{templateSpecId}" />
 			</p:commandLink>
-<!-- #21695 Farid tooltip -->			
 			<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
 				style="background-color:transparent !important; border:0px none;"
 				action="#{templateSpecBackingBean.zoneQtyPopupAction(templateSpecBean)}"
 				partialSubmit="true" process="@this" update="@([id$=zoneQtyPopup])"
 				rendered="#{!empty templateSpecBean.specMaster.tplSpecZone and templateSpecBean.specMaster.qtyByZone}"
-				title="#{lbl['lbl.tpl.qty.instruction.tooltip']}">
+				title="#{lbl['lbl.tpl.spec.zone.qty.tooltip']}">
 				<f:setPropertyActionListener
 					target="#{templateSpecBean.selectedSpecQuestion}"
 					value="#{question}" />

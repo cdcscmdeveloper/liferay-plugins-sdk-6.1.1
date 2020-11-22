@@ -55,7 +55,6 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.MenuModel;
-import org.primefaces.model.TreeNode; //#21695 Farid
 
 /**
  * Supplier Proposal Managed Bean
@@ -215,7 +214,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtProposalChecklist financialQtProposalChecklist;
 	private ScQtCheckList financialQtChecklist;
 	private int supplierInfoActiveIndex; //25089@hatta
-	private List<TreeNode> zoneGeneralTrees; //#21695 Farid
 	private boolean tierType=false; //#11715 danial
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
@@ -1910,22 +1908,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.supplierInfoActiveIndex = supplierInfoActiveIndex;
 	}
 	//25089@hatta - end
-
-	//#21695 Farid start
-	/**
-	 * @return the zoneGeneralTrees
-	 */
-	public List<TreeNode> getZoneGeneralTrees() {
-		return zoneGeneralTrees;
-	}
-
-	/**
-	 * @param zoneGeneralTrees the zoneGeneralTrees to set
-	 */
-	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
-		this.zoneGeneralTrees = zoneGeneralTrees;
-	}
-	//#21695 Farid End
 
 	//#11715 danial start
 	public boolean isTierType() {

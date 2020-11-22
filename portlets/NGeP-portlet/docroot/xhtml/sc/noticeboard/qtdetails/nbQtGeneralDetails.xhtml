@@ -249,23 +249,14 @@
 				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
 			</h:outputText>
 			<h:outputLabel value="" />
-			<!-- #21693 Venkat Start -->	
-			<!--  
+			<h:outputLabel value="" /> -->	
+			<!-- #21693 Venkat END -->	
 			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.two.tier']}"
 				rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
-			<h:outputLabel value="" /> -->	
-			<!-- #21693 Venkat END -->		
-<!-- #21695 Farid Start -->			
-			<h:outputLabel value="#{lbl['lbl.sc.partial.offer']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
-			<h:outputText value="#{lbl['lbl.sc.partial.offer.no']}"
-				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq false or noticeBoardBackingBean.managedBean.scQt.partial eq null}" />
-			<h:outputText value="#{lbl['lbl.sc.partial.offer.yes']}"
-				rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq true}" />
 			<h:outputLabel value="" />
-<!-- #21695 Farid END -->		
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>

@@ -69,7 +69,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -81,7 +80,6 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -127,10 +125,6 @@ import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
-import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
-import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -699,47 +693,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-/** #21695 FARID START*/	
-	/**
-	 * Get parameter id select items by parameter type and search bean for
-	 * dropdown disable/hide sample when partial offer true.
-	 * 
-	 * @param parameterType
-	 *            the parameter type
-	 * @param searchBean
-	 *            the search bean instance
-	 * @return array of SelectItem
-	 */
-	public SelectItem[] getDropdownValuesBySearchBeanForPartial(String parameterType,
-			ISearchBean<PmParameterDesc> searchBean) {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
-		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper
-					.getInstance().getParameterDescListBySearchBean(
-							parameterType, searchBean);
 
-			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			int i = 1;
-			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterId(), parameterDesc.getCodeName());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return items;
-	}
-	/** #21695 FARID END*/
-	
 	/**
 	 * Populate values for Reason Drop down base on reason category code
 	 * 
@@ -1129,11 +1083,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
-/** #21695 Farid start */	
-	public SelectItem[] getRadioButtonCodeValuesForPartial(String parameterType,String disabled) {
-		return getRadioButtonCodeValuesBySearchBeanForPartial(parameterType, null, disabled);
-	}
-/** #21695  END*/
 
 	/**
 	 * Gets the radio button code values by search bean.
@@ -1166,42 +1115,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-
-	/** #21695 Farid start */	
-	//disable = TRUE,
-	public SelectItem[] getRadioButtonCodeValuesBySearchBeanForPartial(
-			String parameterType, ISearchBean<PmParameterDesc> searchBean,String disable) {
-		SelectItem[] items = null;
-		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper
-					.getInstance().getParameterDescListBySearchBean(
-							parameterType, searchBean);
-
-			items = new SelectItem[parameterDescs.size()];
-			int i = 0;
-			for (PmParameterDesc parameterDesc : parameterDescs) {
-				if("TRUE,".contains(parameterDesc.getPmParameter()
-						.getParameterCode())){
-					items[i++] = new SelectItem(parameterDesc.getPmParameter()
-							.getParameterCode(), parameterDesc.getCodeName(),"",true);
-				}else{
-					items[i++] = new SelectItem(parameterDesc.getPmParameter()
-							.getParameterCode(), parameterDesc.getCodeName(),"",false);
-				}
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
-
-		return items;
-	}
-	/** #21695  END*/
-	
 	
 	/**
 	 * Gets the radio button values.
