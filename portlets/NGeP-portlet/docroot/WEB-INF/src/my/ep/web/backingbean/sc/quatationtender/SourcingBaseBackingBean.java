@@ -5057,14 +5057,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		 * To check if Application fall under MOF Central Contract flows
 		 * #27502		 
 		 */
-		public boolean isBpkCentralContract(ScQt scQt) {
-			boolean isBpkCentralContract = false;
-			boolean isSbhOrSrwk = false;
-			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					ICommitteSO.class);
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+	public boolean isBpkCentralContract(ScQt scQt) {
+		boolean isBpkCentralContract = false;
+		boolean isSbhOrSrwk = false;
+		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				ICommitteSO.class);
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(scQt.getQtId());
+		CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+		if (resDTO.getFinalizationSecratry() != null) {
 			for (PmParameter p : resDTO.getFinalizationSecratry()) {
 				if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
 						|| p.getParameterCode().equalsIgnoreCase(
@@ -5072,15 +5073,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					isSbhOrSrwk = true;
 				}
 			}
-			
-			if (scQt.getPmOrgProfile().getBpk() &&						
-					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+
+			if (scQt.getPmOrgProfile().getBpk()
+					&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
+					&& !isSbhOrSrwk) {
 				return isBpkCentralContract = true;
 			}
-
-			return isBpkCentralContract;
 		}
-
+		return isBpkCentralContract;
+	}
 		
 		// #18685-Start.
         /**
