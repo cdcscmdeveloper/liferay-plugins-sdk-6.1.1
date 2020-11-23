@@ -281,7 +281,7 @@ public class SupplierFinalizationBackingBean extends
 			 // #27502 -- Start
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(qtId);
-			ScQt scQt = getManagedBean().getScQt();
+			ScQt scQt = qtBackingBean.getManagedBean().getQt();
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			
