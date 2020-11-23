@@ -5060,6 +5060,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isBpkCentralContract(ScQt scQt) {
 		boolean isBpkCentralContract = false;
 		boolean isSbhOrSrwk = false;
+		Long ctType = null;
 		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				ICommitteSO.class);
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
@@ -5074,9 +5075,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 
-			if (scQt.getPmOrgProfile().getBpk()
-					&&  scQt.getContractType() != null && scQt.getContractType().getParameterId() != null && 
-					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+			if (scQt.getContractType() == null) {
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+				ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
+			} else {
+				ctType = scQt.getContractType().getParameterId();
+			}
+
+			if (scQt.getPmOrgProfile().getBpk() && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
 				return isBpkCentralContract = true;
 			}
 		}
