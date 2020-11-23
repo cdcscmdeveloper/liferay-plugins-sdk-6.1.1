@@ -649,6 +649,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			checkForGSTAlertPopup(this.getManagedBean()
 					.getSpecTemplateSpecBean().getSpecMaster());
 			getLoaReports();
+			
+			// #11134 - start
+			// Remarks
+			scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
+					scLoa.getCurrentStatus(),
+					scLoa.getScLoaRemarks(), ScLoaRemark.class));
+			// #11134 - end
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -1174,6 +1182,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			
 		}
+		
+		// #11134 - Start
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+
+			boolean remarksEmpty = false;
+
+			// check if remark is empty
+			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
+			if (CollectionUtils.isNotEmpty(scLoaRemarks)) {
+				for (ScLoaRemark each : scLoaRemarks) {
+					if (StringUtils.isEmpty(each.getRemark())) {
+						remarksEmpty = true;
+						break;
+					}
+				}
+			} else {
+				remarksEmpty = true;
+			}
+
+			// throw message
+			if (remarksEmpty) {
+				throw new EpException(MessageConst.ERROR_716024);
+				// Remark is mandatory for rejection.
+			}
+		}
+		// #11134 -Start
 
 		// validation for fulfillment schedule and progressivepayment
 		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)
@@ -1212,6 +1247,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			// validate repo attachements
 			validateRepoAttachment(scLoa);
+			
 		}
 
 	}
@@ -5022,6 +5058,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 //			}
 			//#26474 -end-
 			
+			// remove empty remark - start
+			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
+			List<ScLoaRemark> finalScLoaRemarks = new ArrayList<>();
+			if(CollectionUtils.isNotEmpty(scLoaRemarks)){
+				for(ScLoaRemark each : scLoaRemarks){
+					if(!StringUtils.isEmpty(each.getRemark())){
+						finalScLoaRemarks.add(each);
+					}
+				}
+			}
+			scLoa.setScLoaRemarks(finalScLoaRemarks);
+			
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -5224,10 +5272,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		context.put("loaNo", loaNo);
 		context.put("procurementMode", procurementMode.toLowerCase());
-
+		
 		String termsConditions = DocumentGenerator
 				.getInstance()
 				.getHtmlFromVelocity(SourcingConstants.LOA_DECLARATION, context);
+		
 
 		getManagedBean().setTermsConditions(termsConditions);
 
