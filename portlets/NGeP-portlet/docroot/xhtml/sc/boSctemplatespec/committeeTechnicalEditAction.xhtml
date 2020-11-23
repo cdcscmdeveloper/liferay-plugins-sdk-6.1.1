@@ -201,33 +201,7 @@ label.ui-button>span.ui-button-text {
 
 			</p:panel>
 
-			<p:panel header="Process specification data (Import/ Export)"
-				toggleable="false">
-				<table>
-					<tr align="left">
-					<ac:iconTooltip value="#{lbl['lbl.spec.tooltip.import']}" />
-				<p:spacer width="60" />
-					<ac:iconTooltip value="#{lbl['lbl.spec.tooltip.export']}" />
-						<td><p:commandButton value="#{lbl['lbl.btn.import']}" id="getFile" ajax="false"
-								action="#{specificationBackingBean.handleFileUploadImport}" disabled="#{facesContext.validationFailed or specificationBackingBean.checkTplSpecQuestion()}"/>
-							
-								
-								</td>
-									
-						<td><p:fileUpload id="uploader" value="filerUp"
-								fileUploadListener="#{specificationBackingBean.handleFileUploadExport}"
-								ajax="false" label="#{lbl['lbl.btn.export']}" showButtons="false" auto="true"
-								oncomplete="test()"/>
-								
-					
-								
-								</td>
-											
-					</tr>
-				</table>
 
-				<p:growl id="messages" showDetail="true" />
-			</p:panel>
 
 		</h:panelGroup>
 	</ui:define>
