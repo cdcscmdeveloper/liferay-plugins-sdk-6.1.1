@@ -6808,7 +6808,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	private void validateDeliveryAddress(String action) {
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			BigDecimal checkDelAddr = BigDecimal.ONE;
+			int checkDelAddr = 1;
 			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
@@ -6817,7 +6817,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					reqDTO.setAddressId(flDeliveryAddress.getPmAddressId());
 					AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
 					checkDelAddr = resDTO.getCheckDelAddr();
-		    		if(checkDelAddr.doubleValue()==0){
+		    		if(checkDelAddr==0){
 		    			throw new EpException(MessageConst.ERROR_740068);
 		    		}					
 				}
