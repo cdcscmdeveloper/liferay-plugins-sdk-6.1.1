@@ -702,7 +702,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		}else if(docType.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE)){
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
 			reqDTO.setPaymentAdviseId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = paymentSO.retrievePaymentAdviseByPaymentId(reqDTO);
+			FulfilmentResDTO resDTO = paymentSO.retrievePaymentAdviseView(reqDTO);//28857
 			PaymentMatchBackingBean pmBB = new PaymentMatchBackingBean();
 			pmBB.renewSesionObject();
 			pmBB.getManagedBean().setSelectedTabIndex(0);
