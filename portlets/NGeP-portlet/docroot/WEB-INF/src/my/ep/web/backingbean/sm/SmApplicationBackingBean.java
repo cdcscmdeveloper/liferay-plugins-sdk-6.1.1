@@ -5248,12 +5248,19 @@ public class SmApplicationBackingBean extends
 	private void deleteCatCodes(List<SmSupplierCategory> categories) {
 		for (SmSupplierCategory category : categories) {
 			if (category.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0
+				//#29541 --START
+					&& getManagedBean().isSupplierUser()) {
+				//#29541 --END
 				getManagedBean().getSmAppl().getSmSupplierCategories()
 						.remove(category);
-			} else if (category.getRecordStatusFlg().compareTo(
+			} else if (category.getRecordStatusFlg().compareTo(        
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
-					|| category.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL) {
+					|| category.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+				//#29541 --START
+					|| (category.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0)
+					&& !getManagedBean().isSupplierUser()) {
+				//#29541 --END
 				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
 			}
 		}
@@ -5266,6 +5273,7 @@ public class SmApplicationBackingBean extends
 	 * SmSupplierCategory list of the application.
 	 */
 	public void deleteSelectedPendingApprovalCategoryCodes() {
+		log.info("Start deleteSelectedPendingApprovalCategoryCodes");
 		if (getManagedBean().getDeleteNewApplCategoryList() != null
 				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
 
@@ -9946,6 +9954,7 @@ public class SmApplicationBackingBean extends
 			}
 		} catch (IllegalAccessException | InvocationTargetException
 				| NoSuchMethodException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -13997,7 +14006,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
    }
-	
+    
 	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl) {
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
