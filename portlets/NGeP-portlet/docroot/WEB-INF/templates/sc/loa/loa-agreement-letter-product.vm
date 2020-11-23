@@ -352,7 +352,7 @@ u {
 					</p>
 					
 					<p>
-						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak melebihi nilai ambang dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.2. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong.</span>
+						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak melebihi nilai ambang dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong.</span>
 					</p>
 					
 				#if ($isSL1M == "true")
@@ -693,7 +693,7 @@ u {
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
-						class="text_family">4.2 Peruntukan CJCP (sekiranya
+						class="text_family">4.2 Peruntukan Cukai Jualan (sekiranya
 							berkaitan) </span></td>
 					<td>:</td>
 					<td>RM $sstAmt</td>
@@ -750,7 +750,7 @@ u {
 				</tr>
 				<tr>
 					<td align="left" style="padding-left: 8px;" colspan="3"><span
-						class="text_family_red">*Spesifikasi/Skop Perkhidmatan/SLA yang
+						class="text_family_red">*Spesifikasi Pembekalan yang
 							ditetapkan seperti di <b><i>Lampiran A3</i></b>
 					</span></td>
 				</tr>
@@ -825,7 +825,7 @@ u {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">8.2	 Tempoh Perlindungan (Protection period)</span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">Sepanjang tempoh kontrak</td>
+					<td class="text_family_red">Meliputi tempoh kontrak</td>
 				</tr>
 						
 
@@ -841,7 +841,16 @@ u {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">9.1 Formula </span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">......................................</td>
+					<td class="text_family_red">
+					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+					      <tr> 
+					         <td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi.</span></td>
+					      </tr>
+					      <tr> 
+					         <td class="text_family_red">......................................</td>
+					      </tr>
+					    </table>
+					</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -849,7 +858,7 @@ u {
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">RM .................................</td>
 				</tr>
-				
+			 #if ($isSL1M == "true")
 				<tr>
 					<td colspan="3"><span class="text_header_submenu_red"> 10.
 							*<i>Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) (jika berkaitan)</i></span><br/>
@@ -899,7 +908,7 @@ u {
 					</td>		
 					
 				</tr>
-				
+			  #end	
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
