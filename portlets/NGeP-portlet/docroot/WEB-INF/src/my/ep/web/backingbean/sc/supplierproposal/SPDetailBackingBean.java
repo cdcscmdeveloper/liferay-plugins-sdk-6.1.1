@@ -5486,17 +5486,19 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	 * @return
 	 */
 	public boolean checkDisciplinaryActionForQTCat() {
-		if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-			if (null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
-				// #28338 - Start.
-				List<SmDisciplinaryAction> resultList = null;
-				SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-				supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
-				SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-				
-				if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
-					resultList = dataRes.getSmDisciplinaryActions();
-					List<String> catCodeList = null;
+		//#27233#note-36 for #26247 -start-
+		log.debug("Entered inside " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
+		if (null != this.getManagedBean().getQt()) {
+			if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
+				log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for QT No. : " + this.getManagedBean().getQt().getQtNo());
+				if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
+						&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
+					log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for Supplier ID : " + getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
+					// #28338 - Start.
+					List<SmDisciplinaryAction> resultList = null;
+					SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+					supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
+					SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
 					
 					for(SmDisciplinaryAction disciplinaryAction: resultList){
 						if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
@@ -5562,6 +5564,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		} else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
 			return true;
 		}
+		log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
+		//#27233#note-36 for #26247 -end-
+		
 		return false;
 	}
 	
