@@ -2916,7 +2916,7 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_IN.value(),
 						paramcodes));
 				
-				/*searchBean.getDataFilterBeans().add(
+				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						true));
@@ -2930,7 +2930,7 @@ public class TaskReassignmentBackingBean extends
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						1000904L,
-						SearchCondition.CONDITION_OR.value()));*/
+						SearchCondition.CONDITION_OR.value()));
 			}
 
 			break;
