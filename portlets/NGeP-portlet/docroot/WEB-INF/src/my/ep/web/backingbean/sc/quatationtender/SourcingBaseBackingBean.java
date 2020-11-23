@@ -5065,26 +5065,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ICommitteSO.class);
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(scQt.getQtId());
-		CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
-		if (resDTO.getFinalizationSecratry() != null) {
-			for (PmParameter p : resDTO.getFinalizationSecratry()) {
-				if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-						|| p.getParameterCode().equalsIgnoreCase(
-								ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					isSbhOrSrwk = true;
+		if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_APPROVAL)) {
+			CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
+			if (resDTO.getFinalizationSecratry() != null) {
+				for (PmParameter p : resDTO.getFinalizationSecratry()) {
+					if (p.getParameterCode().equalsIgnoreCase(
+							ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
+							|| p.getParameterCode().equalsIgnoreCase(
+									ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
+						isSbhOrSrwk = true;
+					}
 				}
-			}
 
-			if (scQt.getContractType() == null) {
-				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-				qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-				ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
-			} else {
-				ctType = scQt.getContractType().getParameterId();
-			}
+				if (scQt.getContractType() == null) {
+					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+					qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+					ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
+				} else {
+					ctType = scQt.getContractType().getParameterId();
+				}
 
-			if (scQt.getPmOrgProfile().getBpk() && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-				return isBpkCentralContract = true;
+				if (scQt.getPmOrgProfile().getBpk() && ctType.equals(SourcingConstants.CENTRAL_CONTRACT)
+						&& !isSbhOrSrwk) {
+					return isBpkCentralContract = true;
+				}
 			}
 		}
 		return isBpkCentralContract;
