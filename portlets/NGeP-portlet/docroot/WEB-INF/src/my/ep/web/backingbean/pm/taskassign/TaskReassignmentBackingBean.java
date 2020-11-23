@@ -34,9 +34,6 @@ import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.access.application.IAccessApplSO;
-/* 27827 - START */
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-/* 27827 - END */
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
@@ -64,9 +61,6 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.access.application.AccessApplReqDTO;
 import my.ep.dto.pm.access.application.AccessApplResDTO;
-/* 27827 - START */
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-/* 27827 - END */
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -90,9 +84,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
-/* 27827 - START */
-import my.ep.type.aut.SearchCondition;
-/* 27827 - END */
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -1126,11 +1117,9 @@ public class TaskReassignmentBackingBean extends
 				if (loginId == null) {
 					if (getManagedBean().getResultUser() != null) {
 						loginId = getManagedBean().getResultUser().getLoginId();
-						log.info("#27827 loginId null recheck back : " + loginId);
 					}
 				} 
 				if (loginId != null && loginId.length() > 0) {
-					log.info("#27827 loginId not null : " + loginId);
 					if (statusIds != null && !statusIds.isEmpty()) {
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 								.getServiceObject(IBpmSO.class);
@@ -1213,8 +1202,6 @@ public class TaskReassignmentBackingBean extends
 			} finally {
 				bpmSO = null;
 			}
-
-			log.info("#27827 resultBean record getWorklistItems : " + resultBean.getTotalRecord());
 			return resultBean;
 		}
 
@@ -1732,7 +1719,6 @@ public class TaskReassignmentBackingBean extends
 		} catch (Exception e) {
 			throw e;
 		}
-		log.info("#27827 availableUser : " + this.getManagedBean().getAvailableUsers());
 		log.info("redirectToTaskReassign - End");
 		RequestContext.getCurrentInstance()
 				.execute("dlTaskReassignment.show()");
@@ -1850,7 +1836,6 @@ public class TaskReassignmentBackingBean extends
 				vo.setDocType(resDTO.getDocType());
 				vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setRoleList(StringUtils.isNotBlank(resDTO.getRoleCode()) ? new ArrayList<String>(Arrays.asList(resDTO.getRoleCode())) : new ArrayList<String>());
-				log.info("#27827 : retrieveSourcingTaskReassignmentDetail roleList : " + vo.getRoleList());
 				vo.setUserGroupId(resDTO.getUserGroupId());
 				
 			}
@@ -2117,7 +2102,6 @@ public class TaskReassignmentBackingBean extends
 			statusSO = null;
 		}
 		statusRoles.add(RoleCode.BPK_ADMIN.value()); // # 10927
-		log.info("#27827 retrieveAvailableRoles statusRoles : " + statusRoles);
 		return statusRoles;
 	}
 
@@ -2419,7 +2403,6 @@ public class TaskReassignmentBackingBean extends
 				log.info("[#25018] isBulkReassign? " + getManagedBean().isBulkReassign());
 				//[#25018]
 				if(getManagedBean().isSingleReassign()){
-					log.info("#27827 if isBulkReassign false");
 				//WorklistItemVO task = getManagedBean().getSelectedTask();
 					tasks.add(getManagedBean().getSelectedTask());
 					getManagedBean().setTasksReassignmentVO(null); //[#25018] newly added
@@ -2510,7 +2493,7 @@ public class TaskReassignmentBackingBean extends
 										}
 									}
 								}else{
-									log.info("[#25018] #27827 generateUserResultBean for reassignType else :" + reassignType);
+									log.info("[#25018] generateUserResultBean for reassignType:" + reassignType);
 									resultBean = generateUserResultBean(searchBean, task,reassignType,roleList,vo);
 								}
 								
@@ -2551,7 +2534,6 @@ public class TaskReassignmentBackingBean extends
 								    //[#22117]
 								    //remove from list if login user has role BPK administrator
 								    if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
-								    	log.info("#27827 effect x?");
 								    	log.info("[#22117] BPK admin login id: " + getFacesScopes().getUserSessionBean().getLoginId());
 								    	if(users.containsKey(getFacesScopes().getUserSessionBean().getLoginId())) {
 								    		users.remove(getFacesScopes().getUserSessionBean().getLoginId());
@@ -2884,7 +2866,7 @@ public class TaskReassignmentBackingBean extends
 			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
 				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
-				log.info("----- in 3 role -----");
+				log.info("----- User PTJ, JABATAN OR MINISTRY -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
 						SearchOperator.OPERATOR_EQUALS.value(),
@@ -2900,13 +2882,13 @@ public class TaskReassignmentBackingBean extends
 						SearchOperator.OPERATOR_EQUALS.value(),
 						1L));
 			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
-				log.info("----- in 1 role -----");
+				log.info("----- User BPK -----");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						orgProfileId));
 			} else {
-				log.info("----- in else role -----");
+				log.info("----- User EPADMIN, EPADMIN2 -----");
 				List<String> paramcodes=new ArrayList<String>();
 				paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
 				paramcodes.add(ParameterConst.ORG_TYPE_BPK);
@@ -2915,22 +2897,6 @@ public class TaskReassignmentBackingBean extends
 						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
 						SearchOperator.OPERATOR_IN.value(),
 						paramcodes));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						true));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmZone.zoneId",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						1L));
-						
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						1000904L,
-						SearchCondition.CONDITION_OR.value()));
 			}
 
 			break;
@@ -3023,12 +2989,6 @@ public class TaskReassignmentBackingBean extends
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 			
 			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
-			
-			/* 27827 - START */
-			log.info("#27827 resultBean : " + resultBean);
-			log.info("#27827 resultBean.getResultList() : " + resultBean.getResultList());
-			log.info("#27827 resultBean.getTotalRecord() :  " + resultBean.getTotalRecord());
-			/* 27827 - END */
 		}
 		log.info("isSearched:: "+isSearched);
 		return resultBean;
@@ -3897,22 +3857,5 @@ public class TaskReassignmentBackingBean extends
 		}		
 		return isBpkAdmin;			
 	}
-	
-	/* 27827 - START */
-	public Long getMinistryByOrgProfileId(Long orgProfileId) {
-		Long orgCode = 0L;
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		reqDTO.setOrgProfileId(orgProfileId);
-		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
-		if (orgProfile != null) {
-			orgCode = orgProfile.getOrgProfileId();
-		} else {
-			log.info("Ministry not found : " + orgProfileId);
-			orgCode = 0L;
-		}
-		return orgCode;
-	}
-	/* 27827 - END */
 	
 }
