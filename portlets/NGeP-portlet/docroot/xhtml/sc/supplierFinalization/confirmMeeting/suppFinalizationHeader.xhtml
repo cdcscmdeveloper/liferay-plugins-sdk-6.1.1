@@ -17,10 +17,12 @@
 					<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
 				</td>
 				<td style="width:27%;" class="header-info-text">
+				<!-- #28780 start -->
 					<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,scQt,true)}">
-				<h:outputText value="#{scQt.qtNo}" escape="false" />
+						action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+						<h:outputText value="#{scQt.qtNo}" escape="false" />
 					</p:commandLink>
+				<!-- #28780 end -->
 				</td>
 				<td style="width:5%;">
 					<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
