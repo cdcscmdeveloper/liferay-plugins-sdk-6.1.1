@@ -705,7 +705,11 @@ public class CommitteBackingBean extends
 		    resDTO = committeSo.validateFcCommitteDetails(committeReqDTO);
 			resDTO = committeSo.updateCommitteDetails(committeReqDTO);
 			if (resDTO.isSuccessful()) {
-
+				//201123@asyrafhaziq_29316 - Start 
+				if (CollectionUtils.isNotEmpty(committeReqDTO.getToBeDeletedMembers())){
+					getManagedBean().setToBeDelCommitteMemebers(null);
+				}
+				//201123@asyrafhaziq_29316 - End
 				if (StringUtils.isNotBlank(outCome)) {
 					FacesContext
 							.getCurrentInstance()
@@ -1564,6 +1568,9 @@ public class CommitteBackingBean extends
 		if(CollectionUtils.isNotEmpty(deleteList)){
 			committeeMemberList.removeAll(deleteList);
 		}
+		//201123@asyrafhaziq_29316 - Start
+		this.getManagedBean().setCommitteMembers(committeeMemberList);
+		//201123@asyrafhaziq_29316 - End
 		this.getManagedBean().setSelectedCommitteMemebers(null);
 		
 		toBeDelCommitteMemebers.addAll(deleteList);
