@@ -335,7 +335,7 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
-		String reportName = getTrackingDiaryReportName(docType,docId);
+		String reportName = getTrackingDiaryReportName(docType);
 		if(docType !=null && docId !=null & reportName!=null) {
 			try {
 				generateReport(reportName, paramMap);
@@ -836,7 +836,7 @@ public class PmTrackingDiaryBackingBean extends
 	 * @param docType , document type
 	 * @return Tracking diary report name
 	 */
-	private String getTrackingDiaryReportName(String docType, String docId){
+	public String getTrackingDiaryReportName(String docType){
 		String reportName = null;
 		List<String> flDocTypeList = Arrays.asList(
 				ParameterConst.DOCTYPE_CONTRACT_ORDER,ParameterConst.DOCTYPE_CONTRACT_REQUEST,ParameterConst.DOCTYPE_DELIVERY_ORDER,
@@ -846,49 +846,17 @@ public class PmTrackingDiaryBackingBean extends
 		
 		List<String> dpDocTypeList = Arrays.asList(
 				ParameterConst.DOCTYPE_SIMPLE_QUOTE,ParameterConst.DOCTYPE_REQUEST_NOTE,ParameterConst.DOCTYPE_PURCHASE_INQUIRY,
-				ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
+				ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 		
-		List<String> qtDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_QUOTATION,ParameterConst.DOCTYPE_BIDDING,
-				ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+		List<String> qtDocTypeList = Arrays.asList("QT","LI","BD");
 		List<String> contractDocTypeList = Arrays.asList("MC","CC");
 		List<String> ppDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_PLAN_PROCUREMENT,ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 		List<String> circularDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR,ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-		List<String> pmDocTypeList = Arrays.asList(ParameterConst.DOCTYPE_COMPANY_PROFILE, ParameterConst.DOCTYPE_MARKET_RESEARCH);
 		
 		if(flDocTypeList.contains(docType)){//Fulfilment
 			reportName = ReportConst.FL_TRACKING_DIARY;
-		}else if(contractDocTypeList.contains(docType)){//Contract 
-			reportName = ReportConst.CT_TRACKING_DIARY;
-		}else if(circularDocTypeList.contains(docType)){//Circular Search
-			reportName = ReportConst.CT_CIRCULAR_TRACKING_DIARY;
-		}else if(dpDocTypeList.contains(docType)){//Direct Purchase
-			reportName = ReportConst.DP_TRACKING_DIARY;
-		}else if(qtDocTypeList.contains(docType)){//Quotation/Tender
-			reportName = ReportConst.QT_TRACKING_DIARY;
-		}else if(ppDocTypeList.contains(docType)){//Procurement Plan
-			reportName = ReportConst.PP_TRACKING_DIARY;
-		}else if(pmDocTypeList.contains(docType)){//Profile Management
-			reportName = ReportConst.PM_TRACKING_DIARY;
-		}else if(ParameterConst.DOCTYPE_SUPPLIER_APPLICATION.equalsIgnoreCase(docType)){//Supplier Application
-			reportName = ReportConst.SM_APPL_TRACKING_DIARY;
-		}else if("CD".equalsIgnoreCase(docType)){//Codification
-			reportName = ReportConst.CD_TRACKING_DIARY;
-		}else if("CM".equalsIgnoreCase(docType)){//Catalogue
-			reportName = ReportConst.CM_TRACKING_DIARY;
-		}else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)){//LOA
-			log.info("INSIDE DOC TYPE = LA ");
-			ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
-			try{
-				String docTypeSourcingForLOA = trackingDiarySO.getTrackingDiaryDocTypeSourcingForLOAByDocId(Long.valueOf(docId));
-				log.info("docTypeSourcingForLOA == >> "+docTypeSourcingForLOA);
-				if("PR".equalsIgnoreCase(docTypeSourcingForLOA)){
-					reportName = ReportConst.DP_TRACKING_DIARY;
-				}else{//QT or NG(Direct LOA)
-					reportName = ReportConst.QT_TRACKING_DIARY;
-				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+		}else{
+			reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 		}
 		
 		return reportName;
