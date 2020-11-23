@@ -251,30 +251,40 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 
 		boolean ctWorkflowStatusMatch = false;
-		if (ctWorkflowStatus != null) {
-			if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
-				if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-					ctWorkflowStatusMatch = true;
+		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
+		//start
+		if(!getManagedBean().isViewContract()){
+		//Bug #29446
+			if (ctWorkflowStatus != null) {
+				if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
+					if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+						ctWorkflowStatusMatch = true;
+					}
 				}
+			} else { // both also null
+				ctWorkflowStatusMatch = true;
 			}
-		} else { // both also null
-			ctWorkflowStatusMatch = true;
-		}
-
-		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			PmUser pmUser = facesScopes.getUserSessionBean();
-			remark.setCreatedBy(pmUser.getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(pmUser);
+	
+			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				PmUser pmUser = facesScopes.getUserSessionBean();
+				remark.setCreatedBy(pmUser.getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(pmUser);
+				getManagedBean().setRemarkList(remarkList);
+				getManagedBean().getRemarkList().add(0, remark);
+			} else {
+				getManagedBean().setRemarkList(remarkList);
+			}
+			getManagedBean().setAttachmentList(attachmentList);
+		//Bug #29446
+		} else if (getManagedBean().isViewContract()){
 			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().getRemarkList().add(0, remark);
-		} else {
-			getManagedBean().setRemarkList(remarkList);
+			getManagedBean().setAttachmentList(attachmentList);
 		}
-		getManagedBean().setAttachmentList(attachmentList);
+		//Bug #29446 - end
 	}	
 	
 	
@@ -3331,6 +3341,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		// Start - 28292
+			//#28479 - Start Putra
 //		CommonUtils commonUtils = new CommonUtils();
 //		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
 //				.getScRequestItem().getUom().getUomCode());
@@ -3367,19 +3378,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 				   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-								
-				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-					Double maxValue = new Double(0);							
-					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-							maxValue = maxQty.getMaxQuantity().doubleValue();				
-					}
-					if (item.getMinimumOrderQty() > maxValue) {
-						throw new EpException(MessageConst.ERROR_100034,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-						}
-					}
+				   break;
+				   //#28479 - Start remove Code (related to #28292)
+//				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
+//					Double maxValue = new Double(0);							
+//					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+//						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+//							maxValue = maxQty.getMaxQuantity().doubleValue();				
+//					}
+//					if (item.getMinimumOrderQty() > maxValue) {
+//						throw new EpException(MessageConst.ERROR_100034,
+//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
+//						}
+//					}
+				 //#28479 - End remove Code (related to #28292)
 				}//#28479 - End Putra
 			}
 		}
@@ -3418,7 +3431,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //		
 //		contractItemSO.updateItemSearchService(reqDTO);
 //Bug #28356 - End		
-		
+			//#28479 - End Putra		
 		
 	}
 
