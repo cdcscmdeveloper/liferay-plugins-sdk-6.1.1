@@ -83,10 +83,10 @@
 							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}" />
 						<!-- bug #28278 -START -->
 						<h:outputText
-							value="#{lbl['lbl.sm.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"
+							value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'C'}" />
 						<h:outputText
-							value="#{lbl['lbl.sm.status.deleted1']} #{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"
+							value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'B'}" />
 						<h:outputText
 							value="#{lbl['lbl.sm.status.deleted']}"
