@@ -11086,8 +11086,8 @@ public class SmApplicationUtil {
 	 */
 	public static void assignSelShareHolderAddress(SmPersonnel shareHolderBean,
 			SmApplicationManagedBean bean) {
-		//#13320 - view only
-		if ((isPersonnelViewOnly(shareHolderBean) || bean.isDisAllowOwnerEdit())
+		//#13320 - view only && #29086
+		if (isPersonnelViewOnly(shareHolderBean) || bean.isDisAllowOwnerEdit()
 				&& shareHolderBean.getPersonnelId() != null) {
 			if (shareHolderBean.getSmPersonnelAddresses() != null
 					&& shareHolderBean.getSmPersonnelAddresses().size() > 0) {
@@ -11804,7 +11804,8 @@ public class SmApplicationUtil {
 		// to determine whether shareholder for viewonly or edit
 		bean.setShowPersonnelViewOnly(SmApplicationUtil
 				.isPersonnelViewOnly(shareHolderBean));
-		if (bean.isShowPersonnelViewOnly()) {
+		//#29086
+		if (bean.isShowPersonnelViewOnly()|| bean.isDisAllowOwnerEdit()) {
 			bean.setSelectedShareholderIdentificationType(SmCommonUtil
 					.getParamDescriptionByLanguageAndPmParameter(bean
 							.getSelectedShareHolder().getIdentificationType()));
