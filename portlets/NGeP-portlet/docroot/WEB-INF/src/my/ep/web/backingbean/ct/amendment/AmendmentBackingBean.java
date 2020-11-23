@@ -1247,7 +1247,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			//#29403 start
-			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {
+			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	
 				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
@@ -1834,12 +1835,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems() != null) {
 				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
 					// Validation for minimum order quantity
-					if (item.getMinimumOrderQty() <= 0) {
-						item.setMinimumOrderQty(1);
-						setTabValue("IT");
-						throw new EpException(MessageConst.ERROR_100033,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					//#28479 - Start Putra
+//					if (item.getMinimumOrderQty() <= 0) {
+//						item.setMinimumOrderQty(1);
+//						setTabValue("IT");
+//						throw new EpException(MessageConst.ERROR_100033,
+//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//					}
+					if (!item.getCtItemMaxQties().isEmpty()) {
+						Double maxValue = new Double(0);							
+						for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+							if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+								maxValue = maxQty.getMaxQuantity().doubleValue();	
+
+						}
+						log.info(item.getMinimumOrderQty() > maxValue);
+						if (item.getMinimumOrderQty() > maxValue) {
+							throw new EpException(MessageConst.ERROR_100034,
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});					
+						}
+						//#28479 - End Putra
 					}
 					// Validation for ceiling quantity
 					double totalCeilingQuantity = 0.0;
@@ -6773,42 +6790,68 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		public List<CtCommitteeMember> getFilteredCommitteeMembers() {
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
-			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-				for(CtCommitteeMember member: getManagedBean().getUpdatedCommitteeMembers()) {
-					if(member.getUpdateType() == null || (member.getUpdateType() != null 
-							&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()) 
-							&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()))) {
-						filteredCommitteeMembers.add(member);
+			//#29403 start
+			if (ctBackingBean.getManagedBean().getContractVer() != null) {
+				if (ctBackingBean.getManagedBean().getContractVer().getStatus() != null) {
+					if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() != null) { 
+						if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+							for (CtCommitteeMember member : getManagedBean().getUpdatedCommitteeMembers()) {
+								if (member.getUpdateType() == null
+										|| (member.getUpdateType() != null
+												&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()) 
+												&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()))) {
+									filteredCommitteeMembers.add(member);
+								}
+							}
+						} else {
+							for (CtCommitteeMember member : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+								if (!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+									filteredCommitteeMembers.add(member);
+								}
+							}
+						}
 					}
 				}
-			} else {
-				for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-					if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {							
-						filteredCommitteeMembers.add(member);
-					}
-				}
-			}
-			
+			} //#29403 end
 			return filteredCommitteeMembers;
 		}
 		
 		public List<CtCommitteeMember> getFilteredOriginalCommitteeMembers() {
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
-			for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-				if(member.getUpdateType() == null || ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
-					filteredCommitteeMembers.add(member);
+			//#29403 start
+			if(ctBackingBean.getManagedBean().getContractVer() != null){
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null){
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
+						for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+							if(member.getUpdateType() == null || ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+								filteredCommitteeMembers.add(member);
+							}
+						}
+					}
 				}
 			}
+			
+			//#29403 end
+			
 			return filteredCommitteeMembers;
 		}
 		
 		public List<CtCommitteeMember> getFilteredSignedCommitteeMembers() {
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
-			for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-				if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
-					filteredCommitteeMembers.add(member);
+			//#29403 start
+			if(ctBackingBean.getManagedBean().getContractVer()!=null){
+				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()!=null){
+					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
+						for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+							if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+								filteredCommitteeMembers.add(member);
+							}
+						}
+					}
 				}
 			}
+			//#29403 end
+			
 			return filteredCommitteeMembers;
 		}
 		//26753 - end
