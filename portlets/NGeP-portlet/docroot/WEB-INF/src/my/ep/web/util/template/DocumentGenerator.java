@@ -374,10 +374,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 
 		// #26770 - Start.
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+		t1.setValue("Tandatangan & Cop (Kerajaan)  : _____________");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : _____________");
 		Text t3 = factory.createText();
 		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak ini");
 		Text t4 = factory.createText();

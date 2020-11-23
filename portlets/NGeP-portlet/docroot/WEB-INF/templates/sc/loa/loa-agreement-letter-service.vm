@@ -654,7 +654,7 @@ u {
 
 				<tr>
 					<td colspan="3"><span class="text_header_submenu"> 3.
-					Pendaftaran Cukai Jualan dengan Jabatan	Kastam Diraja Malaysia (Jika berdaftar, sekiranya berkaitan)</span></td>
+					Pendaftaran Cukai Perkhidmatan dengan Jabatan	Kastam Diraja Malaysia (Jika berdaftar, sekiranya berkaitan)</span></td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -683,7 +683,7 @@ u {
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
-						class="text_family">4.2 Peruntukan CJCP (sekiranya
+						class="text_family">4.2 Peruntukan Cukai Perkhidmatan (sekiranya
 							berkaitan) </span></td>
 					<td>:</td>
 					<td>RM $sstAmt</td>
@@ -722,7 +722,7 @@ u {
 
 				<tr>
 					<td colspan="3"><span class="text_header_submenu_red"> 5.
-							Tempoh dan Jadual Penyempurnaan Perkhidmatan/Pembekalan Barang</span></td>
+							Tempoh dan Jadual Penyempurnaan Perkhidmatan</span></td>
 				</tr>
 				<tr>
 					<td align="left" style="padding-left: 8px;" colspan="3"><span
@@ -737,7 +737,7 @@ u {
 
 				<tr>
 					<td colspan="3"><span class="text_header_submenu_red"> 6.
-							Spesifikasi/Skop Perkhidmatan/Service Level Agreement (SLA)
+							Skop Perkhidmatan/Service Level Agreement (SLA)
 							(sekiranya berkaitan)</span></td>
 				</tr>
 				<tr>
@@ -815,9 +815,9 @@ u {
 				</tr>
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
-						class="text_family_red">8.2	 Tempoh Perlindungan (Protection period)</span></td>
+						class="text_family_red">8.2	 Tempoh Perlindungan</span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">Sepanjang tempoh kontrak  (during contract period)</td>
+					<td class="text_family_red">Meliputi tempoh kontrak</td>
 				</tr>
 						
 
@@ -833,7 +833,16 @@ u {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">9.1 Formula </span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara jelas kepada syarikat dalam dokumen pelawaan</td>
+					<td class="text_family_red">
+					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+					      <tr> 
+					         <td class="text_family_red"><span class="text_family_small">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara jelas kepada syarikat dalam dokumen pelawaan</span></td>
+					      </tr>
+					      <tr> 
+					         <td class="text_family_red">......................................</td>
+					      </tr>
+					    </table>
+					</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -841,7 +850,7 @@ u {
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">RM .................................</td>
 				</tr>
-				
+			#if ($isSL1M == "true")
 				<tr>
 					<td colspan="3"><span class="text_header_submenu_red"> 10.
 							*<i>Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) (jika berkaitan)</i></span><br/>
@@ -890,7 +899,7 @@ u {
 					</table>
 					</td>
 				</tr>
-				
+			 #end	
 				<tr>
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
