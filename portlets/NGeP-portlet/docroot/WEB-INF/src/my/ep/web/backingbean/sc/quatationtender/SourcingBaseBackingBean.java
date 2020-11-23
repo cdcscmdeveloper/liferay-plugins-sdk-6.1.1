@@ -5075,8 +5075,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 
 			if (scQt.getPmOrgProfile().getBpk()
-					&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
-					&& !isSbhOrSrwk) {
+					&&  scQt.getContractType() != null && scQt.getContractType().getParameterId() != null && 
+					scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
 				return isBpkCentralContract = true;
 			}
 		}
