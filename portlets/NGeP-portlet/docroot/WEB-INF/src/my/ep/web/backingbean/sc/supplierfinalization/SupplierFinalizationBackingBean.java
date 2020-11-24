@@ -670,14 +670,6 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 		scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
-		
-		if(isBpkCentralContract){
-			if(scQtFinalization.getDecision().getParameterCode().equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
-				this.getManagedBean().getScQtFinalization().getDecision().setParameterCode(ParameterConst.DECISION_CANCEL);
-			}
-		}
 	}
 	
 	// #18685 - Start
