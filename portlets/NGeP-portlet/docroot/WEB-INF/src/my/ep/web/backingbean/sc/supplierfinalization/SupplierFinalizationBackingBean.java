@@ -675,7 +675,7 @@ public class SupplierFinalizationBackingBean extends
 		
 		if(isBpkCentralContract){
 			if(scQtFinalization.getDecision().getParameterCode().equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
-				this.getManagedBean().getScQtFinalization().getDecision().setParameterCode(null);
+				this.getManagedBean().getScQtFinalization().getDecision().setParameterCode(ParameterConst.DECISION_CANCEL);
 			}
 		}
 	}
