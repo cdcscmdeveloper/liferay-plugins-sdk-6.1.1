@@ -156,13 +156,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				// Agency name does not exist for G2G
 				throw new EpException(MessageConst.ERROR_722659);
 			}
-			//#28765 - Start
-			if (getManagedBean().getSmSupplier()!=null && 
-				checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId()) && 
-				getManagedBean().getSmSupplier().getRecordStatusFlg()!=DbValueConst.RECORD_STATUS_ACTIVE) {
-				personnelBypassValidation();
-			}
-			//#28765 - End
 		} else {
 			getManagedBean()
 					.setSmSupplier(
@@ -172,19 +165,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 											reqDTO).getSmSupplier());
 		}
 
-		//#28765
-		if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC) && 
-				getManagedBean().getSmSupplier() != null && 
-				checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null && 
-				checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId()) && 
-				getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-			log.info("BASIC ACCOUNT <<<<<<<<<<<<");
-			personnelBypassValidation();
-		}
-		if(getManagedBean().getSmSupplier()!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF)) {
-			personnelBypassValidation();
-		}
-		//#28765 - End
 		// Company not exist
 		if (getManagedBean().getSmSupplier() == null
 				|| (getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
@@ -201,6 +181,23 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		} else {
 			//#28765 - Start
+			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER) && 
+					getManagedBean().getSmSupplier()!=null && 
+					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId()) && 
+					getManagedBean().getSmSupplier().getRecordStatusFlg()!=DbValueConst.RECORD_STATUS_ACTIVE) {
+					personnelBypassValidation();
+				}
+			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC) && 
+					getManagedBean().getSmSupplier() != null && 
+					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null && 
+					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId()) && 
+					getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+				log.info("BASIC ACCOUNT <<<<<<<<<<<<");
+				personnelBypassValidation();
+			}
+			if(getManagedBean().getSmSupplier()!=null && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF)) {
+				personnelBypassValidation();
+			}
 			if(getManagedBean().isBypassFlag()==false) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null));
