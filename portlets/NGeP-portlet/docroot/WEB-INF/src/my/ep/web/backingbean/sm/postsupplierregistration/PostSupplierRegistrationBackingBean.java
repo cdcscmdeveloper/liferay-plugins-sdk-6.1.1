@@ -1137,8 +1137,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					path = CATALOGUE_UPLOAD_PATH;
 				}
 				getManagedBean().setFlowStatus(1);
-			}
-			if(validSupplierTemp()){
+			}else if(validSupplierTemp()){
 				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
