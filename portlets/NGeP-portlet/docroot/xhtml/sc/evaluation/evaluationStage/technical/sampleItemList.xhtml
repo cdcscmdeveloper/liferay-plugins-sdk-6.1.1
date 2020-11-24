@@ -49,8 +49,7 @@
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
-							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
 							style="text-align:right">
 							<ac:validateNumber
@@ -90,8 +89,7 @@
 									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 									label="#{lbl['lbl.tpl.spec.content.user.score']}"
 									disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-								or evaluationBackingBean.managedBean.itemSampleReq
-								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+								or evaluationBackingBean.managedBean.itemSampleReq}"
 									required="!evaluationBackingBean.managedBean.itemSampleReq"
 									value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
 									maxlength="18" style="text-align:right">
