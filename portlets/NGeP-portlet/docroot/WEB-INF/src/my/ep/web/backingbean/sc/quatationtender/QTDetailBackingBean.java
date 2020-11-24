@@ -3095,38 +3095,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 	}
 	
-//	public boolean isBpkCentralContract(ScQt scQt) {
-//		boolean isBpkCentralContract = false;
-//		boolean isSbhOrSrwk = false;
-//		//String committeType = null;
-//		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//				ICommitteSO.class);
-//		CommitteReqDTO reqDTO = new CommitteReqDTO();
-//		reqDTO.setQtId(scQt.getQtId());
-//		CommitteResDTO resDTO = committeSO.retrieveFinalizationCommitteeType(reqDTO);
-//		for (PmParameter p : resDTO.getFinalizationSecratry()) {
-//			if (p.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-//					|| p.getParameterCode().equalsIgnoreCase(
-//							ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-//				isSbhOrSrwk = true;
-//			}
-//		}
-//		
-//		if (scQt.getPmOrgProfile().getBpk() &&						
-//				scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-//			return isBpkCentralContract = true;
-//		}
-
-//		boolean isSbhOrSrwkPtj = committeSO.isSbhOrSrwkPtj(committeType, scQt.getPmOrgProfile().getOrgProfileId());
-//
-//		if (scQt.getPmOrgProfile().getBpk()
-//				&& scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT)
-//				&& !isSbhOrSrwkPtj) {
-//			return isBpkCentralContract = true;
-//		}
-
-//		return isBpkCentralContract;
-//	}
+	
 
 	/**
 	 * Retrieve finalization committee types.
