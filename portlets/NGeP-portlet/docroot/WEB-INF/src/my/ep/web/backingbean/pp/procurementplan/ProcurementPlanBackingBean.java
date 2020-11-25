@@ -7864,8 +7864,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						numberOfClones.add(expenditureItems.get(i).getExpenditureItemId());
 						clonedEpItems.put(expenditureItems.get(i), expenditureItems.get(i - 1));
 
-						log.info("Original getRemarks = " + expenditureItems.get(i - 1).getExpenditureItemId()
-								+ ", Remarks= " + expenditureItems.get(i - 1).getPpRemarks());
 						if (expenditureItems.get(i - 1).getPpRemarks() != null
 								&& expenditureItems.get(i - 1).getPpRemarks().isEmpty()
 								|| expenditureItems.get(i - 1).getPpRemarks().get(0) == null
@@ -8245,9 +8243,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					int indicatorIndex = 0;
 					for (int i = 0; i < procurementItems.size(); i++) {
 						if (procurementItems.get(i).isClonedItem()) {
-							log.info("Original getUpdateReason = " + procurementItems.get(i - 1).getProcurementItemId()
-									+ ", Reason= "
-									+ procurementItems.get(i - 1).getPpUpdateReasons().get(0).getReasonDesc());
 							if (procurementItems.get(i - 1).getPpUpdateReasons() != null
 									&& procurementItems.get(i - 1).getPpUpdateReasons().isEmpty()
 									|| procurementItems.get(i - 1).getPpUpdateReasons().get(0) == null
