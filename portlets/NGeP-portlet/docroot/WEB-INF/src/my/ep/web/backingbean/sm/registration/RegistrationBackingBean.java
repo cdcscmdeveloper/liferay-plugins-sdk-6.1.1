@@ -467,7 +467,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
 				switch(status){
 					case "L"://27382
-						throw new EpException(MessageConst.ERROR_721078,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
 					case "T":
 					case "B":
 					case "W":
@@ -476,7 +476,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					case "C":
 					case "X":
 					case "Y":
-						//27382
+					//27382 - start
 						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					default:
 						break;
@@ -484,7 +484,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//16052019 - SSM INTEGRATION CR
 			}
 			if(!this.getManagedBean().isCompanyValidWithSSM()){
-				throw new EpException(MessageConst.ERROR_721070);
+				throw new EpException(MessageConst.ERROR_721078);
 			}
 			
 			return ssmAccountCheck;
@@ -2308,7 +2308,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					// maybe here to put method to check with ssm
 					
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
-						throw new EpException(MessageConst.ERROR_721070);
+						throw new EpException(MessageConst.ERROR_721078);
 					}
 				}else{
 					//set pmcountry to temp					
