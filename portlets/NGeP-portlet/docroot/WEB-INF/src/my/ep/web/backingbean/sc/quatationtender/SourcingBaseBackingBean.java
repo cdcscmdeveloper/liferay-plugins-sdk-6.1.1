@@ -56,12 +56,14 @@ import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjSpecialApprovalSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -104,6 +106,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
@@ -5009,6 +5013,53 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return omittedList;
 		}
 		//25037 - End
+		
+		/*
+		 * To check if Application fall under MOF Central Contract flows
+		 * #27502		 
+		 */
+		public boolean isBpkCentralContract(ScQt scQt) {
+			boolean isBpkCentralContract = false;
+			boolean isSbhOrSrwk = false;
+			Long ctType = null;		
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+					&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+					&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_APPROVAL)) {
+				
+					IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+					List<String> stateCodeList = new ArrayList<String>();
+					stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
+					stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
+					stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
+					
+					for(String s:stateCodeList){
+						List<Object[]> pjtcode = addressSO.getSabahOrSrwkPtj(scQt.getOrgProfileId(), s);
+						
+						if(pjtcode != null){
+							isSbhOrSrwk = true;
+							break;
+						}					
+					}		
+					
+					if (scQt.getContractType() == null) {
+						QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+						qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+						ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
+					} else {
+						ctType = scQt.getContractType().getParameterId();
+					}
+
+					if (scQt.getPmOrgProfile().getBpk() && ctType.equals(SourcingConstants.CENTRAL_CONTRACT)
+							&& !isSbhOrSrwk) {
+						return isBpkCentralContract = true;
+					}
+				}
+			
+			return isBpkCentralContract;
+		}
 		
 		// #18685-Start.
         /**

@@ -22,12 +22,9 @@ import javax.faces.context.FacesContext;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
@@ -39,7 +36,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -659,16 +655,19 @@ public class ConsolidationReportBackingBean extends
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
 
 		try {
-			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			//#27502 -- Start
-			ScQt scQt = this.getManagedBean().getScQt();			
+			// #27502 -- Start
+			ScQt scQt = this.getManagedBean().getScQt();
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-			//#27502 -- Start
+
+			boolean isBpkCentralContract = false;
+			isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
+			if (!isBpkCentralContract) {
+				validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
+			}// #27502 -- End
+
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSuppFinalizationSO.class);		
 
 			// BPM Params
 			FacesScopes facesScopes = new FacesScopes();
