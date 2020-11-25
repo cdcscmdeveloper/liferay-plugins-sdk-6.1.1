@@ -570,6 +570,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
+				//#29403 start
+				if (ctBackingBean.getManagedBean().getContractVer()==null 
+						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null){
+					ctReqDTO = new ContractReqDTO();
+					ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
+					ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+					ctReqDTO.setUpdateAction(false);
+					setAmendmentContractVer(ctReqDTO);
+				}
+				//#29403 end
+				
 				ConstructTabSideMenu();
 
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
