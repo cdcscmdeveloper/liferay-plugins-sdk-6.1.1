@@ -1121,13 +1121,12 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		//List<CmSupplierItem> cmSuppItemLs = getCmSupplierItems(supplier.getSupplierId());
 		SmPersonnel currentPersonnel = retrieveCurrentPersonnel();
 		softCertStatus = currentPersonnel.getSoftcertFlg();
-		log.info("supplier.getBusinessType()>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+supplier.getBusinessType());
 		boolean isG2G = supplier.getBusinessType().
 				equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER) ? true : false;
 		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
 		log.info("isWithFederal --> " + isWithFederal );
 		log.info("softCertStatus --> " + softCertStatus );
-		
+		//Start 26288 - DA - 29602
 		if(!isWithFederal && !isG2G && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL.equalsIgnoreCase(supplier.getBusinessType())){ //assumption non-federal has no published catalog
 			log.info("this is basic not g2g");
 			if(!isPublishedCatalogue(supplier.getSupplierId())){
@@ -1140,7 +1139,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			}else if(validSupplierTemp()){
 				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
-					//changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
+					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 				}				
 			}
 		//26238 - Basic account skip upload catalogue
@@ -1170,6 +1169,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				
 				getManagedBean().setFlowStatus(2);
 			}
+			//End 26288 - DA - 29602
 			log.info("softCertStatus---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+softCertStatus);
 			if(validSupplierTemp() && softCertStatus == SupplierManagementConst.SOFT_CERT_ISSUED){
 				log.info(">>>CHange ROle for SUpplier Temp<<");
