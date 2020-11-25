@@ -964,7 +964,7 @@ public class EvaluationBackingBean extends
 			SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
 			detailBackingBean.getManagedBean().setQt(
 					this.getManagedBean().getScQt());
-			retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
+			detailBackingBean.getManagedBean().setReadOnly(true);
 			
 			if (proposalCheckList.getScQtCheckList().getTitle()
 					.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
