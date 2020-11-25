@@ -659,13 +659,8 @@ public class ConsolidationReportBackingBean extends
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
 
 		try {
-			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			//#27502 -- Start
-			ScQt scQt = this.getManagedBean().getScQt();			
+			// #27502 -- Start
+			ScQt scQt = this.getManagedBean().getScQt();
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
