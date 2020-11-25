@@ -664,20 +664,8 @@ public class SupplierFinalizationBackingBean extends
 		}	
 		// #25638 - Start
 		displayReviseInstrn(getManagedBean().getCommitteeList());
-		// #25638 - End
+		// #25638 - End		
 		
-		// #27502 - Start
-		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
-		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
-		scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
-		
-		if(isBpkCentralContract){
-			if(scQtFinalization.getDecision().getParameterCode().equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
-				this.getManagedBean().getScQtFinalization().getDecision().setParameterCode(ParameterConst.DECISION_CANCEL);
-			}
-		}
 	}
 	
 	// #18685 - Start
@@ -2359,14 +2347,6 @@ public class SupplierFinalizationBackingBean extends
 		EpException epException = null;
 		
 		 // #27502
-		if(decisionTypeCode == null){
-			throw new EpException(MessageConst.ERROR_770086,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.sc.sf.meeting.decision",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-		}
-		
 		if(this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
 			throw new EpException(MessageConst.ERROR_760329);
 		}
@@ -5398,6 +5378,8 @@ public class SupplierFinalizationBackingBean extends
           //menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
           menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (5)) + "}]); ");
           mainMenuModel.addMenuItem(menuItem);
+          
+          navigateToSupplierFinalizationTab();
 
           // #27502 -- End
 
