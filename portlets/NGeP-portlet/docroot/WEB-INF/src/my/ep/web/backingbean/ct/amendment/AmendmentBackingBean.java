@@ -574,7 +574,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (ctBackingBean.getManagedBean().getContractVer()==null 
 						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null){
 					ctReqDTO = new ContractReqDTO();
-					ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
+					ctReqDTO.setContractVerId(Long.parseLong(getManagedBean().getContractId()));
 					ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 					ctReqDTO.setUpdateAction(false);
 					setAmendmentContractVer(ctReqDTO);
