@@ -6493,7 +6493,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		//26753 - start
 		public void updateCommittee() {
-			getManagedBean().setUpdateCommittee(Boolean.TRUE);
+			//#29403 start
+			if(ctBackingBean.getManagedBean().getContractVer()!=null ){
+				getManagedBean().setUpdateCommittee(Boolean.TRUE);
+			}
+			//#29403 end
 		}
 		
 		//#29403 start
