@@ -573,8 +573,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//#29403 start
 				if (ctBackingBean.getManagedBean().getContractVer()==null 
 						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null){
+					log.info("Check hafiz Amendment preRenderView taskid null and ctbackingBean null");
 					ctReqDTO = new ContractReqDTO();
-					ctReqDTO.setContractVerId(Long.parseLong(getManagedBean().getContractId()));
+					ctReqDTO.setContractVerId(getManagedBean().getContractVerId());
 					ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 					ctReqDTO.setUpdateAction(false);
 					setAmendmentContractVer(ctReqDTO);
@@ -1264,7 +1265,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			//#29403 start
+			
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			getManagedBean().setContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+			log.info("Check hafiz gotoAmendPage setAmendmentContractVer >>>" +getManagedBean().getContractVerId());
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	
 			
 				ContractReqDTO ctReqDTO = new ContractReqDTO();		
