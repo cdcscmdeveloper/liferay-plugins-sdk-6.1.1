@@ -7245,9 +7245,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#22211 - Check if Loa already generated
 	public boolean isLoaGenerated(){
 		Boolean loaGenerated = false;	
-		ScLoa scloa = this.getManagedBean().getScLoa();
 		
-		if(scloa != null) {
+		if(!getManagedBean().getScLoa().isBrandNew()){
 			loaGenerated = true;	
 		}
 		return loaGenerated;
