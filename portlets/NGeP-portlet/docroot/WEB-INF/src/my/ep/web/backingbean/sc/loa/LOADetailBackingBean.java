@@ -1993,7 +1993,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String qtNo = MALAY_NA;
 		if(scQt != null) {
 			qtNo = scQt.getQtNo();
+		} 
+		
+		// #25025 - Start.
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (null != scLoa.getScQuote() && StringUtils.isNotEmpty(scLoa.getScQuote().getQuoteNo())) {
+				qtNo = scLoa.getScQuote().getQuoteNo() + " / " ;
+			}
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(scLoa);
+			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+			if (!MALAY_NA.equals(qtNo) && StringUtils.isNotEmpty(rnNo)) {
+				qtNo = qtNo + rnNo;
+			} else {
+				qtNo = rnNo;
+			}
 		}
+		// #25025 - End.
+		
 		// qtno
 		context.put("qtNo", qtNo);
 
