@@ -3916,11 +3916,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			boolean promotionError = false;
 			if(this.getManagedBean().isPromoPriceExist()){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null){
+				//201126@akmal - 29177 - Start
 					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
 						promotionError = true;
 					}else if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null){
 						promotionError = true;
 					}
+				//201126@akmal - 29177 - End
 				}else{
 					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null)
 						promotionError = true;
