@@ -659,12 +659,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				throw new EpException(MessageConst.ERROR_750019);
 			}
 
-			if(getManagedBean().getCircularVer().getCircularFileName() == null
-					|| getManagedBean().getCircularVer().getCircularFileName().isEmpty()){
+			 //#cr 28713 - start
+			if(getManagedBean().getCircularVer().getCircularAttachments() == null ){
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
+			}//#cr 28713 - end
 
 			if(getManagedBean().getCircularVer().isPid() && 
 					(getManagedBean().getCircularVer().getCtCircularPidReason() == null 
