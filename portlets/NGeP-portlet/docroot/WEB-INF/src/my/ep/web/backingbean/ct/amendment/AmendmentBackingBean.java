@@ -6594,6 +6594,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getUpdatedCommitteeMembers().add(entry.getValue());
 				}	    
 			}
+			getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 		}   
 		
 		
@@ -6714,6 +6715,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 						members.setSelectedCheckBox(false); //#29403
 					}
+					getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 					ctBackingBean.getManagedBean().setButtonHideActive(true);
 
 				}
