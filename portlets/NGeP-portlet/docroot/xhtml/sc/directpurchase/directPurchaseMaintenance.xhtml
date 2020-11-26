@@ -209,6 +209,12 @@
 								action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />					
 					</p:menuButton>	
 					
+					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq QTStatusConst.loaCancelled}">
+						<p:menuitem id="viewCancelLoaDtl" value="#{lbl['lbl.btn.view']}"
+							icon="ui-icon-view"
+							action="#{directPurchaseBackingBean.performViewDoc(Obj)}" />
+					</p:menuButton>
+					
 					<p:tooltip for="cancelLoaBtnIcon">
 						<h:outputText value="#{lbl['lbl.sc.loa.cancel.btn.tooltip']}" escape="false" />
 					</p:tooltip>				
