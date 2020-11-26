@@ -13,15 +13,17 @@
 					value="#{lbl['lbl.rpt.supplierType']}" /> <p:outputLabel value="*"
 					styleClass="mandatory" /></td>
 			<td class="tdContent"><ac:smReportSupplierType
-					bBean="#{applVerificationPerformanceRptBB}" required="false" allValue="all" /></td>
+					bBean="#{applVerificationPerformanceRptBB}" required="true"
+					showAll="false" selectOne="true" /></td>
 		</tr>
 
 		<tr>
 			<td class="tdTitle"><p:outputLabel
-					value="#{lbl['lbl.rpt.receiveddatefrom']}" /> <p:outputLabel
+					value="#{lbl['lbl.rpt.po.receiveddatefrom']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<td class="tdContent"><ac:smReportDateFromTo
-					bBean="#{applVerificationPerformanceRptBB}" /></td>
+					bBean="#{applVerificationPerformanceRptBB}" required="true" limitYearRange="true"
+					dateRange="12" mandatoryDateTo="true" /></td>
 
 			<td class="tdTitle">&#160;</td>
 			<td class="tdContent">&#160;</td>
