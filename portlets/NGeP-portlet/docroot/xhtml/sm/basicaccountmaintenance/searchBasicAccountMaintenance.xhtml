@@ -301,7 +301,11 @@
 								mindate="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}" 
 								value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.endDate}"
 								required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
-								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" />
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" >
+							<!-- 26238: Disciplinary Action - start -->
+							<p:ajax event="dateSelect" update="endDate" process="@this" partialSubmit="true"/>
+							</p:calendar>
+							<!-- 26238: Disciplinary Action - end  -->
 							<p:message id="endDateMsg" for="endDate"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						<td></td>
@@ -315,7 +319,11 @@
 								required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
 								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
 								maxlength="2500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
-								value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" />
+								value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" >
+							<!-- 26238: Disciplinary Action - start -->
+							<p:ajax process="@this" partialSubmit="true" update="@this"/>
+							</p:inputTextarea>
+							<!-- 26238: Disciplinary Action - end -->
 							<p:message id="suspendRemarkMsg"
 							for="suspendRemark" showSummary="true" showDetail="false"
 							display="icon" />
