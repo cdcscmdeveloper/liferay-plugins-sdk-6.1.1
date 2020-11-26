@@ -33,7 +33,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 							</p:commandButton>
 						</ui:repeat>
 						<!--28760 - start -->
-						<p:commandButton id="cancelProcurementBtn" process="@this"
+						<p:commandButton id="cancelProcurementBtn"
 							rendered="#{pPlanBackingBean.managedBean.flagCancelButton}"
 							value="#{lbl['lbl.btn.cancel']}"
 							onclick="dlgProcurementCancel.show()">
