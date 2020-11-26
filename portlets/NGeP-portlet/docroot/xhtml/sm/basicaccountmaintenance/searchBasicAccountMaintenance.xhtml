@@ -77,12 +77,12 @@
 					<!--#28273 -START 110620-->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}"
 						style="width :15%;white-space : normal">
+						<!-- bug #29156 -START -->
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
 							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}" />
 						<!-- bug #28278 -START -->
-						<!-- bug #29156 -START -->
 						<h:outputText
 							value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'C'}" />
@@ -90,10 +90,10 @@
 							value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'B'}" />
 						<h:outputText
-							value="#{lbl['lbl.sm.status.deleted']}"
+							value="#{lbl['lbl.sm.status.inactive']}"
 							rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" />
-						<!-- bug #28278 -START -->
 						<!-- bug #29156 -END -->	
+						<!-- bug #28278 -START -->
 					</p:column>
 					<!--#28273 -END 110620-->   
 					<!--#28273 & #28278 -end -->
