@@ -677,8 +677,8 @@
 					</c:choose>
 				</td>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
+					<p:outputLabel style="width: 151%;text-align:left;margin-top: -40px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
 				<td>
 					<table>
@@ -693,6 +693,9 @@
 									<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 								</p:selectOneRadio>
 								<p:message id="sl1mReqMsg" for="sl1mReq" display="icon" />
+							</td>
+							<td>
+								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
 							</td>
 						</tr>
 					</table>
