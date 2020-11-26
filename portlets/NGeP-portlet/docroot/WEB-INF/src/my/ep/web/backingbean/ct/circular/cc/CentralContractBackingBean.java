@@ -635,12 +635,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void validateCircular(String outcome) {
 		try {
 			 getManagedBean().setAutoUpdate(true);
-
+			 
+			 //#cr 28713 - start
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
-					 && (getManagedBean().getCircularVer().getCircularFileName() == null || getManagedBean().getCircularVer().getCircularFileName().isEmpty()) ){
+					 && (getManagedBean().getCircularVer().getCircularAttachments() == null ) ){
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 						 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			 }
+			 } //#cr 28713 - end
+			 
 			 //Validation for PID
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getCircularVer().isPid() && 
 					 (getManagedBean().getCircularVer().getCtCircularPidReason() == null || getManagedBean().getCircularVer().getCtCircularPidReason().size() == 0)) {
