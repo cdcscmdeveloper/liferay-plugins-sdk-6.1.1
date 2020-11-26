@@ -6885,7 +6885,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		public List<CtCommitteeMember> getFilteredCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
 			//#29403 start
-			if (ctBackingBean.getManagedBean().getContractVer() == null || ctBackingBean.getManagedBean().getContractVer().getStatus() == null) {
+			if (ctBackingBean.getManagedBean().getContractVer() == null 
+					|| ctBackingBean.getManagedBean().getContractVer().getStatus() == null) {
 				preRenderView();
 			} 
 			if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
@@ -6911,7 +6912,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		public List<CtCommitteeMember> getFilteredOriginalCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
 			//#29403 start
-			if(ctBackingBean.getManagedBean().getContractVer() == null){
+			if(ctBackingBean.getManagedBean().getContractVer() == null 
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() == null){
 				preRenderView();
 			}
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
@@ -6930,7 +6933,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		public List<CtCommitteeMember> getFilteredSignedCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
 			//#29403 start
-			if(ctBackingBean.getManagedBean().getContractVer() == null || ctBackingBean.getManagedBean().getContractVer().getCtAmendment()==null){
+			if(ctBackingBean.getManagedBean().getContractVer() == null 
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment()==null
+					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() == null){
 				preRenderView();
 			}
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
