@@ -280,6 +280,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean haveSupplierRejection;
 	// #11134 - End
 	
+	// #27668 - Start
+	private boolean showDefalutSupplierListTblSingle=true;
+	private boolean showDefalutSupplierListTblMultiple=true;
+	// #27668 - End
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2360,6 +2365,24 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.haveSupplierRejection = haveSupplierRejection;
 	}
 
+	// #27668 - Start
+	public boolean isShowDefalutSupplierListTblSingle() {
+		return showDefalutSupplierListTblSingle;
+	}
+
+	public void setShowDefalutSupplierListTblSingle(boolean showDefalutSupplierListTblSingle) {
+		this.showDefalutSupplierListTblSingle = showDefalutSupplierListTblSingle;
+	}
+
+	public boolean isShowDefalutSupplierListTblMultiple() {
+		return showDefalutSupplierListTblMultiple;
+	}
+
+	public void setShowDefalutSupplierListTblMultiple(boolean showDefalutSupplierListTblMultiple) {
+		this.showDefalutSupplierListTblMultiple = showDefalutSupplierListTblMultiple;
+	}
+	// #27668 - End
+	
 }
 
 
