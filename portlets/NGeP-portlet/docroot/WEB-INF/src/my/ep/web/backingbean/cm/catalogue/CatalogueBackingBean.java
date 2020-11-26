@@ -3917,11 +3917,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(this.getManagedBean().isPromoPriceExist()){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null){
 					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
-						if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null)
-							promotionError = true;
-						else if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null)
-							promotionError = true;
-					}else{
+						promotionError = true;
+					}else if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null){
 						promotionError = true;
 					}
 				}else{
