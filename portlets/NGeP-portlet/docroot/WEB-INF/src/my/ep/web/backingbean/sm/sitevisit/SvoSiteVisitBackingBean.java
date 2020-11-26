@@ -2594,7 +2594,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return ResourceBundleUtils.getMessage("lbl.sm.sv.templ." + tempStatus, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 	// #29200 CR 14055: Static Code Analysis
-	
+
 	//#28774 - Start
 	/**
 	 * add Assistant Officer
@@ -2651,5 +2651,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		return false;
 	}
-	//#28774 - Ends
+	
+	/**
+	 * Check if Assistant Officers is empty and create the first officers
+	 */
+	public void checkEmptyAssistantOfficers(){
+		if(this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers()== null || this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().isEmpty()){
+			SmSvAssistantOfficer smSvAssistantOfficer = new SmSvAssistantOfficer();
+			smSvAssistantOfficer.setSmSvTask(this.getManagedBean().getSmSvTask());
+			this.getManagedBean().getSmSvTask().getSmSvAssistantOfficers().add(smSvAssistantOfficer);
+		}
+	}
+	//#28774 - End
 }

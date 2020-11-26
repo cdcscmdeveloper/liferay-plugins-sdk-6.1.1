@@ -24,6 +24,7 @@
 			}
 		</style>
 	
+		#{svoSiteVisitBackingBean.checkEmptyAssistantOfficers()}
 		<p:dataTable styleClass="assistant-officer-tbl" id="assistingOfficerId" var="assistingOfficer" value="#{svoSiteVisitBackingBean.managedBean.smSvTask}">
 		    <p:column>
 		        <p:panelGrid styleClass="assistant-officer-pnlGrid">
@@ -44,7 +45,7 @@
 						</p:column>
 						<p:column>
 							<ui:repeat var="svAOfficer" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAssistantOfficers}">
-								<p:inputText id="svAOfficerName" update="deleteSvAObtnId" partialSubmit="true" readonly="#{viewFlag}" size="40" maxlength="50" value="#{svAOfficer.name}" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true" requiredMessage="#{lbl['lbl.sm.sv.visiting.officer.required']}">
+								<p:inputText id="svAOfficerName" value="#{svAOfficer.name}" readonly="#{viewFlag}" size="40" maxlength="50" disabled="#{svoSiteVisitBackingBean.checkUserRole()}" required="true" requiredMessage="#{lbl['lbl.sm.sv.visiting.officer.required']}">
 									<p:ajax event="keyup" update="deleteSvAObtnId" />
 								</p:inputText>
 								<p:commandButton rendered="#{svoSiteVisitBackingBean.checkUserRole() eq false}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}"/>
