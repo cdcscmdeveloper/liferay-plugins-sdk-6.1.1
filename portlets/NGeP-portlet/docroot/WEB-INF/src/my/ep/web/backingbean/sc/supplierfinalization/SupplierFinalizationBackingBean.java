@@ -5846,6 +5846,15 @@ public class SupplierFinalizationBackingBean extends
 				
 				if (isItemize) {	
 					setSelectedSupplierCodesByItem();
+					// #27668 - Start
+					if(ParameterConst.RECOMMEND_BY_AWARD.equals(finalizationMethodStr)){
+						 this.getManagedBean().setShowDefalutSupplierListTblMultiple(false);
+					}
+					if(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(finalizationMethodStr) || 
+					   ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)){
+						 this.getManagedBean().setShowDefalutSupplierListTblSingle(false);
+					}
+					// #27668 - End	
 				} else {
 					createShortlistedSuppliersDataModel();
 				}
