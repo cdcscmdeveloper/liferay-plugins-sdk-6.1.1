@@ -1706,8 +1706,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *
 	 * @param  action	the user action on this contract. The validation 
 	 * 					will invoke base on the action
+	 * @throws UnsupportedEncodingException 
 	 */
-	public void validateContractAmendment(String action) throws EpException {
+	public void validateContractAmendment(String action) throws EpException, UnsupportedEncodingException { //#29403
 		getManagedBean().setAutoUpdate(true);	
 		// Validation for remark
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
@@ -4441,8 +4442,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used for validating the meeting attendance.
 	 * A warning message will display on screen when the required
 	 * committee doesn't not attended the meeting.
+	 * @throws UnsupportedEncodingException 
 	 */
-	private void validateMeetingDetails() {
+	private void validateMeetingDetails() throws UnsupportedEncodingException { //#29403
 		boolean secretaryRole = true;
 		boolean chairpersonRole = true;
 		boolean memberRole = true;
@@ -4628,8 +4630,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used for validating the committee member details.
 	 * A warning message will display on screen when the required
 	 * committee doesn't not included in the meeting.
+	 * @throws UnsupportedEncodingException 
 	 */
-	private void validateCommiteeMemberDetails() {
+	private void validateCommiteeMemberDetails() throws UnsupportedEncodingException { //#29403
 		boolean secretaryRole = true;
 		boolean chairpersonRole = true;
 		boolean memberRole = true;
@@ -6501,7 +6504,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 		//#29403 start
-		public void backToDecisionTab() {
+		public void backToDecisionTab() throws UnsupportedEncodingException {
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
 			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			if(!getManagedBean().isHasChanges()) {
@@ -6805,7 +6808,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
 		}
 		
-		public void validateLatestCommitteeMembers() {
+		public void validateLatestCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			
 			List<CtCommitteeMember> outer = getManagedBean().getUpdatedCommitteeMembers();
 			List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
@@ -6879,45 +6882,42 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		
-		public List<CtCommitteeMember> getFilteredCommitteeMembers() {
+		public List<CtCommitteeMember> getFilteredCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
 			//#29403 start
-			if (ctBackingBean.getManagedBean().getContractVer() != null) {
-				if (ctBackingBean.getManagedBean().getContractVer().getStatus() != null) {
-					if (ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId() != null) { 
-						if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-							for (CtCommitteeMember member : getManagedBean().getUpdatedCommitteeMembers()) {
-								if (member.getUpdateType() == null
-										|| (member.getUpdateType() != null
-												&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()) 
-												&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()))) {
-									filteredCommitteeMembers.add(member);
-								}
-							}
-						} else {
-							for (CtCommitteeMember member : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-								if (!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
-									filteredCommitteeMembers.add(member);
-								}
-							}
-						}
+			if (ctBackingBean.getManagedBean().getContractVer() == null || ctBackingBean.getManagedBean().getContractVer().getStatus() == null) {
+				preRenderView();
+			} 
+			if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
+				for (CtCommitteeMember member : getManagedBean().getUpdatedCommitteeMembers()) {
+					if (member.getUpdateType() == null
+							|| (member.getUpdateType() != null
+									&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()) 
+									&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType()))) {
+						filteredCommitteeMembers.add(member);
 					}
 				}
-			} //#29403 end
+			} else {
+				for (CtCommitteeMember member : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					if (!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+						filteredCommitteeMembers.add(member);
+					}
+				}
+			}
+			//#29403 end
 			return filteredCommitteeMembers;
 		}
 		
-		public List<CtCommitteeMember> getFilteredOriginalCommitteeMembers() {
+		public List<CtCommitteeMember> getFilteredOriginalCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
 			//#29403 start
-			if(ctBackingBean.getManagedBean().getContractVer() != null){
-				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() != null){
-					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
-						for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-							if(member.getUpdateType() == null || ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
-								filteredCommitteeMembers.add(member);
-							}
-						}
+			if(ctBackingBean.getManagedBean().getContractVer() == null){
+				preRenderView();
+			}
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
+				for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					if(member.getUpdateType() == null || ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+						filteredCommitteeMembers.add(member);
 					}
 				}
 			}
@@ -6927,17 +6927,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return filteredCommitteeMembers;
 		}
 		
-		public List<CtCommitteeMember> getFilteredSignedCommitteeMembers() {
+		public List<CtCommitteeMember> getFilteredSignedCommitteeMembers() throws UnsupportedEncodingException { //#29403
 			List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
 			//#29403 start
-			if(ctBackingBean.getManagedBean().getContractVer()!=null){
-				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment()!=null){
-					if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
-						for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-							if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
-								filteredCommitteeMembers.add(member);
-							}
-						}
+			if(ctBackingBean.getManagedBean().getContractVer() == null || ctBackingBean.getManagedBean().getContractVer().getCtAmendment()==null){
+				preRenderView();
+			}
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()!=null){
+				for(CtCommitteeMember member: ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					if(!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(member.getUpdateType())) {
+						filteredCommitteeMembers.add(member);
 					}
 				}
 			}
