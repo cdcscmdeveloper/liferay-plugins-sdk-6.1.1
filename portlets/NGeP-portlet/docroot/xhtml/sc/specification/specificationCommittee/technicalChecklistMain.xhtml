@@ -338,13 +338,13 @@
 			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 		<div align="right">
 			<p:commandButton styleClass="BtnSpacing"
-				rendered="#{!isReadOnlyOrSpecMain}"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.retriveTechnicalStandardCheckList}"
 				update="@([id$=specCommitteeTechnicalChecklist])" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
-				rendered="#{!specificationBackingBean.managedBean.qt.panel and 
+				rendered="#{specificationBackingBean.managedBean.isChecklist() or !specificationBackingBean.managedBean.qt.panel and 
 				!((specificationBackingBean.managedBean.readOnly and !specificationBackingBean.isQTStatusChecklistScoring()) or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance())}"
 				process="@this" styleClass="BtnSpacing"
 				update="@([id$=commiteeCreationSpec])"
@@ -353,17 +353,17 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				styleClass="BtnSpacing"
-				rendered="#{!isReadOnlyOrSpecMain}"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				process="@this,stageTwotechProposal"
 				action="#{specificationBackingBean.addTechnicalCheckList}"
 				update="@all,stageTwotechProposal" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				styleClass="BtnSpacing" id="deleteTechnicalChecklist"
-				disabled="#{specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+				disabled="#{specificationBackingBean.deleteselectedList(specificationBackingBean.managedBean.scQtCheckSt2techProposal) or specificationBackingBean.managedBean.isChecklist()}"
 				process="@this" partialSubmit="true"
 				oncomplete="technicalCheckListDeletePopUp.show();"
 				update="@([id$=#{technicalCheckListDeleteId}])"
-				rendered="#{!isReadOnlyOrSpecMain}">
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.techStandaraChecklist}"
 					value="#{true}" />
