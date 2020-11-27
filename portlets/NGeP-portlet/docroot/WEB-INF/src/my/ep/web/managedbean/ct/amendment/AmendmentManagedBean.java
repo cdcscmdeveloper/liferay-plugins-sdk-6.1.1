@@ -172,6 +172,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//25956
 	private boolean viewOnly = false; /*#25956 notification setting*/
 	
+	private Long contractVerId; //#29403
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1519,5 +1521,21 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
+	
+	//#29403 start
+	/**
+	 * @return the contractVerId
+	 */
+	public Long getContractVerId() {
+		return contractVerId;
+	}
+
+	/**
+	 * @param contractVerId the contractVerId to set
+	 */
+	public void setContractVerId(Long contractVerId) {
+		this.contractVerId = contractVerId;
+	}
+	//#29403 end
 
 }
