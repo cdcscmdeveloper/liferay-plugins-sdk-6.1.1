@@ -1701,6 +1701,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		private String sampleItemName;
 		private int sampleTotalScore;
 		//#11104-End
+		
+	// #15391 - start
+	private boolean isChecklist;
+	private boolean isGenInfo;
+
+	// #15391 - end
+
+		
+		
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10599,6 +10608,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.sampleTotalScore = sampleTotalScore;
 		}
 		//#11104-End
+
+		public boolean isChecklist() {
+			return isChecklist;
+		}
+
+		public void setChecklist(boolean isChecklist) {
+			this.isChecklist = isChecklist;
+		}
+
+		public boolean isGenInfo() {
+			return isGenInfo;
+		}
+
+		public void setGenInfo(boolean isGenInfo) {
+			this.isGenInfo = isGenInfo;
+		}
 }
 
 
