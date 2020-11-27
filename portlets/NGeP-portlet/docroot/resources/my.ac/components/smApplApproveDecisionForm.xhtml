@@ -23,6 +23,14 @@
 	</cc:interface>
 	
 	<cc:implementation>
+		<style>
+			.selectRecRejectReasonTable .ui-chkbox-box{
+      	 	   pointer-events: all;
+			}
+			.selectRecRejectReasonTable .ui-widget-content{
+    			pointer-events: none;
+			}
+		</style>
 		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
@@ -101,6 +109,127 @@
 						</tr>
 					</p:outputPanel>
 				</c:if>
+				
+                <!-- #15629 start -->
+				<c:if test="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' and !backingBean.managedBean.approverUser}">
+				<p:outputPanel layout="block" id="recRejectBlockPanel">
+				
+					<p:messages id="recSearchRejectMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
+					
+				<!-- <tr> -->
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+								<td>
+									<p:inputText id="recRejectReasonSearchId"
+										label="#{lbl['lbl.sm.rejection.reasons']}"
+										value="#{backingBean.managedBean.searchRejectReason}"
+										size="35" >
+										<p:ajax event="blur" process="@this" update="@this"/>
+									</p:inputText>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<div style="text-align: right;">
+										<p:commandButton value="#{lbl['lbl.btn.search']}" 
+											action="#{backingBean.searchRejectedReason()}"
+											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()"
+											update="recRejectBlockPanel" process="@this">
+										</p:commandButton>
+										<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
+											action="#{backingBean.resetSearchRejectedReason}"
+											update=":#{p:component('recRejectBlockPanel')}" 
+											onstart="recRejectBlockPanelWidget.show()" oncomplete="recRejectBlockPanelWidget.hide()">
+										</p:commandButton>
+									</div>
+								</td>
+							</tr>
+						</table>
+					
+                       <!-- </tr> -->
+
+						<!-- <tr> -->
+						<!-- <td colspan="2"> -->
+					  		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="recResultRejectedReasonPanelId">
+								<p:dataTable var="recReason" widgetVar="recReasonWidgetVar"
+									editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+									value="#{backingBean.managedBean.reasonDescList}"
+									selection="#{backingBean.managedBean.selectedReasonDescs}"
+									rowKey="#{recReason}" rowIndexVar="index" id="recReasonDtId"
+									styleClass="selectRecRejectReasonTable">
+							
+									<ac:paginator for="recReasonDtId" />
+									<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickReason}"
+										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+									<p:ajax event="rowUnselect"
+										listener="#{backingBean.onTickOrUnTickReason}"
+										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+									<p:ajax event="rowSelectCheckbox"
+										listener="#{backingBean.onTickOrUnTickReason}"
+										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+									<p:ajax event="rowUnselectCheckbox"
+										listener="#{backingBean.onTickOrUnTickReason}"
+										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+									<p:ajax event="rowDblselect"
+										listener="#{backingBean.onTickOrUnTickReason}"
+										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+									<p:ajax event="toggleSelect"
+										listener="#{backingBean.onTickOrUnTickReason}"
+										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+							
+									<p:column selectionMode="multiple" width="1%" />
+							
+									<p:column headerText="#{lbl['lbl.sm.rejection.reasons']}">
+										<h:outputText value="#{recReason.reasonDesc}" />
+									</p:column>
+							
+								</p:dataTable>
+							</p:panel>
+<!-- 						</td> -->
+						
+<!-- 						<div align="right"> -->
+<!-- 							<cc:insertChildren /> -->
+<!-- 						</div> -->
+<!-- 						<p:blockUI block="recRejectBlockPanel" widgetVar="recRejectBlockPanelWidget"> -->
+<!-- 							<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage> -->
+<!-- 						</p:blockUI> -->
+						
+<!-- 						<td></td> -->
+
+<!-- 					</tr> -->
+<!-- 					</tr> -->
+
+				<p:outputPanel id="recRejRemarksPanel">
+					<table style="width: 100%">
+						<tr>
+							<td style="vertical-align: top; width: 15%"><p:outputLabel
+									value="#{lbl['lbl.sm.remarks.rejection']}" id="recRejReasonLbl"/> 
+									<p:outputLabel
+									value="*" styleClass="mandatory" id="recRejReasonLblMndty"
+									rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+							<td style="padding-top: 5px;"><p:inputTextarea cols="100"
+									style="width : auto;"
+									value="#{backingBean.managedBean.applnRejectionRemarks}"
+									id="recRmrksForRejectTxtArea" rows="5"
+									validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+									label="#{lbl['lbl.sm.remarks.rejection']}"
+									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
+									maxlength="4000">
+									<f:validateLength maximum="4000" />
+								</p:inputTextarea> <p:message id="recRmrksForRejectTxtAreaMsg"
+									for="recRmrksForRejectTxtArea" showSummary="true" showDetail="false"
+									display="icon" /></td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				
+				
+				</p:outputPanel>
+				</c:if>
+				
+				<c:if test="#{(backingBean.managedBean.poUser and backingBean.managedBean.poSecReview.recommendation ne 'REJECT') or 
+				backingBean.managedBean.approverUser}">
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks.approval']}" /></td>
@@ -114,6 +243,10 @@
 						</p:inputTextarea> <p:message id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
+				</c:if>
+				
+                <!-- #15629 end -->
+												
 				<c:if test="#{cc.attrs.overLappedCategoryExists}">
 					<tr>
 					<td></td>
