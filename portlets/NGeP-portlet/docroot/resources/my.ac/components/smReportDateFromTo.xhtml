@@ -10,9 +10,7 @@
 		<cc:attribute name="bBean" required="true" default="" />
 		<cc:attribute name="required" default="true" />
 		<cc:attribute name="limitDateRange" default="false" />
-		<cc:attribute name="limitYearRange" default="false" />
 		<cc:attribute name="dateRange" default = "0" />
-		<cc:attribute name="mandatoryDateTo" default="false" />
 		<cc:attribute name="noMaxdate" default="false" />
 	</cc:interface>
 
@@ -63,42 +61,7 @@
 						<p:message id="calDtFrmMsg" for="calDtFrm" display="icon" showDetail="false" />
 					</td>
 					
-					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
-					<c:if test="#{cc.attrs.mandatoryDateTo}">
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</c:if>
-					<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
-						id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
-						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
-						value="#{cc.attrs.bBean.managedBean.dateTo}" required="#{!empty cc.attrs.bBean.managedBean.dateFrom or cc.attrs.required}" maxdate="#{cc.attrs.bBean.managedBean.dateTo}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						</p:calendar>
-						<p:message id="calDtToMsg" for="calDtTo" display="icon" showDetail="false" />
-					</td>
-				</tr>
-				</table>
-			</c:when>
-			
-			<c:when test="#{cc.attrs.limitYearRange}">
-				<table style="width: 100%;">
-				<tr>
-					<td class="columnDateFromClass">
-						<p:calendar label="#{lbl['lbl.rpt.frmdate']}"
-							id="calDtFrm" showOn="button" navigator="true"
-							display="inline" readonlyInput="true" size="9" update="calDtTo" 
-							value="#{cc.attrs.bBean.managedBean.dateFrom}" required="#{cc.attrs.required}"
-							mindate="#{CommonConstants.PIAGAM_REPORT_START_DATE}" maxdate="#{CommonConstants.CURRENT_DATE}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-							<p:ajax event="dateSelect"  update="calDtTo" process="@this" listener="#{cc.attrs.bBean.setDateToByDateRange(cc.attrs.dateRange)}" />
-						</p:calendar>
-						<p:message id="calDtFrmMsg" for="calDtFrm" display="icon" showDetail="false" />
-					</td>
-					
-					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
-					<c:if test="#{cc.attrs.mandatoryDateTo}">
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</c:if>
-					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
 					<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 						id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
 						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
@@ -125,11 +88,7 @@
 						<p:message id="calDtFrmMsg" for="calDtFrm" display="icon" showDetail="false" />
 					</td>
 					
-					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" />
-					<c:if test="#{cc.attrs.mandatoryDateTo}">
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</c:if>	
-					</td>
+					<td class="columnDateToClass"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}" /></td>
 					<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 						id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
 						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
