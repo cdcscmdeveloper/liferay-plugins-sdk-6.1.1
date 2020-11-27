@@ -8767,6 +8767,13 @@ public class SpecificationBackingBean extends
 							.setWeightage(new BigDecimal(0));
 				}
 				if (null != weight.getQtScoreWeightage()) {
+					//20201127@asyrafhaziq_29637 - Start
+					String checkDecimal1 = String.valueOf(weight.getQtScoreWeightage().getWeightage());
+					String pattern1 = "^[0-9\\s]+$";
+						if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
+					 //20201127@asyrafhaziq_29637 - End
 					total = total
 							+ weight.getQtScoreWeightage().getWeightage()
 									.intValue();
@@ -9029,6 +9036,13 @@ public class SpecificationBackingBean extends
 							.setWeightage(new BigDecimal(0));
 				}
 				if (null != weight.getQtScoreWeightage()) {
+					//20201127@asyrafhaziq_29637 - Start
+					String checkDecimal1 = String.valueOf(weight.getQtScoreWeightage().getWeightage());
+					String pattern1 = "^[0-9\\s]+$";
+						if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
+						//20201127@asyrafhaziq_29637 - End
 					total = total
 							+ weight.getQtScoreWeightage().getWeightage()
 									.intValue();
