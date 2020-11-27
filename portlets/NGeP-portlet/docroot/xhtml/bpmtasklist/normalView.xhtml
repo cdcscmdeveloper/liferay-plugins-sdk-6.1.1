@@ -133,12 +133,9 @@
 		style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
 
-		<p:column width="5%;" sortBy="#">
+		<p:column width="5%;" >
 			<f:facet name="header">
-			<!--  <h:commandLink action="#" >
-					
-			</h:commandLink>-->
-			#{lbl['lbl.bpm.doc.no']}
+				#{lbl['lbl.bpm.doc.no']}
 			</f:facet>
 			<!-- start updated for #24968 -->
 			<h:panelGroup rendered="#{not empty tasks.pocoNo}">

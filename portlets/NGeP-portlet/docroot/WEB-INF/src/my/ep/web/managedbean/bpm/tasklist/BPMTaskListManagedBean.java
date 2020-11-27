@@ -132,6 +132,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	// 12177 - Start
 	private Calendar expirationDateSq;
 	// 12177 - End
+	
+	//Task Sorting
+	private String sort_by;
+	private boolean ascending = true;
+	private String sort_byGroup;
+	private boolean ascendingGroup = true;
+
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -249,8 +256,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskListDataModel;
 	}
 
-	public void setTaskListDataModel(
-			PagingDataModel<WorklistItemVO> taskListDataModel) {
+	public void setTaskListDataModel(PagingDataModel<WorklistItemVO> taskListDataModel) {
 		this.taskListDataModel = taskListDataModel;
 	}
 
@@ -358,15 +364,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IPmKpiSO pmKpiSO = null;
 
 		try {
-			pmKpiSO = BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IPmKpiSO.class);
+			pmKpiSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IPmKpiSO.class);
 			KpiReqDTO reqDTO = new KpiReqDTO();
 			reqDTO.setModuleCode(moduleCode);
 			reqDTO.setKpiCode(kpiCode);
-			PmKPIValue pmKPIValue = pmKpiSO
-					.retrieveKpiValueByModuleCodeAndKpiCode(reqDTO)
-					.getKpiValue();
+			PmKPIValue pmKPIValue = pmKpiSO.retrieveKpiValueByModuleCodeAndKpiCode(reqDTO).getKpiValue();
 			if (pmKPIValue != null) {
 				return pmKPIValue.getKpiValue();
 			}
@@ -382,13 +384,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setApplId(applId);
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveCompanyNameByApplId(reqDto);
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveCompanyNameByApplId(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {
@@ -439,8 +438,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 		
 			IBpmSO bpmSO = null;
 			try {
@@ -468,6 +466,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if(getDocStatus()>0){
 					reqDTO.setStatus(getDocStatus());
 				}
+				
+				//sort by
+				reqDTO.setSortBy(getSort_by());
+				reqDTO.setIsAsc(isAscending());
 
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
@@ -478,7 +480,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if (responseDTO.getWorklistVO() != null) {
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-
 						//	Enhancement #28766 - Start
 						//	boolean viewGlpFlag = viewGlpFlag();
 						//	Enhancement #28766 - End
@@ -522,8 +523,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						}
 					}
 
-					resultBean.setTotalRecord(responseDTO.getWorklistVO()
-							.getTotal());
+					resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
 					resultBean.setResultList(worklistItemVOTemp);//29089
 				} else {
 					resultBean.setTotalRecord(0);
@@ -564,8 +564,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskListMyTaskDataModel;
 	}
 
-	public void setTaskListMyTaskDataModel(
-			PagingDataModel<WorklistItemVO> taskListMyTaskDataModel) {
+	public void setTaskListMyTaskDataModel(PagingDataModel<WorklistItemVO> taskListMyTaskDataModel) {
 		this.taskListMyTaskDataModel = taskListMyTaskDataModel;
 	}
 
@@ -579,14 +578,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 		
 			IBpmSO bpmSO = null;
 			try {
 
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
@@ -622,6 +619,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
 				
+				//sort by
+				reqDTO.setSortBy(getSort_byGroup());
+				reqDTO.setIsAsc(isAscendingGroup());
+				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
@@ -641,25 +642,20 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								}
 
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE_DRAFT)) {
-									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO
-											.getDocNumber());
+									ScPrInquiry scPrInquiry = retrivePrInquiryByPrInquiryNo(worklistItemVO.getDocNumber());
 									if (scPrInquiry != null) {
 										worklistItemVO.setTitle(scPrInquiry.getTitle());
 									}
 								}
 								// s1 module
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
-									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 								}
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
-									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry",
-											ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 								}
 								if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-									worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-											"lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-											face.getUserLocale()));
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 								}
 								processTitleWithDocStatus(worklistItemVO, face);
 
@@ -693,10 +689,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       }
 						       
 						       if(worklistItemVO.getTitle().startsWith("lbl.pm")) {
-						    	   AccessApplResDTO accessApplResDTO = 
-						    			   retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
-						    	   if(accessApplResDTO.isSuccessful() && 
-						    			   accessApplResDTO.getAccessAppl() != null){
+						    	   AccessApplResDTO accessApplResDTO = retrieveAccessApplByDocNo(worklistItemVO.getDocNumber());
+						    	   if(accessApplResDTO.isSuccessful() && accessApplResDTO.getAccessAppl() != null){
 						    		  
 							    	   StringBuilder sb = new StringBuilder();
 							    	   if(ParameterConst.DOCTYPE_MARKET_RESEARCH.equalsIgnoreCase(worklistItemVO.getDocType())){
@@ -725,8 +719,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						}
 					}
 
-					resultBean.setTotalRecord(responseDTO.getWorklistVO()
-							.getTotal());
+					resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
 					resultBean.setResultList(worklistItemVOTemp);//29089
 				} else {
 					resultBean.setTotalRecord(0);
@@ -743,14 +736,12 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return taskListGroupDataModel;
 	}
 
-	public void setTaskListGroupDataModel(
-			PagingDataModel<WorklistItemVO> taskListGroupDataModel) {
+	public void setTaskListGroupDataModel(PagingDataModel<WorklistItemVO> taskListGroupDataModel) {
 		this.taskListGroupDataModel = taskListGroupDataModel;
 	}
 	
 	// #24714
 	private class taskPagingBothDataModel extends PagingDataModel<WorklistItemVO> {
-
 		private static final long serialVersionUID = 1L;
 		private final Logger log = EpLogger.getLogger(taskPagingBothDataModel.class);
 
@@ -759,8 +750,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		}
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 			IBpmSO bpmSO = null;
 			try {
 				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -807,8 +797,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							//	boolean viewGlpFlag = viewGlpFlag();
 				    	   //	Enhancement #28766 - End
 						
-						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), 
-								new java.util.Comparator<WorklistItemVO>() {
+						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), new java.util.Comparator<WorklistItemVO>() {
 						  @Override
 						  public int compare(WorklistItemVO w1, WorklistItemVO w2) {
 							  return w1.getTaskType().compareTo(w2.getTaskType());
@@ -1770,5 +1759,43 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
     	}
     	return isHide;	    
     }//29089-End
+
+	/**
+	 * @return the sort_by
+	 */
+	public String getSort_by() {
+		return sort_by;
+	}
+
+	/**
+	 * @param sort_by the sort_by to set
+	 */
+	public void setSort_by(String sort_by) {
+		this.sort_by = sort_by;
+	}
+
+	public boolean isAscending() {
+		return ascending;
+	}
+
+	public void setAscending(boolean ascending) {
+		this.ascending = ascending;
+	}
+
+	public String getSort_byGroup() {
+		return sort_byGroup;
+	}
+
+	public void setSort_byGroup(String sort_byGroup) {
+		this.sort_byGroup = sort_byGroup;
+	}
+
+	public boolean isAscendingGroup() {
+		return ascendingGroup;
+	}
+
+	public void setAscendingGroup(boolean ascendingGroup) {
+		this.ascendingGroup = ascendingGroup;
+	}
 	
 }
