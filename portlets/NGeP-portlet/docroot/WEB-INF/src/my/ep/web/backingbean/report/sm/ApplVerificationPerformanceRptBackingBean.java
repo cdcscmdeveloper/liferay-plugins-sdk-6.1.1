@@ -7,13 +7,11 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.ApplVerificationPerformanceRptManagedBean;
 
 @ManagedBean(name = "applVerificationPerformanceRptBB")
@@ -26,20 +24,11 @@ public class ApplVerificationPerformanceRptBackingBean extends SmReportBackingBe
 		LinkedHashMap<String,String> params = new LinkedHashMap<String,String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		log.info("********Report Code*************" + getManagedBean().getReportCode());
-		if (getManagedBean().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			getManagedBean().setReportCode(SmReportConst.SM_APPL_CLIENT_CHARTER_K);
-		} else {
-			getManagedBean().setReportCode(SmReportConst.SM_APPL_CLIENT_CHARTER_J);
-		}
-		log.info("********Report Code************* after set newCode: " + getManagedBean().getReportCode());
-
+		
 		retrieveReportValueFromDb();
-
-		if (StringUtils.isNotBlank(getManagedBean().getDateFrom().toString()) && StringUtils.isNotBlank(getManagedBean().getDateTo().toString())) {
-			checkOneYearDifferent(getManagedBean().getDateFrom(), getManagedBean().getDateTo());
-			params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
-			params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
-		}
+		
+		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
+		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 		params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
 
 		for (Map.Entry<String, String> entry : params.entrySet()) {
