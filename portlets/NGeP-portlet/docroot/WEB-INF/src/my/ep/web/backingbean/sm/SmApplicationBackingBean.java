@@ -1231,8 +1231,16 @@ public class SmApplicationBackingBean extends
 		}
 
 		SmCommonUtil.getInstance().setUserDetails(smAppl);
-		getManagedBean().setSmAppl(smAppl);
-
+		//28771
+		
+		if (getManagedBean().getSmAppl().getSupportingDocMode() == null){
+			getManagedBean().setSmAppl(smAppl);
+			smAppl.setSupportingDocMode(StringUtils.EMPTY);}
+		
+		else if (getManagedBean().getSmAppl().getSupportingDocMode() != null){
+			getManagedBean().setSmAppl(smAppl);	}
+		
+		
 		if (fromBpm) {
 			SmApplicationUtil.getInstance().setApplAddressTransientValue(
 					getManagedBean().getSmAppl(), false);
@@ -3557,7 +3565,10 @@ public class SmApplicationBackingBean extends
 
 		// default to false has suppdoc to download
 		getManagedBean().setHasSuppDocToDownload(false);
-
+		if (getManagedBean().getSmAppl().getSupportingDocMode() == null){
+			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+			log.info(getManagedBean().getSmAppl().getSupportingDocMode());
+			}
 		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
 			getManagedBean().getSmAppl().setSmApplSupportDocs(
 					new ArrayList<SmApplSupportDoc>());
