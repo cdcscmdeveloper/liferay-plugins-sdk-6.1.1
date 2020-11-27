@@ -110,6 +110,16 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean suppInPunishment = false;
 	// 26050
 	private boolean hasActiveAppl = false;
+	// 9569 start
+	private String spName;
+	private Long spCountryId;
+	private int spRecordStatus;
+	private int spSoftcertFlg;
+	private String spEpRole;
+	private int authUserCount;
+	private int contractSignerCount;
+	private String epRoleTrans;
+	// 9569 end
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -757,4 +767,71 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.mailDivisionBox = mailDivisionBox;
 	}
 	//#13320 - added division - end
+
+	// 9569 start
+	public String getSpName() {
+		return spName;
+	}
+
+	public void setSpName(String spName) {
+		this.spName = spName;
+	}
+
+	public Long getSpCountryId() {
+		return spCountryId;
+	}
+
+	public void setSpCountryId(Long spCountryId) {
+		this.spCountryId = spCountryId;
+	}
+
+	public int getSpRecordStatus() {
+		return spRecordStatus;
+	}
+
+	public void setSpRecordStatus(int spRecordStatus) {
+		this.spRecordStatus = spRecordStatus;
+	}
+
+	public int getSpSoftcertFlg() {
+		return spSoftcertFlg;
+	}
+
+	public void setSpSoftcertFlg(int spSoftcertFlg) {
+		this.spSoftcertFlg = spSoftcertFlg;
+	}
+
+	public String getSpEpRole() {
+		return spEpRole;
+	}
+
+	public void setSpEpRole(String spEpRole) {
+		this.spEpRole = spEpRole;
+	}
+
+	public int getAuthUserCount() {
+		return authUserCount;
+	}
+
+	public void setAuthUserCount(int authUserCount) {
+		this.authUserCount = authUserCount;
+	}
+
+	public int getContractSignerCount() {
+		return contractSignerCount;
+	}
+
+	public void setContractSignerCount(int contractSignerCount) {
+		this.contractSignerCount = contractSignerCount;
+	}
+
+	public String getEpRoleTrans() {
+		return epRoleTrans;
+	}
+
+	public void setEpRoleTrans(String epRoleTrans) {
+		this.epRoleTrans = epRoleTrans;
+	}
+	// 9569 end
+	
 }
