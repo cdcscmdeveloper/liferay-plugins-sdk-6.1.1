@@ -36,7 +36,7 @@
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
 				<h:outputText value="#{lbl['lbl.sc.pending']}" 
 							  rendered="#{!endorseStatus or isSupplierFinalization}" />
-				<h:outputText value="#{lbl['lbl.sc.endorse']}" 
+				<h:outputText value="#{lbl['lbl.btn.complete']}" 
 							  rendered="#{endorseStatus and !isSupplierFinalization}" />
 			</p:column>
 		</p:dataTable>
