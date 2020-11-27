@@ -134,7 +134,7 @@
 						<ui:include src="loaApprovalMenu.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 8}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 8 and !isDocTypeQuotation}">
 						<ui:include src="loaCancelMain.xhtml" />
 					</c:if>
 				</h:panelGroup>
