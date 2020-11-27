@@ -1,6 +1,10 @@
 package my.ep.web.backingbean.sm.userprofilemaintenance;
 
 import java.util.ArrayList;
+// 9569 start
+import java.util.Collections;
+import java.util.Comparator;
+//9569 end
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +68,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+
 
 @ManagedBean(name = "smPersonnelBackingBean")
 @RequestScoped
@@ -2154,6 +2159,291 @@ public class SmPersonnelBackingBean extends
 		updateMailAddLists(countryId, stateId, divisionId, districtId);
 	}
 	//#13320 - added division - end
-	
+
+	// 9569 start
+	/**
+	 * Pre render for Supplier User Maintainance
+	 */
+	public void preRenderSmUserMaintenance() {
+		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		getManagedBean().setSmSupplier(smSupplier);
+		getManagedBean().setSmAppl(smSupplier.getSmAppl());
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
+				.getSmPersonnelList();
+		sortPersonnelByEpRole(smPersonnelList);
+		getManagedBean().setSmPersonnelList(smPersonnelList);
+		countAuthUserWithRole(smPersonnelList);
+		countContractSigner(smPersonnelList);
+		epRoleList(2);
+		getManagedBean().setCountryList(SmCommonUtil.getCountryList());
+		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
+		SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+	}
+
+	/**
+	 * Generate Ep Role list for drop down
+	 * 
+	 * @param userAuth
+	 */
+	private void epRoleList(int userAuth) {
+		List<SelectItem> roles = new ArrayList<SelectItem>();
+		if (userAuth == 2) {
+			// all role
+			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
+			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
+			role.setValue(RoleCode.CM_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
+			role.setValue(RoleCode.FL_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			getManagedBean().setRoleList(roles);
+		} else if (userAuth == 1) {
+			// authorized user role
+			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
+			role.setValue(RoleCode.CM_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			getManagedBean().setRoleList(roles);
+		} else if (userAuth == 0) {
+			// non-authorized user role
+			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.FL_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			getManagedBean().setRoleList(roles);
+		}
+	}
+
+	/**
+	 * Reset search field
+	 */
+	public void resetMOFSmPersonnel() {
+		this.getManagedBean().setSpName(null);
+		this.getManagedBean().setSpCountryId(null);
+		this.getManagedBean().setSpSoftcertFlg(0);
+		this.getManagedBean().setSpRecordStatus(0);
+		this.getManagedBean().setSpEpRole(null);
+	}
+
+	/**
+	 * Search personnel based on criteria
+	 */
+	public void searchMOFSmPersonnel() {
+		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		getManagedBean().setSmSupplier(smSupplier);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
+		reqDTO.setApplId(smSupplier.getSmAppl().getApplId());
+		reqDTO.setHasActiveAppl(false);
+		if (getManagedBean().getSpName().isEmpty() && getManagedBean().getSpCountryId() == null
+				&& getManagedBean().getSpSoftcertFlg() == 0 && getManagedBean().getSpRecordStatus() == 0
+				&& getManagedBean().getSpEpRole() == null) {
+			reqDTO.setSmPersonnel(null);
+		} else {
+			reqDTO.setSmPersonnel(new SmPersonnel());
+			reqDTO.getSmPersonnel().setPmCountry(new PmCountry());
+			if (!getManagedBean().getSpName().isEmpty()) {
+				reqDTO.getSmPersonnel().setName(this.getManagedBean().getSpName());
+			}
+
+			if (getManagedBean().getSpCountryId() != null) {
+				reqDTO.getSmPersonnel().getPmCountry().setCountryId(this.getManagedBean().getSpCountryId());
+			}
+
+			if (getManagedBean().getSpEpRole() != null && !getManagedBean().getSpEpRole().isEmpty()) {
+				reqDTO.getSmPersonnel().setEpRole(this.getManagedBean().getSpEpRole());
+			}
+
+			if (getManagedBean().getSpRecordStatus() == 0) {
+				reqDTO.getSmPersonnel().setRecordStatusFlg(0);
+			} else if (getManagedBean().getSpRecordStatus() != 0) {
+				reqDTO.getSmPersonnel().setRecordStatusFlg(this.getManagedBean().getSpRecordStatus());
+			}
+
+			if (getManagedBean().getSpSoftcertFlg() == 0) {
+				reqDTO.getSmPersonnel().setSoftcertFlg(0);
+			} else if (getManagedBean().getSpSoftcertFlg() != 0) {
+				reqDTO.getSmPersonnel().setSoftcertFlg(this.getManagedBean().getSpSoftcertFlg());
+			}
+
+		}
+		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
+				.getSmPersonnelList();
+		sortPersonnelByEpRole(smPersonnelList);
+		getManagedBean().setSmPersonnelList(smPersonnelList);
+	}
+
+	/**
+	 * Navigate to personnel edit page
+	 * 
+	 * @param personnelId
+	 * @return
+	 */
+	public String navigateToUpdateMOFUserPage(String personnelId) {
+		getManagedBean().setEditMode(true);
+		getPersonnelInfoById(personnelId);
+		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
+		epRoleList(getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
+		initializeLists();
+		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
+		return "mofUserProfile.xhtml";
+	}
+
+	/**
+	 * Back to search page
+	 */
+	public String cancelUserMOFUpdate() {
+		return "supplierUserMaintenance.xhtml";
+	}
+
+	/**
+	 * Save personnel update
+	 */
+	public void saveUserMOFUpdate() {
+		try {
+			// Personnel role
+			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
+			if(personnel.getEpRole() == null){
+				personnel.setEpRole("");
+			}
+			if (!personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+				PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+				PersonnelResDTO resDTO1 = new PersonnelResDTO();
+				if (personnel.getPmUser() != null) {
+					reqDTO1.setSmPersonnel(personnel);
+					reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+					resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+				}else{
+					personnel.setEpRole(getManagedBean().getEpRoleTrans());
+					List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+					smPersonnelList.add(personnel);
+					reqDTO1.setSmPersonnelList(smPersonnelList);
+					reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+					resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+				}
+				if (!resDTO1.isSuccessful()) {
+					throw new EpException(MessageConst.ERROR_722632);
+				}
+			}
+			// Personnel address
+			SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
+			if(personnelAddress.isSameAsPerm()){
+				getManagedBean().setBasicSmPersonnelMailingAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
+				getManagedBean().getBasicSmPersonnelMailingAddress().setSameAsPerm(true);
+			}
+			for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
+				if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
+					per.getSmAddress().setPmDivision(null);
+				}
+			}
+			personnel.getSmPersonnelAddresses().add(personnelAddress);
+			PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
+			reqDTO2.setSmPersonnel(personnel);
+			PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+			if (resDTO2.isSuccessful()) {
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+			} else {
+				throw new EpException(MessageConst.ERROR_722632);
+			}
+		} catch (Exception ex) {
+			throw new EpException(MessageConst.ERROR_722632);
+		}
+	}
+
+	/**
+	 * Sort personnel list based Ep Role
+	 * 
+	 * @param smPersonnelList
+	 */
+	public static void sortPersonnelByEpRole(List<SmPersonnel> smPersonnelList) {
+		if (smPersonnelList != null) {
+			for (SmPersonnel per : smPersonnelList) {
+				if (per.getEpRole() != null) {
+					if (per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+						per.setSort(1);
+					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
+						per.setSort(2);
+					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())) {
+						per.setSort(3);
+					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.FL_USER.value())) {
+						per.setSort(4);
+					}
+				} else {
+					per.setSort(5);
+				}
+			}
+			// sort by name
+			Collections.sort(smPersonnelList, new Comparator<SmPersonnel>() {
+				@Override
+				public int compare(final SmPersonnel s1, final SmPersonnel s2) {
+					return (s1.getName()).compareTo(s2.getName());
+				}
+			});
+			// sort by sort
+			Collections.sort(smPersonnelList, new Comparator<SmPersonnel>() {
+				@Override
+				public int compare(final SmPersonnel s1, final SmPersonnel s2) {
+					return (s2.getSort() > s1.getSort() ? -1 : (s1.getSort() == s2.getSort() ? 0 : 1));
+				}
+			});
+		}
+	}
+
+	/**
+	 * Count authorized user
+	 * 
+	 * @param smPersonnelList
+	 */
+	public void countAuthUserWithRole(List<SmPersonnel> smPersonnelList) {
+		if (smPersonnelList != null) {
+			int count = 0;
+			for (SmPersonnel per : smPersonnelList) {
+				if (per.getAuthorizedFlg() == 1 && per.getPmUser() != null) {
+					count++;
+				}
+			}
+			getManagedBean().setAuthUserCount(count);
+		}
+	}
+
+	/**
+	 * Count authorized user
+	 * 
+	 * @param smPersonnelList
+	 */
+	public void countContractSigner(List<SmPersonnel> smPersonnelList) {
+		if (smPersonnelList != null) {
+			int count = 0;
+			for (SmPersonnel per : smPersonnelList) {
+				if (per.getContractSignerFlg() == 1) {
+					count++;
+				}
+			}
+			getManagedBean().setContractSignerCount(count);
+		}
+	}
+	// 9569 end
 	
 }
