@@ -110,13 +110,13 @@
 					</p:outputPanel>
 				</c:if>
 				
-                <!-- #15629 -- start -->
+                <!-- #15629 start -->
 				<c:if test="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' and !backingBean.managedBean.approverUser}">
 				<p:outputPanel layout="block" id="recRejectBlockPanel">
 				
 					<p:messages id="recSearchRejectMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
 					
-<!-- 					<tr> -->
+				<!-- <tr> -->
 						<table style="width: 100%">
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
@@ -147,10 +147,10 @@
 							</tr>
 						</table>
 					
-<!-- 					</tr> -->
+                       <!-- </tr> -->
 
-<!-- 					<tr> -->
-<!-- 						<td colspan="2"> -->
+						<!-- <tr> -->
+						<!-- <td colspan="2"> -->
 					  		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="recResultRejectedReasonPanelId">
 								<p:dataTable var="recReason" widgetVar="recReasonWidgetVar"
 									editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -245,7 +245,7 @@
 				</tr>
 				</c:if>
 				
-                <!-- #15629 -- end -->
+                <!-- #15629 end -->
 												
 				<c:if test="#{cc.attrs.overLappedCategoryExists}">
 					<tr>
