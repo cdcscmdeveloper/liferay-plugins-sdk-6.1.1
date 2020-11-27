@@ -231,6 +231,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String poApprOverlappedRemark;
 	private String poUserName;
 	private String poRemark;
+	private String poRemarkRejectReasons;
 	private Date poRemarkCreatedDate;
 	private String approverUserName;
 	private String approverRemark;
@@ -2219,5 +2220,13 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setFlagShowButtonSubmit(boolean flagShowButtonSubmit) {
 		this.flagShowButtonSubmit = flagShowButtonSubmit;
+	}
+
+	public String getPoRemarkRejectReasons() {
+		return poRemarkRejectReasons;
+	}
+
+	public void setPoRemarkRejectReasons(String poRemarkRejectReasons) {
+		this.poRemarkRejectReasons = poRemarkRejectReasons;
 	}
 }
