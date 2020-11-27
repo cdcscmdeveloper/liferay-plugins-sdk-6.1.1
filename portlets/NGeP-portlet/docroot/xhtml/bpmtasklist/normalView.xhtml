@@ -54,13 +54,45 @@
 				<td width="10%"></td>
 				<td width="40%"></td>
 			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.created.date']} : " /></td>
+				<td width="40%">
+					<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.viewBy}">
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.past.day']}" itemValue="DAY"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.past.week']}" itemValue="WEEK"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}" itemValue="MONTH"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+				<td width="10%"></td>
+				<td width="40%"></td>
+			</tr>
+			<tr>
+				<td width="10%"><p:outputLabel value="Sort By : " /></td>
+				<td width="40%">
+					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
+						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="Document No" itemValue="DOCNUMBER"></f:selectItem>
+						<f:selectItem itemLabel="Document Type" itemValue="DOCTYPE"></f:selectItem>
+						<f:selectItem itemLabel="Created Date" itemValue="CREATEDATE"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+				<td width="10%"><p:outputLabel value="Order By : " /></td>
+				<td width="40%">
+					<p:selectOneMenu id="taskListOrderBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascending}">
+						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="Ascending" itemValue="true"></f:selectItem>
+						<f:selectItem itemLabel="Descending" itemValue="false"></f:selectItem>
+					</p:selectOneMenu>
+				</td>
+			</tr>
 
 
 
 		</table>
-
+		<!-- 
 		<div class="clear"></div>
-
+		
 		<div
 			style="text-align: left; margin-right: 2px; margin-top: 5px; float: left; margin-left: 7.3%;">
 			<p:outputLabel value="#{lbl['lbl.bpm.created.date']} : " />
@@ -71,14 +103,12 @@
 				value="#{bpmTasklistBackingBean.managedBean.viewBy}">
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.day']}" itemValue="DAY"></f:selectItem>
-				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.week']}"
-					itemValue="WEEK"></f:selectItem>
-				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}"
-					itemValue="MONTH"></f:selectItem>
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.week']}" itemValue="WEEK"></f:selectItem>
+				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}" itemValue="MONTH"></f:selectItem>
 			</p:selectOneMenu>
 
 		</div>
-
+		 -->
 
 		<div class="clear"></div>
 		<div style="text-align: left; margin-right: 2px; float: right;">
@@ -103,9 +133,12 @@
 		style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
 
-		<p:column width="5%;">
+		<p:column width="5%;" sortBy="#">
 			<f:facet name="header">
-					#{lbl['lbl.bpm.doc.no']}
+			<!--  <h:commandLink action="#" >
+					
+			</h:commandLink>-->
+			#{lbl['lbl.bpm.doc.no']}
 			</f:facet>
 			<!-- start updated for #24968 -->
 			<h:panelGroup rendered="#{not empty tasks.pocoNo}">
