@@ -279,7 +279,7 @@
 
 			<portlet id="UserProfileMaintenance"></portlet>
 			<!-- #9569 START-->
-			<portlet id="MOFSupplierUserMaintenance"></portlet>
+			<portlet id="SupplierUserMaintenance"></portlet>
 			<!-- #9569 END-->
 			<portlet id="SmUserProfileMaintenance"></portlet>
 			<portlet id="TaskSummary"></portlet>
