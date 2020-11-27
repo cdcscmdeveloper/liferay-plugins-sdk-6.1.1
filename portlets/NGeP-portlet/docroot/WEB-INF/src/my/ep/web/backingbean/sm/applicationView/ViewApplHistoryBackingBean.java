@@ -57,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -576,6 +577,24 @@ public class ViewApplHistoryBackingBean extends
 						getManagedBean().getSmAppl().getApplNo(),
 						getManagedBean().getSmAppl().getApplId());
 		resetPOApproverDecisionInfo();
+		
+		// #15629 -- start
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplRejectReasons())) {
+			for (SmApplRejectReason rej : getManagedBean().getSmAppl().getSmApplRejectReasons()) {
+
+					    sb.append(++count).append(". "); 
+						sb.append(getReasonDesc(rej.getPmReason()));
+						sb.append("\n");
+
+			}
+			
+			getManagedBean().setPoRemarkRejectReasons(sb.toString());
+		}
+		// #15629 -- end
+		
 		if (resDTO.getPoApproverRemarksList() != null) {
 			log.info("PoApproverRemarksList() size:"
 					+ resDTO.getPoApproverRemarksList().size());
@@ -629,6 +648,9 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setApproverUserName(null);
 		getManagedBean().setApproverRemarkCreatedDate(null);
 		getManagedBean().setApproverRemark(null);
+        // #15629 -- start
+		getManagedBean().setPoRemarkRejectReasons(null);
+        // #15629 -- end
 	}
 
 	/**
