@@ -1353,6 +1353,13 @@ public class SmPersonnelBackingBean extends
 					.getBasicSmPersonnel().getName(), getManagedBean()
 					.getBasicSmPersonnel().getEmail());
 		}
+		//Start 13320
+		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
+			if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
+				per.getSmAddress().setPmDivision(null);
+			}
+		}
+		//End 13320
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			getManagedBean().setBasicSmPersonnel(
 					saveNewUser(getManagedBean().getBasicSmPersonnel()));
