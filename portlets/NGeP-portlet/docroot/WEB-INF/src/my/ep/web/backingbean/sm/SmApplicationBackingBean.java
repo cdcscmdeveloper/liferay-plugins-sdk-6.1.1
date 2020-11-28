@@ -13304,10 +13304,10 @@ public class SmApplicationBackingBean extends
 		//#17906 - start
 		if (hasActiveTransactionContractManagement && hasActiveTransactionFulfilment){
 			getManagedBean().setPendingTransaction(true);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					"i) "+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied", null)));
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,""));
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,""));
+			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					"ii) "+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied", null)));
 		//#17906 - end
 			
