@@ -337,8 +337,11 @@
 										isBPKTaskAndClaimed)}">
 						<f:selectItems
 									value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.rePublishOption)}" />
+						<!-- 25426 ruzaimah - Start -->
 						<p:ajax event="change" partialSubmit="true" update="@this"
-							process="@this" />
+							process="@this" 
+							listener="#{suppFinalizationBackingBean.CheckInactiveCommiteeRole(suppFinalizationBackingBean.managedBean.scQtFinalization,'ALL')}"/>
+						<!-- 25426 End -->
 					</p:selectOneMenu>
 					</td>
 					<td style="margin-top: -3px;"><ac:iconTooltip value="#{lbl['lbl.sc.required.specification.changes.tooltip']}" /></td>

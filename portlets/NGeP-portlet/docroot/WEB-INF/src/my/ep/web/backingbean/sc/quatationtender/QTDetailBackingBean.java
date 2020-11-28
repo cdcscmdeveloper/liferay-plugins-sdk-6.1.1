@@ -5783,6 +5783,15 @@ public class QTDetailBackingBean extends
 		
 		Long statusId = this
 				.getManagedBean().getQt().getQtStatus().getStatusId();
+		
+		// #25426#36#95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& isDeskOfficer()) // #25426#85 ruzaimah - remove this.
+				&& !this.getManagedBean().isReadOnly()) {
+			return false;
+		}
+		// #25426 - end	
+		
 		if (this.getManagedBean().isMaintanceFlow()
 				&& QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId)) {
 			return true;
