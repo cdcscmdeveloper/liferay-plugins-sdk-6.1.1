@@ -1988,6 +1988,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setAddToCartFlag(cart);
 		// update item details data table
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		// #28789 - start
+		getManagedBean().setPriceTypeStringFlag(false);
+		getManagedBean().setPriceTypeTableFlag(false);
+		// #28789 - start
 		RequestContext.getCurrentInstance().execute("addToCartPopup.show();");
 	}
 	
