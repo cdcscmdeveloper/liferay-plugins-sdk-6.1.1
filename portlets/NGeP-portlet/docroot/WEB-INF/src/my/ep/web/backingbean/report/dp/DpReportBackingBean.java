@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -29,6 +30,7 @@ import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.DpReportConst;
@@ -103,6 +105,16 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 		reqDTO.setParametersMap(params);
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+			
+			//R5 #14076 start
+			if(getManagedBean().getDocNo()!= null){
+				RPTRequestDtl rdtl = new RPTRequestDtl();
+				rdtl.setRequestId(resDTO.getRequestId());
+				rdtl.setDocumentNo01(getManagedBean().getDocNo());
+				addRptRequestDetail(rdtl);	
+			}
+			//R5 #14076 end
+			
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 			RequestContext.getCurrentInstance().execute(
 					"rptConfirmationDlg.show()");
@@ -110,6 +122,13 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//R5 #14076 start
+	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
+			
+		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
+		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
 	}
 	
 	//TODO to have in base class

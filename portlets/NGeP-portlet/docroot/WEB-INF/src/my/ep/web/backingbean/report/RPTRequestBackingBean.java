@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -26,6 +27,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
@@ -33,6 +35,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.rpt.RPTRequest;
+import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
@@ -61,7 +64,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	private static final Logger logger = EpLogger
 			.getLogger(RPTRequestBackingBean.class);
 
-	private IPagingDataModel<RPTRequest> rptRequestDataModel = new RPTRequestDataModel();
+	private IPagingDataModel<RPTRequest> rptRequestDataModel = new RPTRequestDataModel();	
 
 	public RPTRequestBackingBean() {
 		this.getManagedBean().setDeleteButtonHide(true);
@@ -524,4 +527,30 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		rptRequestSO.updateDownloadedFlag(rptRequest);
 		
 	}
+	
+	public String getDocumentsNo(BigDecimal requestId){
+
+		StringBuilder documentsNo = new StringBuilder(100);
+		IRPTRequestDtlSO iRPTRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
+		RPTRequestDtl rdtl = iRPTRequestDtlSO.findbyRequestId(requestId);
+		
+		if(rdtl != null){	
+						
+			if(rdtl.getDocumentNo01() != null){	documentsNo.append(rdtl.getDocumentNo01());}
+			if(rdtl.getDocumentNo02() != null){	documentsNo.append(","+rdtl.getDocumentNo02());}
+			if(rdtl.getDocumentNo03() != null){	documentsNo.append(","+rdtl.getDocumentNo03());}
+			if(rdtl.getDocumentNo04() != null){	documentsNo.append(","+rdtl.getDocumentNo04());}		
+			if(documentsNo.charAt(0) == ','){ documentsNo.deleteCharAt(0); }
+
+		}else{	
+			if(strLanguage.equals("en")){
+				documentsNo.append("N/A");
+			}else{			
+				documentsNo.append("T/B");
+			}
+		}
+		
+		return documentsNo.toString();
+	}
+	
 }
