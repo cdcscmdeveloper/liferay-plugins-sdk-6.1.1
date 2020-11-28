@@ -7063,25 +7063,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 
 		}
-		//#25956 - End
-		
-		private String[] sortOutcomes(String[] outComes) {
-			outComes = outComes==null ? new String[]{} : outComes;//29253-start
-			List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
-			Collections.sort(bpmActions, new Comparator<String>() {
-				String[] orderedAction = new String[]{
-						BpmOutcomeConst.BPM_SUBMIT, 
-						BpmOutcomeConst.BPM_CANCEL}; 
-				//last index will appear on the far right, 
-				//if outcome not ranked, order come as is,
-				//existed ordered outcome will take precedent
-				List<String> sortOrder = Arrays.asList(orderedAction);
-				public int compare(String s1, String s2) {
-					return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-				}
-			});
-			outComes = new String[bpmActions.size()];
-			return bpmActions.toArray(outComes);
-		}
+		//#25956 - End	
 
 	}
