@@ -13,8 +13,10 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -612,6 +614,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			/*Retrieve bpm details*/
 			getManagedBean().setSelectedTabIndex(0);
 			CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);		
+			
+			//#25956 - Start
+			/* re-Setting Cancel button*/
+			if(this.getManagedBean().getOutComes()!= null){
+			String[] str_array = this.getManagedBean().getOutComes();
+			List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+			if(list.contains(BpmOutcomeConst.BPM_CANCEL)){
+				list.remove(BpmOutcomeConst.BPM_CANCEL);
+				list.add(BpmOutcomeConst.BPM_CANCEL);
+				str_array = list.toArray(new String[0]);
+				this.getManagedBean().setOutComes(null);
+				this.getManagedBean().setOutComes(str_array);
+			}
+		}
+			log.info("Check Button :"+this.getManagedBean().getOutComes().toString());
+			//#25956 - End
 
 			/* Setting save button as per requirement*/
 			String[] outcome = new String[getManagedBean().getOutComes().length];
@@ -7046,5 +7064,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		//#25956 - End
+		
+		private String[] sortOutcomes(String[] outComes) {
+			outComes = outComes==null ? new String[]{} : outComes;//29253-start
+			List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+			Collections.sort(bpmActions, new Comparator<String>() {
+				String[] orderedAction = new String[]{
+						BpmOutcomeConst.BPM_SUBMIT, 
+						BpmOutcomeConst.BPM_CANCEL}; 
+				//last index will appear on the far right, 
+				//if outcome not ranked, order come as is,
+				//existed ordered outcome will take precedent
+				List<String> sortOrder = Arrays.asList(orderedAction);
+				public int compare(String s1, String s2) {
+					return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+				}
+			});
+			outComes = new String[bpmActions.size()];
+			return bpmActions.toArray(outComes);
+		}
 
 	}
