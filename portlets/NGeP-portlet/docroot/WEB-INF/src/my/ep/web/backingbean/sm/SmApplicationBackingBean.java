@@ -13248,16 +13248,17 @@ public class SmApplicationBackingBean extends
 				
 				String labelNameVal = "";
 				if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
+					String msgId = "bankDeleteMsg";
 					if (hasActiveTransactionContractManagement) {
 						getManagedBean().setItemDeleteButtonShow(true);
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						FacesContext.getCurrentInstance().addMessage(msgId, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
 										new String[] { labelNameVal })));
 					} 
 					
 					if (hasActiveTransactionFulfilment) {
 						getManagedBean().setItemDeleteButtonShow(true);
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						FacesContext.getCurrentInstance().addMessage(msgId, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
 									new String[] { labelNameVal })));
 					} 
