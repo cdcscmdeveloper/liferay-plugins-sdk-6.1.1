@@ -13248,6 +13248,7 @@ public class SmApplicationBackingBean extends
 				
 				String labelNameVal = "";
 				if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
+					//#17906
 					String msgId = "bankDeleteMsg";
 					if (hasActiveTransactionContractManagement) {
 						getManagedBean().setItemDeleteButtonShow(true);
@@ -13292,14 +13293,23 @@ public class SmApplicationBackingBean extends
 				.hasActiveTransactionForFulfilment(currSupp, shareBankBean.getAccountNo());
 		
 		String labelNameVal = "";
-		if (hasActiveTransactionContractManagement) {
+		//#17906 - start
+		if (hasActiveTransactionContractManagement && hasActiveTransactionFulfilment){
+			getManagedBean().setPendingTransaction(true);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					"i) "+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied", null)));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,""));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					"ii) "+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied", null)));
+		//#17906 - end
+			
+		} else if (hasActiveTransactionContractManagement) {
 			getManagedBean().setPendingTransaction(true);
 			FacesContext.getCurrentInstance().addMessage("activecontract", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
 							new String[] { labelNameVal })));
-		} 
-		
-		if (hasActiveTransactionFulfilment) {
+			
+		} else if (hasActiveTransactionFulfilment) {
 			getManagedBean().setPendingTransaction(true);
 			FacesContext.getCurrentInstance().addMessage("pendingtransaction", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
