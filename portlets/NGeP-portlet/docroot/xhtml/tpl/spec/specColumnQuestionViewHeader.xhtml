@@ -56,12 +56,17 @@
 
 			</p:column>
 
-
+			<!-- 11715 danial start -->
 			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:4%;text-align:right;"
 				headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
 
 			</p:column>
+			
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:4%;text-align:right;"
+				headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isSpecTypeFinancial and supplierProposalDetailManagedBean.tierType}">
 
+			</p:column>
+			<!-- 11715 danial end -->
 
 			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}"
