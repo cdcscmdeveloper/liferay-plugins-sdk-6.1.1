@@ -92,6 +92,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
+import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean; //#25396
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.ReportConst;
@@ -99,6 +100,7 @@ import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang3.StringUtils;
@@ -185,21 +187,44 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
 	}
 	
+	// start - 25396
 	/**
 	 *  Get document types based on View As selected.
 	 */
 	public void getDocTypesByViewAs() {
-		getManagedBean().setSearchDocumentType(null);
-		if(isGovernment()){
-			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
-			if (!getManagedBean().isG2G()) {
+		getManagedBean().setSearchDocumentType(null);		
+		Long paramViewAsId = 0L;
+		
+		if (getManagedBean().getSearchFunctionType() != null && getManagedBean().getSearchFunctionType() != "") {
+			paramViewAsId = Long.parseLong(getManagedBean().getSearchFunctionType());
+			PmParameter viewAsTypeCode = ParameterHelper.getInstance().getPmParameterById(paramViewAsId);
+			
+			if(viewAsTypeCode.getParameterCode().equals(ParameterConst.ORG_TYPE_PTJ)){
+				getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 				getManagedBean().setGovernment(Boolean.TRUE);
-			}
-		} else if(isSupplier()){
-			getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
-			getManagedBean().setGovernment(Boolean.FALSE);
+				getManagedBean().setViewAsPTJ(Boolean.TRUE);
+				getManagedBean().setViewAsSupplier(Boolean.FALSE);
+				
+				PmTrackingDiaryBackingBean  pmTrackingDiaryBackingBean= new PmTrackingDiaryBackingBean();
+				pmTrackingDiaryBackingBean.getManagedBean().setUseViewAsOption(Boolean.TRUE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsPTJ(Boolean.TRUE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsSupplier(Boolean.FALSE);
+				
+			}else if(viewAsTypeCode.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
+				getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
+				getManagedBean().setGovernment(Boolean.FALSE);
+				getManagedBean().setViewAsPTJ(Boolean.FALSE);
+				getManagedBean().setViewAsSupplier(Boolean.TRUE);				
+				
+				PmTrackingDiaryBackingBean  pmTrackingDiaryBackingBean= new PmTrackingDiaryBackingBean();
+				pmTrackingDiaryBackingBean.getManagedBean().setUseViewAsOption(Boolean.TRUE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsPTJ(Boolean.FALSE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsSupplier(Boolean.TRUE);
+			}	
 		}
+		
 	}
+	// end - 25396
 	
 	/**
 	 * Checks if is government.
@@ -361,6 +386,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	public void search() {
 		debugLogger("DpTrackingDiaryBackingBean search");
+		//start - #25396 
+		if(showFunctionType()){
+			if (getManagedBean().getSearchFunctionType() == null || getManagedBean().getSearchFunctionType() == "") {
+				throw new EpException(MessageConst.ERROR_775160);
+			} 
+		}
+		//end - #25396
 		if ((null == getManagedBean().getSearchDocumentType())) {
 			throw new EpException(MessageConst.ERROR_776101);
 		} else{
