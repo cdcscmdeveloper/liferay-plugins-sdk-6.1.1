@@ -9598,6 +9598,14 @@ public class SmApplicationBackingBean extends
 								}
 
 							}
+							
+							// #15629 -- start
+							if (getManagedBean().isPoUser() && !getManagedBean().getSmAppl().getApplType()
+									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+								setSmApplRejectionReasons();
+								reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
+							}
+							// #15629 -- end
 						}
 					}
 
