@@ -58,7 +58,10 @@
 				</tr>
 				<!-- Redmine 25396: remove duplication option view by adding new drop down field -->  
 				<tr>
-					<td width="22%"><p:outputLabel value="#{lbl['lbl.sc.document.viewas']}" rendered="#{directPurchaseBackingBean.showFunctionType()}" /></td>
+					<td width="22%"><p:outputLabel
+							value="#{lbl['lbl.sc.document.viewas']}"
+							rendered="#{directPurchaseBackingBean.showFunctionType()}" />
+						<p:outputLabel value="*" rendered="#{directPurchaseBackingBean.showFunctionType()}" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="viewAs" style="width: 250px;"
 							value="#{directPurchaseBackingBean.managedBean.searchFunctionType}" 
 							rendered="#{directPurchaseBackingBean.showFunctionType()}">
@@ -188,13 +191,13 @@
 
 						<p:menuitem id="printBtnIcon" value="#{lbl['lbl.btn.print']}"
 							ajax="false"
-							rendered="#{directPurchaseBackingBean.isSupplier() ? directPurchaseBackingBean.managedBean.searchDocumentType eq ParameterConst.doctypeLetterOfAward : true}"
+							rendered="#{!directPurchaseBackingBean.showFunctionType()}"
 							icon="ui-icon-print"
 							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
 							
 						<p:menuitem id="printBtnIconDualRole" value="#{lbl['lbl.btn.print']}"
 							ajax="false"
-							rendered="#{directPurchaseBackingBean.showFunctionType() and !directPurchaseBackingBean.managedBean.isG2G()}"
+							rendered="#{directPurchaseBackingBean.showFunctionType() and directPurchaseBackingBean.managedBean.viewAsPTJ}"
 							icon="ui-icon-print"
 							action="#{directPurchaseBackingBean.generateReport(Obj)}" />
 
