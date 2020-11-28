@@ -2,7 +2,9 @@ package my.ep.web.managedbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -114,6 +116,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private List<PmZone> zoneList;
 	private String backURL;
 	private boolean isFilterBySupplier;
+	
+	//start - #25396
+	private boolean useViewAsOption;
+	private boolean viewAsPTJ;
+	private boolean viewAsSupplier;
+	private String supplierRole;
+	//end - #25396	
 
 	public String getBackURL() {
 		return backURL;
@@ -1064,6 +1073,26 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
 								searchBean, searchFilterBeanAnd1);
 
+						// #25396 - Start
+						ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
+						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+						if (isUseViewAsOption()) {
+							if (isViewAsSupplier()) {
+								List<String> listOfSupplierRole = getAllSupplierRole();
+								for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
+									if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
+										tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
+									}
+								}
+								tempResultBean.getResultList().clear();
+								tempResultBean.getResultList().addAll(
+										new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
+
+								resDTO.setResultBean(tempResultBean);
+							}
+						}
+						// #25396 - end
+
 					} else {
 						searchBean.getDataFilterBeans().add(
 								new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
@@ -1117,6 +1146,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		return pmOrgProfile;
 	}
 	
+	// to get list of all supplier role
+	// Start - #25396
+	private List<String> getAllSupplierRole() {
+		List<String> supplierRoles = new ArrayList<String>();
+
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.FL_USER.value());
+		supplierRoles.add(RoleCode.GOVT_SELLER.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+		return supplierRoles;
+	}
+
+	// End - #25396
+	
 	/**
 	 * set search bean description for tracking purpose
 	 *
@@ -1135,4 +1183,39 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				.hasRoleUser(RoleCode.BPK_AUDITOR.value())|| fc.hasRoleUser(RoleCode.DESK_OFFICER.value()));
 	}
 	// CR 25790 - End
+
+	//start - #25396
+	public boolean isUseViewAsOption() {
+		return useViewAsOption;
+	}
+
+	public void setUseViewAsOption(boolean useViewAsOption) {
+		this.useViewAsOption = useViewAsOption;
+	}
+
+	public boolean isViewAsPTJ() {
+		return viewAsPTJ;
+	}
+
+	public void setViewAsPTJ(boolean viewAsPTJ) {
+		this.viewAsPTJ = viewAsPTJ;
+	}
+
+	public boolean isViewAsSupplier() {
+		return viewAsSupplier;
+	}
+
+	public void setViewAsSupplier(boolean viewAsSupplier) {
+		this.viewAsSupplier = viewAsSupplier;
+	}
+
+	public String getSupplierRole() {
+		return supplierRole;
+	}
+
+	public void setSupplierRole(String supplierRole) {
+		this.supplierRole = supplierRole;
+	}
+	
+	//end - #25396
 }
