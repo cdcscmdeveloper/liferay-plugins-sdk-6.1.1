@@ -31,6 +31,7 @@ import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
+import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -52,6 +53,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.RoleCode;
@@ -205,11 +207,28 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		try {
 
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+	
+			//R5 #14076 start
+			if(getManagedBean().getQuotationNumber()!= null){
+				RPTRequestDtl rdtl = new RPTRequestDtl();
+				rdtl.setRequestId(resDTO.getRequestId());
+				rdtl.setDocumentNo01(getManagedBean().getQuotationNumber());
+				addRptRequestDetail(rdtl);	
+			}
+			//R5 #14076 end
+			
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//R5 #14076 start
+	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
+		
+		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
+		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
 	}
 	
 	//Bug #28440 start
