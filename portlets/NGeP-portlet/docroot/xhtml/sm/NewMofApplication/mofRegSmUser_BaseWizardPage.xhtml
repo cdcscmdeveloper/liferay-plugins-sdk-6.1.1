@@ -337,9 +337,10 @@
 				</div>
 
 			</p:confirmDialog>
+			<!-- #17906 -->
 			<p:messages id="messages" showDetail="true" showSummary="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" escape="false" />
+				closable="true" escape="false" globalOnly="true"/>
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />
@@ -355,7 +356,7 @@
 				<ui:include src="step3CaptialAndEquityStatusInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
-				<ui:include src="step5BankInfo.xhtml" />
+				ya---be<ui:include src="step5BankInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
 				<ui:include src="step6RegisterCategoryCodesInfo.xhtml" />
