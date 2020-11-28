@@ -2891,6 +2891,26 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
 				specMaster = resDTO.getSpecMaster();
+				
+				//#11715 danial start
+				for (TplSpecAnswer answer: resDTO.getSpecAnswerList()) {
+					//shaqimi start - merged if statement
+					if (null!=answer.getTplSpecQuestion() &&
+							null!=answer.getTplSpecQuestion().getClPriceTypeCode()) {
+						String code=answer.getTplSpecQuestion().getClPriceTypeCode().getParameterCode();
+						
+						if (code.equals(ParameterConst.PRICE_TYPE_TIER)||
+						   code.equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER)||
+						   code.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)||
+						   code.equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)||
+						   code.equals(ParameterConst.PRICE_TYPE_TARIFF)||
+						   code.equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+							this.getManagedBean().setTierType(true);
+						}
+					}
+				}
+				//#11715 danial end
+				
 				TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setContentType(reqDTO.getContentType());
