@@ -2024,6 +2024,15 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
+		
+		// #25426 #36 #85 #95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow()
+				&& isDeskOfficer()) 
+				&& !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// #25426 #36 #85 #95 ruzaimah - end
+		
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2039,6 +2048,7 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
+		
 		return false;
 	}
 
@@ -2454,24 +2464,36 @@ public class QTCommitteBackingBean extends
 	
 	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel){
 		if(null!=dataModel){
-		List<PmUser> modelList=dataModel.getList();
-		log.debug("start addNewCommiteteUsers");
-		List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
-		if(null==userList){
-			log.debug("nullList addNewCommiteteUsers");
-			userList=new ArrayList<PmUser>();
-		}
-		if (modelList != null) {
-			List<PmUser> user=new ArrayList<PmUser>();
-			for (PmUser entity : modelList) {
-			if (entity.isSelected()) {
-				user.add(entity);
+			List<PmUser> modelList=dataModel.getList();
+			log.debug("start addNewCommiteteUsers");
+			List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
+			
+			if(null==userList){
+				log.debug("nullList addNewCommiteteUsers");
+				userList=new ArrayList<PmUser>();
 			}
-		}
+			
+			if (modelList != null) {
+				List<PmUser> user=new ArrayList<PmUser>();
+				
+				for (PmUser entity : modelList) {	
+					if (entity.isSelected()) {
+						user.add(entity);
+					}
+			}
+			
 			userList.addAll(user);
 			this.getManagedBean().setSelectedPmUser(userList);
 			//log.info("end addNewCommiteteUsers"+this.getManagedBean().getSelectedPmUser().size());
+			}
+		}
 	}
+	
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
-	}
+	// #25426#36 ruzaimah - end	
+	
 }
