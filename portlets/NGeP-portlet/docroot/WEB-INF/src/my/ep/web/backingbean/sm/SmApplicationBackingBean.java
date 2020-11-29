@@ -1144,7 +1144,6 @@ public class SmApplicationBackingBean extends
 						&& StringUtils.isBlank(smAppl.getSupportingDocMode())) {
 					smAppl.setSupportingDocMode(StringUtils.EMPTY);
 				}
-				log.info("SUPPORTINGDOCUMENTMODE =" + resDto.getSmAppl().getSupportingDocMode());
 
 				log.info("****** After retrieve the appl is ********"
 						+ smAppl.getApplId() + " *** Num ***"
@@ -1233,14 +1232,28 @@ public class SmApplicationBackingBean extends
 
 		SmCommonUtil.getInstance().setUserDetails(smAppl);
 		//28771
-		
-		if (getManagedBean().getSmAppl().getSupportingDocMode() == null){
-			getManagedBean().setSmAppl(smAppl);
-			smAppl.setSupportingDocMode(StringUtils.EMPTY);}
-		
-		if (getManagedBean().getSmAppl().getSupportingDocMode() != null){
-			getManagedBean().setSmAppl(smAppl);	}
-		
+		getManagedBean().setSmAppl(smAppl);
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());
+			if (sts != null && sts.getPmStatus() != null){
+				if (sts.getPmStatus().getStatusId().compareTo(SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
+					if(getManagedBean().getSmAppl().getSupportingDocMode() == null){
+						smAppl.setSupportingDocMode(StringUtils.EMPTY);
+						
+					}else{
+					smAppl.setSupportingDocMode(getManagedBean().getSmAppl().getSupportingDocMode());
+					}
+				}
+				
+			}else{
+				smAppl.setSupportingDocMode(StringUtils.EMPTY);
+				}
+				
+			}
 		
 		if (fromBpm) {
 			SmApplicationUtil.getInstance().setApplAddressTransientValue(
@@ -1557,7 +1570,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}}
-		 getManagedBean().getSmAppl().getSupportingDocMode();
 
 		// set latest mofAccount
 		if (getManagedBean().getSmAppl().getSmSupplier() != null) {
@@ -4126,7 +4138,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(
 				StringUtils.EMPTY);
 		}
-		log.info("SUPPORTINGDOCUMENTMODE3=" + getManagedBean().getSmAppl().getSupportingDocMode());
 		RequestContext.getCurrentInstance().execute("typeConfirmation.hide()");
 	}
 
