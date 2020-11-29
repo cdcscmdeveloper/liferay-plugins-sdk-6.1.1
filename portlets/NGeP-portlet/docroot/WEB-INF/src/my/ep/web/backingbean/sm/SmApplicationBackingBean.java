@@ -1142,8 +1142,9 @@ public class SmApplicationBackingBean extends
 				smAppl.setResubmit(false);
 				if (smAppl != null
 						&& StringUtils.isBlank(smAppl.getSupportingDocMode())) {
-					smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+					smAppl.setSupportingDocMode(StringUtils.EMPTY);
 				}
+				log.info("SUPPORTINGDOCUMENTMODE =" + resDto.getSmAppl().getSupportingDocMode());
 
 				log.info("****** After retrieve the appl is ********"
 						+ smAppl.getApplId() + " *** Num ***"
@@ -1237,7 +1238,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSmAppl(smAppl);
 			smAppl.setSupportingDocMode(StringUtils.EMPTY);}
 		
-		else if (getManagedBean().getSmAppl().getSupportingDocMode() != null){
+		if (getManagedBean().getSmAppl().getSupportingDocMode() != null){
 			getManagedBean().setSmAppl(smAppl);	}
 		
 		
@@ -1550,11 +1551,13 @@ public class SmApplicationBackingBean extends
 								: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 
 		// set supporting document mode if empty
+		if (getManagedBean().isPoUser()|| getManagedBean().isApproverUser()){
 		if (StringUtils.isBlank(getManagedBean().getSmAppl()
 				.getSupportingDocMode())) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-		}
+		}}
+		 getManagedBean().getSmAppl().getSupportingDocMode();
 
 		// set latest mofAccount
 		if (getManagedBean().getSmAppl().getSmSupplier() != null) {
@@ -3567,7 +3570,6 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setHasSuppDocToDownload(false);
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null){
 			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-			log.info(getManagedBean().getSmAppl().getSupportingDocMode());
 			}
 		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
 			getManagedBean().getSmAppl().setSmApplSupportDocs(
@@ -4087,7 +4089,7 @@ public class SmApplicationBackingBean extends
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
-					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+					StringUtils.EMPTY);
 		}
 		saveOrUpdateAppl();
 	}
@@ -4122,8 +4124,9 @@ public class SmApplicationBackingBean extends
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
-					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				StringUtils.EMPTY);
 		}
+		log.info("SUPPORTINGDOCUMENTMODE3=" + getManagedBean().getSmAppl().getSupportingDocMode());
 		RequestContext.getCurrentInstance().execute("typeConfirmation.hide()");
 	}
 
@@ -7934,7 +7937,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSmAppl().setApplSubmitDate(new Date());
 
 		if (bpmAppl.getSupportingDocMode() == null) {
-			bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+			bpmAppl.setSupportingDocMode(StringUtils.EMPTY);
 		}
 		if (!bpmAppl.isActiveAppl()) {
 			bpmAppl.setActiveAppl(true);
@@ -8654,7 +8657,7 @@ public class SmApplicationBackingBean extends
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
 			if (bpmAppl.getSupportingDocMode() == null) {
-				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				bpmAppl.setSupportingDocMode(StringUtils.EMPTY);
 			}
 			String outcome = "";
 			if (!getManagedBean().isDraftedAppl()) {
