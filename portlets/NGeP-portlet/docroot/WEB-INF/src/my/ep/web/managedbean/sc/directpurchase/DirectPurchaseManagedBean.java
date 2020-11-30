@@ -113,6 +113,10 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private String searchFunctionType;
 	
 	private boolean isG2G;
+	
+	private boolean viewAsPTJ;
+	
+	private boolean viewAsSupplier;
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -560,6 +564,24 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setLoaList(List<String> loaList) {
 		this.loaList = loaList;
 	}
+	
+	//Start - #25396
+	public boolean isViewAsPTJ() {
+		return viewAsPTJ;
+	}
+
+	public void setViewAsPTJ(boolean viewAsPTJ) {
+		this.viewAsPTJ = viewAsPTJ;
+	}
+
+	public boolean isViewAsSupplier() {
+		return viewAsSupplier;
+	}
+	
+	public void setViewAsSupplier(boolean viewAsSupplier) {
+		this.viewAsSupplier = viewAsSupplier;
+	}
+	//End - #25396
 
 	/**
 	 * @return the dpmDocumentDataModel
