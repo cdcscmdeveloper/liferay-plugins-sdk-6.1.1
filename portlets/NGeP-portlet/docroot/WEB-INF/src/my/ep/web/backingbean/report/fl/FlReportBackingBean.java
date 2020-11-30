@@ -106,17 +106,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			RPTRequestDtl rdtl = new RPTRequestDtl();
 			rdtl.setRequestId(resDTO.getRequestId());
 			
-			//1 = Contract No || Invoice No
+			//1 = Contract No 
 			//2 = Contract Request No || Invoice No(Supplier)
-			//3 = Purchase Order No ||  Stop Invoice No
-			//4 = Purchase Request No || Delivery Order No || Fulfilment Received Note  No || Stop Delivery Instruction No
+			//3 = Purchase Order No ||  Contract Order No
+			//4 = Purchase Request No || Delivery Order No || Fulfilment Received Note  No || Stop Delivery Instruction No || Invoice No
 			
 			if(params.get(FlReportConst.FL_RPT_CONTRACT_NO) != null){	
 				rdtl.setDocumentNo01(params.get(FlReportConst.FL_RPT_CONTRACT_NO));
 			}	
-			if(params.get(FlReportConst.FL_RPT_INV_NO) != null){	
-				rdtl.setDocumentNo01(params.get(FlReportConst.FL_RPT_INV_NO));
-			}
 			
 			if(params.get(FlReportConst.FL_RPT_CONTRACT_REQ_NO) != null){	
 				rdtl.setDocumentNo02(params.get(FlReportConst.FL_RPT_CONTRACT_REQ_NO));
@@ -129,6 +126,10 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				rdtl.setDocumentNo03(params.get(FlReportConst.FL_RPT_PURCHASE_ORDER));
 			}
 			
+			if(params.get(FlReportConst.FL_RPT_COTRACT_ORDER) != null){	
+				rdtl.setDocumentNo03(params.get(FlReportConst.FL_RPT_COTRACT_ORDER));
+			}
+			
 			if(params.get(FlReportConst.FL_RPT_DELI_ORD_NO) != null){
 				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_DELI_ORD_NO));
 			}
@@ -137,8 +138,11 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			}
 			if(params.get(FlReportConst.FL_RPT_STOP_INSTR_NO) != null){
 				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_STOP_INSTR_NO));
+			}		
+			if(params.get(FlReportConst.FL_RPT_INV_NO) != null){	
+				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_INV_NO));
 			}
-				
+		
 			if(rdtl.getDocumentNo01() != null || rdtl.getDocumentNo02() != null || rdtl.getDocumentNo03() != null || rdtl.getDocumentNo04() != null ){
 				addRptRequestDetail(rdtl);	
 			}

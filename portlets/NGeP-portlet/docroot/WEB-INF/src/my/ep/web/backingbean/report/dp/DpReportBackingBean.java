@@ -34,6 +34,7 @@ import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.DpReportConst;
+import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.dp.DpReportManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -110,8 +111,15 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 			if(getManagedBean().getDocNo()!= null){
 				RPTRequestDtl rdtl = new RPTRequestDtl();
 				rdtl.setRequestId(resDTO.getRequestId());
-				rdtl.setDocumentNo01(getManagedBean().getDocNo());
-				addRptRequestDetail(rdtl);	
+				rdtl.setDocumentNo01(getManagedBean().getDocNo());	
+				
+				if(params.get(DpReportConst.PARAM_SQ_NO) != null){	
+					rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_SQ_NO));
+				}	
+				if(rdtl.getDocumentNo01() != null ){
+					addRptRequestDetail(rdtl);	
+				}
+	
 			}
 			//R5 #14076 end
 			
