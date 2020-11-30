@@ -4045,7 +4045,12 @@ public class SmApplicationUtil {
 		if (resDto.getSmSupplier() != null) {
 
 			SmSupplier smSupplier = resDto.getSmSupplier();
-
+			//20200615@Jacky - #28196 - Start
+			// 28543 - Prevent another bumi application
+//			if(smSupplier.isBumi()){
+//				smSupplier.setBumi(false);
+//			}
+			//20200615@Jacky - #28196 - End
 			// check if dont have supplier admin
 			validateDontHaveSuppAdmin(smSupplier.getSmAppl());
 
