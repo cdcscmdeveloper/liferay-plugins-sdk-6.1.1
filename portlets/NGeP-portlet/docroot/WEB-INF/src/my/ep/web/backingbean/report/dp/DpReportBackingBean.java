@@ -104,22 +104,19 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 				.getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
+		
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			
-			//R5 #14076 start
-			if(getManagedBean().getDocNo()!= null){
-				RPTRequestDtl rdtl = new RPTRequestDtl();
-				rdtl.setRequestId(resDTO.getRequestId());
-				rdtl.setDocumentNo01(getManagedBean().getDocNo());	
-				
-				if(params.get(DpReportConst.PARAM_SQ_NO) != null){	
-					rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_SQ_NO));
-				}	
-				if(rdtl.getDocumentNo01() != null ){
-					addRptRequestDetail(rdtl);	
-				}
-	
+			//R5 #14076 start		
+			RPTRequestDtl rdtl = new RPTRequestDtl();
+			rdtl.setRequestId(resDTO.getRequestId());
+			
+			if(params.get(DpReportConst.PARAM_SQ_NO) != null){	
+				rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_SQ_NO));
+			}	
+			if(rdtl.getDocumentNo01() != null ){
+				addRptRequestDetail(rdtl);	
 			}
 			//R5 #14076 end
 			
