@@ -171,7 +171,7 @@
 					<td>
 						<p:inputText id ="basicBUDep" label="#{lbl['lbl.sm.person.department']}" 
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.department}"
-							size="35" required="true" maxlength="80" />
+							size="35" required="true" maxlength="255"/>
 						<p:message id="basicBUDepMsg" for="basicBUDep"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
@@ -182,7 +182,7 @@
 					<td>
 						<p:inputText id ="basicBUSec" label="#{lbl['lbl.sm.userprofile.unit']}"
 						value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.sectionUnit}"
-						size="35" required="true"/>
+						size="35" required="true" maxlength="255"/>
 						<p:message id="basicBUSecMsg" for="basicBUSec"
 						showSummary="true" showDetail="false" display="icon"/>
 					</td>
