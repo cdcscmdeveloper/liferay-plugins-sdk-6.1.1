@@ -957,25 +957,31 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	private void initiateRemark(List<CtRemark> remarks) {
 		boolean ctWorkflowStatusMatch = false;
-		if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
-			if(!remarks.isEmpty() && remarks.get(0).getCtWorkflowStatus()!=null) {
-				if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-					ctWorkflowStatusMatch = true;
+		
+		//Bug #29447 - To display Remarks and Attachments for CT Module - Circular Maintenance
+		//start
+		if(!getManagedBean().isViewContract()){
+			if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
+				if(!remarks.isEmpty() && remarks.get(0).getCtWorkflowStatus()!=null) {
+					if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+						ctWorkflowStatusMatch = true;
+					}
 				}
+			} else { // both also null
+				ctWorkflowStatusMatch = true;
 			}
-		} else { // both also null
-			ctWorkflowStatusMatch = true;
+	
+			if(remarks.isEmpty() || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+				remarks.add(0, remark);
+			}
 		}
-
-		if(remarks.isEmpty() || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
-			remarks.add(0, remark);
-		}
+		//Bug #29447 - end
 	}
 
 	/**
