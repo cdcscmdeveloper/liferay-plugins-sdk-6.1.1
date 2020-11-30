@@ -36,7 +36,7 @@
 				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeLetterOfAward, lOADetailBackingBean.managedBean.scLoa.loaId, true)}"
 					immediate="true" 
-					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage}" />
+					rendered="#{!empty lOADetailBackingBean.managedBean.backToPreviousPage and !isLoaReviseStatus}" />
 								
 				<ui:param name="readOnlyTask" value="#{lOADetailBackingBean.managedBean.readOnly}" />
 				<ui:decorate
