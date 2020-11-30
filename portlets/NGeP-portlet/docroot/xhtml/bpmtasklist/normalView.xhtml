@@ -137,10 +137,8 @@
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
 
 		<p:column width="5%;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByDocNo}">
-			<f:facet name="header">
-				<h:commandLink action="#{bpmTasklistBackingBean.orderByCreatedDate}">
-				#{lbl['lbl.bpm.doc.no']}
-				</h:commandLink>
+			<f:facet name="header">				
+				#{lbl['lbl.bpm.doc.no']}				
 			</f:facet>
 			<!-- start updated for #24968 -->
 			<h:panelGroup rendered="#{not empty tasks.pocoNo}">
