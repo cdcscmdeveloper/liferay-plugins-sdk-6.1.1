@@ -138,6 +138,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The sc qt checklist. */
 	private ScQtCheckList scQtChecklist;
+	
+	//#28786 - start
+	/** The qt checklist for compliance usage. **/
+	private ScQtCheckList complianceQtChecklist;
+
+	/** The qt proposal checklist for compliance usage **/
+	private ScQtProposalChecklist complianceQtProposalChecklist;
+	//#28786 - end
 
 	/** The qt proposal checklist. */
 	private ScQtProposalChecklist qtProposalChecklist;
@@ -3793,4 +3801,34 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.tabItemPackageIndex = tabItemPackageIndex;
 	}
 	//#25138 - end
+	
+	//#28786 - start
+	/**
+	 * @return the qtChecklist
+	 */
+	public ScQtCheckList getComplianceQtChecklist() {
+		return complianceQtChecklist;
+	}
+
+	/**
+	 * @param qtChecklist the qtChecklist to set
+	 */
+	public void setComplianceQtChecklist(ScQtCheckList complianceQtChecklist) {
+		this.complianceQtChecklist = complianceQtChecklist;
+	}
+	
+	/**
+	 * @return the scQtProposalChecklist
+	 */
+	public ScQtProposalChecklist getComplianceQtProposalChecklist() {
+		return complianceQtProposalChecklist;
+	}
+
+	/**
+	 * @param scQtProposalChecklist the scQtProposalChecklist to set
+	 */
+	public void setComplianceQtProposalChecklist(ScQtProposalChecklist complianceQtProposalChecklist) {
+		this.complianceQtProposalChecklist = complianceQtProposalChecklist;
+	}
+	//#28786 - end
 }
