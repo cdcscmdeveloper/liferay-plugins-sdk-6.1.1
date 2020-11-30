@@ -1128,6 +1128,75 @@ public class EvaluationBackingBean extends
 		}
 
 	}
+	
+	//#28786 - start
+		public String complianceUploadBasedOnSupp(
+				ScQtProposalChecklist proposalCheckList, String checkListType) {		
+			this.getManagedBean().setQtProposalChecklist(proposalCheckList);
+			this.getManagedBean().setCheckListType(checkListType);
+			
+			String proposalPage = null;
+			SPDetailBackingBean detailBackingBean = new SPDetailBackingBean();
+			detailBackingBean.getManagedBean().setQt(
+					this.getManagedBean().getScQt());
+			detailBackingBean.getManagedBean().setReadOnly(true);
+			
+			if (proposalCheckList.getScQtCheckList().getTitle()
+					.equals("Pengesahan dari Institusi Kewangan untuk tiga bulan Penyata Bank")) {
+				retrieveAllFinancialChecklist("Penyata bank untuk tiga bulan");
+				log.info("This is Pengesahan dari Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+				retrieveComplianceUploadedProposalChecklist(proposalCheckList);
+				log.info("This is Pengesahan dari Institusi Kewangan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
+				proposalPage = detailBackingBean
+						.retrieveBankStmtDtls(this.getManagedBean().getComplianceQtProposalChecklist());
+			}
+			if (proposalCheckList.getScQtCheckList().getTitle()
+					.equals("Kunci Kira-Kira Tahunan (Nota - Untuk syarikat ROC, ini mestilah salinan yang telah diaudit)")) {
+				retrieveAllFinancialChecklist("Aset dan Liabiliti (Dari Kunci Kira-kira)");
+				log.info("This is Kunci Kira-Kira Tahunan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+				retrieveComplianceUploadedProposalChecklist(proposalCheckList);
+				log.info("This is Kunci Kira-Kira Tahunan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
+				proposalPage = detailBackingBean
+						.retrieveAssetLiabilityDtls(this.getManagedBean().getComplianceQtProposalChecklist());
+			}
+			if (proposalCheckList.getScQtCheckList().getTitle()
+					.equals("Pengesahan dari Institusi Kewangan ke atas jumlah yang telah dibayar")) {
+				retrieveAllFinancialChecklist("Kemudahan Kredit (Overdraf, Pinjaman Bank)");
+				log.info("This is Institusi Kewangan checklist ID========>>>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+				retrieveComplianceUploadedProposalChecklist(proposalCheckList);
+				log.info("This is Institusi Kewangan proposal checklist ID========>>>> " + this.getManagedBean().getComplianceQtProposalChecklist().getQtProposalChecklistId());
+				proposalPage = detailBackingBean
+						.retrieveCreditFacilitiesDtls(this.getManagedBean().getComplianceQtProposalChecklist());
+			}
+			
+			this.getManagedBean().setProposalPage(proposalPage);
+//			
+//			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+//			try {
+//				this.getManagedBean().setCheckListType(checkListType);
+//				reqDTO.setCheckListId(this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+//				reqDTO.setCompliance(null);
+//					
+//				this.getManagedBean().setComplianceTechnicalProposalCheckListDM(
+//						new ComplianceSupplierPagingDataModel(
+//								"othersFinListId", reqDTO
+//										.getCheckListId(), reqDTO.getCompliance(),
+//								this.getManagedBean().getScQt().getQtId(), null));
+//			} finally {
+//
+//			}
+//			
+//			for(ScQtProposalChecklist proCheck : this.getManagedBean().getComplianceTechnicalProposalCheckListDM().getList()) {
+//				log.info("PropChecklist ID =======================>>> " + proCheck.getQtProposalChecklistId());
+//			}
+			
+			
+			
+			return "/xhtml/sc/evaluation/compliance/financialComplianceSupplierList.xhtml";
+			
+			
+		}
+		//#28786 - end
 
 	/**
 	 * Retrieve opening committee dtls for preparation tab
@@ -1308,21 +1377,27 @@ public class EvaluationBackingBean extends
 
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			List<ScQtSampleItem> sampleCompliance = this.getManagedBean()
-					.getComplianceSampleItemListDM().getList();
-			ScQtSampleLable sampleLabel = null;
-			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
-				for (ScQtSampleItem sampleItem : sampleCompliance) {
-					if (null == sampleItem.getSubmissionStatus()
-							|| null == sampleItem.getSubmissionStatus()
-									.getParameterId()) {
-						throw new EpException(MessageConst.ERROR_760363);
+			
+			//#28786 - start
+			List<ScQtProposalChecklist> technicalCompliance = new ArrayList<ScQtProposalChecklist>();
 
+			if(null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("T")) {
+				technicalCompliance = (List<ScQtProposalChecklist>) this
+						.getManagedBean()
+						.getComplianceTechnicalProposalCheckListDM().getList();
+				reqDTO.setCheckList(this.getManagedBean().getScQtChecklist());
+			} else if(null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("F")) {
+				for(ScQtProposalChecklist proposalCheckList : this.getManagedBean()
+						.getComplianceTechnicalProposalCheckListDM().getList()) {
+					if(proposalCheckList == this.getManagedBean().getQtProposalChecklist()) {
+						technicalCompliance.add(proposalCheckList);
 					}
 				}
-				sampleLabel = sampleCompliance.get(0).getScQtSampleLable();
-				reqDTO.setSampleComplianceList(sampleCompliance);
+				reqDTO.setCheckList(this.getManagedBean().getQtProposalChecklist().getScQtCheckList());
 			}
+			//#28786 - end
 			
 			// #26339 - Start
 			EvaluationResDTO evaluationResDTO = evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
@@ -1348,6 +1423,19 @@ public class EvaluationBackingBean extends
 			}
 			// #26339 - End
 			
+			//#28786 - start
+			for (ScQtProposalChecklist propCheck : this.getManagedBean()
+														.getComplianceTechnicalProposalCheckListDM().getList()) {
+				if (propCheck.getScQtProposalChecklistAttachment() != null && (propCheck.getCompliance() == null || propCheck.getCompliance() == 2)) {
+					reqDTO.setEvalStgCompliance(false);
+					break;
+				} else if (propCheck.getScQtProposalChecklistAttachment() != null && propCheck.getCompliance() != null && propCheck.getCompliance() != 2) {
+					reqDTO.setEvalStgCompliance(true);
+				} else if (propCheck.getScQtProposalChecklistAttachment() == null) {
+					reqDTO.setEvalStgCompliance(true);
+				}
+			}
+			//#28786 - end
 			if (null != sampleLabel) {
 				this.getManagedBean()
 						.setComplianceSampleItemListDM(
@@ -1484,6 +1572,100 @@ public class EvaluationBackingBean extends
 						qtCheckLists.indexOf(getManagedBean()
 								.getScQtChecklist()), resDTO.getCheckList());
 			}
+			
+			//#28786 - start
+				public void retrieveAllFinancialChecklist(String title) {
+					IQTEvaluationSO evaluationSO = null;
+					EvaluationResDTO resDTO = null;
+					try {
+						EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+						evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+						reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+						reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+						reqDTO.setCompliance(null);
+						resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
+						
+						for(ScQtCheckList checklistOfTitle : resDTO.getCheckListResultBean().getResultList()) {
+							log.info("Doc title =======================>>> " + checklistOfTitle.getTitle());
+							if(checklistOfTitle.getTitle().equals(title)) {
+								this.getManagedBean().setComplianceQtChecklist(checklistOfTitle);
+							}
+						}
+
+					} finally {
+						evaluationSO = null;
+					}
+				}
+				
+				public void retrieveComplianceUploadedProposalChecklist(ScQtProposalChecklist proposalCheckList) {
+					
+//					IQTEvaluationSO evaluationSO = null;
+//					EvaluationResDTO resDTO = new EvaluationResDTO();
+		//
+//					try {			
+//						EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+//						evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+//								ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+//						
+//						reqDTO.setQtId(this.getManagedBean().getScQtChecklist().getScQt().getQtId());
+//						reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+//						reqDTO.setDocDefinationKey(this.getManagedBean().getComplianceQtChecklist().getDefinationType().getParameterCode());
+//						reqDTO.setQtproposalId(proposalCheckList.getScQtProposal().getQtProposalId());
+//						resDTO = evaluationSO.retrieveSpecScore(reqDTO);
+//								
+//						for (ScQtProposalChecklist propCheck : resDTO.getSpecScoreBySupplier()) {
+//							log.info("Proposal Checklist ID ===============>> " + propCheck.getQtProposalChecklistId());
+//							log.info("Checklist ID ==============>> " + this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+//							if (this.getManagedBean().getComplianceQtChecklist().getQtChecklistId() == null) {
+//								log.info("This thing you called 'this.getManagedBean().getComplianceQtChecklist().getQtChecklistId()' is null");
+//							}
+//							if(this.getManagedBean().getComplianceQtChecklist().getQtChecklistId() == propCheck.getScQtCheckList().getQtChecklistId() 
+//									|| this.getManagedBean().getComplianceQtChecklist().getTitle().equals(propCheck.getScQtCheckList().getTitle())) {
+//								log.info("Masuk checking 'this.getManagedBean().setComplianceQtProposalChecklist(propCheck)'");
+//								this.getManagedBean().setComplianceQtProposalChecklist(propCheck);
+//							}
+//						}
+//						
+//					} finally {
+//						evaluationSO = null;
+//					}
+					
+					IQTEvaluationSO evaluationSo = null;
+					EvaluationResDTO resDTO = new EvaluationResDTO();
+
+					try {
+						evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+						EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+						reqDTO.setCheckListId(this.getManagedBean().getComplianceQtChecklist().getQtChecklistId());
+						reqDTO.setCompliance(null);
+						reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+						reqDTO.setEvalStage(null);
+						reqDTO.setProposalChecklistSearchBean(null);
+						resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
+
+						if (null != resDTO
+								&& null != resDTO.getComplianceResultBean()
+								&& null != resDTO.getComplianceResultBean().getResultList()
+								&& !resDTO.getComplianceResultBean().getResultList()
+										.isEmpty()) {
+							for (ScQtProposalChecklist propCheck : resDTO.getComplianceResultBean().getResultList()) {
+								log.info("List of Propposal Checlist ID =====>> " + propCheck.getQtProposalChecklistId());
+								if (propCheck.getScQtProposal().getQtProposalId() == proposalCheckList.getScQtProposal().getQtProposalId()
+										|| propCheck.getScQtProposal().getSupplierName().equalsIgnoreCase(proposalCheckList.getScQtProposal().getSupplierName())) {
+									log.info("Masuk checking 'this.getManagedBean().setComplianceQtProposalChecklist(propCheck)'");
+									this.getManagedBean().setComplianceQtProposalChecklist(propCheck);
+								}
+							}
+						}
+					} finally {
+						evaluationSo = null;
+						resDTO = null;
+					}
+				}
+				//#28786 - end
 
 			/*
 			 * this.getManagedBean().setComplianceTechnicalProposalCheckList(
@@ -1513,6 +1695,14 @@ public class EvaluationBackingBean extends
 			evaluationSo = null;
 		}
 	}
+	
+	//#28786 - start
+	public String complianceFinancialBackaction() {
+		this.getManagedBean().setTechindex(-1);
+		return "/xhtml/sc/evaluation/compliance/financialComplianceEditSuppliers.xhtml";
+			
+	}
+	//#28786 - start
 
 	private void updateCheckListIntoQtCheckLists(
 			List<ScQtCheckList> qtCheckLists, int toBeUpdateChecklistIndex,
@@ -14414,9 +14604,8 @@ private void retriveCommitteeRemarksList(){
 			}else{
 				return "/xhtml/sc/evaluation/compliance/financialComplianceViewSuppliers.xhtml";
 			}
-			
 		}
-		
-	}
-	//#25138 - filter qualified supplier in technical & financial for compliance - end
+		this.getManagedBean().getNoOfContractsProposalScore().setUserScore(sampleScore);
+	}//#11104_End
+
 }
