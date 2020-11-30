@@ -3316,9 +3316,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 								expItem.setIndicator(false);
-							}
-							// 24975@20112020 - End
-							expItem.getPpRemarks().get(0).setRemark(null);
+							}							
+//							// 24975@20112020 - End
+						    //24975 - start
+						  for (PpRemark setEditRemark : expItem.getPpRemarks()) {
+							  if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
+								 setEditRemark.setRemark(" ");
+								}
+							 }//24975 - End
 					      }
 				       }	
 					}
@@ -3380,9 +3385,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							if(expItem.isIndicator()== true){
 							   expItem.setIndicator(false);
 							}
-							// 24975@20112020 - End
-							expItem.getPpRemarks().get(0).setRemark(null);
-					     }
+							// 24975@20112020 - End	
+							  //24975 - start
+							  for (PpRemark setEditRemark : expItem.getPpRemarks()) {
+								  if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
+									 setEditRemark.setRemark(" ");
+									}
+							   }//24975 - End
+						   }
 				      }
 				  }
 				//[#24975] - azza - end
@@ -3444,7 +3454,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							   expItem.setIndicator(false);
                              }
 							// 24975@20112020 - End
-							expItem.getPpRemarks().get(0).setRemark(null);
+							//24975 - start
+						 for (PpRemark setEditRemark : expItem.getPpRemarks()) {
+							if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
+								setEditRemark.setRemark(" ");
+						      }
+					      }//24975 - End
 					 }
 				  }
 				}
@@ -3508,7 +3523,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							   expItem.setIndicator(false);
 						   }
 							// 24975@20112020 - End
-							expItem.getPpRemarks().get(0).setRemark(null);
+							//24975 - start
+							 for (PpRemark setEditRemark : expItem.getPpRemarks()) {
+								if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
+									setEditRemark.setRemark(" ");
+							      }
+						    }//24975 - End
 					   }
 				    }
 				}
@@ -3571,7 +3591,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							   expItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
-							expItem.getPpRemarks().get(0).setRemark(null);
+							//24975 - start
+							 for (PpRemark setEditRemark : expItem.getPpRemarks()) {
+								if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
+									setEditRemark.setRemark(" ");
+							      }
+						     }//24975 - End
 					    }
 				    }
 				}
@@ -4260,7 +4285,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							if (updateReason.isDisableReasonField()) {
 								updateReason.setDisableReasonField(false);
 						  }
-							updateReason.setReasonDesc(" ");
 						}
 						
 							// 24975@20112020 - Start
@@ -4268,8 +4292,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								PpItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
-							
-						
+							 //24975 - start
+							 for (PpUpdateReason updateReasons : PpItem.getPpUpdateReasons()) {
+								 if (PpItem.getProcurementItemId().equals(PpItem.getFromPpItem())) {
+									 updateReasons.setReasonDesc(" ");
+								}
+						  }//24975 - End
 				      }
 			       }	
 				}
