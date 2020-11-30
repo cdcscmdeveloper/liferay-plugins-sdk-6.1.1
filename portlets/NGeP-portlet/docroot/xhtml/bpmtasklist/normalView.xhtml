@@ -75,6 +75,9 @@
 						<f:selectItem itemLabel="Document No" itemValue="DOCNUMBER"></f:selectItem>
 						<f:selectItem itemLabel="Document Type" itemValue="DOCTYPE"></f:selectItem>
 						<f:selectItem itemLabel="Created Date" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="Description" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="Status" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem>
 					</p:selectOneMenu>
 				</td>
 				<td width="10%"><p:outputLabel value="Order By : " /></td>
@@ -133,9 +136,11 @@
 		style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
 
-		<p:column width="5%;" >
+		<p:column width="5%;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByDocNo}">
 			<f:facet name="header">
+				<h:commandLink action="#{bpmTasklistBackingBean.orderByCreatedDate}">
 				#{lbl['lbl.bpm.doc.no']}
+				</h:commandLink>
 			</f:facet>
 			<!-- start updated for #24968 -->
 			<h:panelGroup rendered="#{not empty tasks.pocoNo}">
@@ -145,8 +150,8 @@
 				<div >#{tasks.docNumber}</div>
 			</h:panelGroup>
 			<!-- end updated for #24968 -->
-			</p:column>
-		<p:column width="20%;" style="white-space:normal;">
+		</p:column>
+		<p:column width="20%;" style="white-space:normal;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.doc.type']}
 				</f:facet>
@@ -154,7 +159,7 @@
 				
 			</p:column>
 
-		<p:column style="white-space:normal;">
+		<p:column style="white-space:normal;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.description']}
 				</f:facet>
@@ -171,7 +176,7 @@
 			</p:commandLink>
 
 		</p:column>
-		<p:column width="10%">
+		<p:column width="10%" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
@@ -193,7 +198,7 @@
 				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
 			</p:outputPanel>
 		</p:column>
-		<p:column width="18%;" style="white-space:normal;">
+		<p:column width="18%;" style="white-space:normal;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.status']}
 				</f:facet>
