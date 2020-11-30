@@ -2326,7 +2326,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							itemRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 						}
 						itemRemarks.add(itemRemark);
-					}
+                      }
 				  }
 				itemIndex++;
 			}
@@ -2353,6 +2353,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								itemRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 							}
 							itemRemarks.add(itemRemark);
+						}else{	
+							
+							List<PpRemark> PpItemRemarkDel = PpCommonUtil.retrieveRemark(ppExpenditureItem.getExpenditureItemId(), ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+										
+							for(PpRemark itemRemarkDel : PpItemRemarkDel){
+								 if(itemRemarkDel.getDocId().equals(ppExpenditureItem.getExpenditureItemId())){
+									 if(itemRemarkDel.getRemark()!=null && itemRemark.getRemark().isEmpty()){
+										 log.info("first itemRemarkDel" + itemRemarkDel.getRemark());
+										itemRemarkDel.setItemSeq(itemIndex);
+										itemRemarkDel.setDocId(ppExpenditureItem.getExpenditureItemId());
+										itemRemarkDel.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
+										itemRemarkDel.setRemark(itemRemarkDel.getRemark());
+										itemRemarkDel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+
+									 }
+									 itemRemarks.add(itemRemarkDel);
+								 }
+							 }
 						}
 					itemIndex++;
 					}
@@ -2741,7 +2759,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		PpRemark remark = null;
 		boolean brandNew = false;
 		//#24975
-		//List <PpUpdateReason> updateReasons = null;
+		List <PpUpdateReason> updateReasons = null;
 		
 		try{
 			reqDTO = new ProcurementPlanReqDTO();
@@ -2773,6 +2791,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			//Get Remark at Item Level
 			itemRemarks = getAllItemRemarks(ppPlan); 
+			
+			updateReasons = deleteUpdateReasons(ppPlan);
 			
 			//Get Justification 
 			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
@@ -2807,6 +2827,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
+			reqDTO.setUpdateReasonList(updateReasons);
 			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
 				reqDTO.setJustifications(justifications);
 			}
@@ -3297,6 +3318,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								expItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
+							expItem.getPpRemarks().get(0).setRemark(null);
 					      }
 				       }	
 					}
@@ -3359,6 +3381,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							   expItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
+							expItem.getPpRemarks().get(0).setRemark(null);
 					     }
 				      }
 				  }
@@ -3419,8 +3442,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							// 24975@20112020 - Start
 							if(expItem.isIndicator()== true){
 							   expItem.setIndicator(false);
-						}
+                             }
 							// 24975@20112020 - End
+							expItem.getPpRemarks().get(0).setRemark(null);
 					 }
 				  }
 				}
@@ -3484,6 +3508,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							   expItem.setIndicator(false);
 						   }
 							// 24975@20112020 - End
+							expItem.getPpRemarks().get(0).setRemark(null);
 					   }
 				    }
 				}
@@ -3546,6 +3571,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							   expItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
+							expItem.getPpRemarks().get(0).setRemark(null);
 					    }
 				    }
 				}
@@ -4233,7 +4259,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							
 							if (updateReason.isDisableReasonField()) {
 								updateReason.setDisableReasonField(false);
-							}
+						  }
+							updateReason.setReasonDesc(" ");
 						}
 						
 							// 24975@20112020 - Start
@@ -4241,6 +4268,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								PpItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
+							
+						
 				      }
 			       }	
 				}
@@ -6162,54 +6191,35 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param ppPlan
 	 * @return List <PpUpdateReason>
 	 */
-	private List <PpUpdateReason> getAllUpdateReasons(PpPlan ppPlan) {
+	private List<PpUpdateReason> deleteUpdateReasons(PpPlan ppPlan) {
 		log.info("getAllUpdateReasons");
-		List <PpUpdateReason> updateReasons = new ArrayList<PpUpdateReason>();
-		List <PpRejectReason> rejectReasons = new ArrayList<PpRejectReason>();
-		if (ppPlan.getStatus() != null 
-				&& (ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
-						//25549 - start
-						|| ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(ppPlan.getStatus().getStatusId())
-						|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
-						//25549 - end
-						|| ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId())
-						|| ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(ppPlan.getStatus().getStatusId()))
-						|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
-						|| ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(ppPlan.getStatus().getStatusId())
-						|| ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(ppPlan.getStatus().getStatusId())
-						|| ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId())
-				) {
-			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
-				log.info("----------Before PpPlan save----------");
-				for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
-					if (ppProcurementItem.getPpUpdateReasons()!= null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
-						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
-						if (updateReason != null && 
-								updateReason.getReasonDesc() != null) { //&& rejectReason.isBrandNew() add this for phase 2
-							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
-							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
-							updateReasons.add(updateReason);
-							log.info("Current reason docId= "+updateReason.getDocId()+", " +
-									"isCloned= "+ppProcurementItem.isCloned()+", reasonDesc= "+updateReason.getReasonDesc());
+		List<PpUpdateReason> updateReasons = new ArrayList<PpUpdateReason>();
+		log.info("----------Before PpPlan save----------");
+		int itemIndex = 0;
+		for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
+			if (ppProcurementItem.getPpUpdateReasons() != null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
+				PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
+				List<PpUpdateReason> PpUpdateReasonDel = PpCommonUtil.retrieveUpdateReason(
+						ppProcurementItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+
+				for (PpUpdateReason updateReasonDel : PpUpdateReasonDel) {
+					if (updateReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())) {
+						if (updateReasonDel.getReasonDesc() != null && updateReason.getReasonDesc().isEmpty()) {
+							log.info("first getReasonDesc" + updateReasonDel.getReasonDesc());
+							updateReasonDel.setItemSeq(itemIndex);
+							updateReasonDel.setDocId(ppProcurementItem.getProcurementItemId());
+							updateReasonDel.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+							updateReasonDel.setReasonDesc(updateReasonDel.getReasonDesc());
+							updateReasonDel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+							updateReasons.add(updateReasonDel);
 						}
 					}
+					
 				}
 			}
-//			else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
-//				for (PpExpenditureItem ppExpenditureItem : ppPlan.getPpExpenditureItems()){
-//					if (ppExpenditureItem.getPpUpdateReason() != null && 
-//							!ppExpenditureItem.getPpUpdateReason().isEmpty()) {
-//						PpRejectReason rejectReason = ppExpenditureItem.getPpRejectReasons().get(0);
-//						if (rejectReason != null &&
-//								!StringUtils.isBlank(rejectReason.getReasonDesc())) { //&& rejectReason.isBrandNew() add this for phase 2
-//							rejectReason.setDocId(ppExpenditureItem.getExpenditureItemId());
-//							rejectReason.setDocType(ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
-//						rejectReasons.add(rejectReason);
-//					}
-//				}
-//				}
-//			}
+			itemIndex++;
 		}
+			
 		log.info("updateReasons:"+updateReasons);
 		return updateReasons;
 	}
