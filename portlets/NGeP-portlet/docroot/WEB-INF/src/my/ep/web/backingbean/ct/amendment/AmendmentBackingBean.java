@@ -3321,38 +3321,34 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	// Start Fixing - #29589
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
-	    BigDecimal newgstvalidation;
-	    newgstvalidation = new BigDecimal("0");
+	   
+	    BigDecimal newgstvalidation = new BigDecimal("0");
 	   // newgst = new BigDecimal(0);
 		//newgst = BigDecimal.valueOf(0); cast
 	
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null)  {
-			//System.out.println("**-- DEV Env --** newgstamount :"+ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
-			//System.out.println("**-- DEV Env --** newgst :"+newgstvalidation);
-			//System.out.println("**-- DEV Env --** ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().equals(newgstvalidation) "+ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().equals(newgstvalidation));
-			//System.out.println("**-- DEV Env --** !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().equals(newgstvalidation) "+!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().equals(newgstvalidation));
            
 			BigDecimal newgstamount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount();
         			
 		    if (newgstamount.compareTo(newgstvalidation) == 0)
 		       {
 		    	     //System.out.println("**-- DEV Env --** newgstamount == newgstvalidation");
-		    	     contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
-     	    	     //System.out.println("**-- DEV Env --** contractAmt inside old gst value added :::::::::>>> "+contractAmt); 
+		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
+     	    	    
+		    	   
 		       }
 		    else if(newgstamount.compareTo(newgstvalidation) == 1)
 		       {
 		    	     //System.out.println("**-- DEV Env --** newgstamount > newgstvalidation");
-		    	     contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount()));
-            	    // System.out.println("**-- DEV Env --** i am here");
-            	     //System.out.println("**-- DEV Env --** contractAmt  :::::::::>>> "+contractAmt); 
+		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount()));
+            	   
 		       }
 		
 		}
 		  else{
 				
-				contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
-				//System.out.println("**-- DEV Env --** contractAmt old gst value added(outside) :::::::::>>> "+contractAmt); 
+				contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
+				
 			}
 		return contractAmt;
 	}
@@ -3369,8 +3365,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	public BigDecimal newOverallContractAmount() {
 		BigDecimal contractAmount = newOverallContractAmt();
-		 BigDecimal newsstvalidation;
-		    newsstvalidation = new BigDecimal("0");
+		
+		   BigDecimal newsstvalidation = new BigDecimal("0");
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
 			
 			BigDecimal newsstamount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount();
@@ -3378,21 +3374,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (newsstamount.compareTo(newsstvalidation) == 0)
 			 {
 				  // System.out.println("**-- DEV Env --** newsstamount == newsstvalidation");
-			       contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
-		          // System.out.println("**-- DEV Env --** contractAmount :::::::::::>>>>>>>> "+contractAmount);
+			       contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
+		         
 			 }
 		    else if(newsstamount.compareTo(newsstvalidation) == 1)
 		     {
 		    	  //   System.out.println("**-- DEV Env --** newsstamount > newsstvalidation");
-		    	     contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount()));
-          	     //    System.out.println("**-- DEV Env --** contractAmount  :::::::::>>> "+contractAmount); 
+		    	     contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount()));
+          	     
 		     }
 		}
 		
 		else{
 			
-			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
-		//	System.out.println("**-- DEV Env --** contractAmt old sst value added(outside) :::::::::>>> "+contractAmount); 
+			contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
+		
 		}
 		return contractAmount;
 	}
