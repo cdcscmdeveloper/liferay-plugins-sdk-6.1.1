@@ -296,7 +296,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				ArrayList<WorklistItemVO> worklistItemVOTemp = new ArrayList<WorklistItemVO>();//29089
 				
 				if (responseDTO.getWorklistVO() != null) {
 					// setTaskList(responseDTO.getWorklistVO().getWorklistItem());
@@ -337,16 +336,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 								worklistItemVO.setTitle(sb.toString());
 							}
-							//29089-Start
-							if(!isHideTaskListYep(worklistItemVO)){
-								worklistItemVOTemp.add(worklistItemVO);
-							}//29089-End
 						}
 					}
 					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
 							.getTotal());
-					resultBean.setResultList(worklistItemVOTemp);//29089
+					resultBean.setResultList(responseDTO.getWorklistVO()
+							.getWorklistItem());
 				} else {
 					resultBean.setTotalRecord(0);
 					resultBean.setResultList(null);
@@ -475,7 +471,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				ArrayList<WorklistItemVO> worklistItemVOTemp = new ArrayList<WorklistItemVO>();//29089
 				
 				if (responseDTO.getWorklistVO() != null) {
 					
@@ -511,11 +506,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								//CR 28766: Static Code Analysis End
 								
 						       processWorklistItemByDocType(worklistItemVO);
-						       
-						       //29089-Start
-						       if(!isHideTaskListYep(worklistItemVO)){
-						    	   worklistItemVOTemp.add(worklistItemVO);
-						       }//29089-End	
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
 								log.error("worklistItemVO.setTitle error:" + ex.getMessage());
@@ -523,8 +513,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						}
 					}
 
-					resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
-					resultBean.setResultList(worklistItemVOTemp);//29089
+					resultBean.setTotalRecord(responseDTO.getWorklistVO()
+							.getTotal());
+					resultBean.setResultList(responseDTO.getWorklistVO()
+							.getWorklistItem());
 				} else {
 					resultBean.setTotalRecord(0);
 					resultBean.setResultList(null);
@@ -627,7 +619,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sdoSearchFilter(reqDTO);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				ArrayList<WorklistItemVO> worklistItemVOTemp = new ArrayList<WorklistItemVO>();//29089
 				
 				if (responseDTO.getWorklistVO() != null) {
 
@@ -709,18 +700,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    	   }
 						       }
 						       processWorklistItemByTaskName(worklistItemVO, face); //#24968  - performance
-						       //29089-Start
-						       if(!isHideTaskListYep(worklistItemVO)){
-						    	   worklistItemVOTemp.add(worklistItemVO);
-						       }//29089-End	
 							} catch (Exception ex) {
 								worklistItemVO.setTitle("please check");
 							}
 						}
 					}
 
-					resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
-					resultBean.setResultList(worklistItemVOTemp);//29089
+					resultBean.setTotalRecord(responseDTO.getWorklistVO()
+							.getTotal());
+					resultBean.setResultList(responseDTO.getWorklistVO()
+							.getWorklistItem());
 				} else {
 					resultBean.setTotalRecord(0);
 					resultBean.setResultList(null);
@@ -788,7 +777,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sdoSearchFilter(reqDTO);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
-				ArrayList<WorklistItemVO> worklistItemVOTemp = new ArrayList<WorklistItemVO>();//29089
 				
 				if (responseDTO.getWorklistVO() != null) {
 
@@ -815,10 +803,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								// Identify if it is a group or individual task
 								worklistItemVO.getTaskType();
 								
-								//29089-Start
-								if(!isHideTaskListYep(worklistItemVO)){
-									worklistItemVOTemp.add(worklistItemVO);
-								}//29089-End
 							} catch(Exception ex) {
 								worklistItemVO.setTitle("please check");
 								
@@ -828,7 +812,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						
 						resultBean.setTotalRecord(responseDTO.getWorklistVO()
 								.getTotal());
-						resultBean.setResultList(worklistItemVOTemp);//29089
+						resultBean.setResultList(responseDTO.getWorklistVO()
+								.getWorklistItem());
 					}
 					
 				} else {
@@ -1731,34 +1716,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		  
 	}
  	// end #24968 
-    
-  //29089-Start
-    private boolean isHideTaskListYep(WorklistItemVO worklistItemVO) {
-    	FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-    	BigDecimal isHideTaskYEP=BigDecimal.ZERO;
-    	FulfilmentResDTO resDTO =null;
-        Boolean isHide=false;
-        reqDTO.setDocId(worklistItemVO.getDocId().longValue());
-		reqDTO.setFlDocNo(worklistItemVO.getPocoNo());
-        IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
-    	if(worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_PO)||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_CO)){
-    		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
-    		isHideTaskYEP = resDTO.getIsHideTaskYEP();
-    		if(isHideTaskYEP.doubleValue()>0){
-    			isHide = true;
-    		}
-    	}else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.CREATE_FRN_HT) 
-   	    	 || worklistItemVO.getTaskName().equals(FLProcessNameConst.REVISE_FRN_HT)
-   	    	||worklistItemVO.getDocType().equalsIgnoreCase(FulfilmentConst.DOC_TYPE_DN)){
-    		reqDTO.setDocId(null);
-    		resDTO = fulfilmentOrderSO.checkIsHideTaskList(reqDTO);
-    		isHideTaskYEP = resDTO.getIsHideTaskYEP();
-    		if(isHideTaskYEP.doubleValue()>0){
-    			isHide = true;
-    		}
-    	}
-    	return isHide;	    
-    }//29089-End
 
 	/**
 	 * @return the sort_by
