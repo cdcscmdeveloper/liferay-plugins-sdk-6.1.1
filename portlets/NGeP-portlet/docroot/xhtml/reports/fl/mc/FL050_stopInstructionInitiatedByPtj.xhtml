@@ -141,13 +141,13 @@
 				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{siPtjRptBB.managedBean.purchaseOrderNo}"/>
+				<p:inputText value="#{mcSiPtjRptBB.managedBean.purchaseOrderNo}"/>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}"></p:outputLabel> 
 			</td>
 			<td>
-				<p:inputText value="#{siPtjRptBB.managedBean.siNo}">
+				<p:inputText value="#{mcSiPtjRptBB.managedBean.siNo}">
 				<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> 
 			</td>
 		</tr>
@@ -156,11 +156,11 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
-				<p:selectOneMenu value="#{siPtjRptBB.managedBean.group}">
+				<p:selectOneMenu value="#{mcSiPtjRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
-						itemDisabled="#{siPtjRptBB.hasSupplierRole()}"
+						itemDisabled="#{mcSiPtjRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
 						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>

@@ -129,7 +129,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.invoice.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{invRptBB.managedBean.invNo}">
+				<p:inputText value="#{mcInvRptBB.managedBean.invNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
 			</td>
@@ -139,7 +139,7 @@
 				<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"/> 
 			</td>
 			<td>
-				<p:inputText value="#{invRptBB.managedBean.supplierInvNo}">
+				<p:inputText value="#{mcInvRptBB.managedBean.supplierInvNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
 			</td>
