@@ -5871,8 +5871,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 		Long supplierId = smSupplier.getSupplierId();
-		context.put("mofNo", scLoiLoa.getMofNo());
-		
+		// #25025 - Start.
+		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
+			context.put("mofNo", scLoiLoa.getMofNo());
+		} else {
+			context.put("mofNo", MALAY_NA);
+		}
+		// #25025 - End.
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
 		
 		String mofValidityDuration = MALAY_NA;
