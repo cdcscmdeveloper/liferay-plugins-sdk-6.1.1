@@ -23,9 +23,9 @@
 			<p:panel header="#{lbl['lbl.sm.userprofile.authorized.personnels']}"
 				toggleable="true">
 				<p:outputPanel id="smPersonnelUserMaintenance">
-					<table>
+					<table width="100%">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /></td>
+							<td width="10%"><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /></td>
 							<td><p:inputText id="mofspName"
 									value="#{smPersonnelBackingBean.managedBean.spName}" size="35"
 									maxlength="80" label="{#lbl['lbl.sm.userprofile.name']}"></p:inputText></td>
@@ -96,7 +96,7 @@
 										value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								</p:selectOneMenu></td>
 						</tr>
-						<tr style="width:100%;">
+						<tr >
 							<td colspan="2">
 								<div style="text-align: right;">
 									<p:commandButton value="#{lbl['lbl.btn.search']}"
