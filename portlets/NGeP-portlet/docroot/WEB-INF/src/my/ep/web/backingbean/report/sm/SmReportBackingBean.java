@@ -1145,22 +1145,31 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 					receiptNo = (String)objectArr[2];
 					
+					CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+					CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+					CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+					CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+					
 					for(int x=0; x<objectArr.length; x++){
 						if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 						Cell cell = row.createCell(cellid);
 						if(objectArr[x] instanceof Date){
 							cell.setCellValue((Date) objectArr[x]);
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+							cell.setCellStyle(columnStyleDate);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 						}else if(objectArr[x] instanceof BigDecimal){
 							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+							cell.setCellStyle(columnStyleBigDecimal);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 						}else if(objectArr[x] instanceof Double){
 							cell.setCellValue(((Double) objectArr[x]).doubleValue());
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+							cell.setCellStyle(columnStyleDouble);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 						}else{
 							if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 							else cell.setCellValue((String) objectArr[x]);
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+							cell.setCellStyle(columnStyleString);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));							
 						}
 						cellid++;
 					}
@@ -1290,8 +1299,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
-	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+	    	String fullPath = path+"/"+requestId+".xlsx";	    	
+//	    	String fullPath = "D://reports//dev//"+requestId+".xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
@@ -1437,20 +1446,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				cellBil.setCellValue(countRowFpx++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				
+				CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+				CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+				CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+				CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,false,false);
+				                                          
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
 						cell.setCellValue((Date) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(obj instanceof Double){
 						cell.setCellValue(((Double) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else{
 						cell.setCellValue((String) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						cell.setCellStyle(columnStyleString);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
 					}
 					cellid++;
 				}
@@ -1656,7 +1674,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
         	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
         	String fullPath = path+"/"+requestId+".xlsx";
-        	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+//        	String fullPath = "D://reports//dev//"+requestId+".xlsx";
         	log.info("FULL PATH (CREATE FILE) == "+fullPath);
         	FileOutputStream out = new FileOutputStream(new File(fullPath));
         	wb.write(out);
@@ -1758,7 +1776,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							row[2].toString(),//No Resit
 							row[5].toString(),//Nama Pembekal
 							String.valueOf(row[6]),//No Permohonan
-							row[7].toString(),//No Rujukan
+							//row[7].toString(),//No Rujukan
+							row[7] != null ? row[7].toString() : "",
 							row[12].toString(),//Jenis Terimaan-Kod
 							row[13].toString(),//Jenis Terimaan-Perihal
 							priceAmt ,//Harga
@@ -1768,26 +1787,49 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							netPrice,//Amaun Bersih
 							netPrice,//Jumlah Keseluruhan
 							row[16].toString()//Status
-						});
+						});					
 						fpxCount++;
-					}else{
-						creditList.put(creditCount, new Object[] {
-							(Date) row[4],//Tarikh Transaksi
-							(Date) row[3],//Tarikh Resit
-							row[2].toString(),//No Resit
-							row[5].toString(),//Nama Pembekal
-							String.valueOf(row[6]),//No Permohonan
-							row[7].toString(),//No Rujukan
-							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
-							priceAmt ,//Harga
-							gstAmt,//GST
-							serviceCharge, // Caj Perkhidmatan 
-							gstServiceCharge,//GST Caj Perkhidmatan
-							netPrice,//Amaun Bersih
-							netPrice,//Jumlah Keseluruhan
-							row[16].toString()//Status
-						});
+					}else{						
+						if(m > 0){							
+							Object[] previousRow = (Object[]) reportList.get(m-1);
+							if(!row[5].toString().equals(previousRow[5].toString())){								
+								creditList.put(creditCount, new Object[] {
+										(Date) row[4],//Tarikh Transaksi
+										(Date) row[3],//Tarikh Resit
+										row[2].toString(),//No Resit
+										row[5].toString(),//Nama Pembekal
+										String.valueOf(row[6]),//No Permohonan
+										row[7].toString(),//No Rujukan
+										row[12].toString(),//Jenis Terimaan-Kod
+										row[13].toString(),//Jenis Terimaan-Perihal
+										priceAmt ,//Harga
+										gstAmt,//GST
+										serviceCharge, // Caj Perkhidmatan 
+										gstServiceCharge,//GST Caj Perkhidmatan
+										netPrice,//Amaun Bersih
+										netPrice,//Jumlah Keseluruhan
+										row[16].toString()//Status
+									});
+							}
+						} else {														
+							creditList.put(creditCount, new Object[] {
+									(Date) row[4],//Tarikh Transaksi
+									(Date) row[3],//Tarikh Resit
+									row[2].toString(),//No Resit
+									row[5].toString(),//Nama Pembekal
+									String.valueOf(row[6]),//No Permohonan
+									row[7].toString(),//No Rujukan
+									row[12].toString(),//Jenis Terimaan-Kod
+									row[13].toString(),//Jenis Terimaan-Perihal
+									priceAmt ,//Harga
+									gstAmt,//GST
+									serviceCharge, // Caj Perkhidmatan 
+									gstServiceCharge,//GST Caj Perkhidmatan
+									netPrice,//Amaun Bersih
+									netPrice,//Jumlah Keseluruhan
+									row[16].toString()//Status
+								});
+						}												
 						creditCount++;
 					}
 				}
@@ -1887,22 +1929,33 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNo = (String)objectArr[2];
+				
+				CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+				CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+				CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+				CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				
 				for(int x=0; x<objectArr.length; x++){
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else{
-						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
-						else cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+//						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
+//						else cell.setCellValue((String) objectArr[x]);
+						cell.setCellValue((String) objectArr[x]);
+						cell.setCellStyle(columnStyleString);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}
 					cellid++;
 				}
@@ -2004,7 +2057,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowCC++);
 				}else{
-					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 	
+					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0));					
 				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNoCC = (String)objectArr[2];
@@ -2151,7 +2204,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+//	    	String fullPath = "D:\\reports\\dev\\"+requestId+".xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
@@ -2271,20 +2324,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNo = (String)objectArr[1];
 				
+				CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+				CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+				CellStyle columnStyleInteger = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				
 				for (int x=0; x<objectArr.length; x++) {
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(objectArr[x] instanceof Integer){
 						cell.setCellValue(((Integer) objectArr[x]).intValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleInteger);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}else{
 						cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}
 					cellid++;
 				}
@@ -2382,7 +2444,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+//	    	String fullPath = "D://reports//dev//"+requestId+".xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
@@ -2577,7 +2639,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
+//	    	String fullPath = "D://reports//dev//"+requestId+".xlsx";
 	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
