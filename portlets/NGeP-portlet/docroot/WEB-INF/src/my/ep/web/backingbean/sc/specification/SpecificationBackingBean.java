@@ -4513,7 +4513,14 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 	private ScQtCheckList populateWeigthage(List<ScQtCheckList> list,ScQtCheckList checkList){
-		boolean exist=null!=isExistInDB(list)?true:false;
+		//#8979 - danial
+		boolean exist=false;
+		//null!=isExistInDB(list)?true:false;
+		TplSpecMaster spec=isExistInDB(list);
+		if(null!=spec){
+			exist=true;
+		}
+		
 		this.getManagedBean().setSpecItemWeightageRequired(exist);
 		boolean weightageType = false;
 		if(exist){
@@ -4580,18 +4587,12 @@ public class SpecificationBackingBean extends
 				if(null!=templateresDTO){
 					checkList.getScQtDoc().setTplSpecMaster(
 							templateresDTO.getSpecMaster());
-					//this.getManagedBean().setSpecItemWeightageRequired(true);
-					checkList=populateWeigthage(this.getManagedBean()
-							.getScQtCheckSt2techProposal(),checkList);
-//					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
-//					templateSpecBackingbean
-//							.updateItemWeightageReq(templateSpecBean);
+					//#8979 - danial
+					//checkList=populateWeigthage(this.getManagedBean()
+					//		.getScQtCheckSt2techProposal(),checkList);
 				}else{
-					checkList=populateWeigthage(this.getManagedBean()
-							.getScQtCheckSt2techProposal(),checkList);
-//					TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
-//					templateSpecBackingbean
-//							.updateItemWeightageReq(templateSpecBean);
+					//checkList=populateWeigthage(this.getManagedBean()
+					//		.getScQtCheckSt2techProposal(),checkList);
 				}		
 				
 				checkList.getScQtDoc()
