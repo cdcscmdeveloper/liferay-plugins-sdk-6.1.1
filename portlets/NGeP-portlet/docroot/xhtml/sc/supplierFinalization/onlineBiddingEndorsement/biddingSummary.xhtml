@@ -66,5 +66,11 @@
 			</tr>
 		</table>	
 	</p:outputPanel>	
+	
+	<p:outputPanel id="remarksPanel">
+		<ac:scRemarkAndAttachment
+			remarkList="#{suppFinalBiddingBackingBean.managedBean.getFinalizationRemarks()}"
+			showAttachment="false" />
+	</p:outputPanel>
 
 </ui:composition>
