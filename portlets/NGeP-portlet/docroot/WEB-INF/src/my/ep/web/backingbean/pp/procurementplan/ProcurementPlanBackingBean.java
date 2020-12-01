@@ -4287,24 +4287,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						}
 						if (PpItem.getPpUpdateReasons() != null || 
 								!PpItem.getPpUpdateReasons().isEmpty()) {
-							PpUpdateReason updateReason = PpItem.getPpUpdateReasons().get(0);
-							
-							if (updateReason.isDisableReasonField()) {
-								updateReason.setDisableReasonField(false);
-						  }
-						}
-						
+							 //24975 - start
+							 for (PpUpdateReason updateReasons : PpItem.getPpUpdateReasons()){
+									if (PpItem.getProcurementItemId().equals(procurementItem.getFromPpItem())) {
+										updateReasons.setReasonDesc(null);
+										if (updateReasons.isDisableReasonField()) {
+											updateReasons.setDisableReasonField(false);
+										}
+									}
+								}
+							}// 24975 - End	
 							// 24975@20112020 - Start
 							if (PpItem.isIndicator() == true) {
 								PpItem.setIndicator(false);
 							}
 							// 24975@20112020 - End
-							 //24975 - start
-							 for (PpUpdateReason updateReasons : PpItem.getPpUpdateReasons()){
-								 if (PpItem.getProcurementItemId().equals(procurementItem.getFromPpItem())){
-									 updateReasons.setReasonDesc(null);
-								}
-						  }//24975 - End
 				      }
 			       }	
 				}
