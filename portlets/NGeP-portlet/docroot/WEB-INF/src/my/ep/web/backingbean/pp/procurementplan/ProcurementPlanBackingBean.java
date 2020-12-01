@@ -4294,9 +4294,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							}
 							// 24975@20112020 - End
 							 //24975 - start
-							 for (PpUpdateReason updateReasons : PpItem.getPpUpdateReasons()) {
-								 if (PpItem.getProcurementItemId().equals(PpItem.getFromPpItem())) {
-									 updateReasons.setReasonDesc(" ");
+							 for (PpUpdateReason updateReasons : PpItem.getPpUpdateReasons()){
+								 if (PpItem.getProcurementItemId().equals(procurementItem.getFromPpItem())){
+									 updateReasons.setReasonDesc(null);
 								}
 						  }//24975 - End
 				      }
