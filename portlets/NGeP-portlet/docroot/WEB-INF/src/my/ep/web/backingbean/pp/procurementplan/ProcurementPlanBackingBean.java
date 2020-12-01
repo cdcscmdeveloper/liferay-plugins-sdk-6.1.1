@@ -2359,7 +2359,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 										
 							for(PpRemark itemRemarkDel : PpItemRemarkDel){
 								 if(itemRemarkDel.getDocId().equals(ppExpenditureItem.getExpenditureItemId())){
-									 if(itemRemarkDel.getRemark()!=null && itemRemark.getRemark().isEmpty()){
+									 log.info("first itemRemarkDel1" + itemRemark.getRemark() + itemRemarkDel.getRemark());
+									 if(itemRemarkDel.getRemark()!=null && itemRemark.getRemark()== null){
 										 log.info("first itemRemarkDel" + itemRemarkDel.getRemark());
 										itemRemarkDel.setItemSeq(itemIndex);
 										itemRemarkDel.setDocId(ppExpenditureItem.getExpenditureItemId());
@@ -3321,7 +3322,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						    //24975 - start
 						  for (PpRemark setEditRemark : expItem.getPpRemarks()) {
 							  if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
-								 setEditRemark.setRemark(" ");
+								 setEditRemark.setRemark(null);
 								}
 							 }//24975 - End
 					      }
@@ -3389,7 +3390,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							  //24975 - start
 							  for (PpRemark setEditRemark : expItem.getPpRemarks()) {
 								  if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
-									 setEditRemark.setRemark(" ");
+									 setEditRemark.setRemark(null);
 									}
 							   }//24975 - End
 						   }
@@ -3457,7 +3458,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975 - start
 						 for (PpRemark setEditRemark : expItem.getPpRemarks()) {
 							if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
-								setEditRemark.setRemark(" ");
+								setEditRemark.setRemark(null);
 						      }
 					      }//24975 - End
 					 }
@@ -3526,7 +3527,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975 - start
 							 for (PpRemark setEditRemark : expItem.getPpRemarks()) {
 								if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
-									setEditRemark.setRemark(" ");
+									setEditRemark.setRemark(null);
 							      }
 						    }//24975 - End
 					   }
@@ -3594,7 +3595,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							//24975 - start
 							 for (PpRemark setEditRemark : expItem.getPpRemarks()) {
 								if (expItem.getExpenditureItemId().equals(expenditureItem.getFromPpItem())) {
-									setEditRemark.setRemark(" ");
+									setEditRemark.setRemark(null);
 							      }
 						     }//24975 - End
 					    }
