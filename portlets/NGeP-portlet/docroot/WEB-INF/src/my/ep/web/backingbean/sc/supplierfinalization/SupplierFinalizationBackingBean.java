@@ -729,7 +729,7 @@ public class SupplierFinalizationBackingBean extends
 		
 	}
 	
-	private void initializeCommitteeRemarks() {
+	public void initializeCommitteeRemarks() {
 		log.info("initializeCommitteeRemarks");
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
