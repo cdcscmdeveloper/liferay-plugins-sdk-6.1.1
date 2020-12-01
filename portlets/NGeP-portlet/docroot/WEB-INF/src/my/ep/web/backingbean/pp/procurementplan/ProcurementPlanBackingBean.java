@@ -2360,7 +2360,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							for(PpRemark itemRemarkDel : PpItemRemarkDel){
 								 if(itemRemarkDel.getDocId().equals(ppExpenditureItem.getExpenditureItemId())){
 									 log.info("first itemRemarkDel1" + itemRemark.getRemark() + itemRemarkDel.getRemark());
-									 if(itemRemarkDel.getRemark()!=null && itemRemark.getRemark()== null){
+									 if(itemRemarkDel.getRemark()!=null 
+											 && itemRemark.getRemark()== null
+											 || itemRemark.getRemark().isEmpty()){
 										 log.info("first itemRemarkDel" + itemRemarkDel.getRemark());
 										itemRemarkDel.setItemSeq(itemIndex);
 										itemRemarkDel.setDocId(ppExpenditureItem.getExpenditureItemId());
@@ -6238,7 +6240,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				for (PpUpdateReason updateReasonDel : PpUpdateReasonDel) {
 					if (updateReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())) {
-						if (updateReasonDel.getReasonDesc() != null && updateReason.getReasonDesc() == null) {
+						if (updateReasonDel.getReasonDesc() != null 
+								&& updateReason.getReasonDesc() == null 
+								|| updateReason.getReasonDesc().isEmpty()) {
 							log.info("first getReasonDesc" + updateReasonDel.getReasonDesc());
 							updateReasonDel.setItemSeq(itemIndex);
 							updateReasonDel.setDocId(ppProcurementItem.getProcurementItemId());
