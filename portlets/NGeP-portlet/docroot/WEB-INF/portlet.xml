@@ -3847,7 +3847,8 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sm/cancelRegistration/preRenderCancelRegistration.xhtml</value>
+			<value>
+	/xhtml/sm/cancelRegistration/preRenderCancelRegistration.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -5771,8 +5772,8 @@
 	</portlet>
 <!-- #9569 - START -->
 	<portlet>
-		<portlet-name>MOFSupplierUserMaintenance</portlet-name>
-		<display-name>MOF Supplier User Maintenance</display-name>
+		<portlet-name>SupplierUserMaintenance</portlet-name>
+		<display-name>Supplier User Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -5788,7 +5789,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>MOF Supplier User Maintenance</title>
+			<title>Supplier User Maintenance MOF</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
