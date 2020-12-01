@@ -131,6 +131,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	// 12177 - Start
 	private Calendar expirationDateSq;
 	// 12177 - End
+	
+	//Task Sorting
+	private String sort_by;
+	private boolean ascending = true;
+	private String sort_byGroup;
+	private boolean ascendingGroup = true;
+
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
