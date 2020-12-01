@@ -7503,7 +7503,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	                ppItem.setProcurementTitle(PpItemClone.getProcurementTitle());
 	                ppItem.setProcurementDesc(PpItemClone.getProcurementDesc());
 	                ppItem.setEstimatedAmt(PpItemClone.getEstimatedAmt());
-	                ppItem.setInvitationDate(new Date());
+	                // 25549 - start
+	                if(Calendar.getInstance().get(Calendar.YEAR) == this.getManagedBean().getSelectedPlan().getPlanYear()){ 
+	        			//current year
+	        			ppItem.setInvitationDate(new Date());
+	        		}else{ 
+	        			System.out.println("next year ");
+	        			//next year
+	        			int nextYear = Calendar.getInstance().get(Calendar.YEAR);
+	        			Calendar date = new GregorianCalendar((nextYear+1), Calendar.JANUARY, 1);
+	        			
+	        			ppItem.setInvitationDate(date.getTime());
+	        		}//25549 - end
 	                ppItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	                ppItem.setEditable(true);
 	                //25549@12102020 - start
