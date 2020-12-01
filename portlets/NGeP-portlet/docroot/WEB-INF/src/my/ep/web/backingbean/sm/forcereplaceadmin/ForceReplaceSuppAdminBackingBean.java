@@ -899,9 +899,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 			String accTypeStr = "";
 			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
 				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
-			} else if (getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			} else if (getManagedBean().getReactivateBasic().getSuppType()!=null && getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant",null);
-			} else if (getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			} else if (getManagedBean().getReactivateBasic().getSuppType()!=null && getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
 			} else {getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_GOVT_SELLER);
 				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
