@@ -81,6 +81,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
@@ -502,6 +503,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 				ParameterConst.RECOMMEND_TYPE_ITEM)) {
 			retrieveBiddingItems(reqDTO);
 		}
+		//25638 - Start.
+		initializeFinalizationRemarks();
+		//25638 - End.
 	}
 	
 	private void retrieveRecommendedSuppliersByPkg(ScheduleBiddingReqDTO reqDTO) {
@@ -1153,6 +1157,56 @@ public class SupplierFinalizationBiddingBackingBean extends
 			this.getManagedBean().setCommitteeRemarkList(remarks);
 		}		
 	}
+	
+	//25638 - Start.
+	private void initializeFinalizationRemarks() {
+		log.info("initializeFinalizationRemarks");
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+
+		// Retrieve Finalization remarks
+		List<ScQtFinalizationRemarks> remarks = initializeRemarks(scQtFinalization,
+				scQtFinalization.getCurrentStatus(), 
+				scQtFinalization.getScQtFinalizationRemarks(), 
+				ScQtFinalizationRemarks.class);
+		scQtFinalization.setScQtFinalizationRemarks(remarks);
+
+		// Finalization Remarks list
+		getManagedBean().setFinalizationRemarks(remarks);		
+	}
+
+	/**
+	 * 
+	 */
+	private void validateRemarks() {
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
+				|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+			boolean remarksNotFound = true;
+			if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+				for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+				  if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+                    if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+                      if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+                        remarksNotFound = true;
+                        break;
+                      } else {
+                        remarksNotFound = false;
+                      }
+                    }
+                  }
+				}
+			// #25638 - Start. 
+			} else {
+				initializeFinalizationRemarks();
+			}
+			// #25638 - End.
+			
+			if (remarksNotFound) {
+				throw new EpException(MessageConst.ERR_775152);
+			}
+		}
+	}
+	// #25638 - End.
 	
 	private void setDefaultValueForCommitteeActivityIfNull(ScQtCommitteeActivity committeeActivity) {
 		if (committeeActivity.getScCommitteeMember() != null) {
@@ -2035,12 +2089,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void submitBiddingEndorsement(String outcome) {
 		debugLogger("submitBiddingEndorsement");
 		
-		//25638 - Start
+		//25638 - Start.
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			validateRemarks();
 			RequestContext.getCurrentInstance().execute("reviseBiddingDlgs.show()");
 			return;
 		}
-		//25638 - End
+		//25638 - End.
 		
 		List<ScQtMeeting> meetingList=this.getManagedBean().getMeetingList();
 		if(CollectionUtils.isNotEmpty(meetingList)){
@@ -2054,6 +2109,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 			}
 		}
+		
+		//25638 - Start.
+		List<ScQtFinalizationRemarks> finalizationRemarks = 
+				finalizeRemarks(getManagedBean().getFinalizationRemarks());
+		getManagedBean().getScQtFinalization().setScQtFinalizationRemarks(finalizationRemarks);
+		//25638 - End.
+		
 		validateBiddingSubmission();
 		
 		this.getManagedBean().setAction(outcome);
