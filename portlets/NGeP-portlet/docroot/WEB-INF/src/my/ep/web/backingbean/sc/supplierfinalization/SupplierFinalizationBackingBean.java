@@ -438,9 +438,10 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setReverseTabIndex(-1);
 			getManagedBean().setSecretaryUser(true);	
 			getManagedBean().setMofFinalization(true);
-			
-			ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
-			getManagedBean().setEndorsementReport(endorsementReport); 
+			//haziq - button download didn't show after upload - start
+			//ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
+			//getManagedBean().setEndorsementReport(endorsementReport); 
+			//haziq - button download didn't show after upload - end
 			// #27502 -- END
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
