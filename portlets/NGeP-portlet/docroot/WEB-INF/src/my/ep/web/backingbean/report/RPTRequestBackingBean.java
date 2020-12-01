@@ -528,6 +528,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 	}
 	
+	//#14076 start
 	public String getDocumentsNo(BigDecimal requestId){
 
 		StringBuilder documentsNo = new StringBuilder(100);
@@ -552,5 +553,5 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		
 		return documentsNo.toString();
 	}
-	
+	//end
 }
