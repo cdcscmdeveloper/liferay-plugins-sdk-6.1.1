@@ -2828,7 +2828,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
-			reqDTO.setUpdateReasonList(updateReasons);
+			//24975 - start
+			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+				reqDTO.setUpdateReasonList(updateReasons);
+			}
+			//24975 - end
 			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
 				reqDTO.setJustifications(justifications);
 			}
@@ -6220,6 +6224,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param ppPlan
 	 * @return List <PpUpdateReason>
 	 */
+	//24975 - start
 	private List<PpUpdateReason> deleteUpdateReasons(PpPlan ppPlan) {
 		log.info("getAllUpdateReasons");
 		List<PpUpdateReason> updateReasons = new ArrayList<PpUpdateReason>();
@@ -6233,7 +6238,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				for (PpUpdateReason updateReasonDel : PpUpdateReasonDel) {
 					if (updateReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())) {
-						if (updateReasonDel.getReasonDesc() != null && updateReason.getReasonDesc().isEmpty()) {
+						if (updateReasonDel.getReasonDesc() != null && updateReason.getReasonDesc() == null) {
 							log.info("first getReasonDesc" + updateReasonDel.getReasonDesc());
 							updateReasonDel.setItemSeq(itemIndex);
 							updateReasonDel.setDocId(ppProcurementItem.getProcurementItemId());
@@ -6252,7 +6257,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("updateReasons:"+updateReasons);
 		return updateReasons;
 	}
-	
+	//24975 - End 
 	/**
 	 * validate if Update is required
 	 */
