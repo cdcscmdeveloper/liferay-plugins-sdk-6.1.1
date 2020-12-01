@@ -21,7 +21,7 @@
 				oncomplete="blockWidget.hide();" />
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				styleClass="ui-button"
-				oncomplete="confirmSubmitMeetingPopup.show();" style="float:right;"
+				action="#{evaluationMeetingBackingBean.resolveSubmitMeetingDialog()}" style="float:right;"
 				process="@all" partialSubmit="true">
 			</p:commandButton>
 		</div>
@@ -282,15 +282,19 @@
 					update="@([id$=evaluationConfirmMeetingCommitteemembersListPanel])" />
 			</c:otherwise>
 		</c:choose>
+	<ac:confirmationPopup id="confirmSubmitMeetingId"
+		widget="confirmSubmitMeetingPopup" loadingWidget="blockWidget"
+		title="#{lbl['lbl.sc.confirmation']}"
+		okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+		content="#{lbl['lbl.sc.popup.sendproposaleval']}"/>
+	<ac:confirmationPopup id="confirmSubmitToApproverId"
+		widget="confirmSubmitToApproverPopup" loadingWidget="blockWidget"
+		title="#{lbl['lbl.sc.confirmation']}"
+		okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+		content="#{lbl['lbl.sc.popup.submitcommitteeapprover']}"/>
 	</p:panel>
 
 	<ac:scRemarkAndAttachment
 		remarkList="#{evaluationMeetingBackingBean.managedBean.qtCommitteeRemarks}"
 		showAttachment="false" />
-	<ui:param name="confirmSubmitMeetingId" value="confirmSubmitMeetingId"></ui:param>
-	<ac:confirmationPopup id="#{confirmSubmitMeetingId}"
-		widget="confirmSubmitMeetingPopup" loadingWidget="blockWidget"
-		title="#{lbl['lbl.sc.confirmation']}"
-		okAction="evaluationMeetingBackingBean.submitMettingDetails()"
-		content="#{lbl['lbl.sc.popup.sendproposaleval']}"/>
 </ui:composition>

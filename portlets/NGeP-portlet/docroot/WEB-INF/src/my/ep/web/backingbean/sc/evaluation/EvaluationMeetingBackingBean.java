@@ -2199,6 +2199,14 @@ public class EvaluationMeetingBackingBean extends
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 	
+	public void resolveSubmitMeetingDialog(){
+		if(isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())){
+			RequestContext.getCurrentInstance().execute("confirmSubmitToApproverPopup.show();");	
+		}else{
+			RequestContext.getCurrentInstance().execute("confirmSubmitMeetingPopup.show();");	
+		}
+	}
+	
 	private void resolveAcknowledgement(ScQt qt, MeetingReqDTO reqDTO){
 		String taskName = reqDTO.getTaskName();
 		String outcome = reqDTO.getOutcome();
