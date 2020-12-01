@@ -895,6 +895,18 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	private void redirectToSuccessPage(PersonnelResDTO resDTO) {
 		if (resDTO.isSuccessful()) {
+			//#28765 - Start
+			String accTypeStr = "";
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.basic", null);
+			} else if (getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.consultant",null);
+			} else if (getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.mof.contractor",null);
+			} else {getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_GOVT_SELLER);
+				accTypeStr = SmCommonUtil.getMessage("lbl.sm.basic.account.govt", null);
+			}
+			//#28765 - End
 			if (getManagedBean().getNewAdmin().getPmUser() == null) {
 				//Before #28765
 				//SmCommonUtil.redirectToPage(
@@ -903,12 +915,18 @@ public class ForceReplaceSuppAdminBackingBean extends
 				//				SmRuleHelper.getInstance()
 				//						.getEmailActivationDays() + "" }, null);
 				//#28765 - Start
+				if(getManagedBean().getBypassFlag1()==1) {
+					SmCommonUtil.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721041, new String[] {accTypeStr}, null);
+				} else {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721037, new String[] {getManagedBean().getOldAdmin().getName(),
 							getManagedBean().getNewAdmin().getName(),getManagedBean().getNewAdmin().getEmail(),
 								SmRuleHelper.getInstance()
 										.getEmailActivationDays() + "" }, null);
+				}
 				//#28765 - End
 			} else {
 				if (getManagedBean().getReactivateBasic().isShowEmailInput()) {
@@ -921,6 +939,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 					//						.getEmailActivationDays() + "" },
 					//		null);
 					//#28765 - Start
+					if(getManagedBean().getBypassFlag1()==1) {
+						SmCommonUtil.redirectToPage(
+								SmApplicationUtil.getApplicationErrorPage(),
+								MessageConst.INFO_721041, new String[] {accTypeStr}, null);
+					} else {
 					SmCommonUtil.redirectToPage(
 							SmApplicationUtil.getApplicationErrorPage(),
 							MessageConst.INFO_721037, new String[] {getManagedBean().getOldAdmin().getName(),
@@ -929,6 +952,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 									SmRuleHelper.getInstance()
 											.getEmailActivationDays() + "" },
 							null);
+					}
 					//#28765 - End
 				} else {
 					SmCommonUtil.redirectToPage(
@@ -1122,7 +1146,28 @@ public class ForceReplaceSuppAdminBackingBean extends
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		paramReqDTO.setParameterId(getManagedBean().getReactivateBasic()
 				.getNewIdentificationType());
-		
+		PmParameter idno = SmServiceLookup.getParameterSO()
+				.retrieveParameterById(paramReqDTO).getPmParameter();
+		if (idno.getParameterCode().equals(SupplierManagementConst.NEW_IC)) {
+			if (getManagedBean().getReactivateBasic().getNewIdentificationNo()
+					.length() < 12) {
+				throw new EpException(MessageConst.ERROR_722532,
+						new String[] { getManagedBean().getReactivateBasic()
+								.getNewIdentificationNo() });
+			}
+		}
+		if (getManagedBean()
+				.getReactivateBasic()
+				.getIdentificationNo()
+				.equals(getManagedBean().getReactivateBasic()
+						.getNewIdentificationNo())) {
+			throw new EpException(MessageConst.ERROR_722600);
+		}
+		if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
+			if (!getManagedBean().isExistingUser()) {
+				throw new EpException(MessageConst.ERROR_721087);
+			}
+		}
 		//SupplierSearchReqDTO ssreqDTO = new SupplierSearchReqDTO();
 		//ssreqDTO.setSmSupplier(getManagedBean().getSmSupplier());
 		//ssreqDTO.setSmAppl(getManagedBean().getSmSupplier().getSmAppl());
@@ -1210,6 +1255,35 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 			}
 		}
+		// selected old admin not exist
+				if (getManagedBean().getOldAdmin() == null) {
+					throw new EpException(MessageConst.ERROR_722594);
+				} else {
+					// [#26050] check if selected old admin does have any pending task - start
+					if (getManagedBean().getOldAdmin() != null) {
+						//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
+						if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
+								&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
+							throw new EpException(MessageConst.ERROR_770167);
+						}				
+					}
+					// [#26050] check if selected old admin does have any pending task - end
+				}
+
+				// selected old admin does not hold role as supplier admin
+				if (getManagedBean().getOldAdmin() != null) {
+					if (StringUtils.isBlank(getManagedBean().getOldAdmin().getEpRole())
+							|| (getManagedBean().getOldAdmin().getEpRole()
+									.equals(RoleCode.BASIC_SUPPLIER_USER.value())
+									|| getManagedBean().getOldAdmin().getEpRole()
+											.equals(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean()
+									.getOldAdmin().getEpRole()
+									.equals(RoleCode.G2G_SUPPLIER_USER.value()))) {
+						throw new EpException(MessageConst.ERROR_722651,
+								new String[] { getManagedBean().getOldAdmin()
+										.getIdentificationNo() });
+					}
+				}
 		listenerChangeRole();
 		
 		SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
