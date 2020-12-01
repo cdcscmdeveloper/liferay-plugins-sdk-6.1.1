@@ -2305,12 +2305,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return inProgress;
 	}
 	
-	private void assertBriefingSiteVisitInProgress(Long qtId){
+	private void assertBriefingSiteVisitIsComplete(Long qtId){
 		ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, qtId);
 		wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
 		if(wfStatus.getPmStatus()!=null){
 			Long currentStatusId = wfStatus.getPmStatus().getStatusId();
-			if (this.isQTStatusPublished(currentStatusId)){
+			if (this.isStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
 				this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_REJECT}); 
 				FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.doaRequestExpired", null)));
 			}
@@ -2330,7 +2330,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		try{
 			if(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.equals(requestType)){
-				assertBriefingSiteVisitInProgress(qtId);
+				assertBriefingSiteVisitIsComplete(qtId);
 				QTScheduleDetailBackingBean scheduleBB = new QTScheduleDetailBackingBean();
 				List<ScQtApprovalRequest> requestList = getApprovalRequests(qtId, ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APPROVAL, "", Arrays.asList(new String[]{requestType}), "");
 				requestList = requestList==null ? new ArrayList<ScQtApprovalRequest>(): requestList;
