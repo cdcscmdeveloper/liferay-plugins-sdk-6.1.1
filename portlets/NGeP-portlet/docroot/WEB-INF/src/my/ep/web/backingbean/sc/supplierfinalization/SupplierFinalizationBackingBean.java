@@ -1392,7 +1392,8 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setInitialDecisionFwdHighAuth(
 					getManagedBean().isInitialDecisionFwdHighAuth());
 			reqDTO.setRefinalize(isQTRefinalized());
-			
+			//29707
+			reqDTO.setScQt(scQt);
 			//#27502- Adding condition only			 
 			if (!isBpkCentralContract
 					|| this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_FC_SELECTION)) {	//#25037 add new condition due to cannot save
@@ -2687,12 +2688,13 @@ public class SupplierFinalizationBackingBean extends
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
 			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			//29707
+			//boolean isBpkCentralContract = false;
+			//isBpkCentralContract = isBpkCentralContract(scQt);
 
-			if (isBpkCentralContract) {
+			//if (isBpkCentralContract) {
 				reqDTO.setScQt(scQt);
-			}
+			//}
 			
 			// #18685 - Start
 			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
@@ -5670,7 +5672,10 @@ public class SupplierFinalizationBackingBean extends
 		String recommendType = scQtFinalization.getRecommendedTypeId()
 				.getParameterCode();
 		String finalizationMethod = getManagedBean().getFinalizationMethod();
-
+		//29707
+		if ( StringUtils.isBlank(finalizationMethod)){
+			finalizationMethod =  scQtFinalization.getFinalizationMethod().getParameterCode();
+		}
 		// Disable award by package when procurement category is medicine
 		//getManagedBean().isProcCategoryMedicine()
 		if (SourcingConstants.EVALUATE_BY__ITEM.equalsIgnoreCase(this.getManagedBean().getScQt().getEvaluateBy())) {
