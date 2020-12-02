@@ -508,7 +508,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 						&& StringUtils.isBlank(searchRegno)
 						&& StringUtils.isBlank(searchApplType)
 						&& searchApplStatusId == null
-						&& StringUtils.isBlank(searchApplNo)) {
+						&& StringUtils.isBlank(searchApplNo)
+						&& StringUtils.isBlank(supportingDocMode)){
 					throw new EpException(SmCommonUtil.getMessage(
 							"lbl.sm.search.criteria.atleast.one.field", null));
 				}
@@ -526,7 +527,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 						&& StringUtils.isBlank(searchRegno)
 						&& StringUtils.isBlank(searchApplType)
 						&& searchApplStatusId == null
-						&& StringUtils.isBlank(searchApplNo)) {
+						&& StringUtils.isBlank(searchApplNo)
+						&& StringUtils.isBlank(supportingDocMode)) {
 					throw new EpException(SmCommonUtil.getMessage(
 							"lbl.sm.search.criteria.atleast.one.field", null));
 				}				
