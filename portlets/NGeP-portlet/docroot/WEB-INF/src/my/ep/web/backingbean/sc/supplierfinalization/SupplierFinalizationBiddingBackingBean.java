@@ -1838,6 +1838,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
 			
+			// #25638 - Start.
+			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationRemarks()) 
+					&& getManagedBean().getFinalizationRemarks().size() > 0) {
+				List<ScQtFinalizationRemarks> finalizationRemarks = 
+						finalizeRemarks(getManagedBean().getFinalizationRemarks());
+				this.getManagedBean().getScQtFinalization().setScQtFinalizationRemarks(finalizationRemarks);
+			} 
+			// #25638 - End.
+			
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setScQtFinalization(scQtFinalization);
 			
