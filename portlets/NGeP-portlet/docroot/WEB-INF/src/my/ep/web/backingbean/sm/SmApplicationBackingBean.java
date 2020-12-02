@@ -13320,7 +13320,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setPendingTransaction(true);		
 			String msg = "<table width='100%' style='font-size:12px'><tr><td style=\"vertical-align: baseline;\">i) </td><td style='text-align: justify'>" 
 					+ SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied", null)
-					+"<br/><br/></td></tr><tr><td style=\"vertical-align: baseline;\">ii) </td><td style='text-align: justify'>"
+					+"</td></tr><tr><td style=\"vertical-align: baseline;\">ii) </td><td style='text-align: justify'>"
 					+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied", null)
 					+"</td></tr></table>";
 			FacesContext.getCurrentInstance().addMessage("activecontract", 
