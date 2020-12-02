@@ -9,7 +9,8 @@
 	<p:panel id="updCommitteePanel" header="#{lbl['lbl.sc.update.committee.member']}" toggleable="true"  toggleSpeed="500">
             <p:dataTable id="updCommitteeTable" var="ctUpdCommitteeVar" widgetVar="updCommitteeTableWidget"
             	rowIndexVar="index" rowKey="#{ctUpdCommitteeVar}"
-                value="#{amendmentBackingBean.managedBean.updatedCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}">
+                value="#{amendmentBackingBean.managedBean.updatedCommitteeMembers}" 
+                rowStyleClass="#{ctUpdCommitteeVar.updateType eq 'RNM' ? 'ui-helper-hidden' : (ctUpdCommitteeVar.updateType eq 'R' ? 'ui-helper-hidden' : '')}"> <!-- #29403 -->
                   <p:column  style="width:2%;" rendered="#{!amendmentBackingBean.managedBean.disableMeetingDetails}">
 			      <f:facet name="header">
 					<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
@@ -98,6 +99,7 @@
 				</h:panelGroup>
 
 			</p:column>
+
 	         </p:dataTable>
 	         <div class="ppRightBtn"> 
 		          <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"  update="committeeModelDialog"
