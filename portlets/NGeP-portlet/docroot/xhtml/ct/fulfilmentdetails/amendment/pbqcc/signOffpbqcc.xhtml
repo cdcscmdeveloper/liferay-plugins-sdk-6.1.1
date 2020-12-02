@@ -130,7 +130,8 @@
 			<p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
 			<p:dataTable id="secretryTable" var="data" rowIndexVar="index"
 				value="#{CtStatusConst.faPendingMeetingDecision.longValue() == ctBackingBean.managedBean.contractVer.status.statusId.longValue() 
-                ? amendmentBackingBean.managedBean.updatedCommitteeMembers : ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}"><!-- 26753 -->
+                ? amendmentBackingBean.managedBean.updatedCommitteeMembers : ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" 
+                rowStyleClass="#{data.updateType eq 'RNM' ? 'ui-helper-hidden' : (data.updateType eq 'R' ? 'ui-helper-hidden' : '')}"><!-- 29403 -->
 				<ac:paginator for="decisionTable" />
 				<p:column style="width:20%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">

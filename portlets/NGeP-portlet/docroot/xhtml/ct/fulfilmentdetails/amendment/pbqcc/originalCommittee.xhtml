@@ -11,7 +11,7 @@
 			widgetVar="oriCommitteeTableWidget" rowIndexVar="index"
 			rowKey="#{ctOriCommitteeVar}"
 			value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
-			filteredValue="#{amendmentBackingBean.getFilteredOriginalCommitteeMembers()}" >
+			rowStyleClass="#{ctOriCommitteeVar.updateType eq 'A' ? 'ui-helper-hidden' : (ctOriCommitteeVar.updateType eq 'RNM' ? 'ui-helper-hidden' : '')}" > <!-- #29403 -->
 			<p:column style="width:2%;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
@@ -110,6 +110,7 @@
 				</h:panelGroup>
 
 			</p:column>
+
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
