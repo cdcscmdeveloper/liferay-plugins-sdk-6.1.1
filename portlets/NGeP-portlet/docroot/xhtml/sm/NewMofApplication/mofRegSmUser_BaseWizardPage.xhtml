@@ -337,10 +337,9 @@
 				</div>
 
 			</p:confirmDialog>
-			<!-- #17906 -->
 			<p:messages id="messages" showDetail="true" showSummary="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" escape="false" globalOnly="true"/>
+				closable="true" escape="false"/>
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />

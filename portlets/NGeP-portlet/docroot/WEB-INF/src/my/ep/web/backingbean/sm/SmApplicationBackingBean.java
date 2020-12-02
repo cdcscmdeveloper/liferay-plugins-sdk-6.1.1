@@ -13317,12 +13317,14 @@ public class SmApplicationBackingBean extends
 		String labelNameVal = "";
 		//#17906 - start
 		if (hasActiveTransactionContractManagement && hasActiveTransactionFulfilment){
-			getManagedBean().setPendingTransaction(true);
-			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"i) "+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied", null)));
-			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,""));
-			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"ii) "+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied", null)));
+			getManagedBean().setPendingTransaction(true);		
+			String msg = "<table width='100%' style='font-size:12px'><tr><td style=\"vertical-align: baseline;\">i) </td><td style='text-align: justify'>" 
+					+ SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied", null)
+					+"<br/><br/></td></tr><tr><td style=\"vertical-align: baseline;\">ii) </td><td style='text-align: justify'>"
+					+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied", null)
+					+"</td></tr></table>";
+			FacesContext.getCurrentInstance().addMessage("activecontract", 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, msg));
 		//#17906 - end
 			
 		} else if (hasActiveTransactionContractManagement) {
