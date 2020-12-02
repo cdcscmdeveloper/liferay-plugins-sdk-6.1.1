@@ -403,14 +403,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setG2GFlag(false);
 				sqbb.getManagedBean().setActiveIndex(0);
 				sqbb.getManagedBean().getProductTemplateSpecBean().setSpecMaster(null);
-				CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
-				reqDTO.setCircularVerId(getManagedBean().getCircularVer().getCircularVerId());
-				reqDTO.setPanelItemTypeGroup(true);
-				Long selectedPanelItemId = getManagedBean().getCircularVer().getCtPanelItems().get(0).getPanelItemId();
-				sqbb.simpleQuoteAction(selectedPanelItemId, true, null);
+				sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), getManagedBean().getCircularVer()
+						.getCircularVerId() != null ? true : false, null);
+				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
+				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
 			}
+			// #3761 - end
 			return getManagedBean().getGotoPreviewPage();
-			//#3761 - end
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}

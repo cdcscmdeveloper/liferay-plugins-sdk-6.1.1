@@ -15,7 +15,7 @@
 				<ui:param name="isPanel"
 					value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"></ui:param>
 					
-				<td colspan="3">
+				<td colspan="6"><!-- colspan="3" -->
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="panel" required="#{param['submitBtnPressed']=='1'}"
@@ -29,15 +29,13 @@
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
 									id="panelMsg" for="panel" display="icon" /> <ac:iconTooltip
 									value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
-									
 							<td style="padding-left: 20px;">
 							<div align="left">
 								<h:commandLink id="treasuryCircularLink"
 									value="#{lbl['lbl.sc.view.panel.details']}"
 									process="@this" partialSubmit="true"
-									rendered="#{!simpleQuoteBackingBean.managedBean.panelItemFlag and !simpleQuoteBackingBean.managedBean.newableFlag 
-										and simpleQuoteBackingBean.managedBean.addNewSpecFlag}"
-									action="#{simpleQuoteBackingBean.gotoPanelPage(null, 'PQ')}">
+									action="#{simpleQuoteBackingBean.gotoPanelPage(null, 'PQ')}"
+									style="text-decoration:underline;">
 								</h:commandLink>
 							</div></td>
 						</tr>
@@ -48,7 +46,7 @@
 				<td style="vertical-align: top;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="4">
+				<td colspan="3">
 					<table>
 						<tr>
 							<td>
@@ -119,7 +117,7 @@
 										value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
 									<p:ajax event="change" update="@([id$=justId] , [id$=sqinfoId])"
 										listener="#{simpleQuoteBackingBean.procTypeRadioButtonEvent}"
-										process="@this" />
+										process="@this" /><!-- update="@([id$=justId])" -->
 								</p:selectOneRadio></td>
 
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
@@ -223,7 +221,7 @@
 						modVal="15"
 						maxdate="#{simpleQuoteBackingBean.managedBean.maxDate}"
 						update="@([id$=durationId])">
-					</ac:dateTime> </td>
+					</ac:dateTime></td>
 			</tr>
 			<tr>
 		
