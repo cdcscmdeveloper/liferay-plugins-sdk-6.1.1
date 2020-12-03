@@ -2179,6 +2179,14 @@ public class NoticeBoardBackingBean extends
 
 		Date closingDate = DateUtils.convertStringToDate(
 				"yyyy-MM-dd HH:mm:ss.S", clsDate);
+		String strDays = null;
+		for (String newStr : new String[] { ResourceBundleUtils.getMessage(
+				"lbl.cm.days",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes()
+				.getUserLocale()) }) {
+			strDays = newStr;
+		}
 
 		if (new Date(System.currentTimeMillis()).after(closingDate)) {
 			// closed
@@ -2188,11 +2196,20 @@ public class NoticeBoardBackingBean extends
 			DecimalFormat df = new DecimalFormat("#00");
 			closingDays = df.format(days);
 
-			if (days == 0) {
+			if (days < 1) {
 				Long durationInMills = DateUtils.getDateDiffInMillis(
 						DateUtils.getCurrentDate(), closingDate);
 				if (durationInMills > 0) {
 					closingDays = DateUtils.durationFormatter(durationInMills
+							.longValue());
+				}
+			}
+			
+			if (days > 1) {
+				Long durationInMills = DateUtils.getDateDiffInMillis(
+						DateUtils.getCurrentDate(), closingDate);
+				if (durationInMills > 0) {
+					closingDays = df.format(days) + " " + strDays + " " + DateUtils.durationFormatter(durationInMills
 							.longValue());
 				}
 			}
