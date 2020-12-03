@@ -77,9 +77,9 @@
 					<!--#28273 -START 110620-->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}"
 						style="width :15%;white-space : normal">
-						<!-- bug #29156 -START -->
+						<!-- bug #29156 -START ,29690  -->
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
-							rendered="#{smSupplier.recordStatusFlg eq 1}" />
+							rendered="#{smSupplier.recordStatusFlg eq 1 and empty smSupplier.typeDisciplinaryAction}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
 							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}" />
 						<!-- bug #28278 -START -->
@@ -93,7 +93,11 @@
 							value="#{lbl['lbl.sm.status.inactive']}"
 							rendered="#{smSupplier.recordStatusFlg eq 9 and empty smSupplier.typeDisciplinaryAction}" />
 						<!-- bug #29156 -END -->	
-						<!-- bug #28278 -START -->
+						<!-- bug #29690 -START -->
+						<h:outputText
+							value="#{lbl['lbl.sm.status.suspend']}"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S'}" />
+						<!-- bug #29690 -END -->
 					</p:column>
 					<!--#28273 -END 110620-->   
 					<!--#28273 & #28278 -end -->
