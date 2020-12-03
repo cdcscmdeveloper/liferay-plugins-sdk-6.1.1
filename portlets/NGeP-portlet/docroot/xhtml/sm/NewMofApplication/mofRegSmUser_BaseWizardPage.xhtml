@@ -338,7 +338,7 @@
 
 			</p:confirmDialog>
 			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}" rendered="#{backingBean.managedBean.showParentMsg}"
 				closable="true" escape="false"/>
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
