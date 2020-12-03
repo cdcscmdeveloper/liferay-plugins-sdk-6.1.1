@@ -256,11 +256,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        <p:column style="text-align:center;">
 	          <!--25549@18092020 -->
+	           <!--03122020@24975 - start -->
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			        id="clEpJustification" disabled="#{epItem.disableRow}">
 				    <p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.selectable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 				    disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />	
 				</p:commandLink>
+				<p:graphicImage
+				     rendered="#{epItem.notUsingEp}"
+				     value="#{epItem.notUsingEp ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+			 <!--03122020@24975 - end -->
 	        </p:column>
 	         <!--24975@azza - end -->
 	         <!--24975@20112020azza - start -->
@@ -272,10 +277,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:graphicImage value="#{epItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{(pPlanBackingBean.managedBean.modeEditable) or !epItem.reasonForUpdateEnabled}" update="@form" />
                     <f:param name="disableValidation" value="" />
+                   </p:commandLink>
                    <p:graphicImage
 				    rendered="#{epItem.indicator}"
 				    value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" /> 
-				</p:commandLink>
 				 <!--24975@18112020azza - end -->
 	        </p:column>
 	         <!--24975@20112020azza - end -->
