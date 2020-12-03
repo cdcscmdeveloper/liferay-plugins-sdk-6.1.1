@@ -2618,8 +2618,6 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 			getManagedBean().setByLocality(Boolean.FALSE);
 			templateSpecBackingBean.getManagedBean().setG2G(true);
-			getGovtSellerCriteria();
-			getManagedBean().setGovtSellers(getManagedBean().getScQuote().getScQuoteSuppliers());
 		} else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
