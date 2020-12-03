@@ -1779,9 +1779,8 @@ public class QTCommitteBackingBean extends
 				.equalsIgnoreCase(scCommitte.getCommitteeType()
 						.getParameterCode())
 				&& CollectionUtils.isEmpty(scCommitte.getScCommitteeMembers())
-				&& !(QTStatusConst.CMT_PENDING_APPROVAL.equals(scCommitte
-						.getCommitteStatus().getStatusId()) || QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-						.equals(scCommitte.getCommitteStatus().getStatusId()))) {
+				&& !(Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scCommitte.getCommitteStatus().getStatusId()) 
+						|| Arrays.asList(QTStatusConst.CMT_REVISION_APPROVAL_GROUP).contains(scCommitte.getCommitteStatus().getStatusId()))) {
 			bean.getScQtCommittee().getScCommittee().setApprovalReq(false);
 		}
 
@@ -2021,9 +2020,8 @@ public class QTCommitteBackingBean extends
 				
 			}
 		}
-		if (QTStatusConst.CMT_PENDING_APPROVAL.equals(committeStatus)
-				|| QTStatusConst.CMT_PENDING_REVISION_APPROVAL
-						.equals(committeStatus)) {
+		if (Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(committeStatus)
+				|| Arrays.asList(QTStatusConst.CMT_REVISION_APPROVAL_GROUP).contains(committeStatus)) {
 			return false;
 		} 
 
@@ -2046,7 +2044,7 @@ public class QTCommitteBackingBean extends
 				|| (SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equals(taskName) && ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType)) 
 				|| (SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equals(taskName) && ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType)) 
 				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equals(taskName)
-				|| QTStatusConst.CMT_PENDING_REVISION.equals(cmtStatus);
+				|| Arrays.asList(QTStatusConst.CMT_REVISION_GROUP).contains(cmtStatus);
 	}
 	
 	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {

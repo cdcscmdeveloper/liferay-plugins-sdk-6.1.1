@@ -181,7 +181,8 @@ public class QTFieldMapper {
 				new String[] { 
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
-						QTFieldConst.FIELD_QT_BSVDETAILS}),
+						QTFieldConst.FIELD_QT_BSVDETAILS,
+						QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT}),//25037
 						
         //Proposal Preparation 
 		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
