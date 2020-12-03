@@ -354,9 +354,7 @@ u {
 					<p>
 						<span class="text_family_small">Perenggan ini terpakai sekiranya Harga Kontrak melebihi nilai ambang dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute; berdasarkan PP/PK1.2. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong.</span>
 					</p>
-					
-				#if ($isSL1M == "true")
-						
+											
 					<p>
 						<span class="text_family">9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan surat ini sekiranya:  </span></p>
 
@@ -434,74 +432,7 @@ u {
 						<span class="text_family">12.	Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
 						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
 					</p>
-				#else
-										
-					<p>
-						<span class="text_family">9.	Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan surat ini sekiranya:  </span></p>
-
-					<div class="text_indent">
-						<p>
-							<span class="text_family">(a)	syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</span>
-						</p>
-						
-						<p>
-							<span class="text_family">(b)	syarikat tuan gagal mematuhi mana-mana terma yang dinyatakan  dalam Surat Akuan Pembida Berjaya; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(c)	syarikat tuan telah membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau  melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(d)	syarikat tuan membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;</span>
-						</p>
-						
-						<p>
-							<span class="text_family">(e)	syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $subTitle sehingga dokumen kontrak ditandatangani; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(f)	syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> 
-						</p>
-						
-						<p>
-							<span class="text_family">(h)	syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $subTitle;</span>
-						</p>
-						
-						<p>
-							<span class="text_family">(i)	syarikat tuan/ pemilik/ rakan kongsi/ pengarah telah disabitkan atas kesalahan jenayah di dalam atau luar Malaysia; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(j)	syarikat tuan digulungkan;</span>
-						</p>
-						
-						<p>
-							<span class="text_family">(k)	syarikat tuan membekal barang-barang yang tidak tulen, bukan baharu atau yang terpakai; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(l)	syarikat tuan gagal mematuhi spesifikasi pembekalan yang ditetapkan; </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(m)	syarikat tuan tidak mendapat kelulusan daripada Kerajaan terlebih dahulu bagi apa-apa
-							penjualan atau pemindahan ekuiti sepanjang tempoh kontrak
-							ini berkuat kuasa; atau </span>
-						</p>
-						
-						<p>
-							<span class="text_family">(n)	terdapat perkara yang melibatkan kepentingan awam atau keselamatan dan kepentingan negara. </span>
-						</p>
-					</div>
-
-					
-					
-				#end
+				
 			</td>
 		</tr>
 		
@@ -914,53 +845,6 @@ u {
 						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
 				</tr>
 				
-				#if ($isSL1M == "true")
-					<tr>
-						<td colspan="3"><span class="text_header_submenu_red"> 11.
-							*Skim Latihan 1Malaysia (PROT&Eacute;G&Eacute;) (jika berkaitan)</span><br/>
-							<span class="text_family_red"><span class="text_family_small">
-							(Bagi perolehan yang telah melebihi nilai ambang berdasarkan 1PP/PK1.2)</span></span>
-						</td>
-					</tr>
-					<tr>
-						<td align="left" class="submenu_padding" style="width:20%;"><span
-							class="text_family_red">11.1 Tertakluk kepada Pelaksanaan Program PROT&Eacute;G&Eacute; </span></td>
-						<td class="text_family_red">:</td>
-						<td class="text_family_red">Ya/Tidak 
-							<span class="text_family_small">(Berdasarkan nilai ambang yang ditetapkan dalam 1PP/PK1)</span></td>
-					</tr>
-					<tr>
-						<td align="left" class="submenu_padding" style="width:20%;"><span
-							class="text_family_red">11.2 Bilangan minimum peserta PROT&Eacute;G&Eacute;</span></td>
-						<td class="text_family_red">:</td>
-						<td class="text_family_red">......... peserta
-							<span class="text_family_small">Formula pergiraan:
-							<table width="50%" align="center" style="border-collapse: collapse;">
-								<tr>
-									<td style="border-bottom: 1px solid black;text-align: center;">
-										<span class="text_family_small">1% X Harga Kontrak</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="border-top: 1px solid black;text-align: center;">
-										<span class="text_family_small">RM18,000*</span>
-									</td>
-								</tr>
-							</table>
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<td align="right" colspan="3"><span class="text_family_red">
-						<span class="text_family_small">
-						*Elaun PROT&Eacute;G&Eacute; (RM1,500 seorang x 12 bulan)</span></span>
-						</td>
-					</tr>
-				#end
-				<tr>
-					<td colspan="3"><span class="text_family_red"> *<i>potong mana
-							yang tidak berkenaan</i></span></td>
-				</tr>
 			</table>
 		</tr>
 	</table>

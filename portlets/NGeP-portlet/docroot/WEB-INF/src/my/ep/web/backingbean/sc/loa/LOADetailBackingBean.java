@@ -1980,7 +1980,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String qtNo = MALAY_NA;
 		if(scQt != null) {
 			qtNo = scQt.getQtNo();
+		} 
+		
+		// #25025 - Start.
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (null != scLoa.getScQuote() && StringUtils.isNotEmpty(scLoa.getScQuote().getQuoteNo())) {
+				qtNo = scLoa.getScQuote().getQuoteNo();
+			}
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(scLoa);
+			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
+				qtNo = qtNo + " / " + rnNo;
+			} else {
+				qtNo = rnNo;
+			}
 		}
+		// #25025 - End.
+		
 		// qtno
 		context.put("qtNo", qtNo);
 
@@ -6166,7 +6184,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("mofCertValidityDuration", mofCertValidityDuration);
 		context.put("isBumi", isBumi);		
 		context.put("kodBidang", kodBidang);
-		context.put("mofNo", scLoiLoa.getMofNo());
+		// #25025 - Start.
+		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
+			context.put("mofNo", scLoiLoa.getMofNo());
+		} else {
+			context.put("mofNo", "");
+		}
+		// #25025 - End.
 	}
 
 	/**

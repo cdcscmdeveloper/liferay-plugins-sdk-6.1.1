@@ -5856,8 +5856,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 		Long supplierId = smSupplier.getSupplierId();
-		context.put("mofNo", scLoiLoa.getMofNo());
-		
+		// #25025 - Start.
+		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
+			context.put("mofNo", scLoiLoa.getMofNo());
+		} else {
+			context.put("mofNo", "");
+		}
+		// #25025 - End.
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
 		
 		String mofValidityDuration = MALAY_NA;
@@ -8274,6 +8279,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String qtNo = (StringUtils.isEmpty(scQt.getQtNo()))? "______________" : scQt.getQtNo();
 		context.put("qtNo", qtNo);
 		
+		// #25025 - Start.
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (null != scLoa.getScQuote() && StringUtils.isNotEmpty(scLoa.getScQuote().getQuoteNo())) {
+				qtNo = scLoa.getScQuote().getQuoteNo();
+			}
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(scLoa);
+			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
+				qtNo = qtNo + " / " + rnNo;
+			} else {
+				qtNo = rnNo;
+			}
+		}
+		// #25025 - End.
+				
 		// JadualHarga
 		formJadualHarga(context, scLoa);
 		
