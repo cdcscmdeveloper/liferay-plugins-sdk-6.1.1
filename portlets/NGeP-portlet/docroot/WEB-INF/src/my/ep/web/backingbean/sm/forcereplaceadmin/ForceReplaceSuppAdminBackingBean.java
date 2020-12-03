@@ -232,6 +232,40 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	//#28765 - Start
+		private PersonnelReqDTO getOldAdminReqDTO() {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+			reqDTO.setAdminPersonnel(getManagedBean().getOldAdmin());
+			reqDTO.setSmPersonnel(getManagedBean().getOldAdmin());
+			reqDTO.setEmail(getManagedBean().getOldAdmin().getEmail());
+			//#28765 - Start chained method added .getApplId()
+			reqDTO.setApplId(getManagedBean().getSmSupplier().getSmAppl()
+					.getApplId());	
+			//#28765 - End
+			FacesScopes fs = new FacesScopes();
+			reqDTO.setLanguage(fs.getUserLocale().getLanguage());
+			reqDTO.setServerName(fs.getRequest().getServerName());
+			reqDTO.setServerPort(fs.getRequest().getServerPort());
+			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+			reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+			reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
+			reqDTO.setTaskList(getTaskList());
+			//#28765 - Start
+			reqDTO.setSmReplaceSupplierAdminDocs(getManagedBean().getSmReplaceSupplierAdminDocs());
+			if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
+					reqDTO.setRemoveSupplier(true);
+			}	
+			//#28765 - End
+			SmAppl activeAppl = getCurrActiveSmAppl(getManagedBean()
+					.getSmSupplier());
+			if (activeAppl != null) {
+				reqDTO.setHasActiveAppl(true);
+				reqDTO.setDraftApplId(activeAppl.getApplId());
+			}
+			return reqDTO;
+		}
+		//#28765 - End
 	/**
 	 * Replace admin with new personnel and redirect to success page
 	 */
@@ -246,6 +280,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
+		//#28765 - Start
+		if((getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) || 
+				(getManagedBean().getBypassFlag2()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF))) {
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
+					.inactiveSupplierRole(getOldAdminReqDTO());
+		}
+		//#28765 - End
 		redirectToSuccessPage(resDto);
 	}
 
@@ -261,6 +302,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
+		//#28765 - Start
+		if((getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) || 
+				(getManagedBean().getBypassFlag2()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF))) {
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
+					.inactiveSupplierRole(getOldAdminReqDTO());
+		}
+		//#28765 - End
 		redirectToSuccessPage(resDto);
 	}
 	
