@@ -664,11 +664,7 @@ public class ConsolidationReportBackingBean extends
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
-			if (!isBpkCentralContract) {
-				validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
-			}// #27502 -- End
+			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
 
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTSuppFinalizationSO.class);		

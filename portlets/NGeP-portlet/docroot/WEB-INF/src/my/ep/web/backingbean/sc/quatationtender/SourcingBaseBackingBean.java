@@ -83,6 +83,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -5021,6 +5022,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		public boolean isBpkCentralContract(ScQt scQt) {
 			boolean isBpkCentralContract = false;
 			boolean isSbhOrSrwk = false;
+			boolean isRuleBpk = false;
 			Long ctType = null;		
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
@@ -5042,7 +5044,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							isSbhOrSrwk = true;
 							break;
 						}					
-					}		
+					}	
+					
+					IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+					List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJCO);
+					
+					if(bpkList != null){
+						isRuleBpk = true;
+					}
 					
 					if (scQt.getContractType() == null) {
 						QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
@@ -5052,8 +5062,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						ctType = scQt.getContractType().getParameterId();
 					}
 
-					if (scQt.getPmOrgProfile().getBpk() && ctType.equals(SourcingConstants.CENTRAL_CONTRACT)
-							&& !isSbhOrSrwk) {
+					if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
 						return isBpkCentralContract = true;
 					}
 				}

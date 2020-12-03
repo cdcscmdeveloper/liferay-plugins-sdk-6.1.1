@@ -2945,7 +2945,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			PmParameter contractType = getManagedBean().getScLoa().getContractType();
 			if(this.getManagedBean().getFlowamt()==null && null != contractType 
 					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
-					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()))
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()) &&
+					!this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT))//27502, adding condition caz error when save at supplier loa acceptance
 			{
 				throw new EpException(MessageConst.ERROR_760485);
 				

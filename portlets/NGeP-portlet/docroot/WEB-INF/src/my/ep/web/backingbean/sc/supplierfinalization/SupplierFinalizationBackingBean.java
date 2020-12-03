@@ -338,9 +338,10 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setReverseTabIndex(-1);
 			getManagedBean().setSecretaryUser(true);	
 			getManagedBean().setMofFinalization(true);
-			
-			ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
-			getManagedBean().setEndorsementReport(endorsementReport); 
+			//haziq - button download didn't show after upload - start
+			//ScQtFinalizationReport endorsementReport = new ScQtFinalizationReport();
+			//getManagedBean().setEndorsementReport(endorsementReport); 
+			//haziq - button download didn't show after upload - end
 			// #27502 -- END
 		} else {
 			getManagedBean().setPreparationTabIndex(tabIndex++);
@@ -1203,26 +1204,27 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
-			// #18685 - Start
-			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
-			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-			}
-			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
-					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
-				getManagedBean().getNewBriefingPaperReportList().addAll(
-						getManagedBean().getConsolidationBriefingPaperReportList());
-			}
-			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			// #18685 - End
-			
-			//#27502- Adding condition only
-			if (isBpkCentralContract) {	
-				
-				if (!skipValidation) {
-					validateFinalizationReports(reqDTO);
+
+			// #27502- Adding condition only
+			if (!isBpkCentralContract) {
+				// #18685 - Start
+				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+					scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
 				}
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+					getManagedBean().getNewBriefingPaperReportList().addAll(
+							getManagedBean().getConsolidationBriefingPaperReportList());
+				}
+				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+				// #18685 - End
 			}
+
+			if (!skipValidation) {
+				validateFinalizationReports(reqDTO);
+			}
+			
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
@@ -2539,6 +2541,17 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
+			// #27502 -- Start
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
+			ScQt scQt = qtBackingBean.getManagedBean().getQt();
+			boolean isBpkCentralContract = false;
+			isBpkCentralContract = isBpkCentralContract(scQt);
+
+			if (isBpkCentralContract) {
+				reqDTO.setScQt(scQt);
+			}
+			
 			// #18685 - Start
 			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
 			if (CollectionUtils.isNotEmpty(reqDTO.getScQtFinalization().getScQtFinalizationReports())) {
@@ -2649,9 +2662,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (isBpkCentralContract || !getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
-				if(isBpkCentralContract){
-					totalFinalizationRounds = 1;
-				}
+
 				finalizationReports.removeAll(endorsementReports);
 				if (endorsementReportCount < totalFinalizationRounds) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
@@ -3789,7 +3800,19 @@ public class SupplierFinalizationBackingBean extends
 			ScWorkFlowStatusReqDTO tenderReqDTO = new ScWorkFlowStatusReqDTO();
 			tenderReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());	
 			List<Long> statusIds = new ArrayList<Long>();
-			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			
+			//27502
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveQuationTenderDetails(getManagedBean().getScQt().getQtId());
+			ScQt scQt = qtBackingBean.getManagedBean().getQt();
+			boolean isBpkCentralContract = false;
+			isBpkCentralContract = isBpkCentralContract(scQt);
+
+			if (isBpkCentralContract) {
+				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);
+			} else {
+				statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			}
 			//statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
 			//statusIds.add(QTStatusConst.QT_RE_EVALUATION);
 			tenderReqDTO.setStatusIds(statusIds);
