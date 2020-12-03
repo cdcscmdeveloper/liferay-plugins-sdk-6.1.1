@@ -514,7 +514,9 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
-						throw new EpException(MessageConst.ERROR_760160);
+						// #3761 - start
+//						throw new EpException(MessageConst.ERROR_760160);
+						// #3761 - end
 					} 
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
@@ -604,7 +606,11 @@ public class SimpleQuoteBackingBean extends
 								itemName = selectedPanelItem.getItemName();
 							}
 						}
-						throw new EpException(MessageConst.ERROR_700027, new String[] {itemName});
+						// #3761 - start
+						if (getManagedBean().getScQuoteSession() == null) {
+							throw new EpException(MessageConst.ERROR_700027, new String[] { itemName });
+						}
+						// #3761 - end
 						
 					} else {
 						prepareQuestions(selectedPanelItem, null, isGeneralOrSpecific);

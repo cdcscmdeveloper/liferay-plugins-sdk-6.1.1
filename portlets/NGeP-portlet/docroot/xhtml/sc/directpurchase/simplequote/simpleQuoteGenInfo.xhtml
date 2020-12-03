@@ -35,7 +35,8 @@
 									value="#{lbl['lbl.sc.view.panel.details']}"
 									process="@this" partialSubmit="true"
 									action="#{simpleQuoteBackingBean.gotoPanelPage(null, 'PQ')}"
-									style="text-decoration:underline;">
+									style="text-decoration:underline;"
+									rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
 								</h:commandLink>
 							</div></td>
 						</tr>

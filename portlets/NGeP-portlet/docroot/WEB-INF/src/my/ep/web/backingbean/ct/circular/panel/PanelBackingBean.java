@@ -402,9 +402,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setPanelItemFlag(false);
 				sqbb.getManagedBean().setG2GFlag(false);
 				sqbb.getManagedBean().setActiveIndex(0);
-				sqbb.getManagedBean().getProductTemplateSpecBean().setSpecMaster(null);
-				sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), getManagedBean().getCircularVer()
-						.getCircularVerId() != null ? true : false, null);
+				sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true,
+						null);
 				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
 				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
 			}
