@@ -3529,7 +3529,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setOutcome(outcome);
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+		if (outcome.equals(BpmOutcomeConst.BPM_REVISE))
+			reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+		else
+			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
