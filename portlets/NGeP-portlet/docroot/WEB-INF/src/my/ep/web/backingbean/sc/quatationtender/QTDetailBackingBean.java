@@ -3021,7 +3021,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
 				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) 
 						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) 
-						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_APPROVAL)) {
+						&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {
 					for (TabBean t : committeTabs) {
 						if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
 							newCommitteTabs.add(t);
@@ -4109,7 +4109,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
 				Long statusId = wfStatus.getPmStatus()==null ? 0L: wfStatus.getPmStatus().getStatusId();
 
-				if(isQTStatusPublished(statusId)){
+				if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_PROPOSAL_PREPARATION, QTStatusConst.QT_ORDERED_STATUSES)){
 					this.getManagedBean().setPmuserContactpersonList(resDTO.getDeskOfficers().getResultList());
 				}else if(this.getManagedBean().isMaintanceFlow()){
 					ScQtRequestContent requestContent = null;

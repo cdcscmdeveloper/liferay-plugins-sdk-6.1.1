@@ -5028,7 +5028,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reqDTO.setQtId(scQt.getQtId());
 			if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
 					&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
-					&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_APPROVAL)) {
+					&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {//#25037
 				
 					IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
 							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
