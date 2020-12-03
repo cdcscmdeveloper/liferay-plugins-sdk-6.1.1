@@ -80,11 +80,10 @@
 			showAttachment="false" header="#{lbl['lbl.sc.recommendation']}"
 			readonly="#{readOnly}" numberOfCols="80" />
 
+
+ <!--  #29705 remove --> 
 		<p:panel id="panelJustificationId"
-			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
-			rendered="#{suppFinalizationBackingBean.managedBean.finalizationMethod ne null and 
-			(suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendByAward or 
-			suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendBySingleAward)}">
+			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true">
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 20%; margin-left: 55px;"><p:outputLabel
