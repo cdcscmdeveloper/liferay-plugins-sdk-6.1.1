@@ -1150,14 +1150,67 @@
 		</p:dialog>
   	 </p:panel>
   	   
-   <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" 
-   		styleClass="pop_up_top" modal="true" width="500" height="150" resizable="false">
-   		<h:panelGrid columns="1">
-    		<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
-     	</h:panelGrid>
- 		<p:inputTextarea value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc == null ? lbl['lbl.ct.item.tooltip.desc'] : ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemDesc}"
-   			rows="5" style="width:99%; resize:none;" autoResize="false" disabled="true">
-		</p:inputTextarea>
+   <!-- #28854 start - Display item specification as defined in LOA -->
+   <p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.specification']}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+   		styleClass="pop_up_top" modal="true" width="auto" height="auto" resizable="false">
+   		
+   		<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
+   			<h:panelGrid column="2" style="margin-bottom: 20px;margin-top: 10px;">
+    		
+    			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName} </p:outputLabel>  	    	  			
+     		 		
+     			<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">
+     		 		<p:outputLabel value="#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{ctBackingBean.managedBean.supplierOffer}</p:outputLabel>     		 				  				
+     			</c:if>
+     			<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
+					<p:outputLabel value = "#{lbl['lbl.ct.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
+     			</c:if>     		   	
+     		   		
+     			<c:if test="#{ctBackingBean.managedBean.newOfferSpec ne null}">
+     		 		<p:outputLabel value="#{lbl['lbl.ct.new.supp.offer']}" style="float:left;font-weight:bold;">: #{ctBackingBean.managedBean.newOfferSpec}</p:outputLabel>      		 			
+     			</c:if>
+     			<c:if test="#{ctBackingBean.managedBean.newOfferSpec eq null}">
+					<p:outputLabel value = "#{lbl['lbl.ct.new.supp.offer']}" style="float:left;font-weight:bold;">: #{lbl['lbl.sc.qt.item.spec.null']}</p:outputLabel>					
+     			</c:if>
+     			     					
+     		</h:panelGrid>
+     		     		
+  			<p:dataTable id="itemSpec" var="item" value="#{ctBackingBean.managedBean.itemSpecification}"
+			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;">
+				<p:column styleClass="column-align-center"  style="white-space:normal;">
+					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet> 
+					<h:outputText value="#{item}" rows="5" style="float:left;resize:none;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
+      				<h:outputText rows="5" style="resize:none;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>					
+				</p:column>				
+			</p:dataTable>			
+		</h:panelGroup>
+		
+		<h:panelGroup rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeQuotation}">				
+     		<h:panelGrid column="1">
+     			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;margin-bottom: 20px;margin-top: 10px;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
+     	
+     			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin-bottom: 30px;">   
+   					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
+      					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
+      					<h:outputText value="#{item.itemSpec}" style="float:left;" rendered="#{item.itemSpec ne null}"></h:outputText>							
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.itemSpec eq null}"></h:outputText> 									
+   					</p:column>   
+   					<p:column styleClass="column-align-center" style="white-space:normal;">
+     					<f:facet name = "header">#{lbl['lbl.ct.supp.offer']}</f:facet>     					
+     					<h:outputText value="#{item.supplierOffer}" style="float:left;" rendered="#{item.supplierOffer ne null}"></h:outputText>	      					
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.supplierOffer eq null}"></h:outputText>     																											
+   					</p:column>   
+   					<p:column styleClass="column-align-center" style="white-space:normal;">
+      					<f:facet name = "header">#{lbl['lbl.ct.new.offer.spec']}</f:facet>     					
+      					<h:outputText value="#{item.newOfferSpec}" style="float:left;" rendered="#{item.newOfferSpec ne null}"></h:outputText>        					
+      					<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" style="float:left;" rendered="#{item.newOfferSpec eq null}"></h:outputText>    					   										
+   					</p:column>  			
+				</p:dataTable>
+			</h:panelGrid>			
+		</h:panelGroup>
+		
+		<!-- #28854 end -->		
+ 		
      	<f:facet name="footer">
 		<div class="ppRightBtn">
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="itemSpecDlg.hide();" />
