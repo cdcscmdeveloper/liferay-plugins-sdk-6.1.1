@@ -252,13 +252,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	          <!--24975@azza - end -->
 	        <p:column style="text-align:center;">
 	          <!--25549@18092020 -->
-	            <!--24975@azza - start -->
+	            <!--03122020@24975 - start -->
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();"  update="@form" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			    	 id="clEpJustification" disabled="#{epItem.disableRow}">
 					 <p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable or !epItem.selectable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
 					 disabled="#{pPlanBackingBean.managedBean.modeEditable or epItem.justificationEnabled}" update="@form" />
 				</p:commandLink>
-				 <!--24975@azza - end -->
+				 <p:graphicImage
+				     rendered="#{epItem.notUsingEp}"
+				     value="#{epItem.notUsingEp ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+			 <!--03122020@24975 - end -->
 	        </p:column>
 	        <!--24975@20112020azza - start -->
 	        <p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
