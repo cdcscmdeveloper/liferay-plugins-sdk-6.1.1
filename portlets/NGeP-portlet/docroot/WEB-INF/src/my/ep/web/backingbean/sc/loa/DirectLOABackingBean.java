@@ -5875,7 +5875,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
 			context.put("mofNo", scLoiLoa.getMofNo());
 		} else {
-			context.put("mofNo", MALAY_NA);
+			context.put("mofNo", "");
 		}
 		// #25025 - End.
 		SmMofAccount mofAccount = getMofAccountBySupplierId(supplierId);
