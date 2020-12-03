@@ -132,7 +132,7 @@ public class SmApplicationNotificationUtil {
 		log.info("*********** retriveCancelRegistrationMessageForNotification *********");
 		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
 		sb.append("<tr>");
-		sb.append("<td style=\"width:40%; border: 1px solid black;\">")
+		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol1",
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
@@ -201,7 +201,7 @@ public class SmApplicationNotificationUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveRejectCancelRegistrationMessageForNotification *********");
-		sb.append("<table style=\"width:40%; border: 1px solid black;border-collapse: collapse;\">");
+		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol1",
@@ -262,7 +262,7 @@ public class SmApplicationNotificationUtil {
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol7",
+				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol11",
 						null)).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(approvalRemarks).append("</td>");
