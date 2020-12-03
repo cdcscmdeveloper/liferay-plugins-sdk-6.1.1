@@ -113,7 +113,7 @@
 							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 						</p:commandLink>
 						<p:commandLink onstart="blockWidget.show()"
-							rendered="#{not empty smSupplier.typeDisciplinaryAction}"
+							rendered="#{not empty smSupplier.typeDisciplinaryAction and smSupplier.typeDisciplinaryAction ne 'S'}"
 							oncomplete="blockWidget.hide()"
 							action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl, 'D')}"
 							process="@this" partialSubmit="true" update="@form"
