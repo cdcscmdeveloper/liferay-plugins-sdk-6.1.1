@@ -29,6 +29,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -161,6 +162,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean isErr100034 = false;
 	private boolean minQtyCheck = false;
 	// End - 28479	
+
+	//#28854 - start
+	private List<String> itemSpecification;
+	private String newOfferSpec;
+	private String supplierOffer;
+	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
+	//#28854 - end	
 
 	/**
 	 * @return the fileDirectory
@@ -1370,5 +1378,36 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	// End - 28479
 	
+	/* #28854 start*/
+	public String getNewOfferSpec() {
+		return newOfferSpec;
+	}
 
+	public void setNewOfferSpec(String newOfferSpec) {
+		this.newOfferSpec = newOfferSpec;
+	}
+
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}	
+
+	public List<String> getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(List<String> itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
+		return scRequestItemSpecOfferList;
+	}
+	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
+		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
+	}	
+	/* #28854 end*/	
 }
