@@ -9638,6 +9638,13 @@ public class SpecificationBackingBean extends
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
+		
+		// #25638 - Start.
+		if (null != scQt && null != scQt.getScQt()) {
+			removeReviseForRepublishQT();
+		}
+		// #25638 - End.
+		
 		/*#19637-basri*/
 		if(scQt.isZonal()  && scQt.isPanel()){
 			this.getManagedBean().setPanelZone(true);
@@ -9697,6 +9704,44 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// #25638 - Start.
+	/**
+	 * 
+	 */
+	private void removeReviseForRepublishQT() {
+		if (null != this.getManagedBean().getOutComes() && this.getManagedBean().getOutComes().length > 0
+				&& Arrays.toString(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_REVISE)) {
+			
+			boolean removeRevise = false;
+			retriveCommitteeEndorsment();
+			if (CollectionUtils.isNotEmpty(getManagedBean().getCommitteeActivities())) {
+				for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeActivities()) {
+					if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+							&& null != committeeActivity.getScCommitteeMember().getMemberRole()
+							&& null != committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode()
+							&& ParameterConst.COMMITTEE_ROLE_MEMBER
+							.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())
+							&& committeeActivity.isSignedOff()) {
+						removeRevise = true;
+						break;
+					}
+				}
+			}
+			
+			if (removeRevise) {
+				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length -1];
+				for (int i=0, k=0; i < this.getManagedBean().getOutComes().length; i++) {
+					if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISE)) {
+						continue;
+					}
+					tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+				}
+				this.getManagedBean().setOutComes(tempOutComes);
+			}
+		}
+	}
+	// #25638 - End.
+	
 	/**
 	 * Construct spec committe dtls.prepare data for specification committee
 	 * save/submit/accept/Revise.
