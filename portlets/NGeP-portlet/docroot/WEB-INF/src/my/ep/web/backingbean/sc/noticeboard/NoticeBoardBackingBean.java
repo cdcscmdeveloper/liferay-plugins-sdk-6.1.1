@@ -2196,7 +2196,7 @@ public class NoticeBoardBackingBean extends
 			DecimalFormat df = new DecimalFormat("#00");
 			closingDays = df.format(days);
 
-			if (days < 1) {
+			if (days == 0) {
 				Long durationInMills = DateUtils.getDateDiffInMillis(
 						DateUtils.getCurrentDate(), closingDate);
 				if (durationInMills > 0) {
@@ -2205,7 +2205,7 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 			
-			if (days > 1) {
+			if (days > 0) {
 				Long durationInMills = DateUtils.getDateDiffInMillis(
 						DateUtils.getCurrentDate(), closingDate);
 				if (durationInMills > 0) {
