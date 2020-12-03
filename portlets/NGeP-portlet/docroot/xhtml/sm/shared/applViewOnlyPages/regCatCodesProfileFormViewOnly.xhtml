@@ -107,6 +107,9 @@
 				<h:outputText value="#{lbl['lbl.sm.deleted']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 9}" />
 					
+				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
+					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and not empty aprvdCatBean.disciplinaryActionId}" />
+					<!--	
 				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.suspend.registration']})"
 					rendered="#{aprvdCatBean.recordStatusFlg eq 2 and aprvdCatBean.suspendCategory}" /> 
 					
@@ -118,7 +121,7 @@
 				
 				<h:outputText value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']})"
 					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and ((aprvdCatBean.pmCategoryL3.bumiPercentage lt 51 and aprvdCatBean.pmCategoryL3.categoryL3Code ne 99) or aprvdCatBean.cancelCategory)}" />
-					
+					-->
 			<!-- #28220 - disciplinary action- end -->
 			</p:column>
 		</p:dataTable>
