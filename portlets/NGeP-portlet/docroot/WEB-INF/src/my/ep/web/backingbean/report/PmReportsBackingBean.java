@@ -317,6 +317,7 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgType().getParameterId().toString());
 		}
 		
+		// 28239 - start
 		
 		log.info("ParameterCode" + this.getManagedBean().getSelectedOrgType().getParameterCode());
 	
@@ -350,7 +351,7 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
 		}	
 	}
-	
+	// 28239 - end
 
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())) {
 			map.put(PmReportConst.PARAM_PM_ROLE_CODE, getManagedBean()
