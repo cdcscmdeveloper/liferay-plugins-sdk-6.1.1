@@ -21,6 +21,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.bean.pm.ProfileManagementSearchBean; //#28833 -shafie
@@ -50,6 +51,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private CmUnspsc selectedUnspscItem;
 	private Date fromDate;
 	private Date toDate;
+	private Date month; //shafie #29486
 	private PmOrgProfile selectedOrgProfile;
 	private String bizRegNo;
 	private String epNo;
@@ -128,7 +130,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	}
 	
 	//shafie - #28833 start ---------------
-	
 	/**
 	 * @return the govtSeller
 	 */
@@ -142,7 +143,6 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setGovtSeller(boolean govtSeller) {
 		this.govtSeller = govtSeller;
 	}
-	
 	//shafie - #28833 end -----------------
 
 	/**
@@ -243,7 +243,23 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.toDate = toDate;
 	}
 	
+	//shafie #29486 start
 	
+	/**
+	 * @return the month
+	 */
+	public Date getMonth() {
+		return month;
+	}
+
+	/**
+	 * @param month the month to set
+	 */
+	public void setmonth(Date month) {
+		this.month = month;
+	}
+	
+	//shafie #29486 end
 
 	/**
 	 * @return the selectedOrgProfile

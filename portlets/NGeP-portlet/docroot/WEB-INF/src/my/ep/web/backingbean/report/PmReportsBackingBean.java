@@ -75,9 +75,8 @@ public class PmReportsBackingBean extends
 		ReportBaseBackingBean<PmReportsManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
-	
-	private static final String CAP_CHAR = "^"; // shafie - #28833
+	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";	
+	private static final String CAP_CHAR = "^";  // shafie - #28833
 
 	private static Map<Long, Object> orgTypeMapper;
 	
@@ -133,7 +132,7 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
 		}
 		
-		setCurrentActiveOrg(); //#28833 - shafie
+		setCurrentActiveOrg(); //#28833 - shafie 
 		
 	}
 
@@ -213,11 +212,16 @@ public class PmReportsBackingBean extends
 		case PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL:
 			constructPm010Map(map);
 			break;
-			//shafie - #28833 - start
+			//#28833 shafie  start
 		case PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT:
 			constructPm012Map(map);
 			break;
-			//shafie - #28833 - end
+			//#28833 shafie  end
+		//shafie - #29486 -start
+		case PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL:
+			constructPm013Map(map);
+			break;
+		//shafie - #29486 - end
 		default:
 			throw new EpException("Report not found.");
 
@@ -286,7 +290,6 @@ public class PmReportsBackingBean extends
 		}
 		
 		// 28833 start
-		
 		if (getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_MINISTRY ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
@@ -314,7 +317,6 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgType().getParameterId().toString());
 		}
 		
-		// 28239 - start
 		
 		log.info("ParameterCode" + this.getManagedBean().getSelectedOrgType().getParameterCode());
 	
@@ -349,7 +351,6 @@ public class PmReportsBackingBean extends
 		}	
 	}
 	
-	// 28239 - end
 
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())) {
 			map.put(PmReportConst.PARAM_PM_ROLE_CODE, getManagedBean()
@@ -464,8 +465,39 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
 		}
-	}		
+	}	
 	//shafie - #28833 -end
+	
+	//shafie - #29486 - start
+	//Monthly User and Role Report
+	private void constructPm013Map(LinkedHashMap<String, String> map) {
+		if (getManagedBean().getSelectedMinistry() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_MINISTRY, 
+					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
+		}
+		
+		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_KUMPULAN_PTJ, 
+					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
+		}
+		
+		if (getManagedBean().getSelectedPTJ() != null) {
+			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
+					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+		}
+		
+		if (getManagedBean().getStatus() != null) {
+			map.put(PmReportConst.PARAM_PM_USER_STATUS, getManagedBean().getStatus()
+					.toString());
+		}
+		
+		if (getManagedBean().getFromDate() != null) {
+			map.put(PmReportConst.PARAM_PM_MONTH, DateUtils.dateToString(
+					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
+							.getFromDate()));
+		}
+	}
+	//shafie - #29486 - end
 	
 	//No of Company Profile and Market Research Access Application
 	private void constructPm010Map(LinkedHashMap<String, String> map) {
@@ -821,6 +853,29 @@ public class PmReportsBackingBean extends
 		return parentOrgProfile;
 	}
 	
+	//shafie #29486 Start
+	public String constuctConditionFieldsForPTJEpEnabled() {
+
+		String parentOrgProfile = null;
+		
+		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
+		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
+		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
+		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
+		if (null != PTJGroupOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ CAP_CHAR + PTJGroupOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
+		} else if (null != MinistryOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ CAP_CHAR + MinistryOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
+		} else {
+			parentOrgProfile = ("epPtj^") + ParameterConst.FLAG_YES;
+		}
+
+		return parentOrgProfile;
+	}
+	//shafie #29486 end
+	
 	public boolean isMinistryJabatanAdmin(){
 		boolean Admin = false;
 		
@@ -950,9 +1005,7 @@ public class PmReportsBackingBean extends
 		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());		
 		this.getManagedBean().getPmSearchBean().setPtj(null);
 	}
-	
-	
-	//shafie - #28833 - end 
+	//shafie - #28833 - end
 
 	/**
 	 * retrieve all org type into mapper

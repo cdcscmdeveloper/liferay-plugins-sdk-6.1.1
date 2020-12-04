@@ -43,6 +43,10 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_ORG_TYPE_KUMPULAN_PTJ = "P4";
 	public static final String PARAM_PM_ORG_TYPE_PTJ = "P5";
 	//shafie - #28833 -end
+	//shafie - #29486 - start
+	public static final String PARAM_PM_USER_STATUS = "PUSERSTATUS"; 
+	public static final String PARAM_PM_MONTH = "PMONTH"; 
+	//shafie - #29486 - end
 	
 
 	// PM Report Code
@@ -56,7 +60,8 @@ public class PmReportConst implements Serializable {
 	public static final String PM_BPK_USER_PROFILE_RPT_VAL = "PM_008";
 	public static final String PM_BPK_ADMIN_PROFILE_RPT_VAL = "PM_009";
 	public static final String PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL = "PM_010";
-	public static final String PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT = "PM_012"; // #28833 
+	public static final String PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT = "PM_012";
+	public static final String PM_MONTHLY_USER_AND_ROLE_RPT_VAL = "PM_013"; //Shafie - #29486
 	
 
 	// Org Category values
@@ -152,9 +157,19 @@ public class PmReportConst implements Serializable {
 	/**
 	 * @return the pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal
 	 */
-	public String getpmListOfPTJAllowedToApproveOtherPTJProcurementRptVal() {
+	public String getPmListOfPTJAllowedToApproveOtherPTJProcurementRptVal() {
 		return PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT;
 	}
+	
+	//shafie - #29486 - start
+	
+	/**
+	 * @return the pmMonthlyUserAndRoleRptVal
+	 */
+	public String getPmMonthlyUserAndRoleRptVal() {
+		return PM_MONTHLY_USER_AND_ROLE_RPT_VAL;
+	}
+	//shafie - #29486 - end
 	
 	/**
 	 * @return the orgTypeEPProfile
