@@ -1472,6 +1472,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if(this.getManagedBean().getFinalBB()!=null){
 					getManagedBean().getFinalBB().loadPreparationTabDetails();
+					getManagedBean().getFinalBB().initializeCommitteeRemarks();
 					getManagedBean().getFinalBB().prepareUpdateCommitteeMember();
 				}else{
 					getManagedBean().getFinalBiddingBB().retrieveCommitteeAndMeetingDetails(getManagedBean().getScQt().getQtId());
