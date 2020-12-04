@@ -13,7 +13,13 @@
 		}
 	</script>
 	<div style="text-align: right;">
-
+	
+	<!-- #14921 start -->
+		<p:commandButton id="saveLink" value="#{lbl['lbl.cm.save']}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
+			action="#{catalogueBackingBean.saveDraftItemSupTemp()}" update="@form"></p:commandButton>
+	<!-- #14921 end -->	
+	
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
 			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
@@ -48,14 +54,14 @@
 					value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
-						update=":form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax>
+						update=":form:saveLink, :form:submitLink, @(.ui-chkbox[id$=singleCheckBoxID])"></p:ajax> <!-- #14921 - add :form:saveLink -->
 				</p:selectBooleanCheckbox>
 			</f:facet>
 			<p:selectBooleanCheckbox id="singleCheckBoxID"
 				value="#{selectedSuppCat.selected}">
 				<p:ajax event="change"
 					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
-					update=":form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax>
+					update=":form:saveLink, :form:submitLink,  @(.ui-chkbox[id$=selectAllCheckBoxId])  "></p:ajax> <!-- #14921 - add :form:saveLink -->
 			</p:selectBooleanCheckbox>
 		</p:column>
 
