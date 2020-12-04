@@ -252,6 +252,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
 			reqDTO.setTaskList(getTaskList());
 			//#28765 - Start
+			reqDTO.setUserLocale(fs.getUserLocale());
 			reqDTO.setSmReplaceSupplierAdminDocs(getManagedBean().getSmReplaceSupplierAdminDocs());
 			if (getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
 					reqDTO.setRemoveSupplier(true);
@@ -280,14 +281,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
-		//#28765 - Start
+		/*//#28765 - Start
 		if((getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) || 
 				(getManagedBean().getBypassFlag2()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF))) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		}
 		//#28765 - End
-		redirectToSuccessPage(resDto);
+*/		redirectToSuccessPage(resDto);
 	}
 
 	/**
