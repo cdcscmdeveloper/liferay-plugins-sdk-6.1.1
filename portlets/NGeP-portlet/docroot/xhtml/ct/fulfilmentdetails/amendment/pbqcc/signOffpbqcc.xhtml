@@ -131,7 +131,7 @@
 			<p:dataTable id="secretryTable" var="data" rowIndexVar="index"
 				value="#{CtStatusConst.faPendingMeetingDecision.longValue() == ctBackingBean.managedBean.contractVer.status.statusId.longValue() 
                 ? amendmentBackingBean.managedBean.updatedCommitteeMembers : ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" 
-                rowStyleClass="#{data.updateType eq 'RNM' ? 'ui-helper-hidden' : (data.updateType eq 'R' ? 'ui-helper-hidden' : '')}"><!-- 29403 -->
+                rowStyleClass="#{data.updateType eq CtConst.removeNewMemberFromAttendanceList ? 'ui-helper-hidden' : (data.updateType eq CtConst.removeFromAttendanceList ? 'ui-helper-hidden' : '')}"><!-- 29403 -->
 				<ac:paginator for="decisionTable" />
 				<p:column style="width:20%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
@@ -203,11 +203,10 @@
 		<br />
 		<div class="ppRightBtn"> 
 		<p:commandButton value="#{lbl['lbl.ct.update.committee']}"
-			process="@this" partialSubmit="true" onstart="blockWidget.show();"
+			process="@this" onstart="blockWidget.show();"
 			rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision}"
 			oncomplete="blockWidget.hide();"
-			actionListener="#{amendmentBackingBean.updateCommittee}"
-			update=":form" />
+			actionListener="#{amendmentBackingBean.updateCommittee()}"/>
 		</div>
 		<!-- 26753 end -->
 	</p:panel>
