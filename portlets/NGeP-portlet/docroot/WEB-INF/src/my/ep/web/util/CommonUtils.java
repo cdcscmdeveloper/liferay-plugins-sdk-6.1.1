@@ -40,20 +40,21 @@ public class CommonUtils {
 		switch (dateFormatType) {
 			case CommonConstants.DATE_FORMAT_TYPE_DATE : 
 				dateFormat = CommonConstants.DEFAULT_DATE_FORMAT;
-				
 				break;
 			case CommonConstants.DATE_FORMAT_TYPE_TIME : 
 				dateFormat = CommonConstants.DEFAULT_12HR_TIME_FORMAT;
-				
 				break;
 			case CommonConstants.DATE_FORMAT_TYPE_DATETIME : 
 				dateFormat = CommonConstants.DEFAULT_DATETIME_FORMAT;
-				
 				break;
 			case CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS : 
 				dateFormat = CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT;
-				
 				break;
+				//shafie #29486 start
+			case CommonConstants.DATE_FORMAT_TYPE_MONTH_YEAR : 
+				dateFormat = CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY;				
+				break;
+				//shafie #29486 end
 			default : 
 				throw new IllegalArgumentException("Invalid dateFormatType.");
 		}
