@@ -853,28 +853,7 @@ public class PmReportsBackingBean extends
 		return parentOrgProfile;
 	}
 	
-	//shafie #29486 Start
-	public String constuctConditionFieldsForPTJEpEnabled() {
-
-		String parentOrgProfile = null;
-		
-		PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
-		Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
-		PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
-		Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
-		if (null != PTJGroupOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
-					+ CAP_CHAR + PTJGroupOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
-		} else if (null != MinistryOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
-					+ CAP_CHAR + MinistryOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
-		} else {
-			parentOrgProfile = ("epPtj^") + ParameterConst.FLAG_YES;
-		}
-
-		return parentOrgProfile;
-	}
-	//shafie #29486 end
+	
 	
 	public boolean isMinistryJabatanAdmin(){
 		boolean Admin = false;
@@ -1006,6 +985,29 @@ public class PmReportsBackingBean extends
 		this.getManagedBean().getPmSearchBean().setPtj(null);
 	}
 	//shafie - #28833 - end
+	
+	//shafie #29486 Start
+		public String constuctConditionFieldsForPTJEpEnabled() {
+
+			String parentOrgProfile = null;
+			
+			PmOrgProfile ministryOrgProfile = this.getManagedBean().getSelectedMinistry();
+			Long MinistryOrgProfileId = ministryOrgProfile != null ? ministryOrgProfile.getOrgProfileId() : null;
+			PmOrgProfile groupOrgProfile = this.getManagedBean().getSelectedKumpulanPTJ();
+			Long PTJGroupOrgProfileId = groupOrgProfile != null ? groupOrgProfile.getOrgProfileId() : null;
+			if (null != PTJGroupOrgProfileId) {
+				parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+						+ CAP_CHAR + PTJGroupOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
+			} else if (null != MinistryOrgProfileId) {
+				parentOrgProfile = OrgProfileUtil.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+						+ CAP_CHAR + MinistryOrgProfileId + ("|epPtj^") + ParameterConst.FLAG_YES;
+			} else {
+				parentOrgProfile = ("epPtj^") + ParameterConst.FLAG_YES;
+			}
+
+			return parentOrgProfile;
+		}
+		//shafie #29486 end
 
 	/**
 	 * retrieve all org type into mapper
