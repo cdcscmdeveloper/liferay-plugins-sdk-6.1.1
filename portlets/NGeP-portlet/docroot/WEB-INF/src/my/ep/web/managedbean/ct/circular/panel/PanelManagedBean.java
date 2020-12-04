@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -117,6 +118,12 @@ public class PanelManagedBean extends BaseManagedBean {
 	private List<CtCircularPidReason> ctCircularPidReasons;
 	
 	private int attachFileIndex;
+	
+	// #3761 - start
+	private Long supplierItemDocId;
+	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
+	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
+	// #3761 - end
 
 	/**
 	 * @return the circular
@@ -953,5 +960,31 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
-	}	
+	}
+
+	// #3761 - start
+	public Long getSupplierItemDocId() {
+		return supplierItemDocId;
+	}
+
+	public void setSupplierItemDocId(Long supplierItemDocId) {
+		this.supplierItemDocId = supplierItemDocId;
+	}
+	public TemplateSpecBean getProductTemplateSpecBean() {
+		return productTemplateSpecBean;
+	}
+
+	public void setProductTemplateSpecBean(TemplateSpecBean productTemplateSpecBean) {
+		this.productTemplateSpecBean = productTemplateSpecBean;
+	}
+
+	public TemplateSpecBean getServiceTemplateSpecBean() {
+		return serviceTemplateSpecBean;
+	}
+
+	public void setServiceTemplateSpecBean(TemplateSpecBean serviceTemplateSpecBean) {
+		this.serviceTemplateSpecBean = serviceTemplateSpecBean;
+	}
+	// #3761 - end
+
 }

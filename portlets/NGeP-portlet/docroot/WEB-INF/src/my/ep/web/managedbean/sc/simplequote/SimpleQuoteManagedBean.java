@@ -436,6 +436,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean disciplinaryActionWarning = false;
 	//26284 - End
 	
+	// #3761 - start
+	private ScQuote scQuoteSession;
+	private Boolean treasuryCircularLinkClickedFlag = null;
+	private Long supplierItemDocId;
+	// #3761 - end
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2759,4 +2765,32 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.pidBtnFlag = pidBtnFlag;
 	}
 	// 27632 - End
+
+	// #3761 - start
+	public ScQuote getScQuoteSession() {
+		return scQuoteSession;
+	}
+
+	public void setScQuoteSession(ScQuote scQuoteSession) {
+		this.scQuoteSession = scQuoteSession;
+	}
+
+	public Boolean getTreasuryCircularLinkClickedFlag() {
+		return treasuryCircularLinkClickedFlag;
+	}
+
+	public void setTreasuryCircularLinkClickedFlag(Boolean treasuryCircularLinkClickedFlag) {
+		this.treasuryCircularLinkClickedFlag = treasuryCircularLinkClickedFlag;
+	}
+	
+	public Long getSupplierItemDocId() {
+		return supplierItemDocId;
+	}
+
+	public void setSupplierItemDocId(Long supplierItemDocId) {
+		this.supplierItemDocId = supplierItemDocId;
+	}
+	// #3761 - end
+
+
 }
