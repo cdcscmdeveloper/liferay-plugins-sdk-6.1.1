@@ -14,14 +14,18 @@
 		</p:blockUI>
 		<p:messages id="confirmMeeting" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true" severity="error, info" />
-		<ui:param name="evalBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBB}"></ui:param>
 					<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
       <c:choose>
 		 <c:when test="#{suppFinalMeetingBackingBean.managedBean.finalBB != null}">
+		 	<ui:param name="evalBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBB}"></ui:param>
 		 	<ui:param name="meetingBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBB.managedBean.meetingBB}"></ui:param>
 		 </c:when>
+		 <c:when test="#{suppFinalMeetingBackingBean.managedBean.finalBiddingBB != null}">
+		 	<ui:param name="evalBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBiddingBB}"></ui:param>
+		 	<ui:param name="meetingBB" value="#{suppFinalMeetingBackingBean.managedBean.finalBiddingBB.managedBean.meetingBB}"></ui:param>
+		 </c:when>
          <c:otherwise>
-         	<ui:param name="meetingBB" value="#{ suppFinalMeetingBackingBean}"></ui:param>
+         	<ui:param name="meetingBB" value="#{suppFinalMeetingBackingBean}"></ui:param>
          </c:otherwise>
       </c:choose>
 		<div align="left">
