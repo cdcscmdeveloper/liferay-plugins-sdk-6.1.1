@@ -13501,34 +13501,34 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	//24964 - start 
-	public static void rejectSmMofCertForSupplier(SmSupplier supplier){
+	// #29663 & #24964 - start 
+	public static void rejectSmMofCertForSupplier(SmSupplier supplier, SmAppl lastApprovedAppl) {
+		Long bumiApplId = supplier.getSmAppl().getApplId();
+		Long lastApprovedApplId = lastApprovedAppl.getApplId();
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());
-				
-		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMOFCertBySupplierId(reqDTO);
+		reqDTO.setApplId(supplier.getSmAppl().getApplId());
 		
-		if(resDTO != null && resDTO.getSmMofCerts() != null){
-			for(SmMofCert cert : resDTO.getSmMofCerts()){
-				if(cert.isBumiCert() 
-						&& cert.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					VirtualCertReqDTO rejectedMofCert = new VirtualCertReqDTO();
-					MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
-					
-					//update sm_supplier: is_bumi to 0
-					supplier.setBumi(false);
-					mofRegistrationReqDTO.setSmSupplier(supplier);
-					SmServiceLookup.getMofRegistrationSO().updateSupplierProfile(mofRegistrationReqDTO);					
-					
-					//update record_status = 4
-					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);					
-					rejectedMofCert.setMofCert(cert);
-					SmServiceLookup.getVirtualCertSO().updateMOFCert(rejectedMofCert);
+		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMofCertsBySupplierIdAndByApplIds(reqDTO, lastApprovedApplId);
+
+		VirtualCertReqDTO mofCert = new VirtualCertReqDTO();
+		if (resDTO != null && resDTO.getSmMofCerts() != null) {
+			for (SmMofCert cert : resDTO.getSmMofCerts()) {
+				if (cert.getSmAppl().getApplId() == bumiApplId) {
+					// update record_status = 4
+					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
+					mofCert.setMofCert(cert);
 				}
+				if (cert.getSmAppl().getApplId() == lastApprovedApplId) {
+					// update record_status = 1
+					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					mofCert.setMofCert(cert);
+				}
+				SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
 			}
 		}
 	}
-	//24964 - end
+	// #29663 & #24964 - end
 	
 	//27796: Disciplinary Action - start - 26238
 	public static List<SmDisciplinaryAction> retrieveDisciplinaryActionHistoryBySupplier(SmSupplier supplier) {

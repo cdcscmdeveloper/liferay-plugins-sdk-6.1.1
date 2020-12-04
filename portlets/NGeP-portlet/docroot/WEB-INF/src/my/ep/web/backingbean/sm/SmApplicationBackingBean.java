@@ -9148,7 +9148,7 @@ public class SmApplicationBackingBean extends
 			pmRegStatus.setPmStatus(pmStatus);
 			getManagedBean().getSmAppl().setPmRegStatus(pmRegStatus);
 			
-			if(getManagedBean().getSmAppl().getSmSupplier() != null){
+			/*if(getManagedBean().getSmAppl().getSmSupplier() != null){
 				SmApplicationUtil.rejectSmMofCertForSupplier(
 						getManagedBean().getSmAppl().getSmSupplier());
 				
@@ -9156,7 +9156,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
 				getManagedBean().getSmSupplier().setBumi(false);
 				// #28534 END
-			}
+			}*/
 		}
 		log.info("<<<<Appl type>>>>");
 		log.info(getManagedBean().getSmAppl().getApplType());
@@ -9556,6 +9556,14 @@ public class SmApplicationBackingBean extends
 						reqDTO.setLastApprovedAppl(SmApplicationUtil
 								.getLastApprovedApplictionForSupplier(getManagedBean()));
 					}
+					// #29663 - start
+					if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+						getManagedBean().getSmAppl().setBumi(false);
+						getManagedBean().getSmAppl().setPmRegStatus(null);
+						getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
+						SmApplicationUtil.rejectSmMofCertForSupplier(getManagedBean().getSmAppl().getSmSupplier(), reqDTO.getLastApprovedAppl());
+					}				
+					// #29663 - end
 					if (StringUtils.isNotBlank(mofNo)) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700028, new String[] {
