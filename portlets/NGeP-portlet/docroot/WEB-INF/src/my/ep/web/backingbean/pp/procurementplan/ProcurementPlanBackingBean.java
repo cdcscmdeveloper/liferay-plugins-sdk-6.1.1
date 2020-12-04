@@ -6273,6 +6273,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private List<PpUpdateReason> deleteUpdateReasons(PpPlan ppPlan) {
 		log.info("getAllUpdateReasons");
 		List<PpUpdateReason> updateReasons = new ArrayList<PpUpdateReason>();
+	  if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){//04122020@24975 - start
 		log.info("----------Before PpPlan save----------");
 		int itemIndex = 0;
 		for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
@@ -6299,8 +6300,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 			itemIndex++;
-		}
-			
+		  }
+	    }//04122020@24975 - end
 		log.info("updateReasons:"+updateReasons);
 		return updateReasons;
 	}
