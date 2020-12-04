@@ -3080,7 +3080,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							&& scQt.getFinalizationCommitte() != null
 							&& scQt.getFinalizationCommitte().getParameterId() != null
 							&& scQt.getFinalizationSecratery() != null && scQt
-							.getFinalizationSecratery().getUserId() != null)) {
+							.getFinalizationSecratery().getUserId() != null) || 
+							SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabBean.getTabType())) {//27502
 				tabBean.setIcon("ui-icon-endorse");
 			}
 		}
