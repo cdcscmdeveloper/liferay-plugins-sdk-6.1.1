@@ -304,8 +304,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
 		//#28765 - Start
-		if((getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) || 
-				(getManagedBean().getBypassFlag2()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF))) {
+		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		}
@@ -1313,7 +1312,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 						//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
 						if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
 								&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
-							throw new EpException(MessageConst.ERROR_770167);
+							//#28765 - Start comment this code
+							//throw new EpException(MessageConst.ERROR_770167);
+							//#28765 - End
 						}				
 					}
 					// [#26050] check if selected old admin does have any pending task - end
