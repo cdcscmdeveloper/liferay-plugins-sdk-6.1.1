@@ -1306,6 +1306,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		if(requestNote != null){	
 			
+			//28999 - Start
+			requestNote = checkingPriceType(requestNote);
+			//28999 - End
+			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
 			} else {
@@ -5436,4 +5440,103 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
+	
+	//28999 - Start
+	public ScRequestNote checkingPriceType(ScRequestNote requestNote){
+		log.info("checkingPriceType");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		boolean priceTypeChange = false;
+		boolean priceTypeChangeSpecQuestion = false;
+		
+		if(requestNote.getQuote() != null){
+
+			if(!requestNote.getQuote().isZonal()){
+
+				if(requestNote.getRequestNoteDtls() != null){
+
+					for(ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()){
+						
+						priceTypeChangeSpecQuestion = false;
+						
+						if(requestNoteDtl.getPriceType() != null){
+
+							if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
+								priceTypeChange = true;
+							}else if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
+								priceTypeChange = true;
+							}	
+						}
+						
+						if(requestNoteDtl.getRequestItem() != null){
+
+							if(requestNoteDtl.getRequestItem().getSupplierItems() != null){
+
+								for(ScRequestSupplierItem supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()){
+									if(supplierItem.getSupplierItemPrices() != null){
+
+										for(ScSupplierItemPrice supplierItemPrice : supplierItem.getSupplierItemPrices()){
+											if(supplierItemPrice.getPriceType() != null){
+
+												if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
+													priceTypeChange = true;
+												}else if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
+													priceTypeChange = true;
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							if(requestNoteDtl.getRequestItem().getTplSpecQuestion() != null){
+
+								if(!requestNoteDtl.getRequestItem().getTplSpecQuestion().getQuestionType()
+										.equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)){
+
+									if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode() != null){
+
+										if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
+												.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+											requestNoteDtl.getRequestItem().getTplSpecQuestion()
+											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD));
+											priceTypeChangeSpecQuestion = true;
+										}else if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
+												.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+											requestNoteDtl.getRequestItem().getTplSpecQuestion()
+											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER));
+											priceTypeChangeSpecQuestion = true;
+										}
+										
+									}
+									
+								}
+							}
+							
+							if(priceTypeChangeSpecQuestion){
+								specReqDTO.setTplSpecQuestion(requestNoteDtl.getRequestItem().getTplSpecQuestion());
+								getTemplateSpecSO().updateSpecQuestionInfo(specReqDTO);
+							}
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		if(priceTypeChange){
+			requestNoteReqDTO.setRequestNote(requestNote);
+			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
+		}
+				
+		return requestNote;
+	}
+	//28999- End
 }
