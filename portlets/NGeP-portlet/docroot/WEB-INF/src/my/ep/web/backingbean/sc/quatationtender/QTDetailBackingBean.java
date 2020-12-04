@@ -9468,6 +9468,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return checkBpkApproval;
 	}
 	// 25077 - End
+	
+    //#13344 start
+    public boolean isCommitteeApprovalTask(String taskName) {
+     	return (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName));
+    }
+    //#13344 end
 }
 
 

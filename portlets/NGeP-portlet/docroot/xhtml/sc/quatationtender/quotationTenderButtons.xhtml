@@ -13,7 +13,7 @@
 	<ui:remove>
 		#13344 Start				
 	</ui:remove>
- 	<ui:param name="isQTStatusPendingEvaluationCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst. QT_PENDING_PUBLICATION_APPROVAL)}" />
+	<ui:param name="isCommitteeApprovalTask" value="#{qTDetailBB.isCommitteeApprovalTask(qTDetailBB.managedBean.taskName)}" />
 	<ui:remove>
 		#13344 End				
 	</ui:remove>
@@ -64,7 +64,7 @@
 					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
-					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or isQTStatusPendingEvaluationCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					rendered="#{isCommitteeApprovalTask}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					<ui:remove>
 						#13344 End					
