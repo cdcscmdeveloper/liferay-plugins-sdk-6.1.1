@@ -1329,9 +1329,10 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
-
+			//Bug #29707 - start
+			// Move this code to below
 			// #27502- Adding condition only
-			if (!isBpkCentralContract) {
+			/*if (!isBpkCentralContract) {
 				// #18685 - Start
 				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
 				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
@@ -1344,7 +1345,8 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 				// #18685 - End
-			}
+			}*/
+			//Bug #29707 - end
 
 			if (!skipValidation) {
 				validateFinalizationReports(reqDTO);
@@ -1394,6 +1396,26 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRefinalize(isQTRefinalized());
 			//29707
 			reqDTO.setScQt(scQt);
+			//Bug #29707 - start
+			// Moved code from top
+			// #27502- Adding condition only
+			if (!isBpkCentralContract) {
+				// #18685 - Start
+				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+					log.info("masuk 1");
+					scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+				}
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+					log.info("masuk 2");
+					getManagedBean().getNewBriefingPaperReportList().addAll(
+							getManagedBean().getConsolidationBriefingPaperReportList());
+				}
+				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+				// #18685 - End
+			}
+			//Bug #29707 - end
 			//#27502- Adding condition only			 
 			if (!isBpkCentralContract
 					|| this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_FC_SELECTION)) {	//#25037 add new condition due to cannot save
@@ -1425,8 +1447,9 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
-		finalizationReports.addAll(this.getManagedBean()
-				.getEndorsementReports());
+		//Bug #29707
+		//finalizationReports.addAll(this.getManagedBean()
+		//		.getEndorsementReports());
 		List<ScQtFinalizationReport> toBeRemovedReports 
 					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
@@ -5101,7 +5124,16 @@ public class SupplierFinalizationBackingBean extends
 		scQtFinalization.setHigherAuthReq(false);
 		
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
-		getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
+		//Bug #29707 - start
+		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
+		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+		ScQt scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = false;
+		isBpkCentralContract = isBpkCentralContract(scQt);
+		if (isBpkCentralContract ){
+			getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
+		}
+		//Bug #29707 - end
 		
 		Map<String,String[]> higherAuthoritiesMap 
 					= getManagedBean().getHigherAuthoritiesMap();
@@ -8098,14 +8130,20 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		this.getManagedBean().setRenderjustificationTextbox(false);
 		PmReason reason = getReasonByCategoryAndCode(
 				ReasonCategory.SUPPLIER_SELECTION_JUSTIFICATION.value(), reasonCode);
-		this.getManagedBean().getScQtFinalization().setJustification(reason);
-		this.getManagedBean().setJustification(reason);
-		if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
-			this.getManagedBean().setRenderjustificationTextbox(true);
+		//Bug #29707 - start
+		if (reason == null) {
+			this.getManagedBean().getScQtFinalization().setJustification(new PmReason());
+			this.getManagedBean().setJustification(new PmReason());
 		} else {
-			this.getManagedBean().getScQtFinalization().setJustificationText(null);
+			this.getManagedBean().getScQtFinalization().setJustification(reason);
+			this.getManagedBean().setJustification(reason);
+			if (JUSTIFICATION_OTHERS.equalsIgnoreCase(reason.getReasonCode())) {
+				this.getManagedBean().setRenderjustificationTextbox(true);
+			} else {
+				this.getManagedBean().getScQtFinalization().setJustificationText(null);
+			}
 		}
-
+		//Bug #29707 - end
 	}
 	
 	/**
@@ -8140,9 +8178,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 								return 0;
 							} else if (report1.getChangedDate().getTime() >
 									report2.getChangedDate().getTime()) {
-								return 1;
+								return -1; //Bug #29707
 							} else {
-								return -1;
+								return 1; //Bug #29707
 							}
 						}
 						return -1;
