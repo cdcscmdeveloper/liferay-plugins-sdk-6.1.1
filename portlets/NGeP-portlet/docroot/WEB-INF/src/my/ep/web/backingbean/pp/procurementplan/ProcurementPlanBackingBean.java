@@ -3155,6 +3155,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("validateEpItem");
 		
 		List<PpExpenditureItem> epItems =  new ArrayList<PpExpenditureItem>();
+
 		//B
 		if(ParameterConst.VOT_MENGURUS.equals(paramCode)){
 			epItems = this.getManagedBean().getEpItemsB();
@@ -3173,6 +3174,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}	
 		if(!epItems.isEmpty()){
 			List <Long> soIds = new ArrayList<Long>();
+			//03122020@24975 - Start
+			List<PpExpenditureItem> ppItemNotUsingEp = new ArrayList<PpExpenditureItem>();
+			int indicatorIndex = 0;
+			//03122020@24975 - End
 			for(PpExpenditureItem epItem: epItems){
 				if(epItem.getRecordStatusFlg() != null){
 					if(DbValueConst.RECORD_STATUS_ACTIVE ==epItem.getRecordStatusFlg()){
@@ -3198,7 +3203,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 										 epItem.getJustifications().isEmpty() 
 										|| epItem.getJustifications().get(0)==null
 										|| StringUtils.isBlank(epItem.getJustifications().get(0).getRemark())))){
-								throw new EpException(MessageConst.ERROR_730007);
+								//03122020@24975 - Start
+								epItem.setNotUsingEp(true);
+								ppItemNotUsingEp.add(epItem);
+								indicatorIndex++;
+								//03122020@24975 - End
 							}
 						}
 						//24975@23102020azza - start
@@ -3210,6 +3219,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 				}
 			}
+			//03122020@24975 - Start
+			if (indicatorIndex > 0) {
+				throw new EpException(MessageConst.ERROR_730007);
+			}//03122020@24975 - End
+			
 			if(!soIds.isEmpty()){
 				if(!validationUniqueIds(soIds)){
 					throw new EpException(MessageConst.ERROR_730008);
@@ -3328,6 +3342,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								 setEditRemark.setRemark(null);
 								}
 							 }//24975 - End
+						  
+						    //03122020@24975 - Start
+							if (expItem.isNotUsingEp() == true) {
+								expItem.setNotUsingEp(false);
+							 }
+							//03122020@24975 - End
 					      }
 				       }	
 					}
@@ -3396,7 +3416,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									 setEditRemark.setRemark(null);
 									}
 							   }//24975 - End
-						   }
+							  
+							//03122020@24975 - Start
+							if (expItem.isNotUsingEp() == true) {
+								expItem.setNotUsingEp(false);
+							  }
+							//03122020@24975 - End
+						  }
 				      }
 				  }
 				//[#24975] - azza - end
@@ -3464,6 +3490,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								setEditRemark.setRemark(null);
 						      }
 					      }//24975 - End
+						 
+						//03122020@24975 - Start
+						if (expItem.isNotUsingEp() == true) {
+							expItem.setNotUsingEp(false);
+						}
+						//03122020@24975 - End
 					 }
 				  }
 				}
@@ -3533,6 +3565,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									setEditRemark.setRemark(null);
 							      }
 						    }//24975 - End
+							 
+							//03122020@24975 - Start
+							if (expItem.isNotUsingEp() == true) {
+								expItem.setNotUsingEp(false);
+							}
+						   //03122020@24975 - End
 					   }
 				    }
 				}
@@ -3601,6 +3639,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									setEditRemark.setRemark(null);
 							      }
 						     }//24975 - End
+							 
+							//03122020@24975 - Start
+							 if (expItem.isNotUsingEp() == true) {
+								 expItem.setNotUsingEp(false);
+							  }
+							//03122020@24975 - End
 					    }
 				    }
 				}
@@ -3872,6 +3916,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 		loadJustification(epItem);
+		//03122020@24975 - Start
+		if (epItem.isNotUsingEp() == true) {
+			epItem.setNotUsingEp(false);
+		}
+		//03122020@24975 - End
 	}
 	
 	
