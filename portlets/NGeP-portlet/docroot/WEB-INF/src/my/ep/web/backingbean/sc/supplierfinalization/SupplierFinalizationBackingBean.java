@@ -4172,7 +4172,9 @@ public class SupplierFinalizationBackingBean extends
 			isBpkCentralContract = isBpkCentralContract(scQt);
 
 			if (isBpkCentralContract) {
-				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);
+				//statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27901
+				statusIds.add(QTStatusConst.QT_SF_MOF_COMMIEEE);//#27901
+				
 			} else {
 				statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 			}
