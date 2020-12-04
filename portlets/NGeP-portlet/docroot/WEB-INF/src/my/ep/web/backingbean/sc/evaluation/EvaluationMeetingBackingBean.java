@@ -721,14 +721,21 @@ public class EvaluationMeetingBackingBean extends
 		//#25037 - start
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(), "getIcPassport");
 		List<ScCommitteeMember> listToSync = new ArrayList<ScCommitteeMember>();
-		
+		List<ScCommitteeMember> listToReSync = new ArrayList<ScCommitteeMember>();
+
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getRemoveCommitteeList())){
 			for(ScCommitteeMember m: this.getManagedBean().getRemoveCommitteeList()){
-				if(map.get(m.getIcPassport())!=null){
+				ScCommitteeMember em = (ScCommitteeMember)map.get(m.getIcPassport());
+				if(em!=null){
 					m.setDeleted(false);
 					m.setSelected(false);
 					listToSync.add(m);
+					listToReSync.add(em);
 				}
+			}
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCommitteeMemberActivity())){
+				this.getManagedBean().getCommitteeMemberActivity().removeAll(listToReSync);
+				this.getManagedBean().getCommitteeMemberActivity().addAll(listToSync);
 			}
 			this.getManagedBean().getRemoveCommitteeList().removeAll(listToSync);
 		}

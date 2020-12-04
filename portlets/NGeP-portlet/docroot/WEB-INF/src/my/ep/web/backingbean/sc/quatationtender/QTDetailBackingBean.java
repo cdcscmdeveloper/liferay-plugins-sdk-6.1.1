@@ -5468,7 +5468,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
 		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		
-		if(this.getManagedBean().isShowHistory() && Arrays.asList(new String[]{"EC", "OC", "TEC", "FEC"}).contains(committeeType)){
+		if(this.getManagedBean().isShowHistory() && Arrays.asList(new String[]{"SC", "EC", "OC", "TEC", "FEC"}).contains(committeeType)){
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
 		}
 	}
@@ -6024,6 +6024,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			updateApprovalDetails(this.getManagedBean().getQt());
 			retrieveApprovalTabDtl();
+			
+			validateIsCommitteeFormed();//#25037
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
@@ -9485,6 +9487,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return checkBpkApproval;
 	}
 	// 25077 - End
+	
+	//#25037 - start
+  	private void validateIsCommitteeFormed(){
+  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
+  			for(TabBean committeeTab: this.getManagedBean().getScCommitteeMemberTabList()){
+  				ScQtCommittee qtCommittee = committeeTab.getScQtCommittee();
+  				String[] types = new String[]{"SC","OC","EC","TEC","FEC"};
+  				if(qtCommittee!=null){
+  					ScCommittee committee = qtCommittee.getScCommittee();
+  					if(Arrays.asList(types).contains(committee.getCommitteeType().getParameterCode())
+  							|| committee.isApprovalReq()){
+  						QTCommitteBackingBean committeeBB = new QTCommitteBackingBean();
+  						committeeBB.checkCommitteFormedOrNot();
+  					}
+  				}
+  			}
+  		}
+  	}
+  	//#25037 - end
+    
 }
 
 
