@@ -15,7 +15,7 @@
 	</style>
 
 	<ui:param name="isRefinalizedAndBiddingAward" 
-			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>			  
+			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>		  
 	
 		<p:spacer height="15px" rendered="#{suppFinalizationBackingBean.managedBean.itemize}"/>	
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
@@ -70,7 +70,7 @@
 						 style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						 selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
 						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single' or
-						 (suppFinalizationBackingBean.managedBean.showDefalutSupplierListTblSingle and suppFinalizationBackingBean.managedBean.finalizationMethod == 'A')}"> <!-- #27668 -->
+						 suppFinalizationBackingBean.showDefaultTableSingle()}"> <!-- #27668 -->
 				
 				<ac:paginator for="supplierListTblSingle" />
 				
@@ -263,7 +263,7 @@
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple' or
-						 (suppFinalizationBackingBean.managedBean.showDefalutSupplierListTblMultiple and (suppFinalizationBackingBean.managedBean.finalizationMethod == 'B' or suppFinalizationBackingBean.managedBean.finalizationMethod == 'L'))}"> <!-- #27668 -->
+						 suppFinalizationBackingBean.showDefaultTableMultiple()}"> <!-- #27668 -->
 				
 				<ac:paginator for="supplierListTblMultiple" />
 					
