@@ -136,6 +136,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -176,6 +177,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
+	private static final String UPDATE_COMMITTEE_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/pbqcc/committeeList.xhtml"; //#29403
+	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true"; //#29403
 	private ContractBackingBean ctBackingBean = null;
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
@@ -1289,13 +1292,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			log.info("Check hafiz gotoAmendPage setAmendmentContractVer >>>" +getManagedBean().getContractVerId());
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	
-			
-				ContractReqDTO ctReqDTO = new ContractReqDTO();		
-				ContractResDTO ctResDTO = null;
-				contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-				ctReqDTO.setAmendmentId(resDTO.getCtContractVer().getCtAmendment().getAmendmentId());
-				ctResDTO = contractAmendmentSO.retrieveContractCommitteeMemberByAmendmentId(ctReqDTO);
-				getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());
+				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
 				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
@@ -6582,9 +6579,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//26753 - start
 		public void updateCommittee() {
 			//#29403 start
-			if(ctBackingBean.getManagedBean().getContractVer()!=null ){
-				getManagedBean().setUpdateCommittee(Boolean.TRUE);
-			}
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, UPDATE_COMMITTEE_PAGE);
 			//#29403 end
 		}
 		
@@ -6605,9 +6601,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
 				getFilteredCommitteeMembers().clear();
 			}
-			
-			setTabValue("DCN"); //#29403
-			
+			setTabValue("DCN"); 
+			backToAmendmentPage();
+		}
+		
+		public void backToAmendmentPage(){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_AMEND_PAGE);
 		}
 		//#29403 end
 		/**
@@ -6893,6 +6893,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.FALSE);
 			}
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			
+			//#29403 start
+			setTabValue("DCN"); 
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_AMEND_PAGE);
+			//#29403 end
 		}
 		
 		public void validateLatestCommitteeMembers() throws UnsupportedEncodingException { //#29403
