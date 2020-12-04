@@ -133,7 +133,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public static final String SUPPLIER = "SUP";
 
 	private final static Logger log = Logger.getLogger(RegistrationBackingBean.class);
-	//private final static String newICMasking = "999999999999";
+	public final static String newICMasking = "999999999999";
 	private static String accountRegistration = "/xhtml/sm/onlinereg/registrationInfo.xhtml?faces-redirect=true";
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	private static String ssmAccountCheck = "/xhtml/sm/shared/onlinereg/ssmAcountCheck.xhtml?faces-redirect=true";
@@ -328,6 +328,29 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getDummy().clear();
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				
+				//CR 27382: Static Code Analysis End				
+				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
+				switch(status){
+					case "L"://27382
+						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
+					case "T":
+					case "B":
+					case "W":
+					case "D":
+					case "R":
+					case "C":
+					case "X":
+					case "Y":
+					//27382 - start
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					default:
+						break;
+				}
+				//16052019 - SSM INTEGRATION CR
+			}
+			
+			
 				if(this.getManagedBean().getRegIcCheckSSM() == null || this.getManagedBean().getRegIcCheckSSM().isEmpty()){
 					if(businessTypeIsROB(getManagedBean().getSmSupp().getBusinessType())){
 						throw new EpException(MessageConst.ERROR_100051,new String[]{ResourceBundleUtils.getMessage("lbl.sm.register.owner.newic",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),ResourceBundleUtils.getMessage("lbl.sm.register.owner",ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -457,30 +480,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().setHideButton(true);
 					throw new EpException(MessageConst.ERROR_721080);
 				}
-				//CR 27382: Static Code Analysis End				
-				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
-				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
-				switch(status){
-					case "L"://27382
-						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
-					case "T":
-					case "B":
-					case "W":
-					case "D":
-					case "R":
-					case "C":
-					case "X":
-					case "Y":
-					//27382 - start
-						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-					default:
-						break;
+				
+				if(!this.getManagedBean().isCompanyValidWithSSM()){
+					throw new EpException(MessageConst.ERROR_721078);
 				}
-				//16052019 - SSM INTEGRATION CR
-			}
-			if(!this.getManagedBean().isCompanyValidWithSSM()){
-				throw new EpException(MessageConst.ERROR_721078);
-			}
 			
 			return ssmAccountCheck;
 			
