@@ -64,6 +64,9 @@
 						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted3']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />	
 						<!-- 26238 -  Disciplonary action - 29156  -END -->		
 					    <!-- bug #28278 -END -->
+					    <!-- bug #29690 -START -->
+					    <h:outputText value="#{lbl['lbl.sm.mof.status.suspend']}" rendered="#{smSupplier.mofStatus eq 'S'}" />
+					    <!-- bug #29690 -END -->
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
