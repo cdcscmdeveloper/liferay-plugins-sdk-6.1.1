@@ -3,14 +3,18 @@ package my.ep.web.util.sm.helper;
 //10908
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
@@ -22,7 +26,6 @@ import org.apache.log4j.Logger;
 public class SmApplicationNotificationUtil {
 	private static Logger log = Logger
 			.getLogger(SmApplicationNotificationUtil.class);
-
 	/**
 	 * Sets the approval notification parameters to be set in the
 	 * ReviewApplicationDTO and pass it to the SO level.
@@ -87,14 +90,13 @@ public class SmApplicationNotificationUtil {
 			SmSupplier supplier, SmSupplierBasicInfoVO basicInfo, 
 			String supplierRemarks, String approvalRemarks,
 			ReviewApplicationReqDTO reqDTO) {
-
 		reqDTO.setBusinessRegNo(supplier.getRegNo());
 		reqDTO.setCompanyName(supplier.getCompanyName());
 		
 		if (smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			reqDTO.setCategoryDescription(retriveRejectCancelRegistrationMessageForNotification(
-					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks));
+					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO));
 		}
 		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
 			if (reqDTO.getLocation().equalsIgnoreCase(
@@ -126,7 +128,7 @@ public class SmApplicationNotificationUtil {
 	public static String retriveCancelRegistrationMessageForNotification(
 			SmAppl smAppl, SmSupplier supplier,
 			SmSupplierBasicInfoVO basicInfo, 
-			String supplierRemarks, String approvalRemarks) {
+			String supplierRemarks, String approvalRemarks) {;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveCancelRegistrationMessageForNotification *********");
@@ -197,15 +199,26 @@ public class SmApplicationNotificationUtil {
 	public static String retriveRejectCancelRegistrationMessageForNotification(
 			SmAppl smAppl, SmSupplier supplier,
 			SmSupplierBasicInfoVO basicInfo, 
-			String supplierRemarks, String approvalRemarks) {
+			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
+		if(reqDTO.getSuppLoginId() != null && !"".equalsIgnoreCase(reqDTO.getSuppLoginId())){
+			preferredLang = getUserPreferredLanguage(reqDTO.getSuppLoginId());
+		}
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		
+		log.info("preferredLang>>>>>>>>>>" + preferredLang);
+		log.info("User Locale>>>>>>>>>>" + usrLocale.getLanguage());
+		
+		String submitDate = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol1"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("submitDate>>>>>>>>>>>>>>>>>>"+submitDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveRejectCancelRegistrationMessageForNotification *********");
 		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol1",
-						null)).append("</td>");
+				.append(submitDate).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(DateUtils.dateToString("dd-MMM-yyyy",
 						smAppl.getApplSubmitDate())).append("</td>");
@@ -353,4 +366,29 @@ public class SmApplicationNotificationUtil {
 		return finalMsg.toString();
 	}
 
+	private static String getUserPreferredLanguage(String loginId){
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(loginId);
+		PmUser user = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO).getPmUser();
+		String lang = "en";
+		if(user != null){
+			lang = user.getPreferredLanguage();
+		}
+		
+		return null;
+	}
+	
+	private static Locale getLocaleByLang(String lang){
+		if(StringUtils.isNotBlank(lang)){
+			if(lang.equalsIgnoreCase(CommonConstants.LANGUAGE_CODE_MALAY)){
+				return new Locale(CommonConstants.LANGUAGE_CODE_MALAY,CommonConstants.DEFAULT_COUNTRY_CODE);
+			}else{
+				return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			}
+		}else{
+			//return new Locale(CommonConstants.LANGUAGE_CODE_MALAY,CommonConstants.DEFAULT_COUNTRY_CODE);
+			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		}
+	}
+	
 }

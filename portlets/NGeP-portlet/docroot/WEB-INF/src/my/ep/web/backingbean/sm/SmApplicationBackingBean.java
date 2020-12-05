@@ -9403,7 +9403,17 @@ public class SmApplicationBackingBean extends
 						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 						getManagedBean().getApplnRejectionRemarks());
 			}
-		
+			
+			//10908
+			String loginId="";
+			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
+				if(personnel.getEpRole() != null && personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString())){
+					loginId = personnel.getPmUser().getLoginId();
+					log.info("loginId109082>>>>>>>>>>" + loginId);
+				}
+			}
+			reqDTO.setSuppLoginId(loginId);
 			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean().getSmSupplier(), 
