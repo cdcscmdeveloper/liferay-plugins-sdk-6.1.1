@@ -201,8 +201,14 @@ public class SmApplicationNotificationUtil {
 			SmSupplierBasicInfoVO basicInfo, 
 			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
 		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
-		if(reqDTO.getSuppLoginId() != null && !"".equalsIgnoreCase(reqDTO.getSuppLoginId())){
+		log.info(preferredLang+"---reqDTO.getLangCode()>>>>>>>>>>" + reqDTO.getLangCode());
+		/*if(reqDTO.getLangCode() == null && reqDTO.getSuppLoginId() != null && !"".equalsIgnoreCase(reqDTO.getSuppLoginId())){
 			preferredLang = getUserPreferredLanguage(reqDTO.getSuppLoginId());
+		}else{
+			
+		}*/
+		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
+			preferredLang = reqDTO.getLangCode();
 		}
 		Locale usrLocale = getLocaleByLang(preferredLang);
 		
