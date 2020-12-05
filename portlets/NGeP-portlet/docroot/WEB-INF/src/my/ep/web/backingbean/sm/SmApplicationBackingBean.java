@@ -9406,13 +9406,18 @@ public class SmApplicationBackingBean extends
 			
 			//10908
 			String loginId="";
+			String langCode="";
 			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
 				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
 				if(personnel.getEpRole() != null && personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString())){
 					loginId = personnel.getPmUser().getLoginId();
 					log.info("loginId109082>>>>>>>>>>" + loginId);
+					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
+					continue;
 				}
 			}
+			log.info("langCode>>>>>>>>>>" + langCode);
+			reqDTO.setLangCode(langCode);
 			reqDTO.setSuppLoginId(loginId);
 			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
