@@ -9411,6 +9411,7 @@ public class SmApplicationBackingBean extends
 				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
 				if(personnel.getEpRole() != null && personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString())){
 					loginId = personnel.getPmUser().getLoginId();
+					langCode = personnel.getPmUser().getPreferredLanguage();
 					log.info("loginId109082>>>>>>>>>>" + loginId);
 					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
 					continue;
