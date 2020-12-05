@@ -279,7 +279,7 @@ public class SmApplicationNotificationUtil {
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(mofNo).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(supplier.getMofNo()).append("</td>");
+				.append(basicInfo.getMofNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
