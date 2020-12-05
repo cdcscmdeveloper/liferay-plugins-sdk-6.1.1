@@ -5564,41 +5564,6 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-	// #27668 - Start
-	public boolean showDefaultTableSingle(){
-		boolean showDefaultTableSingle = false;
-		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		String finalizationMethodStr = getManagedBean().getFinalizationMethod();
-		Long status = scQtFinalization.getCurrentStatus().getPmStatus().getStatusId();
-		if(ParameterConst.RECOMMEND_BY_AWARD.equals(finalizationMethodStr) && 
-				this.getManagedBean().isShowDefalutSupplierListTblSingle() == true){
-			showDefaultTableSingle = true;
-		}
-		if(status.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION) && showDefaultTableSingle){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	public boolean showDefaultTableMultiple(){
-		boolean showDefaultTableMultiple = false;
-		String finalizationMethodStr = getManagedBean().getFinalizationMethod();
-		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		Long status = scQtFinalization.getCurrentStatus().getPmStatus().getStatusId();
-		if((ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(finalizationMethodStr) || 
-		   ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) && 
-		        this.getManagedBean().isShowDefalutSupplierListTblMultiple() == true){
-			showDefaultTableMultiple = true;
-		}
-		if(status.equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION) && showDefaultTableMultiple){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	// #27668 - End
-	
 	private void checkIfAtleastTwoSuppliersExist() {
 		log.info("checkIfAtleastTwoSuppliersExist ");
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
