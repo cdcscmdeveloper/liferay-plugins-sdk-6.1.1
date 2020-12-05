@@ -53,7 +53,7 @@ public class SmApplicationNotificationUtil {
 		} else if ((smAppl.getApplType().equalsIgnoreCase(
 				ParameterConst.NEW_SM_APPLN_FOR_CANCEL))) {
 			reqDTO.setCategoryDescription(retriveCancelRegistrationMessageForNotification(
-					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks));
+					smAppl, supplier, basicInfo, supplierRemarks, approvalRemarks, reqDTO));
 			// reqDTO.setMofNum(managedBean.getBasicInfo().getMofNo());
 		}
 		
@@ -128,66 +128,87 @@ public class SmApplicationNotificationUtil {
 	public static String retriveCancelRegistrationMessageForNotification(
 			SmAppl smAppl, SmSupplier supplier,
 			SmSupplierBasicInfoVO basicInfo, 
-			String supplierRemarks, String approvalRemarks) {;
+			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
+		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
+		log.info(preferredLang+"---reqDTO.getLangCode()>>>>>>>>>>" + reqDTO.getLangCode());
+		
+		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
+			preferredLang = reqDTO.getLangCode();
+		}
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		
+		log.info("preferredLang>>>>>>>>>>" + preferredLang);
+		log.info("User Locale>>>>>>>>>>" + usrLocale.getLanguage());
+		
+		String submitDate = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol1"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		log.info("submitDate>>>>>>>>>>>>>>>>>>"+submitDate);
+		String applNo = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol2"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String approveDate = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol9"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String mofNo = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol3"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String companyName = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol4"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String companyAdd = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol5"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String suppRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol6"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String appRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol7"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveCancelRegistrationMessageForNotification *********");
 		sb.append("<table style=\"width:50%; border: 1px solid black;border-collapse: collapse;\">");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol1",
-						null)).append("</td>");
+				.append(submitDate).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(DateUtils.dateToString("dd-MMM-yyyy",
 						smAppl.getApplSubmitDate())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol2",
-						null)).append("</td>");
+				.append(applNo).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(smAppl.getApplNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol9",
-						null)).append("</td>");
+				.append(approveDate).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(sdf.format(new Date())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol3",
-						null)).append("</td>");
+				.append(mofNo).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(basicInfo.getMofNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol4",
-						null)).append("</td>");
+				.append(companyName).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getCompanyName()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol5",
-						null)).append("</td>");
+				.append(companyAdd).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(AddressUtils.getFullAddress(basicInfo.getAddress()
 						.getSmAddress())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol6",
-						null)).append("</td>");
+				.append(suppRemarks).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplierRemarks).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol7",
-						null)).append("</td>");
+				.append(appRemarks).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(approvalRemarks).append("</td>");
 		sb.append("</tr>");
@@ -202,11 +223,7 @@ public class SmApplicationNotificationUtil {
 			String supplierRemarks, String approvalRemarks, ReviewApplicationReqDTO reqDTO) {
 		String preferredLang =CommonConstants.LANGUAGE_CODE_MALAY;
 		log.info(preferredLang+"---reqDTO.getLangCode()>>>>>>>>>>" + reqDTO.getLangCode());
-		/*if(reqDTO.getLangCode() == null && reqDTO.getSuppLoginId() != null && !"".equalsIgnoreCase(reqDTO.getSuppLoginId())){
-			preferredLang = getUserPreferredLanguage(reqDTO.getSuppLoginId());
-		}else{
-			
-		}*/
+		
 		if(reqDTO.getLangCode()!=null && !"".equalsIgnoreCase(reqDTO.getLangCode())){
 			preferredLang = reqDTO.getLangCode();
 		}
@@ -218,6 +235,23 @@ public class SmApplicationNotificationUtil {
 		String submitDate = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol1"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		log.info("submitDate>>>>>>>>>>>>>>>>>>"+submitDate);
+		String applNo = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol2"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String rejectDate = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol8"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String mofNo = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol3"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String companyName = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol4"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String regNo = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol10"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String companyAdd = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol5"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String suppRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol6"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		String appRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol11"
+				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		StringBuilder sb = new StringBuilder();
 		log.info("*********** retriveRejectCancelRegistrationMessageForNotification *********");
@@ -231,58 +265,50 @@ public class SmApplicationNotificationUtil {
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol2",
-						null)).append("</td>");
+				.append(applNo).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(smAppl.getApplNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol8",
-						null)).append("</td>");
+				.append(rejectDate).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(sdf.format(new Date())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol3",
-						null)).append("</td>");
+				.append(mofNo).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(basicInfo.getMofNo()).append("</td>");
+				.append(supplier.getMofNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol4",
-						null)).append("</td>");
+				.append(companyName).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getCompanyName()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol10",
-						null)).append("</td>");
+				.append(regNo).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplier.getRegNo()).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol5",
-						null)).append("</td>");
+				.append(companyAdd).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(AddressUtils.getFullAddress(basicInfo.getAddress()
 						.getSmAddress())).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol6",
-						null)).append("</td>");
+				.append(suppRemarks).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(supplierRemarks).append("</td>");
 		sb.append("</tr>");
 		sb.append("<tr>");
 		sb.append("<td style=\"border: 1px solid black;\">")
-				.append(SmCommonUtil.getMessage("lbl.sm.cancelMof.notifCol11",
-						null)).append("</td>");
+				.append(appRemarks).append("</td>");
 		sb.append("<td style=\"border: 1px solid black;\">")
 				.append(approvalRemarks).append("</td>");
 		sb.append("</tr>");
