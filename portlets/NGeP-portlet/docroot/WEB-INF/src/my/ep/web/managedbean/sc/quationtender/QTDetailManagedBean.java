@@ -1688,6 +1688,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String prevDOAs;
 	private String[] roleFilterList;
 	private Long currentQTStatus;
+	private Long currentCMTStatus;
 
 	//#25037-END
 	//#25077 - Start
@@ -10541,6 +10542,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		//#25692 End
 		
 	
+		public Long getCurrentCMTStatus() {
+			return currentCMTStatus;
+		}
+
+		public void setCurrentCMTStatus(Long currentCMTStatus) {
+			this.currentCMTStatus = currentCMTStatus;
+		}
 }
 
 

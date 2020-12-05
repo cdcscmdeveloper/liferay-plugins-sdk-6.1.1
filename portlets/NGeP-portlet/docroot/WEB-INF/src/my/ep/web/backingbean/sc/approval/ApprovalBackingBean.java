@@ -543,12 +543,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
 			//#25037-start
-			paramTypes = new ArrayList<String>();
-			if(CollectionUtils.isNotEmpty(approvalRequests)){
-				for(ScQtApprovalRequest req: approvalRequests){
-					paramTypes.add(req.getApprovalType().getParameterCode());
-				}
-			}
+//			paramTypes = new ArrayList<String>();
+//			if(CollectionUtils.isNotEmpty(approvalRequests)){
+//				for(ScQtApprovalRequest req: approvalRequests){
+//					paramTypes.add(req.getApprovalType().getParameterCode());
+//				}
+//			}
 			//#25037-end
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);

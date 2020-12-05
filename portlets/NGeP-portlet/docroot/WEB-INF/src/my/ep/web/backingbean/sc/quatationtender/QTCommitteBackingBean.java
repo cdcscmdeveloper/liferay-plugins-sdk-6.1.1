@@ -1907,6 +1907,21 @@ public class QTCommitteBackingBean extends
 		}
 				
 		if (this.getManagedBean().isMaintanceFlow()) {
+			//#25037-start
+			Long currentCmtStatus = 0L;
+			if(this.getManagedBean().getCurrentCMTStatus()==null){
+				ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
+				currentCmtStatus = wfStatus==null? currentCmtStatus: wfStatus.getPmStatus().getStatusId();
+			}else{
+				currentCmtStatus = this.getManagedBean().getCurrentCMTStatus();
+			}
+			if (Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(currentCmtStatus)
+					|| Arrays.asList(QTStatusConst.CMT_REVISION_APPROVAL_GROUP).contains(currentCmtStatus)
+						|| Arrays.asList(QTStatusConst.CMT_REVISION_GROUP).contains(currentCmtStatus)) {
+				return false;
+			} 
+			//#25037-end
+
 			if (super.isQTStatusPublished(currentStatusId)) {
 				Long[] allowedStatusAfterPublish = new Long[]{
 						QTStatusConst.QT_BRIEFING_SITE_VISIT,
@@ -1976,6 +1991,13 @@ public class QTCommitteBackingBean extends
 					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
 				return false;
 			}else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
+				if(SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)){
+					if(QTStatusConst.CMT_COMPLETED.equals(committeStatus) 
+							&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType) 
+							&& !Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(this.getCurrentQtStatusId())){
+						return false;
+					}
+				}
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
 				} else if ((SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
 								&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
