@@ -274,6 +274,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	// #27502 - Start 
 	private boolean isMofFinalization;
+	private boolean mofRefinalized;
 	// #27502 - Start 
 	
 	// #27668 - Start
@@ -2370,6 +2371,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.showDefalutSupplierListTblMultiple = showDefalutSupplierListTblMultiple;
 	}
 	// #27668 - End
+
+	public boolean isMofRefinalized() {
+		return mofRefinalized;
+	}
+
+	public void setMofRefinalized(boolean mofRefinalized) {
+		this.mofRefinalized = mofRefinalized;
+	}
+
+	
 	
 }
 

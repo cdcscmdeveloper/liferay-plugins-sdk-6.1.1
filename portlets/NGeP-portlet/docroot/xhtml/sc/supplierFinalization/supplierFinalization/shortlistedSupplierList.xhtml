@@ -242,7 +242,9 @@
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
 														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
 														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
-			</p:dataTable>							 	    
+			</p:dataTable>	
+			
+			<c:if test="#{!suppFinalizationBackingBean.managedBean.mofRefinalized}">						 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
@@ -423,6 +425,7 @@
 				</p:column>
 				
 			</p:dataTable>
+			</c:if>
 		</p:outputPanel>
 		
 	</p:panel>
