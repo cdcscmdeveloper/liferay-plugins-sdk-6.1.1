@@ -1186,7 +1186,7 @@ public class SupplierFinalizationBackingBean extends
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			if (isBpkCentralContract) {			
-				reqDTO = validateInfo(1, skipValidation);
+				reqDTO = validateInfo(2, skipValidation);
 			} else {	//#27502 - END		
 				// Save Preparation and Supplier finalization tab(s) data
 				
@@ -1292,10 +1292,16 @@ public class SupplierFinalizationBackingBean extends
 			}
 			//Bug #29707 - end
 			//#27502- Adding condition only			 
-			if (!isBpkCentralContract
-					|| this.getManagedBean().getTaskName().equals(SCProcessNameConst.FINALISE_FC_SELECTION)) {	//#25037 add new condition due to cannot save
-				saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
-			}
+//			if (isBpkCentralContract) {					
+//				if (CollectionUtils.isNotEmpty(reqDTO.getFinalizationItemizedRemarks())) {
+//					if (CollectionUtils.isEmpty(scQtFinalization.getScQtFinalizationRemarks())) {
+//						List<ScQtFinalizationRemarks> scQtFinalizationRemarks = new ArrayList<>();
+//						scQtFinalization.setScQtFinalizationRemarks(scQtFinalizationRemarks);
+//					}
+//				}
+//			}
+			
+			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 			prepareUpdateCommitteeMember();
 
 			if(!skipValidation){
@@ -1583,7 +1589,18 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setRenderjustificationTextbox(isRenderjustificationTextbox);
 		
 		loadInitialData(qtId);
-
+		
+		//27502, navigate to endorsement tab after save
+		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
+		qtBackingBean.retrieveQuationTenderDetails(qtId);
+		ScQt scQt = qtBackingBean.getManagedBean().getQt();
+		boolean isBpkCentralContract = false;
+		isBpkCentralContract = isBpkCentralContract(scQt);
+		
+		if (isBpkCentralContract) {
+			this.getManagedBean().setActiveIndex(5);
+		}
+		
 		onTabMenuChangeAction();
 	}
 
