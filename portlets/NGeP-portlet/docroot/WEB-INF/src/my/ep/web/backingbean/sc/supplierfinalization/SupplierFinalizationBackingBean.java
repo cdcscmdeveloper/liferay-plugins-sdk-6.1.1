@@ -5126,6 +5126,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setReEvaluate(false);
 		this.getManagedBean().setRePublish(false);
 		this.getManagedBean().setForwardToHigherAuthority(false);
+		this.getManagedBean().setMofRefinalized(false);//27502
 		
 		getManagedBean().setSelectedItem(null);
 		this.getManagedBean().setRecommendedSupplier(null);
@@ -5251,6 +5252,12 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 				this.getManagedBean().setRecommendSupplier(true);
+				
+				 // #27502 -- Start				
+				if (isBpkCentralContract) {
+					this.getManagedBean().setMofRefinalized(true);
+				}
+				
 				if (isInitialDecisionFwdToHighAuth) {
 					resetDecisionForwardToHigherAuthority(scQtFinalization);
 				}
