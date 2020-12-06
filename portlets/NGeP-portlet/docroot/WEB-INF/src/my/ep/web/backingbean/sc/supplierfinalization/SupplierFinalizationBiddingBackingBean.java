@@ -2748,8 +2748,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
 								new ArrayList<ScQtFinalizationReport>();
+			//#29702					
+			List<ScQtFinalizationReport> inputReport = new ArrayList<ScQtFinalizationReport>();
+					new ArrayList<ScQtFinalizationReport>();
 			for (ScQtFinalizationReport report : finalizationReports) {
 				String docCategory = report.getDocCategory();
+			   //#29702
+				String docDefinitionType = report.getDefinationType().getParameterCode();
 				String docDefinitionKey = null;
 				if (report.getPmDocument() != null) {
 					docDefinitionKey = report.getPmDocument()
@@ -2763,6 +2768,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 					endorsementReports.add(report);
 					++endorsementReportCount;
 				}
+			//#29702 - start
+				 else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_USER_INPUT
+							.equals(docDefinitionType)) {
+					 inputReport.add(report);
+			 }
+			//#29702 - end	
 			}
 			if (coverReport != null && 
 					getManagedBean().isBpkUser()) {
@@ -2834,7 +2845,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 					finalizationReports.addAll(endorsementReports);
 				}
 			}
-			
+			//#29702 - start
+			if (inputReport != null ) {
+				finalizationReports.removeAll(inputReport);
+			}
+			//#29702 - end
 			if (finalizationReports != null) {
 				getManagedBean().setDocumentList(finalizationReports);
 			}
