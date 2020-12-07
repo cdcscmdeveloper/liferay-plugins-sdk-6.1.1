@@ -96,6 +96,7 @@ public class SmPersonnelBackingBean extends
 				SmRuleHelper.getInstance().getMaxBasicAuthorizedUser());
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		getManagedBean().setSmSupplier(smSupplier);
+		getManagedBean().setSmAppl(smSupplier.getSmAppl());
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
 		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
@@ -107,29 +108,46 @@ public class SmPersonnelBackingBean extends
 		resetUserLimitMsg();
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
+	
+	//27536 : Disciplinary Action - start also fix 27537
+			String labelNameVal = "";
+			SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+			supReqDTO.setSupplier(smSupplier);
+			SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+			if(activeDisc != null
+					&& activeDisc.getSmDisciplinaryActions() != null){
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+								new String[] { labelNameVal })));
+				getManagedBean().setDisableAddNewUser(true);
+				//START 27912 -  Disciplinary Action - 26238
+				getManagedBean().setSuppInPunishment(true);
+				//END 27912 -  Disciplinary Action - 26238
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);
+			}
+			//27536 : Disciplinary Action - end also fix 27537
+			
+			//#29576: start
+			PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
+			perReqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+			List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(perReqDTO)
+					.getSmPersonnelList();
+			sortPersonnelByEpRole(smPersonnelList);
+			getManagedBean().setSmPersonnelList(smPersonnelList);
+			countAuthUserWithRole(smPersonnelList);
+			countContractSigner(smPersonnelList);
+			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
+			if (getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress() != null)
+				getManagedBean().setTempAddress(
+						getManagedBean().getBasicSmPersonnelPermanentAddress()
+								.getSmAddress());
+			
+			SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null, null);
+			}
+			//#29576: end
+			
 		
-		//27536 : Disciplinary Action - start also fix 27537
-		String labelNameVal = "";
-		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-		supReqDTO.setSupplier(smSupplier);
-		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-		if(activeDisc != null
-				&& activeDisc.getSmDisciplinaryActions() != null){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
-			getManagedBean().setDisableAddNewUser(true);
-			//START 27912 -  Disciplinary Action - 26238
-			getManagedBean().setSuppInPunishment(true);
-			//END 27912 -  Disciplinary Action - 26238
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);
-		}
-		//27536 : Disciplinary Action - end also fix 27537
-				
-		SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null, null);
-	}
-
 	/**
 	 * Pre - render and redirect to Supplier User Profile screen
 	 */
@@ -447,7 +465,7 @@ public class SmPersonnelBackingBean extends
 			reqDTO.setHasActiveAppl(false);
 			getManagedBean().setUpgradeMofDraftAppl(false);
 		}
-
+		
 		// set latest active smAppl
 		getManagedBean().setCurrSmAppl(getCurrActiveSmAppl(smSupplier));
 
@@ -458,9 +476,9 @@ public class SmPersonnelBackingBean extends
 				.retrieveAuthorizedPersonnelsForLatestActiveAppl(reqDTO);
 		if (resDTO.getSmPersonnelList() != null
 				&& !resDTO.getSmPersonnelList().isEmpty()) {
-			getManagedBean().setSmPersonnelList(resDTO.getSmPersonnelList());
+			getManagedBean().setSmPersonnelList(resDTO.getSmPersonnelList());	
 		}
-
+		
 		// set prev epRole
 		if (getManagedBean().getSmPersonnelList() != null
 				&& !getManagedBean().getSmPersonnelList().isEmpty()) {
@@ -479,7 +497,7 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDeactivatePersonnel(false);
 
 	}
-
+	
 	/**
 	 * Redirect to update personnel screen in Supplier User Maintenance
 	 * 
@@ -2301,7 +2319,8 @@ public class SmPersonnelBackingBean extends
 		sortPersonnelByEpRole(smPersonnelList);
 		getManagedBean().setSmPersonnelList(smPersonnelList);
 	}
-
+	
+	
 	/**
 	 * Navigate to personnel edit page
 	 * 
