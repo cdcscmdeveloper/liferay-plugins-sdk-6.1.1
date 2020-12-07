@@ -535,15 +535,15 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 		IRPTRequestDtlSO iRPTRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
 		RPTRequestDtl rdtl = iRPTRequestDtlSO.findbyRequestId(requestId);
 		
-		if(rdtl != null){	
-						
+		if(rdtl != null){
 			if(rdtl.getDocumentNo01() != null){	documentsNo.append(rdtl.getDocumentNo01());}
 			if(rdtl.getDocumentNo02() != null){	documentsNo.append(","+rdtl.getDocumentNo02());}
 			if(rdtl.getDocumentNo03() != null){	documentsNo.append(","+rdtl.getDocumentNo03());}
 			if(rdtl.getDocumentNo04() != null){	documentsNo.append(","+rdtl.getDocumentNo04());}		
-			if(documentsNo.charAt(0) == ','){ documentsNo.deleteCharAt(0); }
+			if(documentsNo.length()>0){if(documentsNo.charAt(0) == ','){ documentsNo.deleteCharAt(0); }}
+		}
 
-		}else{	
+		if(documentsNo.length() == 0){
 			if(strLanguage.equals("en")){
 				documentsNo.append("N/A");
 			}else{			

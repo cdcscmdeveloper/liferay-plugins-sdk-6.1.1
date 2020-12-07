@@ -208,11 +208,17 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 	
-			//R5 #14076 start
-			if(getManagedBean().getQuotationNumber()!= null){
-				RPTRequestDtl rdtl = new RPTRequestDtl();
-				rdtl.setRequestId(resDTO.getRequestId());
-				rdtl.setDocumentNo01(getManagedBean().getQuotationNumber());
+			//R5 #14076 start		
+			RPTRequestDtl rdtl = new RPTRequestDtl();
+			rdtl.setRequestId(resDTO.getRequestId());
+			
+			if(params.get(QtReportConst.QUOTATION_TENDER_ID) != null){
+				if(getManagedBean().getQuotationNumber()!= null){
+					rdtl.setDocumentNo01(getManagedBean().getQuotationNumber());
+				}
+				
+			}	
+			if(rdtl.getDocumentNo01() != null ){
 				addRptRequestDetail(rdtl);	
 			}
 			//R5 #14076 end
