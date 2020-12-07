@@ -4212,9 +4212,9 @@ public class SupplierFinalizationBackingBean extends
 			isBpkCentralContract = isBpkCentralContract(scQt);
 
 			if (isBpkCentralContract) {
-				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#29701
-				//statusIds.add(QTStatusConst.QT_SF_MOF_COMMIEEE);//#29701,  dont use this const, it will causing continues loading when  changing at SF Meeting Decision, selection base on radio button 
-				
+				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27901
+				//statusIds.add(QTStatusConst.QT_SF_MOF_COMMIEEE);//#27901
+
 			} else {
 				statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 			}
@@ -5254,7 +5254,7 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().setRecommendSupplier(true);
 				
 				 // #27502 -- Start				
-				if (isBpkCentralContract) {
+				if (isBpkCentralContract && isQTRefinalized()) {
 					this.getManagedBean().setMofRefinalized(true);
 				}
 				
