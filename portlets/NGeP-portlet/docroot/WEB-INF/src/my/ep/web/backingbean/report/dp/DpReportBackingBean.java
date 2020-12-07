@@ -108,14 +108,32 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			
+			//1 = Item Inquiry No. || Simple Quote No.
+			//2 = LOA No
+			//3 = Purchase In Default No.
+			//4 = Request Note No.
+			
 			//R5 #14076 start		
 			RPTRequestDtl rdtl = new RPTRequestDtl();
 			rdtl.setRequestId(resDTO.getRequestId());
 			
+			if(params.get(DpReportConst.PARAM_PI_NO) != null){	
+				rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_PI_NO));
+			}
 			if(params.get(DpReportConst.PARAM_SQ_NO) != null){	
 				rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_SQ_NO));
-			}	
-			if(rdtl.getDocumentNo01() != null ){
+			}
+			if(params.get(DpReportConst.PARAM_LOA_NUM) != null){	
+				rdtl.setDocumentNo02(params.get(DpReportConst.PARAM_LOA_NUM));
+			}
+			if(params.get(DpReportConst.PARAM_PID_NO) != null){	
+				rdtl.setDocumentNo03(params.get(DpReportConst.PARAM_PID_NO));
+			}
+			if(params.get(DpReportConst.PARAM_RN_NO) != null){	
+				rdtl.setDocumentNo04(params.get(DpReportConst.PARAM_RN_NO));
+			}
+			
+			if(rdtl.getDocumentNo01() != null || rdtl.getDocumentNo02() != null || rdtl.getDocumentNo03() != null || rdtl.getDocumentNo04() != null ){
 				addRptRequestDetail(rdtl);	
 			}
 			//R5 #14076 end
