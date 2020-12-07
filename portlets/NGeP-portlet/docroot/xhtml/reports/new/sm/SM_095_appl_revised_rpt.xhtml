@@ -14,7 +14,7 @@
 
 			<td class="tdContent"><ac:smReportZoneList
 					bBean="#{applRevisedRptBB}" showItemAll="true"
-					disabled="#{applRevisedRptBB.managedBean.flag}" /></td>
+					disabled="#{applRevisedRptBB.managedBean.flag}" required="true"/></td>
 
 			<td class="tdTitle"><p:outputLabel
 					value="#{lbl['lbl.rpt.cmpName']}" /></td>
@@ -28,7 +28,7 @@
 					value="#{lbl['lbl.rpt.supplierType']}" /></td>
 			<td class="tdContent"><p:selectOneMenu
 					value="#{applRevisedRptBB.managedBean.supplierType}"
-					style="width:300px;" required="true"
+					style="width:300px;" 
 					disabled="#{applRevisedRptBB.managedBean.flag}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 						itemValue="#{cc.attrs.allValue}"></f:selectItem>
@@ -50,7 +50,7 @@
 					value="#{lbl['lbl.rpt.applicationType']}" /></td>
 			<td class="tdContent"><p:selectOneMenu
 					value="#{applRevisedRptBB.managedBean.applType}"
-					style="width:300px;" required="true">
+					style="width:300px;" >
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.newAccRegMOF']}"
 						itemValue="N"></f:selectItem>
