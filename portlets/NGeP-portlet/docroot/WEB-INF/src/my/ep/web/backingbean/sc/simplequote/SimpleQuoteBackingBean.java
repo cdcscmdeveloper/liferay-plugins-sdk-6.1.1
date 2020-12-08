@@ -5082,12 +5082,20 @@ public class SimpleQuoteBackingBean extends
 				quoteReqDTO.setUserId(facesScopes.getUserSessionBean()
 						.getUserId());
 				quoteReqDTO.setFetchSubEntity(true);
+				
+				//#25396 - start
+				Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);
+				//#25396 - end
+				
 				QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
 						quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				Long supplierId = getSupplierId();
-				quoteReqDTO.setSupplierId(supplierId);
 				
+				//#25396 - start (comment out)
+			    /*Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);*/
+				//#25396 - end				
 				// clear session data.
 				renewSesionObject();
 

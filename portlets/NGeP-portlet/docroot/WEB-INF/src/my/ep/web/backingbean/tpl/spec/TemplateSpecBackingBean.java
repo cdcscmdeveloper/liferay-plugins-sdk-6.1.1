@@ -2083,6 +2083,11 @@ public class TemplateSpecBackingBean extends
 				TplSpecQuestion specQuestion = tplSpecAnswer
 						.getTplSpecQuestion();
 				
+				//#25396 - start
+				if(specQuestion.getClPriceTypeCode() == null)
+					break;
+				//#25396 - end
+				
 				String priceType = null;
 				if(specQuestion.getClPriceTypeCode()!= null){
 					 priceType = specQuestion.getClPriceTypeCode()

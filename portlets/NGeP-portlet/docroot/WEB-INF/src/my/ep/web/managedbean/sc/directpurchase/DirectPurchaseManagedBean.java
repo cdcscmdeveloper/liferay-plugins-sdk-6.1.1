@@ -249,6 +249,15 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							}
 							reqDTO.setSupplierIds(supplierIds);
 						}
+						//#25396 - start
+						else{
+							if(isViewAsSupplier()){
+								List<Long> supplierIds = new ArrayList<Long>();
+								supplierIds.add(supplierSearchReqDTO.getUserId());
+								reqDTO.setSupplierIds(supplierIds);
+							}
+						}							
+						//#25396 - end
 
 					} finally {
 						supplierSearchSO = null;
