@@ -1185,7 +1185,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 				}
-				if(isCommitteeFormedFirstTime(qt.getQtId(), committeeType)){
+				Long statusId = this.getManagedBean().getCurrentStatusId()!=null ?  this.getManagedBean().getCurrentStatusId(): 0L;
+				if (!Arrays
+						.asList(new Long[] {
+								QTStatusConst.CMT_PENDING_REAPPROVAL,
+								QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION_APPROVAL })
+						.contains(statusId)) {
 					successMessage(getMessgeConstant(this.getManagedBean().getAction()),
 							getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
 							qt.getQtNo(), true);
