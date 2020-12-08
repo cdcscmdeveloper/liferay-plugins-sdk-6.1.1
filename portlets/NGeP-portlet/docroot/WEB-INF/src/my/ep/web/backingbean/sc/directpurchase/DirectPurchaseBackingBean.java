@@ -703,6 +703,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		sqBackingBean.supplierViewSearch(docIdStr);
 		sqBackingBean.getManagedBean().setDpObj(dpObj);
 		sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		sqBackingBean.getManagedBean().setSaveButtonFlg(Boolean.FALSE); //#25396
+		sqBackingBean.getManagedBean().setSubmitButtonFlg(Boolean.FALSE); //#25396
 	}
 	
 	/**
