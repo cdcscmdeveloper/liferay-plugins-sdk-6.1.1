@@ -3548,11 +3548,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				if(this.getManagedBean().isReapproval()){//#25037 start
 					if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-						String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-						committeeType = StringUtils.isEmpty(committeeType) ? "" : this.getParameterDesc(ParameterConst.COMMITTE_TYPE, committeeType);
+						String committeeNames = "";
+						if(committeResDto!=null){
+							if(CollectionUtils.isNotEmpty(committeResDto.getQtCommittes())){
+								int count = 0;
+								for(ScQtCommittee qtc: committeResDto.getQtCommittes()){
+									Long statusId = qtc.getScCommittee().getCommitteStatus()!=null ? 
+											qtc.getScCommittee().getCommitteStatus().getStatusId(): 0L;
+									if(Arrays.asList(new Long[]{QTStatusConst.CMT_PENDING_APPROVAL, QTStatusConst.CMT_PENDING_REVISION_APPROVAL}).contains(statusId)){
+										count++;
+										String code = qtc.getScCommittee().getCommitteeType().getParameterCode();
+										committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
+										if(count<committeResDto.getQtCommittes().size()){
+											committeeNames = committeeNames.concat("/");
+										}
+									}
+								}
+							}
+						}
 						String procurementMode = this.getParameterDesc(scQt.getProcurementMode());
 						String qtNo = scQt.getQtNo();
-						successMessage(MessageConst.INFO_760504, new String[]{committeeType, procurementMode, qtNo}, true);					}
+						successMessage(MessageConst.INFO_760504, new String[]{committeeNames, procurementMode, qtNo}, true);					}
 				}else{//#25037 end
 					successMessage(getMsgCodeByTaskName(taskName), ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
