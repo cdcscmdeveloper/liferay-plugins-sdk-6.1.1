@@ -535,9 +535,9 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				/*if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds())) {
 					getManagedBean().getSelectedQtIds().clear(); 
 				}*/
-			// #25627 - End.
-				getManagedBean().setDisableAssignTo(true);
-				getManagedBean().setDisableSubmit(true);
+				//getManagedBean().setDisableAssignTo(true);
+				//getManagedBean().setDisableSubmit(true);
+				// #25627 - End.
 				
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
