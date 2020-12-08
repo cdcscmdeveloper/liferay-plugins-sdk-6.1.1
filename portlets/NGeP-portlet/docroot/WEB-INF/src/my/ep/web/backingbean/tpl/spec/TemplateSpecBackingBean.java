@@ -2167,6 +2167,11 @@ public class TemplateSpecBackingBean extends
 			for (TplSpecQuestion specQuestion : specQuestions) {
 				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion
 						.getQuestionType())) {
+					//#25396 - start
+					if(specQuestion.getClPriceTypeCode() == null)
+						break;
+					//#25396 - end				
+					
 					String priceType = specQuestion.getClPriceTypeCode()
 							.getParameterCode();
 
