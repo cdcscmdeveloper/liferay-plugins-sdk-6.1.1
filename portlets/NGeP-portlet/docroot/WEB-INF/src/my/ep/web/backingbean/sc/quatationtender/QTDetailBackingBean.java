@@ -3551,15 +3551,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						String committeeNames = "";
 						if(committeResDto!=null){
 							if(CollectionUtils.isNotEmpty(committeResDto.getQtCommittes())){
+								List<ScQtCommittee> approveList = new ArrayList<ScQtCommittee>();
 								int count = 0;
 								for(ScQtCommittee qtc: committeResDto.getQtCommittes()){
 									Long statusId = qtc.getScCommittee().getCommitteStatus()!=null ? 
 											qtc.getScCommittee().getCommitteStatus().getStatusId(): 0L;
 									if(Arrays.asList(new Long[]{QTStatusConst.CMT_PENDING_APPROVAL, QTStatusConst.CMT_PENDING_REVISION_APPROVAL}).contains(statusId)){
+										approveList.add(qtc);
+									}
+								}
+								if(CollectionUtils.isNotEmpty(approveList)){
+									for(ScQtCommittee qtc: approveList){
 										count++;
 										String code = qtc.getScCommittee().getCommitteeType().getParameterCode();
 										committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
-										if(count<committeResDto.getQtCommittes().size()){
+										if(count<approveList.size()){
 											committeeNames = committeeNames.concat("/");
 										}
 									}
