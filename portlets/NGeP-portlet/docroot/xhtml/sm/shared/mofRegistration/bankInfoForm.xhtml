@@ -124,6 +124,7 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"					
 					id="bankDelBtnId" partialSubmit="true"
 					process="bankInfPan" update=":form:tt:bankDt ,sfieldset, bankDelBtnId" 
+					disabled="#{backingBean.managedBean.itemDeleteButtonShow}"
 					action="#{backingBean.checkActiveAndPendingTransaction}"/>
 			</div>
 			
