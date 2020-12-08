@@ -56,6 +56,12 @@
 				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">				
 					
+				<!-- #17906 - start -->
+				<p:ajax event="toggleSelect"
+					listener="#{backingBean.itemRowSelectCheckbox}" 					 
+					update=":form:tt:bankDelBtnId"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+				<!-- #17906 - end -->
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{backingBean.itemRowSelectCheckbox}" 					 
 					update=":form:tt:bankDelBtnId"
