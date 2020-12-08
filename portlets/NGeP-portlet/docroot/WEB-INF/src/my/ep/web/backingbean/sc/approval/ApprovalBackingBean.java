@@ -1185,7 +1185,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 				}
-				if(isCommitteeFormedFirstTime(qt.getQtId(), committeeType)){
+				Long statusId = this.getManagedBean().getCurrentStatusId()!=null ?  this.getManagedBean().getCurrentStatusId(): 0L;
+				if (!Arrays
+						.asList(new Long[] {
+								QTStatusConst.CMT_PENDING_REAPPROVAL,
+								QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION_APPROVAL })
+						.contains(statusId)) {
 					successMessage(getMessgeConstant(this.getManagedBean().getAction()),
 							getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
 							qt.getQtNo(), true);
@@ -2247,10 +2252,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		
+		String committeeType = "";
+		if(CollectionUtils.isNotEmpty(approvalRequests)){
+			committeeType = approvalRequests.get(0).getApprovalType().getParameterCode();
+		}
+		
 		reqDTO.setDocId(this.getManagedBean().getQt().getQtId());
-		reqDTO.setDocType(paramTypes.get(0));
+		reqDTO.setDocType(committeeType);
 
-		ScWorkFlowStatus  wfStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		ScWorkFlowStatus wfStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		if(wfStatus!=null){
 			PmStatus status = wfStatus.getPmStatus();
 			if(Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(status.getStatusId())
