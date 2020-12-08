@@ -558,8 +558,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			String taskId = originalServletRequest.getParameter("taskId");
 			//#25956 - Start (view Contract Amendment url from notification)
 			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-			log.info("Check Putra Amendment preRenderView taskId*******"+taskId);
-			log.info("Check Putra Amendment preRenderView contractVerId*******"+contractVerId);
 			
 			if(contractVerId!=null) {
 				ctReqDTO = new ContractReqDTO();
@@ -631,7 +629,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				this.getManagedBean().setOutComes(str_array);
 			}
 		}
-			log.info("Check Button :"+this.getManagedBean().getOutComes().toString());
 			//#25956 - End
 
 			/* Setting save button as per requirement*/
