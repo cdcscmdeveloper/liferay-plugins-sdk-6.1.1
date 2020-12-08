@@ -1991,21 +1991,24 @@ public class QTCommitteBackingBean extends
 					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
 				return false;
 			}else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
-				if(SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)){
-					if(QTStatusConst.CMT_COMPLETED.equals(committeStatus) 
-							&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType) 
-							&& !Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(this.getCurrentQtStatusId())){
-						return false;
-					}
-				}
 				if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
 				} else if ((SCProcessNameConst.ASSIGN_TEC_COMMITTEE.equalsIgnoreCase(taskName)
 								&& (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)
 										|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType)))) {
 				} else if ((SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equalsIgnoreCase(taskName)
 								&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(commType))) {
-				} else if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
-						|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				} else if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) 
+								|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
+					if(QTStatusConst.CMT_COMPLETED.equals(committeStatus) 
+							&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType) 
+							&& !Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(this.getCurrentQtStatusId())){
+						return false;
+					}
+					if(QTStatusConst.QT_EVALUATION_PROPOSAL.equals(currentStatusId)){
+						if(Arrays.asList(new String[]{"EC", "OC", "TEC", "FEC"}).contains(commType)){
+							return true;
+						}
+					}
 					if (QTStatusConst.QT_RE_EVALUATION.equals(currentStatusId)) {
 						ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 						if (scQtFinalization == null) {
