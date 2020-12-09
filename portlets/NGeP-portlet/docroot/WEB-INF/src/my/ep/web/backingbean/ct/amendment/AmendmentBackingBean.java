@@ -990,10 +990,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getCtItemList().clear();
 			ctBackingBean.getManagedBean().getCtItemServiceList().clear();
 			//Bug #29323
-			AmendmentBackingBean abb=new AmendmentBackingBean();
-			abb.getManagedBean().reassignValue(true);
-			abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
-			abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+			// test Change Code for #25956 & Bug #29323
+//			AmendmentBackingBean abb=new AmendmentBackingBean();
+			getManagedBean().reassignValue(true);
+			getManagedBean().getServiceListingPagingDataModel().reloadData();
+			getManagedBean().getContractListingPagingDataModel().reloadData();
 			getManagedBean().setItemProductExist(false);
 			getManagedBean().setItemServiceExist(false);
 			ctBackingBean.getManagedBean().setShowItem(null);

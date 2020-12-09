@@ -176,7 +176,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	public void reassignValue(boolean value) 
 	{
-		readOnly = value;	
+		//test Change Code for #25956 & Bug #29323
+//		readOnly = value;	
 		resetval= value;
 		servicecollapse=value;
 		prodcollapse=value;
