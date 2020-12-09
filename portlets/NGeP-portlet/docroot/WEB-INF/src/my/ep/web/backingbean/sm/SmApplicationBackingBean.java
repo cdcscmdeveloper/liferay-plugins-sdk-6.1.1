@@ -13302,33 +13302,46 @@ public class SmApplicationBackingBean extends
 //	17906	
 	public void checkActiveAndPendingTransaction(){
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		//#17906 - start
+		boolean hasActiveTransactionContractManagement = false, hasActiveTransactionFulfilment = false;
+		
 		if (getManagedBean().getSelectedBanks().size() > 0) {
 			for (int i = 0; i < getManagedBean().getSelectedBanks().size(); i++) {
 				SmSupplierBank bank = getManagedBean().getSelectedBanks().get(i);
-				boolean hasActiveTransactionContractManagement = SmApplicationUtil
-						.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo());
-				boolean hasActiveTransactionFulfilment = SmApplicationUtil
-						.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo());				
-				
-				String labelNameVal = "";
-				if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
-					//#17906
-					String msgId = "bankDeleteMsg";
-					if (hasActiveTransactionContractManagement) {
-						getManagedBean().setItemDeleteButtonShow(true);
-						FacesContext.getCurrentInstance().addMessage(msgId, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
-										new String[] { labelNameVal })));
-					} 
-					
-					if (hasActiveTransactionFulfilment) {
-						getManagedBean().setItemDeleteButtonShow(true);
-						FacesContext.getCurrentInstance().addMessage(msgId, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
-									new String[] { labelNameVal })));
-					} 
-				}
+				hasActiveTransactionContractManagement = SmApplicationUtil
+						.hasActiveTransactionForContractManagement(currSupp, bank.getAccountNo())
+						|| hasActiveTransactionContractManagement;
+				hasActiveTransactionFulfilment = SmApplicationUtil
+						.hasActiveTransactionForFulfilment(currSupp, bank.getAccountNo())
+						|| hasActiveTransactionFulfilment;				
+			
 			}
+			String labelNameVal = "";
+			if (hasActiveTransactionContractManagement || hasActiveTransactionFulfilment) {
+				String msgId = "bankDeleteMsg";
+				getManagedBean().setItemDeleteButtonShow(true);
+				if (hasActiveTransactionContractManagement && hasActiveTransactionFulfilment) {
+					String msg = "<table width='100%' style='font-size:12px'><tr><td style=\"vertical-align: baseline;\">i) </td><td style='text-align: justify'>"
+							+ SmCommonUtil.getMessage("lbl.sm.alert.active.transaction", null)
+							+ "</td></tr><tr><td style=\"vertical-align: baseline;\">ii) </td><td style='text-align: justify'>"
+							+ SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction", null)
+							+"</td></tr></table>";
+					FacesContext.getCurrentInstance().addMessage(msgId, 
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, msg));
+					
+				} else if (hasActiveTransactionContractManagement) {					
+					FacesContext.getCurrentInstance().addMessage(msgId, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							SmCommonUtil.getMessage("lbl.sm.alert.active.transaction",
+									new String[] { labelNameVal })));
+					
+				} else if (hasActiveTransactionFulfilment) {
+					FacesContext.getCurrentInstance().addMessage(msgId, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.alert.other.active.transaction",
+								new String[] { labelNameVal })));
+				} 
+			}
+			//#17906 - end
+			
 			if(!getManagedBean().isItemDeleteButtonShow() ){
 				RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 			}
