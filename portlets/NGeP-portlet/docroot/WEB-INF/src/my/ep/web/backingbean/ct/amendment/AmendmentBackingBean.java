@@ -202,10 +202,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
 		}
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
-		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
-			getManagedBean().setViewOnly(true);
+		// Remove Code for #25956
+//		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+//		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
+//		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
+//			getManagedBean().setViewOnly(true);
 	}
 
 	/**
