@@ -134,10 +134,12 @@
 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" lazy="true"
 		rowIndexVar="rowIndex" rows="10" id="taskListMyTaskId"
 		style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+		
 		<ac:paginator for="taskListMyTaskId"></ac:paginator>
-
-		<p:column width="5%;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByDocNo}">
-			<f:facet name="header">				
+		<p:ajax event="sort" listener="#{bpmTasklistBackingBean.orderByMyTaskList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
+		
+		<p:column width="5%;" sortBy="#{tasks.docNumber}" >
+			<f:facet name="header">	
 				#{lbl['lbl.bpm.doc.no']}				
 			</f:facet>
 			<!-- start updated for #24968 -->
@@ -149,20 +151,19 @@
 			</h:panelGroup>
 			<!-- end updated for #24968 -->
 		</p:column>
-		<p:column width="20%;" style="white-space:normal;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
+		
+		<p:column width="20%;" style="white-space:normal;" sortBy="#{tasks.docType}" >
 			<f:facet name="header">
-					#{lbl['lbl.bpm.doc.type']}
-				</f:facet>
-				#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}
-				
-			</p:column>
+				#{lbl['lbl.bpm.doc.type']}
+			</f:facet>
+			#{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,tasks.docType)}				
+		</p:column>
 
-		<p:column style="white-space:normal;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
+		<p:column style="white-space:normal;" sortBy="#{tasks.title}" >
 			<f:facet name="header">
-					#{lbl['lbl.bpm.description']}
-				</f:facet>
-			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}" onclick="blockWidget.show();"
-					oncomplete="">
+				#{lbl['lbl.bpm.description']}
+			</f:facet>
+			<p:commandLink action="#{bpmTasklistBackingBean.navigateToURL}" onclick="blockWidget.show();" oncomplete="">
 				<f:param name="taskId" value="#{tasks.taskId}" />
 				<f:param name="process" value="#{tasks.process}" />
 				<f:param name="taskName" value="#{tasks.taskName}" />
@@ -172,9 +173,9 @@
 				<!-- 26238 - Disciplinary Action 28111 -->
 				<f:param name="docNo" value="#{tasks.docNumber}" />
 			</p:commandLink>
-
 		</p:column>
-		<p:column width="10%" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
+		
+		<p:column width="10%" sortBy="#{tasks.createDate}" >
 			<f:facet name="header">
 					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
@@ -182,8 +183,8 @@
 				<f:convertDateTime
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 			</h:outputText>
-
 		</p:column>
+		
 		<p:column width="10%">
 			<f:facet name="header">
 					#{lbl['lbl.bpm.due.date']}
@@ -196,17 +197,13 @@
 				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
 			</p:outputPanel>
 		</p:column>
-		<p:column width="18%;" style="white-space:normal;" sortBy="#{taskListMyTaskId.docNo}" sortFunction="#{bpmTasklistBackingBean.orderByCreatedDate}">
+		
+		<p:column width="18%;" style="white-space:normal;" sortBy="#{tasks.docStatus}" >
 			<f:facet name="header">
-					#{lbl['lbl.bpm.status']}
-				</f:facet>
-				
-				#{bpmTasklistBackingBean.applicationStatus(tasks.docStatus)}
-				
-				
-
-			</p:column>
-
+				#{lbl['lbl.bpm.status']}
+			</f:facet>				
+			#{bpmTasklistBackingBean.applicationStatus(tasks.docStatus)}
+		</p:column>
 
 		<p:column width="6%">
 			<f:facet name="header">
@@ -217,7 +214,6 @@
 				onclick="this.disabled=true;"
 				action="#{bpmTasklistBackingBean.releaseTask}" update="@form"
 				rendered="#{tasks.claimed}">
-
 				<f:param name="taskId" value="#{tasks.taskId}" />
 			</p:commandButton>
 
@@ -226,9 +222,6 @@
 			</h:panelGroup>
 
 		</p:column>
-
-
-
 
 
 	</p:dataTable>
