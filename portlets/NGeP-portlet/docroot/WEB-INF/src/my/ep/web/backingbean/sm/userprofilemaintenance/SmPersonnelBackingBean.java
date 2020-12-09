@@ -138,10 +138,6 @@ public class SmPersonnelBackingBean extends
 			countAuthUserWithRole(smPersonnelList);
 			countContractSigner(smPersonnelList);
 			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
-			if (getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress() != null)
-				getManagedBean().setTempAddress(
-						getManagedBean().getBasicSmPersonnelPermanentAddress()
-								.getSmAddress());
 			
 			SmCommonUtil.redirectToPage("userProfileSearch.xhtml", "", null, null);
 			}
