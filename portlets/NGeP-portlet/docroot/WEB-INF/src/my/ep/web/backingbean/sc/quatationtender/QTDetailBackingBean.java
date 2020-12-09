@@ -9426,28 +9426,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	// 25077 - Start
 	public void checkPopUpBPKApprovalNeeded(boolean showPopup){
-		boolean checkBpkSetting = false;
-		String taskName = this.getManagedBean().getTaskName();
-		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
-		
-		if(Arrays.asList(SCProcessNameConst.REVISE_QT_SCHEDULE).contains(taskName)){
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			ScQt qt = this.getManagedBean().getQt();
-			bpmReqDTO.setDocNumber(qt.getQtNo());
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-			 for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
-				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
-					 if(Arrays.asList(SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING).contains(currentVO.getTaskName())){
-						checkBpkSetting = true; 
-					    break;
-					 }
-				 }
-			 }
-		}
-		
 		boolean checkBpkApproval = false;
 		IQTDetailSO detailSO;
 		try {
@@ -9455,14 +9433,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
+			Long statusId = scQt.getQtStatus().getStatusId();
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_BPK);
 			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
 			if(null!=resDTO && null!=resDTO.getQtApproval()){
 				ScQtApproval approval = resDTO.getQtApproval();
-				if(null!= this.getManagedBean().getTaskName() && 
-					SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(
-		            		this.getManagedBean().getTaskName())){
+				if(null != statusId && statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
 					if(this.getManagedBean().isMaintanceFlow() == false && 
 						approval.getApprovalCategory().getParameterCode()
 							.equals(ParameterConst.APPROVAL_CATEGORY_BPK)) {
@@ -9474,10 +9451,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			detailSO = null;
 		}
 	
-		if(checkBpkApproval){
-			if(!checkBpkSetting && showPopup){
+		if(checkBpkApproval && showPopup){
 				RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlg.show()");
-			}
 		}   
 	}
 	
@@ -9489,14 +9464,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			ScQt scQt = this.getManagedBean().getQt();
+			Long statusId = scQt.getQtStatus().getStatusId();
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_BPK);
 			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
 			if(null!=resDTO && null!=resDTO.getQtApproval()){
 				ScQtApproval approval = resDTO.getQtApproval();
-				if(null!= this.getManagedBean().getTaskName() && 
-					SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(
-		            		this.getManagedBean().getTaskName())){
+				if(null != statusId && statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
 					if(this.getManagedBean().isMaintanceFlow() == false && 
 						approval.getApprovalCategory().getParameterCode()
 							.equals(ParameterConst.APPROVAL_CATEGORY_BPK)) {
