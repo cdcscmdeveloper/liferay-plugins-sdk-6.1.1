@@ -25,7 +25,6 @@ import java.util.Map;
 import my.ep.factory.EpLogger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -176,8 +175,7 @@ import org.primefaces.model.UploadedFile;
  * @since 13/11/2013	 
  */
 @ManagedBean(name="ctBackingBean")
-//@ViewScoped
-@RequestScoped
+@ViewScoped
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	private static Logger log = EpLogger.getLogger(ContractBackingBean.class);
