@@ -10765,9 +10765,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 // 14921 - Start
 	public void saveDraftItemSupTemp(){
 		log.info("saveDraftItemSupTemp");
-		if(	this.getManagedBean().getCloneCmSupplierItemLs() !=null &&this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+		if(	this.getManagedBean().getDraftSearchDataModel() !=null){ 
 			List<CmSupplierItem> listToSave = new ArrayList<CmSupplierItem>();
-			for(CmSupplierItem item: this.getManagedBean().getCloneCmSupplierItemLs()){
+			log.info("saveDraftItemSupTempList" + this.getManagedBean().getDraftSearchDataModel().getList().size());			
+			for(CmSupplierItem item: this.getManagedBean().getDraftSearchDataModel().getList()){
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 				CatalogueResDTO resDTO = new CatalogueResDTO();
 				ICatalogueSO catalogueSO = null;
