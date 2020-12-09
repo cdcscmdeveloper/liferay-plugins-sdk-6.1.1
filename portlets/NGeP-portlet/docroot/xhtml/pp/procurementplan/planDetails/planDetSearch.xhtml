@@ -14,7 +14,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			
 			
 			<tr>
-				<td>
+				<td style="width:30%;">
 				<table class="ppTwoTable">
 					<tr>
 						<td>
@@ -62,7 +62,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</tr>
 				</table>		
 				</td>
-				<td>		
+				<td style="width:45%;">		
 					<table class="ppTwoTable">
 					<tr>
 					<!-- fields rendered conditionally; pplan or eplan -->
@@ -113,6 +113,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateFrom}" readonlyInput="true"
 									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									maxdate="#{pPlanBackingBean.managedBean.maxYear}"
 									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 								<!-- 201111@akmal - Enhancement27624 - End -->
 								</td>
@@ -124,6 +125,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateTo}" readonlyInput="true"
 									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									maxdate="#{pPlanBackingBean.managedBean.maxYear}"
 									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 								<!-- 201111@akmal - Enhancement27624 - End -->
 								</td>
@@ -155,6 +157,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</tr>	
 					</table>	
 				</td>
+				<td style="width:10%;"></td>
 			</tr>
 			
 		</table>
