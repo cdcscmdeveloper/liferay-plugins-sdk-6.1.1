@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.loa;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +14,13 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -30,6 +33,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
 // TODO: Auto-generated Javadoc
@@ -295,6 +299,17 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean flowamt=null;
 
+	//#29006 - start
+	private boolean specificationAndSupplierDialogFlag = false;
+	private boolean updateSupplierInstructionFlag = false;
+	private List<String> scLoiLoaItemSpecsList;
+	private boolean newSupplierUpdatedFlag = false;
+	private boolean updatedLampiranA3DownloadedFlag = false;
+	private String newSupplierOffered;
+	private String newSupplierJustification;
+	private boolean oldNewSuppOfferSameFlag;
+	//#29006 - end
+	
 	//#19336
 		private boolean isValidatewitness=false;
     /**
@@ -1649,6 +1664,72 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setValidatewitness(boolean isValidatewitness) {
 		this.isValidatewitness = isValidatewitness;
 	}
+	
+	//#29006 - start
+	public boolean isSpecificationAndSupplierDialogFlag() {
+		return specificationAndSupplierDialogFlag;
+	}
+
+	public void setSpecificationAndSupplierDialogFlag(boolean specificationAndSupplierDialogFlag) {
+		this.specificationAndSupplierDialogFlag = specificationAndSupplierDialogFlag;
+	}
+	
+	public boolean isUpdateSupplierInstructionFlag() {
+		return updateSupplierInstructionFlag;
+	}
+
+	public void setUpdateSupplierInstructionFlag(boolean updateSupplierInstructionFlag) {
+		this.updateSupplierInstructionFlag = updateSupplierInstructionFlag;
+	}
+
+	public List<String> getScLoiLoaItemSpecsList() {
+		return scLoiLoaItemSpecsList;
+	}
+
+	public void setScLoiLoaItemSpecsList(List<String> scLoiLoaItemSpecsList) {
+		this.scLoiLoaItemSpecsList = scLoiLoaItemSpecsList;
+	}
+	
+	public boolean isNewSupplierUpdatedFlag() {
+		return newSupplierUpdatedFlag;
+	}
+
+	public void setNewSupplierUpdatedFlag(boolean newSupplierUpdatedFlag) {
+		this.newSupplierUpdatedFlag = newSupplierUpdatedFlag;
+	}
+
+	public boolean isUpdatedLampiranA3DownloadedFlag() {
+		return updatedLampiranA3DownloadedFlag;
+	}
+
+	public void setUpdatedLampiranA3DownloadedFlag(boolean updatedLampiranA3DownloadedFlag) {
+		this.updatedLampiranA3DownloadedFlag = updatedLampiranA3DownloadedFlag;
+	}
+	
+	public String getNewSupplierOffered() {
+		return newSupplierOffered;
+	}
+
+	public void setNewSupplierOffered(String newSupplierOffered) {
+		this.newSupplierOffered = newSupplierOffered;
+	}
+
+	public String getNewSupplierJustification() {
+		return newSupplierJustification;
+	}
+
+	public void setNewSupplierJustification(String newSupplierJustification) {
+		this.newSupplierJustification = newSupplierJustification;
+	}
+	
+	public boolean isOldNewSuppOfferSameFlag() {
+		return oldNewSuppOfferSameFlag;
+	}
+
+	public void setOldNewSuppOfferSameFlag(boolean oldNewSuppOfferSameFlag) {
+		this.oldNewSuppOfferSameFlag = oldNewSuppOfferSameFlag;
+	}
+	//#29006 - end
 
 	public String getSourcePage() {
 		return sourcePage;
