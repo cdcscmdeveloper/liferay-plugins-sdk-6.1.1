@@ -13367,20 +13367,24 @@ public class SmApplicationBackingBean extends
 					+"</td></tr></table>";
 			FacesContext.getCurrentInstance().addMessage("activecontract", 
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, msg));
-		//#17906 - end
 			
 		} else if (hasActiveTransactionContractManagement) {
 			getManagedBean().setPendingTransaction(true);
+			String msg = "<div style='text-align: justify'>"
+					+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied", new String[] { labelNameVal })
+					+"</div>";
 			FacesContext.getCurrentInstance().addMessage("activecontract", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",
-							new String[] { labelNameVal })));
+					msg));
 			
 		} else if (hasActiveTransactionFulfilment) {
 			getManagedBean().setPendingTransaction(true);
+			String msg = "<div style='text-align: justify'>"
+					+SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied", new String[] { labelNameVal })
+					+"</div>";
 			FacesContext.getCurrentInstance().addMessage("pendingtransaction", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-				SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",
-						new String[] { labelNameVal })));
+					msg));
 		}
+		//#17906 - end
 
 		// assign cheque signatories
 		Long[] chequSigns = new Long[shareBankBean.getSmChequeSignatories()
