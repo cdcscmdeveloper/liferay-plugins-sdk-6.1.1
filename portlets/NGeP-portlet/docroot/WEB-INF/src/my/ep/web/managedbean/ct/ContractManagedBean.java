@@ -162,6 +162,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean isErr100034 = false;
 	private boolean minQtyCheck = false;
 	// End - 28479	
+	
+	private boolean hasAmendmentLoaNo = false; //15851
 
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -1374,6 +1376,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	public void setMinQtyCheck(boolean minQtyCheck) {
 		this.minQtyCheck = minQtyCheck;
+	}
+
+	public boolean isHasAmendmentLoaNo() {
+		return hasAmendmentLoaNo;
+	}
+
+	public void setHasAmendmentLoaNo(boolean hasAmendmentLoaNo) {
+		this.hasAmendmentLoaNo = hasAmendmentLoaNo;
 	}
 	
 	// End - 28479

@@ -161,6 +161,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -815,6 +816,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 									*/
 				//}
 				
+			}
+			
+			//Enhancement 15851 - Prefix for supplemental contract letter
+			//start
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
+				if(StringUtils.isNotBlank(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo())){
+					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
+				}
 			}
 			//Enhancement #26186 end - retrieve disciplinary info
 			
