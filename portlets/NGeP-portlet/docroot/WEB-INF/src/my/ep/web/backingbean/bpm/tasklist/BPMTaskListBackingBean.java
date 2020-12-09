@@ -1,9 +1,8 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,6 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.record.OldCellRecord;
 
 import com.liferay.compat.portal.util.PortalUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -56,7 +54,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 @ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
 @SessionScoped
-public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean> {
+public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean> implements Serializable{
 
 	/**
 	 * 
@@ -80,13 +78,13 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 	
-	private boolean sortAscending = true;
+	private static boolean sortAscending = true;
 
 	public BPMTaskListBackingBean() {
 
 		if(this.getManagedBean().getBpmMap()==null){
-			this.getManagedBean().setBpmMap(new HashMap());
-			Map temp = new HashMap();
+			this.getManagedBean().setBpmMap(new HashMap<Object, Object>());
+			Map<String, String> temp = new HashMap<String, String>();
 
 			temp.put("UNSPSC Code Request", "review-unspsc-code");
 			temp.put("Extension Code Request", "review-extension");
@@ -1016,142 +1014,35 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	}
 	
-	public String orderByDocNo() {
-		log.info("......................orderByDocNo");
-		this.getManagedBean().setViewBy("");
-		this.getManagedBean().setViewByGroup("");
-		this.getManagedBean().setDocNo("");
-		this.getManagedBean().setDocNoGroup("");
-		this.getManagedBean().setTaskDesc("");
-		this.getManagedBean().setTaskDescGroup("");
-		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
-		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
-		this.getManagedBean().setDocStatusGroup(0);
-		this.getManagedBean().setDocTypeGroup("");
-		//this.getManagedBean().setAssignment("ALL");
-
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		String docTypeId = originalServletRequest.getParameter("docTypeId");
-
-		if (docTypeId != null && !docTypeId.isEmpty()) {
-			this.getManagedBean().setDocType(docTypeId);
-			originalServletRequest.getParameterMap().remove("docTypeId");
-		} else {
-			this.getManagedBean().setDocType("");
-		}
-		//this.getManagedBean().getTaskListDataModel().reloadData();
-		//this.getManagedBean().getTaskListGroupDataModel().reloadData();
-		//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	public void orderByMyTaskList() {
+		
+		//this.getManagedBean().setSort_by(BpmConstants.SORT_BY_DOCNUMBER);
+		this.getManagedBean().setAscending(sortAscending);
 		
 		if (sortAscending) {
-			log.info("enter sorting method");
-			// ascending order
-			Collections.sort(this.getManagedBean().getTaskListGroupDataModel().getList(), new Comparator<WorklistItemVO>() {
-
-				@Override
-				public int compare(WorklistItemVO w1, WorklistItemVO w2) {
-					System.out.println("masuk masuk compare ");
-					System.out.println("value w1 ="+w1.getDocNumber());
-					System.out.println("value w2 ="+w2.getDocNumber());
-					return w1.getDocNumber().compareTo(w2.getDocNumber());
-				}
-
-			});
-			sortAscending = false;
-
+			sortAscending =  false;
 		} else {
-
-			// descending order
-			Collections.sort(this.getManagedBean().getTaskListGroupDataModel().getList(), new Comparator<WorklistItemVO>() {
-
-				@Override
-				public int compare(WorklistItemVO w1, WorklistItemVO w2) {
-					return w2.getDocNumber().compareTo(w1.getDocNumber());
-				}
-
-			});
 			sortAscending = true;
-		}
-
+		}		
 		
-		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
-		
-
-		return null;
+//		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 	}
 	
-	public String orderByCreatedDate() {
-		log.info("......................orderByCreatedDate");
-		this.getManagedBean().setViewBy("");
-		this.getManagedBean().setViewByGroup("");
-		this.getManagedBean().setDocNo("");
-		this.getManagedBean().setDocNoGroup("");
-		this.getManagedBean().setTaskDesc("");
-		this.getManagedBean().setTaskDescGroup("");
-		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
-		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
-		this.getManagedBean().setDocStatusGroup(0);
-		this.getManagedBean().setDocTypeGroup("");
-		this.getManagedBean().setSort_by("DOCNUMBER");
-		//this.getManagedBean().setAssignment("ALL");
+	public void orderByGroupTaskList() {
 
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		String docTypeId = originalServletRequest.getParameter("docTypeId");
-
-		if (docTypeId != null && !docTypeId.isEmpty()) {
-			this.getManagedBean().setDocType(docTypeId);
-			originalServletRequest.getParameterMap().remove("docTypeId");
-		} else {
-			this.getManagedBean().setDocType("");
-		}
-		//this.getManagedBean().getTaskListDataModel().reloadData();
-		this.getManagedBean().getTaskListGroupDataModel().reloadData();
-		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		//this.getManagedBean().setSort_by(BpmConstants.SORT_BY_DOCNUMBER);
+		this.getManagedBean().setAscending(sortAscending);
 		
 		if (sortAscending) {
-			log.info("enter sorting method");
-			// ascending order
-			Collections.sort(this.getManagedBean().getTaskListGroupDataModel().getList(), new Comparator<WorklistItemVO>() {
-
-				@Override
-				public int compare(WorklistItemVO w1, WorklistItemVO w2) {
-					// TODO Auto-generated method stub
-					System.out.println("masuk masuk compare ");
-					System.out.println("value w1 ="+w1.getCreateDate());
-					System.out.println("value w2 ="+w2.getCreateDate());
-					return w1.getCreateDate().compareTo(w2.getCreateDate());
-				}
-
-			});
-			sortAscending = false;
-
+			sortAscending =  false;
 		} else {
-
-			// descending order
-			Collections.sort(this.getManagedBean().getTaskListGroupDataModel().getList(), new Comparator<WorklistItemVO>() {
-
-				@Override
-				public int compare(WorklistItemVO w1, WorklistItemVO w2) {
-					// TODO Auto-generated method stub
-					return w2.getDocNumber().compareTo(w1.getDocNumber());
-				}
-
-			});
 			sortAscending = true;
-		}
-
+		}		
 		
-		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+//		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 		
 
-		return null;
 	}
 }

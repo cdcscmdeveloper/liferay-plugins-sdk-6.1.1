@@ -3,8 +3,6 @@ package my.ep.web.managedbean.bpm.tasklist;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +90,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
-	private static Map bpmMap = null;
+	private static Map<?, ?> bpmMap = null;
 	private String processName;
 	private String[] action;
 	private String taskId;
@@ -464,7 +462,23 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				//sort by
-				reqDTO.setSortBy(getSort_by());
+				//log.info("sortField = "+this.getSortField());
+				if (this.getSortField() != null) {
+					if (this.getSortField().equalsIgnoreCase("docNumber")) {
+						reqDTO.setSortBy(BpmConstants.SORT_BY_DOCNUMBER);
+					} else if (this.getSortField().equalsIgnoreCase("docType")) {
+						reqDTO.setSortBy(BpmConstants.SORT_BY_DOCTYPE);
+					} else if (this.getSortField().equalsIgnoreCase("title")) {
+						reqDTO.setSortBy(BpmConstants.SORT_BY_TITLE);
+					} else if (this.getSortField().equalsIgnoreCase("createDate")) {
+						reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
+					} else if (this.getSortField().equalsIgnoreCase("docStatus")) {
+						reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
+					} else {
+						reqDTO.setSortBy(getSort_by());
+					}
+				} 			
+				
 				reqDTO.setIsAsc(isAscending());
 
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
@@ -925,12 +939,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.selectedStatusDescAdvance = selectedStatusDescAdvance;
 	}
 
-	public static Map getBpmMap() {
-
+	public Map<?, ?> getBpmMap() {
 		return bpmMap;
 	}
 
-	public static void setBpmMap(Map bpmMap) {
+	public void setBpmMap(Map<?, ?> bpmMap) {
 		BPMTaskListManagedBean.bpmMap = bpmMap;
 	}
 
