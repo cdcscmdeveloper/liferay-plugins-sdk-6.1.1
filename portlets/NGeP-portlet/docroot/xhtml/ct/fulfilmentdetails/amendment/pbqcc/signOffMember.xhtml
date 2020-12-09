@@ -45,7 +45,8 @@
                  <p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
                 
                  <p:dataTable id="memberTable" var="data" rowIndexVar="index"
-                     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredSignedCommitteeMembers()}">
+                     value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
+                     rowStyleClass="#{data.updateType eq CtConst.removeFromAttendanceList ? 'ui-helper-hidden' : (data.updateType eq CtConst.removeNewMemberFromAttendanceList ? 'ui-helper-hidden' : '')}"><!-- #29403 -->
                      <ac:paginator for="decisionTable" />
             	   
             	     <p:column style="width:50%;white-space:normal;" 
@@ -71,6 +72,11 @@
 				           headerText="#{lbl['lbl.ct.attendance']}" styleClass="column-align-center">
 				            <p:selectBooleanCheckbox value="#{data.attended}" disabled="true" />
 				     </p:column> 	
+				     <p:column style="width:50%;white-space:normal;" 
+            	          styleClass="column-align-center"  headerText="#{lbl['lbl.ct.name']}">
+            	          <div align="left">
+				           <h:outputText value="#{data.updateType}" /></div>
+				     </p:column> 
               </p:dataTable>
          </h:panelGrid>
      </p:panel>
