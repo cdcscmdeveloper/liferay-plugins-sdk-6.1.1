@@ -721,7 +721,7 @@
 								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 								<f:selectItems
-									value="#{directLOABackingBean.getContractTypes(ParameterConst.procurementModeDirectNego,directLOABackingBean.managedBean.scQt)}"
+									value="#{directLOABackingBean.getContractTypes(ParameterConst.procurementModeDirectNego)}"
 									var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 									itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 								<p:ajax event="change"
