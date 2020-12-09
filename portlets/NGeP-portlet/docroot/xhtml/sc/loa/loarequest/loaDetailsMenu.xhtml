@@ -441,7 +441,7 @@
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
-							value="#{lOADetailBackingBean.getContractTypes(procurementMode)}"
+							value="#{lOADetailBackingBean.getContractTypes(procurementMode,lOADetailBackingBean.managedBean.scLoa.scQt)}"
 							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
 							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 						<p:ajax event="change"
