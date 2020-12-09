@@ -13,14 +13,13 @@
 				<td style="width: 10%">
 				<!-- Enhancement 15851 - Prefix for supplemental contract letter -->
 				<!-- start -->
-					#{not empty ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa ? 
-						ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.loaNo : 
-						""}
-						
 					<p:commandLink value="#{ctBackingBean.managedBean.contractVer.ctContractValue.loaNo}" 
 						process="@this" partialSubmit="true" styleClass="blue_font"
-						rendered="#{empty ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa}"
+						rendered="#{!ctBackingBean.managedBean.hasAmendmentLoaNo}"
 						action="#{ctBackingBean.goToLoaView(ctBackingBean.managedBean.contractVer.ctContract.loa)}"/>
+						
+					<h:outputText value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.loaNo}"
+						rendered="#{ctBackingBean.managedBean.hasAmendmentLoaNo}" />
 				<!-- 15851 end -->
 				</td>
 				<td style="width: 10%">
