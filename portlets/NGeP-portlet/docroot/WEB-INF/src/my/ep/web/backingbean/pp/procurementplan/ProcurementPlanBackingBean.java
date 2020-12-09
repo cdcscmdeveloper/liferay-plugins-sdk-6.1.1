@@ -287,10 +287,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
-		//201111@akmal - Enhancement27624 - Start
+		//201208@akmal - Enhancement27624 - Start
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
-		//201111@akmal - Enhancement27624 - End
+		this.getManagedBean().setFromTaskList(true);
+		//201208@akmal - Enhancement27624 - End
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
@@ -4915,9 +4916,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		  } 
 		  if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
 			  isPlanYearEmpty = false;
-			//201105@akmal - 27624 - Start
+			//201209@akmal - 27624 - Start
 			  isEmpty = false;
-			//201105@akmal - 27624 - End
+			  this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getPlanSearchBean().getYear());
+			//201209@akmal - 27624 - End
 		  }
 		  if(this.getManagedBean().getPlanSearchBean().getPlanType().getParameterCode()!=null){
 			  isPlanTypeEmpty = false;
@@ -4934,16 +4936,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			  isEmpty = false;
 		  }
 		  
-		//200911@akmal - Enhancement27624 - Start
+		//201209@akmal - Enhancement27624 - Start
+		  if(isPlanTypeEmpty){
+			  FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_730016, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.pp.plan.year",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())+"("+MessageConst.ERROR_730016+")"));
+		  } 
 		  if(isPlanYearEmpty){
-			  throw new EpException(MessageConst.ERROR_730028);
-		  }else if(isPlanTypeEmpty){
-				  throw new EpException(MessageConst.ERROR_730016);
-		  } else if(isEmpty){
-			  throw new EpException(MessageConst.ERROR_730027);
+			  FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_730028, 
+					new String[]{ResourceBundleUtils.getMessage("lbl.pp.plan.type",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())+"("+MessageConst.ERROR_730028+")"));
+		  } 
+		  if(!isPlanTypeEmpty && !isPlanYearEmpty){
+			  ppPlanDataModel.reloadData();
 		  }
-		//200911@akmal - Enhancement27624 - End
-		ppPlanDataModel.reloadData();
+		//201209@akmal - Enhancement27624 - End
+		
 	}
 	
 	//200911@akmal - Enhancement27624 - Start
@@ -4971,9 +4981,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			throw new EpException(MessageConst.ERROR_730027);
 		}
 		this.getManagedBean().setPlanDetailSearch(true);
-		
-		loadPlanDetails(this.getManagedBean().getPlanId(), true);
-//		ppPlanDataModel.reloadData();
+		//201208@akmal - Enhancement27624 - Start
+		if(this.getManagedBean().isFromTaskList()){
+			loadPlanDetails(this.getManagedBean().getPlanId(), false);
+		}
+		else
+			loadPlanDetails(this.getManagedBean().getPlanId(), true);
+		//201208@akmal - Enhancement27624 - End
 	}
 	
 	public void searchGLAccounts(){
@@ -8212,6 +8226,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public static void setPageType(String pageType) {
 		ProcurementPlanBackingBean.pageType = pageType;
 	}
+
 	//200911@akmal - Enhancement27624 - End
 	//24975@04112020@azza - Start
 	 public boolean disableDuplicateAccountId(String AccountId) {
