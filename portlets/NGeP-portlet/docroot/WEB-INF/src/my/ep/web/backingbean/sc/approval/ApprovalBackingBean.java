@@ -1112,9 +1112,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						for (int i = 0; i < qtCommittes.size(); i++) {
 							ScQtCommittee qtCommittee = qtCommittes.get(i)
 									.getScQtCommittee();
+							if(null!=qtCommittee){ //#29724-start
 							qtCommittee.setQtCommitteRemarks(this.getManagedBean()
 									.getQtCommitteeRemarks());
 							qtCommitees.add(qtCommittee);
+							} //#29724-End
 						}
 						reqDTO.getQtdetail().setScQtCommittees(qtCommitees);
 					}
@@ -1257,7 +1259,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					for (int i = 0; i < qtCommittes.size(); i++) {
 						ScQtCommittee qtCommittee = qtCommittes.get(i)
 								.getScQtCommittee();
-
+                       if(null!=qtCommittee){//#29724_start
 						if (BpmOutcomeConst.BPM_REVISE
 								.equalsIgnoreCase(outcome)) {
 							qtCommittee
@@ -1272,6 +1274,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								.getQtCommitteeRemarks());
 						qtCommitees.add(qtCommittee);
 						committeeTypes.add(qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
+                       }//#29724-End
 					}
 					qt.setScQtCommittees(qtCommitees);
 				}
