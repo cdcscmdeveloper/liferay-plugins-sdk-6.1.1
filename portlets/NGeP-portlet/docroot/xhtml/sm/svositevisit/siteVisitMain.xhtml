@@ -33,13 +33,16 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
+		<!-- #28774 - START -->
+		<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
+		<!-- #28774 - END -->
+		
 		<table class="customTbl">
 			<tr valign="top">
 				<td class="sidemenutd" style="width:20%"><ui:include
 						src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /></td>
 
 				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
-					<p:messages id="messages" showDetail="true" autoUpdate="#{empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}" ajax="false"
 						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide();">
