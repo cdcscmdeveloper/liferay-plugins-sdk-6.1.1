@@ -2342,36 +2342,54 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * Contract type drop down values.
 	 * @return the list
 	 */
-	public List<PmParameterDesc> getContractTypes(String procurementMode,ScQt scqt) {
+	public List<PmParameterDesc> getContractTypes(String procurementMode) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		// check logged in user allow central contract.
+		boolean  isAllowCentralContract =  isAllowCentralContract();
+		
+		if(!isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
+		} 
+
+		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(
+						ParameterTypeConst.CONTRACT_TYPE, searchBean);
+
+		return contractTypes;
+	}
+	
+	// add rule #27502 START
+	public List<PmParameterDesc> getContractTypesForQt(String procurementMode,ScQt scqt) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		// check logged in user allow central contract for qt.
 		boolean isAllowCentralContract =  isAllowCentralContract();
-		// add rule FARID #25702 START
 		boolean isRuleBpk = false;
 		
-		IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-		List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJCO);
-		
-		if(bpkList != null){
-			isRuleBpk = true;
+		if (scqt != null){
+			IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJCO);
+			
+			if(bpkList != null){
+				isRuleBpk = true;
+			}
 		}
-		log.info("isbpkrule===="+isRuleBpk);
-		log.info("isAllowCentralContract===="+isAllowCentralContract);
-		log.info("procurementMode===="+procurementMode);
+	
 		if(!isRuleBpk || !isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			log.info("masuk ");
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("pmParameter.parameterCode",
 								SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
 			} 
-		//// add rule FARID #25702 ENDq
+		
 		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
 				.getParameterDescListBySearchBean(
 						ParameterTypeConst.CONTRACT_TYPE, searchBean);
 		
 		return contractTypes;
 	}
+	// add rule #27502 END
 	
 	/**
 	 * is Allow Central Contract
