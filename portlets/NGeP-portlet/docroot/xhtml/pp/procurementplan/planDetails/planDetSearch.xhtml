@@ -80,6 +80,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 										<p:calendar rendered="true"
 										value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateFrom}" readonlyInput="true"
 										showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+										maxdate="#{pPlanBackingBean.managedBean.maxYear}"
 										disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 									<!-- 201111@akmal - Enhancement27624 - End -->
 									</td>
@@ -91,6 +92,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 										<p:calendar rendered="true"
 										value="#{pPlanBackingBean.managedBean.planSearchBean.invitationDateTo}" readonlyInput="true"
 										showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+										maxdate="#{pPlanBackingBean.managedBean.maxYear}"
 										disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 									<!-- 201111@akmal - Enhancement27624 - End -->
 									</td>
