@@ -560,7 +560,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			String taskId = originalServletRequest.getParameter("taskId");
 			//#25956 - Start (view Contract Amendment url from notification)
 			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-			
+			log.info("enter preRenderView" + ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			if(contractVerId!=null) {
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
@@ -575,6 +575,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
+				log.info("enter preRenderView>if taskid" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 				//#29403 start
 				if (ctBackingBean.getManagedBean().getContractVer()==null 
 						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null){
@@ -586,11 +587,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					setAmendmentContractVer(ctReqDTO);
 				}
 				//#29403 end
-				
 				ConstructTabSideMenu();
 
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
 						&& ctBackingBean.getManagedBean().isServiceTaxAlertFlg()) {
+					log.info("enter preRenderView>if taskid>if isServiceTaxAlertFlg" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
 									MessageUtils.getMessage(MessageConst.INFO_755004,
@@ -601,16 +602,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 				// During supplier claim the task
 				if (getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equals(ContractConst.SUPPLIER_ACK_LOA)) {
+					log.info("enter preRenderView>if taskid>if getAckFA" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 					BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 					getManagedBean().setReadOnly(!bb.getManagedBean().getClaim());
 					// Default the supplier signer to claimant
 					if (!getManagedBean().isReadOnly()
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy() == null
 							|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getAckBy().getUserId() == null)) {
+						log.info("enter preRenderView>if taskid>if isReadOnly" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 						ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(
 								getFacesScopes().getUserSessionBean());
 					}
-				}					
+				}				
+				log.info("out preRenderView>if taskid");
 				return;
 			}
 			
@@ -843,7 +847,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //				getManagedBean().setOutComes(outcomecancel);
 				//#25956 - Start Button End If not isDisciplinaryAction	
 
-
+			log.info("out preRenderView" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 		}catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -876,6 +880,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IAgreementSO agreementSO = null;
 		ContractAgreementResDTO ctAgreementResDTO = null;
 		ContractAgreementReqDTO ctAgreementReqDTO = null;
+		log.info("enter setAmendmentContractVer" + ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 		if(ctBackingBean.getManagedBean().getDeleteAttachmentList() != null ){
 			ctBackingBean.getManagedBean().getDeleteAttachmentList().clear();
 		}
@@ -1311,7 +1316,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			//#29403 end
-			
+			log.info("out setAmendmentContractVer" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
 		} finally {
@@ -2658,7 +2663,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		AmendTabSideMenus sideMenu = new AmendTabSideMenus();
 		getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
 		getManagedBean().setConfirmMeeting(false);
-
+		log.info("enter ConstructTabSideMenu" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
+		
 		if (getManagedBean().getAckFA() == null) {
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
 
@@ -2732,6 +2738,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
 		}
+		log.info("out ConstructTabSideMenu" + ctBackingBean.getManagedBean().getContractVer().getContractVerId() +","+ + ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 	}
 
 	/**
