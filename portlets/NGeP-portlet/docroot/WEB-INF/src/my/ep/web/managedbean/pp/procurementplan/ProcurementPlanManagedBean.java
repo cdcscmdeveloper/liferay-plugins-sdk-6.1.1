@@ -51,12 +51,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
-	//201111@akmal - Enhancement27624 - Start
+	//201208@akmal - Enhancement27624 - Start
 	private boolean isPlanDetailSearch;
 	private Long planId;
 	private List<VPmGo> vPmGolist;
 	private boolean disablePlanSearchDet = false;
-	//201111@akmal - Enhancement27624 - End
+	private String maxYear = "31/12/2050";
+	private boolean fromTaskList = false;
+	//201208@akmal - Enhancement27624 - End
 	private String btnValue;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
@@ -1360,7 +1362,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	}
 	//25549@18092020 - end
 	
-	//201111@akmal - Enhancement27624 - Start
+	//201208@akmal - Enhancement27624 - Start
 	public boolean isPlanDetailSearch() {
 		return isPlanDetailSearch;
 	}
@@ -1393,8 +1395,24 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setDisablePlanSearchDet(boolean disablePlanSearchDet) {
 		this.disablePlanSearchDet = disablePlanSearchDet;
 	}
-	//201111@akmal - Enhancement27624 - End
     
+	public String getMaxYear() {
+		return maxYear;
+	}
+
+	public void setMaxYear(String maxYear) {
+		this.maxYear = maxYear;
+	}
+
+	public boolean isFromTaskList() {
+		return fromTaskList;
+	}
+	//201208@akmal - Enhancement27624 - End
+
+	public void setFromTaskList(boolean fromTaskList) {
+		this.fromTaskList = fromTaskList;
+	}
+
 	//12112020@azza - 28760 - Start
 	public boolean isFlagCancelButton() {
 		return flagCancelButton;
