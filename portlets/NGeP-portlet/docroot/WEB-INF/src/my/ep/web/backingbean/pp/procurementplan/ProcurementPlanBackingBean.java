@@ -327,11 +327,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
-			loadPlanDetails(id, true);
+			//201209@akmal - Enhancement27624 - Start
+			if(this.getManagedBean().isFromTaskList())
+				loadPlanDetails(id, false);
+			else
+				loadPlanDetails(id, true);
 			loadDefaultButtons();
-			//200911@akmal - Enhancement27624 - Start
 			this.getManagedBean().setPlanId(id);
-			//200911@akmal - Enhancement27624 - End
+			//201209@akmal - Enhancement27624 - End
 		}
 		
 		
