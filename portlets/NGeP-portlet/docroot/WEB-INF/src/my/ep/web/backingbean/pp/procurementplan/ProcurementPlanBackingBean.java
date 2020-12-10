@@ -291,6 +291,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
 		this.getManagedBean().setFromTaskList(true);
+		this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getSelectedPlan().getPlanYear().toString());
 		//201208@akmal - Enhancement27624 - End
 
 		FacesContext fc = FacesContext.getCurrentInstance();
