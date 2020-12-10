@@ -8185,12 +8185,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						new String[] { getRuleTypeDesc(scQt.isPanel() ? RuleTypeConst.PANEL_PUBLISHING_PERIOD_DAYS
 								: RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS) });
 			}
-			if (null == scQt.getQtValidityPeriod()) {
-				
-				addFacesMessage(fc,
-						MessageConst.ERROR_770222,
-						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
-			}
+//			if (null == scQt.getQtValidityPeriod()) {
+//				
+//				addFacesMessage(fc,
+//						MessageConst.ERROR_770222,
+//						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
+//			}
 		}
 	}
 	
