@@ -7711,19 +7711,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void onSaveSupplierOffer(String outcome) {
+		if (StringUtils.isEmpty(getManagedBean().getNewSupplierOffered())
+				&& StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
+			throw new EpException(MessageConst.ERROR_775163);
+		}
 		if (StringUtils.isEmpty(getManagedBean().getNewSupplierOffered())) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-							MessageConst.ERROR_775162, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
+			throw new EpException(MessageConst.ERROR_775162);
 		}
 		if (StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-							MessageConst.ERROR_775161, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
+			throw new EpException(MessageConst.ERROR_775161);
 		}
 		if (StringUtils.isNotEmpty(getManagedBean().getNewSupplierOffered()) && StringUtils.isNotEmpty(getManagedBean().getNewSupplierJustification())) {
 			for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
@@ -7766,7 +7762,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						FacesContext.getCurrentInstance().addMessage(
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-										MessageConst.INFO_776045, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										"lbl.sc.update.success", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale())));
 					}
 					if (outcome.equalsIgnoreCase("COMPLETE")) {
