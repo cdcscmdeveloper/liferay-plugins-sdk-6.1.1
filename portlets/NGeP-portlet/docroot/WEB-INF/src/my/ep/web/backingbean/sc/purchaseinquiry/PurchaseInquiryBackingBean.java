@@ -677,7 +677,7 @@ public class PurchaseInquiryBackingBean extends
 					PmStatus pmStatus = getManagedBean().getPriStatus();
 					if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
 							&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
-						//validateRequiredRemark(prInquiry); //#29739
+						validateRequiredRemark(prInquiry);
 					}
 				}							
 				//End - #26129
@@ -716,16 +716,6 @@ public class PurchaseInquiryBackingBean extends
 						getManagedBean().setRequestNoteDtl(prInquiryResDTO.getScRequestNoteDtl());
 					}
 				}
-				//#29739 - start
-				if (prInquiry.getCurrentStatus() != null) {
-					getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
-					PmStatus pmStatus = getManagedBean().getPriStatus();
-					if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
-							&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
-						getManagedBean().setDisabledRemark(Boolean.FALSE);
-					}
-				}
-				//#29739 - end
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -1923,7 +1913,6 @@ public class PurchaseInquiryBackingBean extends
 		}
 
 		if (newRemark) {
-			getManagedBean().setDisabledRemark(Boolean.FALSE);//#29739
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) 
 				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
 			else
