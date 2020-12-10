@@ -55,6 +55,8 @@ import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#22211
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#22211
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -96,6 +98,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate; //#22211
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -1427,6 +1430,25 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		
 		//12183 - end
+		
+		//#22211 - start -  if loa prepared by user, return true
+		public boolean allowCancel(Object[] dpObj) {
+			IQTAwardSO qtAwardSO;
+			qtAwardSO =  EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			boolean disable = true;
+			String docNo = (String) dpObj[1];
+			
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO.setLoaNo(docNo);
+			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOADtlByLoaNo(awardSupplierReqDTO);
+									
+			if(String.valueOf(awardSupplierResDTO.getScLoa().getCreatedBy()).equalsIgnoreCase(String.valueOf(getFacesScopes().getUserSessionBean().getUserId()))){
+				disable = false;				
+			}
+			return disable;
+		}
+		//#22211 - end
 		
 	//  Redmine 25396: remove duplication option view by adding new drop down field
 		

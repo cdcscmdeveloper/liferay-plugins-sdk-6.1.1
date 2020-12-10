@@ -206,7 +206,7 @@
 					or Obj[4] eq DPStatusConstants.loaPendingRevisionApproval}">
 						<p:menuitem id="cancelLoaBtnIcon" value="#{lbl['lbl.btn.cancel']}"
 								icon="ui-icon-termination"
-								action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />					
+								action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" disabled="#{directPurchaseBackingBean.allowCancel(Obj)}"/>					
 					</p:menuButton>	
 					
 					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq QTStatusConst.loaCancelled}">
