@@ -121,8 +121,8 @@
 		widgetVar="taskListAdvanceTableWidget">
 		<ac:paginator for="taskListGroupId"></ac:paginator>
         <p:ajax event="sort" listener="#{bpmTasklistBackingBean.orderByGroupTaskList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
-		<p:column width="5%;">			
-			<f:facet name="header" sortBy="#{tasks.docNumber}" >
+		<p:column width="5%;" sortBy="#{tasks.docNumber}">			
+			<f:facet name="header">
 				#{lbl['lbl.bpm.doc.no']}					
 			</f:facet>
 			
