@@ -1923,6 +1923,7 @@ public class PurchaseInquiryBackingBean extends
 		}
 
 		if (newRemark) {
+			getManagedBean().setDisabledRemark(Boolean.FALSE);//#29739
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) 
 				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
 			else
