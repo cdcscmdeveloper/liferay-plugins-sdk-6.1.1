@@ -8286,6 +8286,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							.setWeightage(new BigDecimal(0));
 				}
 				if (null != weight.getQtScoreWeightage()) {
+					//20201127@asyrafhaziq_29637 - Start
+					String checkDecimal1 = String.valueOf(weight.getQtScoreWeightage().getWeightage());
+					String pattern1 = "^[0-9\\s]+$";
+						if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
+					 //20201127@asyrafhaziq_29637 - End
 					total = total
 							+ weight.getQtScoreWeightage().getWeightage()
 									.intValue();
@@ -8548,6 +8555,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							.setWeightage(new BigDecimal(0));
 				}
 				if (null != weight.getQtScoreWeightage()) {
+					//20201127@asyrafhaziq_29637 - Start
+					String checkDecimal1 = String.valueOf(weight.getQtScoreWeightage().getWeightage());
+					String pattern1 = "^[0-9\\s]+$";
+						if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
+						//20201127@asyrafhaziq_29637 - End
 					total = total
 							+ weight.getQtScoreWeightage().getWeightage()
 									.intValue();
@@ -15042,15 +15056,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// #25039#67#76 - start
 	// To recalculate estimate amount (Item Total Indicative Price)
 	private void reCalculateEstimateAmount(TemplateSpecBean templateSpecBean){	
-		Double indicativeUnitPrice = 0.00;  
-		BigDecimal clQuantity = new BigDecimal(0); 
-		BigDecimal clUomFrequency = new BigDecimal(0);  
-		BigDecimal clUomPerDay = new BigDecimal(0);  
-		BigDecimal clUomPerMonth = new BigDecimal(0); 
+		//20201113@asyrafhaziq_Bug #29591 - start
 		BigDecimal contractDuration = new BigDecimal(0);
-		Long specEstimationId = 0L ; // #25039 21-3-2020
-		long specZoneId = 0; 
-		BigDecimal questionId = new BigDecimal(0);
+		//20201113@asyrafhaziq_Bug #29591 - end
 		Boolean isItemTypeService = false;
 		Boolean isFulfilmentTypeScheduled = false;	
 		Boolean isZonal = false;
@@ -15077,6 +15085,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		if (questionSize != 0){
 			for (int i = 0; i < questionSize; i++) {
+				//20201113@asyrafhaziq_Bug #29591 - start
+				Double indicativeUnitPrice = 0.00;  
+				BigDecimal clQuantity = new BigDecimal(0); 
+				BigDecimal clUomFrequency = new BigDecimal(0);  
+				BigDecimal clUomPerDay = new BigDecimal(0);  
+				BigDecimal clUomPerMonth = new BigDecimal(0); 
+				Long specEstimationId =0L ; // #25039 21-3-2020
+				long specZoneId = 0; 
+				BigDecimal questionId = new BigDecimal(0);
+				//20201113@asyrafhaziq_Bug #29591 - End				
 				int estimationSize =templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size();
 				
 				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
