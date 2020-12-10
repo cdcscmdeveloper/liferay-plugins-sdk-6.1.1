@@ -507,8 +507,7 @@ public class PurchaseInquiryBackingBean extends
 				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
 						parameterType, priceTypeCode));
 			}
-		} catch (Exception e) {
-			log.error(e);
+		} finally { //#29739 - bugs error validation not appear
 		}
 		return items;
 	}
@@ -720,8 +719,7 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
-		} catch (Exception e) {
-			log.error(e);
+		} finally { //#29739 - bugs error validation not appear
 		}
 		return null;
 	}
