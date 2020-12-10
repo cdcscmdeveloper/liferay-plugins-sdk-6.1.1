@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -172,8 +171,7 @@ import com.liferay.portal.util.PortalUtil;
  * @since 1/13/2014
  */
 @ManagedBean (name = "amendmentBackingBean")
-//@ViewScoped
-@SessionScoped
+@ViewScoped
 public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManagedBean> {
 
 	private static final long serialVersionUID = 1L;
