@@ -213,7 +213,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private String itemNameSearchCriteria;
 	private List<ScLoiLoaItem> completeScLoiLoaItemList;
 	private ScLoiLoaItem selectedScLoiLoaItem;
-	private String lampiranA3SubStr = "Lampiran A3 - ";
+	private String lampiranA3SubStr = "Lampiran A3";
 	//#29006 - end
 
 	/**
@@ -699,7 +699,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setEditFlag(Boolean.FALSE);
 
 			// QT Proposal validity expired
-			getQtProposalValidExpiredMessage(getManagedBean().getScQt());		
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());	
+			
+			// #29006 - start
+			removeUnwantedLampiranA3Report(1);
+			// #29006 - end
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -7773,16 +7777,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						if (!getManagedBean().isOldNewSuppOfferSameFlag()) {
 							createLampiranA3(each);
 						}
-						if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())
-								&& getManagedBean().isOldNewSuppOfferSameFlag()) {
-							List<ScLoaReport> oldLampiranA3List = new ArrayList<>();
-							for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-								if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-									oldLampiranA3List.add(report);
-								}
-							}
-							getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
-						}
 						onBackToZoneItemDetailsTab();
 					}
 				}
@@ -7801,24 +7795,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void createLampiranA3(ScLoiLoaItem scLoiLoaItem) {
-		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
-			List<ScLoaReport> oldLampiranA3List = new ArrayList<>();
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					oldLampiranA3List.add(report);
-				}
-			}
-			getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
-		}
+		removeUnwantedLampiranA3Report(2);
 		ScLoaReport lampiranA3 = getQtAwardSO().createLampiranA3(
 				getManagedBean().getScLoa(),
 				populateLabelLampiranA3(
 						new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils.getCurrentDate()),
 						SmCommonUtil.getUserByUserId(getManagedBean().getScLoa().getCreatedBy()).getUserName()));
 		try {
-			// generateAckOfLOAReceiptPdfFromVelocity((ScAttachment)
-			// lampiranA3.getScLoaReportAttachment(),
-			// getManagedBean().getScLoa());
 			StringBuilder filename = new StringBuilder();
 			filename.append(lampiranA3.getTitle());
 			lampiranA3.setScLoaReportAttachment(new ScLoaReportAttachment());
@@ -7920,6 +7903,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		if (content != null) {
 			DocumentGenerator.convertHtmlToDocFile(content, getActualFilePath(attachment), scLoa.getLoaNo());
+		}
+	}
+	
+	private void removeUnwantedLampiranA3Report(int mode) {
+		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			List<ScLoaReport> oldLampiranA3List = new ArrayList<>();
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle())) {
+					if ((mode == 1) && report.getTitle().contains(lampiranA3SubStr)
+							&& report.getTitle().contains("<date update> <Desk Officer Name>")) {
+						oldLampiranA3List.add(report);
+					} else if ((mode == 2) && report.getTitle().contains(lampiranA3SubStr)) {
+						oldLampiranA3List.add(report);
+					}
+				}
+			}
+			getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
 		}
 	}
 
