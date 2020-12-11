@@ -4078,41 +4078,6 @@ public class SupplierFinalizationBackingBean extends
 			
 	}
 	
-	private List<Long> getUserSupplierListByUserIds(List<Long> userIds){
-		List<Long> result = new ArrayList<>();
-		
-		IUserSO userSO = null;
-		try{
-			userSO = BusinessDelegate.getInstance()
-					.getServiceObject(IUserSO.class);
-			
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserIds(userIds);
-			reqDTO.setRoleCodes(Arrays.asList(RoleCode.BASIC_SUPPLIER_ADMIN.value(), 
-					RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
-					RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value()));
-			
-			
-			UserResDTO resDTO = userSO.retrieveUserRoleListByUserIds(reqDTO);
-			
-			if(resDTO != null && resDTO.isSuccessful()){
-				List<PmUserRole> pmUserRoleList = resDTO.getUserRoleList();
-				
-				if(CollectionUtils.isNotEmpty(pmUserRoleList)){
-					for(PmUserRole each : pmUserRoleList){
-						if(each.getPmUserOrg() != null && each.getPmUserOrg().getPmUser() != null){
-							result.add(each.getPmUserOrg().getPmUser().getUserId());
-						}
-					}
-				}
-			}
-			
-		} finally {
-			userSO = null;
-		}
-		
-		return result;
-	}
 	// #11134 - end
 
 	private void disableAwardedItems(List<ScQtRecommend> scQtRecommends) {
