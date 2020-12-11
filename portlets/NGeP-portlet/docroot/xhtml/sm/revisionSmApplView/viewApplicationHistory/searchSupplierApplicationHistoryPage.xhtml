@@ -28,7 +28,6 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId">
-			
 			<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
 				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
@@ -99,6 +98,17 @@
 					<h:outputText value="#{viewSuppProfileBackingBean.getStatusDescription(smAppl)}" />
 				</p:column>	
 				
+<!-- #28771 START -->				
+				<p:column headerText="#{lbl['lbl.sm.supportingDocumentMode']}">
+					<h:outputText value="#{lbl['lbl.sm.no.available']}"
+					 rendered="#{empty smAppl[15]}"/>	
+					  <h:outputText value="#{lbl['lbl.sm.suppDoc.online']}"
+					 rendered="#{smAppl[15] eq 'S'}"/>	
+				    <h:outputText value="#{lbl['lbl.sm.suppDoc.offline']}"
+					rendered="#{smAppl[15] eq 'H' }"/>
+				</p:column>	
+<!-- #28771 END -->
+				
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
@@ -110,7 +120,6 @@
 				</p:column>
 				
 			</p:dataTable>
-			
 		</p:panel>
 	</ui:define>
 </ui:composition>
