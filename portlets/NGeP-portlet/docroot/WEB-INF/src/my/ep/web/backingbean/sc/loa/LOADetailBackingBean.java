@@ -990,7 +990,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
-
+		// #11134 - start
+		List<ScLoaRemark> supplierRemarks = filterSupplierRemarks(scLoa.getScLoaRemarks(), false);
+		getManagedBean().setSupplierRemarks(supplierRemarks);
+		// #11134 - end
+		
 		// check agreement
 		checkAgreementMandatory();
 
