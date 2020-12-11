@@ -3978,10 +3978,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 			getManagedBean().setItemSpecification(itemSpecList);
-			getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
-			getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());			
+			
+			if(requestItemSO.retrieveNewOfferSpec(requestItemId).isEmpty()){
+				getManagedBean().setSupplierOffer(null);
+				getManagedBean().setNewOfferSpec(null);
+			}else{
+				getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
+				getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());
+			}
 		}
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
 			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
 			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
 		}		
