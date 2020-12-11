@@ -978,7 +978,8 @@ public class SmApplicationBackingBean extends
 				smAppl.setResubmit(false);
 				if (smAppl != null
 						&& StringUtils.isBlank(smAppl.getSupportingDocMode())) {
-					smAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+					//28771
+					smAppl.setSupportingDocMode(StringUtils.EMPTY);
 				}
 
 				log.info("****** After retrieve the appl is ********"
@@ -1067,8 +1068,30 @@ public class SmApplicationBackingBean extends
 		}
 
 		SmCommonUtil.getInstance().setUserDetails(smAppl);
+		//28771 - start 
 		getManagedBean().setSmAppl(smAppl);
-
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+				|| applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			SmWorkflowStatus sts = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());
+			if (sts != null && sts.getPmStatus() != null){
+				if (sts.getPmStatus().getStatusId().compareTo(SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) == 0) {
+					if(getManagedBean().getSmAppl().getSupportingDocMode() == null){
+						smAppl.setSupportingDocMode(StringUtils.EMPTY);
+						
+					}else{
+					smAppl.setSupportingDocMode(getManagedBean().getSmAppl().getSupportingDocMode());
+					}
+				}
+				
+			}else{
+				smAppl.setSupportingDocMode(StringUtils.EMPTY);
+				}
+				
+			}
+		//28771 - end
 		if (fromBpm) {
 			SmApplicationUtil.getInstance().setApplAddressTransientValue(
 					getManagedBean().getSmAppl(), false);
@@ -1364,12 +1387,14 @@ public class SmApplicationBackingBean extends
 								: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 
 		// set supporting document mode if empty
+		//28771 - start
+		if (getManagedBean().isPoUser()|| getManagedBean().isApproverUser()){
 		if (StringUtils.isBlank(getManagedBean().getSmAppl()
 				.getSupportingDocMode())) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-		}
-
+		}}
+		//28771 - end
 		// set latest mofAccount
 		if (getManagedBean().getSmAppl().getSmSupplier() != null) {
 			getManagedBean().setExpiryDate(StringUtils.EMPTY);
@@ -3797,7 +3822,8 @@ public class SmApplicationBackingBean extends
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
-					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+					//28771
+					StringUtils.EMPTY);
 		}
 		saveOrUpdateAppl();
 	}
@@ -3832,7 +3858,8 @@ public class SmApplicationBackingBean extends
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("")) {
 			getManagedBean().getSmAppl().setSupportingDocMode(
-					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				//28771
+				StringUtils.EMPTY);
 		}
 		RequestContext.getCurrentInstance().execute("typeConfirmation.hide()");
 	}
@@ -7547,7 +7574,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSmAppl().setApplSubmitDate(new Date());
 
 		if (bpmAppl.getSupportingDocMode() == null) {
-			bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+			//28771
+			bpmAppl.setSupportingDocMode(StringUtils.EMPTY);
 		}
 		if (!bpmAppl.isActiveAppl()) {
 			bpmAppl.setActiveAppl(true);
@@ -8260,7 +8288,8 @@ public class SmApplicationBackingBean extends
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			bpmAppl.setApplSaveDate(new Timestamp(System.currentTimeMillis()));
 			if (bpmAppl.getSupportingDocMode() == null) {
-				bpmAppl.setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+				//28771
+				bpmAppl.setSupportingDocMode(StringUtils.EMPTY);
 			}
 			String outcome = "";
 			if (!getManagedBean().isDraftedAppl()) {
