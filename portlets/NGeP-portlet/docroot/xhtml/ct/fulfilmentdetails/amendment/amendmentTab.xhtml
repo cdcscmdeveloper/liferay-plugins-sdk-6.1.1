@@ -70,10 +70,9 @@
 	  <p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>			
-
+		  	 <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 		<h:panelGroup id="panelHeaderException">
 		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
-		  	 <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
 		  </h:panelGroup>
@@ -284,6 +283,7 @@
 		</tr>
 		</table>
 		</h:panelGroup>
+		<!-- Test Remove For CT Issue 
 		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
@@ -355,5 +355,6 @@
 				</p:commandButton>
 			</div>
 		</p:confirmDialog>
+		-->
 	</ui:define>  
 </ui:composition>
