@@ -21,7 +21,7 @@
 		<p:dialog id="#{cc.attrs.dialogId}" header="#{cc.attrs.title}"
 			widgetVar="#{cc.attrs.dialogId}WidgetVar" modal="true"
 			height="#{cc.attrs.height}" width="#{cc.attrs.width}"
-			resizable="true" style="display: block;">
+			resizable="true" style="display: static;">
 			
 			<div id="#{cc.attrs.dialogId}ContentDiv"
 				style="overflow-wrap: break-word;">
@@ -67,7 +67,18 @@
 					value="#{lbl['lbl.sm.status']} :"></h:outputLabel>
 				<h:outputText
 					value="#{cc.attrs.bBean.setStatusMessageFromSSM(cc.attrs.bBean.managedBean.smCompanyBasicSsm.companySsmStatus)}"></h:outputText>
-
+					
+				<c:if test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">	
+				<h:outputLabel style="font-weight:bold" 
+					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
+					<h:panelGrid columns="3" layout="grid"> 
+						<h:outputText value="#{cc.attrs.bBean.managedBean.smCompanyBasicSsm.annualRevenueSSM}"   >
+							<f:convertNumber groupingUsed="true" maxFractionDigits="3" minFractionDigits="3" />
+						</h:outputText>
+						<h:outputText>&#160;&#160;</h:outputText>    
+					</h:panelGrid>
+				</c:if>
+					
 				<h:outputLabel
 					style="font-weight:bold;display: inline-block; vertical-align: top;"
 					value="#{lbl['lbl.sm.companyaddress']} :"></h:outputLabel>
@@ -76,38 +87,23 @@
 					escape="false"></h:outputText>
 
 				<h:outputLabel style="font-weight:bold"
-					value="#{lbl['lbl.sm.state']} :"></h:outputLabel>
-				<h:outputText
-					value="#{cc.attrs.bBean.managedBean.smAddress.pmState.stateName}"></h:outputText>
-
-				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.postcode']} :"></h:outputLabel>
 				<h:outputText
 					value="#{cc.attrs.bBean.managedBean.smAddress.postcode}"></h:outputText>
+					
+				<h:outputLabel style="font-weight:bold"
+					value="#{lbl['lbl.sm.state']} :"></h:outputLabel>
+				<h:outputText
+					value="#{cc.attrs.bBean.managedBean.smAddress.pmState.stateName}"></h:outputText>
 				
 				<!-- 27346 -->
 				<c:if test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">	
 				<h:outputLabel style="font-weight:bold"
 					value="#{lbl['lbl.sm.country']} :"></h:outputLabel>
 				<h:outputText
-					value="#{cc.attrs.bBean.managedBean.smAddress.pmCountry.countryName}"></h:outputText>	
+					value="#{cc.attrs.bBean.managedBean.smAddress.pmCountry.countryName}"></h:outputText>	</c:if>
 				
-				<h:outputLabel style="font-weight:bold" 
-					value="#{lbl['lbl.sm.annualRev']} :"></h:outputLabel>
-					<h:panelGrid columns="3" layout="grid"> 
-						<h:outputText value="#{cc.attrs.bBean.managedBean.smCompanyBasicSsm.annualRevenueSSM}" >
-							<f:convertNumber groupingUsed="true" maxFractionDigits="3" minFractionDigits="3" />
-						</h:outputText>
-						<h:outputText>&#160;&#160;</h:outputText>    
-						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sm.annualRev']}" required="true"
-							id="smSupAnnRev"
-							disabled="true"
-							value="#{cc.attrs.bBean.managedBean.smCompanyBasicSsm.annualRevenue}">
-							<f:selectItems value="#{cc.attrs.bBean.getDropdownValues('SAR')}" />
-						</p:selectOneMenu>
-					</h:panelGrid>
-					</c:if>
+
 					
 				
 	
@@ -120,6 +116,12 @@
 			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
 			<ui:include
 				src="/xhtml/sm/shared/onlinereg/viewSsmInformationBranchAc.xhtml" />
+		</c:if>
+		
+		<c:if
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">
+			<ui:include
+				src="/xhtml/sm/shared/onlinereg/viewSsmInformationEquityInfo.xhtml" />
 		</c:if>
 		
 		<!-- 27346 -->

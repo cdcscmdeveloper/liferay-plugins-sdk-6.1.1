@@ -2971,8 +2971,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 						if(personnel.isDirector()){
 							this.getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
+						}	
+						if(personnel.isManagement() || personnel.isDirector()){
+							this.getManagedBean().getPersonnelsSsm().add(personnel);
 						}
-						this.getManagedBean().getPersonnelsSsm().add(personnel);									
 					}
 					// set business nature
 					if(ssmResDTO.getSmSupplierBusinessList() != null){
@@ -3043,8 +3045,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void clearPersonnelList() {
-		this.getManagedBean().getPersonnelsOwner().clear();
-		this.getManagedBean().getPersonnelsDirector().clear();
+		this.getManagedBean().getPersonnelsOwnerSsm().clear();
+		this.getManagedBean().getSmPersonnelDirectorSsm().clear();
 		this.getManagedBean().getSmSupplierBranchSsm().clear();
 		this.getManagedBean().getSmSupplierBusinessSsm().clear();
 		this.getManagedBean().getPersonnelsSsm().clear();
