@@ -1237,5 +1237,12 @@ public class ViewApplHistoryBackingBean extends
 		}
 		//#27232 - END SSM CHANGES FOR RESUBMIT
 	}
-
+	
+	//28771 - start
+	public void onChangeSupportingDocumentMode(){
+		getManagedBean().searchSupplier();
+		
+	}
+	//28771 - end 
+	
 }
