@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
+import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
@@ -398,6 +399,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private String suppConfirmMsgAccept;
 	private String suppConfirmMsgReject;
+	
+	// #11134
+	private List<ScLoiRemark> supplierRemarks;
 	
 	/*
 	 * Enhancement #21694
@@ -2320,6 +2324,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setLoiTaskId(String loiTaskId) {
 		this.loiTaskId = loiTaskId;
+	}
+
+	public List<ScLoiRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoiRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
 	}
 	
 	
