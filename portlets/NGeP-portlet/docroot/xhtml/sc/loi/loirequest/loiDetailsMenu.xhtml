@@ -279,4 +279,13 @@
 		</table>
 	</p:panel>
 	
+	<p:outputPanel id="suppRemarksPanel">
+		test list : #{lOIDetailBackingBean.managedBean.supplierRemarks}
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOIDetailBackingBean.managedBean.supplierRemarks}"
+			showAttachment="false" 
+			readonly="true"
+			rendered="#{not empty lOIDetailBackingBean.managedBean.supplierRemarks}" />
+	</p:outputPanel>
+	
 </ui:composition>
