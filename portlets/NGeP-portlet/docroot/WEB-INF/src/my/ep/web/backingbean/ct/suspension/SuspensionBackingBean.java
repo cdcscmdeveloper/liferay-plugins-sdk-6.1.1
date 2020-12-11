@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -779,7 +781,38 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * The method used to invoke and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
+		/*#28854 start*/
+		IRequestItemSO requestItemSO = null;
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		
+		Long requestItemId = this.getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();		
+		
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+			List<String> itemSpecList = new ArrayList<String>();
+			for(int i=0;i<requestItemSO.retrieveNewOfferSpec(requestItemId).size();i++){
+				if(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec().isEmpty()){
+					continue;
+				}else{			
+					itemSpecList.add(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec());			
+				}
+			}
+			getManagedBean().setItemSpecification(itemSpecList);
+			
+			if(requestItemSO.retrieveNewOfferSpec(requestItemId).isEmpty()){
+				getManagedBean().setSupplierOffer(null);
+				getManagedBean().setNewOfferSpec(null);
+			}else{
+				getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
+				getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());
+			}
+		}
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
+			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
+			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);			
+		}
+		/*#28854 end*/
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 	
