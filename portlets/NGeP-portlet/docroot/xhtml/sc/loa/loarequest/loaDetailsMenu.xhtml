@@ -614,4 +614,11 @@
 			
 		</table>
 	</p:panel>
+	<p:outputPanel id="suppRemarksPanel">
+		<ac:scRemarkAndAttachment
+			remarkList="#{lOADetailBackingBean.managedBean.supplierRemarks}"
+			showAttachment="false" 
+			readonly="true"
+			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
+	</p:outputPanel>
 </ui:composition>
