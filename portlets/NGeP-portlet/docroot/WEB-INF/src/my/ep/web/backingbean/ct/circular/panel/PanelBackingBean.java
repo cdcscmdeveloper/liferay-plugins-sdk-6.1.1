@@ -391,6 +391,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} else if(getManagedBean().isDifferentModule()){
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
+			//#3761 - start
+			if (StringUtils.equals(getManagedBean().getGotoPreviewPage(), "simpleQuoteMain")) {
+				SimpleQuoteBackingBean sqbb = new SimpleQuoteBackingBean();
+				sqbb.getManagedBean().setPanelItemFlag(false);
+				sqbb.getManagedBean().setG2GFlag(false);
+				sqbb.getManagedBean().setActiveIndex(0);
+				sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true,
+						null);
+				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
+				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
+			}
+			// #3761 - end
 			return getManagedBean().getGotoPreviewPage();
 		} else {
 			return "search.xhtml?faces-redirect=true";
@@ -1757,7 +1769,34 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-
+		//#29121 CR 3761: Static Code Analysis Start
+		try (FileOutputStream fileOuputStream = new FileOutputStream(filePath)) {
+			fileOuputStream.write(item.getContents());
+			fileOuputStream.close();
+			
+			//#28713 start basri
+			/*getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
+			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));*/
+			CtAttachment attachment = new CtAttachment();
+			if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
+				
+				attachment.setFileName(item.getFileName());
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedUser(facesScopes.getUserSessionBean());
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
+			} else {
+				
+				attachment.setFileName(item.getFileName());
+				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedUser(facesScopes.getUserSessionBean());
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);
+			}//end
+		}
+		/*
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
@@ -1774,6 +1813,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
 		}
+		*/
+		//#29121 CR 3761: Static Code Analysis End
 	}	
 
 	/**
