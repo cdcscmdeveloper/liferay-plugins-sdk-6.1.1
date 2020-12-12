@@ -40,15 +40,15 @@
 		
 		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
 			 
-		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
 		<h:commandLink
-				rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}"
+				rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}"
 				action="#{registrationBackingBean.redirectToViewSSMInfo(registrationBackingBean.managedBean.smSupp.regNo,registrationBackingBean.managedBean.smSupp.businessType)}"
 				value="#{lbl['lbl.fl.instruction.here']}" 
 				styleClass="splNotesFonts" style="float: inherit" escape="false">
 				 <f:ajax execute="@form" render="@form" />
 				</h:commandLink>
-		<h:outputText rendered="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
+		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer2']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
 					
 			 <div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.declare']}" action="#{registrationBackingBean.updateBasicSupplier}" update="@([id$=Msg])" 
@@ -75,7 +75,11 @@
 		<ui:include src="/xhtml/sm/shared/onlinereg/disciplinaryActionInfo.xhtml" />	
 		
 		<p:outputPanel id="detailSsm" rendered="#{registrationBackingBean.managedBean.showDetailSSM}">
-			<ac:baseViewSsmInfo bBean="#{registrationBackingBean}" title="#{lbl['lbl.sm.view.ssm.infomation']}" dialogId="viewssminfo" />
+			<ac:baseViewSsmInfo bBean="#{registrationBackingBean}"
+								title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+								dialogId="viewssminfo"
+								width="650" height="650"
+								resizable="true" />
 		</p:outputPanel>
 		
 	</ui:define>
