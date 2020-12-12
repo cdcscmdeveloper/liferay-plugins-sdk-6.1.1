@@ -126,6 +126,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -1769,34 +1770,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-		//#29121 CR 3761: Static Code Analysis Start
-		try (FileOutputStream fileOuputStream = new FileOutputStream(filePath)) {
-			fileOuputStream.write(item.getContents());
-			fileOuputStream.close();
-			
-			//#28713 start basri
-			/*getManagedBean().getCircularVer().setCircularFileName("Stored in ctAttachment");
-			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath("CtAttachment"));*/
-			CtAttachment attachment = new CtAttachment();
-			if(event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
-				
-				attachment.setFileName(item.getFileName());
-				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-				attachment.setCreatedUser(facesScopes.getUserSessionBean());
-				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
-			} else {
-				
-				attachment.setFileName(item.getFileName());
-				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-				attachment.setCreatedUser(facesScopes.getUserSessionBean());
-				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);
-			}//end
-		}
-		/*
+
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
@@ -1813,8 +1787,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			RequestContext.getCurrentInstance().execute("uploadCircularDlg.hide()");
 		}
-		*/
-		//#29121 CR 3761: Static Code Analysis End
 	}	
 
 	/**
