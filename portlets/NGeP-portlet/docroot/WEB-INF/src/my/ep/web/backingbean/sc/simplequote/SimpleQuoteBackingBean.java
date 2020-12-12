@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.simplequote;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -43,6 +45,7 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -55,6 +58,9 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -114,6 +120,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -129,16 +136,20 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.format.AttachmentDefaultFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -150,6 +161,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -488,7 +500,9 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
-						throw new EpException(MessageConst.ERROR_760160);
+						// #3761 - start
+//						throw new EpException(MessageConst.ERROR_760160);
+						// #3761 - end
 					} 
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
@@ -551,6 +565,17 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 						// panel item specific
 						isGeneralOrSpecific = Boolean.TRUE;
+						//#3761 - start
+						getManagedBean().setPanelItemFlag(Boolean.FALSE);
+						getManagedBean().setNewableFlag(Boolean.FALSE);
+						getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
+						scQuote.setPanelItem(selectedPanelItem);
+						if (getManagedBean().getTreasuryCircularLinkClickedFlag() != null
+								&& getManagedBean().getTreasuryCircularLinkClickedFlag().booleanValue() == true) {
+							isGeneralOrSpecific = Boolean.FALSE;
+						}
+						getManagedBean().setTreasuryCircularLinkClickedFlag(null);
+						//#3761 - end
 					}
 
 					boolean alreadyExists = checkItemExists(null, selectedPanelItem);
@@ -567,7 +592,11 @@ public class SimpleQuoteBackingBean extends
 								itemName = selectedPanelItem.getItemName();
 							}
 						}
-						throw new EpException(MessageConst.ERROR_700027, new String[] {itemName});
+						// #3761 - start
+						if (getManagedBean().getScQuoteSession() == null) {
+							throw new EpException(MessageConst.ERROR_700027, new String[] { itemName });
+						}
+						// #3761 - end
 						
 					} else {
 						prepareQuestions(selectedPanelItem, null, isGeneralOrSpecific);
@@ -794,6 +823,26 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setEditableFlag(Boolean.TRUE);
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(Boolean.FALSE);
+		
+		// #3761 - start
+		if (getManagedBean().getScQuoteSession() != null) {
+			ScQuote cloneScQuote = getManagedBean().getScQuoteSession();
+			getManagedBean().setScQuoteSession(null);
+			scQuote.setPanel(cloneScQuote.isPanel());
+			scQuote.setTitle(cloneScQuote.getTitle());
+			scQuote.setScQuoteAttachment(cloneScQuote.getScQuoteAttachment());
+			scQuote.setProcurementTypeCategory(cloneScQuote.getProcurementTypeCategory());
+			scQuote.setProcurementType(cloneScQuote.getProcurementType());
+			scQuote.setZonal(cloneScQuote.isZonal());
+			scQuote.setStartDate(cloneScQuote.getStartDate());
+			scQuote.setEndDate(cloneScQuote.getEndDate());
+			scQuote.setMultipleQuote(cloneScQuote.getMultipleQuote());
+			getDurationToolTip();
+		}
+		if ((docId != null) && docId > 0) {
+			getManagedBean().setSupplierItemDocId(docId);
+		}
+		// #3761 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -5694,12 +5743,10 @@ public class SimpleQuoteBackingBean extends
 		if (getManagedBean().getScQuoteSupplier() != null) {
 			smSupplier = getManagedBean().getScQuoteSupplier().getSmSupplier();
 
-			if (smSupplier.getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses() != null
-					&& smSupplier.getSmAppl().getSmCompanyBasic()
-							.getSmCompanyAddresses().size() > 0) {
-				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
-						.getSmCompanyBasic().getSmCompanyAddresses();
+			//#29121 CR 3761: Static Code Analysis Start
+			if (smSupplier != null) {
+			if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size() > 0) {
+				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
 
 				for (SmCompanyAddress compaAddress : companyAddress) {
 					if (compaAddress.getAddressType().equalsIgnoreCase(
@@ -5710,6 +5757,8 @@ public class SimpleQuoteBackingBean extends
 					}
 				}
 			}
+			}
+			//#29121 CR 3761: Static Code Analysis End 
 		}
 
 		sb.append(getManagedBean().getScQuote().getQuoteNo()).append("|")
@@ -5727,7 +5776,11 @@ public class SimpleQuoteBackingBean extends
 			}
 
 		} else {
-			sb.append(smSupplier.getRegNo());
+			//#29121 CR 3761: Static Code Analysis Start
+			if (smSupplier != null) {
+				sb.append(smSupplier.getRegNo());
+			}
+			//#29121 CR 3761: Static Code Analysis End
 		}
 		sb.append("|").append(countryCode);
 		orginalText = sb.toString();
@@ -6037,7 +6090,7 @@ public class SimpleQuoteBackingBean extends
 	 * @return the string
 	 */
 	public String cancel() {
-		log.info("cancel");
+		//log.info("cancel");
 		// clear sq
 		super.renewSesionObject();
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
@@ -6049,7 +6102,7 @@ public class SimpleQuoteBackingBean extends
 	 * Cancel zone pop up.
 	 */
 	public void cancelZonePopUp() {
-		log.info("cancelZonePopUp");
+		//log.info("cancelZonePopUp");
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 		// zone required validation
 		getManagedBean().setRequired(Boolean.FALSE);
@@ -7493,4 +7546,110 @@ public class SimpleQuoteBackingBean extends
 		return valid;
 	}
 	//12183 - End
+	
+	//#3761 - start
+	public void downloadBusinessNaturePdf() throws Exception{
+		debugLogger("downloadBusinessNaturePdf");
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setFileName("Business Nature.pdf");
+
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		pbAttachment.setFilePath(filePath.toString());
+
+		File theDir = new File(getActualFilePath(pbAttachment));
+		theDir.mkdirs();
+
+		AttachmentFormat scFormat = new AttachmentDefaultFormat();
+		String formatedFileName = scFormat.format(SourcingConstants.DOCNAME_SC_LOA_BUSINESS_NATURE,
+				pbAttachment.getPrefixFileName());
+
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		pbAttachment.setFilePath(filePath.toString());
+
+		downloadFile(pbAttachment);
+	}
+	
+	public void gotoPanelPage(Long circularVerId, String docType) {
+		if (((circularVerId == null) || (circularVerId.longValue() == 0))
+				&& (getManagedBean().getScQuote().getPanelItem() != null)) {
+			ICircularDetailSO circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularDetailSO.class);
+			CircularDetailReqDTO circularReqDTO = new CircularDetailReqDTO();
+			circularReqDTO.setPanelItemId(getManagedBean().getScQuote().getPanelItem().getPanelItemId());
+			CircularDetailResDTO circularseqDTO = circularDetailSO.getPanelItemById(circularReqDTO);
+			if ((circularseqDTO != null) && (circularseqDTO.getCtPanelItem() != null)
+					&& (circularseqDTO.getCtPanelItem().getCtCircularVer() != null)) {
+				circularVerId = circularseqDTO.getCtPanelItem().getCtCircularVer().getCircularVerId();
+			}
+		}
+		
+		CircularReqDTO reqDTO = new CircularReqDTO();
+		reqDTO.setCircularVerId(circularVerId);
+		
+		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+			PanelBackingBean ppBB = new PanelBackingBean();
+			ppBB.getManagedBean().setSelectionOfZone(false);
+			ppBB.getManagedBean().setSelectedPanelItems(null);
+			ppBB.getManagedBean().setSelectedPanelZone(null);
+			ppBB.getManagedBean().setSelectedTabIndex(0);
+			ppBB.getManagedBean().setAction("view");
+			ppBB.getManagedBean().setUpdateAction(false);
+			ppBB.getManagedBean().setViewContract(true);
+			ppBB.getManagedBean().setOutComes(new String[] {});
+			if (circularVerId != null) {
+				ppBB.setPanelCircularVar(reqDTO);
+			}
+			ppBB.getManagedBean().setFromCircularNotice(false);
+			ppBB.getManagedBean().setDifferentModule(false);
+			ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
+			ppBB.getManagedBean().setSupplierItemDocId(getManagedBean().getSupplierItemDocId());
+			final TemplateSpecBean ptsb = new TemplateSpecBean();
+			try {
+				BeanUtils.copyProperties(ptsb, getManagedBean().getProductTemplateSpecBean());
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			final TemplateSpecBean stsb = new TemplateSpecBean();
+			try {
+				BeanUtils.copyProperties(stsb, getManagedBean().getServiceTemplateSpecBean());
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ppBB.getManagedBean().setProductTemplateSpecBean(ptsb);
+			ppBB.getManagedBean().setServiceTemplateSpecBean(stsb);
+			if ((getManagedBean().getProductTemplateSpecBean() != null
+					&& getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null && CollectionUtils
+						.isNotEmpty(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions()))
+					|| (getManagedBean().getServiceTemplateSpecBean() != null
+							&& getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null && CollectionUtils
+								.isNotEmpty(getManagedBean().getServiceTemplateSpecBean().getSpecMaster()
+										.getTplSpecQuestions()))) {
+				getManagedBean().setTreasuryCircularLinkClickedFlag(Boolean.TRUE);
+			} else {
+				getManagedBean().setTreasuryCircularLinkClickedFlag(Boolean.FALSE);
+			}
+			
+			ScQuote clonedScQuote = (ScQuote) getManagedBean().getScQuote().cloneEntity();
+			getManagedBean().setScQuoteSession(clonedScQuote);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/ct/circular/portal/panelCircularTab.xhtml");
+		}
+	}
+	//#3761 - end
 }
