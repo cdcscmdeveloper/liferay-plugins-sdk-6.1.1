@@ -183,7 +183,8 @@ public class PurchaseInquiryBackingBean extends
 			this.getManagedBean().setSupplierItem(cmSupplierItem);
 
 			if (cmSupplierItem.getCmPricings() != null
-					&& cmSupplierItem.getCmPricings().size() > 0) {
+					//#29236 CR 26129: Static Code Analysis Use isEmpty() to check whether the collection is empty or not.
+					&& !cmSupplierItem.getCmPricings().isEmpty()) {
 				supplierItemPrice.setPricing(cmSupplierItem.getCmPricings()
 						.get(0));
 				// price type
@@ -216,7 +217,8 @@ public class PurchaseInquiryBackingBean extends
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
 		ruleReqDTO.setRuleType(ParameterConst.ITEM_INQUIRY);
 		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
+		//#29236 CR 26129: Static Code Analysis Use isEmpty() to check whether the collection is empty or not.
+		if (ruleValueList != null && !ruleValueList.isEmpty()) {
 			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
 			scPrInquiry.setDayToResponse(Integer.valueOf(configRuleValue.getRuleValue()));
 		} else {
@@ -253,14 +255,16 @@ public class PurchaseInquiryBackingBean extends
 
 		List<CmPricing> cmPricings = new ArrayList<CmPricing>();
 		if (cmSupplierItem.getCmPricings() != null
-				&& cmSupplierItem.getCmPricings().size() > 0) {
+				//#29236 CR 26129: Static Code Analysis Use isEmpty() to check whether the collection is empty or not.
+				&& !cmSupplierItem.getCmPricings().isEmpty()) {
 			List<String> priceTypes = new ArrayList<String>();
 			for (CmPricing princing : cmSupplierItem.getCmPricings()) {
 				if (!priceTypes.contains(princing.getPricingType())) {
 					priceTypes.add(princing.getPricingType());
 				}
 			}
-			if (priceTypes != null && priceTypes.size() > 0) {
+			//#29236 CR 26129: Static Code Analysis Use isEmpty() to check whether the collection is empty or not.
+			if (priceTypes != null && !priceTypes.isEmpty()) {
 				for (CmPricing princing : cmSupplierItem.getCmPricings()) {
 					cmPricings.add(princing);
 				}
@@ -318,42 +322,6 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 		requestNoteDtl.setConditionField(sb.toString());
-
-		// prepare requestSupplierItems , request item and supplier item price
-		// IViewSupplierItemSO viewSupplierItemSO =
-		// BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-		// IViewSupplierItemSO.class);
-		// CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-		// ISearchBean<VCmSupplierItem> searchBean = new
-		// CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
-		// searchBean.getDataFilterBeans().clear();
-		// catalogueReqDTO.setViewSearchBean(searchBean);
-		// catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
-		// catalogueReqDTO.setExtensionCode(cmSupplierItem.getCmItem().getExtensionCode());
-		// catalogueReqDTO.setUomId(cmSupplierItem.getPmUom().getUomId());
-		// CatalogueResDTO catalogueResDTO =
-		// viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
-		//
-		// List<ScRequestSupplierItem> supplierItems = new
-		// ArrayList<ScRequestSupplierItem>();
-		// for (CmSupplierItem supplierItem :
-		// catalogueResDTO.getSupplierItemList()) {
-		// if (supplierItem.getItemPricings() != null &&
-		// supplierItem.getItemPricings().size() > 0) {
-		//
-		// if(cmSupplieritemIds.contains(supplierItem.getSupplierItemId())){
-		//
-		// if(supplierItem.getCmItem().getItemId().equals(cmSupplierItem.getCmItem().getItemId())){
-		//
-		// ScRequestSupplierItem scRequestSupplierItem =
-		// createScRequestSupplierItem(
-		// requestItem, supplierItem.getSmSupplier(),
-		// supplierItem.getItemPricings());
-		// supplierItems.add(scRequestSupplierItem);
-		// }
-		// }
-		// }
-		// }
 
 		// Add selected supplier item.
 		requestSupplierItem.setCmSupplierItem(cmSupplierItem);
@@ -418,12 +386,18 @@ public class PurchaseInquiryBackingBean extends
 		reqDTO.setOrgProfileId(cmSupplierItem.getSmSupplier().getSupplierId());
 		OrgProfileResDTO resDTO = orgProfileSO
 				.retrieveOrgProfileByProfileId(reqDTO);
-
+		//#29236 CR 26129: Static Code Analysis Start Merge this if statement with the enclosing one.
+		/*
 		if (resDTO.getPmOrgProfile() != null) {
 			if (resDTO.getPmOrgProfile().isGovtSeller()) {
 				isg2g = Boolean.TRUE;
 			} 
 		}
+		*/
+		if (resDTO.getPmOrgProfile() != null && resDTO.getPmOrgProfile().isGovtSeller()) {
+			isg2g = Boolean.TRUE;
+		}
+		//#29236 CR 26129: Static Code Analysis End
 		return isg2g;
 	}
 
@@ -432,38 +406,20 @@ public class PurchaseInquiryBackingBean extends
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(supplierId);
 		OrgProfileResDTO resDTO = getIOrgProfileSO().retrieveOrgProfileByProfileId(reqDTO);
-
+		//#29236 CR 26129: Static Code Analysis Start Merge this if statement with the enclosing one.
+		/*
 		if (resDTO.getPmOrgProfile() != null) {
 			if (resDTO.getPmOrgProfile().isGovtSeller()) {
 				isg2g = Boolean.TRUE;
 			}
 		}
+		*/
+		if (resDTO.getPmOrgProfile() != null && resDTO.getPmOrgProfile().isGovtSeller()) {
+			isg2g = Boolean.TRUE;
+		}
+		//#29236 CR 26129: Static Code Analysis End
 		return isg2g;
 	}
-	/**
-	 * Creates the sc request supplier item.
-	 * 
-	 * @param requestItem
-	 *            the request item
-	 * @param smSupplier
-	 *            the sm supplier
-	 * @param cmPricings
-	 *            the cm pricings
-	 * @return the sc request supplier item
-	 */
-	/*
-	 * private ScRequestSupplierItem createScRequestSupplierItem(ScRequestItem
-	 * requestItem, SmSupplier smSupplier, List<CmPricing> cmPricings) {
-	 * ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
-	 * 
-	 * requestSupplierItem.setRequestNoteItem(requestItem);
-	 * requestSupplierItem.setSmSupplier(smSupplier);
-	 * 
-	 * requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(
-	 * requestSupplierItem, cmPricings ,Boolean.TRUE));
-	 * 
-	 * return requestSupplierItem; }
-	 */
 
 	/**
 	 * Creates the request item.
@@ -551,7 +507,7 @@ public class PurchaseInquiryBackingBean extends
 				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
 						parameterType, priceTypeCode));
 			}
-		} finally {
+		} finally { //#29739 - bugs error validation not appear
 		}
 		return items;
 	}
@@ -714,6 +670,17 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				ScRequestNote requestNote = requestNoteDtl.getScRequestNote();
 				SmSupplier smSupplier = scRequestSupplierItem.getSmSupplier();
+				
+				//Start - #26129
+				if (prInquiry.getCurrentStatus() != null) {
+					getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
+					PmStatus pmStatus = getManagedBean().getPriStatus();
+					if (ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(pmStatus.getDocType())
+							&& DPStatusConstants.PRI_PENDING_SUBMISSION.equals(pmStatus.getStatusId())) {
+						validateRequiredRemark(prInquiry);
+					}
+				}							
+				//End - #26129
 				finalizeRemarks(prInquiry.getRemarks());
 
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
@@ -752,8 +719,7 @@ public class PurchaseInquiryBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
-		} finally {
-			// directPurchaseSO = null;
+		} finally { //#29739 - bugs error validation not appear
 		}
 		return null;
 	}
@@ -771,44 +737,44 @@ public class PurchaseInquiryBackingBean extends
 
 		ScRequestSupplierItem scRequestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		updatePricing(scRequestSupplierItem);
-
+		//#29236 CR 26129: Static Code Analysis Start A "NullPointerException" could be thrown; "scRequestSupplierItem" is nullable here.
 		if (scRequestSupplierItem != null) {
 			prInquiry.setScRequestSupplierItems(Arrays.asList(scRequestSupplierItem));
-		}
+			prInquiry.setIsStockAvailable(stockAvailable);
 
-		prInquiry.setIsStockAvailable(stockAvailable);
+			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
+			reqDTO.setPrInquiryId(prInquiry.getPrInquiryId());
+			reqDTO.setPrInquiryDetail(prInquiry);
 
-		PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
-		reqDTO.setPrInquiryId(prInquiry.getPrInquiryId());
-		reqDTO.setPrInquiryDetail(prInquiry);
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(getManagedBean().getTaskId());
 
-		FacesScopes facesScopes = new FacesScopes();
-		reqDTO.setPmUser(facesScopes.getUserSessionBean());
-		reqDTO.setRoleCode(getUserRoleCode());
-		reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-		reqDTO.setTaskId(getManagedBean().getTaskId());
+			PrInquiryResDTO resDTO = getPrInquirySO().savePrInquiryPrice(reqDTO);
 
-		PrInquiryResDTO resDTO = getPrInquirySO().savePrInquiryPrice(reqDTO);
+			if (resDTO.isSuccessful()) {
+				ScPrInquiry resPrInquiry = resDTO.getPrInquiryDetail();
+				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resPrInquiry.getPrInquiryNo(), Boolean.FALSE);
+				getManagedBean().setSupplierItemPrices(resDTO.getSupplierItemPrices());
 
-		if (resDTO.isSuccessful()) {
-			ScPrInquiry resPrInquiry = resDTO.getPrInquiryDetail();
-			successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_PURCHASE_INQUIRY, resPrInquiry.getPrInquiryNo(), Boolean.FALSE);
-			getManagedBean().setSupplierItemPrices(resDTO.getSupplierItemPrices());
+				ScRequestSupplierItem resRequestSupplierItem = resDTO.getScRequestSupplierItem();
+				scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
+				scRequestSupplierItem.setRequestNoteItem(resDTO.getScRequestItem());
+				scRequestSupplierItem.setChangedDate(resRequestSupplierItem.getChangedDate());
 
-			ScRequestSupplierItem resRequestSupplierItem = resDTO.getScRequestSupplierItem();
-			scRequestSupplierItem.setSupplierItemPrices(resDTO.getSupplierItemPrices());
-			scRequestSupplierItem.setRequestNoteItem(resDTO.getScRequestItem());
-			scRequestSupplierItem.setChangedDate(resRequestSupplierItem.getChangedDate());
+				scRequestNoteDtl.setRequestItem(resDTO.getScRequestItem());
+				scRequestNote.setRequestNoteItems(Arrays.asList(resDTO.getScRequestItem()));
+				scRequestNote.setRequestNoteDtls(Arrays.asList(scRequestNoteDtl));
 
-			scRequestNoteDtl.setRequestItem(resDTO.getScRequestItem());
-			scRequestNote.setRequestNoteItems(Arrays.asList(resDTO.getScRequestItem()));
-			scRequestNote.setRequestNoteDtls(Arrays.asList(scRequestNoteDtl));
-			
-			getManagedBean().setRequestNote(scRequestNote);
-			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
-			getManagedBean().setScPrInquiry(resPrInquiry);
-			getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
+				getManagedBean().setRequestNote(scRequestNote);
+				getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+				getManagedBean().setScPrInquiry(resPrInquiry);
+				getManagedBean().setScRequestSupplierItem(scRequestSupplierItem);
+			}
+			//#29236 CR 26129: Static Code Analysis End 
 		} else {
 			throw new EpException(MessageConst.ERROR_700020);
 		}
@@ -873,11 +839,12 @@ public class PurchaseInquiryBackingBean extends
 						ParameterConst.DOCTYPE_PURCHASE_INQUIRY,
 						prInquiry.getPrInquiryId(), prInquiry.getPrInquiryNo(),
 						originalText);
-			}
-			
-			byte[] signedData = getManagedBean().getSpkiBackingBean()
-					.spkiSignTransaction(originalText);
-			pmDigiSign.setSpkiSignedData(signedData);
+				//#29236 CR 26129: Static Code Analysis Start A "NullPointerException" could be thrown; "pmDigiSign" is nullable here.
+				byte[] signedData = getManagedBean().getSpkiBackingBean()
+						.spkiSignTransaction(originalText);
+				pmDigiSign.setSpkiSignedData(signedData);
+				//#29236 CR 26129: Static Code Analysis End
+			}			
 		}
 
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
@@ -896,6 +863,9 @@ public class PurchaseInquiryBackingBean extends
 		reqDTO.setOutcome(getManagedBean().getAction());
 		reqDTO.setTaskId(getManagedBean().getTaskId());
 		reqDTO.setPmDigiSign(pmDigiSign);
+		//#26129 - Start
+		reqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
+		//#26129 - End
 
 		PrInquiryResDTO resDTO = getPrInquirySO().submitPrInquiryPrice(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -921,43 +891,6 @@ public class PurchaseInquiryBackingBean extends
 			}
 		}
 	}
-
-	/**
-	 * Prepare original text.
-	 * 
-	 * @param smSupplier
-	 *            the sm supplier
-	 * @return the string
-	 *//*
-	private String prepareOriginalText(SmSupplier smSupplier) {
-		FacesScopes facesScopes = new FacesScopes();
-		StringBuilder sb = new StringBuilder();
-		String countryCode = "";
-		String orginalText = "";
-
-		if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
-				&& smSupplier.getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().size() > 0) {
-			List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
-					.getSmCompanyBasic().getSmCompanyAddresses();
-
-			for (SmCompanyAddress compaAddress : companyAddress) {
-				if (compaAddress.getAddressType().equalsIgnoreCase(
-						AddressType.CONTACT_ADDRESS.value())) {
-					countryCode = compaAddress.getSmAddress().getPmCountry()
-							.getCountryCode();
-					break;
-				}
-			}
-		}
-		sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo())
-				.append("|")
-				.append(facesScopes.getUserSessionBean().getIdentificationNo())
-				.append("|").append(smSupplier.getRegNo()).append("|")
-				.append(countryCode);
-		orginalText = sb.toString();
-		return orginalText;
-	}*/
 	
 	/**
 	 * Prepare original text to pass spki authentication
@@ -965,42 +898,38 @@ public class PurchaseInquiryBackingBean extends
 	 * @return the string
 	 */
 	private String prepareOriginalText(boolean isG2GSupplier) {
-		/*
-		 * The first one is the Government user, it is the combination of IC.No,
-		 * > Organization Code and Country Code. >
-		 * 0000000081102813580400000000000211602001MY > IC No. , Organization
-		 * code, Country code > > The second one is for Supplier, it is the
-		 * combination of IC. No, Reg No and > Country Code. >
-		 * 00000000680427115037000000000KT0143162-VMY > IC No. , Registration
-		 * No., Country code
-		 */
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
 		SmSupplier smSupplier = null;
 		String countryCode = "";
 		String orginalText = "";
+		//#29236 CR 26129: Static Code Analysis Start A "NullPointerException" could be thrown; "smSupplier" is nullable here.
+		String regNo = "";
 
 		if (getManagedBean().getScRequestSupplierItem() != null) {
 			ScRequestSupplierItem scRequestSupplierItem = getManagedBean()
 					.getScRequestSupplierItem();
 			smSupplier = scRequestSupplierItem.getSmSupplier();
 
-			if (smSupplier.getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses() != null
-					&& smSupplier.getSmAppl().getSmCompanyBasic()
-							.getSmCompanyAddresses().size() > 0) {
-				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
-						.getSmCompanyBasic().getSmCompanyAddresses();
+			if (smSupplier != null) {
+				if (smSupplier.getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses() != null
+						//#29236 CR 26129: Static Code Analysis Start Use isEmpty() to check whether the collection is empty or not. 
+						&& !smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().isEmpty()) {
+					List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses();
 
-				for (SmCompanyAddress compaAddress : companyAddress) {
-					if (compaAddress.getAddressType().equalsIgnoreCase(
-							AddressType.CONTACT_ADDRESS.value())) {
-						countryCode = compaAddress.getSmAddress()
-								.getPmCountry().getCountryCode();
-						break;
+					for (SmCompanyAddress compaAddress : companyAddress) {
+						if (compaAddress.getAddressType().equalsIgnoreCase(
+								AddressType.CONTACT_ADDRESS.value())) {
+							countryCode = compaAddress.getSmAddress()
+									.getPmCountry().getCountryCode();
+							break;
+						}
 					}
 				}
-			}
+				regNo = smSupplier.getRegNo();				
+			}		
 		}
 		
 		sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo()).append("|")
@@ -1018,8 +947,9 @@ public class PurchaseInquiryBackingBean extends
 			}
 
 		} else {
-			sb.append(smSupplier.getRegNo());
+			sb.append(regNo);
 		}
+		//#29236 CR 26129: Static Code Analysis End
 		sb.append("|").append(countryCode);
 		orginalText = sb.toString();
 		return orginalText;
@@ -1287,7 +1217,6 @@ public class PurchaseInquiryBackingBean extends
 									requestNote.getCreatedBy()).getUserName());
 
 					reqNoteBackingBean.initializeApproverGroup();
-//					reqNoteBackingBean.initialInformation(requestNote);
 					
 					Long rnStatusId = DPStatusConstants.RN_PENDING_SUBMISSION;
 					reqNoteBackingBean.getManagedBean().setCurrentStatusId(rnStatusId);
@@ -1309,7 +1238,28 @@ public class PurchaseInquiryBackingBean extends
 			// redirect to RequestNote screen
 			return "requestNoteMain";
 
-		} else {
+		} else if (StringUtils.equalsIgnoreCase("CANCELPI", action)) { //Start - #26129
+			validateRequiredRemark(prInquiry);
+			finalizeRemarks(prInquiry.getRemarks());
+			getPrInquirySO().updatePICurrentWorkflowStatus(prInquiry, DPStatusConstants.PRI_CANCELLED);
+			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
+			reqDTO.setPrInquiryDetail(prInquiry);
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			PrInquiryResDTO resDTO = getPrInquirySO().submitPrInquiryPrice(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700089, new String[] { getManagedBean().getScPrInquiry()
+						.getPrInquiryNo() }, Boolean.TRUE);
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+			return null;
+		} else {													   //End - #26129
 			finalizeRemarks(prInquiry.getRemarks());
 			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			reqDTO.setPrInquiryDetail(prInquiry);
@@ -1341,10 +1291,11 @@ public class PurchaseInquiryBackingBean extends
 	 * @return the delivery term type
 	 */
 	private PmParameter getDeliveryTermType() {
-		PmParameter deliveryTermType = getParameterByTypeAndCode(
-				ParameterTypeConst.DELIVERY_TERM,
-				ParameterConst.SQ_DURATION_DAY);
-		return deliveryTermType;
+		//#29236 CR 26129: Static Code Analysis Start Immediately return this expression instead of assigning it to the temporary variable "deliveryTermType".
+		//PmParameter deliveryTermType = getParameterByTypeAndCode( ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
+		//return deliveryTermType;
+		return getParameterByTypeAndCode( ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
+		//#29236 CR 26129: Static Code Analysis End
 	}
 
 	/**
@@ -1442,33 +1393,22 @@ public class PurchaseInquiryBackingBean extends
 		// price change lister
 		stockAvailabilityEvent();
 		
-		/* comment for Bug #25388
-		try {
-			boolean hasActiveCancelMOFAppl = false;
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			
-			hasActiveCancelMOFAppl = SmApplicationUtil
-					.checkActiveCancelSmApplForSupp(currSupp);
-			log.info("checkActiveCancelMOFAppl | supplierId : " + currSupp.getSupplierId());
-			if (hasActiveCancelMOFAppl) {
-				getManagedBean().setShowButton(Boolean.FALSE);
-				throw new EpException(MessageConst.ERROR_722668);		
-			}
-		} catch (EpException e) {
-			handleException(e);
-		}
-		*/
-		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (isPageNavFlag) { // page nav.to purchase inquiry
 
 			// Weather stock is available or not
+			//#29236 CR 26129: Static Code Analysis Start Merge this if statement with the enclosing one.
+			/*
 			if (prInquiry.getIsStockAvailable() != null) {
-				if (prInquiry.getIsStockAvailable().equals(
-						ParameterConst.PI_NO_STOCK)) {
+				if (prInquiry.getIsStockAvailable().equals(ParameterConst.PI_NO_STOCK)) {
 					outOfStockMessage();
 				}
 			}
+			*/
+			if (prInquiry.getIsStockAvailable() != null && prInquiry.getIsStockAvailable().equals(ParameterConst.PI_NO_STOCK)) {
+				outOfStockMessage();
+			}
+			//#29236 CR 26129: Static Code Analysis End
 			
 			fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -1789,87 +1729,6 @@ public class PurchaseInquiryBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 	}
 
-	/*
-	 * private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
-	 * IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO)
-	 * BusinessDelegate
-	 * .getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-	 * IZoneMaintenanceSO.class); ZoneMaintenanceReqDTO reqDTO = new
-	 * ZoneMaintenanceReqDTO(); TplSpecZoneDtl specZoneDtl = null;
-	 * if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
-	 * 
-	 * reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
-	 * ZoneMaintenanceResDTO resDTO =
-	 * zoneMaintenanceSO.getSupplierZoneById(reqDTO); CmSupplierZone
-	 * CmSupplierZone = resDTO.getSelectedCmSupplierZone();
-	 * 
-	 * if(CmSupplierZone.getCmSupplierZoneDtls() != null &&
-	 * CmSupplierZone.getCmSupplierZoneDtls().size()>0) {
-	 * 
-	 * Map<String, TplSpecZoneDtl> zoneDtlMap =
-	 * getManagedBean().getZoneDtlMap(); StringBuilder zoneKey = new
-	 * StringBuilder(); String suppZoneName = CmSupplierZone.getSuppZoneName();
-	 * ScPrInquiry scPrInquiry = getManagedBean().getScPrInquiry();
-	 * 
-	 * zoneKey.append(CmSupplierZone.getSuppZoneId());
-	 * zoneKey.append(ZONE_SEPARATOR); zoneKey.append(suppZoneName);
-	 * 
-	 * if (zoneDtlMap == null) { zoneDtlMap = new HashMap<String,
-	 * TplSpecZoneDtl>();
-	 * 
-	 * if (!scPrInquiry.isBrandNew()) { putDBSpecZoneDtlsIntoMap(zoneDtlMap); }
-	 * 
-	 * getManagedBean().setZoneDtlMap(zoneDtlMap); }
-	 * 
-	 * specZoneDtl = zoneDtlMap.get(zoneKey.toString());
-	 * 
-	 * if (specZoneDtl == null) { specZoneDtl = new TplSpecZoneDtl();
-	 * specZoneDtl.setZoneName(suppZoneName);
-	 * specZoneDtl.setSupplierZone(CmSupplierZone);
-	 * 
-	 * ScPIZone zone = getManagedBean().getScPIZone();
-	 * 
-	 * zone.setScPrInquiry(getManagedBean().getScPrInquiry());
-	 * getManagedBean().getScPrInquiry().setScPIZone(zone);
-	 * specZoneDtl.setTplSpecZone(zone);
-	 * 
-	 * List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
-	 * for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {
-	 * TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-	 * specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-	 * specZoneLoc.setPmState(zoneDtl.getPmState());
-	 * specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-	 * specZoneLoc.setTplSpecZoneDtl(specZoneDtl); zoneLocs.add(specZoneLoc); }
-	 * specZoneDtl.setTplSpecZoneLocs(zoneLocs);
-	 * 
-	 * zoneDtlMap.put(zoneKey.toString(), specZoneDtl); } } } return
-	 * specZoneDtl; } private void putDBSpecZoneDtlsIntoMap(Map<String,
-	 * TplSpecZoneDtl> zoneDtlMap) { ISpecZoneLocSO specZoneLocSO = null;
-	 * 
-	 * try { specZoneLocSO =
-	 * BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst
-	 * .COMMON_COMPONENT, ISpecZoneLocSO.class);
-	 * 
-	 * ScPIZone zone = getManagedBean().getScPIZone();
-	 * 
-	 * SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-	 * reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-	 * reqDTO.setDocId(zone.getSpecZoneId()); //reqDTO.setDocId(3391L);
-	 * SpecZoneLocResDTO resDTO =
-	 * specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
-	 * 
-	 * StringBuilder dbZoneKey = null; List<TplSpecZoneDtl> dbSpecZoneDtls =
-	 * resDTO.getZonesList();
-	 * 
-	 * for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) { dbZoneKey = new
-	 * StringBuilder();
-	 * dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
-	 * dbZoneKey.append(ZONE_SEPARATOR);
-	 * dbZoneKey.append(dbSpecZoneDtl.getZoneName());
-	 * 
-	 * zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl); } } finally {
-	 * specZoneLocSO = null; } }
-	 */
 	/**
 	 * Get parameter code select items by parameter type for radio buttons. if
 	 * govt. seller , enable G2G radio button only. if not govt. seller enable
@@ -1995,7 +1854,6 @@ public class PurchaseInquiryBackingBean extends
 	 * The method to used auto update of request.
 	 */
 	public void enableAutoUpdate() {
-		//RequestContext.getCurrentInstance().update("@form");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 	
@@ -2038,4 +1896,28 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 
+	// Start - #26129
+	private void validateRequiredRemark(ScPrInquiry prInquiryDetail) {
+		boolean newRemark = false;
+		if (prInquiryDetail != null) {
+			for (ScPRIRemark remark : prInquiryDetail.getRemarks()) {
+				// no new remark being insert
+				if (remark.getRemark() == null || remark.getRemark().isEmpty()) {
+					newRemark = true;
+				}
+			}
+			//#29236 CR 26129: Static Code Analysis Use isEmpty() to check whether the collection is empty or not
+			if (prInquiryDetail.getRemarks().isEmpty()) {
+				newRemark = true;
+			}				
+		}
+
+		if (newRemark) {
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) 
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+			else
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Catatan" });
+		}
+	}
+	// End - #26129
 }
