@@ -3329,23 +3329,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
         			
 		    if (newgstamount.compareTo(newgstvalidation) == 0)
 		       {
+		    	 if( ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null){
 		    	     //System.out.println("**-- DEV Env --** newgstamount == newgstvalidation");
 		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
-     	    	    
+		    	 }
 		    	   
 		       }
 		    else if(newgstamount.compareTo(newgstvalidation) == 1)
 		       {
+		    	 if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null && ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null  ){
 		    	     //System.out.println("**-- DEV Env --** newgstamount > newgstvalidation");
 		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount()));
-            	   
+		    	 }
 		       }
 		
 		}
 		  else{
-				
+				if(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null){
 				contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
-				
+				}
 			}
 		return contractAmt;
 	}
@@ -3370,22 +3372,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			if (newsstamount.compareTo(newsstvalidation) == 0)
 			 {
+				if(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
 				  // System.out.println("**-- DEV Env --** newsstamount == newsstvalidation");
 			       contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
-		         
+			     }
 			 }
 		    else if(newsstamount.compareTo(newsstvalidation) == 1)
 		     {
+		    	  if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null && ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
 		    	  //   System.out.println("**-- DEV Env --** newsstamount > newsstvalidation");
 		    	     contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount()));
-          	     
+		    	  }
 		     }
 		}
 		
 		else{
-			
+			if(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
 			contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
-		
+			}
 		}
 		return contractAmount;
 	}
