@@ -85,6 +85,9 @@ public class DirOwnCeoOneCompRptBackingBean extends
 					.setCompanyName(StringUtils.EMPTY);
 		}
 		getManagedBean().setIdentificationNo(StringUtils.EMPTY);
+		//15174 - Start
+		getManagedBean().setPersonnelName(StringUtils.EMPTY);
+		//15174 - End
 	}
 
 	public void onChangeSuppType() {
