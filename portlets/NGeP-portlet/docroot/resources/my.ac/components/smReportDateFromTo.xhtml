@@ -67,6 +67,7 @@
 					<c:if test="#{cc.attrs.mandatoryDateTo}">
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</c:if>
+					</td>
 					<td><p:calendar label="#{lbl['lbl.rpt.todate']}"
 						id="calDtTo" showOn="button" navigator="true" disabled="#{empty cc.attrs.bBean.managedBean.dateFrom}"
 						display="inline" readonlyInput="true" size="9" mindate="#{cc.attrs.bBean.managedBean.dateFrom}"
