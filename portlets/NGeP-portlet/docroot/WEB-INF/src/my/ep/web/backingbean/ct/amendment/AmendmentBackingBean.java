@@ -625,15 +625,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#25956 - Start
 			/* re-Setting Cancel button*/
-			if(this.getManagedBean().getOutComes()!= null){
+			if(getManagedBean().getOutComes()!= null){
 			String[] str_array = this.getManagedBean().getOutComes();
 			List<String> list = new ArrayList<String>(Arrays.asList(str_array));
 			if(list.contains(BpmOutcomeConst.BPM_CANCEL)){
 				list.remove(BpmOutcomeConst.BPM_CANCEL);
 				list.add(BpmOutcomeConst.BPM_CANCEL);
 				str_array = list.toArray(new String[0]);
-				this.getManagedBean().setOutComes(null);
-				this.getManagedBean().setOutComes(str_array);
+				getManagedBean().setOutComes(null);
+				getManagedBean().setOutComes(str_array);
 			}
 		}
 			//#25956 - End
@@ -7168,5 +7168,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		//#25956 - End	
+		
+		/**
+		 * The method used to clear the previous viewed information before
+		 * rendering the screen.
+		 */
+		public void preRenderAmendment() {
+			renewSesionObject();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"amendmentTab.xhtml?faces-redirect=true");
+		}
 
 	}
