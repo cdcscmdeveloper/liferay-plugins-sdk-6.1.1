@@ -5202,7 +5202,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			// user id of supplier
-			userIds = getUserSupplierListByUserIds(userIds);
+			if(CollectionUtils.isNotEmpty(userIds)){
+				userIds = getUserSupplierListByUserIds(userIds);
+			}
 			
 			for(A remark : scRemarksIn){
 				if(remark != null && remark.getCreatedBy() != null
