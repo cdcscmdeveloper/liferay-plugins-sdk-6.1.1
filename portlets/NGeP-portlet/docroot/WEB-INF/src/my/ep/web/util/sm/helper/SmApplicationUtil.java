@@ -11915,10 +11915,10 @@ public class SmApplicationUtil {
 			String updateAddressDetails) {
 		if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-           if (!bean.getSmSupplier().getBusinessType()
+			if (bean.getSmSupplier().getBusinessType()  //#29666 - change by removing the the '!' sign
 					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 					// BUG #28173 & #28315 -START
-					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl())
+					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())  //#29666
 					// BUG #28173 & #28315 -END
 					&& (bean.getSelectedShareHolder().isEquityOwner()
 							|| bean.getSelectedShareHolder().isDirector()
@@ -11927,25 +11927,39 @@ public class SmApplicationUtil {
 							.getSelectedShareHolder().isManagement())) {
 				bean.getSelectedShareHolder().setClerical(false);
 				bean.getSelectedShareHolder().setDisableStaff(true);
-					
-			} else {
-				  if (bean.getSmSupplier().getBusinessType()
-						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+		  //#29666 - START		
+			} else if (bean.getSmSupplier().getBusinessType()    
+						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+						&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())
+		  //#29666 - END
 						/* #28256 - Start (Missing role at personnel/capital/equity section)*/
 						// BUG #28173 & #28315 -START
-						&& bean.getSelectedShareHolder().isDirector()
-							|| bean.getSelectedShareHolder().isHigherManagement()) {
+						&& (bean.getSelectedShareHolder().isDirector()
+							|| bean.getSelectedShareHolder().isHigherManagement()
 					    // BUG #28173 & #28315 -END
+							 //#29666 - START
+							|| bean.getSelectedShareHolder().isEquityOwner()
+							|| bean.getSelectedShareHolder().isManagement())) {
+				             //#29666 - END
 					  bean.getSelectedShareHolder().setClerical(false);
 					  bean.getSelectedShareHolder().setDisableStaff(true);
 					  	/*#28356 - End*/
+		//#29666 - START 
+			} else if (bean.getSmSupplier().getBusinessType()     
+					.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+					&& alreadyHadEquityOwnerAsStaff(bean.getSmAppl(), bean.getSelectedShareHolder().getPersonnelId())
+					&& (bean.getSelectedShareHolder().isDirector()
+						|| bean.getSelectedShareHolder().isHigherManagement()
+						|| bean.getSelectedShareHolder().isEquityOwner()
+						|| bean.getSelectedShareHolder().isManagement())) {
+				  bean.getSelectedShareHolder().setClerical(false);
+				  bean.getSelectedShareHolder().setDisableStaff(true);
+		//#29666 - END 
 			} else {
 					bean.getSelectedShareHolder().setDisableStaff(false);
 			}
-		}
 			
-
-		} else if (bean.getSmAppl().getSupplierType()
+	    } else if (bean.getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 			if (bean.getSelectedShareHolder().isEquityOwner()
 					|| bean.getSelectedShareHolder().isDirector()
@@ -11990,14 +12004,16 @@ public class SmApplicationUtil {
 		}
 	}
 
-	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl) {
+	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personelId) { //#29666 - add variable Long 
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
+			if (!per.getPersonnelId().equals(personelId)){  //#29666 - add condition
 			if (per.isEquityOwner() && per.isClerical()) {
 				retVal = true;
 				break;
 			}
 		}
+	 }
 		return retVal;
 	}
 
