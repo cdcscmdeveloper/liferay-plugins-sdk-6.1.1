@@ -7,7 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:param name="scQt" value="#{suppFinalMeetingBackingBean.managedBean.scQt}" />
-
+	<!-- 27668@hatta - start -->
+    <ui:param name="validatevalue" value="#{suppFinalizationBackingBean.handleProposalValidityDays(scQt)}"></ui:param>
+    <!-- 27668@hatta - end -->
 	<div align="left" class="header-info header-spacing">
 		<table style="width:100%;">
 			<tr>
@@ -29,12 +31,44 @@
 suppFinalMeetingBackingBean.isQTStatusPublished(suppFinalMeetingBackingBean.managedBean.currentStatusId)?scQt.publishDate : scQt.createdDate)}
 				</td>
 				<td style="width:5%;">
-					<h:outputLabel value="#{lbl['lbl.sc.status']}" />
+					<!-- 27668@hatta - start --> <h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /> <!-- 27668@hatta - end -->
 				</td>
 				<td style="width:22%;" class="header-info-text">
-					#{suppFinalMeetingBackingBean.getStatusDescById(suppFinalMeetingBackingBean.managedBean.currentStatusId)}
+					<!-- 27668@hatta - start --> #{scQt.qtValidityPeriod} <!-- 27668@hatta - end -->
 				</td>
 			</tr>
+			<!-- 27668@hatta - start -->
+			<tr>
+			    <td style="width: 10%;"><h:outputLabel value="#{lbl['lbl.pp.procurement.title']}" /></td>
+				<td style="width: 27%;" class="header-info-text"><h:outputText value="#{scQt.qtTitle}" /></td>
+				
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.status']}" /></td>
+				<td style="width: 32%;" class="header-info-text">
+										#{suppFinalMeetingBackingBean.getStatusDescById(suppFinalMeetingBackingBean.managedBean.currentStatusId)}
+				</td>
+				
+				<td style="width: 5%;"><h:outputLabel
+						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
+				<c:if test="#{validatevalue eq 'true'}">
+					<td style="width: 22%" class="header-info-text">
+						<h:outputText value="#{scQt.proposalValidityEndDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</td>
+				</c:if>
+				<c:if test="#{validatevalue eq 'false'}">
+					<td style="width: 22%; font-weight: bold; color: red;"
+						class="header-info-text">
+						<h:outputText value="#{scQt.proposalValidityEndDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</td>
+				</c:if>
+		   </tr>
+	       <!-- 27668@hatta - end -->
 		</table>
 	</div>
 

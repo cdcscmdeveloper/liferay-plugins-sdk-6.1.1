@@ -238,7 +238,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#25729#142 & #26169 - Start
 	private boolean isSuppOfferPriceExceedCommunityAuthority;
 	private BigDecimal maxAmountCommitteeAuthority;
-	//#25729#142 & #26169 - End		
+	//#25729#142 & #26169 - End 
+	
+	// #27668 - Start
+	private boolean showDefalutSupplierListTblSingle=true;
+	private boolean showDefalutSupplierListTblMultiple=true;
+	// #27668 - End
 		
 	/**
 	 * @return the activeIndex
@@ -2148,6 +2153,24 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setMaxAmountCommitteeAuthority(BigDecimal maxAmountCommitteeAuthority) {
 		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
 	}	
-	//#25729#142 & #26169 - End
+	//#25729#142 & #26169 - End 
+	
+	// #27668 - Start
+	public boolean isShowDefalutSupplierListTblSingle() {
+		return showDefalutSupplierListTblSingle;
+	}
+
+	public void setShowDefalutSupplierListTblSingle(boolean showDefalutSupplierListTblSingle) {
+		this.showDefalutSupplierListTblSingle = showDefalutSupplierListTblSingle;
+	}
+
+	public boolean isShowDefalutSupplierListTblMultiple() {
+		return showDefalutSupplierListTblMultiple;
+	}
+
+	public void setShowDefalutSupplierListTblMultiple(boolean showDefalutSupplierListTblMultiple) {
+		this.showDefalutSupplierListTblMultiple = showDefalutSupplierListTblMultiple;
+	}
+	// #27668 - End
 
 }
