@@ -15072,18 +15072,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 	// #25039#67#76 - start
 	// To recalculate estimate amount (Item Total Indicative Price)
-	private void reCalculateEstimateAmount(TemplateSpecBean templateSpecBean){
-		log.info("===========reCalculateEstimateAmount start============");
-	
-		Double indicativeUnitPrice = 0.00;  
-		BigDecimal clQuantity = new BigDecimal(0); 
-		BigDecimal clUomFrequency = new BigDecimal(0);  
-		BigDecimal clUomPerDay = new BigDecimal(0);  
-		BigDecimal clUomPerMonth = new BigDecimal(0); 
+	private void reCalculateEstimateAmount(TemplateSpecBean templateSpecBean){	
+		//20201113@asyrafhaziq_Bug #29591 - start
 		BigDecimal contractDuration = new BigDecimal(0);
-		Long specEstimationId = 0L ; // #25039 21-3-2020
-		long specZoneId = 0; 
-		BigDecimal questionId = new BigDecimal(0);
+		//20201113@asyrafhaziq_Bug #29591 - end
 		Boolean isItemTypeService = false;
 		Boolean isFulfilmentTypeScheduled = false;	
 		Boolean isZonal = false;
@@ -15110,6 +15102,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		
 		if (questionSize != 0){
 			for (int i = 0; i < questionSize; i++) {
+				//20201113@asyrafhaziq_Bug #29591 - start
+				Double indicativeUnitPrice = 0.00;  
+				BigDecimal clQuantity = new BigDecimal(0); 
+				BigDecimal clUomFrequency = new BigDecimal(0);  
+				BigDecimal clUomPerDay = new BigDecimal(0);  
+				BigDecimal clUomPerMonth = new BigDecimal(0); 
+				Long specEstimationId =0L ; // #25039 21-3-2020
+				long specZoneId = 0; 
+				BigDecimal questionId = new BigDecimal(0);
+				//20201113@asyrafhaziq_Bug #29591 - End				
 				int estimationSize =templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getTplSpecEstimations().size();
 				
 				if (templateSpecBean.getSpecMaster().getTplSpecQuestions().get(i).getClQuantity() != null) {
