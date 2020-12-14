@@ -119,7 +119,11 @@
 		update=":#{p:component('natureBusinessId')}"/>
 		
 		<p:outputPanel id="detailSsm" rendered="#{supplierBusinessNatureBackingBean.managedBean.showDetailSSM}">	
-		<ac:baseViewSsmInfo bBean="#{supplierBusinessNatureBackingBean}" title="#{lbl['lbl.sm.view.ssm.infomation']}" dialogId="viewssminfo" />
+		<ac:baseViewSsmInfo bBean="#{supplierBusinessNatureBackingBean}" 
+							title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+							dialogId="viewssminfo"
+							width="650" height="650"
+							resizable="true" />
  	</p:outputPanel> 
  	
 	 </ui:define>
