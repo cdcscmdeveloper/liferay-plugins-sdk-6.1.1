@@ -566,6 +566,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			log.info("Check Putra Amendment preRenderView taskId*******"+taskId);
 			log.info("Check Putra Amendment preRenderView contractVerId*******"+contractVerId);
 			
+			log.info("Check Putra CtBackingBean Null ****Start PrerenderView***"+ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+			
 			if(contractVerId!=null) {
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
@@ -580,6 +582,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
+				log.info("Check Putra CtBackingBean Null ****PrerenderView taskId==null***"+ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 				ConstructTabSideMenu();
 
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
@@ -811,6 +814,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //			}
 //				getManagedBean().setOutComes(outcomecancel);
 				//#25956 - Start Button End If not isDisciplinaryAction	
+			log.info("Check Putra CtBackingBean Null ****END PrerenderView***"+ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 
 
 		}catch (Exception e) {
@@ -854,6 +858,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer resDTO.getCtContractVer()"+resDTO.getCtContractVer().getContractVerId());
 			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
+			log.info("Check Putra CtBackingBean Null ****Start setAmendmentContractVer***"+ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			//26753 - start
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {
 				ContractReqDTO ctReqDTO = new ContractReqDTO();		
@@ -1255,6 +1260,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
 				ctBackingBean.getManagedBean().setContractExpired(true);
 			}
+			log.info("Check Putra CtBackingBean Null ****END setAmendmentContractVer***"+ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
 		} finally {
