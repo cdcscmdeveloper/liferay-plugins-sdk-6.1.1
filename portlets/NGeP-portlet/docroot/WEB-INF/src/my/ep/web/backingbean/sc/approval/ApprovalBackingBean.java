@@ -593,6 +593,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (tabBeans.size() > 0) {
 				getManagedBean().setSelectedTabBean(tabBeans.get(0));
+				List<QtCommitteeMemberBean> historyList = getMemberHistoryList(getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee());
+				this.getManagedBean().setMemberHistoryList(historyList);
 			}
 			if(CollectionUtils.isNotEmpty(paramTypes)){//#25037
 				prepareEvalCommiteeApproval(paramTypes, approvalRequests);
@@ -755,7 +757,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				if(this.getManagedBean().isCommitteeReviseFlow()){
 					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
-					page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";				
+//					page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";				
 				}//#25037
 				List<ScQtCommittee> cmts = null;
 				if(this.getManagedBean().getQt()!=null) { cmts = this.getManagedBean().getQt().getScQtCommittees();}
@@ -1172,17 +1174,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//#25037-START
 			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
-				String committeeType = "";
 				String committeeNames = "";
 				if(CollectionUtils.isNotEmpty(qt.getScQtCommittees())){
 					int count = 0;
 					for(ScQtCommittee c: qt.getScQtCommittees()){
 						count++;
 						String code = c.getScCommittee().getCommitteeType().getParameterCode();
-						committeeType = committeeType.concat(code);
 						committeeNames = committeeNames.concat(this.getParameterDesc(ParameterConst.COMMITTE_TYPE, code));
 						if(count<qt.getScQtCommittees().size()){
-							committeeType = committeeType.concat("/");
 							committeeNames = committeeNames.concat("/");
 						}
 					}
@@ -2250,7 +2249,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	//#25692-End
 	
 	//#25037-START
-	@SuppressWarnings("unchecked")
 	private void prepareEvalCommiteeApproval(List<String> paramTypes, List<ScQtApprovalRequest> approvalRequests) throws IOException{
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -2273,19 +2271,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					this.getManagedBean().setScQtApprovalRequest(approvalRequests.get(0));
 				}
 				this.getManagedBean().setCommitteeReviseFlow(true);
-			}
-		}
-		if(this.getManagedBean().isCommitteeReviseFlow()){
-			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			ScQtCommittee qtCommittee = this.getManagedBean().getQt().getScQtCommittees().get(0);
-			this.getManagedBean().setCurrentCommitteeDesc(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
-
-			List<ScCommitteeMemberHistory> histories = committeSO.getMergedHistory(qtCommittee, false);
-			
-			if(CollectionUtils.isNotEmpty(histories)){
-				ScCommitteeMemberHistory h= histories.get(0);
-				List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>)(Object)h.deserializeList(h.getCommitteeMembers());
-				this.getManagedBean().setMemberHistoryList(list);
 			}
 		}
 	}
