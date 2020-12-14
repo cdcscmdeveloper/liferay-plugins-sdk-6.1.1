@@ -428,7 +428,11 @@
 		</ac:smPanel>
 		
 		<p:outputPanel id="detailSsm" rendered="#{backingBean.managedBean.showDetailSSM}">
-		<ac:baseViewSsmInfo bBean="#{backingBean}" title="#{lbl['lbl.sm.view.ssm.infomation']}" dialogId="viewssminfo" />
+		<ac:baseViewSsmInfo bBean="#{backingBean}" 
+							title="#{lbl['lbl.sm.view.ssm.infomation']}" 
+							dialogId="viewssminfo"
+							width="650" height="650"
+							resizable="true" />
 		</p:outputPanel>
 
 	</ui:define>
