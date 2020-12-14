@@ -639,7 +639,9 @@ public class PmReportsBackingBean extends
 		getManagedBean().setApplicantName(null);
 		getManagedBean().setSelectedApplicationStatus(null);
 		//shafie - #28833 - start
-		getManagedBean().setSelectedMinistry(null);
+		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			getManagedBean().setSelectedMinistry(null);
+		}
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
 		//shafie - #28833 - end
