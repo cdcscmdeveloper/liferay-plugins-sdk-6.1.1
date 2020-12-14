@@ -2892,12 +2892,6 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
-		templateSpecSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-
 		SmSupplier smSupplier = new SmSupplier();
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		reqDTO.setSupplier(smSupplier);
