@@ -754,27 +754,36 @@ public class BSVAttendanceBackingBean extends
 		}
 
 		if (mofAccounts != null) {
-			for (int i = 0; i < mofAccounts.size(); i++) {
-				SmMofAccount mofAccount = mofAccounts.get(i);
-				ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
-				bsvRegistration.setSupplier(mofAccount.getSmSupplier());
-				bsvRegistration.setBsvDtl(this.getManagedBean()
-						.getScQtBriefing());
-				if (getManagedBean().getBriefingRegistrationList().contains(
-						bsvRegistration)) {
-					throw new EpException(MessageConst.ERROR_760186);
-				}
-				getManagedBean().getBriefingRegistrationList().add(
-						bsvRegistration);
-				if (i == mofAccounts.size() - 1) {
-					this.getManagedBean().setSelectedbriefRegistration(
+			//#29770 - #26247 - Start.
+			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTBriefingSO.class);
+			try {
+				for (int i = 0; i < mofAccounts.size(); i++) {
+					SmMofAccount mofAccount = mofAccounts.get(i);
+					ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
+					SmSupplier smSupplier = bsvSo.retrieveActiveDisciplinaryActionBySupplier(mofAccount.getSmSupplier());
+					bsvRegistration.setSupplier(smSupplier);
+					bsvRegistration.setBsvDtl(this.getManagedBean()
+							.getScQtBriefing());
+					if (getManagedBean().getBriefingRegistrationList().contains(
+							bsvRegistration)) {
+						throw new EpException(MessageConst.ERROR_760186);
+					}
+					getManagedBean().getBriefingRegistrationList().add(
 							bsvRegistration);
-					getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
+					if (i == mofAccounts.size() - 1) {
+						this.getManagedBean().setSelectedbriefRegistration(
+								bsvRegistration);
+						getAttandanceDtlsBySelectedRegistartion(bsvRegistration);
+					}
+					setSlectedHeaderName(bsvRegistration.getSupplier()
+							.getCompanyName().concat("  ").concat(">"));
 				}
-				setSlectedHeaderName(bsvRegistration.getSupplier()
-						.getCompanyName().concat("  ").concat(">"));
+			} finally {
+				bsvSo = null;
 			}
-
+			//#29770 - #26247 - End.
 		}
 	}
 
