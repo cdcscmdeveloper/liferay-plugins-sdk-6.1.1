@@ -4502,8 +4502,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item
 				.getTplSpecZoneDtl().getZoneName() : "");
-		itemBean.setItem(item.getScRequestItem().getItemName());
-
+		//20200720@asyrafhaziq  - #28609 - Start
+		String itemName = item.getScRequestItem().getItemName();
+		if (itemName == null) {
+			itemName = "";
+		  }
+		itemName = itemName.trim();
+		//replace all special characters
+		itemName = itemName.replaceAll("<", "&#60;");
+		itemName = itemName.replaceAll(">", "&#62;");
+		itemName = itemName.replaceAll("\u2264", "&#60;=");//symbol less then equal
+		itemName = itemName.replaceAll("\u2265", "&#62;=");//symbol greater then equal
+		itemName = itemName.replaceAll("\r\n", "<br/>");		
+		itemBean.setItem(itemName);
+		//20200720@asyrafhaziq  - #28609 - End
+		
 		if(item.getTplSpecTierQty() != null){
 			itemBean.setTier(Boolean.TRUE);
 			itemBean.setFromQty(null == item.getTplSpecTierQty().getFromQty()? "" 
@@ -6639,7 +6652,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					int order = specQuestion.getQuestionOrder();
 					if (!questionSpecMap.containsKey(order)) {
 						ItemBean specBean = new ItemBean();
-						specBean.setItem(specQuestion.getClItem());
+						//20200824@asyrafhaziq  - #28609 - Start
+						String itemName = specQuestion.getClItem();
+						if (itemName == null) {
+							itemName = "";
+						}
+						itemName = itemName.trim();
+						//replace all special characters
+						itemName = itemName.replaceAll("<", "&#60;");
+						itemName = itemName.replaceAll(">", "&#62;");
+						itemName = itemName.replaceAll("\u2264", "&#60;=");//symbol less then equal
+						itemName = itemName.replaceAll("\u2265", "&#62;=");//symbol greater then equal
+						itemName = itemName.replaceAll("\r\n", "<br/>");
+						specBean.setItem(itemName);
+						//20200824@asyrafhaziq  - #28609 - End
 						specBean.setSpecs(new ArrayList<String>());
 						questionSpecMap.put(order, specBean);						} 
 				} else {
