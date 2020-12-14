@@ -35,7 +35,8 @@
 			challengeQues1="#{amendmentBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
-
+		<c:choose>
+		<c:when test="#{!amendmentBackingBean.managedBean.updateCommittee}">
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="2" valign="top" class="myProfile-title" style="color:blue;">
@@ -85,79 +86,28 @@
 				</td>
 			</tr>
 		</table>
-		
-				<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
-			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-					partialSubmit="true" process="@this"
-					action="#{amendmentBackingBean.saveContractAmendment('CANCEL')}"
-					onstart="cancelConfirmDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-				process="@this" update="@form"
-				onclick="cancelConfirmDlg.hide()">
-				<f:setPropertyActionListener
-					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
-				</p:commandButton>
-			</div>
-		</p:confirmDialog>
-		
-		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.officer.amendment']}"
-			severity="alert" widgetVar="cancelofficerConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-					partialSubmit="true" process="@this"
-					action="#{amendmentBackingBean.saveContractAmendment('CANCEL')}"
-					onstart="cancelofficerConfirmDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-				process="@this" update="@form"
-				onclick="cancelofficerConfirmDlg.hide()">
-				<f:setPropertyActionListener
-					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
-				</p:commandButton>
-			</div>
-		</p:confirmDialog>
-		
-			<p:confirmDialog message="#{lbl['lbl.msg.confirm.reject.amendment']}"
-			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-					partialSubmit="true" process="@this"
-					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
-					onstart="rejectConfirmDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-				process="@this" update="@form"
-				onclick="rejectConfirmDlg.hide()">
-				<f:setPropertyActionListener
-					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
-				</p:commandButton>
-			</div>
-		</p:confirmDialog>
-		
-		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
-			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-					partialSubmit="true" process="@this"
-					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
-					onstart="supplierrejectConfirmDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-				process="@this" update="@form"
-				onclick="supplierrejectConfirmDlg.hide()">
-				<f:setPropertyActionListener
-					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
-				</p:commandButton>
-			</div>
-		</p:confirmDialog>
-
+		</c:when>
+		<c:otherwise>
+		<table style="width: 100%;">
+		<tr>
+		<td class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.update']}"
+						immediate="true" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						rendered="#{amendmentBackingBean.managedBean.updateCommittee}"
+						actionListener="#{amendmentBackingBean.validateLatestCommitteeMembers}" 
+						partialSubmit="true"/>
+		<p:commandButton value="#{lbl['lbl.ct.btn.back']}"
+						immediate="true" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						rendered="#{amendmentBackingBean.managedBean.updateCommittee}"
+						actionListener="#{amendmentBackingBean.backToDecisionTab}" 
+						update="@form"/>
+		</td>
+		</tr>
+		</table>
+		</c:otherwise>
+		</c:choose>
 	<p:remoteCommand update=":form:panelHeaderException"
 		actionListener="#{amendmentBackingBean.showCompleteButton}"
 		name="showCompleteBtn" />
