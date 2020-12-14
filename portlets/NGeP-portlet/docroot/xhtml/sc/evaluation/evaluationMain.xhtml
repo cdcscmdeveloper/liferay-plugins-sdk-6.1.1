@@ -56,7 +56,8 @@
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}" disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
-			styleClass="ui-button" oncomplete="confirmSubmitMeetingMainPopup.show();"
+			styleClass="ui-button" action="#{evaluationMeetingBackingBean.submitMettingDetails()}" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();"
 			style="float:right;" process="@all" partialSubmit="true">
 		</p:commandButton>
 
