@@ -16,20 +16,14 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-
-import com.liferay.compat.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -57,7 +51,6 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 
@@ -172,12 +165,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//25956
 	private boolean viewOnly = false; /*#25956 notification setting*/
 	
-	private Long contractVerId; //#29403
-	
 	public void reassignValue(boolean value) 
 	{
-		//test Change Code for #25956 & Bug #29323
-//		readOnly = value;	
+		readOnly = value;	
 		resetval= value;
 		servicecollapse=value;
 		prodcollapse=value;
@@ -225,29 +215,14 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				// Start - #29507 Fixing
-				Long contractVerId=null;				
-				log.info("ServiceListingPagingDataModel");
-				log.info("getTaskId : "+getTaskId());
-								
-				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId()) && getTaskId()== null){
-					
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
-				}
-				//if contract from tasklist taskid != null
-				if(getTaskId()!= null){
-					
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-					log.info("tasklist screen  :: contractVer :: >>> "+contractVerId);
-				}else {
-					
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
-				}
-				// End - #29507 Fixing
 				
+				Long contractVerId=null;
+				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
+				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
+				}else {
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+				}
 				  if(contractVerId!=null ){						
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 						searchBean.getDataFilterBeans().add(filterBean);
@@ -371,32 +346,16 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 			Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 			
 			Long contractVerId=null;
-			// Start - #29507 Fixing
-			log.info("ContractListingPagingDataModel");
-			log.info("getTaskId : "+getTaskId());
-			
 			if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId()) && getTaskId()== null){
-				
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
-			}
-			//if contract from tasklist taskid != null
-			if(getTaskId()!= null){
-				
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-				log.info("tasklist screen  :: contractVer :: >>> "+contractVerId);
+			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
 			}else {
-				
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
-				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
 			}
-			// End - #29507 Fixing
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-			  
 			
 		  if(contId!=null ) {
 				SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
@@ -1522,21 +1481,5 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
-	
-	//#29403 start
-	/**
-	 * @return the contractVerId
-	 */
-	public Long getContractVerId() {
-		return contractVerId;
-	}
-
-	/**
-	 * @param contractVerId the contractVerId to set
-	 */
-	public void setContractVerId(Long contractVerId) {
-		this.contractVerId = contractVerId;
-	}
-	//#29403 end
 
 }
