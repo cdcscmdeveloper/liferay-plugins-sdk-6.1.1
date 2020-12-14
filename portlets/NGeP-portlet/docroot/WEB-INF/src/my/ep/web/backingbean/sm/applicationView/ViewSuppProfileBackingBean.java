@@ -210,7 +210,9 @@ public class ViewSuppProfileBackingBean extends
 		if(!EntityHelper.isCollectionEmpty(voList)
 				&& voList.size() > 0){
 			getManagedBean().setDisciplineVOs(voList);
-			
+			//#-29771 - Start.
+			getManagedBean().setSmSupplier(smSupplier);
+			//#-29771 - End.
 			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			PmUser sUsers = facesScopes.getUserSessionBean();
