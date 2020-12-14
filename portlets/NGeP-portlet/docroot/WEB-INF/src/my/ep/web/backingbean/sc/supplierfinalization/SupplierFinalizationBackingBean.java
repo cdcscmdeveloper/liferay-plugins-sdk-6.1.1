@@ -187,6 +187,8 @@ public class SupplierFinalizationBackingBean extends
 	private static final Long DEFAULT_ZONE = 0L;
 	private static final String JUSTIFICATION_OTHERS = "OTHERS";
 	
+	private ScQt scQt;
+	
 	/**
 	 * Default constructor
 	 */
