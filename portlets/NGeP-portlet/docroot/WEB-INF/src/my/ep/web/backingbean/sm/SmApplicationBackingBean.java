@@ -14091,21 +14091,30 @@ public class SmApplicationBackingBean extends
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 
 			    if (getManagedBean().getSelectedShareHolder().isClerical()
-			    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl())) {
+			    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())) {  //#29666 
 			    	log.info("insert clerical contractor");
 				getManagedBean().getSelectedShareHolder().setEquityOwner(false);
 				getManagedBean().getSelectedShareHolder().setDirector(false);
 				getManagedBean().getSelectedShareHolder().setHigherManagement(false);
 				getManagedBean().getSelectedShareHolder().setManagement(false);
 				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			}else {
-				/*getManagedBean().getSelectedShareHolder().setEquityOwner(true);
-				getManagedBean().getSelectedShareHolder().setManagement(true);*/
+		    //#29666- START 	
+			    } else if (getManagedBean().getSelectedShareHolder().isClerical()
+			    		&& !alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
+			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+			//#29666- END 		
+			    }else {
+			    	/*getManagedBean().getSelectedShareHolder().setEquityOwner(true);
+					getManagedBean().getSelectedShareHolder().setManagement(true);*/
 				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
 				log.info("enable equity owner contractor");
-			}
-		}
-		else if (getManagedBean().getSmAppl().getSupplierType()
+			    }
+			    
+		   } else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 			if (getManagedBean().getSelectedShareHolder().isClerical()) {
 			    	log.info("insert clerical consultant");
@@ -14124,15 +14133,16 @@ public class SmApplicationBackingBean extends
 			}
 		}
    }
-    
-	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl) {
+    private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personnelId) { //#29666- add Long variable
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
+			if (!per.getPersonnelId().equals(personnelId)){  //#29666- add condition
 			if (per.isEquityOwner() && per.isClerical()) {
 				retVal = true;
 				break;
 			}
 		}
+	}
 		return retVal;
 	}
 // BUG #28173 & #28315 -END
