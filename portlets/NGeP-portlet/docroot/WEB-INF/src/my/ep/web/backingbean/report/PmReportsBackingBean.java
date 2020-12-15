@@ -631,7 +631,7 @@ public class PmReportsBackingBean extends
 		else
 			getManagedBean().setSearchOrgCategory(0);
 		getManagedBean().setSelectedOrgType(null);
-		
+		getManagedBean().setSelectedPmUser(null);
 		getManagedBean().setRoleDescResults(null);
 		getManagedBean().setSelectedRoleDesc(null);
 		getManagedBean().setCurrentActiveOrg(null);
@@ -641,7 +641,7 @@ public class PmReportsBackingBean extends
 		//shafie - #28833 - start
 		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(null);
-			getManagedBean().setSelectedPmUser(null);
+			onChangeReportName();
 		}
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
