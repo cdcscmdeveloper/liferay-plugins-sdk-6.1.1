@@ -195,10 +195,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(ctBackingBean == null){
 			ctBackingBean = new ContractBackingBean();
 		}
-		log.info("Check Putra CTISSUE AmendmentBackingBean>>>>>getOutComes "+this.getManagedBean().getOutComes().toString());
+
 		if (this.getManagedBean().getOutComes() == null) {
 			this.getManagedBean().setOutComes(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBackingBean.getManagedBean().setContractVer(new CtContractVer());
+			log.info("Check Putra CTISSUE AmendmentBackingBean>>>>>getOutComes ");
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
