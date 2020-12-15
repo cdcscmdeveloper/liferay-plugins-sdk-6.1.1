@@ -44,6 +44,11 @@ public class DailyRegApplRptBackingBean extends
 		params.put(SmReportConst.PARAM_REG_TYPE, getManagedBean().getRegType());
 		params.put(SmReportConst.PARAM_REG_NO, getManagedBean().getRegNo());
 
+		//#7754 - Start
+		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone() == null ? StringUtils.EMPTY : getManagedBean()
+				.getZone());		
+		//#7754 - End
+
 		generateSmReport(params);
 	}
 
@@ -56,6 +61,9 @@ public class DailyRegApplRptBackingBean extends
 		}
 		getManagedBean().setRegNo(StringUtils.EMPTY);
 		setDefaultDateFromAndDateTo();
+		//#7754 - Start
+		getManagedBean().setZone(null);
+		//#7754 - End
 	}
 
 }
