@@ -842,7 +842,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //			}
 //				getManagedBean().setOutComes(outcomecancel);
 				//#25956 - Start Button End If not isDisciplinaryAction	
-
+			log.info("CTISSUE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ctBackingBean.getManagedBean().getContractVer());
 
 		}catch (Exception e) {
 			e.printStackTrace();
