@@ -1064,6 +1064,23 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
+				// #29772 - Start.
+				IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+				try {
+					qtSuppFinalizationSO = BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTSuppFinalizationSO.class);
+					for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) {
+						SmSupplier supplier = scLoiLoa.getSmSupplier();
+						if (null != supplier) {
+							supplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(supplier);
+							scLoiLoa.setSmSupplier(supplier);
+						}
+					}
+				} finally {
+					qtSuppFinalizationSO = null;
+				}
+				// #29772 - End.
 				getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
 				checkIsLoiProcessRequired(resDTO.getLoiLoas());
 				// rec supplier in loi list
