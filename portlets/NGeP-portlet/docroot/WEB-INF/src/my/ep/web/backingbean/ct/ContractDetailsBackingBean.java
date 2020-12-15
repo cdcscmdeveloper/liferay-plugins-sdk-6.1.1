@@ -385,11 +385,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							this.getManagedBean().setOldMinistryProfile(retrieveMinistryOrgProfile(
 									ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 							this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
-									ctBB.getManagedBean().getContractVer().getOwnerOrgProfile()));
-							this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile()));
-//							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile()).);
-
-//							this.getManagedBean().setSearchPtjProfile(retrievePTJNameByOrgProfileId(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile()));
+									ctBB.getManagedBean().getContractVer().getOwnerOrgProfile().getOrgProfileId()));
+							this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile().getOrgProfileId()));
+							this.getManagedBean().setSearchPtjProfile(ctBB.getManagedBean().getContractVer().getOwnerOrgProfile());
 						}else{
 							this.getManagedBean().setOldMinistryProfile(retrieveMinistryOrgProfile(
 									ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
@@ -849,7 +847,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#25406 - Start
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-			ctContractVer.setOwnerOrgProfile(getManagedBean().getSearchPtjProfile().getOrgProfileId());
+			ctContractVer.setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}
 		
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
