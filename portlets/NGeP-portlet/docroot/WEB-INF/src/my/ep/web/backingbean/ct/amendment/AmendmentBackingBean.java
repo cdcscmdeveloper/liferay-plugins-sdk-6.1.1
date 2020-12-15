@@ -561,6 +561,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#25956 - Start (view Contract Amendment url from notification)
 			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
 			
+			log.info("Check Putra CTISSUE** Enter preRenderView getContractVerId :"+ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+			
 			if(contractVerId!=null) {
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
@@ -576,6 +578,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				//#29403 start
+				log.info("Check Putra CTISSUE** Enter preRenderView if>taskId == null getContractVer == null :"+ctBackingBean.getManagedBean().getContractVer());
+				log.info("Check Putra CTISSUE** Enter preRenderView if>taskId == null getCtAmendment == null :"+ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
 				if (ctBackingBean.getManagedBean().getContractVer()==null 
 						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null){
 					log.info("Check hafiz Amendment preRenderView taskid null and ctbackingBean null");
@@ -843,6 +847,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //				getManagedBean().setOutComes(outcomecancel);
 				//#25956 - Start Button End If not isDisciplinaryAction	
 			log.info("CTISSUE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ctBackingBean.getManagedBean().getContractVer());
+			log.info("CTISSUE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
 
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -953,6 +958,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			}
+			log.info("Check Putra CTISSUE setAmendmentContractVer getCtAmendment :"+ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
+			log.info("Check Putra CTISSUE setAmendmentContractVer getCtAmendment :"+ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 
 			if (getManagedBean().getTaskName() != null 
 					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
