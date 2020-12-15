@@ -51,22 +51,32 @@
 						<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty smSupplier.smMofAccounts}"/>
 					</p:column>
 		
+					    <!-- new requirement for wording #29778 -START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
 						<!-- bug #28278 -START @harith -->
 						<!-- 26238 -  Disciplonary action - 29156 START @akmal -->
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG}" />	
-						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST}" />	
+						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction eq true}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction ne true}" />	
+						
+						<h:outputText value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction eq true}" />	
+						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted1']} (#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_DELETED and smSupplier.typeDisciplinaryAction eq SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction ne true}" />	
 						
 						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted2']} (#{smSupplier.smAppl.applNo})" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_CANCELLED}" />	
 						<h:outputText value="#{lbl['lbl.sm.mof.status.deleted3']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM}" />	
 						<!-- 26238 -  Disciplonary action - 29156  -END -->		
 					    <!-- bug #28278 -END -->
 					    <!-- bug #29690 -START -->
-					    <h:outputText value="#{lbl['lbl.sm.mof.status.suspend']}" rendered="#{smSupplier.mofStatus eq 'S'}" />
+						<h:outputText
+							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction eq true}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.status.suspend']})"
+							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction ne true}" />
 					    <!-- bug #29690 -END -->
+					    <!-- new requirement for wording #29778 -END -->
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
