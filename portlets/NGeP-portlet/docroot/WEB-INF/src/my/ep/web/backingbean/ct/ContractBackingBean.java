@@ -282,7 +282,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			getManagedBean().setAttachmentList(attachmentList);
 		//Bug #29446
-		} else if (getManagedBean().isViewContract()){
+		} else {
 			getManagedBean().setRemarkList(remarkList);
 			getManagedBean().setAttachmentList(attachmentList);
 		}
