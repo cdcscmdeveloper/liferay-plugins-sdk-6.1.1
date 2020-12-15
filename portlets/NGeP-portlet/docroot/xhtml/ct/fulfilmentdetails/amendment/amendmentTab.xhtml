@@ -144,11 +144,6 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SLOA')}" update=":form" />
-			
-			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
-			actionListener="#{amendmentBackingBean.setTabValue('MET')}" update=":form" />
 	
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -163,6 +158,11 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SDEC')}" update=":form" />
+			
+	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
+			actionListener="#{amendmentBackingBean.setTabValue('MET')}" update=":form" />
 				
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
