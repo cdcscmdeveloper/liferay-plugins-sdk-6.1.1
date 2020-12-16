@@ -1639,4 +1639,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	// System.out.println("handleFileUploadTest - end");
 	// }
 
+	//28838 - start
+		public boolean isCheckFactUser() {
+			boolean checkFactUser = true;
+			
+			for(PmUserRole userRole : getManagedBean().getUserActiveRoles()) {
+				logger.info("User Roles: " + userRole.getPmRole().getRoleCode());
+				if(userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.FACTORING_USER.value())) {
+					checkFactUser = false;
+				}
+			}
+			
+			return checkFactUser;
+		}
+		//28838 - end
 }
