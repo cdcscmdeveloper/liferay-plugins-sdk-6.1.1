@@ -153,7 +153,8 @@ public class SmApplicationNotificationUtil {
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		String companyAdd = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol5"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
-		String suppRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol6"
+		//10908
+		String suppRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol12"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
 		String appRemarks = ResourceBundleUtils.getMessage("lbl.sm.cancelMof.notifCol7"
 				,ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
