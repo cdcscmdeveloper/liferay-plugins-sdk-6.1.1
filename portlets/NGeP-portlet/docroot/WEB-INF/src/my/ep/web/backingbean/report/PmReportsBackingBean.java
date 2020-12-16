@@ -130,7 +130,7 @@ public class PmReportsBackingBean extends
 				getManagedBean().getReportCode())) {
 			retrieveOrgTypeMap();
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
-			//#28833 - shafie -start
+		//#28833 - shafie -start
 		}else if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(
 				getManagedBean().getReportCode())) {
 			setCurrentActiveOrg(); 
@@ -456,19 +456,23 @@ public class PmReportsBackingBean extends
 	//#28833 -start
 	//List of PTJ allowed to approve other PTJ's procurement
 	private void constructPm012Map(LinkedHashMap<String, String> map) {
+		log.info("PARAMETER in report PM_012 :");  //testing #28333
 		if (getManagedBean().getSelectedMinistry() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_MINISTRY, 
 					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
+			log.info("MINISTRY : " + getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
 		}
 		
 		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_KUMPULAN_PTJ, 
 					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
+			log.info("KUMPULAN PTJ : " + getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
 		}
 		
 		if (getManagedBean().getSelectedPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+			log.info("PTJ : " + getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
 		}
 	}	
 	//shafie - #28833 -end
