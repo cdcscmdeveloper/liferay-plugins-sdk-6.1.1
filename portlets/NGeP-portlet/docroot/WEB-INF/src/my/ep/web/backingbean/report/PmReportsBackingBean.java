@@ -986,14 +986,14 @@ public class PmReportsBackingBean extends
 	}
 	
 	public void resetPtjGroupOrgProfile() {
-		this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());		
+		this.getManagedBean().setSelectedKumpulanPTJ(null);		
 		this.getManagedBean().getPmSearchBean().setKptj(null);
 		resetPtjOrgProfile();
 	}
 	
 	
 	public void resetPtjOrgProfile() {
-		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());		
+		this.getManagedBean().setSelectedPTJ(null);		
 		this.getManagedBean().getPmSearchBean().setPtj(null);
 	}
 	//shafie - #28833 - end
@@ -1060,8 +1060,14 @@ public class PmReportsBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
 		//#28833 -shafie -start
+		/*if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(getManagedBean().getReportCode())) {
+			getManagedBean().setSelectedMinistry(null);
+			getManagedBean().setSelectedKumpulanPTJ(null);
+			getManagedBean().setSelectedPTJ(null);
+
+		}*/
+		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(pmOrgProfile);
 			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
