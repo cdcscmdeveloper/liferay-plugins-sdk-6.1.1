@@ -287,7 +287,7 @@
 		</tr>
 		</table>
 		</h:panelGroup>
-		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
+		<p:confirmDialog id="cancelConfirm"  message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -305,7 +305,7 @@
 			</div>
 		</p:confirmDialog>
 		
-		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.officer.amendment']}"
+		<p:confirmDialog id="cancelofficerConfirm" message="#{lbl['lbl.msg.confirm.cancel.officer.amendment']}"
 			severity="alert" widgetVar="cancelofficerConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -323,7 +323,7 @@
 			</div>
 		</p:confirmDialog>
 		
-			<p:confirmDialog message="#{lbl['lbl.msg.confirm.reject.amendment']}"
+			<p:confirmDialog id="rejectConfirm" message="#{lbl['lbl.msg.confirm.reject.amendment']}"
 			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -341,7 +341,7 @@
 			</div>
 		</p:confirmDialog>
 		
-		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
+		<p:confirmDialog id="supplierrejectConfirm" message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
 			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
