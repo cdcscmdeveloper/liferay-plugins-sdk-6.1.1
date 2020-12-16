@@ -90,7 +90,8 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}" process="@this"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" 
+					disabled="true" process="@this"
 					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
