@@ -768,8 +768,18 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						break;
 					}
 				}
-				
-				if(isEcOcTecFec){
+				boolean isFullTablist = false;
+				//#25692-start
+				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
+						ParameterConst.DOCTYPE_QUOTATION,qtDetailBB.getManagedBean().getQt().getQtId());
+				if(null!=workFlowStatus){
+				    qtDetailBB.getManagedBean().getQt().setQtStatus(workFlowStatus.getPmStatus());
+				    Long qtStatusId =  workFlowStatus.getPmStatus().getStatusId();
+				    isFullTablist = qtDetailBB.isQTStatusGreaterThanOrEquals(qtStatusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+			
+				}
+				//#25692-End
+				if(isEcOcTecFec || isFullTablist){
 					qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(), pageAppr);
 					qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
 					qtDetailBB.getManagedBean().setActiveIndex(9);
@@ -785,13 +795,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					if(isCmtStatusCompletedAndBefore){
 						qtDetailBB.getManagedBean().setActiveIndex(9);
 					}
-					//#25692-start
-					ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
-							ParameterConst.DOCTYPE_QUOTATION,qtDetailBB.getManagedBean().getQt().getQtId());
-					if(null!=workFlowStatus){
-					     qtDetailBB.getManagedBean().getQt().setQtStatus(workFlowStatus.getPmStatus());
-					}
-					//#25692-End
 					log.info("*********** preRenderView:userHasRole(COMMITTEE_APPROVER) for ecOcTecFec");
 				}
 				else{
