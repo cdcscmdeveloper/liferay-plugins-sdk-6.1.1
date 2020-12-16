@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -95,7 +94,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -112,11 +110,9 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
-import my.ep.persistence.entity.sc.directpurchase.ScApprovalDocument;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
@@ -127,8 +123,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -139,20 +133,16 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -176,7 +166,6 @@ import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.util.PortalUtil;
 // TODO: Auto-generated Javadoc
@@ -212,9 +201,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The request note codification page. */
 	private String REQUEST_NOTE_CODIFICARION_PAGE = "/xhtml/sc/directpurchase/requestnote/codification/requestNoteCodificationMain.xhtml";
 	
-	//26059 - start
-	private String approvalDocFileType = "/(\\.|\\/)(pdf)$/";
-	//26059 - end
 	/**
 	 * Instantiates a new request note backing bean.
 	 */
@@ -636,17 +622,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScRequestNoteRemark.class));
 
 		initializeApproverGroup();
-		//26059 - start
-		if(null != getManagedBean().getRequestNote().getScApprovalDocument() 
-				|| (null != getManagedBean().getRequestNote().getDpExceedJustification() 
-				&& getManagedBean().getRequestNote().getDpExceedJustification().trim().length() > 0)) {
-			getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-			getManagedBean().setProceedWithDPExceedThreshold(Boolean.TRUE);
-		} else {
-			getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-			getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
-		}
-		//26059 - end
 	}
 	
 	/**
@@ -769,9 +744,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// 12177 - Start
 			requestNoteReqDTO.setSqEndDate(getManagedBean().getSqEndDate());
 			// 12177 - End
-			//26059 - start
-			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
-			//26059 - end
 			try {
 				if(outcome.isEmpty()) {	
 					requestNoteReqDTO.setToken(ctxToken);
@@ -938,30 +910,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-
-		debugLogger("RequestNoteBackingBean >> submitAction ---- isExceededAmountAlerted() = "+ getManagedBean().isExceededAmountAlerted());
-		
-		if(getManagedBean().isExceededAmountAlerted() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)){//26059
-			//26059 - start			
-			if(!getManagedBean().isProceedWithDPExceedThreshold() && !BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
-				// refresh remarks
-				getManagedBean().getRequestNote().setRemarks(initializeRemarks(
-						getManagedBean().getRequestNote(),
-						getManagedBean().getRequestNote().getCurrentStatus(),
-						getManagedBean().getRequestNote().getRemarks(),
-						ScRequestNoteRemark.class));
-				RequestContext.getCurrentInstance().execute("dpExceedDlg.show()");			
-			}		
-			//26059 - end
-		} else{
-			if(!isDeliveryTermPrompt){
-				if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
-						outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
-						outcome.equals(BpmOutcomeConst.BPM_REJECT)){
-					approverAction(outcome);
-				} else{
-					requestNoteSubmit(outcome);
-				}
+		//26059 - remove if else
+		if(!isDeliveryTermPrompt){
+			if(outcome.equals(BpmOutcomeConst.BPM_APPROVE) || 
+					outcome.equals(BpmOutcomeConst.BPM_REVISE) || 
+					outcome.equals(BpmOutcomeConst.BPM_REJECT)){
+				approverAction(outcome);
+			} else{
+				requestNoteSubmit(outcome);
 			}
 		}
 	}
@@ -1067,17 +1023,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void validateRequestNote(ScRequestNote requestNote){
 		debugLogger("validateRequestNote");
-		//26059 - start
-		boolean alreadyProceedWithDPExceedThreshold = getManagedBean().isProceedWithDPExceedThreshold();
-		//26059 - end
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
-			//26059 - start
-			int count = 1;
-			if(getManagedBean().getItemListExceedThreshold() == null) {
-				getManagedBean().setItemListExceedThreshold(new ArrayList<Long>());
-			}
-			//26059 - end
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if(!requestNoteDtl.isDeleted()) {
 					String pType = requestNoteDtl.getProcurementType()
@@ -1088,7 +1035,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
 							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
 									+ requestNoteDtl.getRequestNoteDtlId());
@@ -1134,50 +1080,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								}								
 								//Rule : ITEM_THRESHOLD For 20k
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0 && ((quote != null && !quote.isPanel())
-										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {
-									
-									if(!getManagedBean().getItemListExceedThreshold().contains(itemId)) {
-										getManagedBean().getItemListExceedThreshold().add(itemId);
-									}
-									if(!alreadyProceedWithDPExceedThreshold){										
-										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);									
-										/*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-												MessageUtils.getMessage(MessageConst.ERROR_760036, 
-														new String[]{requestNoteDtl.getRequestItem().getItemName(),requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()}, 
-														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
+										|| !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))) {									
 										String language = new FacesScopes().getUserLocale().getLanguage();
-										String itemTitle = null;
+										String itemTitle;
 										if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language)) {
 											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
 										} else {
 											itemTitle = requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
 										}
-										String message = MessageUtils.getMessage(MessageConst.ERROR_760036, 
-												new String[]{itemTitle, ""}, 
-												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-										getManagedBean().setExceedThresholdMessage(message);
-										//26059 - end
-//										throw new EpException(MessageConst.ERROR_760036,
-//												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
-									}
-									//26059 - start
-									break;
-								} else {
-									if(alreadyProceedWithDPExceedThreshold && getManagedBean().getItemListExceedThreshold().contains(itemId)) {
-										getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-										getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
-										getManagedBean().getRequestNote().setScApprovalDocument(null);
-										getManagedBean().getRequestNote().setDpExceedJustification(null);
-										getManagedBean().getItemListExceedThreshold().remove(itemId);
-										break;
-									} else if(alreadyProceedWithDPExceedThreshold && !getManagedBean().getItemListExceedThreshold().contains(itemId) 
-											&& count == requestNote.getRequestNoteDtls().size()) {
-										getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-										getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
-										getManagedBean().getRequestNote().setScApprovalDocument(null);
-										getManagedBean().getRequestNote().setDpExceedJustification(null);
-										break;
-									}
+										throw new EpException(MessageConst.ERROR_760518,
+												new String[] {itemTitle, requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
 								}
 								//26059 - end
 							} else {
@@ -1230,7 +1142,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					//26221 - end
 					}
 				}
-				count++;//26059
 			}
 		}
 		
@@ -1248,25 +1159,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					new String[] {ResourceBundleUtils.getMessage("lbl.sc.approverName",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
-		
-		//26059 - start
-		if(getManagedBean().isProceedWithDPExceedThreshold()) {
-			if(null == getManagedBean().getRequestNote().getScApprovalDocument()) {
-				throw new EpException(
-						MessageConst.ERROR_760498,
-						new String[] {ResourceBundleUtils.getMessage("lbl.sc.egpa.approval.doc",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-			
-			if(null == getManagedBean().getRequestNote().getDpExceedJustification() || 
-					StringUtils.isEmpty(getManagedBean().getRequestNote().getDpExceedJustification().trim())) {
-				throw new EpException(
-						MessageConst.ERROR_760499,
-						new String[] {ResourceBundleUtils.getMessage("lbl.sc.exceed.justification",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			}
-		}
-		//26059 - end
 	}
 
 	/**
@@ -1342,26 +1234,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
-		
-		//26059 - start
-		if(getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) 
-				|| getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION)
-				|| getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-				|| getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_SUBMISSION)
-				|| getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_BPK_APPROVAL)
-				|| getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_BPK)
-				|| getManagedBean().getRequestNoteStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_BPK_APPROVAL)) {
-			if(null != getManagedBean().getRequestNote().getScApprovalDocument() 
-					|| (null != getManagedBean().getRequestNote().getDpExceedJustification()
-					&& getManagedBean().getRequestNote().getDpExceedJustification().trim().length() > 0)) {
-				getManagedBean().setProceedWithDPExceedThreshold(Boolean.TRUE);
-				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-			} else {
-				getManagedBean().setProceedWithDPExceedThreshold(Boolean.FALSE);
-			}
-		}
-		getManagedBean().setBpkApprover(isBPKApprover());	
-		//26059 - end
 		FacesContext fc = FacesContext.getCurrentInstance();
 		debugLogger("end preRenderView");
 		// page nav. to common request note
@@ -1623,30 +1495,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			//12183 - Start
 			requestNoteReqDTO.setPidValidityExpired(getManagedBean().isPidValidityExpired());
 			//12183 - End
-			
-			//26059 - start
-			System.out.println("Is exceed: " + getManagedBean().isProceedWithDPExceedThreshold());
-			requestNoteReqDTO.setExceedThreshold(getManagedBean().isProceedWithDPExceedThreshold());
-			if(getManagedBean().isProceedWithDPExceedThreshold() && isRNApprover()) {
-				log.info("get BPK Approvers");
-				if(DPStatusConstants.RN_PENDING_APPROVAL.equals(requestNote.getCurrentStatus().getPmStatus().getStatusId())
-						|| DPStatusConstants.RN_PENDING_REVISION_APPROVAL.equals(requestNote.getCurrentStatus().getPmStatus().getStatusId())
-						|| DPStatusConstants.RN_PENDING_REVISION_BPK.equals(requestNote.getCurrentStatus().getPmStatus().getStatusId())) {
-					List<PmUser> bpkApprovers = getBpkApprovers();
-					if(bpkApprovers != null) {
-						requestNoteReqDTO.setBpkApprovers(new ArrayList<String>());
-						for(PmUser bpkApprover: bpkApprovers) {
-							requestNoteReqDTO.getBpkApprovers().add(bpkApprover.getLoginId());							
-						}
-					}
-				}
-			}
-			//26059 - end
 			try {
 				requestNoteResDTO = getRequestNoteSO().updateRequestNote(requestNoteReqDTO);
 			} catch(EpException e) {
 				//26059 - start				
-				List<ScRequestNoteRemark> remarks = new ArrayList<>();
+				List<ScRequestNoteRemark> remarks;
 				remarks = initializeRemarks(requestNote, null, requestNote.getRemarks(), ScRequestNoteRemark.class);
 				if(remarks != null && !remarks.isEmpty()) {
 					for(ScRequestNoteRemark remark: remarks) {
@@ -1661,50 +1514,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-					//26059 - start
-					if(isRNApprover()) {
-						if(DPStatusConstants.RN_PENDING_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())
-								|| DPStatusConstants.RN_PENDING_REVISION_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())
-								|| DPStatusConstants.RN_PENDING_REVISION_BPK.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())) {
-							if(getManagedBean().isProceedWithDPExceedThreshold()) {
-								successMessage(MessageConst.INFO_723002, new String[] {scRequestNote.getRequestNoteNo()});
-								FacesContext fc = FacesContext.getCurrentInstance();
-								fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-							} else {
-								successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
-										ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
-							}
-						}
-					} else if(isBPKApprover()) {
-						if(DPStatusConstants.RN_PENDING_BPK_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())
-								|| DPStatusConstants.RN_PENDING_REVISION_BPK_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())) {
-							successMessage(MessageConst.INFO_723003, new String[] {scRequestNote.getRequestNoteNo()});
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-						}
-					} 
+					//26059 - start - replace with original code
+					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 					//26059 - end
 				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
 				} else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-					//26059 - start
-					if(isRNApprover()) {
-						if(DPStatusConstants.RN_PENDING_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())
-								|| DPStatusConstants.RN_PENDING_REVISION_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())
-								|| DPStatusConstants.RN_PENDING_REVISION_BPK.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())) {
-							successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
-									ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
-						}
-					} else if(isBPKApprover()) {
-						if(DPStatusConstants.RN_PENDING_BPK_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())
-								|| DPStatusConstants.RN_PENDING_REVISION_BPK_APPROVAL.equals(scRequestNote.getCurrentStatus().getPmStatus().getStatusId())) {
-							successMessage(MessageConst.INFO_723004, new String[] {scRequestNote.getRequestNoteNo()});
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-						}
-					}					
+					//26059 - start - replace with original code
+					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);					
 					//26059 - end
 				} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,
@@ -5039,102 +4860,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		return sb.toString();
 	}
-	//26221-end
-	
-	//26059 - start
-	/**
-	 * Checks if is BPK Approver.
-	 *
-	 * @return true, if is BPK Approver
-	 */
-	public boolean isBPKApprover(){
-		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("BPK_APPROVER");
-	}
-	
-	/**
-	 * Checks if is Request Note Approver.
-	 *
-	 * @return true, if is Request Note Approver
-	 */
-	public boolean isRNApprover(){
-		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("RN_APPROVER");
-	}
-	
-	/**
-	 * handleFileUpload event for file upload in RequestNote Approval Document.
-	 * 
-	 * @param event
-	 *            the event
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void handleFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-		debugLogger("handleFileUpload");
-		FacesScopes facesScopes = new FacesScopes();
-			
-		if (event.getFile() != null) {			
-			ScApprovalDocument attachment = getManagedBean().getRequestNote().getScApprovalDocument();
-			
-			if (null == attachment) {
-				attachment = new ScApprovalDocument();
-				attachment.setScRequestNote(getManagedBean().getRequestNote());
-			}
-
-			attachment.setDocNo(getManagedBean().getRequestNote().getRequestNoteNo());
-			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			attachment.setCreatedUser(facesScopes.getUserSessionBean());
-
-			uploadAttachment(event.getFile(), attachment);
-			getManagedBean().getRequestNote().setScApprovalDocument(attachment);
-		}
-	}
-
-	public void proceedWithDPExceedThreshold() {
-		getManagedBean().setProceedWithDPExceedThreshold(Boolean.TRUE);
-		getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
-	}
-	
-	/**
-	 * Delete Attachment for eGPA approval doc.
-	 */
-	public void deleteApprovalDocUpload(BaseEntity delEntity) {
-		debugLogger("deleteeGPAApprovalDoc - START");
-		getManagedBean().getRequestNote().setScApprovalDocument(null);
-		debugLogger("deleteeGPAApprovalDoc - END");
-	}
-	
-	/**
-	 * @return the approvalDocFileType
-	 */
-	public String getApprovalDocFileType() {
-		return approvalDocFileType;
-	}
-
-	/**
-	 * @param approvalDocFileType the approvalDocFileType to set
-	 */
-	public void setApprovalDocFileType(String approvalDocFileType) {
-		this.approvalDocFileType = approvalDocFileType;
-	}
-	public List<PmUser> getBpkApprovers() {
-		UserReqDTO reqDTO = new UserReqDTO();
-		List<PmUser> userlist = null;
-		 FacesScopes face = new FacesScopes();
-		 face.getUserSessionBean();
-		reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-
-		UserResDTO resDTO = getUserSO().retrieveUserListByRole(reqDTO);
-		userlist = resDTO.getUserList();
-		log.info("BPK Approvers: " + userlist.size());
-		return userlist;
-	}
-	//26059 - end
-	
+	//26221-end	
 	//26284 - Start	
 	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier){
 		SmSupplier currSupp = smSupplier;
