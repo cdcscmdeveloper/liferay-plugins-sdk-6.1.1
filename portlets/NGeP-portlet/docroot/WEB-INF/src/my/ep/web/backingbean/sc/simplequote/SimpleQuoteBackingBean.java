@@ -7175,16 +7175,34 @@ public class SimpleQuoteBackingBean extends
 				BigDecimal days = diff.divide(twentyFour.multiply(sixty).multiply(sixty).multiply(thousand), 2, RoundingMode.HALF_UP);
 
 				BigDecimal one = BigDecimal.valueOf(1);*/
-				if(diff.compareTo(minMinutes) < 0){
+				//29209 - START
+				if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+					if(diff.compareTo(minMinutes) < 0){
+						int minHourss;
+						minHourss = minHours.intValue();
+						throw new EpException(
+								MessageConst.ERROR_760429,
+								new String[] {Integer.toString(minHourss)});
+					}
+				}
+				//29209 - END
+				
+				else if (diff.compareTo(minMinutes) < 0){
+					//29209 - START
 					throw new EpException(
-							MessageConst.ERROR_760429,
-							new String[] {minHours.toString()});
+							MessageConst.ERROR_760522);
+					//29209 - END
+					
 				}
 				
 				if(diff.compareTo(maxMinutes) > 0){
+					//29209 - START
+					int maxDayss;
+					maxDayss = maxDays.intValue();
 					throw new EpException(
 							MessageConst.ERROR_760430,
-							new String[] {maxDays.toString()});
+							new String[] {Integer.toString(maxDayss)});
+					//29209 - END
 				}
 			} else if (endDate == null){ //29209 - to set default date
 				maxMinutes = new BigDecimal(4320); // equals to 3 days
