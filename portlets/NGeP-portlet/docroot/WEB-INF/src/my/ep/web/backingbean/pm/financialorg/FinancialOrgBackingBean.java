@@ -1833,7 +1833,9 @@ public class FinancialOrgBackingBean extends
 							||	wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL
 							||	wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL){
 							finAcc.setRecordStatusFlg(1);
-							throw new EpException(MessageConst.ERROR_775218);
+							//20201216@Jacky - Enhancement#28836 - Start
+							throw new EpException(MessageConst.ERROR_775216);
+							//20201216@Jacky - Enhancement#28836 - End
 						}
 					}
 					List<BigDecimal> ctWfStatList = finanOrgSO.retrievePendingContract(getManagedBean().getFinancialOrg().getFinancialOrgId());
@@ -1847,10 +1849,10 @@ public class FinancialOrgBackingBean extends
 								|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_SUBMISSION
 								|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_ACKNOWLEDGEMENT
 								|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_ENDORSEMENT){
-							//20201215@Jacky - Enhancement#28836 - Start
+							//20201216@Jacky - Enhancement#28836 - Start
 							finAcc.setRecordStatusFlg(1);
-							//20201215@Jacky - Enhancement#28836 - End
-							throw new EpException(MessageConst.ERROR_775218);
+							throw new EpException(MessageConst.ERROR_775216);
+							//20201216@Jacky - Enhancement#28836 - End
 						}
 					}
 				}
