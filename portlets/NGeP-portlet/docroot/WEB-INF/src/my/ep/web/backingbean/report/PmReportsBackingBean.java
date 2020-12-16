@@ -130,9 +130,13 @@ public class PmReportsBackingBean extends
 				getManagedBean().getReportCode())) {
 			retrieveOrgTypeMap();
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
+			//#28833 - shafie -start
+		}else if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(
+				getManagedBean().getReportCode())) {
+			setCurrentActiveOrg(); 
 		}
+		//#28833 - shafie -end
 		
-		setCurrentActiveOrg(); //#28833 - shafie 
 		
 	}
 
