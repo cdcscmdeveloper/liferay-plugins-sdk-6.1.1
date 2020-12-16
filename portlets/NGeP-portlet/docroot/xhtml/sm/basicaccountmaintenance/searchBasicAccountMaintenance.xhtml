@@ -105,7 +105,7 @@
 							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.status.suspend']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction eq true}" />
 						<h:outputText 
-							value="#{lbl['lbl.sm.status.deleted1']} (#{lbl['lbl.sm.status.suspend']})"
+							value="#{lbl['lbl.sm.status.deleted_suspend']} (#{lbl['lbl.sm.status.suspend']})"
 							rendered="#{smSupplier.typeDisciplinaryAction eq 'S' and supplierDataMaintenanceBackingBean.managedBean.hasActiveTransaction ne true}" />
 						<!-- bug #29690 -END -->
 						
