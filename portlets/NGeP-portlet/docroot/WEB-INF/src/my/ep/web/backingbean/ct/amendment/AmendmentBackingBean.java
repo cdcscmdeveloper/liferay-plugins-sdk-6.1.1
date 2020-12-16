@@ -660,6 +660,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				outcome[i++] = action;
 			}
 			getManagedBean().setOutComes(outcome);
+			
+			getManagedBean().reassignValue(true);
+			getManagedBean().getServiceListingPagingDataModel().reloadData();
+			getManagedBean().getContractListingPagingDataModel().reloadData();
 
 			/*Retrieve contract amendment details*/
 			ctReqDTO = new ContractReqDTO();
@@ -1000,10 +1004,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getCtItemList().clear();
 			ctBackingBean.getManagedBean().getCtItemServiceList().clear();
 			//Bug #29323
-//			AmendmentBackingBean abb=new AmendmentBackingBean();
-			getManagedBean().reassignValue(true);
-			getManagedBean().getServiceListingPagingDataModel().reloadData();
-			getManagedBean().getContractListingPagingDataModel().reloadData();
 			getManagedBean().setItemProductExist(false);
 			getManagedBean().setItemServiceExist(false);
 			ctBackingBean.getManagedBean().setShowItem(null);
