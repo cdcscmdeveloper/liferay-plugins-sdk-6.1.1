@@ -457,19 +457,19 @@ public class PmReportsBackingBean extends
 	//List of PTJ allowed to approve other PTJ's procurement
 	private void constructPm012Map(LinkedHashMap<String, String> map) {
 		log.info("PARAMETER in report PM_012 :");  //testing #28333
-		if (getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName() != null) {
+		if (getManagedBean().getSelectedMinistry() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_MINISTRY, 
 					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
 			log.info("MINISTRY : " + getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
 		}
 		
-		if (getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName() != null) {
+		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_KUMPULAN_PTJ, 
 					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
 			log.info("KUMPULAN PTJ : " + getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName()); 
 		}
 		
-		if (getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName() != null) {
+		if (getManagedBean().getSelectedPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName()); 
 			log.info("PTJ : " + getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
