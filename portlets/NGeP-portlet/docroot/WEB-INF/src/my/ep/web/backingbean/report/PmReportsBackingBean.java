@@ -639,14 +639,14 @@ public class PmReportsBackingBean extends
 		getManagedBean().setApplicantName(null);
 		getManagedBean().setSelectedApplicationStatus(null);
 		//shafie - #28833 - start
-		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(null);
-			setCurrentActiveOrg();
+		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			setSelectedMinistryforMinistryJabatanAdmin();
 		}
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
 		//shafie - #28833 - end
-
 	}
 
 	public void autoSelectOrgType() {
