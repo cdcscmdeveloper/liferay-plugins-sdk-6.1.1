@@ -1188,6 +1188,16 @@ public class SmApplicationBackingBean extends
 								ReasonCategory.SUPPLIER_REJECTION_REASON
 										.value(),
 								SupplierManagementConst.SM_REASON_CODE_OTHERS));
+		
+		//#15629 - START
+		getManagedBean().setRecommendReasonDescInitList(
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmSupplier().getBusinessType(), applicationType));
+		getManagedBean().setRecommendReasonDescList(
+				getManagedBean().getRecommendReasonDescInitList());
+		//#15629 - END
+
 
 		if (getManagedBean().isApproverUser() || getManagedBean().isPoUser()) {
 			if (smAppl.getSmCompanyBasic() == null) {
@@ -9676,7 +9686,7 @@ public class SmApplicationBackingBean extends
 							// #15629 -- start
 							if (getManagedBean().isPoUser() && !getManagedBean().getSmAppl().getApplType()
 									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-								setSmApplRejectionReasons();
+								setSmApplRecommendRejectionReasons();
 								reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
 							}
 							// #15629 -- end
@@ -14146,4 +14156,148 @@ public class SmApplicationBackingBean extends
 		return retVal;
 	}
 // BUG #28173 & #28315 -END
+    
+ // #15629 -- start
+	/**
+	 * Search recommend rejected reason
+	 */
+	public void searchRecommendRejectedReason() {
+		// reset selected recommend reject reason during search
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		// reset remark for other and remove remark required flag during search
+		getManagedBean().setRecommendReasonId(null);
+		// reset selected recommend reject reason remarks during search
+		verifySelectedRecommendRejectReasons();
+
+		getManagedBean().setRecommendReasonDescList(
+				SmApplicationUtil.getWildCardSearchRejectReason(
+						getManagedBean().getSearchRecommendRejectReason(),
+						getManagedBean().getRecommendReasonDescInitList()));
+	}
+
+	/**
+	 * Reset search recommend rejected reason
+	 */
+	public void resetSearchRecommendRejectedReason() {
+		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
+		getManagedBean().setRecommendReasonDescList(
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmSupplier().getBusinessType(), getManagedBean()
+						.getSmAppl().getApplType()));
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+	}
+	
+	/**
+	 * Verify selected recommend rejection reason
+	 */
+	public void verifySelectedRecommendRejectReasons() {
+		getManagedBean().setRecommendRejectReasonReqd(isRecommendDpaOthersSelected());
+		if (!getManagedBean().isRecommendRejectReasonReqd()) {
+			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+		}
+	}
+		
+	/**
+	 * Return true or false whether there is Others selected in Delete Pending
+	 * Application Reason
+	 * 
+	 * @return boolean
+	 */
+	private boolean isRecommendDpaOthersSelected() {
+		boolean retVal = false;
+		if (getManagedBean().getRecommendReasonId() != null
+				&& getManagedBean().getRecommendReasonId().length > 0) {
+			for (Long reasonId : getManagedBean().getRecommendReasonId()) {
+				ReasonReqDTO reqDTO = new ReasonReqDTO();
+				reqDTO.setReasonId(reasonId);
+				PmReason reason = SmServiceLookup.getReasonSO()
+						.retrieveReasonById(reqDTO).getPmReason();
+				if (reason != null
+						&& !StringUtils.isBlank(reason.getReasonCode())
+						&& SupplierManagementConst.DPA_REASON_OTHERS_LIST
+								.contains(reason.getReasonCode())) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * On tick checkbox during search recommend rejection reason
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
+	public void onTickOrUnTickRecommendReason(AjaxBehaviorEvent e) {
+		getManagedBean().setRecommendRejectReasonReqd(false);
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean()
+					.getSelectedRecommendReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setRecommendReasonId(null);
+		}
+		verifySelectedRecommendRejectReasons();
+	}
+	
+	/**
+	 * Sets the SM application recommend rejection reasons selected.
+	 */
+	private void setSmApplRecommendRejectionReasons() {
+		StringBuilder sb = new StringBuilder();
+		// int count = 0;
+		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
+		if(getManagedBean().getRecommendReasonId()!=null && getManagedBean().getRecommendReasonId().length>0){
+			for (Long resId : getManagedBean().getReasonId()) {
+				for (PmReasonDesc desc : getManagedBean().getRecommendReasonDescList()) {
+					if (desc.getPmReason().getReasonId().equals(resId)) {				
+						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
+							if (StringUtils.isBlank(getManagedBean()
+									.getApplnRejectionRemarks())) {
+								throw new EpException("Recommend Rejection Remarks is mandatory.");
+							}
+						}
+						
+						SmApplRejectReason rej = new SmApplRejectReason();
+						rej.setPmReason(desc.getPmReason());
+						rej.setSmAppl(getManagedBean().getSmAppl());
+						resList.add(rej);
+						log.info("Reason Id === " + resId);
+						// sb.append(++count).append(". ");
+						// sb.append(desc.getReasonDesc());
+						// sb.append("\n");
+						sb.append(desc.getPmReason().getReasonId());
+						sb.append("|");
+					}
+				}
+			}
+		}else{
+			//Just in case
+			throw new EpException("Recommend Rejection reason is mandatory."); //21937		
+		}
+
+		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+						.isEmpty()) {
+			log.info(" ***** Already exisiting records ******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
+			log.info(" *****Size after reset******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+		}
+		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
+		getManagedBean().setReasonDesc(sb.toString());
+	}
+// #15629 -- end
+	
 }

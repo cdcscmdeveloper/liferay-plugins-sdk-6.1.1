@@ -953,6 +953,15 @@ public class SupplierApplicationBackingBean extends
 								ReasonCategory.SUPPLIER_REJECTION_REASON
 										.value(),
 								SupplierManagementConst.SM_REASON_CODE_OTHERS));
+		
+		//#15629 - START
+		getManagedBean().setRecommendReasonDescInitList(
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmSupplier().getBusinessType(), applicationType));
+		getManagedBean().setRecommendReasonDescList(
+				getManagedBean().getRecommendReasonDescInitList());
+		//#15629 - END
 
 		if (getManagedBean().isApproverUser() || getManagedBean().isPoUser()) {
 			if (getManagedBean().getSmCompanyBasic() == null) {
@@ -11727,4 +11736,96 @@ public class SupplierApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("myIdentityDialog.show();");
 	}
 
+	// #15629 -- start
+	/**
+	 * Search recommend rejected reason
+	 */
+	public void searchRecommendRejectedReason() {
+		// reset selected reject reason during search
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		// reset remark for other and remove remark required flag during search
+		getManagedBean().setRecommendReasonId(null);
+		// reset selected reject reason remarks during search
+		verifySelectedRecommendRejectReasons();
+
+		getManagedBean().setRecommendReasonDescList(
+				SmApplicationUtil.getWildCardSearchRejectReason(
+						getManagedBean().getSearchRecommendRejectReason(),
+						getManagedBean().getRecommendReasonDescInitList()));
+	}
+
+	/**
+	 * Reset search recommend rejected reason
+	 */
+	public void resetSearchRecommendRejectedReason() {
+		getManagedBean().setSearchRecommendRejectReason(StringUtils.EMPTY);
+		getManagedBean().setRecommendReasonDescList(
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
+						.getSmSupplier().getBusinessType(), getManagedBean()
+						.getSmAppl().getApplType()));
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+	}
+	
+	/**
+	 * Verify selected recommend rejection reason
+	 */
+	public void verifySelectedRecommendRejectReasons() {
+		getManagedBean().setRecommendRejectReasonReqd(isRecommendDpaOthersSelected());
+		if (!getManagedBean().isRecommendRejectReasonReqd()) {
+			getManagedBean().setApplnRejectionRemarks(StringUtils.EMPTY);
+		}
+	}
+		
+	/**
+	 * Return true or false whether there is Others selected in Delete Pending
+	 * Application Reason
+	 * 
+	 * @return boolean
+	 */
+	private boolean isRecommendDpaOthersSelected() {
+		boolean retVal = false;
+		if (getManagedBean().getRecommendReasonId() != null
+				&& getManagedBean().getRecommendReasonId().length > 0) {
+			for (Long reasonId : getManagedBean().getRecommendReasonId()) {
+				ReasonReqDTO reqDTO = new ReasonReqDTO();
+				reqDTO.setReasonId(reasonId);
+				PmReason reason = SmServiceLookup.getReasonSO()
+						.retrieveReasonById(reqDTO).getPmReason();
+				if (reason != null
+						&& !StringUtils.isBlank(reason.getReasonCode())
+						&& SupplierManagementConst.DPA_REASON_OTHERS_LIST
+								.contains(reason.getReasonCode())) {
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * On tick checkbox during search recommend rejection reason
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
+	public void onTickOrUnTickRecommendReason(AjaxBehaviorEvent e) {
+		getManagedBean().setRecommendRejectReasonReqd(false);
+		if (!EntityHelper.isCollectionEmpty(getManagedBean()
+				.getSelectedRecommendReasonDescs())) {
+			List<Long> reasonIdList = new ArrayList<Long>();
+			for (PmReasonDesc reason : getManagedBean()
+					.getSelectedRecommendReasonDescs()) {
+				reasonIdList.add(reason.getPmReason().getReasonId());
+			}
+			getManagedBean().setRecommendReasonId(
+					reasonIdList.toArray(new Long[reasonIdList.size()]));
+		}else{
+			getManagedBean().setRecommendReasonId(null);
+		}
+		verifySelectedRecommendRejectReasons();
+	}
+	// #15629 -- end
+	
 }
