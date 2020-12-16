@@ -1067,7 +1067,7 @@ u {
 									<table width="100%">
 											<tbody>
 											<tr >
-											if ($tplSpecAnswer.newSupplierOffer != "")
+											#if ($tplSpecAnswer.newSupplierOffer != "")
 												<td rowspan="$tplSpecAnswer.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecAnswer.newSupplierOffer</td>
 											#else
 												#if ($tplSpecAnswer.answerRemark) 
