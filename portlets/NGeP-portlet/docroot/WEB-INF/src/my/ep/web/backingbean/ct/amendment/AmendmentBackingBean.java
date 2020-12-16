@@ -661,10 +661,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			getManagedBean().setOutComes(outcome);
 			
-			getManagedBean().reassignValue(true);
-			getManagedBean().getServiceListingPagingDataModel().reloadData();
-			getManagedBean().getContractListingPagingDataModel().reloadData();
-
 			/*Retrieve contract amendment details*/
 			ctReqDTO = new ContractReqDTO();
 			ctReqDTO.setUpdateAction(false);
@@ -2800,10 +2796,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							getManagedBean().setSelectedTabIndex(3);
 							// Enhancement 20977
 							//Bug #29323
-//							AmendmentBackingBean abb=new AmendmentBackingBean();
-//							abb.getManagedBean().reassignValue(true);
-//							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
-//							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 						}
 						if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 							getManagedBean().setSelectedTabIndex(4);
@@ -2822,10 +2818,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSelectedTabIndex(2);
 						// Enhancement 20977
 						//Bug #29323
-//							AmendmentBackingBean abb=new AmendmentBackingBean();
-//							abb.getManagedBean().reassignValue(true);
-//							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
-//							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 					}else if(outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)){
 						getManagedBean().setSelectedTabIndex(3);
 					}else if(outputValue.equalsIgnoreCase("PB") && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() ){
@@ -2944,10 +2940,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSelectedTabIndex(4);
 						// Enhancement 20977
 						//Bug #29323
-//							AmendmentBackingBean abb=new AmendmentBackingBean();
-//							abb.getManagedBean().reassignValue(true);
-//							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
-//							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 					}
 				} else {
 					if (outputValue.equalsIgnoreCase("AG")) {
@@ -2956,10 +2952,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						getManagedBean().setSelectedTabIndex(3);
 						// Enhancement 20977
 						//Bug #29323
-//							AmendmentBackingBean abb=new AmendmentBackingBean();
-//							abb.getManagedBean().reassignValue(true);
-//							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
-//							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
+							AmendmentBackingBean abb=new AmendmentBackingBean();
+							abb.getManagedBean().reassignValue(true);
+							abb.getManagedBean().getServiceListingPagingDataModel().reloadData();
+							abb.getManagedBean().getContractListingPagingDataModel().reloadData();
 					}
 				}
 				if (outputValue.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
