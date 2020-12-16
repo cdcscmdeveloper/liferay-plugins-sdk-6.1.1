@@ -583,7 +583,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				log.info("Check Putra CTISSUE** Enter preRenderView if>taskId == null getContractVer == null :"+ctBackingBean.getManagedBean().getContractVer());
 				log.info("Check Putra CTISSUE** Enter preRenderView if>taskId == null getCtAmendment == null :"+ctBackingBean.getManagedBean().getContractVer().getCtAmendment());
 				
-				log.info("Check Putra CTISSUE** Enter preRenderView if>taskId == null ctBackingBean.getValueFromAmendment() :"+ctBackingBean.getValueFromAmendment());
 				if (ctBackingBean.getManagedBean().getContractVer()==null 
 						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null){
 					log.info("Check hafiz Amendment preRenderView taskid null and ctbackingBean null");
@@ -1163,7 +1162,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, ctBackingBean.getManagedBean().getContractVer().getDocType(), ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()));
 			
-			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
+
 
 			getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
