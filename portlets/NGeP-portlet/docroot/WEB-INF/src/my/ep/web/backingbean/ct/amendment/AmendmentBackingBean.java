@@ -7164,5 +7164,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		//#25956 - End	
+		
+		/**
+		 * The method used to clear the previous viewed information before
+		 * rendering the screen.
+		 */
+		public void preRenderAmendment() {
+			renewSesionObject();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"amendmentTab.xhtml?faces-redirect=true");
+		}
 
 	}
