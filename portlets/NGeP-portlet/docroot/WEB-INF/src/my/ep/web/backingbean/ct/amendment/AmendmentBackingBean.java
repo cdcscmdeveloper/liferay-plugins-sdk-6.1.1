@@ -1196,7 +1196,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}else{
 				ctBackingBean.getManagedBean().setGstTotalAmount(ctBackingBean.getManagedBean().getCtContractAmount().getContractAmount());
 			}
-			ctBackingBean = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			ctBackingBean.getManagedBean().setViewContract(false);
 			ctBackingBean.getManagedBean().setUpdateCompanyName(false);
 			ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
