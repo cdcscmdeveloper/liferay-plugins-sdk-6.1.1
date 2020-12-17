@@ -78,8 +78,6 @@
 			 <ui:include src="amendmentButtons.xhtml" />
 		     <ui:include src="amendmentHeader.xhtml" />
 		  </h:panelGroup>
-		  
-		  <p:log id="logAmendmentTab" />
 	<h:panelGroup id="amendmentMainTabRender">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
@@ -146,6 +144,11 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SLOA')}" update=":form" />
+			
+			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
+			actionListener="#{amendmentBackingBean.setTabValue('MET')}" update=":form" />
 	
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -160,11 +163,6 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			rendered="#{amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa}"
 			actionListener="#{amendmentBackingBean.setTabValue('SDEC')}" update=":form" />
-			
-	       <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.meeting']}"
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting}"
-			actionListener="#{amendmentBackingBean.setTabValue('MET')}" update=":form" />
 				
 		 <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.decision']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -287,7 +285,7 @@
 		</tr>
 		</table>
 		</h:panelGroup>
-		<p:confirmDialog id="cancelConfirm"  message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.amendment']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -296,12 +294,16 @@
 					action="#{amendmentBackingBean.saveContractAmendment('CANCEL')}"
 					onstart="cancelConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="cancelConfirmDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="cancelConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:confirmDialog>
 		
-		<p:confirmDialog id="cancelofficerConfirm" message="#{lbl['lbl.msg.confirm.cancel.officer.amendment']}"
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.cancel.officer.amendment']}"
 			severity="alert" widgetVar="cancelofficerConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -310,12 +312,16 @@
 					action="#{amendmentBackingBean.saveContractAmendment('CANCEL')}"
 					onstart="cancelofficerConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="cancelofficerConfirmDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="cancelofficerConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:confirmDialog>
 		
-			<p:confirmDialog id="rejectConfirm" message="#{lbl['lbl.msg.confirm.reject.amendment']}"
+			<p:confirmDialog message="#{lbl['lbl.msg.confirm.reject.amendment']}"
 			severity="alert" widgetVar="rejectConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -324,12 +330,16 @@
 					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
 					onstart="rejectConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="rejectConfirmDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="rejectConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:confirmDialog>
 		
-		<p:confirmDialog id="supplierrejectConfirm" message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
+		<p:confirmDialog message="#{lbl['lbl.msg.confirm.supplier.reject.amendment']}"
 			severity="alert" widgetVar="supplierrejectConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
 			<div class="ppRightBtn">
@@ -338,8 +348,12 @@
 					action="#{amendmentBackingBean.preRejectContractAmendment('REJECT')}"
 					onstart="supplierrejectConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="supplierrejectConfirmDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" update="@form"
+				onclick="supplierrejectConfirmDlg.hide()">
+				<f:setPropertyActionListener
+					target="#{amendmentBackingBean.managedBean.remarkList[0].remark}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:confirmDialog>
 	</ui:define>  
