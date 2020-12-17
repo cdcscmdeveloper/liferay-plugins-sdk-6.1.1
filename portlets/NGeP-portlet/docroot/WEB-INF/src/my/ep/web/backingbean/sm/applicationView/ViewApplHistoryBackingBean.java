@@ -1465,6 +1465,9 @@ public class ViewApplHistoryBackingBean extends
 					//27382 - start
 					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
 						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}//27382 - Terminated 
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
+						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					}else{
 					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 					} 
