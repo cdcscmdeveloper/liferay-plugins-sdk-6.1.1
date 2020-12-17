@@ -36,7 +36,7 @@ import org.primefaces.model.SortOrder;
  */
 public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPagingDataModel<T> {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(PagingDataModel.class);
+	protected static Logger log = Logger.getLogger(PagingDataModel.class);
 
 	private boolean firstLoad;
 	private boolean defaultFirstLoad;
@@ -207,9 +207,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final void reloadDataWithoutReset() {
 		debugLogger("reloadDataWithoutReset");
 
-		UIComponent component = new FacesScopes().findComponentById(
-				FacesContext.getCurrentInstance().getViewRoot(), 
-				componentId);
+		UIComponent component = new FacesScopes().findComponentById(FacesContext.getCurrentInstance().getViewRoot(), componentId);
 
 		if (component instanceof DataTable) {
 			DataTable dataTable = (DataTable)component;
