@@ -13493,6 +13493,13 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
 		}
+		
+		/*#29605 Start - Temporary Solution*/
+		for (SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+			personnel.setSsmData(true);
+		}
+		/*#29605 End*/
+		
 		if(getManagedBean().isDisAllowOwnerEdit()){
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
