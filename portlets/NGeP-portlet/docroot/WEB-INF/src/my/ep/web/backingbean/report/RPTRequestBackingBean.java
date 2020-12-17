@@ -102,13 +102,13 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 			
 			IRPTRequestSO reqSO = (IRPTRequestSO) BusinessDelegate.getInstance()
 					.getServiceObject("rpt", IRPTRequestSO.class);
-			
+			debugLogger("Line105");
 			RPTRequest[] rptRequestArr = this.getManagedBean().getSelectedRPTRequests();
 			
 			//reload the same object from db
-			
+			debugLogger("Line109");
 			long[] rptRequetsIds = new long[rptRequestArr.length];
-			
+			debugLogger("Line111");
 			for(int i = 0; i<rptRequestArr.length; i++){
 				//pmNotifyUserIds[i] = rptRequestArr[i].getNotifyUserId();
 			}
@@ -116,16 +116,16 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 			//rptRequestArr = reqSO.getPmReportList(pmNotifyUserIds);
 
 			//end
-			
+			debugLogger("Line119");
 			if(rptRequestArr.length > 0){
-				
+				debugLogger("Line121");
 				this.getManagedBean().setSelectedRPTRequests(rptRequestArr);
-				
+				debugLogger("Line123");
 				for (RPTRequest rptRequest : this.getManagedBean()
 						.getSelectedRPTRequests()) {
 					reqDTO.getRPTRequestList().add(rptRequest);
 				}
-				
+				debugLogger("Line128");
 				RPTRequestResDTO resDTO = reqSO.removeRPTRequestList(reqDTO);
 				
 				debugLogger("RPTRequestResDTO isSuccessful[" + resDTO.isSuccessful()
