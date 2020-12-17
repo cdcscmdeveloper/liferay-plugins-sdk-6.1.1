@@ -5,6 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- #25077 Start -->
+	<ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" />
+	<!-- #25077 End -->
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable var="historyDtls" style="width:100%"
@@ -29,9 +33,7 @@
 			</p:column>
 			<!-- #25077 Start -->
 		     <c:if test="#{not empty approvalDtlsList.historyApprovalRequests and 
-		                qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers and 
-		                (createQtBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or
-					     createQtBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
+		                qTDetailBB.managedBean.selectedApprovalTabBean.tabType eq ParameterConst.approvalCategoryOthers and isOthersApprovalMandatoryForAttachment}">
 		               <c:choose>
 							    <c:when test="#{qTDetailBB.managedBean.maintanceFlow}">	
 							           <p:column headerText="#{lbl['lbl.sc.document']}">
