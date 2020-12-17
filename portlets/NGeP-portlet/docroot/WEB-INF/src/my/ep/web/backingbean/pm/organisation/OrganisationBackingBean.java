@@ -3307,15 +3307,14 @@ public class OrganisationBackingBean extends
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
 
-		OrgProfileResDTO orgResDTO = orgProfileSO
-				.retrieveOrgDetailsByOrgId(reqDTO);
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
 		PmOrgProfile orgProfile = orgResDTO.getPmOrgProfile();
 		//20201105@Jacky - Enhancement#28836 - Start
 		checkPendingStatus(orgProfile);
 		//20201105@Jacky - Enhancement#28836 - End
 
-		if (orgProfile.getSmSupplier() != null
-				&& getManagedBean().getOrgProfile().isGovtSeller()) {
+
+		if (orgProfile.getSmSupplier() != null && getManagedBean().getOrgProfile().isGovtSeller()) {
 			log.info("Supplier Test");
 			/*
 			 * this.getManagedBean().setSmSupplierBanks(
@@ -3843,6 +3842,9 @@ public class OrganisationBackingBean extends
 			for(SmSupplierBank suppBank: suppBankList){
 				if(suppBank.getSupplierBankId().equals(supBankId)){
 					List<BigDecimal> wfStatList = orgProfileSO.retrievePendingFulfilment(orgProfile.getOrgProfileId());
+					//20201217@Jacky - Enhancement#28836 - Start
+					long startTime = System.currentTimeMillis();
+					log.info("Execution start took {" + (System.currentTimeMillis() - startTime) + "}ms");
 					for(BigDecimal wfStat: wfStatList){
 						if(wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL
 								|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL
@@ -3859,6 +3861,9 @@ public class OrganisationBackingBean extends
 								|| wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL
 								|| wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL){
 							suppBank.setRecordStatusFlg(1);
+							log.info("wfStat Size : " + wfStatList.size());
+							log.info("Execution end took {" + (System.currentTimeMillis() - startTime) + "}ms");
+					//20201217@Jacky - Enhancement#28836 - End
 							throw new EpException(MessageConst.ERROR_775216);
 						}
 					}	
@@ -3871,6 +3876,9 @@ public class OrganisationBackingBean extends
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		if(!getManagedBean().getOrgProfile().isGovtSeller()){
 			List<BigDecimal> wfStatList = orgProfileSO.retrievePendingFulfilment(orgProfile.getOrgProfileId());
+			//20201217@Jacky - Enhancement#28836 - Start
+			long startTime = System.currentTimeMillis();
+			log.info("Execution start took {" + (System.currentTimeMillis() - startTime) + "}ms");
 			for(BigDecimal wfStat: wfStatList){
 				if(wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL
 						|| wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL
@@ -3887,6 +3895,9 @@ public class OrganisationBackingBean extends
 						|| wfStat.longValue() == FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL
 						|| wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL){
 					getManagedBean().getOrgProfile().setGovtSeller(true);
+					log.info("wfStat Size : " + wfStatList.size());
+					log.info("Execution end took {" + (System.currentTimeMillis() - startTime) + "}ms");
+			//20201217@Jacky - Enhancement#28836 - End
 					throw new EpException(MessageConst.ERROR_775215);
 				}
 			}
