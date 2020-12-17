@@ -335,6 +335,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					case "L"://27382
 						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
 					case "T":
+						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
 					case "B":
 					case "W":
 					case "D":
@@ -2002,6 +2003,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//27382 - start
 					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
 						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}
+					//27382 - Terminated 
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
+						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					}else{ 
 					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 					}
@@ -2203,6 +2208,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							//27382 - start
 							if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
 								throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+							}
+							//27382 - Terminated 
+							if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
+								throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 							}else{ 
 							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 							}
