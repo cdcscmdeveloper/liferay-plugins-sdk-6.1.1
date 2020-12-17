@@ -46,7 +46,6 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
-import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -117,7 +116,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.type.aut.SearchCondition;
@@ -253,40 +251,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 
 		boolean ctWorkflowStatusMatch = false;
-		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
-		//start
-		if(!getManagedBean().isViewContract()){
-		//Bug #29446
-			if (ctWorkflowStatus != null) {
-				if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
-					if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-						ctWorkflowStatusMatch = true;
-					}
+		if (ctWorkflowStatus != null) {
+			if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
+				if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
 				}
-			} else { // both also null
-				ctWorkflowStatusMatch = true;
 			}
-	
-			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
-				CtRemark remark = new CtRemark();
-				PmUser pmUser = facesScopes.getUserSessionBean();
-				remark.setCreatedBy(pmUser.getUserId());
-				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				remark.setChangedBy(remark.getCreatedBy());
-				remark.setChangedDate(remark.getCreatedDate());
-				remark.setCreatedUser(pmUser);
-				getManagedBean().setRemarkList(remarkList);
-				getManagedBean().getRemarkList().add(0, remark);
-			} else {
-				getManagedBean().setRemarkList(remarkList);
-			}
-			getManagedBean().setAttachmentList(attachmentList);
-		//Bug #29446
-		} else if (getManagedBean().isViewContract()){
-			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().setAttachmentList(attachmentList);
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
 		}
-		//Bug #29446 - end
+
+		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
+			CtRemark remark = new CtRemark();
+			PmUser pmUser = facesScopes.getUserSessionBean();
+			remark.setCreatedBy(pmUser.getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUser(pmUser);
+			getManagedBean().setRemarkList(remarkList);
+			getManagedBean().getRemarkList().add(0, remark);
+		} else {
+			getManagedBean().setRemarkList(remarkList);
+		}
+		getManagedBean().setAttachmentList(attachmentList);
 	}	
 	
 	
@@ -3343,7 +3331,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		// Start - 28292
-			//#28479 - Start Putra
 //		CommonUtils commonUtils = new CommonUtils();
 //		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
 //				.getScRequestItem().getUom().getUomCode());
@@ -3380,21 +3367,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 				   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-				   break;
-				   //#28479 - Start remove Code (related to #28292)
-//				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-//					Double maxValue = new Double(0);							
-//					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-//						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-//							maxValue = maxQty.getMaxQuantity().doubleValue();				
-//					}
-//					if (item.getMinimumOrderQty() > maxValue) {
-//						throw new EpException(MessageConst.ERROR_100034,
-//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-//						}
-//					}
-				 //#28479 - End remove Code (related to #28292)
+								
+				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
+					Double maxValue = new Double(0);							
+					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
+					}
+					if (item.getMinimumOrderQty() > maxValue) {
+						throw new EpException(MessageConst.ERROR_100034,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
+						}
+					}
 				}//#28479 - End Putra
 			}
 		}
@@ -3433,7 +3418,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //		
 //		contractItemSO.updateItemSearchService(reqDTO);
 //Bug #28356 - End		
-			//#28479 - End Putra		
+		
 		
 	}
 
@@ -3960,39 +3945,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
-		/*#28854 start*/
-		IRequestItemSO requestItemSO = null;
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-		
-		Long requestItemId = this.getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();	
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			List<String> itemSpecList = new ArrayList<String>();
-			for(int i=0;i<requestItemSO.retrieveNewOfferSpec(requestItemId).size();i++){
-				if(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec().isEmpty()){
-					continue;
-				}else{			
-					itemSpecList.add(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec());			
-				}
-			}
-			getManagedBean().setItemSpecification(itemSpecList);
-			
-			if(requestItemSO.retrieveNewOfferSpec(requestItemId).isEmpty()){
-				getManagedBean().setSupplierOffer(null);
-				getManagedBean().setNewOfferSpec(null);
-			}else{
-				getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
-				getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());
-			}
-		}
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
-			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
-			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
-		}		
-		/*#28854 end*/
-		log.info("HHHHHHH");
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 
