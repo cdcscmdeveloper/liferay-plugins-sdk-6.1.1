@@ -5040,6 +5040,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
 					
 					if(CollectionUtils.isNotEmpty(histories)){
+						Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
+							public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
+								return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+							}
+						});
+						
 						ScCommitteeMemberHistory h = histories.get(0);
 						list = (List<QtCommitteeMemberBean>)(Object)h.deserializeList(h.getCommitteeMembers());
 					}
