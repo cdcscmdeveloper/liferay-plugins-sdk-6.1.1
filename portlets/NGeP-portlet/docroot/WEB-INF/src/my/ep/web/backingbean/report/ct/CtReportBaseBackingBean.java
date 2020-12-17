@@ -8,16 +8,19 @@ import java.util.LinkedHashMap;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
+import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ct.CtReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -71,6 +74,26 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
+			
+			//R5 #14076 start
+			RPTRequestDtl rdtl = new RPTRequestDtl();
+			rdtl.setRequestId(resDTO.getRequestId());
+			
+			if(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO) != null){
+				rdtl.setDocumentNo01(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO));
+			}
+			if(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO) != null){
+				rdtl.setDocumentNo02(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO));
+			}
+			if(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO) != null){
+				rdtl.setDocumentNo03(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO));
+			}
+				
+			if(rdtl.getDocumentNo01() != null || rdtl.getDocumentNo02() != null || rdtl.getDocumentNo03() != null ){
+				addRptRequestDetail(rdtl);	
+			}
+			//R5 #14076 end
+			
 			getPopUpMsg(resDTO.getRequestId() != null ? resDTO.getRequestId().toString() : "");
 			RequestContext.getCurrentInstance().execute(
 					"rptConfirmationDlg.show()");
@@ -81,6 +104,14 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			e.printStackTrace();
 		}
 	}
+	
+	//R5 #14076 start
+	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
+				
+		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
+		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
+	}
+	//end
 
 	/**
 	 * Construct ministry condition fields.

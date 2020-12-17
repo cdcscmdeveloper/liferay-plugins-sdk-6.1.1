@@ -110,6 +110,9 @@ public class FRNCancellationRptBackingBean extends FlReportBackingBean<Fulfilmen
 		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
+		if (StringUtils.isNotBlank(getManagedBean().getFlRecNoteNo())) {
+			params.put(FlReportConst.FL_RPT_FRN_NO, getManagedBean().getFlRecNoteNo());
+		}
 		
 		generateFlReport(params);
 		
