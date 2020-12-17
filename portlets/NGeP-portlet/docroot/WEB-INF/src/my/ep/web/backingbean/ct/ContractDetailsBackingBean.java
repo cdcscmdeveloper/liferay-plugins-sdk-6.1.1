@@ -68,6 +68,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1078,7 +1079,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Validation for contract item details
 		//#28320 - During Notification Setting, no need to validate
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
-				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+				) {
 			// Bug #28479 - Start
 
 //			if ((ctBB.getManagedBean().getContractVer().getContractVerId() == null)
