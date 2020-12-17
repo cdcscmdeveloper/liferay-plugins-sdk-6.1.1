@@ -157,22 +157,22 @@
 							
 									<ac:paginator for="recReasonDtId" />
 									<p:ajax event="rowSelect" listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
 									<p:ajax event="rowUnselect"
 										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
 									<p:ajax event="rowSelectCheckbox"
 										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
 									<p:ajax event="rowUnselectCheckbox"
 										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
 									<p:ajax event="rowDblselect"
 										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
 									<p:ajax event="toggleSelect"
 										listener="#{cc.attrs.backingBean.onTickOrUnTickRecommendReason}"
-										update=":#{p:component('recRejectBlockPanel')}"></p:ajax>
+										update=":#{p:component(cc.attrs.changeRegStatusUpdateId)}"></p:ajax>
 							
 									<p:column selectionMode="multiple" width="1%" />
 							
