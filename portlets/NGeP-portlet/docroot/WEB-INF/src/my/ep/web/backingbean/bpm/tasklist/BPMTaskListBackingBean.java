@@ -79,6 +79,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 	
 	private static boolean sortAscending = true;
+	private static boolean fromSearchBttn = false;
 
 	public BPMTaskListBackingBean() {
 
@@ -663,14 +664,13 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 
 	public void refreshAdvanceTaskList() {
-
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
-
 	}
 
 
 	public void refreshNormalTaskList(){
-
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 	}
 	
@@ -1016,7 +1016,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	
 	public void orderByMyTaskList() {
 		
-		//this.getManagedBean().setSort_by(BpmConstants.SORT_BY_DOCNUMBER);
+		this.getManagedBean().setFromSearchBttn(false);
 		this.getManagedBean().setAscending(sortAscending);
 		
 		if (sortAscending) {
@@ -1031,8 +1031,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	
 	public void orderByGroupTaskList() {
 
-		//this.getManagedBean().setSort_by(BpmConstants.SORT_BY_DOCNUMBER);
-		this.getManagedBean().setAscending(sortAscending);
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscendingGroup(sortAscending);
 		
 		if (sortAscending) {
 			sortAscending =  false;
