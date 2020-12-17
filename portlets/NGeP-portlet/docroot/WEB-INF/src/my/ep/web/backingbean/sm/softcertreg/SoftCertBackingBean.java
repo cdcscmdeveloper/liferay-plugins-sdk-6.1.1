@@ -515,10 +515,30 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								.getName();
 						email = getManagedBean().getSupplierTmpPersonnel()
 								.getEmail();
+						//#29481 - Start
+						if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+								getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+								(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
+							msgKey = MessageConst.INFO_721067;
+							params = new String[] { name, email };
+						} 
+						//#29481 - End
 					} else if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getFreeSofcertPersonnelList())) {
 						sbName = new StringBuilder();
 						sbEmail = new StringBuilder();
+						//#29481 - Start
+						if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+								getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+								(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
+							for (int count=1, per=0; count<=reqDTO.getFreeSofcertPersonnelList().size(); count++,per++) {
+								sbName.append(count).append(". ").append(reqDTO.getFreeSofcertPersonnelList().get(per).getName()).append(" (").append(reqDTO.getFreeSofcertPersonnelList().get(per).getEmail()).append(")<br />");
+							}
+							name = sbName.toString();
+							params = new String[] { name };
+							msgKey = MessageConst.INFO_721068;
+						} else {
+							//#29481 - End
 						for (SmPersonnel per : reqDTO
 								.getFreeSofcertPersonnelList()) {
 							sbName.append(per.getName()).append(",");
@@ -532,9 +552,22 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						if (email.endsWith(",")) {
 							email = email.substring(0, email.length() - 1);
 						}
+						//#29481 - Start
+					}
+					//#29481 - End
 
 					}
+					//#29481 - Start
+					if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+							getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+							(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
+						//msgkey and params as defined above refer same cr no.
+					} else {
+					//#29481 - End
 					params = new String[] { name, email };
+					//#29481 - Start
+				}
+				//#29481 - End
 				} else {
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
