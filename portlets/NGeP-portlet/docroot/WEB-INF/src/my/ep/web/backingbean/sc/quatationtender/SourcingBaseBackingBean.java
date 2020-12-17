@@ -5000,6 +5000,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
 					}
 				}	
+			}else{
+				if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_ORDERED_STATUSES)){
+					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				}
 			}
 			if(CollectionUtils.isNotEmpty(list)){
 				arr = new String[list.size()];
