@@ -1462,8 +1462,13 @@ public class ViewApplHistoryBackingBean extends
 				//check the business/company registration status in ssm
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-				}
+					//27382 - start
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
+						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}else{
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
+					} 
+					//27382 - end
 			} else{					
 				SmCommonUtil.ssmError(ssmResDTO);
 			}
