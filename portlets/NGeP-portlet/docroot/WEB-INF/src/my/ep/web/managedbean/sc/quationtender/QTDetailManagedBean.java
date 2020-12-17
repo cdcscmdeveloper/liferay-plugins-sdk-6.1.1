@@ -1694,6 +1694,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25037-END
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
+	private boolean showPopUpBPKApprovalNeeded=false;
 	//#25077 - End
 
 	//#11104-start
@@ -10549,6 +10550,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
 			this.historyApprovalRequests = historyApprovalRequests;
 		}
+		
+		public boolean isShowPopUpBPKApprovalNeeded() {
+			return showPopUpBPKApprovalNeeded;
+		}
+
+		public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
+			this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -10633,6 +10642,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCurrentCMTStatus(Long currentCMTStatus) {
 			this.currentCMTStatus = currentCMTStatus;
 		}
+
 }
 
 
