@@ -9666,7 +9666,12 @@ public class SpecificationBackingBean extends
 		if (null != member) {
 
 			if (member.getMemberRole().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)||
+				member.getMemberRole().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)||
+				member.getMemberRole().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)
+					) {
 				this.getManagedBean().setReadOnly(false);
 
 			} else {
