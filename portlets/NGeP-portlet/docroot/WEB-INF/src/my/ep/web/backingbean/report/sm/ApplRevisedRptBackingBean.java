@@ -20,7 +20,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.report.sm.ApplRevisedRptManagedBean;
@@ -80,11 +79,11 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 
 	// User Validation
 	public void getUserValidation() {
-		if (getUserRole().equalsIgnoreCase("UPS_APPROVER") && getUserZone().equalsIgnoreCase("SABAH")) {
+		if (getUserRole().equalsIgnoreCase(RoleCode.UPS_APPROVER.value()) && getUserZone().equalsIgnoreCase("SABAH")) {
 			getManagedBean().setZone(SmReportConst.SM_ZONE_SABAH);
 			getManagedBean().setSupplierType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
 			getManagedBean().setFlag(true);
-		} else if (getUserRole().equalsIgnoreCase("UPS_APPROVER") && getUserZone().equalsIgnoreCase("SARAWAK")) {
+		} else if (getUserRole().equalsIgnoreCase(RoleCode.UPS_APPROVER.value()) && getUserZone().equalsIgnoreCase("SARAWAK")) {
 			getManagedBean().setZone(SmReportConst.SM_ZONE_SARAWAK);
 			getManagedBean().setSupplierType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
 			getManagedBean().setFlag(true);
@@ -101,7 +100,7 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 
 		if (dateType.equalsIgnoreCase("from")) {
 			addedCal.add(Calendar.MONTH, 12);
-			if (currDate.compareTo(addedCal.getTime()) == 1) {
+			if (1 == currDate.compareTo(addedCal.getTime())) {
 				getManagedBean().setMaxToDate(addedCal.getTime());
 			} else {
 				getManagedBean().setMaxToDate(currDate);
@@ -147,10 +146,10 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 
 	// Reset Button
 	public void resetSearch() {
-		if (getUserRole().equalsIgnoreCase("UPS_APPROVER") && getUserZone().equalsIgnoreCase("SABAH")) {
+		if (getUserRole().equalsIgnoreCase(RoleCode.UPS_APPROVER.value()) && getUserZone().equalsIgnoreCase("SABAH")) {
 			getManagedBean().setZone(SmReportConst.SM_ZONE_SABAH);
 			getManagedBean().setSupplierType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
-		} else if (getUserRole().equalsIgnoreCase("UPS_APPROVER") && getUserZone().equalsIgnoreCase("SARAWAK")) {
+		} else if (getUserRole().equalsIgnoreCase(RoleCode.UPS_APPROVER.value()) && getUserZone().equalsIgnoreCase("SARAWAK")) {
 			getManagedBean().setZone(SmReportConst.SM_ZONE_SARAWAK);
 			getManagedBean().setSupplierType(SupplierManagementConst.SUPP_TYPE_CONTRACTOR);
 		} else {
