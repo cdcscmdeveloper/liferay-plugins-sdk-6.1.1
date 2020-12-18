@@ -21,14 +21,11 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false" />
 		<br />
-		<br />
-		<p:remoteCommand name="loadFilter" onsuccess="tableAgencyWidget.filter();"/> <!--  to set filter loader outside ajax-->
-        <!--  <p:remoteCommand name="savecelledit" action="#{ctBackingBean.savecellTest}" onsuccess="var d=tableAgencyWidget, c=d.jq.find('td:has(.ui-cell-editor-input:visible)'); if(c.length)d.saveCell(c)"/>-->  
+		<br />		
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
 			widgetVar="tableAgencyWidget"
 			editable="true" 
 			editMode="cell"
-			filteredValue="#{ctBackingBean.filteredAgencies}"
 			value="#{ctBackingBean.managedBean.contractVer.ctAgencies}"
 			selectionMode="single" rowKey="#{agencyData}"
 			selection="#{ctBackingBean.managedBean.selectedAgency}"
@@ -93,8 +90,8 @@
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
 		     
-			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" process="@this"  update=":form:tableAgencyDetails" oncomplete="loadFilter();"/>
-		     <!--  <p:ajax event="cellEdit" oncomplete="savecelledit();" />-->
+		 	<p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/>
+			
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
@@ -672,4 +669,18 @@
 		</p:confirmDialog>
 
 	</p:panel>
+	
+	<!-- Bug #29466 -->
+	<!-- start -->
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" 
+	    rendered="#{ctBackingBean.managedBean.viewContract}">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" style="float:none;text-align:center"/></td>
+				<td width="50%" valign="top" style="text-align:center"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" style="float:none;text-align:center"/></td>
+			</tr>
+			<ui:include src="../shared/remarkAndAttachmentFulfilment.xhtml" />
+		</table>
+	</p:panel>
+	<!-- end -->
 </ui:composition>
