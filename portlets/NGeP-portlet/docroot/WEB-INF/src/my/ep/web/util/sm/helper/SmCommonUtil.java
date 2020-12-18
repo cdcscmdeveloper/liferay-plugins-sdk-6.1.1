@@ -1468,10 +1468,11 @@ public class SmCommonUtil {
 		}
 		// 28466 - Skip recalculate paid up capital
 		try {
-			// 28466 - fixed not recalculate for other business type
-			if (BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class)
-					.ssmActive()
-					&& !businessTypeVal.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
+			// 28466 - re-fixed not recalculate for other business type
+			if (!BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class).ssmActive()
+					|| (BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISsmSO.class).ssmActive() && !businessTypeVal
+							.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT))) {
 				compBasic.setPaidUpCapital(compBasic.getBumiEquity()
 						.add(compBasic.getNonBumiEquity())
 						.add(compBasic.getLocalCompanyEquity())
