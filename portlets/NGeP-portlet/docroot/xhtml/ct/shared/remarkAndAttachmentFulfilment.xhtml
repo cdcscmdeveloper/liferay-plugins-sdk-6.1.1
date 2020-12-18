@@ -15,7 +15,7 @@
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex ? ctBackingBean.managedBean.contractVer.itemRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex ? ctBackingBean.managedBean.contractVer.deductionRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex ? ctBackingBean.managedBean.contractVer.scheduleRemarks : 
-				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.remark : 
+				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.factoringRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex ? ctBackingBean.managedBean.contractVer.settingRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.notificationIndex ? ctBackingBean.managedBean.contractVer.notiSettingRemarks : null)))))))}" rowIndexVar="index"
 				columns="1"
@@ -53,7 +53,7 @@
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex ? ctBackingBean.managedBean.contractVer.itemAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex ? ctBackingBean.managedBean.contractVer.deductionAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex ? ctBackingBean.managedBean.contractVer.scheduleAttachments : 
-				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.attachment : null)))))}"
+				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.factoringAttachments : null)))))}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
 				rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
 					contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
