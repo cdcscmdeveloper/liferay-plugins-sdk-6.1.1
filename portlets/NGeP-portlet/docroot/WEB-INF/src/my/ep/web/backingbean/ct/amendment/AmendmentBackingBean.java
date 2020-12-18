@@ -655,6 +655,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				outcome[i++] = action;
 			}
 			getManagedBean().setOutComes(outcome);
+			
+			//#29446 start
+			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			//#29446 end
 
 			/*Retrieve contract amendment details*/
 			ctReqDTO = new ContractReqDTO();
@@ -676,9 +680,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
 			
-			//#29446 start
-			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
-			//#29446 end
+
 			
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
