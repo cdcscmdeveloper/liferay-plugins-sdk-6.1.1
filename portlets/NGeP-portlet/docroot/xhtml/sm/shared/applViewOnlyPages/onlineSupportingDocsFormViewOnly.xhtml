@@ -38,26 +38,26 @@
 	                </p:row>
 	                <p:row>
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-							style="width : 2%;text-align: center !important;" />
+							style="width:2% !important; text-align:center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-							style="width : 58%;overflow: hidden !important;" />
+							style="width:58% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width : 15%;overflow: hidden !important;" />
+							style="width:15% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width : 25%;overflow: hidden !important;" />
+							style="width:25% !important; overflow:hidden !important;" />
 	                </p:row>
 				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;text-align: center !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}"
 						style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 58%;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width:58% !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 15%;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:15% !important;" rendered="#{table.pmDocument.mandatory}">
 					<p:dataList value="#{table.smApplDocFiles}" var="fileVar">
-						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{fileVar.fileName}"
+						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{viewSmApplBackingBean.getShortFileName(fileVar.fileName)}"
 							action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(fileVar.fileName,fileVar.filePath)}"
 							update=":form" ajax="false">
 							<p:fileDownload value="#{viewSmApplBackingBean.file}" />
@@ -66,7 +66,7 @@
 							style="float: left;white-space: normal;" rendered="#{empty fileVar.fileName}"/>
 					</p:dataList>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 25%;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:25% !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{table.sdoRemarks}"
 						style="float: left;white-space: normal;" />
 				</p:column>
@@ -90,26 +90,26 @@
 	                </p:row>
 	                <p:row>
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-							style="width : 2%;text-align: center !important;" />
+							style="width:2% !important; text-align:center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-							style="width : 58%;overflow: hidden !important;" />
+							style="width:58% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width : 15%;overflow: hidden !important;" />
+							style="width:15% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width : 25%;overflow: hidden !important;" />
+							style="width:25% !important; overflow:hidden !important;" />
 	                </p:row>
 				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;text-align: center  !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center  !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}"
 						style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 58%;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width:58% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 15%;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:15% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<p:dataList value="#{table.smApplDocFiles}" var="fileVar">
-						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{fileVar.fileName}"
+						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{viewSmApplBackingBean.getShortFileName(fileVar.fileName)}"
 							action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(fileVar.fileName,fileVar.filePath)}"
 							update=":form" ajax="false">
 							<p:fileDownload value="#{viewSmApplBackingBean.file}" />
@@ -118,7 +118,7 @@
 							style="float: left;white-space: normal;" rendered="#{empty fileVar.fileName}"/>
 					</p:dataList>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 25%;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:25% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.sdoRemarks}"
 						style="float: left;white-space: normal;" />
 				</p:column>
@@ -144,26 +144,26 @@
 	                </p:row>
 	                <p:row>
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-							style="width : 2%;text-align: center !important;" />
+							style="width:2% !important; text-align:center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-							style="width : 58%;overflow: hidden !important;" />
+							style="width:58% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width : 15%;overflow: hidden !important;" />
+							style="width:15% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width : 25%;overflow: hidden !important;" />
+							style="width:25% !important; overflow:hidden !important;" />
 	                </p:row>
 				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;text-align: center !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{viewSmApplBackingBean.mandatoryCounter}"
 						style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 58%;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width:58% !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 15%;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 15% !important;" rendered="#{table.pmDocument.mandatory}">
 					<p:dataList value="#{table.smApplInquiryDocFiles}" var="fileVar">
-						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{fileVar.fileName}"
+						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{viewSmApplBackingBean.getShortFileName(fileVar.fileName)}"
 							action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(fileVar.fileName,fileVar.filePath)}"
 							update=":form" ajax="false">
 							<p:fileDownload value="#{viewSmApplBackingBean.file}" />
@@ -172,7 +172,7 @@
 							style="float: left;white-space: normal;" rendered="#{empty fileVar.fileName}"/>
 					</p:dataList>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 25%;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:25% !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{table.sdoRemarks}"
 						style="float: left;white-space: normal;" />
 				</p:column>
@@ -196,26 +196,26 @@
 	                </p:row>
 	                <p:row>
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
-							style="width : 2%;text-align: center !important;" />
+							style="width:2% !important; text-align:center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" 
-							style="width : 58%;overflow: hidden !important;" />
+							style="width:58% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width : 15%;overflow: hidden !important;" />
+							style="width:15% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width : 25%;overflow: hidden !important;" />
+							style="width:25% !important; overflow:hidden !important;" />
 	                </p:row>
 				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;text-align: center !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align: center !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{viewSmApplBackingBean.nonMandatoryCounter}"
 						style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 58%;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width:58% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}"
 						style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 15%;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:15% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<p:dataList value="#{table.smApplInquiryDocFiles}" var="fileVar">
-						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{fileVar.fileName}"
+						<p:commandLink rendered="#{not empty fileVar.fileName}" value="#{viewSmApplBackingBean.getShortFileName(fileVar.fileName)}"
 							action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(fileVar.fileName,fileVar.filePath)}"
 							update=":form" ajax="false">
 							<p:fileDownload value="#{viewSmApplBackingBean.file}" />
@@ -224,7 +224,7 @@
 							style="float: left;white-space: normal;" rendered="#{empty fileVar.fileName}"/>
 					</p:dataList>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 25%;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:25% !important; " rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.sdoRemarks}"
 						style="float: left;white-space: normal;" />
 				</p:column>
@@ -333,7 +333,7 @@
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 18% !important;" rendered="#{table.pmDocument.mandatory}">
-									<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+									<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal; width:100% !important;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForApplStatus" rendered="#{viewSmApplBackingBean.mandatoryEmpty}"
@@ -380,7 +380,7 @@
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 18% !important;" rendered="#{!table.pmDocument.mandatory}">
-									<h:inputTextarea value="#{table.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+									<h:inputTextarea value="#{table.sdoRemarks}" style="float:left; white-space:normal; width:100% !important;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForApplHistory" rendered="#{viewSmApplBackingBean.nonMandatoryEmpty}"
