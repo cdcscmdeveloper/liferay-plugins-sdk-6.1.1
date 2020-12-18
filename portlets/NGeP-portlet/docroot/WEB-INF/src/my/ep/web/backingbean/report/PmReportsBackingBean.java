@@ -75,9 +75,8 @@ public class PmReportsBackingBean extends
 		ReportBaseBackingBean<PmReportsManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";
-	
-	private static final String CAP_CHAR = "^"; // shafie - #28833
+	private static final String NAV_TO_PMREPORT = "/xhtml/reports/new/pm/pmreportsmain.xhtml";	
+	private static final String CAP_CHAR = "^";  // shafie - #28833
 
 	private static Map<Long, Object> orgTypeMapper;
 	
@@ -131,9 +130,13 @@ public class PmReportsBackingBean extends
 				getManagedBean().getReportCode())) {
 			retrieveOrgTypeMap();
 			this.getManagedBean().setSearchOrgCategory(PmReportConst.ORG_CAT_CP_MR);
+		//#28833 - shafie -start
+		}else if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(
+				getManagedBean().getReportCode())) {
+			setCurrentActiveOrg(); 
 		}
+		//#28833 - shafie -end
 		
-		setCurrentActiveOrg(); //#28833 - shafie
 		
 	}
 
@@ -213,11 +216,16 @@ public class PmReportsBackingBean extends
 		case PmReportConst.PM_NO_OF_CP_AND_MR_ACCESS_APPLICATION_RPT_VAL:
 			constructPm010Map(map);
 			break;
-			//shafie - #28833 - start
+			//#28833 shafie  start
 		case PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT:
 			constructPm012Map(map);
 			break;
-			//shafie - #28833 - end
+			//#28833 shafie  end
+		//shafie - #29486 -start
+		case PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL:
+			constructPm013Map(map);
+			break;
+		//shafie - #29486 - end
 		default:
 			throw new EpException("Report not found.");
 
@@ -286,7 +294,6 @@ public class PmReportsBackingBean extends
 		}
 		
 		// 28833 start
-		
 		if (getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_MINISTRY ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
@@ -348,7 +355,6 @@ public class PmReportsBackingBean extends
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
 		}	
 	}
-	
 	// 28239 - end
 
 		if (StringUtils.isNotBlank(getManagedBean().getSelectedRoleCode())) {
@@ -462,9 +468,9 @@ public class PmReportsBackingBean extends
 		
 		if (getManagedBean().getSelectedPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
-					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName()); 
 		}
-	}		
+	}	
 	//shafie - #28833 -end
 	
 	//No of Company Profile and Market Research Access Application
@@ -606,14 +612,14 @@ public class PmReportsBackingBean extends
 		getManagedBean().setApplicantName(null);
 		getManagedBean().setSelectedApplicationStatus(null);
 		//shafie - #28833 - start
-		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(null);
+		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			setCurrentActiveOrg();
 		}
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
 		//shafie - #28833 - end
-
 	}
 
 	public void autoSelectOrgType() {
@@ -824,6 +830,8 @@ public class PmReportsBackingBean extends
 		return parentOrgProfile;
 	}
 	
+	
+	
 	public boolean isMinistryJabatanAdmin(){
 		boolean Admin = false;
 		
@@ -926,7 +934,7 @@ public class PmReportsBackingBean extends
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		this.getManagedBean().getPmSearchBean()
 				.setKptj(orgProfile);
-		
+
 		resetPtjOrgProfile();
 	}
 		
@@ -943,16 +951,17 @@ public class PmReportsBackingBean extends
 	}
 	
 	public void resetPtjGroupOrgProfile() {
-		this.getManagedBean().setSelectedKumpulanPTJ(new PmOrgProfile());		
+		this.getManagedBean().setSelectedKumpulanPTJ(null);		
 		this.getManagedBean().getPmSearchBean().setKptj(null);
 		resetPtjOrgProfile();
 	}
 	
 	
 	public void resetPtjOrgProfile() {
-		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());		
+		this.getManagedBean().setSelectedPTJ(null);		
 		this.getManagedBean().getPmSearchBean().setPtj(null);
 	}
+	//shafie - #28833 - end
 	
 	
 	//shafie - #28833 - end 
@@ -996,8 +1005,14 @@ public class PmReportsBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
 		//#28833 -shafie -start
+		/*if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(getManagedBean().getReportCode())) {
+			getManagedBean().setSelectedMinistry(null);
+			getManagedBean().setSelectedKumpulanPTJ(null);
+			getManagedBean().setSelectedPTJ(null);
+
+		}*/
+		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(pmOrgProfile);
 			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
