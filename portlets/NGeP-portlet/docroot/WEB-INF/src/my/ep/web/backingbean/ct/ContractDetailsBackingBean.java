@@ -2883,7 +2883,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctWorkflowStatusMatch = true;
 		}
 		
-		if ((remarks.size() == 0 || !ctWorkflowStatusMatch) && !ctBB.getManagedBean().isViewContract()) {
+		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
