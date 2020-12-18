@@ -15572,10 +15572,7 @@ public class SpecificationBackingBean extends
 			log.info("checkFinancialSpecEstimations count" + count);
 			//#25729 #142 start - checking total indicative price <= 20k
 			//Intended Price
-			BigDecimal totalSpecEstimatedAmount = null;
-			if (totalSpecEstimatedAmount == null) {
-				totalSpecEstimatedAmount = BigDecimal.valueOf(0);
-			}
+		BigDecimal totalSpecEstimatedAmount=BigDecimal.valueOf(0);//Bug #29806
 
 			if (qtChecklist != null
 					&& null != qtChecklist.getScQtDoc()
@@ -15588,15 +15585,26 @@ public class SpecificationBackingBean extends
 					for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion
 							.getTplSpecEstimations()) {
 						if (tplSpecEstimation.getEstimatedCost() != null) {
-							totalSpecEstimatedAmount = totalSpecEstimatedAmount
-									.add(tplSpecEstimation
-											.getEstimatedCost());
+							//20201217@haziq- Bug #29806 - Start
+								BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
+								
+								if (estimatedCost.compareTo(BigDecimal.ZERO) == 0){		
+									throw new EpException(MessageConst.ERROR_760515, 
+											new String[]{ 
+											ResourceBundleUtils.getMessage(
+													"lbl.tpl.spec.content.Indicative.unit.price", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) });
+								}
+								totalSpecEstimatedAmount = totalSpecEstimatedAmount
+										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+								//20201217@haziq- Bug #29806 - Start
 						}
 					}
 				}
 			}
 			log.debug("totalSpecEstimatedAmount" + totalSpecEstimatedAmount);
-			if (count == 0) {
+			if (count == 0) { //Bug #29806
 				// Intended Price
 				if (qt.isPanel()) {
 					BigDecimal panelThreshold = getPanelThresholdAmount();
