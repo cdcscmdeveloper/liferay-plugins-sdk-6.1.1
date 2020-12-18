@@ -365,8 +365,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)) {
 			getManagedBean().setUpdateSupplierInstructionFlag(true);
 		}
-		//#29006 - end
 		
+		removeUnwantedLampiranA3Report(1);
+		//#29006 - end
+					
 		return QTConstants.LOA_PAGE;
 	}
 	
