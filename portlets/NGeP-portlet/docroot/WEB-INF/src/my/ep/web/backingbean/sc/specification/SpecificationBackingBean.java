@@ -15355,7 +15355,7 @@ public class SpecificationBackingBean extends
 								BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
 								
 								if (estimatedCost.compareTo(BigDecimal.ZERO) == 0){		
-									throw new EpException(MessageConst.ERROR_760515, 
+									throw new EpException(MessageConst.ERROR_760519, 
 											new String[]{ 
 											ResourceBundleUtils.getMessage(
 													"lbl.tpl.spec.content.Indicative.unit.price", 
