@@ -571,6 +571,19 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				} else {
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
+						//#29481 - Start
+						if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+								getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+								(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
+							sbName = new StringBuilder();
+							for (int count=1, per=0; count<=reqDTO.getSmPersonnelList().size(); count++,per++) {
+								sbName.append(count).append(". ").append(reqDTO.getSmPersonnelList().get(per).getName()).append(" (").append(reqDTO.getSmPersonnelList().get(per).getEmail()).append(")<br />");
+							}
+							name = sbName.toString();
+							params = new String[] { name };
+							msgKey = MessageConst.INFO_721068;
+						} else {
+						//#29481 - End
 						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
 							sbName = new StringBuilder();
 							sbName.append(per.getName()).append(",");
@@ -584,6 +597,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								SmCommonUtil
 										.getBasePortalAppUrlFromProperties()
 										+ "task-list" };
+						//#29481 - Start
+						}
+						//#29481 - End
 					}
 				}
 				renewSesionObject();
