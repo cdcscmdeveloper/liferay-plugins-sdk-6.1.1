@@ -14094,22 +14094,45 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 
-			    if (getManagedBean().getSelectedShareHolder().isClerical()
-			    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl())) {
-			    	log.info("insert clerical contractor");
+			    if (getManagedBean().getSmSupplier().getBusinessType()     
+						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG) //#29666 
+						&& getManagedBean().getSelectedShareHolder().isClerical()
+			    		&& alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())) {  //#29666 
+			    	log.info("insert clerical contractor semenanjung");
 				getManagedBean().getSelectedShareHolder().setEquityOwner(false);
 				getManagedBean().getSelectedShareHolder().setDirector(false);
 				getManagedBean().getSelectedShareHolder().setHigherManagement(false);
 				getManagedBean().getSelectedShareHolder().setManagement(false);
 				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			}else {
-				/*getManagedBean().getSelectedShareHolder().setEquityOwner(true);
-				getManagedBean().getSelectedShareHolder().setManagement(true);*/
-				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
-				log.info("enable equity owner contractor");
-			}
-		}
-		else if (getManagedBean().getSmAppl().getSupplierType()
+		    //#29666- START 	
+			   } else if (getManagedBean().getSmSupplier().getBusinessType()     
+						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+						&& getManagedBean().getSelectedShareHolder().isClerical()
+			      && alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
+			    	log.info("insert clerical contractor sarawak");
+			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+					
+			   } else if (getManagedBean().getSmSupplier().getBusinessType()     
+						.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+						&& getManagedBean().getSelectedShareHolder().isClerical()
+			      && alreadyHadEquityOwnerAsStaff(getManagedBean().getSmAppl(), getManagedBean().getSelectedShareHolder().getPersonnelId())){
+			    	log.info("insert clerical contractor sabah");
+			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+			//#29666- END 		
+			    }else {
+			    getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
+			    log.info("enable equity owner contractor");
+			    }
+			    
+		   } else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 			if (getManagedBean().getSelectedShareHolder().isClerical()) {
 			    	log.info("insert clerical consultant");
@@ -14128,15 +14151,16 @@ public class SmApplicationBackingBean extends
 			}
 		}
    }
-    
-	private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl) {
+    private static boolean alreadyHadEquityOwnerAsStaff(SmAppl appl, Long personnelId) { //#29666- add Long variable
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
+			if (!per.getPersonnelId().equals(personnelId)){  //#29666- add condition
 			if (per.isEquityOwner() && per.isClerical()) {
 				retVal = true;
 				break;
 			}
 		}
+	}
 		return retVal;
 	}
 // BUG #28173 & #28315 -END
