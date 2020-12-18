@@ -2871,21 +2871,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	private void initiateRemark(List<CtRemark> remarks) {
 		boolean ctWorkflowStatusMatch = false;
-		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
-		//start
-		if(!ctBB.getManagedBean().isViewContract()){
-		//Bug #29446
-			if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus() != null) {
-				if (remarks.size()>0 && remarks.get(0).getCtWorkflowStatus() != null) {
-					if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus().getWorkflowStatusId() 
-							== remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-						ctWorkflowStatusMatch = true;
-					}
+		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance - start
+		if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus() != null) {
+			if (remarks.size()>0 && remarks.get(0).getCtWorkflowStatus() != null) {
+				if (ctBB.getManagedBean().getContractVer().getCtWorkflowStatus().getWorkflowStatusId() 
+						== remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
 				}
-			} else { // both also null
-				ctWorkflowStatusMatch = true;
 			}
-	
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if(!ctBB.getManagedBean().isViewContract()){
 			if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
 				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
@@ -2895,7 +2893,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				remark.setCreatedUser(getFacesScopes().getUserSessionBean());
 				remarks.add(0, remark);
 			}
-		//Bug #29446
 		}
 		//Bug #29446 - end
 	}
