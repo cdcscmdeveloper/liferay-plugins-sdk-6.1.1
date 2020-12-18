@@ -251,22 +251,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void initializeRemarkAndAttachement(CtWorkflowStatus ctWorkflowStatus, 
 			List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
 		FacesScopes facesScopes = new FacesScopes();
-
+		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance (start)
 		boolean ctWorkflowStatusMatch = false;
-		//Bug #29446 - To display Remarks and Attachments for CT Module - Contract Maintenance
-		//start
-		if(!getManagedBean().isViewContract()){
-		//Bug #29446
-			if (ctWorkflowStatus != null) {
-				if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
-					if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-						ctWorkflowStatusMatch = true;
-					}
+		if (ctWorkflowStatus != null) {
+			if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
+				if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
 				}
-			} else { // both also null
-				ctWorkflowStatusMatch = true;
 			}
-	
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if(!getManagedBean().isViewContract()){
 			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
 				PmUser pmUser = facesScopes.getUserSessionBean();
@@ -281,8 +278,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setRemarkList(remarkList);
 			}
 			getManagedBean().setAttachmentList(attachmentList);
-		//Bug #29446
-		} else if (getManagedBean().isViewContract()){
+		
+		} else {
 			getManagedBean().setRemarkList(remarkList);
 			getManagedBean().setAttachmentList(attachmentList);
 		}
