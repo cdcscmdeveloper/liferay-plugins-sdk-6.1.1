@@ -658,6 +658,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//#29446 start
 			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
+			ctBackingBean.getManagedBean().setViewContract(false);
 			//#29446 end
 
 			/*Retrieve contract amendment details*/
