@@ -161,6 +161,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -201,7 +202,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
 		}
-		//remove for #25956 
+		// Remove Code for #25956
 //		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 //		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
 //		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
@@ -559,8 +560,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			String taskId = originalServletRequest.getParameter("taskId");
 			//#25956 - Start (view Contract Amendment url from notification)
 			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-			log.info("Check Putra Amendment preRenderView taskId*******"+taskId);
-			log.info("Check Putra Amendment preRenderView contractVerId*******"+contractVerId);
 			
 			if(contractVerId!=null) {
 				ctReqDTO = new ContractReqDTO();
@@ -632,7 +631,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				this.getManagedBean().setOutComes(str_array);
 			}
 		}
-			log.info("Check Button :"+this.getManagedBean().getOutComes().toString());
 			//#25956 - End
 
 			/* Setting save button as per requirement*/
@@ -655,11 +653,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				outcome[i++] = action;
 			}
 			getManagedBean().setOutComes(outcome);
-			
-			//#29446 start
-			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
-			ctBackingBean.getManagedBean().setViewContract(false);
-			//#29446 end
 
 			/*Retrieve contract amendment details*/
 			ctReqDTO = new ContractReqDTO();
@@ -681,8 +674,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
 			
+//			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 
-			
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
@@ -826,7 +819,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 			}
 			
-			
+			//Enhancement 15851 - Prefix for supplemental contract letter
+			//start
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
+				if(StringUtils.isNotBlank(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo())){
+					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
+				}
+			}
 			//Enhancement #26186 end - retrieve disciplinary info
 			
 			//#25956 - Start Button Cancel If not isDisciplinaryAction
@@ -1312,15 +1311,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#29403 end
 			
-			//Enhancement 15851 - Prefix for supplemental contract letter
-			//start
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
-				if(StringUtils.isNotBlank(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo())){
-					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
-				}
-			}
-			//end
-			
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
 		} finally {
@@ -1725,6 +1715,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
+			
 			//Enhancement 15851 - Prefix for supplemental contract letter
 			//start
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
