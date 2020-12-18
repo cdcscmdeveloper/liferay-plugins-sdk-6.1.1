@@ -1190,12 +1190,14 @@ public class SmApplicationBackingBean extends
 								SupplierManagementConst.SM_REASON_CODE_OTHERS));
 		
 		//#15629 - START
+		if(getManagedBean().isPoUser()){
 		getManagedBean().setRecommendReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
 						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
 		getManagedBean().setRecommendReasonDescList(
 				getManagedBean().getRecommendReasonDescInitList());
+		}
 		//#15629 - END
 
 
@@ -9695,6 +9697,14 @@ public class SmApplicationBackingBean extends
 								setSmApplRecommendRejectionReasons();
 								reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
 							}
+							
+							if (StringUtils.isNotBlank(getManagedBean()
+									.getApplnRejectionRemarks())) {
+								SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
+										.getSmAppl().getApplId(),
+										ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+										getManagedBean().getApplnRejectionRemarks());
+							}
 							// #15629 -- end
 						}
 					}
@@ -14289,7 +14299,7 @@ public class SmApplicationBackingBean extends
 		// int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
 		if(getManagedBean().getRecommendReasonId()!=null && getManagedBean().getRecommendReasonId().length>0){
-			for (Long resId : getManagedBean().getReasonId()) {
+			for (Long resId : getManagedBean().getRecommendReasonId()) {
 				for (PmReasonDesc desc : getManagedBean().getRecommendReasonDescList()) {
 					if (desc.getPmReason().getReasonId().equals(resId)) {				
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark

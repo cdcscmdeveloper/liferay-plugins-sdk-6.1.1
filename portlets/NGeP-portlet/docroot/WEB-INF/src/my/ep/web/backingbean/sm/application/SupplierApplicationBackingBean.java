@@ -8410,6 +8410,21 @@ public class SupplierApplicationBackingBean extends
 								}
 
 							}
+							// #15629 -- start
+							if (getManagedBean().isPoUser() && !getManagedBean().getSmAppl().getApplType()
+									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+								setSmApplRecommendRejectionReasons();
+								reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
+							}
+							
+							if (StringUtils.isNotBlank(getManagedBean()
+									.getApplnRejectionRemarks())) {
+								SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
+										.getSmAppl().getApplId(),
+										ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+										getManagedBean().getApplnRejectionRemarks());
+							}
+							// #15629 -- end
 						}
 					}
 
@@ -11826,6 +11841,57 @@ public class SupplierApplicationBackingBean extends
 		}
 		verifySelectedRecommendRejectReasons();
 	}
+	
+	/**
+	 * Sets the SM application recommend rejection reasons selected.
+	 */
+	private void setSmApplRecommendRejectionReasons() {
+		StringBuilder sb = new StringBuilder();
+		// int count = 0;
+		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
+		if(getManagedBean().getRecommendReasonId()!=null && getManagedBean().getRecommendReasonId().length>0){
+			for (Long resId : getManagedBean().getRecommendReasonId()) {
+				for (PmReasonDesc desc : getManagedBean().getRecommendReasonDescList()) {
+					if (desc.getPmReason().getReasonId().equals(resId)) {				
+						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
+							if (StringUtils.isBlank(getManagedBean()
+									.getApplnRejectionRemarks())) {
+								throw new EpException("Recommend Rejection Remarks is mandatory.");
+							}
+						}
+						
+						SmApplRejectReason rej = new SmApplRejectReason();
+						rej.setPmReason(desc.getPmReason());
+						rej.setSmAppl(getManagedBean().getSmAppl());
+						resList.add(rej);
+						log.info("Reason Id === " + resId);
+						// sb.append(++count).append(". ");
+						// sb.append(desc.getReasonDesc());
+						// sb.append("\n");
+						sb.append(desc.getPmReason().getReasonId());
+						sb.append("|");
+					}
+				}
+			}
+		}else{
+			//Just in case
+			throw new EpException("Recommend Rejection reason is mandatory."); //21937		
+		}
+
+		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+						.isEmpty()) {
+			log.info(" ***** Already exisiting records ******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
+			log.info(" *****Size after reset******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+		}
+		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
+		getManagedBean().setReasonDesc(sb.toString());
+	}	
 	// #15629 -- end
 	
 }
