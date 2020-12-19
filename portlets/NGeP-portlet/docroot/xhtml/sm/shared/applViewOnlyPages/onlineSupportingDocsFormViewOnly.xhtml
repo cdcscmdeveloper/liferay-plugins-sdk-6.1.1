@@ -27,7 +27,7 @@
 		}
 		</style>
 		
-		<p:outputPanel rendered="#{viewSmApplBackingBean.inquiryResponse and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne '20200'}">
+		<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId ne '20200'}">
 			<p:dataTable var="table" value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}" id="onlineSDPendingMandatoryList" 
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
