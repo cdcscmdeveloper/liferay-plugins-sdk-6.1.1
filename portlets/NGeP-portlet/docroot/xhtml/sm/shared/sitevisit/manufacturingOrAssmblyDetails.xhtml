@@ -17,7 +17,13 @@
 			id="smManufacturingDtl" rowKey="#{manufacturingDtl}">
 
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}" />
+				rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.manufacturingDtlLs}" />	
+			<!-- #24964 -->
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnManufacturingListDelete')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnManufacturingListDelete')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('btnManufacturingListDelete')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('btnManufacturingListDelete')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('btnManufacturingListDelete')}" />
 
 			<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
 				<h:outputText value="#{manufacturingDtl.goodsType}" />
@@ -57,9 +63,11 @@
 				action="#{svoSiteVisitBackingBean.addAdditionalManufacturing}"
 				rendered="#{!viewFlag}" update="smManufacturingDtl,manufacturingDlg">
 			</p:commandButton>
+			<!-- #24964 -->
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				oncomplete="additionalManufacturingDeletePopUp.show();"
-				rendered="#{!viewFlag}" update="smManufacturingDtl">
+				rendered="#{!viewFlag}" update="smManufacturingDtl" id="btnManufacturingListDelete"
+				disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedManufacturingList}">
 			</p:commandButton>
 		</div>
 
