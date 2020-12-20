@@ -527,7 +527,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							.getFreeSofcertPersonnelList())) {
 						sbName = new StringBuilder();
 						sbEmail = new StringBuilder();
-						//#29481 - Start
+						/* //#29481 - Start
 						if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
 								getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
 								(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
@@ -538,7 +538,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							params = new String[] { name };
 							msgKey = MessageConst.INFO_721068;
 						} else {
-							//#29481 - End
+							//#29481 - End */
 						for (SmPersonnel per : reqDTO
 								.getFreeSofcertPersonnelList()) {
 							sbName.append(per.getName()).append(",");
@@ -553,7 +553,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							email = email.substring(0, email.length() - 1);
 						}
 						//#29481 - Start
-					}
+//					}
 					//#29481 - End
 
 					}
@@ -571,7 +571,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				} else {
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
-						//#29481 - Start
+						/* //#29481 - Start
 						if(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
 								getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
 								(getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && getManagedBean().getSmAppl().getSmCompanyBasic().isWithFederal()==true)) {
@@ -583,7 +583,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							params = new String[] { name };
 							msgKey = MessageConst.INFO_721068;
 						} else {
-						//#29481 - End
+						//#29481 - End */
 						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
 							sbName = new StringBuilder();
 							sbName.append(per.getName()).append(",");
@@ -598,7 +598,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 										.getBasePortalAppUrlFromProperties()
 										+ "task-list" };
 						//#29481 - Start
-						}
+//						}
 						//#29481 - End
 					}
 				}
