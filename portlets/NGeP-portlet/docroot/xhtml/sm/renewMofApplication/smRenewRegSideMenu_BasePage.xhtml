@@ -86,8 +86,10 @@
 				src="/xhtml/sm/shared/mofRegistration/applAdditionalInfo.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
+			<!-- #17906 - bank tab -->
 			<p:messages id="messages" showDetail="true"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				globalOnly="#{backingBean.managedBean.tabActiveIndex eq 4}"
 				closable="true" showSummary="false" escape="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
