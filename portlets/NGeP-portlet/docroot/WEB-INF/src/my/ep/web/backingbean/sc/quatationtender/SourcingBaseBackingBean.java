@@ -87,6 +87,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -4973,8 +4974,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			return false;
 		}
-		
-		public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType){		
+		public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType){	
+			return getRoleFilterListForCommitteeMaintenance(scQt, committeeType, null);
+		}
+		public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType, String taskName){		
 			String[] arr = new String[0];
 			List<String> list = new ArrayList<String>();
 			if(scQt == null){
@@ -5002,7 +5005,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}	
 			}else{
 				if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_ORDERED_STATUSES)){
-					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					String[] excludeTasks = new String[]{SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE};
+					taskName = StringUtils.isNotEmpty(taskName)? taskName: "";
+					if(!Arrays.asList(excludeTasks).contains(taskName)){
+						list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					}
 				}
 			}
 			if(CollectionUtils.isNotEmpty(list)){
