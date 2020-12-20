@@ -31,6 +31,8 @@ import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.designatedarea.IDesignatedAreaSO;
 import my.ep.biz.service.pm.general.settings.gstitem.IGstItemSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -55,6 +57,8 @@ import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaReqDTO;
 import my.ep.dto.pm.general.settings.designatedarea.DesignatedAreaResDTO;
 import my.ep.dto.pm.general.settings.gstitem.GstItemReqDTO;
 import my.ep.dto.pm.general.settings.gstitem.GstItemResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -1723,5 +1727,36 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end	
+	
+	//28855 - start
+	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
+		IRequestItemSO requestItemSO = null;
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+			
+		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+			
+		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
+		getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
+		getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());
+			
+		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+		PurchaseRequestReqDTO doReqDTO = new PurchaseRequestReqDTO();
+		PurchaseRequestResDTO doResDTO = null;
+		doReqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
+		doReqDTO.setSupplierId(getManagedBean().getSpecificationList().get(0).getSupplierId().getSupplierId());
+		doResDTO = purchaseRequestSO.retrieveLoaDtlByDocTypeNId(doReqDTO);
+
+		if (doResDTO.getScLoa().getProcurementMode()
+				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
+				doResDTO.getScLoa().getProcurementMode()
+				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			getManagedBean().setDpFlag(true);
+		} else {
+			getManagedBean().setDpFlag(false);
+		}
+	}
+		//29955 - end
 	
 }
