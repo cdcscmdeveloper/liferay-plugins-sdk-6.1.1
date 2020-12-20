@@ -3006,6 +3006,10 @@ public class SmApplicationBackingBean extends
 							.getSmAppl().getSmStaffTotals());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
+					//28771
+					if(getManagedBean().getSmAppl().getSupportingDocMode() ==null){
+						getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+					}
 					if (getManagedBean().isSupplierUser()) {
 						assignApplicationSupportingDocs();
 					}
