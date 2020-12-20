@@ -31,6 +31,7 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -39,6 +40,8 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -49,6 +52,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
@@ -57,6 +62,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
@@ -1568,4 +1575,35 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				"disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
+	
+	//28855 - start
+	public void doItemInfoList(FlFulfilmentItemAddr flItemAddr) {
+		IRequestItemSO requestItemSO = null;
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		
+		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+		
+		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
+		getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
+		getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());
+		
+		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+		PurchaseRequestReqDTO doReqDTO = new PurchaseRequestReqDTO();
+		PurchaseRequestResDTO doResDTO = null;
+		doReqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
+		doReqDTO.setSupplierId(getManagedBean().getSpecificationList().get(0).getSupplierId().getSupplierId());
+		doResDTO = purchaseRequestSO.retrieveLoaDtlByDocTypeNId(doReqDTO);
+
+		if (doResDTO.getScLoa().getProcurementMode()
+				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
+				doResDTO.getScLoa().getProcurementMode()
+				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			getManagedBean().setDpFlag(true);
+		} else {
+			getManagedBean().setDpFlag(false);
+		}
+	}
+	//29955 - end
 }

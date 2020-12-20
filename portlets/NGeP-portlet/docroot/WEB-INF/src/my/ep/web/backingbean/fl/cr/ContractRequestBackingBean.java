@@ -61,6 +61,9 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -121,6 +124,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.requestitem.RequestItemReqDTO;
+import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -178,6 +183,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -4067,8 +4073,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flItemAddr the fl item addr
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
+		IRequestItemSO requestItemSO = null;
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
+		
+		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
+		getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
+		getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());	
+		
 		flItemAddr.setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
@@ -4085,6 +4101,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractItemResDTO ciItemResDTO = null;
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
 		reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 
 		if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
@@ -4098,6 +4115,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 				ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
+				
 				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
 				getManagedBean().setMinOrderQuantity(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity().doubleValue());
 			}
@@ -4152,6 +4170,21 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}	
+		
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
+		ContractReqDTO cireqDTO = new ContractReqDTO();
+		ContractResDTO ciResDTO = null;
+		cireqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		ciResDTO = contractSO.retrieveContract(cireqDTO);
+
+		if (ciResDTO.getContract().getProcurementMode()
+				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
+				ciResDTO.getContract().getProcurementMode()
+				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			getManagedBean().setDpFlag(true);
+		} else {
+			getManagedBean().setDpFlag(false);
+		}
 	}
 
 	/**
@@ -4340,13 +4373,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(getManagedBean().getItemAddrList()==null) {
 			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 			
+			
 			getManagedBean().setItemAddrList(new ArrayList<FlFulfilmentItemAddr>());
 			getManagedBean().setShowItemAddrList(new ArrayList<FlFulfilmentItemAddr>());
 			
 			FlFulfilmentItemAddr flItemAddr = null;
 			List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-			ContractItemResDTO resDTO = new ContractItemResDTO();
+			ContractItemResDTO resDTO = new ContractItemResDTO();		
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
 			List<FlTempItem> suspendedItem = new ArrayList<FlTempItem>();
@@ -4356,6 +4390,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractItemReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractItemReqDTO.setRequestItemId(flTempItem.getScRequestItem().getRequestNoteItemId());
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItemByRequestItem(contractItemReqDTO);
+				
 				//#29171, CR 14650: Static Code Analysis Start
 				//if(getManagedBean().getTaskName() != null){
 					if(getManagedBean().getTaskName() != null && ((getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_CR_HT) ||
@@ -4423,9 +4458,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getShowItemAddrList().addAll(itemAddrList);
 				if(getManagedBean().getSelectedDelAddr()!=null) {
 					populateItemsForSelectedAddress();
-				}
+					
+			
 			}
 		}
+	}
+	
 	}
 
 	/**
