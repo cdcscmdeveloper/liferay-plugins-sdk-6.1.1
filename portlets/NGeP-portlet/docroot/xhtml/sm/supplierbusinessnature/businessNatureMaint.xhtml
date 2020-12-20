@@ -118,13 +118,13 @@
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":#{p:component('natureBusinessId')}"/>
 		
-		<p:outputPanel id="detailSsm" rendered="#{supplierBusinessNatureBackingBean.managedBean.showDetailSSM}">	
-		<ac:baseViewSsmInfo bBean="#{supplierBusinessNatureBackingBean}" 
+		<p:outputPanel id="detailSsm" rendered="#{supplierBusinessNatureBackingBean.managedBean.showDetailSSM}">
+		<ac:baseViewSsmInfo bBean="#{supplierBusinessNatureBackingBean}"
 							title="#{lbl['lbl.sm.view.ssm.infomation']}" 
 							dialogId="viewssminfo"
-							width="650" height="650"
+							width="1150" height="600"
 							resizable="true" />
- 	</p:outputPanel> 
+		</p:outputPanel> 
  	
 	 </ui:define>
 </ui:composition>
