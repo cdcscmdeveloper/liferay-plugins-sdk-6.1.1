@@ -3083,4 +3083,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	//END 27239
+	
+	//START #27472
+	public PmOrgProfile retrieveOrgProfileDtlById(Long orgProfileId) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		PmOrgProfile pmOrgProfile = profileSO.retrieveOrgProfileDtlByID(
+				reqDTO).getPmOrgProfile();
+		if (pmOrgProfile == null) {
+			pmOrgProfile = new PmOrgProfile();
+			pmOrgProfile.setOrgProfileId(-1L);
+		}
+		return pmOrgProfile;
+	}
+	//END #27472
 }
