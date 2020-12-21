@@ -4975,9 +4975,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}
 		public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType){	
-			return getRoleFilterListForCommitteeMaintenance(scQt, committeeType, null);
-		}
-		public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType, String taskName){		
 			String[] arr = new String[0];
 			List<String> list = new ArrayList<String>();
 			if(scQt == null){
@@ -5005,9 +5002,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}	
 			}else{
 				if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_ORDERED_STATUSES)){
-					String[] excludeTasks = new String[]{SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE};
-					taskName = StringUtils.isNotEmpty(taskName)? taskName: "";
-					if(!Arrays.asList(excludeTasks).contains(taskName)){
+					boolean isCommitteeEvalStage = false;
+					if(StringUtils.isNotEmpty(committeeType)){
+						reqDTO = new ScWorkFlowStatusReqDTO();
+						reqDTO.setDocType(committeeType);
+						reqDTO.setDocId(scQt.getQtId());
+						wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+						Long evalStatusId = wfStatus!=null ? wfStatus.getPmStatus().getStatusId(): 0L;
+						isCommitteeEvalStage = Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(evalStatusId) 
+								|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(evalStatusId);
+					}
+					
+					if(isCommitteeEvalStage){
 						list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 					}
 				}
