@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
@@ -16,6 +17,7 @@ import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
@@ -23,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -63,7 +64,6 @@ import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -94,8 +94,10 @@ import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
+//#29759 - Searching application status supporting doc loading
+@SessionScoped
 public class ViewApplHistoryBackingBean extends
-		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
+		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> implements Serializable{
 
 	/**
 	 * 
@@ -182,6 +184,7 @@ public class ViewApplHistoryBackingBean extends
 	/**
 	 * Pre-render for View Application History
 	 */
+	@SuppressWarnings("deprecation")
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
@@ -193,37 +196,21 @@ public class ViewApplHistoryBackingBean extends
 		if (!getManagedBean().isSupplierUser()) {
 			initLoginUserZone();
 			String supplierIdParam = getSupplierIdParam();
-			getManagedBean().setRegStatusDescList(
-					retrieveRegistrationStatusList());
-			getManagedBean().setZoneList(
-					SmServiceLookup.getZoneSO().retrieveActiveZoneList()
-							.getZoneList());
+			getManagedBean().setRegStatusDescList(retrieveRegistrationStatusList());
+			getManagedBean().setZoneList(SmServiceLookup.getZoneSO().retrieveActiveZoneList().getZoneList());
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
-				SmSupplier paramSupplier = SmServiceLookup
-						.getSupplierSearchSO().retriveSupplierById(reqDTO)
-						.getSmSupplier();
+				SmSupplier paramSupplier = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(reqDTO).getSmSupplier();
 				getManagedBean().setSearchSupplier(new SmSupplier());
-				getManagedBean().getSearchSupplier().setRegNo(
-						paramSupplier.getRegNo());
-				if (paramSupplier.getSmAppl() != null) {
-					getManagedBean().setSearchSuppType(
-							paramSupplier.getSmAppl().getSupplierType());
-					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null
-							&& !EntityHelper.isCollectionEmpty(paramSupplier
-									.getSmAppl().getSmCompanyBasic()
-									.getSmCompanyAddresses())) {
-						SmAddress address = paramSupplier.getSmAppl()
-								.getSmCompanyBasic().getSmCompanyAddresses()
-								.get(0).getSmAddress();
+				getManagedBean().getSearchSupplier().setRegNo(paramSupplier.getRegNo());
+				if (paramSupplier.getSmAppl() != null) {getManagedBean().setSearchSuppType(paramSupplier.getSmAppl().getSupplierType());
+					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null && !EntityHelper.isCollectionEmpty(paramSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses())) {
+						SmAddress address = paramSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
 						if (address != null && address.getPmState() != null) {
-							PmZone zone = SmApplicationUtil
-									.retrieveZoneByStateId(address.getPmState()
-											.getStateId());
+							PmZone zone = SmApplicationUtil.retrieveZoneByStateId(address.getPmState().getStateId());
 							if (zone != null) {
-								getManagedBean().setSearchPmZoneId(
-										zone.getZoneId());
+								getManagedBean().setSearchPmZoneId(zone.getZoneId());
 							}
 						}
 					}
@@ -237,18 +224,14 @@ public class ViewApplHistoryBackingBean extends
 		else {			
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-			if(!EntityHelper.isCollectionEmpty(resultList)
-					&& resultList.size() > 0){
+			if(!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0){
 				getManagedBean().setDisciplinaryAction(true);
 			} else {
 				getManagedBean().setDisciplinaryAction(false);
 			}			
 		} //26238 - end
 
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml",
-						"", null);
+		SmCommonUtil.redirectToPage("/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml","", null);
 	}
 
 	/**

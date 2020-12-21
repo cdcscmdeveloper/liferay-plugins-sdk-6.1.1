@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.applicationView;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +37,8 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "viewApplHistoryMB")
 @SessionScoped
-public class ViewApplHistoryManagedBean extends
-		BaseReviewApplicationManagedBean {
+//#29759 - Searching application status supporting doc loading
+public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean implements Serializable {
 
 	/**
 	 * 
@@ -86,8 +87,7 @@ public class ViewApplHistoryManagedBean extends
 		}
 
 		@Override
-		protected ISearchResultBean<Object[]> pageChangeListener(
-				ISearchBean<Object[]> searchBean) {
+		protected ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setObjArrSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
@@ -101,19 +101,18 @@ public class ViewApplHistoryManagedBean extends
 					if (!isSearchCriteriaEmpty()) {
 						return getApplicationHistoryResultBean(reqDTO);
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<Object[]>();
 					}
 				} else {
 					return getApplicationHistoryResultBean(reqDTO);
 				}
 			} catch (Exception ex) {
 				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage()); //to be included for #25792
-				return new SearchResultBean();
+				return new SearchResultBean<Object[]>();
 			} 
 		}
 
-		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
-				SmApplRevisionReqDTO reqDTO) {
+		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(SmApplRevisionReqDTO reqDTO) {
 			//25792 - start
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			if(getAccountType() != null) {
@@ -122,13 +121,11 @@ public class ViewApplHistoryManagedBean extends
 					reqDTO.setApplicationType(getSearchApplType());
 					reqDTO.setApplicationNo(getSearchApplNo());
 					reqDTO.setPmStatusId(getSearchApplStatusId());
-				}
-				else if(getAccountType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+				} else if(getAccountType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 					reqDTO.setAgencyType(getAgencyType());
 					reqDTO.setAgencyName(getAgencyName());
 					reqDTO.setEpNo(getSearchEpNo());
-				}
-				else {					
+				} else {					
 					reqDTO.setMofAccountNo(getSearchMofNo());
 					reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
 					reqDTO.setSupplierType(getSearchSuppType());
@@ -137,16 +134,14 @@ public class ViewApplHistoryManagedBean extends
 					reqDTO.setApplicationType(getSearchApplType());
 					reqDTO.setApplicationNo(getSearchApplNo());
 					reqDTO.setPmStatusId(getSearchApplStatusId());
-				}
-				
+				}				
 				reqDTO.setAccountType(getAccountType());
 			} else {
 				//#25792 START Changes Fix error Null Pointer
 				if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
 					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_BASIC);
 				} else if(getSearchSupplier().getSmAppl() != null && SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getSearchSupplier().getSmAppl().getSupplierType())) {
-					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);
-					
+					reqDTO.setAccountType(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT);					
 				} else {
 					reqDTO.setAccountType("M");
 				}
@@ -157,14 +152,11 @@ public class ViewApplHistoryManagedBean extends
 			reqDTO.setSmSupplier(getSearchSupplier());
 			//25792 - end
 
-			ISearchResultBean<Object[]> retVal = SmServiceLookup
-					.getSmApplRevisionSO()
-					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
-					.getObjectArrResultBean();
+			ISearchResultBean<Object[]> retVal = SmServiceLookup.getSmApplRevisionSO().retrieveApplicationHistoryUsingNativeQuery(reqDTO).getObjectArrResultBean();
 			//Bug #25601 :
 			int[] indexToCheck = new int[]{0, 10, 11, 12, 13,1}; 
-			List<Object[]> resultListTemp = new ArrayList();
-			String previousAppl="applno,";
+			List<Object[]> resultListTemp = new ArrayList<Object[]>();
+			//String previousAppl="applno,";
 			try {
 				for (Object[] obj : retVal.getResultList()) {
 					//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration //10 = appl id & 11 = supplier id
