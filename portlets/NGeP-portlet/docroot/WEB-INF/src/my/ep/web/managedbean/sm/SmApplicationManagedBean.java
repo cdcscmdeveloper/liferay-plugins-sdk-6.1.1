@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -526,6 +527,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private int attachedFileIndex;
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
+	private boolean activeTransaction;
+	private boolean pendingTransaction;
+	private boolean itemDeleteButtonShow;
+	private int index;
+	private String accountNo;
 
 	//#16052019 - SSM INTEGRATION CR
 	private List<SmEquityCompany> smEquityCompanyTemp;
@@ -4116,6 +4122,46 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSmEquityCompaniesSsm(List<SmEquityCompany> smEquityCompaniesSsm) {
 		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
+	}
+	
+	public boolean isActiveTransaction() {
+		return activeTransaction;
+	}
+
+	public void setActiveTransaction(boolean activeTransaction) {
+		this.activeTransaction = activeTransaction;
+	}
+
+	public boolean isPendingTransaction() {
+		return pendingTransaction;
+	}
+
+	public void setPendingTransaction(boolean pendingTransaction) {
+		this.pendingTransaction = pendingTransaction;
+	}
+
+	public boolean isItemDeleteButtonShow() {
+		return itemDeleteButtonShow;
+	}
+
+	public void setItemDeleteButtonShow(boolean itemDeleteButtonShow) {
+		this.itemDeleteButtonShow = itemDeleteButtonShow;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
 	}
 	
 	public boolean isFlagMandatoryEpfNo() {

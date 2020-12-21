@@ -40,6 +40,8 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -1460,5 +1462,37 @@ public class SupplierDataMaintenanceBackingBean extends
 		return PmCommonUtil.retriveUserName(userId);
 
 	}
-
+	//START 17906
+	public void checkingBeforeRemoveSupplierBank() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<font color='red'>");
+		boolean showErrorContract = false;//to avoid duplicate message
+		boolean showErrorFl = false;//to avoid duplicate message
+		boolean showErrorPopup = false;
+		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
+			this.getManagedBean().setDisplayMessageBank("");
+			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
+				if(suppBank.isHasActiveTransactionContractManagement() && !showErrorContract){
+					showErrorPopup = true;
+					showErrorContract = true;
+					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
+					sb.append("<br/>");
+				}
+				if(suppBank.isHasActiveTransactionFulfilment() && !showErrorFl){
+					showErrorPopup = true;
+					showErrorFl = true;
+					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",null));
+					sb.append("<br/>");
+				}				
+			}
+		}
+		sb.append("</font>");
+		this.getManagedBean().setDisplayMessageBank(sb.toString());
+		if(showErrorPopup){
+			RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
+			return;
+		}
+		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
+	}
+	//End 17906
 }

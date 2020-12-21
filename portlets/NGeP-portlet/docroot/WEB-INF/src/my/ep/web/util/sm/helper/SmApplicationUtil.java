@@ -4223,6 +4223,36 @@ public class SmApplicationUtil {
 
 		return resDTO.isHasActiveTransaction();
 	}
+	
+	public static boolean hasActiveTransactionForContractManagement(SmSupplier smSupplier, String accountNo) {
+
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		reqDTO.setAccountNo(accountNo);
+
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.hasActiveTransactionsForContractManagement(reqDTO);
+
+		return resDTO.isHasActiveTransaction();
+	}
+	
+	public static boolean hasActiveTransactionForFulfilment(SmSupplier smSupplier, String accountNo) {
+
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		reqDTO.setAccountNo(accountNo);
+
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.hasActiveTransactionsForFulfilment(reqDTO);
+
+		return resDTO.isHasActiveTransaction();
+	}
 
 	public static boolean hasOtherActiveTransactions(SmSupplier smSupplier) {
 
