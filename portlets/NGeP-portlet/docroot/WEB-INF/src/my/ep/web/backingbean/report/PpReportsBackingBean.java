@@ -140,20 +140,35 @@ public class PpReportsBackingBean extends
 	}
 
 	public void resetAction() {
-		getManagedBean().setCurrentActiveOrg(null);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedPegawaiPengawal(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
+		
+		//start #27472
+		if(!getManagedBean().isDisabledMinistryLov()){
+			//getManagedBean().setCurrentActiveOrg(null);
+			getManagedBean().setSelectedMinistry(null);
+			getManagedBean().setDisabledMinistryLov(false);
+		}
+		
+		if(!getManagedBean().isDisabledPegawaiLov()){
+			getManagedBean().setSelectedPegawaiPengawal(null);
+			getManagedBean().setDisabledPegawaiLov(false);			
+		}
+		
+		if(!getManagedBean().isDisabledKumpulanPTJLov()){
+			getManagedBean().setSelectedKumpulanPTJ(null);			
+			getManagedBean().setDisabledKumpulanPTJLov(false);
+		}
+		
+		if(!getManagedBean().isDisabledPTJLov()){
+			getManagedBean().setSelectedPTJ(null);
+			getManagedBean().setDisabledPTJLov(false);	
+		}
+		//end #27472
+		
 		getManagedBean().setSelectedYear(null);
-		getManagedBean().setDisabledMinistryLov(false);
-		getManagedBean().setDisabledPegawaiLov(false);
-		getManagedBean().setDisabledKumpulanPTJLov(false);
-		getManagedBean().setDisabledPTJLov(false);
 		getManagedBean().setProcurementCatId(null);
 		getManagedBean().setProcurementTypeId(null);
 		getManagedBean().setStatus(null);
-		getManagedBean().setDocumentType(null); //#27472 reset doc type dropdown
+		getManagedBean().setDocumentType(ReportConst.PDF); //#27472 reset to pdf default
 		
 		//[#27197] - start
 		//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
