@@ -1,10 +1,12 @@
 package my.ep.web.backingbean.sm.applicationView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
@@ -22,14 +24,11 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,8 +36,10 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
+//#29759 - Searching application status supporting doc loading
+@SessionScoped
 public class ViewSuppProfileBackingBean extends
-		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> {
+		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> implements Serializable {
 
 	/**
 	 * 
