@@ -3091,8 +3091,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					committeTabs.get(this.getManagedBean()
 							.getSelectedCommitteeTabIndex()));
 			String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-			String taskName = this.getManagedBean().getTaskName();
-			this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType, taskName));
+			this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		}
 
 	}
@@ -5477,8 +5476,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
 		String committeeType = this.getManagedBean().getSelectedTabBean().getTabType();
-		String taskName = this.getManagedBean().getTaskName();
-		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType, taskName));
+		this.getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
 		
 		if(this.getManagedBean().isShowHistory() && Arrays.asList(new String[]{"SC", "EC", "OC", "TEC", "FEC"}).contains(committeeType)){
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
