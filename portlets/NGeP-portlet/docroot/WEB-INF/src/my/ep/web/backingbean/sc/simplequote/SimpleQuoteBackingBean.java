@@ -7278,8 +7278,20 @@ public class SimpleQuoteBackingBean extends
 				min = Integer.toString(mHours/60);
 			}
 		}
-		return getMessage(
-				"lbl.sc.sq.resp.duration.min.max", new String[] {min, Integer.toString(maxDays)});
+		if(procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)){
+		log.info("------in getDurationToolTip : min" + min);
+		log.info("------in getDurationToolTip : maxDays" + maxDays);
+				 String message = getMessage(
+							"lbl.sc.sq.resp.duration.min.max", new String[] {min, Integer.toString(maxDays)});
+				 log.info("------in getDurationToolTip : message" + message);
+				 return message;
+		}
+		else {
+			 String message = getMessage(
+						"lbl.sc.sq.resp.duration.minn.max", new String[] {Integer.toString(maxDays)});
+			 log.info("------in getDurationToolTip : message" + message);
+			 return message;
+		}
 	}
 	
 	//#29209
@@ -7297,6 +7309,7 @@ public class SimpleQuoteBackingBean extends
 
 		return ruleValue;
 	}
+	
 	
 	/**
 	 * Get the counter of questions in Simple Quote
