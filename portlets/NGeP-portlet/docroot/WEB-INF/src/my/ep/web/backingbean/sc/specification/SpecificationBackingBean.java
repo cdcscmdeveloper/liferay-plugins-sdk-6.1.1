@@ -15589,7 +15589,7 @@ public class SpecificationBackingBean extends
 								BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
 								
 								if (estimatedCost.compareTo(BigDecimal.ZERO) == 0){		
-									throw new EpException(MessageConst.ERROR_760515, 
+									throw new EpException(MessageConst.ERROR_760519, 
 											new String[]{ 
 											ResourceBundleUtils.getMessage(
 													"lbl.tpl.spec.content.Indicative.unit.price", 
@@ -15622,7 +15622,8 @@ public class SpecificationBackingBean extends
 								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
 					}
 				}
-				qt.setEstimatedAmount(totalSpecEstimatedAmount);
+				//Bug #29808
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
 			}
 			// Check Intended Price
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
