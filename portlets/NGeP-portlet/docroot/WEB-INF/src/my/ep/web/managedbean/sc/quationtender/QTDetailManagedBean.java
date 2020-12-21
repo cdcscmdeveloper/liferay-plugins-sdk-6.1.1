@@ -107,6 +107,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -1693,6 +1694,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25037-END
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
+	private boolean showPopUpBPKApprovalNeeded=false;
 	//#25077 - End
 
 	public QTDetailManagedBean() {
@@ -10288,7 +10290,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.roleCode = roleCode;
 	}
 	
-	
 	// 26095@hatta - start
 		public Date getCurrentDate() {
 			return currentDate;
@@ -10536,8 +10537,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
 			this.historyApprovalRequests = historyApprovalRequests;
 		}
-		//#25077 - End
 		
+		public boolean isShowPopUpBPKApprovalNeeded() {
+			return showPopUpBPKApprovalNeeded;
+		}
+
+		public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
+			this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+		}
+		//#25077 - End
 		
 		//#25692 End
 		
@@ -10549,6 +10557,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCurrentCMTStatus(Long currentCMTStatus) {
 			this.currentCMTStatus = currentCMTStatus;
 		}
+
 }
 
 
