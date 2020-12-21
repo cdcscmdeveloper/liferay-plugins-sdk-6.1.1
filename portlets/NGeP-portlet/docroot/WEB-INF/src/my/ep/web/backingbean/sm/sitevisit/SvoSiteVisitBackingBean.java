@@ -1826,6 +1826,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.getSmSvAdtMachines().remove(adtMachine);
 			}
 		}
+		getManagedBean().getSelectedSvTemplate().setSelectedAdtMachines(null);
 	}
 	
 	/**
