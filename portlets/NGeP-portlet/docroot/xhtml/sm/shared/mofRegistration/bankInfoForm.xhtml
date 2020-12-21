@@ -6,18 +6,19 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.bankDtls.panHdr']}" toggleable="true">
-
-		<table style="width: 100%">
+	<p:panel header="#{lbl['lbl.sm.bankDtls.panHdr']}" toggleable="true">					    
+		<table style="width: 100%">							
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+					<td width="10px" style="padding-right: 2px;">
+						<p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.bankVerified}"
 							id="poBankVer">
 							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
 								event="change" process="@this,:form:tt:bankInfPan"
-								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />
-						</p:selectBooleanCheckbox></td>
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />							
+						</p:selectBooleanCheckbox>		
+					</td>
 					<td valign="top"><h:outputText
 							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
@@ -26,13 +27,15 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+					<td width="10px" style="padding-right: 2px;">
+						<p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.bankVerified}"
 							id="apprBankVer">
 							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
 								event="change" process="@this,:form:tt:bankInfPan"
-								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.bankVerified)}" />
-						</p:selectBooleanCheckbox></td>
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />
+						</p:selectBooleanCheckbox>
+					</td>
 					<td valign="top"><h:outputText
 							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
@@ -44,17 +47,33 @@
 			<p:blockUI block=":form:tt:bankInfPan" widgetVar="buiPoBank"
 				id="poBankBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.bankVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.bankVerified : false)}" />
-			
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.bankDtls.instruction']}" escape="false" /><br />
-			
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.bankDtls.instruction']}" escape="false" /><br />			
+			<!-- #17906 -->
+			<p:messages id="bankDeleteMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" for="bankDeleteMsg" escape="false"/>	
 			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
 				selection="#{backingBean.managedBean.selectedBanks}"
 				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt"
-				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">				
+					
+				<!-- #17906 - start -->
+				<p:ajax event="toggleSelect"
+					listener="#{backingBean.itemRowSelectCheckbox}" 					 
+					update=":form:tt:bankDelBtnId"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+				<!-- #17906 - end -->
+				<p:ajax event="rowSelectCheckbox"
+					listener="#{backingBean.itemRowSelectCheckbox}" 					 
+					update=":form:tt:bankDelBtnId"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{backingBean.itemRowUnselectCheckbox}"
+					update=":form:tt:bankDelBtnId"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+					
 				<ac:paginator for="bankDt" />
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
-
+				<p:column selectionMode="multiple" width="1%" action="#{backingBean.checkActiveAndPendingTransaction}" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierBanks}"/>
+				
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctNo']}">
 					<h:outputText value="#{bankBean.accountNo}" />
 				</p:column>
@@ -79,13 +98,13 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
-					<p:commandLink partialSubmit="true" process="@this"
-						action="#{backingBean.assignSelBank(bankBean)}"
+					<p:commandLink partialSubmit="true" process="@this" id="edit"
+						action="#{backingBean.assignSelBankWithPendingTransaction(bankBean)}"
 						update=":form:tt:bankDialog" style="padding-right :5px;" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
-					<ac:smFieldChangeTableAlert object="#{bankBean}" />
+					<ac:smFieldChangeTableAlert object="#{bankBean}" listener="#{backingBean.assignSelBankWithPendingTransaction(bankBean)}" update=":form:tt:bankDialog"/>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -102,11 +121,11 @@
 					actionListener="#{backingBean.assignNewBank}"
 					update=":form:tt:bankDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-					disabled="#{empty backingBean.managedBean.smAppl.smSupplierBanks}"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"					
 					id="bankDelBtnId" partialSubmit="true"
-					process="bankInfPan" update=":form:tt:bankDt ,sfieldset" 
-					oncomplete="bankDeletePopUp.show()" />
+					process="bankInfPan" update=":form:tt:bankDt ,sfieldset, bankDelBtnId" 
+					disabled="#{backingBean.managedBean.itemDeleteButtonShow}"
+					action="#{backingBean.checkActiveAndPendingTransaction}"/>
 			</div>
 			
 			<p:outputPanel id="sfieldset">
@@ -185,15 +204,14 @@
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="bankDialog">
 		<p:outputPanel id="bankDetailsPanel" layout="block">
-			<p:messages id="suppBankAcctInfoMsg" showSummary="false"
-				showDetail="true" autoUpdate="true" closable="true" />
+		<p:messages id="msg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>				
 			<table style="width: 100%">
-
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.bankDtls.acctPurpose']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
@@ -223,12 +241,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.bankName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankName']}" id="smBankNameVal"
-							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}"
-							style="width: 207px;margin-bottom: 5px;">
+							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" update="@([id$=save])"
+							style="width: 207px;margin-bottom: 5px;background-color:white;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems var="finOrg"
+							<f:selectItems var="finOrg"								
 								value="#{backingBean.managedBean.finOrgLs}"
 								itemValue="#{finOrg.financialOrgId}"
 								itemLabel="#{finOrg.finOrgName}" />
@@ -239,14 +258,14 @@
 							oriValue="#{backingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId}" 
 							currValue="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" 
 							alertValue="#{backingBean.getFinOrgByIdFromList(backingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId)}"/>
-						<p:message id="smBankNameValMsg" for="smBankNameVal"
-							showSummary="true" showDetail="false" display="icon" /></td>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="60"
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankBranch']}"
 							id="smBankBranchName"
@@ -266,6 +285,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="18"
+							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
@@ -276,8 +296,7 @@
 						<p:tooltip id="bantt" for="banti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
 						</p:tooltip>
-						<p:message id="smBankAcctNoMsg" for="smBankAcctNo"
-							showSummary="true" showDetail="false" display="icon" /></td>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
@@ -570,7 +589,7 @@
 			</table>
 		</p:outputPanel>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -13,6 +14,8 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -53,7 +56,8 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-
+	
+	private SmSupplierBank[] selectedSuppBanks;
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -302,6 +306,13 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldRegStatusId(Long oldRegStatusId) {
 		this.oldRegStatusId = oldRegStatusId;
+	}
+	public SmSupplierBank[] getSelectedSuppBanks() {
+		return selectedSuppBanks;
+	}
+
+	public void setSelectedSuppBanks(SmSupplierBank[] selectedSuppBanks) {
+		this.selectedSuppBanks = selectedSuppBanks;
 	}
 
 }
