@@ -2532,7 +2532,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}else if("T".equalsIgnoreCase(statusCode)){
 					return SmCommonUtil.getMessage("lbl.sm.status.terminated", null);
 				}else if("B".equalsIgnoreCase(statusCode)){ 
-				//27346
+				//27382
 					return SmCommonUtil.getMessage("lbl.sm.status.b", null);
 				}else if("W".equalsIgnoreCase(statusCode)){
 					return SmCommonUtil.getMessage("lbl.sm.status.w", null);
