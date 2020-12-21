@@ -237,7 +237,8 @@ public class PpReportsBackingBean extends
 						getManagedBean().setDisabledKumpulanPTJLov(true);
 					}
 				}else if(isInternalAuditor()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					//getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId)); //#27472
+					getManagedBean().setSelectedMinistry(retrieveOrgProfileDtlById(orgProfileId)); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
 			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
@@ -254,7 +255,8 @@ public class PpReportsBackingBean extends
 					getManagedBean().setDisabledKumpulanPTJLov(true);
 					getManagedBean().setDisabledPTJLov(true);
 				}else if(isInternalAuditor()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					//getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId)); //#27472
+					getManagedBean().setSelectedMinistry(retrieveOrgProfileDtlById(orgProfileId)); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
 			}
