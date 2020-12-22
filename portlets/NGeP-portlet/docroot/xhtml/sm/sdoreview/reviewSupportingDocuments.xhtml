@@ -574,12 +574,18 @@
 				smApplSupportDocs="#{sdoReviewBackingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
 			
 			<!-- #3460 - Start -->
-			<br/>	
+			<br />
 			<table>
 				<tr>
-					<td><p:outputLabel valign="top" value="#{lbl['lbl.sm.supportingdoc.supp.application.sdo.remarks']}" /></td>
-					<td><p:inputTextarea align="right" id="sdoRemarks" rows="10" cols="10" autoResize="false" maxlength="4000" style="width: 300px;"
-					value="#{sdoReviewBackingBean.managedBean.smRemark.remark}" /></td>
+					<td><p:outputLabel valign="top"
+							value="#{lbl['lbl.sm.supportingdoc.supp.application.sdo.remarks']}" /></td>
+					<td><p:inputTextarea align="right" id="sdoRemarks" rows="10"
+							cols="10" autoResize="false" maxlength="4000"
+							style="width: 300px;"
+							value="#{sdoReviewBackingBean.managedBean.smRemark.remark}">
+							<p:ajax event="blur" update="sdoRemarks" process="@this"
+								listener="#{sdoReviewBackingBean.changePlainTxt(sdoReviewBackingBean.managedBean.smRemark.remark)}" />
+						</p:inputTextarea></td>
 				</tr>
 			</table>
 			<!-- #3460 - End -->
