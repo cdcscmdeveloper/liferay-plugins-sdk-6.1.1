@@ -54,22 +54,35 @@
 			   			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			   	</p:inputText>	 
 			   	
-			   	   <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
+			   	 <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 		         <h:panelGroup id="uploadCircularPg1">
-				   	            <p:commandButton icon="ui-icon-upload"
-				   	                   rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null
-				   	                   and !panelBackingBean.managedBean.viewContract}"
-						               update="uploadCircularPg1, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" />	
-					            <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-					                 rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}"
-						               styleClass="blue_font truncate"  action="#{panelBackingBean.commonDownload(
-						               		panelBackingBean.managedBean.circularVer.circularFilePath, panelBackingBean.managedBean.circularVer.circularFileName)}" />
-						         <p:commandLink  onclick="deleteAttachFile.show();"
-						              rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null
-						              and !panelBackingBean.managedBean.viewContract}">
-			   				          <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	                 </p:commandLink>				
-			  	            </h:panelGroup>
+		         	<h:panelGrid columns="5">
+				   	           <p:commandButton icon="ui-icon-upload" update="uploadCircularPg1, uploadCircularDlg"
+								action="#{panelBackingBean.setCentralDetailsValue()}" 
+								rendered="#{!panelBackingBean.managedBean.viewContract}" />
+						 
+						 
+						  		<p:dataGrid id="copyAgreement1" value="#{panelBackingBean.retrieveAttachmentList()}"
+									var="attachAggreement" rowIndexVar="attachAggreementIndex" columns="1" style="width:100%"
+									emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+									<table>
+										
+										<tr>
+											<td></td>
+											<td>
+											 	<h:commandLink action="#{panelBackingBean.downloadFile(attachAggreement)}" 
+											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
+										     	<p:commandLink action="#{panelBackingBean.setAttachmentIndex(attachAggreementIndex)}"
+								   	                 onclick="deleteCircularFileDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
+								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+								   			   	 </p:commandLink>
+								   			 </td>
+										</tr>
+									 </table>
+								</p:dataGrid>
+			 	      <p:spacer width="1" />
+					  </h:panelGrid>				
+			  	   </h:panelGroup>
 			 </h:panelGrid>
 			 <h:panelGrid  style="width:350px; margin-left:5px" columns="2" id="pmGridId">
 			 
