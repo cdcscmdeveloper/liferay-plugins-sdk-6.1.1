@@ -125,6 +125,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 						.getSelectedRPTRequests()) {
 					reqDTO.getRPTRequestList().add(rptRequest);
 					debugLogger("**********************" + rptRequest + "**********************" );
+					debugLogger("**********************" + rptRequest.getStatusCode() + "**********************" );
 				}
 				debugLogger("Line128");
 				RPTRequestResDTO resDTO = reqSO.removeRPTRequestList(reqDTO);
