@@ -150,6 +150,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * This method will initialize the button and approver list.
 	 */
 	public ContractDetailsBackingBean() {
+		//#TroubleShoot Error CT
 		/* Initialization of button */
 		if(ctBB == null){
 			ctBB = new ContractBackingBean();
