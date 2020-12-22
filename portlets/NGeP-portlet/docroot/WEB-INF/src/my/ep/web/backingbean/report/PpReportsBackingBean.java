@@ -20,20 +20,26 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO; //#27472
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.EpPropertiesConst; //#27472
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO; //#27472
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser; //#27472
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
+import my.ep.persistence.logging.LogKey; //#27472
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils; //#27472
@@ -45,6 +51,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.PpReportsManagedBean;
 import my.ep.web.util.AlphanumericSortUtil; //#27472
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
@@ -64,10 +71,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
-//#27472
-//#27472
-//#27472
-//#27472
 
 //END #27472
 
@@ -137,20 +140,35 @@ public class PpReportsBackingBean extends
 	}
 
 	public void resetAction() {
-		getManagedBean().setCurrentActiveOrg(null);
-		getManagedBean().setSelectedMinistry(null);
-		getManagedBean().setSelectedPegawaiPengawal(null);
-		getManagedBean().setSelectedKumpulanPTJ(null);
-		getManagedBean().setSelectedPTJ(null);
+		
+		//start #27472
+		if(!getManagedBean().isDisabledMinistryLov()){
+			//getManagedBean().setCurrentActiveOrg(null);
+			getManagedBean().setSelectedMinistry(null);
+			getManagedBean().setDisabledMinistryLov(false);
+		}
+		
+		if(!getManagedBean().isDisabledPegawaiLov()){
+			getManagedBean().setSelectedPegawaiPengawal(null);
+			getManagedBean().setDisabledPegawaiLov(false);			
+		}
+		
+		if(!getManagedBean().isDisabledKumpulanPTJLov()){
+			getManagedBean().setSelectedKumpulanPTJ(null);			
+			getManagedBean().setDisabledKumpulanPTJLov(false);
+		}
+		
+		if(!getManagedBean().isDisabledPTJLov()){
+			getManagedBean().setSelectedPTJ(null);
+			getManagedBean().setDisabledPTJLov(false);	
+		}
+		//end #27472
+		
 		getManagedBean().setSelectedYear(null);
-		getManagedBean().setDisabledMinistryLov(false);
-		getManagedBean().setDisabledPegawaiLov(false);
-		getManagedBean().setDisabledKumpulanPTJLov(false);
-		getManagedBean().setDisabledPTJLov(false);
 		getManagedBean().setProcurementCatId(null);
 		getManagedBean().setProcurementTypeId(null);
 		getManagedBean().setStatus(null);
-		getManagedBean().setDocumentType(null); //#27472 reset doc type dropdown
+		getManagedBean().setDocumentType(ReportConst.PDF); //#27472 reset to pdf default
 		
 		//[#27197] - start
 		//set mandatory for Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
@@ -219,7 +237,8 @@ public class PpReportsBackingBean extends
 						getManagedBean().setDisabledKumpulanPTJLov(true);
 					}
 				}else if(isInternalAuditor()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					//getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId)); //#27472
+					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
 			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
@@ -236,7 +255,8 @@ public class PpReportsBackingBean extends
 					getManagedBean().setDisabledKumpulanPTJLov(true);
 					getManagedBean().setDisabledPTJLov(true);
 				}else if(isInternalAuditor()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+					//getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId)); //#27472
+					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
 			}
