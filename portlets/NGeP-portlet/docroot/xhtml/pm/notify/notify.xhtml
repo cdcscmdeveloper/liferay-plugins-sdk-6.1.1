@@ -82,34 +82,36 @@
 						<tr>
 							<td colspan="2" width="100%" valign="top">
 							
-								<p:dataTable
-									value="#{notifyBackingBean.notifyDataModel}" var="notify"
-									id="notifyTable" rows="10" rowIndexVar="index" width="100%"
-									rowKey="#{notify}" lazy="true" 
+								<p:dataTable var="notify" widgetVar="notifyWidgetVar"
+									editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+									value="#{notifyBackingBean.filteredNotifyDataModel}" width="100%"
+									paginator="true"
+									paginatorAlwaysVisible="false"
+									paginatorPosition="bottom" 
+									paginatorTemplate="#{lbl['lbl.datatable.paginator.page']} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									rowKey="#{notify}" rowIndexVar="index" id="notifyTable"
+									currentPageReportTemplate="{currentPage} / {totalPages}"
 									selection="#{notifyBackingBean.managedBean.selectedNotifys}">
-
-									<ac:paginator for="notifyTable" />
-
+									
 									<p:column  selectionMode="multiple" style="width:7%;text-align:center"/>
 
 									<p:column style="text-align:center; width:7%">
 										<h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
-											rendered="#{notify.read eq '0'}" />
+											rendered="#{notify[12] eq '0'}" />
 									</p:column>
 
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
-										#{notify.sender.userName} <br />
+										#{notify[27]} <br />
 
 										<p:commandLink id="btnNotifyLink"
-											action="#{notifyBackingBean.selectedNotify}"
+											action="#{notifyBackingBean.selectedNotifys}"
 											update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable">
-												
-											<h:outputText 
-											     value="#{notifyBackingBean.getNotifyDashboardSubject(notify).length() gt 50 ? notifyBackingBean.getNotifyDashboardSubject(notify).substring(0,47).concat('...') : notifyBackingBean.getNotifyDashboardSubject(notify)}"></h:outputText>
-											
+
+											<h:outputText
+												value="#{notify[28].length() gt 50 ? notify[28].substring(0,47).concat('...') : notify[28]}"></h:outputText>
 											<f:setPropertyActionListener value="#{notify}"
-												target="#{notifyBackingBean.managedBean.selectedNotify}" />
+												target="#{notifyBackingBean.managedBean.selectedNotifyObj}" />
 
 										</p:commandLink>
 
@@ -118,19 +120,19 @@
 									<p:column headerText="#{lbl['lbl.portal.notify.datetime']}"
 										style="text-align: right;width:10%; padding:5px!important; ">
 
-										<h:outputText value="#{notify.createdDate}">
+										<h:outputText value="#{notify[5]}">
 											<f:convertDateTime pattern="dd-MM-yyyy" />
 										</h:outputText>
 
 										<br />
 
-										<h:outputText value="#{notify.createdDate}">
+										<h:outputText value="#{notify[5]}">
 											<f:convertDateTime pattern="hh:mm:ss a" />
 										</h:outputText>
 
 									</p:column>
 
-    								<p:ajax event="rowSelectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
+									<p:ajax event="rowSelectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
 									<p:ajax event="rowUnselectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
 									<p:ajax event="rowUnselect" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
 									<p:ajax event="rowSelect" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>

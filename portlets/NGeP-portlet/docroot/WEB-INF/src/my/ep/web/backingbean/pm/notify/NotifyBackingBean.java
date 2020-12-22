@@ -2,8 +2,12 @@ package my.ep.web.backingbean.pm.notify;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -12,6 +16,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -34,6 +39,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 @ManagedBean(name = "notifyBackingBean")
 @ViewScoped
@@ -41,7 +48,10 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	private static final Logger logger = EpLogger
 			.getLogger(NotifyBackingBean.class);
 
-	private IPagingDataModel<PmNotifyUser> notifyDataModel = new NotifyDataModel();
+	private IPagingDataModel<Object[]> notifyDataModel = new NotifyDataModel(); // #27009
+	private FilteredNotifyDataModel filteredNotifyDataModel; // #
+	private List<Object[]> resultBean;
+	int first;
 
 	public NotifyBackingBean() {
 		this.getManagedBean().setDeleteButtonHide(true);
@@ -160,6 +170,44 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		}
 	}
 	
+	// #27009 -- start
+	public void selectedNotifys() {
+		
+		System.out.println("=== selectedNotifys ===");
+		
+		Object[] selectedNotifyObj = this.getManagedBean().getSelectedNotifyObj();
+		
+		Long notifyUserId = new Long(selectedNotifyObj[0].toString());
+		boolean readSelectedNotifyObj = Boolean.parseBoolean(String.valueOf(selectedNotifyObj[12]));
+		
+		System.out.println("notifyUserId= "+notifyUserId);
+		
+		PmNotifyUser selectedNotify = new PmNotifyUser();
+		
+		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", INotifySO.class);
+		
+		if (this.getManagedBean().getSelectedNotify() == null) {
+			// Retrieve notifyUser
+			selectedNotify = reqSO.getPmNotifyUserByNotifyUserId(notifyUserId);
+		}
+		
+		if (!readSelectedNotifyObj) {
+		
+			NotifyReqDTO reqDTO = new NotifyReqDTO();
+			reqDTO.setPmNotifyUser(selectedNotify);
+			
+			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
+			System.out.println("NotifyResDTO updateIsReadNotify["
+					+ resDTO.isSuccessful() + "]");
+			
+			if (resDTO.isSuccessful()) {
+				selectedNotify.setRead(true);
+			}
+		}
+	}
+	// #27009 -- end
+	
 	public void rowSelectUnselectCheckbox(){
 		
 		if (this.getManagedBean().getSelectedNotifys() != null) {
@@ -183,7 +231,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	 * 
 	 * @author MD
 	 */
-	private class NotifyDataModel extends PagingDataModel<PmNotifyUser> {
+	// #27009
+	private class NotifyDataModel extends PagingDataModel<Object[]> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -198,9 +247,10 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
 		 * .biz.bean.search.ISearchBean)
 		 */
+		// #27009 -- start
 		@Override
-		public ISearchResultBean<PmNotifyUser> pageChangeListener(
-				ISearchBean<PmNotifyUser> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("pageChangeListener");
 			}
@@ -218,128 +268,37 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 							.getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									INotifySO.class);
-					//20200601@asyrafhaziq_Enhancement #14291 - Start
-					// Filter By - Notification Mode
-					//searchBean.getDataFilterBeans().add(
-					//		new SearchFilterBean("pmNotifyDashboard.notifyDashboardId",
-					//				SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
 					
-					searchBean.getDataFilterBeans().add(
-							new SearchMultiFilterBean(
-									new SearchFilterBean(
-											"pmNotifyDashboard.notifyDashboardId",
-											SearchOperator.OPERATOR_IS_NOT_NULL.value(),
-											null), 
-									new SearchFilterBean(
-											"pmNotifyDashboardQt.notifyDashboardQtId",
-											SearchOperator.OPERATOR_IS_NOT_NULL.value(),
-											null,
-									SearchCondition.CONDITION_OR.value())));
-					//20200601@asyrafhaziq_Enhancement #14291 - End
-					// Filter By - recipient Id
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recipient.userId",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									user.getUserId()));
+					NotifyReqDTO reqDTO = new NotifyReqDTO();
+					//reqDTO.setSearchBean(searchBean);
+					reqDTO.setNativeSearchBean(searchBean);
+					reqDTO.setUserId(user.getUserId());
+					
+					NotifyResDTO resDTO = ntfSO.searchNativeNotifyList(reqDTO);
+					
+					if (resDTO.getNativeSearchResultBeanObj() != null) {
+						if (!resDTO.getNativeSearchResultBeanObj().getResultList().isEmpty() &&
+								resDTO.getNativeSearchResultBeanObj().getResultList() != null) {
+							System.out.println("getNativeSearchResultBeanObj= " +
+									resDTO.getNativeSearchResultBeanObj().getResultList().size());
+							/* For debugging..
+							 * for (int i = 0; i < resDTO.getNativeSearchResultBeanObj().getResultList().size(); i++) {
+								Object[] objects = (Object[]) resDTO.getNativeSearchList().get(i);
+								System.out.println("notify obj= " + String.valueOf(objects[27]) 
+										+", "+ String.valueOf(objects[5])+", "+String.valueOf(objects[28]));
+							}*/
 
-					// Filter By - status
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recordStatus",
-									SearchOperator.OPERATOR_EQUALS.value(), 1));
-
-					// Order by address Id.
-					searchBean.getSortColumns().add(
-							new SearchOrderBean("createdDate",
-									false));
-
-					if (getManagedBean().isUnRead()) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("isRead",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										0));
-					}
-					
-					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("2")){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("sender.userName",
-										SearchOperator.OPERATOR_LIKE.value(), 
-										getManagedBean().getSearchValue().trim(), true));
-					}
-					
-					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("3")){
-						//20200601@asyrafhaziq_Enhancement #14291 - Start
-						//searchBean.getDataFilterBeans().add(
-						//		new SearchFilterBean("pmNotifyDashboard.subject",
-						//				SearchOperator.OPERATOR_LIKE.value(), 
-						//				getManagedBean().getSearchValue().trim(), true));
-						
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(
-										new SearchFilterBean(
-												"pmNotifyDashboard.subject",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true), 
-										SearchCondition.CONDITION_OR.value(),
-										new SearchFilterBean(
-												"pmNotifyDashboardQt.subject",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true)));
-						//20200601@asyrafhaziq_Enhancement #14291 - End
-					}
-					
-					
-					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("4")){
-						//20200601@asyrafhaziq_Enhancement #14291 - Start
-						//searchBean.getDataFilterBeans().add(
-						//			new SearchFilterBean("pmNotifyDashboard.content",
-						//					SearchOperator.OPERATOR_LIKE.value(), 
-						//					getManagedBean().getSearchValue().trim(), true));
-						
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(
-										new SearchFilterBean(
-												"pmNotifyDashboard.content",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true), 
-										SearchCondition.CONDITION_OR.value(),
-										new SearchFilterBean(
-												"pmNotifyDashboardQt.content",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getManagedBean().getSearchValue().trim(), true)));
-						//20200601@asyrafhaziq_Enhancement #14291 - End
-					}
-						
-					if(getManagedBean().getSearchItem() != null && getManagedBean().getSearchItem().equals("5")){
-						
-						Date date = covertStringToDate(getManagedBean().getSearchValue());
-						
-						if(date != null){
-							//20200601@asyrafhaziq_Enhancement #14291 - Start
-							//searchBean
-							//		.getDataFilterBeans()
-							//		.add(new SearchFilterBean("pmNotifyDashboard.createdDate",
-							//			SearchOperator.OPERATOR_GREATER_EQUAL.value(), date));
-							
-							searchBean.getDataFilterBeans().add(
-									new SearchMultiFilterBean(
-											new SearchFilterBean(
-													"pmNotifyDashboard.createdDate",
-													SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-													date), 
-											new SearchFilterBean(
-													"pmNotifyDashboardQt.createdDate",
-													SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-													date,
-											SearchCondition.CONDITION_OR.value())));
-							//20200601@asyrafhaziq_Enhancement #14291 - End
+						} else {
+							System.out.println(" getNativeSearchResultBeanObj size 0 "); 
 						}
 					}
-					NotifyReqDTO reqDTO = new NotifyReqDTO();
-					reqDTO.setSearchBean(searchBean);
-					NotifyResDTO resDTO = ntfSO.searchNotifyList(reqDTO);
 					
 					if (resDTO.isSuccessful()) {
-						return resDTO.getSearchResultBean();
+						for (int i = 0; i < resDTO.getNativeSearchResultBeanObj().getResultList().size(); i++) {
+							Object[] objects = (Object[]) resDTO.getNativeSearchList().get(i);
+							getManagedBean().setSelectedNotifyObj(objects);
+						}
+						return resDTO.getNativeSearchResultBeanObj();
 					}
 				}
 			} catch (Exception e) {
@@ -351,11 +310,171 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			return null;
 		}
 	}
+	
+	public FilteredNotifyDataModel getFilteredNotifyDataModel() {
+		return filteredNotifyDataModel;
+	}
+
+	public void setFilteredNotifyDataModel(
+			FilteredNotifyDataModel filteredNotifyDataModel) {
+		this.filteredNotifyDataModel = filteredNotifyDataModel;
+	}
+	
+	@PostConstruct
+	public void init() {
+		
+		resultBean = new ArrayList<Object[]>();
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("pageChangeListener");
+		}
+
+		INotifySO ntfSO;
+		
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			PmUser user = facesScopes.getUserSessionBean();
+			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
+
+			if (user == null) {
+				logger.error("User is empty.");
+			} else {
+				ntfSO = (INotifySO) BusinessDelegate.getInstance()
+						.getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								INotifySO.class);
+				
+				NotifyReqDTO reqDTO = new NotifyReqDTO();
+				reqDTO.setNativeSearchBean(searchBean);
+				reqDTO.setUserId(user.getUserId());
+				
+				NotifyResDTO resDTO = ntfSO.searchNativeNotifyList(reqDTO);
+				
+				System.out.println("resDTO.isSuccessful= "+resDTO.isSuccessful());
+				
+				if (resDTO.isSuccessful()) {
+					
+					if (resDTO.getNativeSearchResultBeanObj() != null) {
+						
+						if (!resDTO.getNativeSearchResultBeanObj().getResultList().isEmpty() &&
+								resDTO.getNativeSearchResultBeanObj().getResultList() != null) {
+							
+							resultBean = resDTO.getNativeSearchResultBeanObj().getResultList();
+							
+							getManagedBean().setFilteredSelectedNotifyObj(resultBean);
+							
+							System.out.println("resultBean.size= "+getManagedBean().getFilteredSelectedNotifyObj().size());
+							
+							if (getManagedBean().getFilteredSelectedNotifyObj() != null &&
+									!getManagedBean().getFilteredSelectedNotifyObj().isEmpty()) {
+								
+								for (int j = 0; j < getManagedBean().getFilteredSelectedNotifyObj().size(); j++) {
+									Object[] objects = (Object[]) resDTO.getNativeSearchList().get(j);
+									System.out.println("Filtered obj= " + String.valueOf(objects[27]) 
+											+", "+ String.valueOf(objects[5])+", "+String.valueOf(objects[28]));
+									getManagedBean().setSelectedNotifyObj(objects);
+								}
+							}
+						}
+					}
+					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ntfSO = null;
+		}
+		
+		filteredNotifyDataModel = new FilteredNotifyDataModel(resultBean);
+		
+	}
+	
+	private class FilteredNotifyDataModel extends LazyDataModel<Object[]> {
+		
+		private static final long serialVersionUID = 1L;
+		
+		private List<Object[]> datasource;
+		
+		private int first;
+		
+		public FilteredNotifyDataModel(List<Object[]> datasource) {
+			this.datasource = datasource;
+		}
+		
+		@Override
+	    public Object[] getRowData(String rowKey) {
+			
+			System.out.println("datasource.size= "+datasource.size()+", first= "+first); 
+			
+	        for (int j = 0; j < datasource.size(); j++) {
+	        	
+				Object[] object = (Object[]) datasource.get(j);
+				
+				System.out.println("rowData= " + String.valueOf(object[27]) 
+						+", "+ String.valueOf(object[5])+", "+String.valueOf(object[28]));
+				
+				if (object[0].toString().equals(rowKey)) {
+	                return object;
+	            }
+			}
+	        return null;
+	    }
+
+		@Override
+		public List<Object[]> load(int first, int pageSize, String sortField, 
+				SortOrder sortOrder, Map<String,String> filters) {
+			
+			System.out.println("load..");
+			
+			List<Object[]> data = new ArrayList<Object[]>();
+			
+			for (Object[] src : datasource) {
+				data.add(src);
+			}
+			
+			setFirst(first);
+        	
+        	System.out.println("filteredModel.first= "+getFirst());
+			
+			//RowCount
+	        int dataSize = data.size();
+	        this.setRowCount(dataSize);
+	        
+	        System.out.println("rowCount= "+this.getRowCount());
+	        System.out.println("pageSize= "+pageSize+", dataSize= "+dataSize);
+	        
+	        //Paginate
+	        if (dataSize > pageSize) {
+	        	
+	            try {
+	                return data.subList(first, first + pageSize);
+	            } catch (IndexOutOfBoundsException e) {
+	                return data.subList(first, first + (dataSize % pageSize));
+	            }
+	            
+	        } else {
+	            return data;
+	        }
+			
+		}
+		
+		public int getFirst() {
+			return first;
+		}
+		
+		public void setFirst(int fst) {
+			 first = fst;
+		}
+		
+	}
+	
+	// #27009 -- end
 
 	/**
 	 * @return the specMasterDataModel
 	 */
-	public IPagingDataModel<PmNotifyUser> getNotifyDataModel() {
+	public IPagingDataModel<Object[]> getNotifyDataModel() {
 		return notifyDataModel;
 	}
 
@@ -364,7 +483,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	 *            the specMasterDataModel to set
 	 */
 	public void setNotifyDataModel(
-			IPagingDataModel<PmNotifyUser> specMasterDataModel) {
+			IPagingDataModel<Object[]> specMasterDataModel) {
 		this.notifyDataModel = specMasterDataModel;
 	}
 	
