@@ -5497,7 +5497,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedApprovalTabIndex);
-
+		// #25077 - #80 - Start.
+		if (null != approvalTabBean && !"OTH".equals(approvalTabBean.getTabType())) {
+			IQTDetailSO detailSO;
+			try {
+				this.getManagedBean().setSaveFlow(false);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO reqDTO = prepareQTInfo();
+				reqDTO.getQtdetail().setOtherApproval(true);
+				detailSO.validateApprovalDetails(reqDTO);
+			} finally {
+				detailSO = null;
+			}
+		}
+		// #25077 - #80 - End.
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
