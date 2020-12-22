@@ -226,6 +226,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param fileDirectory  the directory for file storage. 
 	 */
 	public ContractBackingBean(String fileDirectory) {
+		//#TroubleShoot Error CT - Revert to 1.249
 		if (fileDirectory == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
