@@ -7,8 +7,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     
-    
-	<p:panel id="agencyId" toggleable="true" toggleSpeed="500">
+	 <p:panel id="agencyId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.agency']}" />
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}" />
@@ -22,7 +21,7 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false" />
 		<br />
-		<br />
+		<br />		
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
 			widgetVar="tableAgencyWidget"
 			editable="true" 
@@ -90,8 +89,9 @@
 				<h:outputText  value="#{agencyData.orgProfile.orgCode}" style="float:left;text-align:left;"/><br />
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
-		
-			 <p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/> 	
+		     
+		 	<p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/>
+			
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
@@ -113,14 +113,12 @@
 					   </h:outputText></f:facet>					  	
                </p:cellEditor> 
 
-                    <ui:fragment rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
+                    <ui:fragment  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
                          <div style="text-align:center;">
-                          <i class="fa fa-pencil-square-o"></i>
+                          <i class="fa fa-pencil-square-o"></i>              
                          </div>
                     </ui:fragment>							 					  
-			
-					
-                         
+                
            </p:column> 
            
 			<p:column rowspan="2" style="width:8%;"
