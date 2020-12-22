@@ -1826,6 +1826,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.getSmSvAdtMachines().remove(adtMachine);
 			}
 		}
+		getManagedBean().getSelectedSvTemplate().setSelectedAdtMachines(null);
 	}
 	
 	/**
@@ -2496,7 +2497,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 
 	public void addAdditionalManufacturing() {
-		this.getManagedBean().setSelectedManufacturer(new SmManufacturingDtl());
 		this.getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls();
 
 		SmManufacturingDtl manufacDtl = new SmManufacturingDtl();
@@ -2532,6 +2532,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void removeAdditionalManufacturingDtl() {
 		//CR 28774: Static Code Analysis
+		/*
 		if (!getManagedBean().getSelectedManufacturingList().isEmpty()) {
 			EntityHelper.compareAndRemoveEntityFromList(getManagedBean().getSelectedManufacturingList(), getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls(),
 					"manufacturingDtlId");
@@ -2539,7 +2540,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		} else {
 			throw new EpException(MessageConst.ERROR_722534, new String[] { "Manufacturer" });
 		}
-
+		*/
+		//#24964 - start
+		if(getManagedBean().getSelectedManufacturingList() == null) return;
+		for (SmManufacturingDtl man : getManagedBean().getSelectedManufacturingList()){
+			getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls().remove(man);
+		}
+		getManagedBean().setSelectedManufacturingList(null);
+		//#24964 - end
 	}
 	
 	// #24964 - start
@@ -2633,6 +2641,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public boolean checkUserRole() {
 		FacesScopes fs = new FacesScopes();
+		if(!getManagedBean().isViewMode()) return true;
 		if(this.getManagedBean().isViewMode()){
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
 					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20017 || 
