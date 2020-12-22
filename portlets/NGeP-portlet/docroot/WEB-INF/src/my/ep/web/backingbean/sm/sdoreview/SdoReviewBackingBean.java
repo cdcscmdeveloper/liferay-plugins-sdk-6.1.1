@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.sdoreview;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -306,6 +307,27 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		}
 		return null;
 	}
+	
+	//3460 - Start
+	public void changePlainTxt(String txt) throws Exception {
+		SmRemark smRmk = new SmRemark();
+		txt = txt.trim();
+		byte[] bytes = txt.getBytes(StandardCharsets.US_ASCII);
+		String asciiEncodedString = new String(bytes, StandardCharsets.US_ASCII);
+		int length = asciiEncodedString.length();
+		if (length > 4000) {
+			asciiEncodedString = asciiEncodedString.substring(0, 4000);
+			log.info("THIS IS THE LENGTH OF THE AFTER CUT TEXT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+					+ asciiEncodedString.length());
+			smRmk.setRemark(asciiEncodedString);
+			this.getManagedBean().setSmRemark(smRmk);
+		} else {
+			log.info("THIS IS THE LENGTH OF ACTUAL TEXT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + length);
+			smRmk.setRemark(asciiEncodedString);
+			this.getManagedBean().setSmRemark(smRmk);
+		}
+	}
+	//3460 - End
 
 	public String getAssignedPOName(String docNo) {
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
