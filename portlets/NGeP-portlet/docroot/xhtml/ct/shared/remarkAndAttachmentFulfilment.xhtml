@@ -15,7 +15,7 @@
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex ? ctBackingBean.managedBean.contractVer.itemRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex ? ctBackingBean.managedBean.contractVer.deductionRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex ? ctBackingBean.managedBean.contractVer.scheduleRemarks : 
-				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.factoringRemarks : 
+				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.remark : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex ? ctBackingBean.managedBean.contractVer.settingRemarks : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.notificationIndex ? ctBackingBean.managedBean.contractVer.notiSettingRemarks : null)))))))}" rowIndexVar="index"
 				columns="1"
@@ -38,10 +38,8 @@
 					<tr>
 						<td></td>
 						<td>
-							<!-- Bug #29446 -->
 							<h:outputText value="#{remark.remark}"
-							style="display: inline-block; word-break: break-word; white-space:normal"/>
-							<!-- Bug #29446 -->
+							style="display: inline-block; width:220px;word-wrap: break-word;"/>
 						</td>
 					</tr>
 				</table>
@@ -53,10 +51,8 @@
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex ? ctBackingBean.managedBean.contractVer.itemAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex ? ctBackingBean.managedBean.contractVer.deductionAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex ? ctBackingBean.managedBean.contractVer.scheduleAttachments : 
-				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.factoringAttachments : null)))))}"
+				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.attachement : null)))))}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
-				rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
-					contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
 				rowIndexVar="attachFileIndex" columns="1" style="width:100%">
 				<table>
 					<tr>
