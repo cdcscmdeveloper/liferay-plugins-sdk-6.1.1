@@ -17,6 +17,7 @@
 	    <cc:attribute name="isWorkflowStatus" default="false" />
 	    <cc:attribute name="addNewSpec" default="false" />
 	    <cc:attribute name="first" default="0" />
+	    <cc:attribute name="instruction"/>
 	</cc:interface>
 
 	<cc:implementation>
@@ -32,6 +33,7 @@
 		<ui:param name="isWorkflowStatus" value="#{cc.attrs.isWorkflowStatus}" />
 		<ui:param name="addNewSpec" value="#{cc.attrs.addNewSpec}" />
 		<ui:param name="initRow" value="#{cc.attrs.first}" />
+		<ui:param name="instruction" value="#{cc.attrs.instruction}" />
 		
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 		
