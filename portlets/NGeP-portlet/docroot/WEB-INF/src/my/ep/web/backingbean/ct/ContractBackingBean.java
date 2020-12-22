@@ -153,8 +153,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
@@ -188,6 +190,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
+	
+	
 	static
 	{
 		months = new HashMap<String, String>();
@@ -222,6 +226,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param fileDirectory  the directory for file storage. 
 	 */
 	public ContractBackingBean(String fileDirectory) {
+		//#TroubleShoot Error CT - Revert to 1.249
 		if (fileDirectory == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
@@ -1451,14 +1456,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
+		log.info("agencyList : "+agencyList.size());
+		log.info("Changes value using(agencyData) in ContractBackingBean :"+agencyData.getCeilingAmount());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+				log.info("Changes value in ContractBackingBean : "+ctAgency.getCeilingAmount().doubleValue());
+				
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
-
+          
 			double overallContractAmount = 0.0;
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
@@ -3318,7 +3327,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		// Start - 28292
-			//#28479 - Start Putra
 //		CommonUtils commonUtils = new CommonUtils();
 //		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
 //				.getScRequestItem().getUom().getUomCode());
@@ -3355,21 +3363,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 				   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-				   break;
-				   //#28479 - Start remove Code (related to #28292)
-//				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-//					Double maxValue = new Double(0);							
-//					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-//						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-//							maxValue = maxQty.getMaxQuantity().doubleValue();				
-//					}
-//					if (item.getMinimumOrderQty() > maxValue) {
-//						throw new EpException(MessageConst.ERROR_100034,
-//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-//						}
-//					}
-				 //#28479 - End remove Code (related to #28292)
+								
+				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
+					Double maxValue = new Double(0);							
+					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
+					}
+					if (item.getMinimumOrderQty() > maxValue) {
+						throw new EpException(MessageConst.ERROR_100034,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
+						}
+					}
 				}//#28479 - End Putra
 			}
 		}
@@ -3408,7 +3414,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //		
 //		contractItemSO.updateItemSearchService(reqDTO);
 //Bug #28356 - End		
-			//#28479 - End Putra		
+		
 		
 	}
 
@@ -4302,20 +4308,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{	//#25703 start
-		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
-			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
-				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	{	
+		/*#28868 - basri start*/
+		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
+				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
+					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+				}
+				else{
+					return null;
+				}
 			}
-			else{
+
+			else {
+				return null;
+			}
+		}else{
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
+				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
+					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
+				}
+				else{
+					return null;
+				}
+			}
+
+			else {
 				return null;
 			}
 		}
-
-		else {
-			return null;
-		}
-		//#25703 end
+		/*#28868 - basri end*/
+		
 	}
 	
 	/*#21387 - basri start*/
