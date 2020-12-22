@@ -11,7 +11,7 @@
 			widgetVar="oriCommitteeTableWidget" rowIndexVar="index"
 			rowKey="#{ctOriCommitteeVar}"
 			value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
-			rowStyleClass="#{ctOriCommitteeVar.updateType eq CtConst.addNewMember ? 'ui-helper-hidden' : (ctOriCommitteeVar.updateType eq CtConst.removeNewMemberFromAttendanceList ? 'ui-helper-hidden' : '')}" > <!-- #29403 -->
+			filteredValue="#{amendmentBackingBean.getFilteredOriginalCommitteeMembers()}" >
 			<p:column style="width:2%;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
@@ -90,9 +90,7 @@
 					</p:selectOneMenu>
 				</ui:fragment>
 			</p:column>
-			<p:column style="width: 15%" styleClass="column-align-center" 
-			rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
-				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
+			<p:column style="width: 15%" styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
@@ -110,7 +108,6 @@
 				</h:panelGroup>
 
 			</p:column>
-
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
