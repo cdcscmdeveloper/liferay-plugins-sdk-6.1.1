@@ -5498,7 +5498,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedApprovalTabIndex);
 		// #25077 - #80 - Start.
-		if (null != approvalTabBean && !"OTH".equals(approvalTabBean.getTabType())) {
+		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
+				&& "OTH".equals(this.getManagedBean().getPreviousApprovalTabName()) && !"OTH".equals(approvalTabBean.getTabType())) {
 			IQTDetailSO detailSO;
 			try {
 				this.getManagedBean().setSaveFlow(false);
@@ -5517,6 +5518,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
 		this.getManagedBean()
 				.setScQtApproval(approvalTabBean.getScQtApproval());
+		// #25077 - #80 - Start.
+		if (null != approvalTabBean && StringUtils.isNotEmpty(approvalTabBean.getTabType())) {
+			this.getManagedBean().setPreviousApprovalTabName(approvalTabBean.getTabType());
+		}
+		// #25077 - #80 - End.
 	}
 
 	/**
@@ -5768,6 +5774,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean()
 								.getQt().getQtStatus().getStatusId())) {
 							reqDTO.getQtdetail().setFCApproval(true);
+							// #25077 - #80 - Start.
+							reqDTO.getQtdetail().setOtherApproval(true);
+							// #25077 - #80 - End.
 						}
 						
 					detailSO.validateApprovalDetails(reqDTO);

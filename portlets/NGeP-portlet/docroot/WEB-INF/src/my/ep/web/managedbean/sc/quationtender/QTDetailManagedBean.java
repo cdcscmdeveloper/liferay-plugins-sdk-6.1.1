@@ -1695,6 +1695,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
+	private String previousApprovalTabName;
 	//#25077 - End
 
 	//#11104-start
@@ -10557,6 +10558,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
 			this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+		}
+		
+		/**
+		 * @return the previousApprovalTabName
+		 */
+		public String getPreviousApprovalTabName() {
+			return previousApprovalTabName;
+		}
+		
+		/**
+		 * @param previousApprovalTabName the previousApprovalTabName to set
+		 */
+		public void setPreviousApprovalTabName(String previousApprovalTabName) {
+			this.previousApprovalTabName = previousApprovalTabName;
 		}
 		//#25077 - End
 		
