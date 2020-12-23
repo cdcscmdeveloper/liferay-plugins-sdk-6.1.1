@@ -122,7 +122,8 @@
 				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="width: 20%;white-space: normal;vertical-align: top;word-break: break-all;">
 					<h:outputText value="#{tasks.poRecommendation}"/>
 					<br /><br />
-					
+					<h:outputText value="#{lbl['lbl.sm.rejection.reasons']} :&lt;br/&gt;#{tasks.rejectReasons}" escape ="false" rendered="#{not empty tasks.rejectReasons}"/>
+					<br />
 					<h:outputText value="#{lbl['lbl.txt.remarks']} :&lt;br/&gt;#{tasks.poRemarks}" escape ="false" rendered="#{not empty tasks.poRemarks}"/>
 					<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{empty tasks.poRemarks}"/>
 				</p:column>
