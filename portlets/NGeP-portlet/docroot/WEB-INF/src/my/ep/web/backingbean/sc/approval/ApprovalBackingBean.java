@@ -537,6 +537,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
+			//#25037-start
+			Long currentTaskStatusId = this.getManagedBean().getCurrentStatusId();
+			currentTaskStatusId = currentTaskStatusId!=null ? currentTaskStatusId: 0L; 
+			boolean isCommitteeUpdateFlow = Arrays
+					.asList(new Long[] {
+							QTStatusConst.CMT_PENDING_REAPPROVAL,
+							QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION_APPROVAL })
+					.contains(currentTaskStatusId);
+			this.getManagedBean().setCommitteeUpdateFlow(isCommitteeUpdateFlow);
+			//#25037-end
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
 			paramTypes = Arrays.asList(new String[]{"SC","OC","EC", "TEC", "FEC"});//#25037

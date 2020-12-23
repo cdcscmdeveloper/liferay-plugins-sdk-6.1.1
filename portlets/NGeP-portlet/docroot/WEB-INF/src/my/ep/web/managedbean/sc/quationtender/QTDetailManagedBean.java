@@ -1690,6 +1690,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String[] roleFilterList;
 	private Long currentQTStatus;
 	private Long currentCMTStatus;
+	private boolean committeeUpdateFlow;
 
 	//#25037-END
 	//#25077 - Start
@@ -10656,6 +10657,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		public void setCurrentCMTStatus(Long currentCMTStatus) {
 			this.currentCMTStatus = currentCMTStatus;
+		}
+
+		public boolean isCommitteeUpdateFlow() {
+			return committeeUpdateFlow;
+		}
+
+		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
+			this.committeeUpdateFlow = committeeUpdateFlow;
 		}
 
 }
