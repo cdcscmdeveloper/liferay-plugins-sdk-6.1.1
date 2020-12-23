@@ -31,7 +31,7 @@
 		</p:panel>
 	</c:if>
 	
-	<p:panel header="#{lbl['lbl.sc.lbl.prevCommittee']}" toggleable="true" id="prevCommitteeId">
+	<p:panel header="#{lbl['lbl.sc.lbl.prevCommittee']}" rendered="#{approvalBackingBean.managedBean.committeeUpdateFlow}" toggleable="true" id="prevCommitteeId">
 		<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
 			<c:forEach var="tabBean" varStatus="status"
 				items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
@@ -83,18 +83,34 @@
 			</p:dataTable>
 		</p:panel>
 	</p:panel>
-	
-	<p:panel header="#{lbl['lbl.sc.lbl.newCommittee']}" toggleable="true" id="newCommitteeId">
-		<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
-		<c:forEach var="tabBean" varStatus="status"
-			items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
-			<p:menuitem value="#{tabBean.titleName}"
-				action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
-				partialSubmit="true"
-				update="@form"
-				process="@form" />
-		</c:forEach>
-		</p:tabMenu>
-		<ui:include src="committeeApprovalTab.xhtml" />
-	</p:panel>
+	<c:choose>
+		<c:when test="#{approvalBackingBean.managedBean.committeeUpdateFlow}">
+			<p:panel header="#{lbl['lbl.sc.lbl.newCommittee']}" toggleable="true" id="newCommitteeId">
+			<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
+			<c:forEach var="tabBean" varStatus="status"
+				items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+				<p:menuitem value="#{tabBean.titleName}"
+					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
+					partialSubmit="true"
+					update="@form"
+					process="@form" />
+				</c:forEach>
+				</p:tabMenu>
+				<ui:include src="committeeApprovalTab.xhtml" />
+			</p:panel>
+		</c:when>
+		<c:otherwise>
+			<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
+			<c:forEach var="tabBean" varStatus="status"
+				items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+				<p:menuitem value="#{tabBean.titleName}"
+					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
+					partialSubmit="true"
+					update="@form"
+					process="@form" />
+			</c:forEach>
+			</p:tabMenu>
+			<ui:include src="committeeApprovalTab.xhtml" />
+		</c:otherwise>
+	</c:choose>	
 </ui:composition>
