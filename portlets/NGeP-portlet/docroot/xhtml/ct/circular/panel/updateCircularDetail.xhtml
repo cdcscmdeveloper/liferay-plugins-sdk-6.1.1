@@ -58,7 +58,7 @@
 		         <h:panelGroup id="uploadCircularPg1">
 		         	<h:panelGrid columns="5">
 				   	           <p:commandButton icon="ui-icon-upload" update="uploadCircularPg1, uploadCircularDlg"
-								action="#{panelBackingBean.setCentralDetailsValue()}" 
+								action="#{panelBackingBean.setPanelDetailsValue()}" 
 								rendered="#{!panelBackingBean.managedBean.viewContract}" />
 						 
 						 
@@ -73,7 +73,7 @@
 											 	<h:commandLink action="#{panelBackingBean.downloadFile(attachAggreement)}" 
 											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
 										     	<p:commandLink action="#{panelBackingBean.setAttachmentIndex(attachAggreementIndex)}"
-								   	                 onclick="deleteCircularFileDlg.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
+								   	                 onclick="deleteAttachFile.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
 								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 								   			   	 </p:commandLink>
 								   			 </td>
