@@ -307,8 +307,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
 		</div>
 		
-		<!-- #25549 - start -->
-		<p:dialog id="cloneAcquirementPopUp" widgetVar="cloneAcquirementPopUp" closable="false" modal="true"
+		<!-- #25549@23122020 - start -->
+		<p:dialog id="cloneAcquirementPopUp" widgetVar="cloneAcquirementPopUp" closable="true" modal="true"
 			header="#{lbl['lbl.pp.procurement.plan.clone']}" width="800" height="500">
 			<ui:include src="planProcurementPopup.xhtml"></ui:include>
 		</p:dialog>

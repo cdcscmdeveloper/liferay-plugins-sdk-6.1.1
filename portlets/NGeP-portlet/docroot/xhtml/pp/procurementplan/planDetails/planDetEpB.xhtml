@@ -360,8 +360,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votMengurus)}"/> 
 		</div>
 		
-		<!-- #25549 - start -->
-		<p:dialog id="cloneExpenditureBPopUp" widgetVar="cloneExpenditureBPopUp" modal="true" closable="false" 
+		<!-- #25549@23122020 - start -->
+		<p:dialog id="cloneExpenditureBPopUp" widgetVar="cloneExpenditureBPopUp" modal="true" closable="true" 
 			header="#{lbl['lbl.pp.plan.b.clone']}" width="680">
 			<ui:include src="planExpenditurePopup.xhtml"></ui:include>
 		</p:dialog>
