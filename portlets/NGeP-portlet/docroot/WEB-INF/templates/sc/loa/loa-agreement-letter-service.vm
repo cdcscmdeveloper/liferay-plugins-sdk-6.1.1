@@ -600,7 +600,7 @@ u {
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
-						class="text_family">4.1 Harga *Pembelian Terus/Sebut Harga/Tender (Butiran harga 
+						class="text_family">4.1 Harga *$docType (Butiran harga 
 						seperti di <b><i>Lampiran A1</i></b>)</span></td>
 					<td>:</td>
 					<td>RM $offerPrice</td>
@@ -2133,4 +2133,4 @@ u {
 		</tr>
 	</table>
 </body>
-</html>
+</html>	
