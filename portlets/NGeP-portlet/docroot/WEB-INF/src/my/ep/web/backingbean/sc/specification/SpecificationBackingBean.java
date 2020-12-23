@@ -14723,7 +14723,7 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getSpecMaintenanceScreen()
 				.equals(getSpecMaintenance())) {
 			if (!this.getManagedBean().isReadOnly()) {
-				this.getManagedBean().setSpecNewable(false);
+				this.getManagedBean().setSpecNewable(true); //#15391
 				this.getManagedBean().setUpdateSpec(true);
 			} else {
 				this.getManagedBean().setSpecNewable(false);
