@@ -734,6 +734,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String redirectUrl = retrieveSupplierLOADtl(sourceId, 
 				loaId, null, getManagedBean().isReadOnly());
 		getManagedBean().setValidatewitness(Boolean.TRUE); //#19336
+		
+		if(null!=this.getManagedBean().getScLoa()){//#29826-start
+			this.getManagedBean().setFlowamt(this.getManagedBean().getScLoa().isFollowLoaAmt());
+		}//#29826-End
+		
 		if (StringUtils.isNotBlank(redirectUrl)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -2964,7 +2969,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if(this.getManagedBean().getFlowamt()==null && null != contractType 
 					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
 					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()) &&
-					!this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT))//27502, adding condition caz error when save at supplier loa acceptance
+					!this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT))//29826,//27502, adding condition caz error when save at supplier loa acceptance
 			{
 				throw new EpException(MessageConst.ERROR_760485);
 				
