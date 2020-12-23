@@ -1107,6 +1107,21 @@ public class ReportConst implements Serializable{
 	public static final String ERR_999000_MORTHAN_TEN = "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
 	
+	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - START
+	//Purpose : To Split Tracking Diary Report Based on Module
+	public static final String FL_TRACKING_DIARY = "FL_TRACKING_DIARY.jsp";
+	public static final String CT_TRACKING_DIARY = "CT_TRACKING_DIARY.jsp";
+	public static final String DP_TRACKING_DIARY = "SC_S1_TRACKING_DIARY.jsp";
+	public static final String CM_TRACKING_DIARY = "CM_TRACKING_DIARY.jsp";
+	public static final String CD_TRACKING_DIARY = "CM_CODIFICATION_TRACKING_DIARY.jsp";
+	public static final String PP_TRACKING_DIARY = "PP_TRACKING_DIARY.jsp";
+	public static final String PM_TRACKING_DIARY = "PM_TRACKING_DIARY.jsp";
+	public static final String QT_TRACKING_DIARY = "SC_TRACKING_DIARY.jsp";
+	public static final String CT_CIRCULAR_TRACKING_DIARY = "CT_CIRCULAR_TRACKING_DIARY.jsp";
+	public static final String SM_APPL_TRACKING_DIARY = "SM_APPLICATION_TRACKING_DIARY.jsp";
+	public static final String SM_PROFILE_TRACKING_DIARY = "SM_PROFILE_TRACKING_DIARY.jsp";
+	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - END
+	
 	public ReportConst(){}
 	
 	/**
