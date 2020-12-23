@@ -2054,7 +2054,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else {
 				qtNo = rnNo;
 			}
-		}
+			context.put("docType", "Pembelian Terus"); 
+		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
+				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
+			context.put("docType", "Sebut Harga/Tender"); 
+		} 
 		// #25025 - End.
 		
 		// qtno
