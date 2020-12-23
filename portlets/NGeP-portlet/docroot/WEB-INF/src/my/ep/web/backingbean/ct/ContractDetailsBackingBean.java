@@ -150,7 +150,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * This method will initialize the button and approver list.
 	 */
 	public ContractDetailsBackingBean() {
-		//#TroubleShoot Error CT
 		/* Initialization of button */
 		if(ctBB == null){
 			ctBB = new ContractBackingBean();
@@ -853,6 +852,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+			ctContractVer.setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 			ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}
 		//#25406 - End
@@ -2932,6 +2932,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		String portletTitle = null;
 		if (ctBB.getManagedBean().isViewContract()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.view.contract",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			//#25406
+		}  else if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.owner.management",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.maintenance",
