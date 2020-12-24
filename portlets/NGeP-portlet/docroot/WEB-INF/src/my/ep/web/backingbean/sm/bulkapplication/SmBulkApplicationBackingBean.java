@@ -143,6 +143,7 @@ public class SmBulkApplicationBackingBean extends
 				reqDTO = getReviewApplicationReqDTO(fs, basePortalUrl,
 						bulkAppl, "APPROVE");
 
+				//10908
 				SmApplicationNotificationUtil
 						.setApprovalNotificationParameters(bulkAppl.getAppl(),
 								null, false,
@@ -211,13 +212,11 @@ public class SmBulkApplicationBackingBean extends
 						.getAppl().getSmSupplier().getSupplierId(), bulkAppl
 						.getAppl().getSupplierType());
 
+				//10908
 				SmApplicationNotificationUtil
 						.setRejectionNotificationParameters(
-								bulkAppl.getAppl(),
-								acc == null ? StringUtils.EMPTY : acc
-										.getMofNo(), bulkAppl
-										.getRejectionRemarks(), bulkAppl
-										.getAppl().getSmSupplier(), reqDTO);
+								bulkAppl.getAppl(), bulkAppl.getAppl().getSmSupplier(),
+								null, null, null, reqDTO);
 
 				SmServiceLookup.getReviewApplicationSO()
 						.submitPOorApproverReviewToBPM(reqDTO);
