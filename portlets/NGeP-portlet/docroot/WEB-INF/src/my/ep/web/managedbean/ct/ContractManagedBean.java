@@ -171,6 +171,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
 	//#28854 - end	
+	
+	//#13847 - start
+	private boolean disableDeferment = false;
 
 	/**
 	 * @return the fileDirectory
@@ -1378,6 +1381,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.minQtyCheck = minQtyCheck;
 	}
 
+	//#15851 - start
 	public boolean isHasAmendmentLoaNo() {
 		return hasAmendmentLoaNo;
 	}
@@ -1385,6 +1389,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setHasAmendmentLoaNo(boolean hasAmendmentLoaNo) {
 		this.hasAmendmentLoaNo = hasAmendmentLoaNo;
 	}
+	//#15851 - end
 	
 	// End - 28479
 	
@@ -1419,5 +1424,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
-	/* #28854 end*/	
+	/* #28854 end*/
+
+	public boolean isDisableDeferment() {
+		return disableDeferment;
+	}
+
+	public void setDisableDeferment(boolean disableDeferment) {
+		this.disableDeferment = disableDeferment;
+	}	
 }
