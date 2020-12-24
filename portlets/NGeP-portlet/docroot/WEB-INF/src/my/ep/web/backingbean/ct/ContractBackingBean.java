@@ -226,7 +226,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param fileDirectory  the directory for file storage. 
 	 */
 	public ContractBackingBean(String fileDirectory) {
-		//#TroubleShoot Error CT - Revert to 1.249
 		if (fileDirectory == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
@@ -3332,6 +3331,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		// Start - 28292
+		//#28479 - Start Putra
 //		CommonUtils commonUtils = new CommonUtils();
 //		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
 //				.getScRequestItem().getUom().getUomCode());
@@ -3364,26 +3364,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //						getManagedBean().setErr100033(true);
 //						getManagedBean().setMinQtyCheck(true);
 					//Bug #28479 - End				
-			if (ctContractItem.getMinimumOrderQty() > 0) {
-				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-				   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-								
-				if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-					Double maxValue = new Double(0);							
-					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-							maxValue = maxQty.getMaxQuantity().doubleValue();				
-					}
-					if (item.getMinimumOrderQty() > maxValue) {
-						throw new EpException(MessageConst.ERROR_100034,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-						}
-					}
-				}//#28479 - End Putra
-			}
-		}
+			//Bug #28479 - End				
+	if (ctContractItem.getMinimumOrderQty() > 0) {
+		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+		   break;
+		   //#28479 - Start remove Code (related to #28292)
+//		if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
+//			Double maxValue = new Double(0);							
+//			for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+//				if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+//					maxValue = maxQty.getMaxQuantity().doubleValue();				
+//			}
+//			if (item.getMinimumOrderQty() > maxValue) {
+//				throw new EpException(MessageConst.ERROR_100034,
+//						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+//								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
+//				}
+//			}
+		 //#28479 - End remove Code (related to #28292)
+		}//#28479 - End Putra
+	}
+}
 //		}//28292 - null checker
 		// Start - 28292
 //		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
