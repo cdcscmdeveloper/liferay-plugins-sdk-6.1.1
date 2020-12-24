@@ -2641,7 +2641,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public boolean checkUserRole() {
 		FacesScopes fs = new FacesScopes();
-		if(!getManagedBean().isViewMode()) return true;
 		if(this.getManagedBean().isViewMode()){
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
 					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20017 || 
