@@ -163,6 +163,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	// End - 28479	
 	
 	private boolean hasAmendmentLoaNo = false; //15851
+	
+	//#13847 - start
+	private boolean disableDeferment = false;
 
 	/**
 	 * @return the fileDirectory
@@ -1370,6 +1373,7 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.minQtyCheck = minQtyCheck;
 	}
 
+	//#15851 - start
 	public boolean isHasAmendmentLoaNo() {
 		return hasAmendmentLoaNo;
 	}
@@ -1377,8 +1381,15 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setHasAmendmentLoaNo(boolean hasAmendmentLoaNo) {
 		this.hasAmendmentLoaNo = hasAmendmentLoaNo;
 	}
+	//#15851 - end
 	
 	// End - 28479
-	
 
+	public boolean isDisableDeferment() {
+		return disableDeferment;
+	}
+
+	public void setDisableDeferment(boolean disableDeferment) {
+		this.disableDeferment = disableDeferment;
+	}	
 }
