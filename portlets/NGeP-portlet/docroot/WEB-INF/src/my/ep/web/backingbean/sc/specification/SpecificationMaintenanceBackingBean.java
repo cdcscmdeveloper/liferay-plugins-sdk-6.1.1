@@ -524,10 +524,15 @@ public void editSpecificationMaintenance(ScQt scQt,
 		
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
+		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
 		log.info("QTID: "+scQt.getQtId());
 		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
-				|| QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(scQt.getQtStatus().getStatusId())){
+				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
 			this.getManagedBean().setGenInfo(true);
+			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
+				this.getManagedBean().setGenInfo(false);
+			}
 		}
 		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
 				|| (QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(scQt.getQtStatus().getStatusId()))
