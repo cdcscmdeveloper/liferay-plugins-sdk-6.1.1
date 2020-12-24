@@ -3165,8 +3165,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		reqDTO.setDocId(scLoa.getLoaId());
 
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){			
-			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){
+//			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(workFlowStatusSO.retrievePreviousStatus(reqDTO)));
 			log.info("-----Check 62523L------ " + workFlowStatus.getPmStatus().getStatusId());
 		}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){			
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));	
