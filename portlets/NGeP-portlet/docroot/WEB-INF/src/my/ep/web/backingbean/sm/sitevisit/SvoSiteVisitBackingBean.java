@@ -2643,7 +2643,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		FacesScopes fs = new FacesScopes();
 		if(this.getManagedBean().isViewMode()){
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
-					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20017 || 
+					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20116 || 
 					 this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20108))
 				return true;
 			if(fs.hasRoleUser(RoleCode.UPS_PO.value()) && this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20103)
