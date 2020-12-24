@@ -72,8 +72,19 @@ public class SvoSiteVisitLocRptBackingBean extends
 		params.put(SmReportConst.PARAM_DATE_TO,
 				df.format(getManagedBean().getDateTo()));
 
-//		addCategoryParam(params);
+		//12625 start - add param
+		if (!StringUtils.isBlank(getManagedBean().getSvoApplicationStatus())) {
+		params.put(SmReportConst.PARAM_SVO_APPL_STATUS, getManagedBean()
+				.getSvoApplicationStatus());
+		}
+		if (!StringUtils.isBlank(getManagedBean().getSvoPerformSiteVisit())) {
+		params.put(SmReportConst.PARAM_SVO_PERFORM_SITE_VISIT, getManagedBean()
+				.getSvoPerformSiteVisit());
+		}
+		//12625 end
 		
+//		addCategoryParam(params);
+
 		generateSmReport(params);
 	}
 
