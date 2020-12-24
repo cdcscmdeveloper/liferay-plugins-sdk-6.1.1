@@ -1189,7 +1189,20 @@ public class SmApplicationBackingBean extends
 										.value(),
 								SupplierManagementConst.SM_REASON_CODE_OTHERS));
 		
-		//#15629 - START
+		//#15629 - START		
+		if(getManagedBean().isApproverUser()){
+			if(!EntityHelper.isCollectionEmpty(appl.getSmApplRejectReasons())) {
+				getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+				for(SmApplRejectReason smApplRejectReason : appl.getSmApplRejectReasons()){
+						for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
+							if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
+								getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
+							}
+						}			
+				}
+			}
+		}
+		
 		if(getManagedBean().isPoUser()){
 		getManagedBean().setRecommendReasonDescInitList(
 				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()

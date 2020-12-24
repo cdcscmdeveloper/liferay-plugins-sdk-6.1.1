@@ -41,10 +41,10 @@
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
 				<td>
-					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poRemarkRejectReasons}" 
-						rendered="#{not empty viewSmApplBackingBean.managedBean.poRemarkRejectReasons}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.rejectReason}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.rejectReason}" />
 				    <p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
-						rendered="#{empty viewSmApplBackingBean.managedBean.poRemarkRejectReasons}" />
+						rendered="#{empty viewSmApplBackingBean.managedBean.rejectReason}" />
 				</td>
 			</tr>
 			<!-- #15629 end -->
