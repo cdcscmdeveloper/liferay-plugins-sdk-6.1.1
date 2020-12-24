@@ -70,7 +70,7 @@ public class SmApplicationNotificationUtil {
 				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
 						"lbl.sm.notifAddr.semunanjung", null));
 			}
-		}
+		} 
 		reqDTO.setNotifLink("");
 
 	}
