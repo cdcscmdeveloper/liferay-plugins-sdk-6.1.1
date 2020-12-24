@@ -417,8 +417,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	
 	private ScPrInquiry retrivePrInquiryByPrInquiryNo(String prInquiryNo) {
-		ScPrInquiry scPrInquiry = getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
-		return scPrInquiry;
+		//CR 28766: Static Code Analysis Start
+		//ScPrInquiry scPrInquiry = getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
+		//return scPrInquiry;
+		return getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
+		//CR 28766: Static Code Analysis End
 	}
 
 	private IPrInquirySO getPrInquirySO() {
@@ -426,10 +429,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 
 	private int calculateFinalOffSet(int currentPage) {
-
-		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
-
-		return offSet;
+		//CR 28766: Static Code Analysis Start
+		//int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+		//return offSet;
+		return (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+		//CR 28766: Static Code Analysis End
 	}
 
 	public Integer getTabActiveIndex() {
@@ -503,7 +507,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 
-						boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - End
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
 								if (worklistItemVO.getTitle().contains("<")) {
@@ -537,9 +543,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
 								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
+								    	  /* if(viewGlpFlag && mofResDto.isGlp()) {
 								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
+								    	   }*/
 						    	   }
 						    	   
 								worklistItemVO.setTitle(sb.toString());
@@ -943,7 +949,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							+ responseDTO.getWorklistVO().getTotal());
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-						boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - End
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try {
 								if (worklistItemVO.getTitle().matches("<")) {
@@ -981,9 +989,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
 								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
-								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
+								    	   //	Enhancement #28766 - Start
+								    	   //	if(viewGlpFlag && mofResDto.isGlp()) {
+								    	   //	sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+								    	   //	}
+								    	//	Enhancement #28766 - End
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -1155,8 +1165,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				if (responseDTO.getWorklistVO() != null) {
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
+				    	   //	Enhancement #28766 - Start
+							//	boolean viewGlpFlag = viewGlpFlag();
+				    	   //	Enhancement #28766 - End
 						
-						boolean viewGlpFlag = viewGlpFlag();
+						
 						
 						for( WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try {
@@ -1193,9 +1206,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
 								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
+								    	  /* if(viewGlpFlag && mofResDto.isGlp()) {
 								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
+								    	   }*/
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -1693,15 +1706,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return false;
 	}
 
-	private boolean viewGlpFlag() {
-		FacesScopes fs = new FacesScopes();
-		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
-				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
-				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
-			return true;
-		}
-		return false;
-	}
+	//	Enhancement #28766 - Start
+	//	private boolean viewGlpFlag() {
+	//		FacesScopes fs = new FacesScopes();
+	//		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
+	//				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
+	//				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
+	//			return true;
+	//		}
+	//		return false;
+	//	}
+	//	Enhancement #28766 - End
 
 	public boolean isSdoWithMultipleRoles() {
 		return sdoWithMultipleRoles;
