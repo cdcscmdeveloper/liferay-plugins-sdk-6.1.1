@@ -104,7 +104,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplAuditors;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -129,7 +128,6 @@ import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmPersonnelSecretaries;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -1784,30 +1782,9 @@ public class SmApplicationBackingBean extends
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							// 28466 - add paid up capital, 28767 add registerAdressSSM
-							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM","paidUpCapital","registerAdressSSM"};
+							// 28466 - add paid up capital
+							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM","paidUpCapital"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
-							//START 28767
-							if(ssmResDTO.getSmApplIndebtedness() != null){
-								ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
-								this.getManagedBean().getSmAppl().setSmApplIndebtedness(ssmResDTO.getSmApplIndebtedness());
-							}
-							if(ssmResDTO.getSmPersonnelSecretaries() != null){
-								this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
-								for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
-									personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
-									this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
-								}
-							}
-							if(ssmResDTO.getSmApplAuditors()!= null){
-								this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
-								for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
-									auditors.setSmAppl(this.getManagedBean().getSmAppl());
-									this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
-								}
-							}
-							//END 28767
-							
 						}
 						//#27165
 						if(dontGetSsmData){	
