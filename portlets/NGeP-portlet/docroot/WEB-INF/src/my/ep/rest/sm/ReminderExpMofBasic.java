@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 @Path("/sm")
 public class ReminderExpMofBasic {
 
-public static Logger log = Logger.getLogger(ReminderExpMofBasic.class);
+public static final Logger log = Logger.getLogger(ReminderExpMofBasic.class);
 	
 	@GET
 	@Path("reminderexpmofbasic")
@@ -45,7 +45,6 @@ public static Logger log = Logger.getLogger(ReminderExpMofBasic.class);
 		log.info("**********reminderExpiredMofToDelete - Start************");
 		log.info("List of Reminder Mof == " + mofAccountLs.size());
 		for (SmMofAccount mofAccount : mofAccountLs) {
-				
 			SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 			schedulerReqDTO.setMofAccount(mofAccount);
 			try {
