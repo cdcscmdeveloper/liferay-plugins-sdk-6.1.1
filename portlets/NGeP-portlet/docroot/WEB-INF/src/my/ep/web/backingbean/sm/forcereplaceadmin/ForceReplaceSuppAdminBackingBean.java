@@ -1346,7 +1346,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().getSmSupplier().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE && 
 				(
 					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
-					|| 
+					&& 
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)) {
 			getManagedBean().setBypassFlag1(1);
@@ -1368,7 +1368,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				&& 
 				(
 					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null
-					|| 
+					&& 
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)
 			)) {
