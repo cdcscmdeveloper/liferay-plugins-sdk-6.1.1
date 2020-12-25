@@ -173,13 +173,14 @@
 				<p:column style="width:6%;" headerText="#{lbl['lbl.ct.role']}"
 					styleClass="column-align-center">
 					<div align="left">
-						<h:outputText
-							value="#{amendmentBackingBean.getParameterDesc(index, data.memberRole)}" />
+						<h:outputText value="#{amendmentBackingBean.getParameterDescCommitteeByMember(data, index)}" />
 					</div>
 				</p:column>
 				<p:column style="width:15%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.represent.type']}"
-					styleClass="column-align-center">
+					styleClass="column-align-center"
+					rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
+				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
 					<div align="left">
 						<h:outputText
 							value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
@@ -200,11 +201,10 @@
 		<br />
 		<div class="ppRightBtn"> 
 		<p:commandButton value="#{lbl['lbl.ct.update.committee']}"
-			process="@this" partialSubmit="true" onstart="blockWidget.show();"
+			process="@this" onstart="blockWidget.show();"
 			rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision}"
 			oncomplete="blockWidget.hide();"
-			actionListener="#{amendmentBackingBean.updateCommittee}"
-			update=":form" />
+			actionListener="#{amendmentBackingBean.updateCommittee()}" />
 		</div>
 		<!-- 26753 end -->
 	</p:panel>

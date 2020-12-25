@@ -175,6 +175,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
+	private static final String UPDATE_COMMITTEE_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/pbqcc/committeeList.xhtml"; //#29403
+	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true"; //#29403
 	private ContractBackingBean ctBackingBean = null;
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
@@ -1270,7 +1272,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			//#29403 start
-			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {
+			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	
 				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
@@ -2866,19 +2869,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
+					//#29403 start
 					if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
 						getManagedBean().setSelectedTabIndex(index + 3);
 					}else if (getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
 						getManagedBean().setSelectedTabIndex(index + 2);
 					}
-					if (!getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 2);
-					}
-					if (!getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-//						getManagedBean().setSelectedTabIndex(index + 2);
-//					} else {
+
+					else if (!getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
+					else if (!getManagedBean().isPbConfirmMeeting() && (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+							&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
+							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
+							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+									ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+						getManagedBean().setSelectedTabIndex(index + 2);
+					}else{
+						getManagedBean().setSelectedTabIndex(index + 1);
+					}
+					//#29403	
 				}
 				//#20997- End
 
@@ -6497,7 +6507,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		//26753 - start
 		public void updateCommittee() {
-			getManagedBean().setUpdateCommittee(Boolean.TRUE);
+			//#29403 start
+			//getManagedBean().setUpdateCommittee(Boolean.TRUE);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, UPDATE_COMMITTEE_PAGE);
+			//#29403 end
 		}
 		
 		//#29403 start
@@ -6518,8 +6532,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getFilteredCommitteeMembers().clear();
 			}
 			
-			setTabValue("DCN"); //#29403
+			setTabValue("DCN");
+			backToAmendmentPage();
 			
+		}
+		public void backToAmendmentPage(){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_AMEND_PAGE);
 		}
 		//#29403 end
 		/**
@@ -6591,6 +6610,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getUpdatedCommitteeMembers().add(entry.getValue());
 				}	    
 			}
+			getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 		}   
 		
 		
@@ -6646,7 +6666,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		 * @param   curCommitteeMember  the current committee member
 		 * @return  parameter description
 		 */
-		public String getUpdatedParameterDesc(CtCommitteeMember curCommitteeMember, int index) {
+		public String getParameterDescCommitteeByMember(CtCommitteeMember curCommitteeMember, int index) {
 			String strDescription = null;
 			PmParameter curParameter = null;
 			
@@ -6711,6 +6731,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 						members.setSelectedCheckBox(false); //#29403
 					}
+					getManagedBean().setHasChanges(Boolean.FALSE); //#29403
 					ctBackingBean.getManagedBean().setButtonHideActive(true);
 
 				}
@@ -6803,6 +6824,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setHasChanges(Boolean.FALSE);
 			}
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
+			
+			//#29403 start
+			setTabValue("DCN"); 
+			backToAmendmentPage();
+			//#29403 end
 		}
 		
 		public void validateLatestCommitteeMembers() {
