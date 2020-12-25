@@ -1037,7 +1037,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			
-			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
+//			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
 			
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
@@ -1053,6 +1053,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);
 				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
 				scLoa = resDTO.getScLoa();								
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
