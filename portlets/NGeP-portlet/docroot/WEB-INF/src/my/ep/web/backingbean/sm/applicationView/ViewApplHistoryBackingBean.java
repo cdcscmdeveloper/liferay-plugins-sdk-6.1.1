@@ -44,10 +44,13 @@ import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -63,10 +66,12 @@ import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
@@ -600,6 +605,52 @@ public class ViewApplHistoryBackingBean extends
 				}
 			}
 		}
+		
+		// #29664 - start
+		SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
+		remarksReqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE);
+		remarksReqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+
+		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
+
+		if (remaksResDTO.getRemarksList().size() > 0) {
+			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
+				log.info("remaksResDTO.getRemarksList().size()::" + remaksResDTO.getRemarksList().size());
+				log.info("poRemark.getRoleCode()::::::::::::::::" + poRemark.getRoleCode());
+
+				if (poRemark.getRoleCode() != null && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
+					getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
+					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
+
+					if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
+						PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
+						getManagedBean().setSecondPoUserName(user.getUserName());
+					}
+				} else {
+					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(poRemark.getCreatedBy());
+					String roleCode = StringUtils.EMPTY;
+					if (!EntityHelper.isCollectionEmpty(userRoles)) {
+						for (PmUserRole pmRole : userRoles) {
+							if (pmRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value())) {
+								roleCode = pmRole.getPmRole().getRoleCode();
+								break;
+							}
+						}
+					}
+					if ((roleCode != null && roleCode.equals(RoleCode.UPS_PO.value()))
+							&& (poRemark.getRoleCode() != null && !(poRemark.getRoleCode().equals(RoleCode.UPS_APPROVER.value())))) {
+						getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
+						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
+
+						if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
+							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
+							getManagedBean().setSecondPoUserName(user.getUserName());
+						}
+					}
+				}
+			}
+		}
+		// #29664 - end
 	}
 
 	/**
@@ -613,6 +664,10 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setApproverUserName(null);
 		getManagedBean().setApproverRemarkCreatedDate(null);
 		getManagedBean().setApproverRemark(null);
+		// #29664 - start
+		getManagedBean().setSecondPoUserName(null);		
+		getManagedBean().setPoRemarkAfterSiteVisit(null);
+		// #29664 - end
 	}
 
 	/**
