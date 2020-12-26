@@ -13540,7 +13540,10 @@ public class SmApplicationUtil {
 					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					mofCert.setMofCert(cert);
 				}
-				SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
+				//28774 - temp stopper
+				if(mofCert.getMofCert() != null){
+					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
+				}
 			}
 		}
 	}
