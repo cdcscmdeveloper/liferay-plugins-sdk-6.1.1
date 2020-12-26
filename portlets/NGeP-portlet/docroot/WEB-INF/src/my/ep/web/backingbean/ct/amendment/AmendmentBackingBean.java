@@ -3304,24 +3304,93 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new overall contract amount
 	 */
+//	public BigDecimal newOverallContractAmt() {
+//		BigDecimal contractAmt = newContractAmt();
+//		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
+//			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+//		
+//		}
+//		return contractAmt;
+//	}
+	// Start Fixing - #29589
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
-			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+	   
+	    BigDecimal newgstvalidation = new BigDecimal("0");
+	   // newgst = new BigDecimal(0);
+		//newgst = BigDecimal.valueOf(0); cast
+	
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null)  {
+           
+			BigDecimal newgstamount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount();
+        			
+		    if (newgstamount.compareTo(newgstvalidation) == 0)
+		       {
+		    	 if( ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null){
+		    	     //System.out.println("**-- DEV Env --** newgstamount == newgstvalidation");
+		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
+		    	 }
+		    	   
+		       }
+		    else if(newgstamount.compareTo(newgstvalidation) == 1)
+		       {
+		    	 if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null || ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null  ){
+		    	     //System.out.println("**-- DEV Env --** newgstamount > newgstvalidation");
+		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount()));
+		    	 }
+		       }
 		
 		}
+		  else{
+				if(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null){
+				contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
+				}
+			}
 		return contractAmt;
 	}
 	
+//	public BigDecimal newOverallContractAmount() {
+//		BigDecimal contractAmount = newOverallContractAmt();
+//	
+//		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
+//			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
+//		
+//		}
+//		return contractAmount;
+//	}
+	
 	public BigDecimal newOverallContractAmount() {
 		BigDecimal contractAmount = newOverallContractAmt();
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
-			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
 		
+		   BigDecimal newsstvalidation = new BigDecimal("0");
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
+			
+			BigDecimal newsstamount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount();
+			
+			if (newsstamount.compareTo(newsstvalidation) == 0)
+			 {    if(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
+				  // System.out.println("**-- DEV Env --** newsstamount == newsstvalidation");
+			       contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
+			     }
+			 }
+		    else if(newsstamount.compareTo(newsstvalidation) == 1)
+		     {
+		    	  if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null || ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
+		    	  //   System.out.println("**-- DEV Env --** newsstamount > newsstvalidation");
+		    	     contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount()));
+		    	  }
+		     }
+		}
+		
+		else{
+			if(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
+			contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
+			}
 		}
 		return contractAmount;
 	}
-
+	// End - Fixing - #29589 
+  
 	/**
 	 * The method used to retrieve the new contract period
 	 * with addition of old contract period and extended period.
