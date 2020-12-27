@@ -9889,9 +9889,14 @@ public class SpecificationBackingBean extends
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
-
+			//danial #8979 17/12/2020
 			if (member.getMemberRole().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)||
+                member.getMemberRole().getParameterCode()
+                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)||
+                member.getMemberRole().getParameterCode()
+                        .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)
+                    ) {
 				this.getManagedBean().setReadOnly(false);
 
 			} else {
