@@ -221,10 +221,6 @@ public class PmReportsBackingBean extends
 			constructPm012Map(map);
 			break;
 			//#28833 shafie  end
-		//shafie - #29486 -start
-		case PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL:
-			constructPm013Map(map);
-			break;
 		//shafie - #29486 - end
 		default:
 			throw new EpException("Report not found.");
