@@ -1698,6 +1698,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String previousApprovalTabName;
 	//#25077 - End
 
+	// #15391 - start
+	private boolean isChecklist;
+	private boolean isGenInfo;
+
+	// #15391 - end
 	public QTDetailManagedBean() {
 		log.info("inside ");
 
@@ -10564,7 +10569,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		
 		//#25692 End
 		
-	
+		public boolean isChecklist() {
+			return isChecklist;
+		}
+
+		public void setChecklist(boolean isChecklist) {
+			this.isChecklist = isChecklist;
+		}
+
+		public boolean isGenInfo() {
+			return isGenInfo;
+		}
+
+		public void setGenInfo(boolean isGenInfo) {
+			this.isGenInfo = isGenInfo;
+		}
+		
 		public Long getCurrentCMTStatus() {
 			return currentCMTStatus;
 		}

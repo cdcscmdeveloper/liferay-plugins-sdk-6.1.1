@@ -121,7 +121,6 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -14950,7 +14949,7 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getSpecMaintenanceScreen()
 				.equals(getSpecMaintenance())) {
 			if (!this.getManagedBean().isReadOnly()) {
-				this.getManagedBean().setSpecNewable(false);
+				this.getManagedBean().setSpecNewable(true); //#15391
 				this.getManagedBean().setUpdateSpec(true);
 			} else {
 				this.getManagedBean().setSpecNewable(false);

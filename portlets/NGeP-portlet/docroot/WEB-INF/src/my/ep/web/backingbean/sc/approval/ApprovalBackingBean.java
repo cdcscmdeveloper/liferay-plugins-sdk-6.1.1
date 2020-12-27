@@ -2309,7 +2309,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
 					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
 						 this.getManagedBean().setSpecUpdateInProgress(true);
-						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish", null)));
+						 //FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish", null)));
+						 //Start - 15391
+						 RequestContext.getCurrentInstance().execute("specCommAlert.show()");
+						 //End - 15391
 						 inProgress = true;
 						 break;
 					 }

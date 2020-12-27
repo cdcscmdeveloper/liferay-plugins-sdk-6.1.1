@@ -313,13 +313,13 @@
 		<div align="right">
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
-				rendered="#{!isReadOnlyOrSpecMain}"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				process="@this" partialSubmit="true"
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.retriveFinancialStandardCheckList}"
 				update="@([id$=financialChecklistPopup])" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" styleClass="BtnSpacing"
-				rendered="#{!isReadOnlyOrSpecMain}"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.addFinancialCheckList}"
 				update="@all,financeProposaltwo" />
@@ -330,7 +330,7 @@
 				process="@this" partialSubmit="true"
 				oncomplete="financialCheckListDeletePopUp.show();"
 				update="@([id$=#{financialCheckListDeleteId}])"
-				rendered="#{!isReadOnlyOrSpecMain}">
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.finStandaraChecklist}"
 					value="#{true}" />
