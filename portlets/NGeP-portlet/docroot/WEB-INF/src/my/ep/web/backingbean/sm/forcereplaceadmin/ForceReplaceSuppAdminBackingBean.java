@@ -189,8 +189,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_BASIC) && 
 					getManagedBean().getSmSupplier() != null && 
-					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null && 
-					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId()) && 
+					(checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null || 
+					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())) && 
 					getManagedBean().getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 				log.info("BASIC ACCOUNT <<<<<<<<<<<<");
 				personnelBypassValidation();
@@ -1368,8 +1368,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				&& 
 				(
 					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null
-					&& 
-					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
+					|| 
+					getManagedBean().getOldAdmin().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ
 				)
 			)) {
 				getManagedBean().setBypassFlag1(1);
