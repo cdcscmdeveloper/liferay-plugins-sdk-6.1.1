@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -70,6 +71,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
@@ -421,6 +423,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractNGovtSignDate(scLoa);
 			updateContractDetails(scLoa);
 			validateContractDetails(scLoa);
+			validateContractAdmin(scLoa);  // #26474 validate contract admin
 
 			log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
@@ -436,6 +439,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			reqDTO.setScLoa(scLoa);
+			
+			//#26474 - start
+			if (getManagedBean().getContractSignerUser() != null) {
+				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
+			
+				String designation = getManagedBean().getContractSignerUser().getDesignation();
+				
+				reqDTO.getScLoa().setLoaSignerDesig(designation);
+			}
+			
+			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			
+			if (this.getManagedBean().getSelectedPtj() != null) {
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
+			//#26474 - end
+			
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -1421,6 +1441,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		scLoa.setIssueDate(scLoa.getContractEffDate());
+		
+		// #26474 - start
+		scLoa.setContractAdmin(null);
+		// #26474 - end
 
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
@@ -2136,6 +2160,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getApprovalUsers();
 		prepareSignerInfo();
 		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		/* ENHANCEMENT 26474 START */
+		this.getManagedBean().setSelectedPtj(pmOrgProfile);
+		/* ENHANCEMENT 26474 END */
+		
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null, redirectUrl);
@@ -4443,7 +4472,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// contract Signer info
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
+		} else { //#26474 - start		
+			getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+			getManagedBean().getScLoa().setLoaSignerDesig(scLoa.getContractSigner().getDesignation());
 		}
+		
+		if (this.getManagedBean().getSelectedPtj() == null) {
+			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+			this.getManagedBean().setSelectedPtj(pmOrgProfile);
+		}
+		//#26474 - end
 		
 		// Actual Total Intended Price (RM)
 		if (scLoa.getEstimatedPrice() != null) {
@@ -4678,7 +4716,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-			} 
+			}
+			else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+				//Enhancement #21694 START 
+				if(this.getManagedBean().getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)){
+					//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+					updateReviseBPMTaskAction(outcome);
+				}else{
+					//IF REVISE BUT NOT REVISE DOCUMENT STAGE
+					updateBpmTaskAction(outcome);
+				}
+				//Enhancement #21694 END
+			}
 			else {
 				updateBpmTaskAction(outcome);
 			}
@@ -4807,6 +4856,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 
+			//#26474 -start-
+			ScQt scQt = this.getManagedBean().getScQt();
+			reqDTO.setScQt(scQt);
+			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+//			if (this.getManagedBean().getSelectedPtj() != null){
+//				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+//			}
+			//#26474 -end-
+			
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -6479,8 +6537,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			if (null != scLoa.getContractSigner() && scLoa.getContractSigner().getUserId() != null) {
-				scLoa.setLoaSignerDesig(null);
-				scLoa.setContractSigner(null);
+//				#26474 -start-
+//				scLoa.setLoaSignerDesig(null);
+//				scLoa.setContractSigner(null);
+//				#26474 -end-
 				
 				prepareSignerInfo();
 				
@@ -6756,7 +6816,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.getOrgProfileId());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			getManagedBean().setContractSignerList(userResDTO.getUserList());
-			scLoa.setContractSigner(new PmUser());
+			
+//			#26474 -start-
+//			scLoa.setContractSigner(new PmUser());
+//			#26474 -end-
 		}
 	}
 	
@@ -6921,8 +6984,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void setOverallCtAmount(BigDecimal loaAmount) {
 		BigDecimal contractOverAllAmt = BigDecimal.ZERO;
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		scLoa.setContractSigner(new PmUser());
-		scLoa.setLoaSignerDesig(null);
+
+		// #26474 - Start.
+//		scLoa.setContractSigner(new PmUser());
+		//scLoa.setLoaSignerDesig(null);
+        // #26474 - End.
 		
 		if (loaAmount != null) {
 			contractOverAllAmt   = overallCtAmountWithSST(loaAmount, scLoa.getSstAmt());
@@ -8296,6 +8362,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
+		
+        //#26474 - start.
+		getManagedBean().setContractSignerUser(contractSignerUser);
+        //#26474 - end.
 
 	}
 	private boolean isFulfillmentTypeOneOffOrAsAndWhen(PmParameter fulfillmentType) {
@@ -8316,21 +8386,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		Locale locale = new FacesScopes().getUserLocale();
-
-		if (StringUtils.isBlank(
-				scLoa.getContractAdmin().getUserName())) {
-			throw new EpException(MessageConst.ERROR_760400,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}
 		//Redmine Bug #21137
 		if(scLoa.getContractDuration() != null && (scLoa.getContractDuration().compareTo(new BigDecimal(1)) < 0)) {
 			throw new EpException(MessageConst.ERROR_760473);
 		} else if (scLoa.getContractDuration() != null && (scLoa.getContractDuration().doubleValue() % 1 != 0)){
 			throw new EpException(MessageConst.ERROR_760472, new String[] {scLoa.getContractDuration().toString()});
 		}
+	}	
+
+	// #26474 - start
+	private void validateContractAdmin(ScLoa scLoa) {
+		List<PmUser> pmUserList = getUsersByAgency();
+		
+		if (CollectionUtils.isEmpty(pmUserList)) {
+			throw new EpException(MessageConst.ERROR_760512);
+		}
 	}
+	// #26474 - end
 	
 	/**
 	 * Get User Organization Profile by user id.

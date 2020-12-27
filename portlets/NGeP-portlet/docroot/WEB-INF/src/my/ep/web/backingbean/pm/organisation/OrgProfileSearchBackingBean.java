@@ -1,11 +1,13 @@
 package my.ep.web.backingbean.pm.organisation;
 
 import java.util.List;
+
 import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -29,6 +31,7 @@ import my.ep.web.managedbean.pm.organisation.OrgProfileSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -73,7 +76,19 @@ public class OrgProfileSearchBackingBean extends
 
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
-		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+		
+		//#26475 - add Approver value
+		//#26474 - add Publication Approver & all FC Secretaries value -start-	
+		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.APPROVER.value())	
+				|| getFacesScopes().hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+			//#26474 -end-
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
@@ -169,8 +184,33 @@ public class OrgProfileSearchBackingBean extends
 	}
 	
 	public void resetOrgProfiles(){
+		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
+		
 		this.renewSesionObject();
+		
 		getOrgProfileDataModel().resetData();
+		
+		//#26475 - start
+		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
+
+		//#26474 -start-:::
+		log.info("::: resetOrgProfiles() 001 portletName: "+ portletName);
+		
+		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains("loa") || 
+				 portletName.toLowerCase().contains("createmanualsourcing") || 
+				 portletName.toLowerCase().contains("reviewmanualsourcing"))) {
+			 
+			log.info("::: resetOrgProfiles() portletName: "+ portletName);
+			//#26474 -end-:::
+			
+			this.getManagedBean().setMinistryProfileId(ministryId);
+			if (ministryId != null){
+				this.getManagedBean().setDisabledMinistry(true);
+			}else{
+				this.getManagedBean().setDisabledMinistry(false);
+			}
+		}
+		//#26475 - end
 	}
 
 	public IPagingDataModel<PmOrgProfile> getOrgProfileDataModel() {
@@ -197,7 +237,6 @@ public class OrgProfileSearchBackingBean extends
 					FacesContext.getCurrentInstance().getELContext(), 
 					new Object[]{getManagedBean().getSelectedPtj()});
 			}
-			
 			
 			RequestContext.getCurrentInstance().execute("ptjPopup.hide();");
 		}
