@@ -38,28 +38,22 @@
 					<tr>
 						<td></td>
 						<td>
-							<!-- Bug #29446 - start -->
 							<h:outputText value="#{remark.remark}"
-							style="display: inline-block; word-break: break-word; white-space:normal"/>
-							<!-- Bug #29446 - end -->
+							style="display: inline-block; width:220px;word-wrap: break-word;"/>
 						</td>
 					</tr>
 				</table>
 			</p:dataGrid>
 		</td>
 		<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
-				<!-- Bug #29446 - start -->
 			<p:dataGrid value="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq 0 ? ctBackingBean.managedBean.attachmentList : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.agencyIndex ? ctBackingBean.managedBean.contractVer.agencyAttachements : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex ? ctBackingBean.managedBean.contractVer.itemAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex ? ctBackingBean.managedBean.contractVer.deductionAttachments : 
 				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex ? ctBackingBean.managedBean.contractVer.scheduleAttachments : 
-				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.attachment : null)))))}"
+				(contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring ? ctBackingBean.managedBean.contractVer.ctContract.ctFactoring.attachement : null)))))}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
-				rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
-					contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
 				rowIndexVar="attachFileIndex" columns="1" style="width:100%">
-				<!-- Bug #29446 - end -->
 				<table>
 					<tr>
 						<td rowspan="2" style="vertical-align: top;" align="left">
