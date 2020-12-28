@@ -44,7 +44,10 @@ public class PmReportConst implements Serializable {
 	public static final String PARAM_PM_ORG_TYPE_PTJ = "P5";
 	//shafie - #28833 -end
 	//shafie - #29486 - start
-	public static final String PARAM_PM_USER_STATUS = "PUSERSTATUS"; 
+	public static final String PARAM_PM_MINISTRY = "PMINISTRY";
+	public static final String PARAM_PM_KUMPULAN_PTJ = "PKPTJ";
+	public static final String PARAM_PM_PTJ = "PPTJ"; 
+	public static final String PARAM_PM_USER_STATUS = "PSTATUS"; 
 	public static final String PARAM_PM_MONTH = "PMONTH"; 
 	//shafie - #29486 - end
 	
