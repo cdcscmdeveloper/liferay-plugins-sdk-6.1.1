@@ -78,10 +78,10 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -1115,6 +1116,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this
 						.getManagedBean().getApprovalType())) {
+					if(this.getManagedBean().getQt().isSampleReq()){//#29762-start
+					checkSampleRequiredChecking(this.getManagedBean().getQt());
+					}//#29762-End
 					detailSO.validatePublicationScheduleDetails(reqDTO);
 					// detailSO.validateScheduleDetails(reqDTO);
 				} else if(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this
@@ -2569,6 +2573,48 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		//#25077 - End
+		
+	//#	29762-start
+		private void checkSampleRequiredChecking(ScQt scQt){
+			log.info("===========ApprovalBackingbeancheckSampleRequiredChecking========");
+			// Setting Sample Submission to qtDetails.
+			List<ScQtSampleSubmission> sampleSubmissionList = null;
+			if (scQt.isZonal()) {
+				sampleSubmissionList = getManagedBean()
+						.getScQtSampleSubmissionList();
+				if (sampleSubmissionList != null
+						&& !sampleSubmissionList.isEmpty()) {
+					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
+						ScAddress scAddress = scQtSampleSubmission.getScAddress();
+
+						if (null != scAddress) {
+							if (scAddress.getPmDivision() != null
+									&& scAddress.getPmDivision()
+											.getDivisionId() == null) {
+								scAddress.setPmDivision(null);
+							}
+							//scAddress.setPmCountry(retrieveCountry());
+						}
+						//scQtSampleSubmission.setScQt(getManagedBean().getQt());
+					}
+				}
+			} else {
+				sampleSubmissionList = new ArrayList<ScQtSampleSubmission>();
+				if (null != this.getManagedBean().getScQtSampleSubmission()) {
+					ScAddress scAddress = this.getManagedBean()
+							.getScQtSampleSubmission().getScAddress();
+
+					if (scAddress.getPmDivision() != null
+							&& scAddress.getPmDivision().getDivisionId() == null) {
+						scAddress.setPmDivision(null);
+					}
+					//scAddress.setPmCountry(retrieveCountry());
+					sampleSubmissionList.add(this.getManagedBean()
+							.getScQtSampleSubmission());
+				}
+			}
+		}
+		//#	29762-start
 }
 
 // ***25692

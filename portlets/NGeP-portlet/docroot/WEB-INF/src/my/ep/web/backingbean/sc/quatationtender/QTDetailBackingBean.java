@@ -5482,8 +5482,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
 		}
 		if(committeTabBean!=null){
-			List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
-			this.getManagedBean().setMemberHistoryList(historyList);
+			if(null!=committeTabBean.getScQtCommittee()){//#29762-start
+				List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
+				this.getManagedBean().setMemberHistoryList(historyList);
+				}//#29762-End
 		}
 	}
 
