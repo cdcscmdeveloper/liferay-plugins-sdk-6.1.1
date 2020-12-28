@@ -12,8 +12,8 @@
 	<ui:param name="loa" value="#{lOADetailBackingBean.managedBean.scLoa}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
 
-		<!-- #29006 - start --><!-- #29007 Added rendered for DP Vinod -->
-		<p:outputPanel id="supplierUpdateInstructionPanel" rendered="#{!isDocTypeQuotation}"
+		<!-- #29006 - start -->
+		<p:outputPanel id="supplierUpdateInstructionPanel"
 			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag || isDocTypeQuotation}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
@@ -23,7 +23,8 @@
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
 			<p:spacer height="10" />
-			<p:panel id="supplierSearchCriteria"
+			<!-- #29007 Added rendered for QT Vinod -->
+			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
 				header="#{lbl['lbl.sc.notice.board.searchCriteria']}" toggleable="true">
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
