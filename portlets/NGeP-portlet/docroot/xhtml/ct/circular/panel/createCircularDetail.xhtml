@@ -44,52 +44,59 @@
 				      <h:outputText value="#{lbl['lbl.ct.days']}" />
 			      </h:panelGroup>	
 			      
-			       <p:outputLabel value="#{lbl['lbl.ct.start.date']}" styleClass="required"/>
-			   	       <h:panelGrid columns="2">
-			   	          <p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
-			   			      navigator="true" size="12" showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
-			       		      disabled="#{panelBackingBean.managedBean.viewContract}" 
-			       		      pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-			       	            <p:ajax event="dateSelect" process="@this" update=":form:popupButtonCal1" />
-			               </p:calendar> 
-			               <p:message for="popupButtonCal" display="icon" />
-			            </h:panelGrid> 
+		       <p:outputLabel value="#{lbl['lbl.ct.start.date']}" styleClass="required"/>
+		   	       <h:panelGrid columns="2">
+		   	          <p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
+		   			      navigator="true" size="12" showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
+		       		      disabled="#{panelBackingBean.managedBean.viewContract}" 
+		       		      pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+		       	            <p:ajax event="dateSelect" process="@this" update=":form:popupButtonCal1" />
+		               </p:calendar> 
+		               <p:message for="popupButtonCal" display="icon" />
+		            </h:panelGrid> 
 				  
                        <h:outputLabel value="#{lbl['lbl.ct.end.date']}"  styleClass="required"/>
-	                   <h:panelGrid columns="2">
-		   		                 <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
-		   		            	     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-		         	                 mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="12" navigator="true"
-		         	                 showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
-		         	                 disabled="#{panelBackingBean.managedBean.viewContract}">
-		         	                  <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
-                                  <f:validator validatorId="primeDateRangeValidator" />
-		         	           </p:calendar>
-		         	          <p:message for="popupButtonCal1" display="icon" />
-		         	       </h:panelGrid>	
+                  <h:panelGrid columns="2">
+   		                 <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
+   		            	     pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+         	                 mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="12" navigator="true"
+         	                 showOn="button" required="false" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
+         	                 disabled="#{panelBackingBean.managedBean.viewContract}">
+         	                  <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
+                                <f:validator validatorId="primeDateRangeValidator" />
+         	           </p:calendar>
+         	          <p:message for="popupButtonCal1" display="icon" />
+         	       </h:panelGrid>	
 
-				          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required"
-				             rendered="#{(panelBackingBean.managedBean.circularVer.circularFilePath == null and !panelBackingBean.managedBean.viewContract) 
-				  or (panelBackingBean.managedBean.circularVer.circularFilePath != null and !panelBackingBean.managedBean.viewContract)
-				  or (panelBackingBean.managedBean.circularVer.circularFilePath != null and panelBackingBean.managedBean.viewContract)}" />
-		         <h:panelGroup id="uploadCircularPg">
-				   	            <p:commandButton icon="ui-icon-upload"
-				   	                   rendered="#{panelBackingBean.managedBean.circularVer.circularFileName == null
-				   	                   and !panelBackingBean.managedBean.viewContract}"
-						               update="uploadCircularPg, uploadCircularDlg" action="#{panelBackingBean.setPanelDetailsValue()}" 
-						               disabled="#{panelBackingBean.managedBean.viewContract}"/>	
-					            <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
-					                 rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null}"
-						               styleClass="blue_font truncate"  action="#{panelBackingBean.commonDownload(
-						               		panelBackingBean.managedBean.circularVer.circularFilePath, panelBackingBean.managedBean.circularVer.circularFileName)}" />
-						         <p:commandLink  onclick="deleteAttachFile.show();"
-						              rendered="#{panelBackingBean.managedBean.circularVer.circularFileName != null
-						              and !panelBackingBean.managedBean.viewContract}">
-			   				          <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	                 </p:commandLink>				
-			  	            </h:panelGroup>
+		          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
+			         <h:panelGroup id="uploadCircularPg">
+		 			<h:panelGrid columns="5">
+				  		<p:commandButton icon="ui-icon-upload" update="uploadCircularPg, uploadCircularDlg"
+							action="#{panelBackingBean.setPanelDetailsValue()}" 
+							rendered="#{!panelBackingBean.managedBean.viewContract}"/>	
+					 		
+					 			 <p:dataGrid id="copyAgreement" value="#{panelBackingBean.retrieveAttachmentList()}"
+									var="attachAggreement" rowIndexVar="attachAggreementIndex" columns="1" style="width:100%"
+									emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+									<table>
+										<tr>
+											<td></td>
+											<td>
+											 	<h:commandLink action="#{panelBackingBean.downloadFile(attachAggreement)}" 
+											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
+										     	<p:commandLink action="#{panelBackingBean.setAttachmentIndex(attachAggreementIndex)}"
+								   	                 onclick="deleteAttachFile.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
+								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+								   			   	 </p:commandLink>
+								   			 </td>
+										</tr>
+									 </table>
+								</p:dataGrid>
+				 	           <p:spacer width="1" />
+			 	          </h:panelGrid>		
+			  		</h:panelGroup>
 			 </h:panelGrid>
-		<h:panelGrid  style="width:400px; margin-left:5px" columns="2" id="panelleftsideid" columnClasses="columnWidth170">
+			 <h:panelGrid  style="width:400px; margin-left:5px" columns="2" id="panelleftsideid" columnClasses="columnWidth170">
 		              <p:outputLabel value="#{lbl['lbl.ct.panel.pm']}" styleClass="required"/>
 			        <h:panelGrid columns="3">
 			            <p:selectBooleanCheckbox  disabled="#{panelBackingBean.managedBean.viewContract}"
@@ -127,6 +134,6 @@
 		            	<p:spacer width="5"/>
 			  			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.circular.pid']}" />
 			  		  </h:panelGrid>
-		</h:panelGrid>
-	</h:panelGrid>
-	 </ui:composition>
+			</h:panelGrid>
+	 </h:panelGrid>
+</ui:composition>
