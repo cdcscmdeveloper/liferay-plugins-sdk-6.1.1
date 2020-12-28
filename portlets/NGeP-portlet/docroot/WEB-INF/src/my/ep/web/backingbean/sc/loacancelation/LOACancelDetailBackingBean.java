@@ -1054,6 +1054,14 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 			if (resDTO.isSuccessful()) {
 				log.info("-----add log before------ ");
+				try
+				{
+				    Thread.sleep(5000);
+				}
+				catch(InterruptedException ex)
+				{
+				    Thread.currentThread().interrupt();
+				}
 				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);
 				log.info("-----add log after------ ");
 				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
