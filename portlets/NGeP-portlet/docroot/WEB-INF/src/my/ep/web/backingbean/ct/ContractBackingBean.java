@@ -263,20 +263,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ctWorkflowStatusMatch = true;
 		}
 
-		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			PmUser pmUser = facesScopes.getUserSessionBean();
-			remark.setCreatedBy(pmUser.getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(pmUser);
-			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().getRemarkList().add(0, remark);
-		} else {
+		//Bug #29446 - start
+		log.info(!getManagedBean().isViewContract());
+		if(!getManagedBean().isViewContract()){
+			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				PmUser pmUser = facesScopes.getUserSessionBean();
+				remark.setCreatedBy(pmUser.getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(pmUser);
+				getManagedBean().setRemarkList(remarkList);
+				getManagedBean().getRemarkList().add(0, remark);
+			} else {
+				getManagedBean().setRemarkList(remarkList);
+			}
+		} else if (getManagedBean().isViewContract()){
 			getManagedBean().setRemarkList(remarkList);
 		}
 		getManagedBean().setAttachmentList(attachmentList);
+		//Bug #29446 - end
 	}	
 	
 	
