@@ -75,8 +75,6 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -162,7 +160,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
@@ -183,16 +180,13 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jasper.compiler.SmapUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
-import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
-// TODO: Auto-generated Javadoc
 @ManagedBean(name = "backingBean")
 @RequestScoped
 public class SmApplicationBackingBean extends
@@ -9523,14 +9517,24 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmSupplier(), getManagedBean()
 							.getSupplierRemarks(), getManagedBean()
 							.getApplnApprovalRemarks(), reqDTO);
-
-			if (StringUtils.isNotBlank(getManagedBean()
+			
+			// #29664 - start
+			/*if (StringUtils.isNotBlank(getManagedBean()
 					.getApplnApprovalRemarks())) {
 				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
 						.getSmAppl().getApplId(),
 						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
 						getManagedBean().getApplnApprovalRemarks());
+			}*/
+			if (StringUtils.isNotBlank(getManagedBean()
+					.getApplnApprovalRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
+						.getSmAppl().getApplId(),
+						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
+						getManagedBean().getApplnApprovalRemarks(), getManagedBean().getRoleCode());
 			}
+			// #29664 - end
+			
 			if (getManagedBean().isOverLappedCategoryExists()
 					&& StringUtils.isNotBlank(getManagedBean()
 							.getApplnOverLapRemarks())) {

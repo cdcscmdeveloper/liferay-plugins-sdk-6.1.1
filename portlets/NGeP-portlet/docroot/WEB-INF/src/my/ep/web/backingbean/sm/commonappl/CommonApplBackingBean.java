@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
-import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
@@ -38,7 +37,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
-import my.ep.rest.sm.DowngradeExpMofPersonnelRest;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -68,6 +67,10 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class CommonApplBackingBean extends
 		BaseBackingBean<CommonApplManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(CommonApplBackingBean.class);
 	//SM CHANGES 11012020
 	public boolean isPoSdoUser = false;
@@ -475,6 +478,9 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
@@ -482,6 +488,9 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
+					// #29664 - end
 					if (appl.getApplType().equals(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 						setSiteVisitView(smApplBB.getManagedBean(), appl);

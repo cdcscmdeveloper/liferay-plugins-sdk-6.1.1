@@ -576,6 +576,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#29315
 	private boolean flagMandatoryEpfNo;
 	
+	// #29664 - start
+	private String roleCode;
+	// #29664 - end
+	
 	//#28807 - START
 	private SmApplDocFile smApplDocFile;
 	//#28807 - END
@@ -4315,6 +4319,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
 		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
 	}
+	
+	// #29664 - start
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+	// #29664 - end
 
 	//#28807 - Start
 	public SmApplDocFile getSmApplDocFile() {
