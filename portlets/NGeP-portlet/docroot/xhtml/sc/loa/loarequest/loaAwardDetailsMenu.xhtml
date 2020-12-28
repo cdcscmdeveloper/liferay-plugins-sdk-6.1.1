@@ -14,7 +14,7 @@
 
 		<!-- #29006 - start -->
 		<p:outputPanel id="supplierUpdateInstructionPanel"
-			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag}">
+			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag || isDocTypeQuotation}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
 			<p:graphicImage value="/css/images/design/ico-viewnedit.png"
@@ -47,6 +47,30 @@
 						update="supplierUpdateInstructionPanel" />
 				</div>
 			</p:panel>
+			<!-- #29007 Start Vinod -->
+			<p:panel id="supplierSearchCriteriaQT" rendered="#{isDocTypeQuotation}"
+				header="#{lbl['lbl.sc.qt.sampel.technical.panel.search.criteria']}" toggleable="true">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="10%"><h:outputLabel
+								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
+						<td width="90%"><p:inputText id="itemNameSearchInputQT"
+								value="#{lOADetailBackingBean.itemNameSearchCriteria}"
+								style="width:310px;">
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText></td>
+					</tr>
+				</table>
+				<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="itemtbl"
+								 action="#{lOADetailBackingBean.searchSupplierItemByName}"
+								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+								 action="#{lOADetailBackingBean.onResetSupplierCriteria()}"
+								 update="supplierUpdateInstructionPanel" />
+				</div>
+			</p:panel>
+			<!-- #29007 End Vinod -->
 		</p:outputPanel>
 		<br />
 		<!-- #29006 - end -->
@@ -89,7 +113,7 @@
 				<p:spacer width="10" />
 
 				<c:if
-					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag}">
+					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}"><!-- #29007 Added isDocTypeQuotation Vinod -->
 					<p:commandLink id="specAndSupplierOfferLink" process="@this"
 						update="@([id$=specAndSupplierOfferDlg])"
 						action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
@@ -116,6 +140,22 @@
 					<br />
 				</c:if>
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
+				<!-- #29007 Start Vinod -->
+				<p:spacer width="5" />
+				<c:if
+					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
+					<p:commandLink id="itemName"
+						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem)}"
+						oncomplete="loaSuppliersProposalSpecificationUpdatePopup.show();"
+						partialSubmit="true" process="@this" update="@([id$=loaSuppliersProposalSpecificationUpdatePopup])">
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+					</p:commandLink>
+					<p:tooltip id="toolTipSpecAndSupplierOffer"
+						for="itemName"
+						value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" />
+
+				</c:if>
+				<!-- #29007 End Vinod -->
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
@@ -197,6 +237,7 @@
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 	</c:if>
+	<ui:include src="loaSuppliersProposalSpecificationUpdatePopup.xhtml" /><!-- #29007 Added Vinod -->
 
 	<!-- #29006 - start -->
 	<p:dialog id="specAndSupplierOfferDlg"
