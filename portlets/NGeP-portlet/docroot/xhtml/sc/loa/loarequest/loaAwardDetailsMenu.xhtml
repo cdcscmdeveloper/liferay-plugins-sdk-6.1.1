@@ -12,8 +12,8 @@
 	<ui:param name="loa" value="#{lOADetailBackingBean.managedBean.scLoa}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
 
-		<!-- #29006 - start -->
-		<p:outputPanel id="supplierUpdateInstructionPanel"
+		<!-- #29006 - start --><!-- #29007 Added rendered for DP Vinod -->
+		<p:outputPanel id="supplierUpdateInstructionPanel" rendered="#{!isDocTypeQuotation}"
 			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag || isDocTypeQuotation}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
