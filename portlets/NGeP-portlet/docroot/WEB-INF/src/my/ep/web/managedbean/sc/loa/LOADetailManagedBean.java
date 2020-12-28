@@ -32,6 +32,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -316,6 +317,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		
 	//#11134
 	private List<ScLoaRemark> supplierRemarks;
+	/*#29007 Start Vinod*/
+	private boolean supPropSpecUpdate = false;
+	private boolean specificationAndSupplierDialogFlagQT = false;
+	private String itemNamePopup;
+	private String specKeyword;
+	private ScLoiLoaItem scLoiLoaItem;
+	private List<TplSpecAnswer> tplSpecAnswerList;
+	/*#29007 End Vinod*/
     /**
      * Gets the spki backing bean.
      *
@@ -1766,6 +1775,44 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
 		this.supplierRemarks = supplierRemarks;
 	}
+	/*#29007 Start Vinod*/
+	public List<TplSpecAnswer> getTplSpecAnswerList() {
+		return tplSpecAnswerList;
+	}
+	public void setTplSpecAnswerList(List<TplSpecAnswer> tplSpecAnswerList) {
+		this.tplSpecAnswerList = tplSpecAnswerList;
+	}
+	public String getItemNamePopup() {
+		return itemNamePopup;
+	}
+	public void setItemNamePopup(String itemNamePopup) {
+		this.itemNamePopup = itemNamePopup;
+	}
+	public String getSpecKeyword() {
+		return specKeyword;
+	}
+	public void setSpecKeyword(String specKeyword) {
+		this.specKeyword = specKeyword;
+	}
+	public ScLoiLoaItem getScLoiLoaItem() {
+		return scLoiLoaItem;
+	}
+	public void setScLoiLoaItem(ScLoiLoaItem scLoiLoaItem) {
+		this.scLoiLoaItem = scLoiLoaItem;
+	}
+	public boolean isSupPropSpecUpdate() {
+		return supPropSpecUpdate;
+	}
+	public void setSupPropSpecUpdate(boolean supPropSpecUpdate) {
+		this.supPropSpecUpdate = supPropSpecUpdate;
+	}
+	public boolean isSpecificationAndSupplierDialogFlagQT() {
+		return specificationAndSupplierDialogFlagQT;
+	}
+	public void setSpecificationAndSupplierDialogFlagQT(boolean specificationAndSupplierDialogFlagQT) {
+		this.specificationAndSupplierDialogFlagQT = specificationAndSupplierDialogFlagQT;
+	}
+	/*#29007 End Vinod*/
 }
 
 

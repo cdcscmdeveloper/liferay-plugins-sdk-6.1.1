@@ -403,6 +403,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	// #11134
 	private List<ScLoiRemark> supplierRemarks;
 	
+	private String loiSupplierProposalspec;//#29007 Added by Vinod
 	/*
 	 * Enhancement #21694
 	 */
@@ -2333,7 +2334,13 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSupplierRemarks(List<ScLoiRemark> supplierRemarks) {
 		this.supplierRemarks = supplierRemarks;
 	}
-	
-	
+	//#29007 Start Vinod
+	public String getLoiSupplierProposalspec() {
+		return loiSupplierProposalspec;
+	}
+	public void setLoiSupplierProposalspec(String loiSupplierProposalspec) {
+		this.loiSupplierProposalspec = loiSupplierProposalspec;
+	}
+	//#29007 End Vinod
 	
 }
