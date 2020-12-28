@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import my.ep.factory.EpLogger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -263,19 +265,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ctWorkflowStatusMatch = true;
 		}
 
-		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			PmUser pmUser = facesScopes.getUserSessionBean();
-			remark.setCreatedBy(pmUser.getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(pmUser);
-			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().getRemarkList().add(0, remark);
+		//#29446 - start
+		if(!getManagedBean().isViewContract()){
+			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				PmUser pmUser = facesScopes.getUserSessionBean();
+				remark.setCreatedBy(pmUser.getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(pmUser);
+				getManagedBean().setRemarkList(remarkList);
+				getManagedBean().getRemarkList().add(0, remark);
+			} else {
+				getManagedBean().setRemarkList(remarkList);
+			}
 		} else {
 			getManagedBean().setRemarkList(remarkList);
 		}
+		//#29446 - end
 		getManagedBean().setAttachmentList(attachmentList);
 	}	
 	
@@ -444,8 +452,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getCtAttachmentLatest().setFileName(null);
 		}
 		RequestContext.getCurrentInstance().execute("deleteWaiverAttachDlg.hide()");
-		
 	}
+	
+	//Enhancement 13847 - start
+	public void deleteWaiverHistoryAttachment() throws EpException {
+		int index = 0;
+		for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+			if(index == getManagedBean().getAttachFileIndex()){
+				ctAttachmentHistory.setFileName(null);
+				ctAttachmentHistory.setFilePath(null);
+			}
+			index++;
+		}
+		RequestContext.getCurrentInstance().execute("deleteHistoryWaiverAttachDlg.hide()");
+	}
+	//Enhancement 13847 - end
 
 	/**
 	 * The method used to delete termination letter attachment from the list.
@@ -2207,6 +2228,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			//getManagedBean().getContractVer().getBondWaiverAttachments().add(attachment);
 			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
 		}
+		//#13847 - start
+		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
+			int index = 0;
+			
+			for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+				if(index == getManagedBean().getAttachFileIndex()){
+					getManagedBean().setCtAttachmentDelete(ctAttachmentHistory);
+					
+					ctAttachmentHistory.setFileName(item.getFileName());
+					ctAttachmentHistory.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+					ctAttachmentHistory.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+					ctAttachmentHistory.setCreatedUser(facesScopes.getUserSessionBean());
+					ctAttachmentHistory.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					
+					getManagedBean().setCtAttachmentLatest(ctAttachmentHistory);
+				}
+				index++;
+			}
+			RequestContext.getCurrentInstance().execute("uploadHistoryWaiverDlg.hide()");
+		}
+		//#13847 - end
 	}
 	//LOG : 13847, by Fahmi 22032019
 		/**
@@ -2247,27 +2289,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @see    
 	 */
 	public void setBondWaiverToTable() throws Exception {
+		Date bondStartDate = null, bondEndDate = null, entryBondStartDate = null, entryBondEndDate = null;
+		boolean sameStartLessEnd = false, overStartSameEnd = false, lessStartLessEndMoreStart = false, lessStartMoreEnd = false, 
+				moreStartLessEndMoreEnd = false, lessStartSameEnd = false, sameStartMoreEnd = false;
+				
 		if(getManagedBean().getCtContractAmount().isBondWaived()){
 			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate() == null) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.start.date", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				//#Enhancement 13847 - start
+				throw new EpException(MessageConst.ERROR_750062);
+				//#Enhancement 13847 - end
 			}
 			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate() == null) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.end.date", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				//#Enhancement 13847 - start
+				throw new EpException(MessageConst.ERROR_750063);
+				//#Enhancement 13847 - end
 			}
 			if (getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getReferenceNo())) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] {ResourceBundleUtils.getMessage("lbl.ct.pb.waiver.reference.no", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				//#Enhancement 13847 - start
+				throw new EpException(MessageConst.ERROR_750064);
+				//#Enhancement 13847 - end
 			}
 			if (getManagedBean().getCtAttachmentLatest().getFileName() == null || "".equalsIgnoreCase(getManagedBean().getCtAttachmentLatest().getFileName())) {
 				/*throw new EpException(MessageConst.ERROR_100022,
 						new String[] {ResourceBundleUtils.getMessage("lbl.ct.bond.waiver.deferment", 
 								2, new FacesScopes().getUserLocale())});*/
-				throw new EpException(MessageConst.ERROR_740060,new String[]{SmCommonUtil.getMessage("lbl.ct.bond.waiver.deferment",null), ""});
+				//#Enhancement 13847 - start
+				throw new EpException(MessageConst.ERROR_750065);
+				//#Enhancement 13847 - end
 			}
 			
 			/*
@@ -2302,8 +2350,44 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 		
+		//Enhancement 13847 - start
+		for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+			bondStartDate = getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverStartDate();
+			bondEndDate = getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().getWaiverEndDate();
+			entryBondStartDate = ctAttachmentHistory.getCtBondWaiverDetail().getWaiverStartDate();
+			entryBondEndDate = ctAttachmentHistory.getCtBondWaiverDetail().getWaiverEndDate();
+			
+			//for easier reading
+			sameStartLessEnd = bondStartDate.compareTo(entryBondStartDate) == 0 && bondEndDate.compareTo(entryBondEndDate) < 0;
+			overStartSameEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate.compareTo(entryBondEndDate) < 0) &&
+					bondEndDate.compareTo(entryBondEndDate) == 0;
+			lessStartLessEndMoreStart = bondStartDate.compareTo(entryBondStartDate) < 0 &&
+					(bondEndDate.compareTo(entryBondEndDate) < 0 && bondEndDate.compareTo(entryBondStartDate) > 0);
+			lessStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) < 0 && bondEndDate.compareTo(entryBondEndDate) > 0;
+			moreStartLessEndMoreEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate.compareTo(entryBondEndDate) < 0) && 
+					bondEndDate.compareTo(entryBondEndDate) > 0;
+			lessStartSameEnd = bondStartDate.compareTo(entryBondStartDate) < 0 && bondEndDate.compareTo(entryBondEndDate) == 0;
+			sameStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) == 0 && bondEndDate.compareTo(entryBondEndDate) > 0;
+			
+			if(entryBondStartDate.compareTo(bondStartDate) == 0 && entryBondEndDate.compareTo(bondEndDate) == 0){
+				//date same as history entry
+ 				throw new EpException(MessageConst.ERROR_750066);
+			} else if (sameStartLessEnd || overStartSameEnd || lessStartLessEndMoreStart || lessStartMoreEnd || moreStartLessEndMoreEnd ||
+					lessStartSameEnd || sameStartMoreEnd){
+				//date range overlaps with history entry
+ 				throw new EpException(MessageConst.ERROR_750067);
+			}
+		}
 		
+		RequestContext.getCurrentInstance().execute("addPBConfirmDlg.show()");
+
+		//Enhancement 13847 - end
+	}
+	
+	//Enhancement 13847 - start
+	public void saveBondWaiverToTable() throws EpException {
 		FacesScopes facesScopes = new FacesScopes();
+		long noOfDays = 0;
 		
 		//add to tracking list first
 		//reverse list to insert new data at first row
@@ -2311,7 +2395,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		//getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachment()));
 		getManagedBean().getWaiverDetail().add(SerializationUtils.clone(getManagedBean().getCtAttachmentLatest()));
 		Collections.reverse(getManagedBean().getWaiverDetail());
-				
+		
+		
+		for(CtAttachment ctAttachmentHistory : getManagedBean().getWaiverDetail()){
+			noOfDays += findDifference(ctAttachmentHistory.getCtBondWaiverDetail().getWaiverStartDate(), ctAttachmentHistory.getCtBondWaiverDetail().getWaiverEndDate());
+		}
+		
+		if(noOfDays >= 60){
+			getManagedBean().setDisableDeferment(true);
+		} else {
+			getManagedBean().setDisableDeferment(false);
+		}
 				
 		getManagedBean().getCtAttachmentLatest().setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		getManagedBean().getCtAttachmentLatest().setCreatedUser(facesScopes.getUserSessionBean());
@@ -2325,9 +2419,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setBrandNew(true);
 		getManagedBean().getCtAttachmentLatest().getCtBondWaiverDetail().setCtAttachment(new CtAttachment());
-		
-		
 	}
+	
+	public long findDifference(Date start_date, Date end_date){
+		// Calculate time difference 
+		// in milliseconds 
+		long difference_In_Time = end_date.getTime() - start_date.getTime(); 
+		
+		// Calculate time difference in seconds, 
+		// minutes, hours, years, and days 
+		long difference_In_Seconds = TimeUnit.MILLISECONDS.toSeconds(difference_In_Time) % 60;
+		long difference_In_Minutes = TimeUnit.MILLISECONDS.toMinutes(difference_In_Time) % 60;
+		long difference_In_Hours = TimeUnit.MILLISECONDS.toHours(difference_In_Time) % 24;
+		long difference_In_Days = TimeUnit.MILLISECONDS.toDays(difference_In_Time) % 365;
+		long difference_In_Years = TimeUnit.MILLISECONDS.toDays(difference_In_Time) / 365l;
+		
+		// Print the date difference in 
+		// years, in days, in hours, in 
+		// minutes, and in seconds 
+		System.out.print("Difference" + " between two dates is: "); 
+		
+		// Print result 
+		System.out.println(difference_In_Years + " years, " + difference_In_Days + " days, " + difference_In_Hours 
+				+ " hours, " + difference_In_Minutes + " minutes, " + difference_In_Seconds + " seconds");
+		
+		return difference_In_Days;
+	} 
+	//Enhancement 13847 - end
 
 	/**
 	 * The method used to delete the uploaded agency file.
