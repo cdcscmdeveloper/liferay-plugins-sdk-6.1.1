@@ -5065,6 +5065,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						
 						ScCommitteeMemberHistory h = histories.get(0);
 						list = (List<QtCommitteeMemberBean>)(Object)h.deserializeList(h.getCommitteeMembers());
+						CustomUtils.sortQtCommitteeMemberRole(list);
 					}
 				}
 			}catch(Exception e){
