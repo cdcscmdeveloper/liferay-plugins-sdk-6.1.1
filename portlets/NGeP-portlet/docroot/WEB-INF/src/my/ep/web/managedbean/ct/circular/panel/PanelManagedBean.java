@@ -117,6 +117,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private SmMofAccount smMofAccount;
 	private List<CtCircularPidReason> ctCircularPidReasons;
 	
+	private int attachFileIndex;
+	
 	// #3761 - start
 	private Long supplierItemDocId;
 	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
@@ -943,6 +945,21 @@ public class PanelManagedBean extends BaseManagedBean {
 	 */
 	public void setFilterCircularVerList(List<CtCircularVer> filterCircularVerList) {
 		this.filterCircularVerList = filterCircularVerList;
+	}
+	
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
 	}
 
 	// #3761 - start
