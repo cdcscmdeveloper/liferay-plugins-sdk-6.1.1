@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +31,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -42,12 +40,10 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
-import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
@@ -64,7 +60,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -389,26 +384,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								RoleCode.SUPPLIER_TEMP.value())) {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
-					/**
-					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
-					 */
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
-                        RoleCode.MOF_SUPPLIER_USER.value())) {
-					personnel.setFreeSoftCert(false);
-					amountPerPersonnel = SmRuleHelper.getInstance()
-							.getSoftCertFee();
-					amount = amount.add(amountPerPersonnel);
-					/**
-					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
-					 */
-				} else {
-					/**
-					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
-					 */
+				// #29695 - start
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					personnel.setFreeSoftCert(true);
-					/**
-					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
-					 */
+				// #29695 - end
+				} else {
+					personnel.setFreeSoftCert(true);
 				}
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
