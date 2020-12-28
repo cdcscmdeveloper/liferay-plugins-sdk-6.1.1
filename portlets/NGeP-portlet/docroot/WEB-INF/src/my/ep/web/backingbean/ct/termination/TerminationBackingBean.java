@@ -426,7 +426,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 						messageId = MessageConst.INFO_700092;
 					} else { 
-						messageId = MessageConst.INFO_700093; // Central Contract
+						//messageId = MessageConst.INFO_700093; // Central Contract
 					}
 					//#16025 - END
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
