@@ -212,7 +212,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())){
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){ //#28837 - shafie 
 
 			return Boolean.TRUE;
 		}
