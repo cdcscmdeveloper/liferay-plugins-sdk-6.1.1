@@ -1080,8 +1080,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					// 26307 end
 					reportListMap.put(m, new Object[]{
 						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
-						//26307 - add card type
-						row[5].toString(),row[6].toString(),cardType,amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
+						//26307 - add card type & #14203 - uppercase perihal
+						row[5].toString(),row[6].toString().toUpperCase(),cardType,amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
 					});
 				}
 			}
@@ -1408,14 +1408,15 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					// 26307 end
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								//#14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								// 26307 - add card type
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),cardType,
+								// 26307 - add card type & #14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),cardType,
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
@@ -1850,7 +1851,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							//row[7].toString(),//No Rujukan
 							row[7] != null ? row[7].toString() : "",
 							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
+							//#14203 - uppercase perihal
+							row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 							priceAmt ,//Harga
 							gstAmt,//GST
 							serviceCharge, // Caj Perkhidmatan 
@@ -1872,7 +1874,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 										String.valueOf(row[6]),//No Permohonan
 										row[7].toString(),//No Rujukan
 										row[12].toString(),//Jenis Terimaan-Kod
-										row[13].toString(),//Jenis Terimaan-Perihal
+										//#14203 - uppercase perihal
+										row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 										// 26307 - add card type
 										cardType,//Jenis Kad
 										priceAmt ,//Harga
@@ -1893,7 +1896,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									String.valueOf(row[6]),//No Permohonan
 									row[7].toString(),//No Rujukan
 									row[12].toString(),//Jenis Terimaan-Kod
-									row[13].toString(),//Jenis Terimaan-Perihal
+									//#14203 - uppercase perihal
+									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 									// 26307 - add card type
 									cardType,//Jenis Kad
 									priceAmt ,//Harga
@@ -2334,7 +2338,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					// 26307 end
 					fullList.put(m, new Object[] {
 						(Date) row[3],row[2].toString(),row[5].toString(),
-						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString(),
+						//#14203 - uppercase perihal
+						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString().toUpperCase(),
 						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO
 					});
 				}
@@ -2606,7 +2611,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal totalAll = jan.add(feb).add(mac).add(apr).add(may).add(jun).add(july).add(aug).add(sep).add(oct).add(nov).add(dec);
 							
 					revenueCollectionList.put(m, new Object[]{
-						row[0].toString(),row[1].toString(),
+						//#14203 - uppercase perihal
+						row[0].toString(),row[1].toString().toUpperCase(),
 						(BigDecimal)row[2] != null ? (BigDecimal)row[2] : "-",
 						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-",
 						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-",
