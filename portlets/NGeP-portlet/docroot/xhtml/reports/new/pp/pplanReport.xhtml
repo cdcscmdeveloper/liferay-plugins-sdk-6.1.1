@@ -216,12 +216,14 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td width="20%">
+				<!-- #27472 change id-->
 				<p:selectOneMenu id="ppYearPerformance"
 					label="#{lbl['lbl.rpt.yearone']}"
 					value="#{ppReportsBackingBean.managedBean.selectedYear}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 					<f:selectItems value="#{ppReportsBackingBean.generateCommonYearList()}"></f:selectItems>
 				</p:selectOneMenu>
+				<!-- #27472 change id-->
 				<p:message id="ppYearPerformanceMsg" for="ppYearPerformance" display="icon" showDetail="false" />
 			</td>
 
