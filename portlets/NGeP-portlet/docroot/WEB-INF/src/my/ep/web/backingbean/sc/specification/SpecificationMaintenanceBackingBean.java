@@ -664,7 +664,6 @@ public boolean isSpecCommittee() {
 			|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())) {
 		committeeTrue = true;
 	}
-	log.info("Yoooooooooooooooooooooooooooooooooo Hello == > " + committeeTrue);
 	return committeeTrue;
 }
 
