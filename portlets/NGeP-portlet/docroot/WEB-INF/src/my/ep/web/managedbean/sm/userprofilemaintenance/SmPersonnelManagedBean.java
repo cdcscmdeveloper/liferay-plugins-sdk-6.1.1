@@ -121,6 +121,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private String epRoleTrans;
 	private List<SelectItem> raceSelectItems;
 	private boolean disableRoleSelection;
+	private boolean allowAccess;
 	// 9569 end
 
 	public SmPersonnelManagedBean() {
@@ -833,6 +834,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setEpRoleTrans(String epRoleTrans) {
 		this.epRoleTrans = epRoleTrans;
+	}
+	
+	public boolean isAllowAccess() {
+		return allowAccess;
+	}
+
+	public void setAllowAccess(boolean allowAccess) {
+		this.allowAccess = allowAccess;
 	}
 	// 9569 end
 

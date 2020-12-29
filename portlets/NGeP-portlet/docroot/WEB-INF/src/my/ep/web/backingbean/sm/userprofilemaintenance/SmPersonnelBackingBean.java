@@ -2188,34 +2188,49 @@ public class SmPersonnelBackingBean extends
 	 * Pre render for Supplier User Maintainance
 	 */
 	public void preRenderSmUserMaintenance() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		boolean allowAccess = true;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
 		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierByEpNo(supplierSearchReqDTO);
 		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
 			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
-				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
-				throw new EpException(MessageConst.ERROR_722684);
+				allowAccess = false;
+				//SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+				//throw new EpException(MessageConst.ERROR_722684);
+				
 			}else if(searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!= null &&!searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal()){
-				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
-				throw new EpException(MessageConst.ERROR_722684);
+				allowAccess = false;
+			//	SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+				//throw new EpException(MessageConst.ERROR_722684);
 			}
 		}
-		getManagedBean().setSmSupplier(smSupplier);
-		getManagedBean().setSmAppl(smSupplier.getSmAppl());
-		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
-		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
-				.getSmPersonnelList();
-		sortPersonnelByEpRole(smPersonnelList);
-		getManagedBean().setSmPersonnelList(smPersonnelList);
-		countAuthUserWithRole(smPersonnelList);
-		countContractSigner(smPersonnelList);
-		epRoleList(2);
-		getManagedBean().setCountryList(SmCommonUtil.getCountryList());
-		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
-		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
-		SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+		getManagedBean().setAllowAccess(allowAccess);
+		if(!allowAccess){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_722684,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/userProfileMaintenance/supplierUserMaintenance.xhtml");
+		}else{
+			getManagedBean().setSmSupplier(smSupplier);
+			getManagedBean().setSmAppl(smSupplier.getSmAppl());
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+			List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
+					.getSmPersonnelList();
+			sortPersonnelByEpRole(smPersonnelList);
+			getManagedBean().setSmPersonnelList(smPersonnelList);
+			countAuthUserWithRole(smPersonnelList);
+			countContractSigner(smPersonnelList);
+			epRoleList(2);
+			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
+			getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
+			getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
+			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+		}
+		
 	}
 
 	/**
