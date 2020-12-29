@@ -547,6 +547,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		if(this.getManagedBean().getSmApplDocFile() != null){
 			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
 			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
+			this.getManagedBean().getAddedDocFile().remove(this.getManagedBean().getSmApplDocFile());
 		}
 		this.getManagedBean().setSmApplDocFile(null);
 	}
