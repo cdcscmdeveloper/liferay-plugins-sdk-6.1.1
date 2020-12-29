@@ -252,6 +252,10 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
+	
+	//3460 - Start
+	public static final String SM_RMK_DOC_TYPE_SDOR = "SD";
+	//3460 - End
 
 	// Site Visit
 	public static final String CAT_TYPE_TRANSPORTATION = "A";
