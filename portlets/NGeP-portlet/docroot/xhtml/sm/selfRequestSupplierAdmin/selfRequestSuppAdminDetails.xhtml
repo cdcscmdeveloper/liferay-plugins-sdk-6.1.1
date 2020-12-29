@@ -314,13 +314,43 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.stateItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeState(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
-							update="suppAdminPermDist,suppAdminPermCity" />
+							update="divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity" />
 
 					</p:selectOneMenu>
 					<p:message id="suppAdminPermStateMsg" for="suppAdminPermState"
 						showSummary="true" showDetail="false" display="icon" />
-				</td>
+						</td>
+					</tr>
+					
+				<!-- 13320 Start-->
+			     <tr>
+				    <td></td>
+				    <td></td>
+				    <td class="tdTitle"><p:outputPanel id="divisionSrLabelPanelId">
+				    <ui:fragment
+				    rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.pmState.adoptDivision}">
+					<p:outputLabel value="#{lbl['lbl.sm.division']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+					</ui:fragment>
+					</p:outputPanel></td>
+				    <td><p:outputPanel id="divisionSrDropdownPanelId">
+					<ui:fragment
+						rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.pmState.adoptDivision}">
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.division']}"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.divisionId}"
+							id="suppAdminPermDivision">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="suppAdminSrPermDivision"
+							value="#{selfRequestSupplierAdminBackingBean.managedBean.divisionItems}" />
+							<p:ajax event="change" process="@this"
+							listener="#{selfRequestSupplierAdminBackingBean.onChangeDivision(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
+							update="suppAdminPermDist,suppAdminPermCity" />
+						</p:selectOneMenu>
+					</ui:fragment>
+					</p:outputPanel></td>
 			</tr>
+			<!-- 13320-End -->
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.person.designation']}" />

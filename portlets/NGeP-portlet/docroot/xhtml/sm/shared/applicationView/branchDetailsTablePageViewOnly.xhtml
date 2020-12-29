@@ -34,6 +34,13 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmState.stateName}"/></td>
 			</tr>
+			
+			<tr><!-- #13320 - added division -->
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+									rendered="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmDivision.divisionName}"
+									rendered="#{viewSmApplBackingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}"/></td>
+			</tr>
 
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
