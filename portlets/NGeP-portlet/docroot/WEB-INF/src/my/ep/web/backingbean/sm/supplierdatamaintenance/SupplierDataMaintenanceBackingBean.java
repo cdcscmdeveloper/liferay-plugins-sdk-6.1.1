@@ -784,10 +784,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				&& !getManagedBean().getApprovedCategoryList().isEmpty()) {
 			getManagedBean().getApprovedCategoryList().clear();
 		}
-		
 		SmApplicationUtil.sortSupplierCategory(apprvList);
-		//14150
-		SmApplicationUtil.sortSupplierCategory(catList);
 		getManagedBean().setApprovedCategoryList(apprvList);
 		getManagedBean().setActiveCategoryList(catList);
 	}
