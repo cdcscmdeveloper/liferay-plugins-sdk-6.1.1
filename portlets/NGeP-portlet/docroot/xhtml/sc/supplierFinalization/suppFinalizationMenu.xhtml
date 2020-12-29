@@ -76,7 +76,9 @@
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+							
 					</ui:repeat>
+					
 				</ui:define>
 			</ui:decorate>
 		</div>
@@ -159,10 +161,53 @@
 			</div>
 		</p:dialog>
 		
+		
+					
+			<!-- ***28834 start -->
+			
+			<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.popup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
+					oncomplete="confirmBriefPopup.hide(); "
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{suppFinalizationBackingBean.submitBrief(bpmAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="confirmBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+			<!-- ***28834 end -->
+		
+		<!-- ***28834 start -->
+		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="true">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.rempopup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			
+		</p:dialog>
+		
+		<!-- ***28834 end -->
+		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
 			modal="true">
+			
 
 			<table>
 				<tr>
