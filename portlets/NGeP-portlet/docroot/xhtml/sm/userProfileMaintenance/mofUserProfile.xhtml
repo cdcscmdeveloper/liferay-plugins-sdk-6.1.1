@@ -288,7 +288,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /> 
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu id="basicBURole"
+						<td><p:selectOneMenu id="basicBURole" disabled="#{smPersonnelBackingBean.managedBean.disableRoleSelection}"
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.epRoleTrans}"
 								style="width: 207px;margin-bottom: 5px;" required="true">
@@ -884,7 +884,7 @@
 											size="35"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											disabled="true" /> <p:message id="offAdd1Msg" for="mailAdd1"
+											 /> <p:message id="offAdd1Msg" for="mailAdd1"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
@@ -893,7 +893,7 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.address2}"
 											size="35"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											disabled="true" /></td>
+											 /></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -901,7 +901,7 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.address3}"
 											size="35"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											disabled="true" /></td>
+											/></td>
 								</tr>
 								<tr>
 									<td></td>
