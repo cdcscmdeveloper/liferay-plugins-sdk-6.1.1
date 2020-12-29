@@ -24,19 +24,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.NodeUnselectEvent;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -138,6 +125,19 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Circular Panel Backing bean
@@ -374,7 +374,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			ctBB.initializeRemarkAndAttachement(resDTO.getCancelCircularReq().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			ctBB.getManagedBean().setDeleteAttachmentList(null);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			circularSO = null;
@@ -929,7 +929,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				getManagedBean().getUserMap().put(user.getUserId(), user);
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			userSO = null;
@@ -1066,7 +1066,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CtContactPerson contactPerson = new CtContactPerson();
 			getManagedBean().getCircularVer().getCtContactPersons().add(contactPerson);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1080,7 +1080,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
 			getManagedBean().setSelectedContactPersons(null);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1115,7 +1115,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			itemSpec.setCtPanelItem(getManagedBean().getSelectedItemForSpec());
 			getManagedBean().getSelectedItemForSpec().getCtPanelItemSpecs().add(itemSpec);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
@@ -1207,7 +1207,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						"itemSupplierWidget.paginator.endLink.click()");
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1330,7 +1330,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1413,7 +1413,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			getManagedBean().setSelectedPanelSuppliers(null);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1488,7 +1488,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1503,7 +1503,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCancelledCircularList().addAll(getManagedBean().getSelectedCancelCircular());		
 			getManagedBean().setSelectedCancelCircular(null);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1521,7 +1521,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1542,7 +1542,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCircularVer().getCtPanelItems().add(panelItem);
 
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1602,7 +1602,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularVerList(null);
 			getManagedBean().setFilterCircularVerList(null);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1623,7 +1623,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setButtonHideActiveDel(true);
 
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1648,7 +1648,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				items[i++] = new SelectItem(state.getStateId(), state.getStateName());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -1678,7 +1678,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, centralContractString);
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -1832,7 +1832,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			return resDTO.getPmParameter().getParameterCode();
 		}catch(Exception e) {
 			log.error("Exception>>", e);
-			//e.printStackTrace();
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			parameterSO = null;
@@ -1930,9 +1930,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			countrySO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 			CountryResDTO resDTO  = countrySO.retrieveCountryByCode(reqDTO);
 			return resDTO.getPmCountry().getCountryId();
-		}catch(Exception ex){
-			log.error(ex);
-		}
+		}catch(Exception ex){}
 		finally{
 			countrySO = null;
 		}
@@ -1959,9 +1957,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			this.getManagedBean().setZoneName(null);
 			this.getManagedBean().setEditZone(false);
-		}catch(Exception ex){
-			log.error(ex);
-		}
+		}catch(Exception ex){}
 
 	}
 
@@ -1988,7 +1984,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -2137,7 +2133,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			this.getManagedBean().setSelectionOfZone(false);
 			getManagedBean().setButtonHideActiveDel(true);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -2168,7 +2164,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedPanelItems(null);
 			getManagedBean().setSelectionOfZone(false);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -2317,22 +2313,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method to retrieve portal name
 	 */
 	public String getPortletTitle() {
-		/*
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.panel.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
-		*/
-		return ResourceBundleUtils.getMessage("lbl.ct.panel.circular.creation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
 	/**
 	 * Method to retrieve portal details title for cancel
 	 */
 	public String getCancelPortletTitle() {
-		/*
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.cancel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
-		*/
-		return ResourceBundleUtils.getMessage("lbl.ct.cancel.circular.request", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
 	/**
@@ -2500,7 +2490,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			reqDTO = null;
@@ -2563,7 +2553,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				return true;
 			}
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally{
 			reqDTO = null;
@@ -2845,7 +2835,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setButtonHideActiveDel(true);
 			getManagedBean().setButtonHidePanelItemDel(true);
 		} catch (Exception e) {
-			log.error(e);
+			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -3145,15 +3135,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		reqDTO.setGroupItemName(groupItemName);
 		PanelGroupItemResDTO resDTO = panelGroupItemSO.retrievePanelGroupItemByGroupName(reqDTO);
 
-		/*
 		if (resDTO.getCtPanelItemGroup() != null) {
 			return true;
 		} else {
 			return false;
 		}
-		*/
-		
-		return resDTO.getCtPanelItemGroup() != null;
 	}
 
 	/**
@@ -3178,13 +3164,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		String pattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		mask = Pattern.compile(pattern);
 		Matcher matcher = mask.matcher(email);
-		/*
 		if (!matcher.matches()) {
 			return true;
 		}
 		return false;
-		*/
-		return !matcher.matches() ? true : false;
 	}
 
 	/**
@@ -3194,13 +3177,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * */
 	public boolean isNotValidMobileNo(String phoneNo) {
 		String pattern = "\\d+";
-		/*
 		if (!phoneNo.matches(pattern)) {
 			return true;
 		}
 		return false;
-		*/
-		return !phoneNo.matches(pattern) ? true : false;
 	}
 
 	/**
@@ -3211,11 +3191,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
 				SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE));
-		/*
 		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
 		return items;
-		*/
-		return getDropdownValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
 	}
 	
 	//#28713 start basri
@@ -3246,5 +3223,5 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void setAttachmentIndex(int attachmentIndex){
 		this.getManagedBean().setAttachFileIndex(attachmentIndex);
 	}
-	//end
+	//end #28713
 }
