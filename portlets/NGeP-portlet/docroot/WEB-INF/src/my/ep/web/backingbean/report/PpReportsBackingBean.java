@@ -1153,7 +1153,7 @@ public class PpReportsBackingBean extends
 		  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 		  				));
 				Sheet sheetKumpPtjList = createSheetBase(wb, createHelper, "Kumpulan PTJ", titleReport, 
-						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName + "(KUMP PTJ)");
 		        
 				// Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderListKumpPtj.size(); i++) {   
@@ -1225,7 +1225,7 @@ public class PpReportsBackingBean extends
 	  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 	  				));
 			Sheet sheetPtjList = createSheetBase(wb, createHelper, "PTJ", titleReport, columnHeaderListPtj, 
-					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName + "(PTJ)");
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListPtj.size(); i++) {   
@@ -1444,7 +1444,7 @@ public class PpReportsBackingBean extends
 		  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 		  				));
 				Sheet sheetKumpPtjList = createSheetBase(wb, createHelper, "Kumpulan PTJ", titleReport, 
-						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName + "(KUMP PTJ)");
 		        
 				// Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderListKumpPtj.size(); i++) {   
@@ -1489,14 +1489,14 @@ public class PpReportsBackingBean extends
 							obj[7] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
 							
 							//percentage
-							Double amntMinusDeduct = (Double)obj[6] - ((BigDecimal)obj[7]).doubleValue();
-							obj[8] = amntMinusDeduct / ((BigDecimal)obj[4]).doubleValue() * 100;
+							//Double amntMinusDeduct = (Double)obj[6] - ((BigDecimal)obj[7]).doubleValue();
+							obj[8] = (Double)obj[6] / ((BigDecimal)obj[4]).doubleValue() * 100;
 
 							kumpPtjList.put(Integer.parseInt((String)row[3]), obj);
 						}else{
 							BigDecimal unUsedAmnt = ((BigDecimal)row[9]).subtract((BigDecimal)row[10]);
-							Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
-							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
+							//Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
+							Double percentageExpenditure = (Double)row[14] /((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[3]), new Object[]{
 								count,Integer.parseInt((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
 								(BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO,percentageExpenditure
@@ -1516,7 +1516,7 @@ public class PpReportsBackingBean extends
 	  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 	  				));
 			Sheet sheetPtjList = createSheetBase(wb, createHelper, "PTJ", titleReport, columnHeaderListPtj, 
-					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName + "(PTJ)");
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListPtj.size(); i++) {   
@@ -1543,9 +1543,7 @@ public class PpReportsBackingBean extends
 				Integer count = 1;
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m); //get whole object
-					
-					log.info("test report excel azza");
-					
+										
 					if(ptjList.containsKey(Integer.parseInt((String)row[3]))){ //find key in map
 						Object[] obj = ptjList.get(Integer.parseInt((String)row[3]));
 						//9-10
@@ -1566,14 +1564,12 @@ public class PpReportsBackingBean extends
 						//percentage
 						//Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
 						obj[9] = (Double)obj[7] / ((BigDecimal)obj[5]).doubleValue() * 100;
-						//obj[9] = amntMinusDeduct / ((BigDecimal)obj[5]).doubleValue() * 100;
-
-
+					
 						ptjList.put(Integer.parseInt((String)row[3]), obj);
 					}else{
 						BigDecimal unUsedAmnt = ((BigDecimal)row[9]).subtract((BigDecimal)row[10]);
-						Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
-						Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
+						//Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
+						Double percentageExpenditure = (Double)row[14] /((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[3]), new Object[]{
 							count,(String)row[4],Integer.parseInt((String)row[5]),(String)row[6],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,
 							(Double)row[14],(BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO,percentageExpenditure
