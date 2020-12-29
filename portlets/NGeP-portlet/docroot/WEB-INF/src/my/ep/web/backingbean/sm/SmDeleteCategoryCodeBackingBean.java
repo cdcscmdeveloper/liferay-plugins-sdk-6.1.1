@@ -94,9 +94,6 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 			assignActiveCategoryList();
-			//14150
-			SmApplicationUtil.sortSupplierCategory(getManagedBean()
-					.getActiveCategoryList());
 			retView = SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
 		} finally {
 
