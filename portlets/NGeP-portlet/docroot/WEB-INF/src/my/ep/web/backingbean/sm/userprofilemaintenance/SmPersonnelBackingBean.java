@@ -2357,7 +2357,9 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setEditMode(true);
 		getPersonnelInfoById(personnelId);
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
-		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());;
+		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
+		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
+						.getBasicSmPersonnel()));
 		epRoleList(getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
@@ -2496,6 +2498,24 @@ public class SmPersonnelBackingBean extends
 			}
 			getManagedBean().setContractSignerCount(count);
 		}
+	}
+	
+	/**
+	 * To check whether need to disable ep role drop down
+	 * 
+	 * @param smPersonnel
+	 * @return boolean
+	 */
+	public static boolean disableEpRoleDropDown(SmPersonnel smPersonnel) {
+		boolean retVal = false;
+
+		// disabled drop down for Admin
+		if (!StringUtils.isBlank(smPersonnel.getEpRole())
+				&& (smPersonnel.getEpRole().equals(
+						RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
+			retVal = true;
+		}
+		return retVal;
 	}
 	// 9569 end
 	
