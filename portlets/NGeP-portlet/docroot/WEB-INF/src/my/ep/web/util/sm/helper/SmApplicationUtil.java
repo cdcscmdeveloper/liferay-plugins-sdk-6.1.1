@@ -29,6 +29,7 @@ import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.biz.service.pm.common.kpi.IPmKpiSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -65,6 +66,8 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
@@ -119,6 +122,7 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
@@ -407,6 +411,7 @@ public class SmApplicationUtil {
 
 		return addedNewCode;
 	}
+
 	/**
 	 * Validate max new category added.
 	 * 
@@ -2931,6 +2936,13 @@ public class SmApplicationUtil {
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
 		addr.setPmDistrict(new PmDistrict());
+		//13320-Start
+		PmState state = (SmCommonUtil.getInstance().getStateById(addr.getPmState().getStateId()));
+		if(state != null){
+		if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+		addr.setPmDivision(new PmDivision());
+		}
+		}//13320-End
 		addr.setAddress1("");
 		addr.setAddress2("");
 		addr.setAddress3("");
@@ -2968,6 +2980,15 @@ public class SmApplicationUtil {
 		} else {
 			facAddr.setPmState(new PmState());
 		}
+		//13320-Start
+		if(facAddr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+		if (baseOffAddr.getPmDivision() != null) {
+			facAddr.setPmDivision(baseOffAddr.getPmDivision());
+		} else {
+			facAddr.setPmState(new PmState());
+		}
+		}
+		//13320-End
 		if (baseOffAddr.getPmDistrict() != null) {
 			facAddr.setPmDistrict(baseOffAddr.getPmDistrict());
 		} else {
@@ -5026,7 +5047,18 @@ public class SmApplicationUtil {
 
 		return resDTO.getPmDistrict();
 	}
+	//13320-Start
+	public static PmDivision retrievePmDivsById(Long divnId) {
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+		reqDTO.setDivisionId(divnId);
+		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
 
+		return resDTO.getPmDivision();
+	}
+	//13320-End
 	/**
 	 * Retrive application by id.
 	 * 
@@ -5399,6 +5431,14 @@ public class SmApplicationUtil {
 					srcAddr.getPmState().getStateId()));
 			desAddr.setStateId(srcAddr.getStateId());
 		}
+		//START-13320
+		if (srcAddr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+			if (srcAddr.getDivisionId() != null) {
+				desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(srcAddr.getDivisionId()));
+				desAddr.setDivisionId(srcAddr.getDivisionId());
+			}
+		}
+		//END-13320
 		if (srcAddr.getPmDistrict() != null
 				&& srcAddr.getPmDistrict().getDistrictId() != null) {
 			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
@@ -5438,6 +5478,14 @@ public class SmApplicationUtil {
 			desAddr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
 					srcAddr.getPmDistrict().getDistrictId()));
 		}
+		//#13320 - added division - start
+		desAddr.setDivisionId(srcAddr.getDivisionId());
+		if (srcAddr.getPmDivision() != null
+				&& srcAddr.getPmDivision().getDivisionId() != null) {
+			desAddr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+					srcAddr.getPmDivision().getDivisionId()));
+		}
+		//#13320 - added division - end
 		desAddr.setDistrictId(srcAddr.getDistrictId());
 		if (srcAddr.getPmCity() != null
 				&& srcAddr.getPmCity().getCityId() != null) {
@@ -9018,6 +9066,7 @@ public class SmApplicationUtil {
 				addr.setPmState(SmCommonUtil.getInstance()
 						.getStateById(stateId));
 			}
+			bean.setDivisionBox(true);
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(stateId);
 			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
@@ -9211,6 +9260,15 @@ public class SmApplicationUtil {
 		if (addr.getPmState() != null) {
 			addr.setStateId(addr.getPmState().getStateId());
 		}
+		//13320-Address
+		PmState state = (SmCommonUtil.getInstance().getStateById(addr.getPmState().getStateId()));
+		if(state != null){
+		if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE))
+		getInstance().populateDivisionsByState(addr, panelName, bean);
+		if (addr.getPmDivision()!= null) {
+		addr.setDivisionId(addr.getPmDivision().getDivisionId());
+			}
+		}
 		getInstance().populateDistrictsByState(addr, panelName, bean);
 		if (addr.getPmDistrict() != null) {
 			addr.setDistrictId(addr.getPmDistrict().getDistrictId());
@@ -9316,6 +9374,12 @@ public class SmApplicationUtil {
 					&& addr.getPmState().getStateId() != null) {
 				addr.setStateId(addr.getPmState().getStateId());
 			}
+			if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			if (addr.getPmDivision()!= null
+					&& addr.getPmDivision().getDivisionId() != null) {
+				addr.setDivisionId(addr.getPmDivision().getDivisionId());//13320-For Address
+			}
+		}
 			if (addr.getPmDistrict() != null
 					&& addr.getPmDistrict().getDistrictId() != null) {
 				addr.setDistrictId(addr.getPmDistrict().getDistrictId());
@@ -9336,6 +9400,12 @@ public class SmApplicationUtil {
 			if (addr.getStateId() != null) {
 				addr.setPmState(SmCommonUtil.getInstance().getStateById(
 						addr.getStateId()));
+			}
+			if(addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+			if (addr.getDivisionId() != null) {
+				addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+						addr.getDivisionId()));//13320-For Address
+			}
 			}
 			if (addr.getDistrictId() != null) {
 				addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
@@ -11150,6 +11220,15 @@ public class SmApplicationUtil {
 					smAddress.setPmState(state);
 					smAddress.setStateId(state.getStateId());
 					//START 27879
+					//#13320 - added division - start
+					if(addr.getSmAddress().getPmDivision() != null){
+						PmDivision div = new PmDivision();
+						div.setDivisionId(addr.getSmAddress().getPmDivision()
+								.getDivisionId());
+						smAddress.setPmDivision(div);
+						smAddress.setDivisionId(div.getDivisionId());
+					}
+					//#13320 - added division - end
 					if(addr.getSmAddress().getPmDistrict() != null){
 						PmDistrict district = new PmDistrict();
 
@@ -13346,35 +13425,263 @@ public class SmApplicationUtil {
 			}
 		}
 		//#29315 - end
+
+	//13320-start
+	public void populateDivisionsByState(SmAddress addr, String panelName,
+			SmApplicationManagedBean bean){
 		
-		//STATR 25474
-		public static SmAppl getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
-				Long supplierId, String applType) {
-			SmAppl smAppl = null;
-			StringBuilder sb = new StringBuilder();
-			sb.append("(")
-					.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
-					.append(",")
-					.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
-					.append(",")
-					.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
-					.append(")");
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setNotUsedConditionExpired(true);
-			reqDTO.setCurrent(true);
-			reqDTO.setSupplierId(supplierId);
-			reqDTO.setWorkflowStatus(sb.toString());
-			reqDTO.setAppType(applType);
-			Long applId = SmServiceLookup.getMofRegistrationSO()
-					.retriveApplIdForLastRejectedApplicationByApplType(reqDTO)
-					.getApplId();
-			if (applId != null) {
-				reqDTO = new MofRegistrationReqDTO();
-				reqDTO.setApplId(applId);
-				smAppl = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+
+		try {
+			Long stateId = addr.getStateId();
+			if (stateId != null) {
+				addr.setPmState(SmCommonUtil.getInstance()
+						.getStateById(stateId));
 			}
-			return smAppl;
+			DivisionReqDTO reqDTO = new DivisionReqDTO();
+			reqDTO.setStateId(stateId);
+			IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IDivisionSO.class);
+			DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
+			addr.setDivisionId(null);
+			List<PmDivision> divLs = resDTO.getDivisionList();
+			List<SelectItem> divItems = SmCommonUtil.getDivisionList(stateId);
+			addr.getPmState().setAdoptDivision(true);
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				bean.setBasicCompanyDivisions(divItems);
+				bean.setBasicCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setBasicCompanyCities(null);
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				bean.setBasicOffFacDivisions(divItems);
+				bean.setBasicOffFacDistricts(new ArrayList<SelectItem>());
+				bean.setBasicOffFacCities(null);
+				break;
+
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				bean.setBranchCompanyDivisions(divItems);
+				bean.setBranchCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setBranchCompanyCities(null);
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				bean.setAssocCompanyDivisions(divItems);
+				bean.setAssocCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setAssocCompanyCities(null);
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				bean.setEquiCompanyDivisions(divItems);
+				bean.setEquiCompanyDistricts(new ArrayList<SelectItem>());
+				bean.setEquiCompanyCities(null);
+				break;
+
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				bean.setFactoryFacilityDivisions(divItems);
+				bean.setFactoryFacilityDistricts(null);
+				bean.setFactoryFacilityCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				bean.setDockFacilityDivisions(divItems);
+				bean.setDockFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setDockFacilityCities(null);
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				bean.setWorkShopFacilityDivisions(divItems);
+				bean.setWorkShopFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setWorkShopFacilityCities(null);
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				bean.setStoreFacilityDivisions(divItems);
+				bean.setStoreFacilityDistricts(new ArrayList<SelectItem>());
+				bean.setStoreFacilityCities(null);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
+				bean.setShrHldrPermDivisions(divItems);
+				bean.setShrHldrPermDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrPermCities(null);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
+				bean.setShrHldrResdDivisions(divItems);
+				bean.setShrHldrResdDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrResdCities(null);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
+				bean.setShrHldrOffDivisions(divItems);
+				bean.setShrHldrOffDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrOffCities(null);
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
+				bean.setShrHldrMailDivisions(divItems);
+				bean.setShrHldrMailDistricts(new ArrayList<SelectItem>());
+				bean.setShrHldrMailCities(null);
+				break;
+			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
+				bean.setPersnlPermDivisions(divLs);
+				bean.setPersnlPermDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlPermCities(null);
+				break;
+			case SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL:
+				bean.setPersnlResdDivisions(divLs);
+				bean.setPersnlResdDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlResdCities(null);
+				break;
+			case SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL:
+				bean.setPersnlOffDivisions(divLs);
+				bean.setPersnlOffDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlOffCities(null);
+				break;
+			case SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL:
+				bean.setPersnlMailDivisions(divLs);
+				bean.setPersnlMailDistricts(new ArrayList<PmDistrict>());
+				bean.setPersnlMailCities(null);
+				break;
+			case SupplierManagementConst.SM_BANK_INFO_PANEL:
+				bean.setBankDivisions(divItems);
+				bean.setBankDistricts(new ArrayList<SelectItem>());
+				bean.setBankCities(null);
+				break;
+			default:
+				log.info("**** This is an unknown panel ***** ");
+				break;
+			}
+			addr.setDivisionId(null);
+			addr.setDistrictId(null);
+			addr.setCityId(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+//13320-end
+	
+	
+//13320-start
+	public void populateDistrictsByUsingDivision(SmAddress addr, String panelName,
+			SmApplicationManagedBean bean) {
+		try {
+			Long divisionId = addr.getDivisionId();
+			//#13320 - SmCommonUtil change method
+			addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
+					divisionId));
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setDistrictId(divisionId);
+			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IDistrictSO.class);
+			DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
+			List<PmDistrict> diviLs = resDTO.getDistrictList();
+			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(divisionId);
+			switch (panelName) {
+			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
+				bean.setBasicCompanyDistricts(divisionLs);
+				bean.setBasicCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
+				bean.setBasicOffFacDistricts(divisionLs);
+				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
+				break;
+
+			case SupplierManagementConst.SM_BRANCH_PANEL:
+				bean.setBranchCompanyDistricts(divisionLs);
+				bean.setBranchCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
+				bean.setAssocCompanyDistricts(divisionLs);
+				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
+				bean.setEquiCompanyDistricts(divisionLs);
+				bean.setEquiCompanyCities(new ArrayList<SelectItem>());
+				break;
+
+			case SupplierManagementConst.SM_FACTORY_FACILITY_PANEL:
+				bean.setFactoryFacilityDistricts(divisionLs);
+				bean.setFactoryFacilityCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL:
+				bean.setDockFacilityDistricts(divisionLs);
+				bean.setDockFacilityCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL:
+				bean.setWorkShopFacilityDistricts(divisionLs);
+				bean.setWorkShopFacilityCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_STORE_FACILITY_PANEL:
+				bean.setStoreFacilityDistricts(divisionLs);
+				bean.setStoreFacilityCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL:
+				bean.setShrHldrPermDistricts(divisionLs);
+				bean.setShrHldrPermCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL:
+				bean.setShrHldrResdDistricts(divisionLs);
+				bean.setShrHldrResdCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL:
+				bean.setShrHldrOffDistricts(divisionLs);
+				bean.setShrHldrOffCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL:
+				bean.setShrHldrMailDistricts(divisionLs);
+				bean.setShrHldrMailCities(new ArrayList<SelectItem>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_PERM_ADDR_PANEL:
+				bean.setPersnlPermDistricts(diviLs);
+				bean.setPersnlPermCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_RESD_ADDR_PANEL:
+				bean.setPersnlResdDistricts(diviLs);
+				bean.setPersnlResdCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_OFF_ADDR_PANEL:
+				bean.setPersnlOffDistricts(diviLs);
+				bean.setPersnlOffCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_PERSNL_MAIL_ADDR_PANEL:
+				bean.setPersnlMailDistricts(diviLs);
+				bean.setPersnlMailCities(new ArrayList<PmCity>());
+				break;
+			case SupplierManagementConst.SM_BANK_INFO_PANEL:
+				bean.setBankDistricts(divisionLs);
+				bean.setBankCities(new ArrayList<SelectItem>());
+				break;
+			default:
+				log.info("**** This is an unknown panel ***** ");
+				break;
+			}
+			addr.setDistrictId(null);
+			addr.setCityId(null);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		//END 25474
+	}
+//13320-end	
+	//STATR 25474
+	public static SmAppl getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+			Long supplierId, String applType) {
+		SmAppl smAppl = null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("(")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				.append(")");
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setNotUsedConditionExpired(true);
+		reqDTO.setCurrent(true);
+		reqDTO.setSupplierId(supplierId);
+		reqDTO.setWorkflowStatus(sb.toString());
+		reqDTO.setAppType(applType);
+		Long applId = SmServiceLookup.getMofRegistrationSO()
+				.retriveApplIdForLastRejectedApplicationByApplType(reqDTO)
+				.getApplId();
+		if (applId != null) {
+			reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(applId);
+			smAppl = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		}
+		return smAppl;
+	}
+	//END 25474
 }
