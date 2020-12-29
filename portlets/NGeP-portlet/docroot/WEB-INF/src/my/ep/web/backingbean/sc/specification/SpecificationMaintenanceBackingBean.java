@@ -656,6 +656,17 @@ private boolean checkStatus(Long statusId){
 	
 }
 
+public boolean isSpecCommittee() {
+	boolean committeeTrue = false;
+	FacesScopes facesScopes = new FacesScopes();
+	if(facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
+			|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
+			|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())) {
+		committeeTrue = true;
+	}
+	return committeeTrue;
+}
+
 	
 	
 }
