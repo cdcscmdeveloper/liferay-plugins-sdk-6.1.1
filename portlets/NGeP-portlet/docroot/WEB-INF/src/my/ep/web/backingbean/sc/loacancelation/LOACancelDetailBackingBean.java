@@ -1037,7 +1037,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 			
-			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
+//			updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);	
 			
 			if(!BpmOutcomeConst.BPM_LOA_CANCEL.equals(outcome)){
 					getQtAwardSO().prepareCancelLoaTrackingDiary(reqDTO);
@@ -1053,6 +1053,17 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				
+				try
+				{
+				    Thread.sleep(5000);
+				}
+				catch(InterruptedException ex)
+				{
+				    Thread.currentThread().interrupt();
+				}
+				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);
+				
 				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
 				scLoa = resDTO.getScLoa();								
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
@@ -3165,8 +3176,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		reqDTO.setDocId(scLoa.getLoaId());
 
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){			
-			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){
+//			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(workFlowStatusSO.retrievePreviousStatus(reqDTO)));
 			log.info("-----Check 62523L------ " + workFlowStatus.getPmStatus().getStatusId());
 		}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){			
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));	
