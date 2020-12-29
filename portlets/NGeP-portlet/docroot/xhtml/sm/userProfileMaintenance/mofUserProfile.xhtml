@@ -37,7 +37,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}"
 					rendered="#{!smPersonnelBackingBean.managedBean.editMode}" />
-				<h:outputText value="#{lbl['lbl.sm.userprofile.edit']}"
+				<h:outputText value="#{lbl['lbl.sm.person.info.hdr']}"
 					rendered="#{smPersonnelBackingBean.managedBean.editMode}" />
 			</f:facet>
 			<table style="width: 100%">
@@ -50,7 +50,7 @@
 							size="35" required="true" maxlength="80"
 							label="#{lbl['lbl.sm.userprofile.name']}"
 							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /> <p:message
-							id="basicBUNameMsg" for="basicBUName" showSummary="true"
+							id="basicBUNameMsg" for="basicBUName" showSummary="true" 
 							showDetail="false" display="icon" /></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.nationality']}" /> <p:outputLabel
@@ -80,27 +80,28 @@
 						</p:selectOneMenu> <p:message id="basicBUSalutationMsg" for="basicBUSalutation"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="basicBURace"
-							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace.raceName}"
-							size="35" required="true" maxlength="80"
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="basicBURace"
 							label="#{lbl['lbl.sm.person.race']}"
-							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /> <p:message
-							id="basicBURaceMsg" for="basicBURace" showSummary="true"
-							showDetail="false" display="icon" /></td>
-
+							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace}"
+							style="width: 207px;margin-bottom: 5px;" required="true"
+							disabled="true">
+							<f:selectItems
+								value="#{smPersonnelBackingBean.managedBean.raceSelectItems}" />
+						</p:selectOneMenu> <p:message id="basicBURaceMsg" for="basicBURace"
+							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="basicBUIdType"
-							required="#{!empty param['disableValidation']}" disabled="true"
 							label="#{lbl['lbl.sm.identificationtype']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationTypeId}"
-							style="width: 207px;margin-bottom: 5px;">
+							style="width: 207px;margin-bottom: 5px;" required="true"
+							disabled="true">
 							<f:selectItems
-								value="#{smPersonnelBackingBean.managedBean.idTypes}" />
+								value="#{smPersonnelBackingBean.getPmIdTypeDropdownValues()}" />
 						</p:selectOneMenu> <p:message id="basicBUIdTypeMsg" for="basicBUIdType"
 							showSummary="true" showDetail="false" display="icon" /></td>
 
@@ -285,14 +286,12 @@
 				or (smPersonnelBackingBean.managedBean.basicSmPersonnel.authorizedFlg eq 0 
 				and smPersonnelBackingBean.managedBean.authUserCount gt 9)}">
 					<tr>
-						<td><p:outputLabel id="basicBURoleLabel"
-								value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel
-								id="basicBURoleMandatory" value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="basicBURole"
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.epRoleTrans}"
 								style="width: 207px;margin-bottom: 5px;" required="true">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								<p:ajax event="change" partialSubmit="true" process="@this"
@@ -701,6 +700,19 @@
 													value="#{lbl['lbl.sm.person.resiAddr']} " /></b></u></td>
 								</tr>
 								<tr>
+									<td></td>
+									<td style="float: left;"><p:selectBooleanCheckbox
+											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+											disabled="true">
+											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
+												partialSubmit="true" process="@this"
+												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
+												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
+										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+									<td></td>
+								</tr>
+								
+								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
 									<td><p:inputText maxlength="100" required="true"
@@ -753,15 +765,15 @@
 											for="basicPermAddCountryList" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
+				
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu required="true"
-											label="#{lbl['lbl.sm.state']}" id="offPermAddStateList"
+									<td><p:selectOneMenu id="offPermAddStateList"
+											label="#{lbl['lbl.sm.state']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateId}"
-											style="width: 207px;margin-bottom: 5px;" disabled="true">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
+											style="width: 207px;margin-bottom: 5px;" 
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 											<p:ajax event="change"
@@ -860,7 +872,7 @@
 												partialSubmit="true" process="@this"
 												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
 												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
-										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}" /></td>
 									<td></td>
 								</tr>
 								<tr>
@@ -918,17 +930,14 @@
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
-									<td><p:selectOneMenu
+									<td><p:selectOneMenu id="basicOffAddStateList"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											disabled="true" label="#{lbl['lbl.sm.state']}"
-											id="basicOffAddStateList"
+											label="#{lbl['lbl.sm.state']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId}"
-											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-												itemValue="" />
+											style="width: 207px;margin-bottom: 5px;" disabled="true"> 
 											<f:selectItems
-												value="#{smPersonnelBackingBean.managedBean.stateList}" />
+												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 											<p:ajax event="change"
 												update="basicMailAddDistrictList, basicMailAddCityList"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null,null)}" />
