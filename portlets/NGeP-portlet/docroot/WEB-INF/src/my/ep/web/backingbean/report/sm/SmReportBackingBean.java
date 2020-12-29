@@ -1,13 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +56,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
-import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -76,12 +70,10 @@ import my.ep.web.vo.CategoryRptVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -1068,7 +1060,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					reportListMap.put(m, new Object[]{
 						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
-						row[5].toString(),row[6].toString(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
+						// #14203 - uppercase perihal
+						row[5].toString(),row[6].toString().toUpperCase(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
 					});
 				}
 			}
@@ -1378,13 +1371,15 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal netPrice = (priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge)).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								//#14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								//#14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
@@ -1748,19 +1743,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if("M".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE1))){//MOF Registration Fee
 				payType.add("MF");
 				payType.add("RF");
-				paymentTypeDesc.add("Bayaran Pendaftaran");
+				// 14203 - Change Bayaran Pendaftaran
+				paymentTypeDesc.add("Fi Pendaftaran MOF");
 			}
 			
 			if("P".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE2))){//Processing Fee
 				payType.add("PF");
 				payType.add("RPF");
-				paymentTypeDesc.add("Bayaran Proses");
+				// 14203 - Change Bayaran Proses
+				paymentTypeDesc.add("Fi Pemprosesan MOF");
 			}
 			
 			String paymentType = "";
 			if("S".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE3))){//Soft Certificate Fee
 				payType.add("SF");
-				paymentTypeDesc.add("Bayaran Sijil Digital");
+				// 14203 - Change Bayaran Sijil Digital
+				paymentTypeDesc.add("Fi Sijil Digital");
 			}
 			
 			for(int b=0; b<payType.size(); b++){
@@ -1800,7 +1798,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							//row[7].toString(),//No Rujukan
 							row[7] != null ? row[7].toString() : "",
 							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
+							//#14203 - uppercase perihal
+							row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 							priceAmt ,//Harga
 							gstAmt,//GST
 							serviceCharge, // Caj Perkhidmatan 
@@ -1822,7 +1821,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 										String.valueOf(row[6]),//No Permohonan
 										row[7].toString(),//No Rujukan
 										row[12].toString(),//Jenis Terimaan-Kod
-										row[13].toString(),//Jenis Terimaan-Perihal
+										//#14203 - uppercase perihal
+										row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 										priceAmt ,//Harga
 										gstAmt,//GST
 										serviceCharge, // Caj Perkhidmatan 
@@ -1841,7 +1841,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									String.valueOf(row[6]),//No Permohonan
 									row[7].toString(),//No Rujukan
 									row[12].toString(),//Jenis Terimaan-Kod
-									row[13].toString(),//Jenis Terimaan-Perihal
+									//#14203 - uppercase perihal
+									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 									priceAmt ,//Harga
 									gstAmt,//GST
 									serviceCharge, // Caj Perkhidmatan 
@@ -2268,7 +2269,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) reportList.get(m);
 					fullList.put(m, new Object[] {
 						(Date) row[3],row[2].toString(),row[5].toString(),
-						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString(),
+						//#14203 - uppercase perihal
+						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString().toUpperCase(),
 						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO
 					});
 				}
@@ -2540,7 +2542,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal totalAll = jan.add(feb).add(mac).add(apr).add(may).add(jun).add(july).add(aug).add(sep).add(oct).add(nov).add(dec);
 							
 					revenueCollectionList.put(m, new Object[]{
-						row[0].toString(),row[1].toString(),
+						//#14203 - uppercase perihal
+						row[0].toString(),row[1].toString().toUpperCase(),
 						(BigDecimal)row[2] != null ? (BigDecimal)row[2] : "-",
 						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-",
 						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-",
