@@ -13362,7 +13362,14 @@ public class SmApplicationBackingBean extends
 	
 //	17906	
 	public void checkActiveAndPendingTransaction(){
-		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		//to check if not from supplier user
+		SmSupplier currSupp = this.getManagedBean().getSmSupplier();
+		if(this.getManagedBean().isSupplierUser() && currSupp == null){
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		}else if(currSupp == null){
+			currSupp = new SmSupplier();
+		}
 		//#17906 - start
 		boolean hasActiveTransactionContractManagement = false, hasActiveTransactionFulfilment = false;
 		
@@ -13422,8 +13429,14 @@ public class SmApplicationBackingBean extends
 	public void assignSelBankWithPendingTransaction(SmSupplierBank shareBankBean) {
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelectedBankBranchIds(null);
-		
-		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		//to check if not from supplier user
+		//SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		SmSupplier currSupp = this.getManagedBean().getSmSupplier();
+		if(this.getManagedBean().isSupplierUser() && currSupp == null){
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		}else if(currSupp == null){
+			currSupp = new SmSupplier();
+		}
 		
 		boolean hasActiveTransactionContractManagement = SmApplicationUtil
 				.hasActiveTransactionForContractManagement(currSupp, shareBankBean.getAccountNo());
