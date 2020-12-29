@@ -7,11 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" toggleable="true">
+		<!-- #14150 - added sortBy -->
 		<p:dataTable var="aprvdCatBean"
 			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
 			value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}"
 			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			sortBy="#{aprvdCatBean.pmCategoryL1.categoryL1Code}">
+
 			<ac:paginator for="catApprDt" />
 			<p:columnGroup type="header">
 				<p:row>
