@@ -1022,7 +1022,7 @@ public class PpReportsBackingBean extends
 					"Jumlah Peratusan Amaun Perbelanjaan eP(%)","Justifikasi Tidak Menggunakan eP"
 			));
 			Sheet sheetItemList = createSheetBase(wb, createHelper, "Senarai Item", titleReport, 
-					columnHeaderListItem, columnHeaderListItem.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListItem, columnHeaderListItem.size(),params.get("PMINIS")!=null?true:false,ministryName );
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListItem.size(); i++) {   
@@ -1199,13 +1199,13 @@ public class PpReportsBackingBean extends
 							obj[7] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
 							
 							//percentage
-							Double amntMinusDeduct = ((Double)obj[6]) - ((BigDecimal)obj[7]).doubleValue();
-							obj[8] = amntMinusDeduct / ((BigDecimal)obj[4]).doubleValue() * 100;
+							//Double amntMinusDeduct = ((Double)obj[6]) - ((BigDecimal)obj[7]).doubleValue();
+							obj[8] = ((Double)obj[6])  / ((BigDecimal)obj[4]).doubleValue() * 100;
 
 							kumpPtjList.put(Integer.parseInt((String)row[1]), obj);
 						}else{
-							Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
-							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
+							//Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
+							Double percentageExpenditure = (Double)row[18] /((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[1]), new Object[]{
 								count,Integer.valueOf((String)row[1]),(String)row[2],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
 								(Double)row[18],(BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO,percentageExpenditure
@@ -1272,13 +1272,13 @@ public class PpReportsBackingBean extends
 						obj[8] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
 						
 						//percentage
-						Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
-						obj[9] = amntMinusDeduct / ((BigDecimal)obj[4]).doubleValue() * 100;
+						//Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
+						obj[9] = (Double)obj[7] / ((BigDecimal)obj[4]).doubleValue() * 100;
 
 						ptjList.put(Integer.parseInt((String)row[3]), obj);
 					}else{
-						Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
-						Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
+						//Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
+						Double percentageExpenditure = (Double)row[18] /((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[3]), new Object[]{
 							count,(String)row[2],Integer.valueOf((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
 							(Double)row[18],(BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO,percentageExpenditure
@@ -1544,6 +1544,8 @@ public class PpReportsBackingBean extends
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m); //get whole object
 					
+					log.info("test report excel azza");
+					
 					if(ptjList.containsKey(Integer.parseInt((String)row[3]))){ //find key in map
 						Object[] obj = ptjList.get(Integer.parseInt((String)row[3]));
 						//9-10
@@ -1562,8 +1564,10 @@ public class PpReportsBackingBean extends
 						obj[8] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
 						
 						//percentage
-						Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
-						obj[9] = amntMinusDeduct / ((BigDecimal)obj[5]).doubleValue() * 100;
+						//Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
+						obj[9] = (Double)obj[7] / ((BigDecimal)obj[5]).doubleValue() * 100;
+						//obj[9] = amntMinusDeduct / ((BigDecimal)obj[5]).doubleValue() * 100;
+
 
 						ptjList.put(Integer.parseInt((String)row[3]), obj);
 					}else{
