@@ -42,6 +42,15 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
 					</tr>
+					<!-- 13320 - added division-->
+					<ui:fragment rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+					<tr>
+						<td></td>
+						<td></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionName}"/></td>
+					</tr>
+					</ui:fragment>
 					<tr>
 						<c:choose>
 						<c:when test="#{empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2.trim()

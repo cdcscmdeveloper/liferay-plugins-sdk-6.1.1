@@ -49,6 +49,17 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateName}"/></td>
 					</tr>
+					<!-- 13320 -->
+					<tr>
+						<td>&#160;</td>
+						<td></td>
+						<!-- #13320 - render division - end-->
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionName}"
+											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/></td>
+						<!-- #13320 - render division - end-->
+					</tr>
 					<tr>
 						<td>&#160;</td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
