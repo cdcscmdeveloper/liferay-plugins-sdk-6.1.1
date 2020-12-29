@@ -1053,7 +1053,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				log.info("-----add log before------ ");
+				
 				try
 				{
 				    Thread.sleep(5000);
@@ -1063,7 +1063,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				    Thread.currentThread().interrupt();
 				}
 				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);
-				log.info("-----add log after------ ");
+				
 				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
 				scLoa = resDTO.getScLoa();								
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
