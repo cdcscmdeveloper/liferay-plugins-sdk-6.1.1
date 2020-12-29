@@ -56,8 +56,15 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-	
+
 	private SmSupplierBank[] selectedSuppBanks;
+	//13320-Start
+	private List<SelectItem> businessDivisionLs;
+	private List<SelectItem> residentialDivisionLs;
+	private List<SelectItem> permenantDivisionLs;
+	private Long divisionId;
+	private boolean divisionBox = true;
+	//13320-End
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -314,5 +321,44 @@ public class ViewSuppProfileManagedBean extends
 	public void setSelectedSuppBanks(SmSupplierBank[] selectedSuppBanks) {
 		this.selectedSuppBanks = selectedSuppBanks;
 	}
+	
+	public List<SelectItem> getBusinessDivisionLs() {
+		return businessDivisionLs;
+	}
 
+	public void setBusinessDivisionLs(List<SelectItem> businessDivisionLs) {
+		this.businessDivisionLs = businessDivisionLs;
+	}
+
+	public List<SelectItem> getResidentialDivisionLs() {
+		return residentialDivisionLs;
+	}
+
+	public void setResidentialDivisionLs(List<SelectItem> residentialDivisionLs) {
+		this.residentialDivisionLs = residentialDivisionLs;
+	}
+
+	public List<SelectItem> getPermenantDivisionLs() {
+		return permenantDivisionLs;
+	}
+
+	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
+		this.permenantDivisionLs = permenantDivisionLs;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
+	}
 }

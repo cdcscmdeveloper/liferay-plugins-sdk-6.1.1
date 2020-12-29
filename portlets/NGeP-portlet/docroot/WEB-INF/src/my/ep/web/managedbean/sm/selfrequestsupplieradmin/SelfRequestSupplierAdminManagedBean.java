@@ -26,6 +26,10 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 	private Long myCountryId;
 	private List<SelectItem> countryItems;
 	private List<SelectItem> stateItems;
+	/*13320-start*/
+	private List<SelectItem> divisionItems;
+	private boolean divisionBox=true;
+	/*13320-End*/
 	private List<SelectItem> districtItems;
 	private List<SelectItem> cityItems;
 	private SelectItem[] identificationTypeItems;
@@ -165,6 +169,22 @@ public class SelfRequestSupplierAdminManagedBean extends BaseManagedBean {
 
 	public void setSmPermenantAdd(SmAddress smPermenantAdd) {
 		this.smPermenantAdd = smPermenantAdd;
+	}
+
+	public List<SelectItem> getDivisionItems() {
+		return divisionItems;
+	}
+
+	public void setDivisionItems(List<SelectItem> divisionItems) {
+		this.divisionItems = divisionItems;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
 	}
 
 
