@@ -7,16 +7,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 
@@ -27,7 +23,7 @@ public class DisciplinaryActionRest {
 
 	@GET
 	@Path("smdisciplinaryaction") 
-	public Response retrieveDisciplinaryAction() {
+	public Response retrieveDisciplinaryAction() {		
 		log.info("Before success calling retrieve rest api....");
 		try {
 			//27426 : Disciplinary Action - start
@@ -44,11 +40,16 @@ public class DisciplinaryActionRest {
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
 					&& releaseDAList.getSmDisciplinaryActions().size() > 0){
+				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
+				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
 					if(disc != null
 							&& disc.getSmSupplier() != null){
 						disc.getSmSupplier();
+						log.info("-----------Bilangan------------------"+i);
 						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);	
+						log.info("-----------After------------------"+i);
+						i++;
 					}										
 				}
 			}
