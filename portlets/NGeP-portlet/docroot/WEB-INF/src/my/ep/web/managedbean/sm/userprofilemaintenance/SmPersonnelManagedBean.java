@@ -119,6 +119,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private int authUserCount;
 	private int contractSignerCount;
 	private String epRoleTrans;
+	private List<SelectItem> raceSelectItems;
+	private boolean disableRoleSelection;
 	// 9569 end
 
 	public SmPersonnelManagedBean() {
@@ -833,5 +835,21 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.epRoleTrans = epRoleTrans;
 	}
 	// 9569 end
+
+	public List<SelectItem> getRaceSelectItems() {
+		return raceSelectItems;
+	}
+
+	public void setRaceSelectItems(List<SelectItem> raceSelectItems) {
+		this.raceSelectItems = raceSelectItems;
+	}
+
+	public boolean isDisableRoleSelection() {
+		return disableRoleSelection;
+	}
+
+	public void setDisableRoleSelection(boolean disableRoleSelection) {
+		this.disableRoleSelection = disableRoleSelection;
+	}
 	
 }
