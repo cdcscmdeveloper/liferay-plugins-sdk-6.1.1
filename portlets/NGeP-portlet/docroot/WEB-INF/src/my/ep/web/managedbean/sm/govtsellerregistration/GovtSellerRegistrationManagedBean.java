@@ -36,6 +36,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	public List<SelectItem> agencyTypeItems;
 	public List<SelectItem> identificationTypeItems;
 	public List<SelectItem> branchCompanyStates;
+	public List<SelectItem> branchCompanyDivisions;//13320
 	public List<SelectItem> branchCompanyDistricts;
 	public List<SelectItem> branchCompanyCities;
 	public List<SelectItem> salutationItems;
@@ -48,6 +49,7 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	//harris
 	private boolean showSst;
 	private boolean showBranchPointOfContact;
+	private Long divisionIds;//13320
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
 		/**
@@ -235,6 +237,22 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setBankBranches(List<SmSupplierBranchBank> bankBranches) {
 		this.bankBranches = bankBranches;
+	}
+
+	public Long getDivisionIds() {
+		return divisionIds;
+	}
+
+	public void setDivisionIds(Long divisionIds) {
+		this.divisionIds = divisionIds;
+	}
+
+	public List<SelectItem> getBranchCompanyDivisions() {
+		return branchCompanyDivisions;
+	}
+
+	public void setBranchCompanyDivisions(List<SelectItem> branchCompanyDivisions) {
+		this.branchCompanyDivisions = branchCompanyDivisions;
 	}
 
 }

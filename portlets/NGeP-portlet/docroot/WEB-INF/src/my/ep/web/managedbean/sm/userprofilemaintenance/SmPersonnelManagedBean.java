@@ -57,6 +57,17 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> mailAddCityList;
 	private List<SelectItem> permAddCountryList;
 	private List<SelectItem> permAddStateList;
+	
+	//13320-Start
+	private List<SelectItem> mailAddDivisionList;
+	private List<SelectItem> permAddDivisionList;
+	private List<SelectItem> divisionList;
+	private Long divisionId;
+	//#13320 - added division
+	private Long mailDivisionId;
+	private boolean mailDivisionBox=true;
+	private boolean divisionBox=true;
+	//13320-End
 	private List<SelectItem> permAddDistrictList;
 	private List<SelectItem> permAddCityList;
 	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
@@ -677,4 +688,63 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setHasActiveAppl(boolean hasActiveAppl) {
 		this.hasActiveAppl = hasActiveAppl;
 	}
+	
+	public List<SelectItem> getMailAddDivisionList() {
+		return mailAddDivisionList;
+	}
+
+	public void setMailAddDivisionList(List<SelectItem> mailAddDivisionList) {
+		this.mailAddDivisionList = mailAddDivisionList;
+	}
+
+	public List<SelectItem> getPermAddDivisionList() {
+		return permAddDivisionList;
+	}
+
+	public void setPermAddDivisionList(List<SelectItem> permAddDivisionList) {
+		this.permAddDivisionList = permAddDivisionList;
+	}
+
+	public List<SelectItem> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<SelectItem> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	public boolean isDivisionBox() {
+		return divisionBox;
+	}
+
+	public void setDivisionBox(boolean divisionBox) {
+		this.divisionBox = divisionBox;
+	}
+
+
+	//#13320 - added division - start
+	public Long getMailDivisionId() {
+		return mailDivisionId;
+	}
+
+	public void setMailDivisionId(Long mailDivisionId) {
+		this.mailDivisionId = mailDivisionId;
+	}
+
+	public boolean isMailDivisionBox() {
+		return mailDivisionBox;
+	}
+
+	public void setMailDivisionBox(boolean mailDivisionBox) {
+		this.mailDivisionBox = mailDivisionBox;
+	}
+	//#13320 - added division - end
 }
