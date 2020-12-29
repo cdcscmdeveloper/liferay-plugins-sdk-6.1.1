@@ -30,6 +30,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -2187,6 +2189,18 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void preRenderSmUserMaintenance() {
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
+		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierByEpNo(supplierSearchReqDTO);
+		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
+			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+				throw new EpException(MessageConst.ERROR_722684);
+			}else if(searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!= null &&!searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal()){
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+				throw new EpException(MessageConst.ERROR_722684);
+			}
+		}
 		getManagedBean().setSmSupplier(smSupplier);
 		getManagedBean().setSmAppl(smSupplier.getSmAppl());
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -2200,6 +2214,7 @@ public class SmPersonnelBackingBean extends
 		epRoleList(2);
 		getManagedBean().setCountryList(SmCommonUtil.getCountryList());
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
+		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
 		SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
 	}
 
@@ -2327,6 +2342,7 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setEditMode(true);
 		getPersonnelInfoById(personnelId);
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
+		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());;
 		epRoleList(getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
