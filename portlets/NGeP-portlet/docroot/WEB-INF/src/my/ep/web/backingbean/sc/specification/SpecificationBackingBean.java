@@ -9718,7 +9718,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
 		Long statusId = scQt.getQtStatus().getStatusId();
 		
-		if(this.getManagedBean().isReadOnly() && !(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))){
+		// #25077 - #91
+		if(!(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId))){
 			log.debug("TestmangaEstimatedAmountPrerenderView");
 			if (null == scQt.getEstimatedAmount()) {
 				SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
