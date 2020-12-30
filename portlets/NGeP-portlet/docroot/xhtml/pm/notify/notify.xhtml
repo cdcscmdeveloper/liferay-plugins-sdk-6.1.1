@@ -202,8 +202,8 @@
 								</p:outputPanel>
 								
 								<p:outputPanel id="pnldetail" layout="block" autoUpdate="true">
-								
-									<p:panel rendered="#{notifyBackingBean.managedBean.selectedNotify != null}"
+									
+									<p:panel rendered="#{notifyBackingBean.managedBean.selectedNotifyObj != null}"
 										style="border-width:1px 1px; border:1px solid #ddd!important;padding:10px!important; background:transparent !important; overflow: auto; margin: 5px 0 0;"
 										toggleable="true">
 											<table border="0" width="100%" cellpadding="0" cellspacing="0">
@@ -213,14 +213,14 @@
 															value="#{lbl['lbl.portal.notify.sender']}"> : </h:outputText></td>
 											
 													<td style="text-align: left"><h:outputText
-															value="#{notifyBackingBean.managedBean.selectedNotify.sender.userName}"></h:outputText>
+															value="#{notifyBackingBean.managedBean.selectedNotifyObj[27]}"></h:outputText>
 													</td>
 											
 													<td align="right"
 														style="width: 200px; text-align: right; font-size: 12px;">
 														
 														<h:outputText
-															value="#{notifyBackingBean.managedBean.selectedNotify.createdDate}"
+															value="#{notifyBackingBean.managedBean.selectedNotifyObj[5]}"
 															readonly="true">
 															<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
 														</h:outputText></td>
@@ -234,7 +234,7 @@
 												
 													<td colspan="3"><h:outputText readonly="true"
 															style="width:545px"
-															value="#{notifyBackingBean.getNotifyDashboardSubject(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
+															value="#{notifyBackingBean.managedBean.selectedNotifyObj[28]}"></h:outputText>
 													</td>
 													
 												</tr>
@@ -250,7 +250,7 @@
 																			<p>
 																				<h:outputText escape="false"
 																						style="text-align:left;width:98%;height:220px;overflow: auto;"
-																						value="#{notifyBackingBean.getNotifyDashboardContent(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
+																						value="#{notifyBackingBean.getFilteredNotifyDashboardContent(notifyBackingBean.managedBean.selectedNotifyObj)}"></h:outputText>
 																			</p>
 																		</p:outputPanel>
 																	</td>
