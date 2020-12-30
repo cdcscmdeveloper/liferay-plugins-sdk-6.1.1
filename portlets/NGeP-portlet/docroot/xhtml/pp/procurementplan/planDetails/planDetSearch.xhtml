@@ -40,7 +40,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 								<f:selectItems value="#{pPlanBackingBean.retrievePplanTypeCategory()}" 
 								var="parameter" itemValue="#{parameter.parameterDescId}"
 								itemLabel="#{parameter.codeName}"/>
-								<p:ajax event="change" update="pDetProcMthdSearch" listener="#{pPlanBackingBean.onSelectCategorySearch(pPlanBackingBean.managedBean.planSearchBean.categoryType.parameterCode)}" partialSubmit="true" />
+								<p:ajax event="change" update="pDetProcMthdSearch" listener="#{pPlanBackingBean.onSelectCategorySearch(pPlanBackingBean.managedBean.planSearchBean.categoryType.parameterCode)}" process="@this" />
 						<!-- 201111@akmal - Enhancement27624 - End -->
 							</p:selectOneMenu>
 						</td>
