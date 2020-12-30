@@ -2179,6 +2179,7 @@ public class NoticeBoardBackingBean extends
 
 		Date closingDate = DateUtils.convertStringToDate(
 				"yyyy-MM-dd HH:mm:ss.S", clsDate);
+		//#15934 - start
 		String strDays = null;
 		for (String newStr : new String[] { ResourceBundleUtils.getMessage(
 				"lbl.cm.days",
@@ -2214,6 +2215,7 @@ public class NoticeBoardBackingBean extends
 				}
 			}
 		}
+		//#15934 - end
 		return closingDays;
 	}
 
