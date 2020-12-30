@@ -639,7 +639,7 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void submitAction() {
 		// Validate Desk officer ranking
-		validateConsolidationReport();
+		//validateConsolidationReport();
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
 	}
