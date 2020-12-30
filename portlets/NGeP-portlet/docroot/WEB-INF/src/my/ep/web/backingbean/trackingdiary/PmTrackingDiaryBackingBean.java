@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -332,9 +333,10 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-		String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
-		
-		if(docType !=null && docId !=null) {
+		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
+		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
+		String reportName = getTrackingDiaryReportName(docType);
+		if(docType !=null && docId !=null & reportName!=null) {
 			try {
 				generateReport(reportName, paramMap);
 			} catch (IOException e) {
@@ -343,6 +345,7 @@ public class PmTrackingDiaryBackingBean extends
 		} else {
 			throw new EpException("Report is not available for this document.");
 		}
+		//END- #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 	}
 	
 	public void redirectToMainPage(){
