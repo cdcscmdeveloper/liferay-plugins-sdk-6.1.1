@@ -205,7 +205,8 @@ public class PpReportsBackingBean extends
 			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
 			if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
 					&&(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
-							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+						|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
+							|| ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){ //#27472 add N type 
 				if(isRolePlanner() || isRoleVerifier()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));					
 					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));					
@@ -221,7 +222,8 @@ public class PpReportsBackingBean extends
 					if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
 						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setDisabledMinistryLov(true);
-					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){					
+					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
+							|| ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){ //#27472 add N type 				
 						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));	
 						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
@@ -234,20 +236,6 @@ public class PpReportsBackingBean extends
 					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
-			}
-			//start #27472 -enable plan officer yg ade Kuatkuasa choose ptj : Approve Other PTJ Procurement(type 'N')
-			else if((getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
-					&& ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
-				if(isRolePlanner() || isRoleVerifier() || isRoleApprover()){
-					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
-					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));
-					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
-					getManagedBean().setSelectedPTJ(getManagedBean().getCurrentActiveOrg());
-					getManagedBean().setDisabledMinistryLov(true);
-					getManagedBean().setDisabledPegawaiLov(true);
-					getManagedBean().setDisabledKumpulanPTJLov(true);
-				}
-			//end 27472
 			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null){ //#27472 remove group org type N
 				// usual org hierarchy 
 				if(isRolePlanner() || isRoleVerifier() || isRoleApprover()){
