@@ -339,8 +339,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				loadPlanDetails(id, false);
 			else
 				loadPlanDetails(id, true);
-			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
+			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
 				this.getManagedBean().setDisablePlanSearchDet(true);
+				this.getManagedBean().setPageStyle("m_approved");
+			}
 			else
 				this.getManagedBean().setDisablePlanSearchDet(false);
 			loadDefaultButtons();
