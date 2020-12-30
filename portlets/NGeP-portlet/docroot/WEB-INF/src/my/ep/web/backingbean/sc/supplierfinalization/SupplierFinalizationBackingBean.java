@@ -2374,26 +2374,39 @@ public class SupplierFinalizationBackingBean extends
 //28834
 	public boolean changeMeetingStatusBrief() {
 		Boolean Meetingstatus= false;
-		
+		int doneList = 0;
+		int pendingList = 0;
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 		
 		if (CollectionUtils.isNotEmpty(meetingList)) {
             List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 				
-				for (ScQtMeeting meeting : meetingList) {
-					meeting.getMeetingStatus().getStatusId();
-					if(meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID))
-					{
-						throw new EpException(MessageConst.ERROR_700091);
+//				for (ScQtMeeting meeting : meetingList) {
+//					meeting.getMeetingStatus().getStatusId();
+//					if(meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID))
+//					{
+//						throw new EpException(MessageConst.ERROR_700091);
+//					}
+//					else 
+//					{
+//						Meetingstatus=true;
+//					
+//					}
+//					
+//				}
+				for (ScQtMeeting meeting : meetingList){
+					if(meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID)){
+						doneList++;
+					}else{
+						pendingList++;
 					}
-					else 
-					{
-						Meetingstatus=true;
-					
-					}
-					
 				}
-				
+				if (pendingList==0){
+					throw new EpException(MessageConst.ERROR_700091);
+				}
+				if((pendingList-doneList)>0 && doneList!=0){
+					throw new EpException(MessageConst.ERROR_700091);
+				}else{Meetingstatus=true;}
 			}
 		
 		
