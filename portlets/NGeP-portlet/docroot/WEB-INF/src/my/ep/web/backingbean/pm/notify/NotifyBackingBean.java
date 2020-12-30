@@ -180,7 +180,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		Long notifyUserId = new Long(selectedNotifyObj[0].toString());
 		boolean readSelectedNotifyObj = Boolean.parseBoolean(String.valueOf(selectedNotifyObj[12]));
 		
-		System.out.println("notifyUserId= "+notifyUserId);
+		System.out.println("notifyUserId= "+notifyUserId
+				+", readSelectedNotifyObj= "+readSelectedNotifyObj);
 		
 		PmNotifyUser selectedNotify = new PmNotifyUser();
 		
@@ -204,6 +205,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			if (resDTO.isSuccessful()) {
 				selectedNotify.setRead(true);
 			}
+			System.out.println("getNotifyUserId= "+ selectedNotify.getNotifyUserId()
+					+"isRead= "+selectedNotify.isRead());
 		}
 	}
 	// #27009 -- end
@@ -586,6 +589,79 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		}
 		return "";
 	}
+	
+	// #27009 -- start
+	public String getFilteredNotifyDashboardContent(Object[] pmNotifyUser) {
+		
+		System.out.println("Entered getFilteredNotifyDashboardContent()");
+		
+		String notifyDashboardId = pmNotifyUser[21].toString();
+		String notifyDashboardQtId;
+		
+		if (null != pmNotifyUser) {
+			
+			logger.info("notifyDashboardId= " + notifyDashboardId);
+			notifyDashboardQtId = (pmNotifyUser[26] != null) ? pmNotifyUser[26].toString() : "";
+			
+			logger.info("notifyDashboardQtId= " + notifyDashboardQtId);
+			
+			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", INotifySO.class);
+			
+			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notifyDashboardId)
+					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notifyDashboardId)
+					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notifyDashboardId)
+					|| NotificationTextConst.TEMPLATE_ID_401050.equals(notifyDashboardId)) {
+			
+				NotifyReqDTO reqDTO = new NotifyReqDTO();
+				
+				if (StringUtils.isNotEmpty(notifyDashboardQtId)) {
+					
+					reqDTO.setNotificationDashboardQtId(notifyDashboardQtId);
+					NotifyResDTO resDTO = reqSO.retrieveNotificationDashboardQt(reqDTO);
+					
+					logger.info("isSuccessful= "+resDTO.isSuccessful());
+					
+					if (resDTO.isSuccessful()) {
+						logger.info("QT Subject= " + String.valueOf(resDTO.getNotificationDashboardQt()[1]) 
+								+", QT Content= "+ String.valueOf(resDTO.getNotificationDashboardQt()[7]));
+						return String.valueOf(resDTO.getNotificationDashboardQt()[7]);
+					}
+					
+				} else {
+					
+					reqDTO.setNotificationDashboardId(notifyDashboardId);
+					NotifyResDTO resDTO = reqSO.retrieveNotificationDashboard(reqDTO);
+					
+					logger.info("isSuccessful= "+resDTO.isSuccessful());
+					
+					if (resDTO.isSuccessful()) {
+						logger.info("Subject= " + String.valueOf(resDTO.getNotificationDashboard()[1]) 
+								+", Content= "+ String.valueOf(resDTO.getNotificationDashboard()[6]));
+						return String.valueOf(resDTO.getNotificationDashboard()[6]);
+					}
+				}
+				
+		    } else {
+		    	
+		    	NotifyReqDTO reqDTO = new NotifyReqDTO();
+		    	reqDTO.setNotificationDashboardId(notifyDashboardId);
+				NotifyResDTO resDTO = reqSO.retrieveNotificationDashboard(reqDTO);
+				
+				logger.info("isSuccessful= "+resDTO.isSuccessful());
+				
+				if (resDTO.isSuccessful()) {
+					logger.info("Subject= " + String.valueOf(resDTO.getNotificationDashboard()[1]) 
+							+", Content= "+ String.valueOf(resDTO.getNotificationDashboard()[6]));
+					return String.valueOf(resDTO.getNotificationDashboard()[6]);
+				}
+		    	 
+		    }
+			
+		}
+		return "";
+	}
+	// #27009 -- end
 	
 	public String getNotifyDashboardSubject(PmNotifyUser pmNotifyUser) {
 		logger.debug("Entered: " + this.getClass().getName() + ".getNotifyDashboardContent()");
