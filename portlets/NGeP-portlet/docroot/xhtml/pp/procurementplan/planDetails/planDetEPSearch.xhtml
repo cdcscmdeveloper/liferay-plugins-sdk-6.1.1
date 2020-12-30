@@ -14,7 +14,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			
 			
 			<tr>
-				<td style="width: 20%;"></td>
+				<td style="#{pPlanBackingBean.managedBean.pageStyle eq 'create' ? 'width: 12%;':'width: 20%;'}"></td>
 				<td style="width: 30%;">
 				<table class="ppTwoTable">
 					
@@ -54,7 +54,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						 	<p:dataTable id="accCodeResult" 
 						 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 						 		styleClass="ppTablePlanItem" rows="5"
-						 		style="width: 400px; margin-left: auto;" 
+						 		style="width: 400px;" 
 						 		var="pmGo" value="#{pPlanBackingBean.managedBean.vPmGolist}"
 								rendered="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">	
 								<p:column headerText="#{lbl['lbl.fl.gosodo']}" style="width: 30%;">
@@ -86,6 +86,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateFrom}" readonlyInput="true"
 									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									mindate="#{pPlanBackingBean.managedBean.minYear}"
 									maxdate="#{pPlanBackingBean.managedBean.maxYear}"
 									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 								<!-- 201111@akmal - Enhancement27624 - End -->
@@ -98,6 +99,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<p:calendar rendered="true"
 									value="#{pPlanBackingBean.managedBean.planSearchBean.updatedDateTo}" readonlyInput="true"
 									showOn="button" navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									mindate="#{pPlanBackingBean.managedBean.minYear}"
 									maxdate="#{pPlanBackingBean.managedBean.maxYear}"
 									disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"/>
 								<!-- 201111@akmal - Enhancement27624 - End -->
