@@ -2869,7 +2869,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					Long statusId = null;
 					PmUser pmUserNull = null;//#26475 & #26474
 					
-					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
 						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
