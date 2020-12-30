@@ -5604,6 +5604,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 		List<PmParameterDesc> arrlist = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PROCUREMENT_METHOD, null);
 		List<PmParameterDesc> filteredlist = new ArrayList<PmParameterDesc>();
+
+		log.info("procurementCatTypeList size - "+procurementCatTypeList.size());
 		if(!procurementCatTypeList.isEmpty()){
 			for(PmProcurementCatType cattype : procurementCatTypeList){
 				for(PmParameterDesc paramdesc : arrlist){
@@ -5614,7 +5616,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 		}
-		if(filteredlist.isEmpty()) filteredlist = arrlist;
+		if(filteredlist.isEmpty()){ 
+			log.info("filteredlist.isEmpty size - "+filteredlist.size());
+			filteredlist = arrlist;
+		}
 		log.info("retrievePplanProcurementMethod - End");
 		return filteredlist;
 	}
