@@ -2263,13 +2263,16 @@ public class SupplierFinalizationBackingBean extends
 		ScQtCommittee scQtCommittee = null;
 		EpException epException = null;
 		
-		 // #27502  //#29699
-		if(this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
+		 // #27502  //#29699  //28780#52
+		//27502 - Start.
+		if ((getManagedBean().isBpkCentralContract() || !getManagedBean().isInitialDecisionFwdToBPK()) && 
+				this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
 			throw new EpException(MessageConst.ERROR_775150,new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.committee.endorsement.report",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) });
 		}
+		//27502 - End.
 		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
