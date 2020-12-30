@@ -2856,8 +2856,9 @@ return	remarksNotFound;
 		ScQtCommittee scQtCommittee = null;
 		EpException epException = null;
 		
-		 // #27502  //#29699
-		if(this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
+		 // #27502  //#29699  //28780#52
+		if(null != this.getManagedBean().getEndorsementReport() && 
+				this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
 			throw new EpException(MessageConst.ERROR_775150,new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.committee.endorsement.report",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
