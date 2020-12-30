@@ -238,9 +238,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void preLoadingCreate(){
 		log.info("preLoadingCreate");
 		this.getManagedBean().setBackAllow(false);
-		//201111@akmal - Enhancement27624 - Start
+		//201228@akmal - Enhancement27624 - Start
 		this.getManagedBean().setDisablePlanSearchDet(true);
-		//201111@akmal - Enhancement27624 - End
+		this.getManagedBean().setPageStyle("create");
+		//201228@akmal - Enhancement27624 - End
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
@@ -260,6 +261,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+
 		if (taskId == null) {
 			return;
 		}
@@ -287,12 +289,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
 		this.loadPlanDetails(planObj.getPlanId().longValue(), false);
-		//201208@akmal - Enhancement27624 - Start
 		setScreenVariables();
 		this.getManagedBean().setPlanId(planObj.getPlanId().longValue());
 		this.getManagedBean().setFromTaskList(true);
+
+		//201228@akmal - Enhancement27624 - Start
 		this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getSelectedPlan().getPlanYear().toString());
-		//201208@akmal - Enhancement27624 - End
+		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
+			this.getManagedBean().setDisablePlanSearchDet(true);
+		else
+			this.getManagedBean().setDisablePlanSearchDet(false);
+		//201228@akmal - Enhancement27624 - End
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
@@ -327,14 +334,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrievePlanTypeMapper();
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
-			//201209@akmal - Enhancement27624 - Start
+			//201229@akmal - Enhancement27624 - Start
 			if(this.getManagedBean().isFromTaskList())
 				loadPlanDetails(id, false);
 			else
 				loadPlanDetails(id, true);
+			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
+				this.getManagedBean().setDisablePlanSearchDet(true);
+			else
+				this.getManagedBean().setDisablePlanSearchDet(false);
 			loadDefaultButtons();
 			this.getManagedBean().setPlanId(id);
-			//201209@akmal - Enhancement27624 - End
+			//201229@akmal - Enhancement27624 - End
 		}
 		
 		
@@ -932,6 +943,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
+				//201228@akmal - Enhancement27624 - Start
+				this.getManagedBean().setMinYear(resDTO.getLastUpdatedDate());
+				this.getManagedBean().setMinInvitationYear(
+						resDTO.getLastUpdatedDate().length()>4
+						? "01/01/"+resDTO.getLastUpdatedDate().substring(resDTO.getLastUpdatedDate().length()-4)
+						: resDTO.getLastUpdatedDate());
+				//201228@akmal - Enhancement27624 - End
 				ppPlan = resDTO.getPlan();
 				if(ppPlan!=null){
 					PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
@@ -2730,6 +2748,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return xhtml
 	 * @throws Exception
 	 */
+	//201228@akmal - Enhancement27624 - Start
+	public void onSelectCategorySearch(Long id){
+		log.info("The category search id " + id);
+		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
+				this.getManagedBean().setSelectedCatSearch(pmProcCat.getProcurementCat());
+				break;
+			}
+		}
+	}
+	//201228@akmal - Enhancement27624 - End
+	
 	public void onSelectCategory(Long id, int index){
 		log.info("The category id " + id);
 		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
@@ -5014,6 +5045,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return reqDTO;
 	}
 	
+	//201228@akmal - Enhancement27624 - Start
 	public void resetPlanDetailSearch() throws Exception{
 		this.getManagedBean().getvPmGolist().clear();
 		this.getManagedBean().getPlanSearchBean().setProcurementType(null);
@@ -5024,10 +5056,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().getPlanSearchBean().setUpdatedDateFrom(null);
 		this.getManagedBean().getPlanSearchBean().setUpdatedDateTo(null);
 		this.getManagedBean().getPlanSearchBean().setStatus(null);
-		redirectToMaintainPlan(this.getManagedBean().getPlanId(), 
+		if(this.getManagedBean().isFromTaskList()){
+			generatePageModeForProcess(this.getManagedBean().getTaskName());
+			this.loadPlanDetails(this.getManagedBean().getPlanId(), false);
+			this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getSelectedPlan().getPlanYear().toString());
+			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
+				this.getManagedBean().setDisablePlanSearchDet(true);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
+		}
+		else
+			redirectToMaintainPlan(this.getManagedBean().getPlanId(), 
 				this.getManagedBean().getBtnValue(), this.getManagedBean().isTrackingDiary());
 	}
-	//200911@akmal - Enhancement27624 - End
+	//201228@akmal - Enhancement27624 - End
 
 	/**
 	 * @return the ppPlanDataModel
@@ -5548,11 +5591,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * 
 	 * @return List<PmParameterDesc> 
 	 */
+	//201228@akmal - Enhancement27624 - Start
 	public List<PmParameterDesc> retrievePplanProcurementMethod(){
-		
-		log.info("retrievePplanProcurementMethod");		
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PROCUREMENT_METHOD, null);
+		log.info("retrievePplanProcurementMethod - Start");
+		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
+
+		String languageCode = getFacesScopes().getUserLocale().getLanguage();
+		if(this.getManagedBean().getSelectedCatSearch()!=null)
+			procurementCatTypeList = PpCommonUtil.retrieveProcurementTypeListByCatId(languageCode, this.getManagedBean().getSelectedCatSearch().getParameterId());
+			
+		List<PmParameterDesc> arrlist = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PROCUREMENT_METHOD, null);
+		List<PmParameterDesc> filteredlist = new ArrayList<PmParameterDesc>();
+		if(!procurementCatTypeList.isEmpty()){
+			for(PmProcurementCatType cattype : procurementCatTypeList){
+				for(PmParameterDesc paramdesc : arrlist){
+					if(cattype.getProcurementType().getParameterId() == paramdesc.getPmParameter().getParameterId()){
+						filteredlist.add(paramdesc);
+						break;
+					}
+				}
+			}
+		}
+		log.info("retrievePplanProcurementMethod - End");
+		return filteredlist;
 	}
+	//201228@akmal - Enhancement27624 - Start
 	
 	/**
 	 * Gets the Status DropDown Values.
