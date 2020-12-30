@@ -275,6 +275,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #27502 - Start 
 	private boolean isMofFinalization;
 	private boolean mofRefinalized;
+	private boolean isBpkCentralContract;
 	// #27502 - Start 
 	
 	// #27668 - Start
@@ -2380,6 +2381,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.mofRefinalized = mofRefinalized;
 	}
 
+	//27502 - Start.
+	/**
+	 * @return the isBpkCentralContract
+	 */
+	public boolean isBpkCentralContract() {
+		return isBpkCentralContract;
+	}
+
+	/**
+	 * @param isBpkCentralContract the isBpkCentralContract to set
+	 */
+	public void setBpkCentralContract(boolean isBpkCentralContract) {
+		this.isBpkCentralContract = isBpkCentralContract;
+	}
+	//27502 - End.
 	
 	
 }
