@@ -3346,7 +3346,11 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			throw new EpException("Rejection reason is mandatory."); //21937		
+			//15629 - Start
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+					null)); 
+			//15629 - End
+			//21937		
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
