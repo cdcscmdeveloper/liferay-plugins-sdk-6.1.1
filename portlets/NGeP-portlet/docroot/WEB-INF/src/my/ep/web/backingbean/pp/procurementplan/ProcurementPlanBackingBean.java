@@ -5612,6 +5612,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 		}
+		if(filteredlist.isEmpty()) filteredlist = arrlist;
 		log.info("retrievePplanProcurementMethod - End");
 		return filteredlist;
 	}
