@@ -558,11 +558,11 @@ public class SmApplicationUtil {
 			} else {
 //				FIXME: check again this condition because all user without Disciplinary Action view this error message (#26934)
 //				log.debug("**** No valid supplier record found for this user ******");
-				throw new EpException(MessageConst.ERROR_721018);
+//				throw new EpException(MessageConst.ERROR_721018);
 			}
 			if (smSupp.getSupplierId() == null) {
 //				FIXME: check again this condition because all user without Disciplinary Action view this error message (#26934)
-				throw new EpException(MessageConst.ERROR_721018);
+//				throw new EpException(MessageConst.ERROR_721018);
 			}
 			return smSupp;
 		} catch (Exception e) {
