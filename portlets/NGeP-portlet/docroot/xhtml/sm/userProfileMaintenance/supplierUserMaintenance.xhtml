@@ -131,13 +131,15 @@
 						<ac:smSoftcertStatus personnel="#{personnel}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
-						<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}"
-							rendered="#{personnel.recordStatusFlg eq '1' and not empty personnel.epRole}" />
-						<h:outputText value="#{lbl['lbl.sm.accountstatus.deactivate']}"
-							rendered="#{personnel.recordStatusFlg eq '1' and empty personnel.epRole}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.accountstatus.active']}"
+							rendered="#{personnel.recordStatusFlg eq '1'}" />
 						<h:outputText
 							value="#{lbl['lbl.sm.accountstatus.pendingactivation']}"
-							rendered="#{personnel.recordStatusFlg ne '1'}" />
+							rendered="#{personnel.recordStatusFlg eq '8'}" />
+						<h:outputText 
+							value="#{lbl['lbl.sm.accountstatus.deactivate']}"
+							rendered="#{personnel.recordStatusFlg ne '1' and personnel.recordStatusFlg ne '8'}" />						
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
 						<ac:smRoleDesc roleCode="#{personnel.epRole}"
