@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
  */
 public class ReportConst implements Serializable{
 	
-
 	private static final long serialVersionUID = 1L;
 	// public static final String MOD_SC_TTL = "lbl.module.supplierSelection";
 	public static final String MALAY_LANGUAGE_CODE = "ms";
@@ -195,7 +194,7 @@ public class ReportConst implements Serializable{
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	public static final String SC_MARKET_RESEARCH_RPT_JSP = "SC_ITEM_PRICING_SUM.jsp";
 	public static final String SC_SUPPLIER_PROPOSAL_REPORT = "SC_PROPOSAL.jsp";
-
+	
 	// SC Module reports start
 	// CM Module reports start
 	public static final String LST_PUB_CAT_ITM_RPT_VAL = "CM_001";
@@ -967,6 +966,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REMARK = "PREMARK";
 	public static final String PARAM_RECOM = "PRECOM";
 	public static final String PARAM_REPORT_OUTPUT_FORMAT = "desformat";
+	public static final String ENHANCED_SPREAD_SHEET = "enhancedspreadsheet";
 	
 
 	// Report parameter key for s1 market research report
@@ -1014,7 +1014,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_QUOTE_NO = "QUOTENO";
 	public static final String PARAM_LOA_NO = "LOANUM";
 	public static final String PARAM_QUOTE_GROUP = "SIMPLE QUOTE NO";
-	public static final String PARAM_PID_GROUP = "CONTRACT PKP NO";
+	public static final String PARAM_PID_GROUP = "CONTRACT+PKP+NO";
 
 	// Supplier Management
 	public static final String DOTJSP = ".jsp";
