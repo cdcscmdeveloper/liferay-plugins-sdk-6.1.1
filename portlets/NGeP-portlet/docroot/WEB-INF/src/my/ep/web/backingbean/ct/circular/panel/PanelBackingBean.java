@@ -387,28 +387,42 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		System.out.println("----------------------- in backAction - start ----------------------");
 		if(getManagedBean().isChkCancelPage()) {
 			getManagedBean().setChkCancelPage(false);
 			return "cancelCircularBase.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isFromCircularNotice()) {
+			System.out.println("----------------------- in backAction - here 001 ");
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isDifferentModule()){
+			System.out.println("----------------------- in backAction - here 002 ");
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
+			System.out.println("----------------------- in backAction - here 1 ");
 			//#3761 - start
 			if (StringUtils.equals(getManagedBean().getGotoPreviewPage(), "simpleQuoteMain")) {
+				System.out.println("----------------------- in backAction - here 2 ");
 				SimpleQuoteBackingBean sqbb = new SimpleQuoteBackingBean();
+				System.out.println("----------------------- in backAction - here 3 ");
 				sqbb.getManagedBean().setPanelItemFlag(false);
+				System.out.println("----------------------- in backAction - here 4 ");
 				sqbb.getManagedBean().setG2GFlag(false);
+				System.out.println("----------------------- in backAction - here 5 ");
 				sqbb.getManagedBean().setActiveIndex(0);
+				System.out.println("----------------------- in backAction - here 6 ");
 				sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true,
 						null);
+				System.out.println("----------------------- in backAction - here 7 ");
 				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
+				System.out.println("----------------------- in backAction - here 8 ");
 				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
+				System.out.println("----------------------- in backAction - here 9 ");
 			}
 			// #3761 - end
+			System.out.println("----------------------- in backAction - here 10 ");
 			return getManagedBean().getGotoPreviewPage();
 		} else {
+			System.out.println("----------------------- in backAction - here 11 ");
 			return "search.xhtml?faces-redirect=true";
 		}
 	}
