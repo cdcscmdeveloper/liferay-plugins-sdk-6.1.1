@@ -2354,15 +2354,19 @@ public class SmPersonnelBackingBean extends
 	 * @return
 	 */
 	public String navigateToUpdateMOFUserPage(String personnelId) {
+		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
 		getPersonnelInfoById(personnelId);
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
 		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
-		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
-						.getBasicSmPersonnel()));
 		epRoleList(getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
+		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				epRoleList(2);
+				}
+		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
+				.getBasicSmPersonnel()));
 		return "mofUserProfile.xhtml";
 	}
 
