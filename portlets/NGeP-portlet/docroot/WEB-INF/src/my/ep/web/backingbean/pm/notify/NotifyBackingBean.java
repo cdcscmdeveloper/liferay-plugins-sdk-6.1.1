@@ -637,8 +637,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 					
 					if (resDTO.isSuccessful()) {
 						logger.info("Subject= " + String.valueOf(resDTO.getNotificationDashboard()[1]) 
-								+", Content= "+ String.valueOf(resDTO.getNotificationDashboard()[6]));
-						return String.valueOf(resDTO.getNotificationDashboard()[6]);
+								+", Content= "+ String.valueOf(resDTO.getNotificationDashboard()[7]));
+						return String.valueOf(resDTO.getNotificationDashboard()[7]);
 					}
 				}
 				
@@ -652,8 +652,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				
 				if (resDTO.isSuccessful()) {
 					logger.info("Subject= " + String.valueOf(resDTO.getNotificationDashboard()[1]) 
-							+", Content= "+ String.valueOf(resDTO.getNotificationDashboard()[6]));
-					return String.valueOf(resDTO.getNotificationDashboard()[6]);
+							+", Content= "+ String.valueOf(resDTO.getNotificationDashboard()[7]));
+					return String.valueOf(resDTO.getNotificationDashboard()[7]);
 				}
 		    	 
 		    }
