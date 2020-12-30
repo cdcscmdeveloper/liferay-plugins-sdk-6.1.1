@@ -5614,7 +5614,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		log.info("arrlist size - "+arrlist.size());
-		for(int i=0; i<procurementCatTypeList.size(); i++){
+		for(int i=0; i<arrlist.size(); i++){
 			log.info("arrlist getPmParameter().getParameterCode - "+arrlist.get(i).getPmParameter().getParameterCode());
 			log.info("arrlist getPmParameter().getParameterType - "+arrlist.get(i).getPmParameter().getParameterType());
 			log.info("arrlist getPmParameter().getParameterId - "+arrlist.get(i).getPmParameter().getParameterId());
