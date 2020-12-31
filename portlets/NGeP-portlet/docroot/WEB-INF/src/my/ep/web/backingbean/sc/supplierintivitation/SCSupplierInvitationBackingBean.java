@@ -182,12 +182,30 @@ public class SCSupplierInvitationBackingBean extends  BaseBackingBean<SCSupplier
 				invitationSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,ISCSupplierInvitationSO.class);
 				Long userId = new FacesScopes().getUserSessionBean().getUserId();
+				//20200103@asyrafhaziq _Performance #27154 - Start
+				int sizeSelectedInvitation =  0;
+				boolean navigatable = searchBean.isNavigatable();
 				if(userId != null){
 					reqDTO.setUserId(userId);
-					reqDTO.setSearchBean(searchBean);			
-				    resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO,isPorletIdFromQtFlag);		
+					reqDTO.setSearchBean(searchBean);				
+					
+					if (  getManagedBean().getSizeSelectedInvitation() == 0  &&  navigatable) {
+					 sizeSelectedInvitation =  invitationSO.retrieveSizeSupplierInviteQtsByUserId(reqDTO,isPorletIdFromQtFlag);
+					
+					 if (sizeSelectedInvitation == 0){
+						 getManagedBean().setSizeSelectedInvitation(-1);		
+					 }
+					 else{
+						 getManagedBean().setSizeSelectedInvitation(sizeSelectedInvitation);		
+					 }
+					}
+					else if (  getManagedBean().getSizeSelectedInvitation() > 0){
+						 sizeSelectedInvitation =  getManagedBean().getSizeSelectedInvitation();	
+					}
+				    resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO,isPorletIdFromQtFlag,sizeSelectedInvitation);		
 //				    resDTO = invitationSO.retrieveSupplierInviteQtsByUserId(reqDTO);
 				}
+				//20200103@asyrafhaziq _Performance #27154 - End
 				
 			} finally{
 				invitationSO = null;
