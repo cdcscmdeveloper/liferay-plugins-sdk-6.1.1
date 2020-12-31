@@ -323,8 +323,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmAppl latestRejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(this
 				.getManagedBean().getSmSupplier().getSupplierId(), ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		
-		
+		/* #28765 - Comment G2G Negation
 		if (!getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
+		*/
 			
 			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
 						.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
@@ -355,9 +356,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 					}
 				}
 			}
-
+		/* #28765 Closing for G2G Negation
 		}
-
+		*/
 	}
 	
 
