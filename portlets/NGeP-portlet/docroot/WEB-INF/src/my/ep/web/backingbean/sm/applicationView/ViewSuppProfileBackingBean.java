@@ -20,6 +20,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
@@ -31,6 +32,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 
@@ -505,4 +507,11 @@ public class ViewSuppProfileBackingBean extends
 		retrieveActiveDisciplinaryAction(supplier);
 	}
 	//28281 - end
+	
+	//#29482 - Start
+	public void assignSelAcadQualify(SmStaffAcademic smStaffAcademic) {
+		this.getManagedBean().setSmStaffAcademic(smStaffAcademic);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	//#29482 - End
 }
