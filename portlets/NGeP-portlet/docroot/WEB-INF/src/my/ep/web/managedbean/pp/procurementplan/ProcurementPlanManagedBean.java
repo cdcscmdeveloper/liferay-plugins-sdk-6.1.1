@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.VPmGo;
 import my.ep.persistence.entity.pp.procurementplan.PpExpenditureItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
@@ -57,7 +58,12 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<VPmGo> vPmGolist;
 	private boolean disablePlanSearchDet = false;
 	private String maxYear = "31/12/2050";
+	private String minYear = "01/01/2010";
+	private String minInvitationYear = "01/01/2010";
+	private String maxInvitationYear = "01/01/2050";
 	private boolean fromTaskList = false;
+	private PmParameter selectedCatSearch;
+	private String pageStyle;
 	//201208@akmal - Enhancement27624 - End
 	private String btnValue;
 	
@@ -1404,14 +1410,54 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.maxYear = maxYear;
 	}
 
+	public String getMinYear() {
+		return minYear;
+	}
+
+	public void setMinYear(String minYear) {
+		this.minYear = minYear;
+	}
+
+	public String getMinInvitationYear() {
+		return minInvitationYear;
+	}
+
+	public void setMinInvitationYear(String minInvitationYear) {
+		this.minInvitationYear = minInvitationYear;
+	}
+
+	public String getMaxInvitationYear() {
+		return maxInvitationYear;
+	}
+
+	public void setMaxInvitationYear(String maxInvitationYear) {
+		this.maxInvitationYear = maxInvitationYear;
+	}
+
+	public PmParameter getSelectedCatSearch() {
+		return selectedCatSearch;
+	}
+
+	public void setSelectedCatSearch(PmParameter selectedCatSearch) {
+		this.selectedCatSearch = selectedCatSearch;
+	}
+
+	public String getPageStyle() {
+		return pageStyle;
+	}
+
+	public void setPageStyle(String pageStyle) {
+		this.pageStyle = pageStyle;
+	}
+
 	public boolean isFromTaskList() {
 		return fromTaskList;
 	}
-	//201208@akmal - Enhancement27624 - End
 
 	public void setFromTaskList(boolean fromTaskList) {
 		this.fromTaskList = fromTaskList;
 	}
+	//201208@akmal - Enhancement27624 - End
 
 	//12112020@azza - 28760 - Start
 	public boolean isFlagCancelButton() {
