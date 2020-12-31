@@ -215,8 +215,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			if(params.get(QtReportConst.QUOTATION_TENDER_ID) != null){
 				if(getManagedBean().getQuotationNumber()!= null){
 					rdtl.setDocumentNo01(getManagedBean().getQuotationNumber());
-				}
-				
+				}		
 			}	
 			if(rdtl.getDocumentNo01() != null ){
 				addRptRequestDetail(rdtl);	
@@ -233,7 +232,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	//R5 #14076 start
 	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
 		
-		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
+		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
+		if(rPTRequestDtl.getCreatedBy() == null){
+			rPTRequestDtl.setCreatedBy(getFacesScopes()
+				.getUserSessionBean().getUserId());
+		}
 		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
 	}
 	
