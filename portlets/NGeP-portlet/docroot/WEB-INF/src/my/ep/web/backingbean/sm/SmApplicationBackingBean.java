@@ -3104,10 +3104,8 @@ public class SmApplicationBackingBean extends
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 					if (valid) {
 						log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
-						// 28466 - to maintain paid up capital from SSM
-						if(!getManagedBean().isSsmIntegrationActive()){
-							calculateCapital();
-						}
+						// 28466 - remove skip condition
+						calculateCapital();
 						SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
 								getManagedBean().getSmAppl(), getManagedBean()
 										.getPrevApprovedPersonnels(),
