@@ -171,16 +171,16 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 	
 	// #27009 -- start
-	public void selectedNotifys() {
+	public void selectedNotifys(Object[] selectedNotifyObj) {
 		
-		System.out.println("=== selectedNotifys ===");
-		
-		Object[] selectedNotifyObj = this.getManagedBean().getSelectedNotifyObj();
+		logger.info("=== selectedNotifys ===");
 		
 		Long notifyUserId = new Long(selectedNotifyObj[0].toString());
 		boolean readSelectedNotifyObj = Boolean.parseBoolean(String.valueOf(selectedNotifyObj[12]));
 		
-		System.out.println("notifyUserId= "+notifyUserId
+		this.getManagedBean().setSelectedNotifyObj(selectedNotifyObj);
+		
+		logger.info("notifyUserId= "+notifyUserId
 				+", readSelectedNotifyObj= "+readSelectedNotifyObj);
 		
 		PmNotifyUser selectedNotify = new PmNotifyUser();
@@ -188,26 +188,126 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", INotifySO.class);
 		
-		if (this.getManagedBean().getSelectedNotify() == null) {
-			// Retrieve notifyUser
-			selectedNotify = reqSO.getPmNotifyUserByNotifyUserId(notifyUserId);
-		}
+		// Retrieve notifyUser
+		selectedNotify = reqSO.getPmNotifyUserByNotifyUserId(notifyUserId);
+		logger.info("Retrieve notifyDashboardId= "+selectedNotify.getPmNotifyDashboard().getNotifyDashboardId());
 		
 		if (!readSelectedNotifyObj) {
 		
+			readSelectedNotifyObj = true;
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
 			reqDTO.setPmNotifyUser(selectedNotify);
 			
 			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
-			System.out.println("NotifyResDTO updateIsReadNotify["
+			logger.info("NotifyResDTO updateIsReadNotify["
 					+ resDTO.isSuccessful() + "]");
 			
 			if (resDTO.isSuccessful()) {
 				selectedNotify.setRead(true);
 			}
-			System.out.println("getNotifyUserId= "+ selectedNotify.getNotifyUserId()
-					+"isRead= "+selectedNotify.isRead());
+			logger.info("getNotifyUserId= "+ selectedNotify.getNotifyUserId()
+					+", isRead= "+selectedNotify.isRead()
+					+", readSelectedNotifyObj= "+readSelectedNotifyObj);
 		}
+	}
+	
+	public void rowSelectUnselectCheckboxObj() {
+		
+		logger.info("== rowSelectUnselectCheckboxObj ==");
+		
+		List<Object[]> pmNotifyUserArr;
+		
+		if (this.getManagedBean().getFilteredSelectedNotifyObj() != null) {
+			
+			pmNotifyUserArr = this.getManagedBean().getFilteredSelectedNotifyObj();
+			logger.info("pmNotifyUserArr.size= "+pmNotifyUserArr.size());
+			
+			if(pmNotifyUserArr != null && pmNotifyUserArr.size() > 0){
+				this.getManagedBean().setDeleteButtonHide(false);
+			} else {
+				this.getManagedBean().setDeleteButtonHide(true);
+			}
+		}
+	}
+	
+	public void removeNotifysObj() {
+		
+		logger.info("removeNotifysObj");
+		
+		NotifyReqDTO reqDTO = new NotifyReqDTO();
+		INotifySO reqSO;
+		
+		if (this.getManagedBean().getFilteredSelectedNotifyObj() != null) {
+			
+			logger.info("getFilteredSelectedNotifyObj size= "
+					+ this.getManagedBean().getFilteredSelectedNotifyObj().size());
+			
+			reqSO = (INotifySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", INotifySO.class);
+			
+			List<Object[]> pmNotifyUserArr = this.getManagedBean().getFilteredSelectedNotifyObj();
+			
+			long[] pmNotifyUserIds = new long[pmNotifyUserArr.size()];
+			String pmNotifyUserId;
+			Object[] messages;
+			
+			for (int i = 0; i < pmNotifyUserArr.size(); i++) {
+				messages = (Object[]) pmNotifyUserArr.get(i);
+				pmNotifyUserId = String.valueOf(messages[0]);
+				logger.info("messages[0]= "
+						+ Long.valueOf(pmNotifyUserId));
+				pmNotifyUserIds[i] = Long.valueOf(pmNotifyUserId);
+			}
+			
+			pmNotifyUserArr = reqSO.getPmNotifyUserObj(pmNotifyUserIds);
+			
+			logger.info("pmNotifyUserArr.size()= "+ pmNotifyUserArr.size());
+			
+			Object[] notifyUser;
+
+			if (pmNotifyUserArr.size() > 0) {
+				
+				this.getManagedBean().setFilteredSelectedNotifyObj(pmNotifyUserArr);
+				
+				if (reqDTO.getPmNotifyUserListObj() == null) {
+					reqDTO.setPmNotifyUserListObj(new ArrayList<Object[]>());
+				}
+				
+				for (int j = 0; j < this.getManagedBean().getFilteredSelectedNotifyObj().size(); j++) {
+					notifyUser = this.getManagedBean().getFilteredSelectedNotifyObj().get(j);
+					logger.info("notifyUser= "+String.valueOf(notifyUser[j]));
+					reqDTO.getPmNotifyUserListObj().add(notifyUser);
+				}
+				
+				NotifyResDTO resDTO = reqSO.removeNotifyListObj(reqDTO);
+				
+				debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
+						+ "]");
+				
+				if (resDTO.isSuccessful()) {
+					resetSelectedNotify();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO,
+									ResourceBundleUtils.getMessage("lbl.portal.notify.recordRemovedSuccesssfully",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), ""));
+					notifyDataModel.reloadData();
+				}
+				
+			} else {
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ResourceBundleUtils.getMessage("lbl.portal.notify.selectAtLeastARecord",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()), ""));
+				notifyDataModel.reloadData();
+			}
+		}
+		
+		resetSelectedNotifyObj();
+	}
+	
+	private void resetSelectedNotifyObj() {
+		getManagedBean().setSelectedNotifyObj(null);
 	}
 	// #27009 -- end
 	
@@ -364,20 +464,20 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 							
 							resultBean = resDTO.getNativeSearchResultBeanObj().getResultList();
 							
-							getManagedBean().setFilteredSelectedNotifyObj(resultBean);
+							//getManagedBean().setFilteredSelectedNotifyObj(resultBean);
 							
-							System.out.println("resultBean.size= "+getManagedBean().getFilteredSelectedNotifyObj().size());
+							System.out.println("resultBean.size= "+resultBean.size());
 							
-							if (getManagedBean().getFilteredSelectedNotifyObj() != null &&
+							/*if (getManagedBean().getFilteredSelectedNotifyObj() != null &&
 									!getManagedBean().getFilteredSelectedNotifyObj().isEmpty()) {
 								
+								Object[] messages = null;
+								
 								for (int j = 0; j < getManagedBean().getFilteredSelectedNotifyObj().size(); j++) {
-									Object[] objects = (Object[]) resDTO.getNativeSearchList().get(j);
-									System.out.println("Filtered obj= " + String.valueOf(objects[27]) 
-											+", "+ String.valueOf(objects[5])+", "+String.valueOf(objects[28]));
-									getManagedBean().setSelectedNotifyObj(objects);
+									messages = (Object[]) resDTO.getNativeSearchList().get(j);
+									getManagedBean().setSelectedNotifyObj(messages);
 								}
-							}
+							}*/
 						}
 					}
 					

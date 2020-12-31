@@ -91,7 +91,7 @@
 									paginatorTemplate="#{lbl['lbl.datatable.paginator.page']} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 									rowKey="#{notify}" rowIndexVar="index" id="notifyTable"
 									currentPageReportTemplate="{currentPage} / {totalPages}"
-									selection="#{notifyBackingBean.managedBean.selectedNotifys}">
+									selection="#{notifyBackingBean.managedBean.filteredSelectedNotifyObj}">
 									
 									<p:column  selectionMode="multiple" style="width:7%;text-align:center"/>
 
@@ -105,7 +105,7 @@
 										#{notify[27]} <br />
 
 										<p:commandLink id="btnNotifyLink"
-											action="#{notifyBackingBean.selectedNotifys}"
+											action="#{notifyBackingBean.selectedNotifys(notify)}"
 											update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable">
 
 											<h:outputText
@@ -132,11 +132,11 @@
 
 									</p:column>
 
-									<p:ajax event="rowSelectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
-									<p:ajax event="rowUnselectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
-									<p:ajax event="rowUnselect" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
-									<p:ajax event="rowSelect" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
-									<p:ajax event="toggleSelect" listener="#{notifyBackingBean.rowSelectUnselectCheckbox}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
+									<p:ajax event="rowSelectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckboxObj}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
+									<p:ajax event="rowUnselectCheckbox" listener="#{notifyBackingBean.rowSelectUnselectCheckboxObj}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
+									<p:ajax event="rowUnselect" listener="#{notifyBackingBean.rowSelectUnselectCheckboxObj}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
+									<p:ajax event="rowSelect" listener="#{notifyBackingBean.rowSelectUnselectCheckboxObj}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
+									<p:ajax event="toggleSelect" listener="#{notifyBackingBean.rowSelectUnselectCheckboxObj}" update=":form:deleteBtn, :form:pnldetail, :form:pnlemptydetail"/>
 									
 								</p:dataTable>
 								
@@ -274,7 +274,7 @@
 			<div align="right">
 	
 				<p:commandButton id="conf" value="#{lbl['lbl.btn.dialog.cofirm.yes']}"
-					actionListener="#{notifyBackingBean.removeNotifys}" 
+					actionListener="#{notifyBackingBean.removeNotifysObj}" 
 					update=":form:notifyTable,:form:pnldetail, :form:pnlemptydetail"
 					oncomplete="confirmation.hide()" />
 	
