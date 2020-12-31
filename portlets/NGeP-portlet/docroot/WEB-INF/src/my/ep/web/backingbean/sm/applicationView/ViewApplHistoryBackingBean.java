@@ -66,7 +66,9 @@ import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmRemark;
+
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -1573,4 +1575,11 @@ public class ViewApplHistoryBackingBean extends
 		return null;
 	}
 	//11641 - END
+	
+	//#29482 - Start
+	public void assignSelAcadQualify(SmStaffAcademic smStaffAcademic) {
+		this.getManagedBean().setSmStaffAcademic(smStaffAcademic);
+		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
+	}
+	//#29482 - End
 }
