@@ -1,61 +1,54 @@
 package my.ep.web.backingbean.report;
 
-import java.io.File; //#27472
-import java.io.FileOutputStream; //#27472
-import java.math.BigDecimal; //#27472
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections; //#27472
-import java.util.Comparator; //#27472
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map; //#27472
-import java.util.Set; //#27472
-import java.util.TreeMap; //#27472
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO; //#27472
 import my.ep.biz.service.rpt.IRPTRequestSO;
-import my.ep.constant.EpPropertiesConst; //#27472
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO; //#27472
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser; //#27472
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmProcurementCatType;
-import my.ep.persistence.logging.LogKey; //#27472
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils; //#27472
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.PpReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.PpReportsManagedBean;
-import my.ep.web.util.AlphanumericSortUtil; //#27472
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
 // START #27472
+import java.io.File;
+import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import my.ep.constant.EpPropertiesConst;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.web.util.AlphanumericSortUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -212,7 +205,8 @@ public class PpReportsBackingBean extends
 			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
 			if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
 					&&(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
-							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+						|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
+							|| ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){ //#27472 add N type 
 				if(isRolePlanner() || isRoleVerifier()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));					
 					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));					
@@ -228,7 +222,8 @@ public class PpReportsBackingBean extends
 					if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
 						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setDisabledMinistryLov(true);
-					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){					
+					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
+							|| ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){ //#27472 add N type 				
 						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));	
 						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
@@ -241,9 +236,7 @@ public class PpReportsBackingBean extends
 					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
-			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
-					|| (getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
-					&& ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
+			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null){ //#27472 remove group org type N
 				// usual org hierarchy 
 				if(isRolePlanner() || isRoleVerifier() || isRoleApprover()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
@@ -412,20 +405,6 @@ public class PpReportsBackingBean extends
 	public void generatePpReport() {
 		IRPTRequestSO rptRequestSO = null;
 		RPTRequestResDTO resDTO = new RPTRequestResDTO(); //#27472
-		
-		//[#27197] - start
-		//validate Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
-		if(isBPKOfficer() || isBPKAuditor()	|| isGeneralAuditor()) {
-			
-			log.info("[#27197] Report code list: " + Arrays.toString(ppReportCodes.toArray()));
-			if(ppReportCodes.contains(getManagedBean().getReportCode())) {
-				log.info("[#27197] Report code exists...");
-				if(getManagedBean().getSelectedMinistry() == null) {
-					throw new EpException(MessageConst.ERROR_REPORT_780059);
-				}
-			}
-		}
-		//[#27197] - end
 		
 		//[#27197] - start
 		//validate Ministry search field for role BPK_OFFICER, BPK_AUDITOR, AUDITOR_GENERAL
@@ -714,7 +693,7 @@ public class PpReportsBackingBean extends
 				ArrayList<String> columnHeaderListKumpPtj = new ArrayList<String>(Arrays.asList(
 						"Bil.","Kod Kump PTJ","Kumpulan PTJ","Anggaran Amaun (RM)"));
 				Sheet sheetKumpPtjList = createSheetBase(wb, createHelper, "Kumpulan PTJ", titleReport, 
-						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (KUMP PTJ)");
 		        
 				// Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderListKumpPtj.size(); i++) {   
@@ -759,7 +738,7 @@ public class PpReportsBackingBean extends
 			ArrayList<String> columnHeaderListPtj = new ArrayList<String>(Arrays.asList(
 					"Bil.","Kumpulan PTJ","Kod PTJ","Nama PTJ","Nombor Pelan","Anggaran Amaun (RM)"));
 			Sheet sheetPtjList = createSheetBase(wb, createHelper, "PTJ", titleReport, columnHeaderListPtj, 
-					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (PTJ)");
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListPtj.size(); i++) {   
@@ -919,7 +898,7 @@ public class PpReportsBackingBean extends
 				ArrayList<String> columnHeaderListKumpPtj = new ArrayList<String>(Arrays.asList(
 						"Bil.","Kod Kump PTJ","Kumpulan PTJ","Bilangan","Kaedah Perolehan","Anggaran Amaun (RM)"));
 				Sheet sheetKumpPtjList = createSheetBase(wb, createHelper, "Kumpulan PTJ", titleReport, 
-						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (KUMP PTJ)");
 		        
 				// Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderListKumpPtj.size(); i++) {   
@@ -969,7 +948,7 @@ public class PpReportsBackingBean extends
 			ArrayList<String> columnHeaderListPtj = new ArrayList<String>(Arrays.asList(
 					"Bil.","Kumpulan PTJ","Kod PTJ","Nama PTJ","Nombor Pelan","Anggaran Amaun (RM)"));
 			Sheet sheetPtjList = createSheetBase(wb, createHelper, "PTJ", titleReport, columnHeaderListPtj, 
-					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (PTJ)");
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListPtj.size(); i++) {   
@@ -1036,7 +1015,7 @@ public class PpReportsBackingBean extends
 					"Jumlah Peratusan Amaun Perbelanjaan eP(%)","Justifikasi Tidak Menggunakan eP"
 			));
 			Sheet sheetItemList = createSheetBase(wb, createHelper, "Senarai Item", titleReport, 
-					columnHeaderListItem, columnHeaderListItem.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListItem, columnHeaderListItem.size(),params.get("PMINIS")!=null?true:false,ministryName );
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListItem.size(); i++) {   
@@ -1100,7 +1079,7 @@ public class PpReportsBackingBean extends
 				for(int i = 0; i < columnHeaderListMinistry.size(); i++) {   
 					if(i==0)sheetMinistryList.setColumnWidth(i, 5*256);//Col : Bil.
 					else if(i==1)sheetMinistryList.setColumnWidth(i, 45*256); //Col : Ministry
-					else if(i==2)sheetMinistryList.setColumnWidth(i, 15*256); //Col : Jumlah Bajet yang Diluluskan
+					else if(i==2)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet yang Diluluskan
 					else if(i==3)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet untuk Kegunaan eP
 					else if(i==4)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Peruntukan Tidak Menggunakan eP
 					else if(i==5)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Jumlah Amaun Perbelanjaan
@@ -1135,11 +1114,18 @@ public class PpReportsBackingBean extends
 							Double oldAmountValue = (Double)obj[5]; //old amount
 							obj[5] = (Double)row[18] + oldAmountValue;
 							
-							BigDecimal oldDeductValue = (BigDecimal)obj[6]; //old deduct
-							obj[6] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
+							//BigDecimal oldDeductValue = (BigDecimal)obj[6]; //old deduct
+							//obj[6] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
+							
+							Double dVal = 0.00;
+							if((BigDecimal)row[15]!=null){
+								obj[6]="("+((BigDecimal)row[15]).toString()+")";
+								dVal = ((BigDecimal)row[15]).doubleValue();
+							}else if(StringUtils.isNotBlank(obj[6].toString()))
+								dVal = Double.parseDouble(obj[6].toString().replaceAll("[()]", ""));
 							
 							//percentage
-							Double amntMinusDeduct = (Double)obj[5] - ((BigDecimal)obj[6]).doubleValue();
+							Double amntMinusDeduct = (Double)obj[5] - dVal;
 							obj[7] = amntMinusDeduct / ((BigDecimal)obj[3]).doubleValue() * 100;
 
 							ministryList.put(((BigDecimal)row[17]).intValueExact(), obj);
@@ -1148,7 +1134,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							ministryList.put(((BigDecimal)row[17]).intValueExact(), new Object[]{
 								count,(String)row[16],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],(Double)row[18],
-								(BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO,percentageExpenditure
+								(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"",percentageExpenditure
 								});
 							count++;
 						}
@@ -1167,14 +1153,14 @@ public class PpReportsBackingBean extends
 		  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 		  				));
 				Sheet sheetKumpPtjList = createSheetBase(wb, createHelper, "Kumpulan PTJ", titleReport, 
-						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (KUMP PTJ)");
 		        
 				// Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderListKumpPtj.size(); i++) {   
 		    		if(i==0)sheetKumpPtjList.setColumnWidth(i, 5*256);//Col : Bil.
 		    		else if(i==1)sheetKumpPtjList.setColumnWidth(i, 20*256); //Col : Kod Kump PTJ
 		        	else if(i==2)sheetKumpPtjList.setColumnWidth(i, 45*256); //Col : Kumpulan PTJ
-		        	else if(i==3)sheetKumpPtjList.setColumnWidth(i, 15*256); //Col : Jumlah Bajet yang Diluluskan
+		        	else if(i==3)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet yang Diluluskan
 					else if(i==4)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet untuk Kegunaan eP
 					else if(i==5)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Peruntukan Tidak Menggunakan eP
 					else if(i==6)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Amaun Perbelanjaan
@@ -1209,20 +1195,27 @@ public class PpReportsBackingBean extends
 							Double oldAmountValue = (Double)obj[6]; //old amount
 							obj[6] = (Double)row[18] + oldAmountValue;
 							
-							BigDecimal oldDeductValue = (BigDecimal)obj[7]; //old deduct
-							obj[7] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
+							//BigDecimal oldDeductValue = (BigDecimal)obj[7]; //old deduct
+							//obj[7] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
+							
+							Double dVal = 0.00;
+							if((BigDecimal)row[15]!=null){
+								obj[7]="("+((BigDecimal)row[15]).toString()+")";
+								dVal = ((BigDecimal)row[15]).doubleValue();
+							}else if(StringUtils.isNotBlank(obj[7].toString()))
+								dVal = Double.parseDouble(obj[7].toString().replaceAll("[()]", ""));
 							
 							//percentage
-							Double amntMinusDeduct = ((Double)obj[6]) - ((BigDecimal)obj[7]).doubleValue();
+							Double amntMinusDeduct = ((Double)obj[6]) - dVal;
 							obj[8] = amntMinusDeduct / ((BigDecimal)obj[4]).doubleValue() * 100;
 
 							kumpPtjList.put(Integer.parseInt((String)row[1]), obj);
 						}else{
 							Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
-							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
+							Double percentageExpenditure = amntMinusDeduct /((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[1]), new Object[]{
 								count,Integer.valueOf((String)row[1]),(String)row[2],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
-								(Double)row[18],(BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO,percentageExpenditure
+								(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"",percentageExpenditure
 								});
 							count++;
 						}
@@ -1239,7 +1232,7 @@ public class PpReportsBackingBean extends
 	  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 	  				));
 			Sheet sheetPtjList = createSheetBase(wb, createHelper, "PTJ", titleReport, columnHeaderListPtj, 
-					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (PTJ)");
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListPtj.size(); i++) {   
@@ -1247,7 +1240,7 @@ public class PpReportsBackingBean extends
 	    		else if(i==1)sheetPtjList.setColumnWidth(i, 45*256); //Col : Kumpulan PTJ
 	        	else if(i==2)sheetPtjList.setColumnWidth(i, 15*256); //Col : Kod PTJ
 	        	else if(i==3)sheetPtjList.setColumnWidth(i, 45*256); //Col : Name PTJ
-	        	else if(i==4)sheetPtjList.setColumnWidth(i, 15*256); //Col : Jumlah Bajet yang Diluluskan
+	        	else if(i==4)sheetPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet yang Diluluskan
 				else if(i==5)sheetPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet untuk Kegunaan eP
 				else if(i==6)sheetPtjList.setColumnWidth(i, 25*256); //Col : Peruntukan Tidak Menggunakan eP
 				else if(i==7)sheetPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Amaun Perbelanjaan
@@ -1282,20 +1275,27 @@ public class PpReportsBackingBean extends
 						Double oldAmountValue = (Double)obj[7]; //old amount
 						obj[7] = (Double)row[18] + oldAmountValue;
 						
-						BigDecimal oldDeductValue = (BigDecimal)obj[8]; //old deduct
-						obj[8] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
+						//BigDecimal oldDeductValue = (BigDecimal)obj[8]; //old deduct
+						//obj[8] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
+						
+						Double dVal = 0.00;
+						if((BigDecimal)row[15]!=null){
+							obj[8]="("+((BigDecimal)row[15]).toString()+")";
+							dVal = ((BigDecimal)row[15]).doubleValue();
+						}else if(StringUtils.isNotBlank(obj[8].toString()))
+							dVal = Double.parseDouble(obj[8].toString().replaceAll("[()]", ""));
 						
 						//percentage
-						Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
-						obj[9] = amntMinusDeduct / ((BigDecimal)obj[4]).doubleValue() * 100;
+						Double amntMinusDeduct = (Double)obj[7] - dVal;//((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
+						obj[9] = amntMinusDeduct / ((BigDecimal)obj[5]).doubleValue() * 100;
 
 						ptjList.put(Integer.parseInt((String)row[3]), obj);
 					}else{
 						Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
-						Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
+						Double percentageExpenditure = amntMinusDeduct /((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[3]), new Object[]{
 							count,(String)row[2],Integer.valueOf((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
-							(Double)row[18],(BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO,percentageExpenditure
+							(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"",percentageExpenditure
 							});
 						count++;
 					}
@@ -1391,7 +1391,7 @@ public class PpReportsBackingBean extends
 				for(int i = 0; i < columnHeaderListMinistry.size(); i++) {   
 					if(i==0)sheetMinistryList.setColumnWidth(i, 5*256);//Col : Bil.
 					else if(i==1)sheetMinistryList.setColumnWidth(i, 45*256); //Col : Ministry
-					else if(i==2)sheetMinistryList.setColumnWidth(i, 15*256); //Col : Jumlah Bajet yang Diluluskan
+					else if(i==2)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet yang Diluluskan
 					else if(i==3)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet untuk Kegunaan eP
 					else if(i==4)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Peruntukan Tidak Menggunakan eP
 					else if(i==5)sheetMinistryList.setColumnWidth(i, 25*256); //Col : Jumlah Amaun Perbelanjaan
@@ -1425,11 +1425,18 @@ public class PpReportsBackingBean extends
 							Double oldAmountValue = (Double)obj[5]; //old amount
 							obj[5] = (Double)row[14] + oldAmountValue;
 							
-							BigDecimal oldDeductValue = (BigDecimal)obj[6]; //old deduct
-							obj[6] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
+							//BigDecimal oldDeductValue = (BigDecimal)obj[6]; //old deduct
+							//obj[6] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
+							
+							Double dVal = 0.00;
+							if((BigDecimal)row[11]!=null){
+								obj[6]="("+((BigDecimal)row[11]).toString()+")";
+								dVal = ((BigDecimal)row[11]).doubleValue();
+							}else if(StringUtils.isNotBlank(obj[6].toString()))
+								dVal = Double.parseDouble(obj[6].toString().replaceAll("[()]", ""));
 							
 							//percentage
-							Double amntMinusDeduct = (Double)obj[5] - ((BigDecimal)obj[6]).doubleValue();
+							Double amntMinusDeduct = (Double)obj[5] - dVal;//((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
 							obj[7] = amntMinusDeduct / ((BigDecimal)obj[3]).doubleValue() * 100;
 
 							ministryList.put(((BigDecimal)row[1]).intValueExact(), obj);
@@ -1439,7 +1446,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							ministryList.put(((BigDecimal)row[1]).intValueExact(), new Object[]{
 								count,(String)row[0],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
-								(BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO,percentageExpenditure
+								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"",percentageExpenditure
 								});
 							count++;
 						}
@@ -1458,14 +1465,14 @@ public class PpReportsBackingBean extends
 		  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 		  				));
 				Sheet sheetKumpPtjList = createSheetBase(wb, createHelper, "Kumpulan PTJ", titleReport, 
-						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+						columnHeaderListKumpPtj, columnHeaderListKumpPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (KUMP PTJ)");
 		        
 				// Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderListKumpPtj.size(); i++) {   
 		    		if(i==0)sheetKumpPtjList.setColumnWidth(i, 5*256);//Col : Bil.
 		    		else if(i==1)sheetKumpPtjList.setColumnWidth(i, 20*256); //Col : Kod Kump PTJ
 		        	else if(i==2)sheetKumpPtjList.setColumnWidth(i, 45*256); //Col : Kumpulan PTJ
-		        	else if(i==3)sheetKumpPtjList.setColumnWidth(i, 15*256); //Col : Jumlah Bajet yang Diluluskan
+		        	else if(i==3)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet yang Diluluskan
 					else if(i==4)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet untuk Kegunaan eP
 					else if(i==5)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Peruntukan Tidak Menggunakan eP
 					else if(i==6)sheetKumpPtjList.setColumnWidth(i, 25*256); //Col : Jumlah Amaun Perbelanjaan
@@ -1499,11 +1506,18 @@ public class PpReportsBackingBean extends
 							Double oldAmountValue = (Double)obj[6]; //old amount
 							obj[6] = (Double)row[14] + oldAmountValue;
 							
-							BigDecimal oldDeductValue = (BigDecimal)obj[7]; //old deduct
-							obj[7] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
+							//BigDecimal oldDeductValue = (BigDecimal)obj[7]; //old deduct
+							//obj[7] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
+							
+							Double dVal = 0.00;
+							if((BigDecimal)row[11]!=null){
+								obj[7]="("+((BigDecimal)row[11]).toString()+")";
+								dVal = ((BigDecimal)row[11]).doubleValue();
+							}else if(StringUtils.isNotBlank(obj[7].toString()))
+								dVal = Double.parseDouble(obj[7].toString().replaceAll("[()]", ""));
 							
 							//percentage
-							Double amntMinusDeduct = (Double)obj[6] - ((BigDecimal)obj[7]).doubleValue();
+							Double amntMinusDeduct = (Double)obj[6] - dVal;//((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
 							obj[8] = amntMinusDeduct / ((BigDecimal)obj[4]).doubleValue() * 100;
 
 							kumpPtjList.put(Integer.parseInt((String)row[3]), obj);
@@ -1513,7 +1527,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[3]), new Object[]{
 								count,Integer.parseInt((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
-								(BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO,percentageExpenditure
+								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"",percentageExpenditure
 								});
 							count++;
 						}
@@ -1530,7 +1544,7 @@ public class PpReportsBackingBean extends
 	  				"Jumlah Amaun Perbelanjaan (RM)","Jumlah Potongan (RM)","Jumlah Peratusan Amaun Perbelanjaan(%)"
 	  				));
 			Sheet sheetPtjList = createSheetBase(wb, createHelper, "PTJ", titleReport, columnHeaderListPtj, 
-					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName);
+					columnHeaderListPtj.size(),params.get("PMINIS")!=null?true:false,ministryName+" (PTJ)");
 	        
 			// Resize all columns to fit the content size
 	        for(int i = 0; i < columnHeaderListPtj.size(); i++) {   
@@ -1558,8 +1572,8 @@ public class PpReportsBackingBean extends
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m); //get whole object
 					
-					if(ptjList.containsKey(Integer.parseInt((String)row[3]))){ //find key in map
-						Object[] obj = ptjList.get(Integer.parseInt((String)row[3]));
+					if(ptjList.containsKey(Integer.parseInt((String)row[5]))){ //find key in map
+						Object[] obj = ptjList.get(Integer.parseInt((String)row[5]));
 						//9-10
 						BigDecimal oldBudgetValue = (BigDecimal)obj[4]; //old budget
 						obj[4] = ((BigDecimal)row[9]).add(oldBudgetValue);
@@ -1572,21 +1586,29 @@ public class PpReportsBackingBean extends
 						Double oldAmountValue = (Double)obj[7]; //old amount
 						obj[7] = (Double)row[14] + oldAmountValue;
 						
-						BigDecimal oldDeductValue = (BigDecimal)obj[8]; //old deduct
-						obj[8] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
+						//BigDecimal oldDeductValue = (BigDecimal)obj[8]; //old deduct
+						//obj[8] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
 						
+						Double dVal = 0.00;
+						if((BigDecimal)row[11]!=null){
+							obj[8]="("+((BigDecimal)row[11]).toString()+")";
+							dVal = ((BigDecimal)row[11]).doubleValue();
+						}else if(StringUtils.isNotBlank(obj[8].toString()))
+							dVal = Double.parseDouble(obj[8].toString().replaceAll("[()]", ""));
+												
 						//percentage
-						Double amntMinusDeduct = (Double)obj[7] - ((BigDecimal)obj[8]).doubleValue();
+						Double amntMinusDeduct = (Double)obj[7] - dVal;//((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
 						obj[9] = amntMinusDeduct / ((BigDecimal)obj[5]).doubleValue() * 100;
 
-						ptjList.put(Integer.parseInt((String)row[3]), obj);
+
+						ptjList.put(Integer.parseInt((String)row[5]), obj);
 					}else{
 						BigDecimal unUsedAmnt = ((BigDecimal)row[9]).subtract((BigDecimal)row[10]);
 						Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
 						Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
-						ptjList.put(Integer.parseInt((String)row[3]), new Object[]{
+						ptjList.put(Integer.parseInt((String)row[5]), new Object[]{
 							count,(String)row[4],Integer.parseInt((String)row[5]),(String)row[6],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,
-							(Double)row[14],(BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO,percentageExpenditure
+							(Double)row[14],(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"",percentageExpenditure
 							});
 						count++;
 					}
@@ -1894,6 +1916,10 @@ public class PpReportsBackingBean extends
 				}else if(objectArr[x] instanceof Date){
 					cell.setCellValue((Date)objectArr[x]);
 					cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,true,false,true,true));
+				}else if(objectArr[x]!=null && StringUtils.isNotBlank(objectArr[x].toString()) &&
+						objectArr[x].toString().charAt(0) == '(' && objectArr[x].toString().charAt(objectArr[x].toString().length()-1) == ')'){
+					cell.setCellValue((String) objectArr[x]);
+					cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,true,false,false,true,true));
 				}else{
 					cell.setCellValue((String) objectArr[x]);
 					cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true,true));
