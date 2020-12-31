@@ -945,13 +945,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
-				//201228@akmal - Enhancement27624 - Start
-				this.getManagedBean().setMinYear(resDTO.getLastUpdatedDate());
-				this.getManagedBean().setMinInvitationYear(
-						resDTO.getLastUpdatedDate().length()>4
-						? "01/01/"+resDTO.getLastUpdatedDate().substring(resDTO.getLastUpdatedDate().length()-4)
-						: resDTO.getLastUpdatedDate());
-				//201228@akmal - Enhancement27624 - End
 				ppPlan = resDTO.getPlan();
 				if(ppPlan!=null){
 					PmOrgProfile pmOrgProfile = PpCommonUtil.retrievePmOrgProfileDtl(ppPlan.getOrgProfile().getOrgProfileId());
@@ -1077,9 +1070,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if (ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()) {
 						this.resetPpProcurementItems(ppPlan.getPpProcurementItems());
 					}
-					
-					
-					
+
+					//201228@akmal - Enhancement27624 - Start
+					this.getManagedBean().setMinYear(resDTO.getLastUpdatedDate());
+					this.getManagedBean().setMinInvitationYear("01/01/"+ppPlan.getPlanYear().toString());
+					this.getManagedBean().setMaxInvitationYear("31/12/"+ppPlan.getPlanYear().toString());
+					//201228@akmal - Enhancement27624 - End
 				}else{
 					throw new EpException(MessageConst.ERROR_730001);
 				}
