@@ -5605,25 +5605,25 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmParameterDesc> arrlist = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.PROCUREMENT_METHOD, null);
 		List<PmParameterDesc> filteredlist = new ArrayList<PmParameterDesc>();
 		
-		log.info("procurementCatTypeList size - "+procurementCatTypeList.size());
-		for(int i=0; i<procurementCatTypeList.size(); i++){
-			log.info("procurementCatTypeList getProcurementType().getParameterCode - "+procurementCatTypeList.get(i).getProcurementType().getParameterCode());
-			log.info("procurementCatTypeList getProcurementType().getParameterType - "+procurementCatTypeList.get(i).getProcurementType().getParameterType());
-			log.info("procurementCatTypeList getProcurementType().getParameterId - "+procurementCatTypeList.get(i).getProcurementType().getParameterId());
-			log.info("==================================================== ");
-		}
+//		log.info("procurementCatTypeList size - "+procurementCatTypeList.size());
+//		for(int i=0; i<procurementCatTypeList.size(); i++){
+//			log.info("procurementCatTypeList getProcurementType().getParameterCode - "+procurementCatTypeList.get(i).getProcurementType().getParameterCode());
+//			log.info("procurementCatTypeList getProcurementType().getParameterType - "+procurementCatTypeList.get(i).getProcurementType().getParameterType());
+//			log.info("procurementCatTypeList getProcurementType().getParameterId - "+procurementCatTypeList.get(i).getProcurementType().getParameterId());
+//			log.info("==================================================== ");
+//		}
 		
-		log.info("arrlist size - "+arrlist.size());
-		for(int i=0; i<arrlist.size(); i++){
-			log.info("arrlist getPmParameter().getParameterCode - "+arrlist.get(i).getPmParameter().getParameterCode());
-			log.info("arrlist getPmParameter().getParameterType - "+arrlist.get(i).getPmParameter().getParameterType());
-			log.info("arrlist getPmParameter().getParameterId - "+arrlist.get(i).getPmParameter().getParameterId());
-			log.info("==================================================== ");
-		}
+//		log.info("arrlist size - "+arrlist.size());
+//		for(int i=0; i<arrlist.size(); i++){
+//			log.info("arrlist getPmParameter().getParameterCode - "+arrlist.get(i).getPmParameter().getParameterCode());
+//			log.info("arrlist getPmParameter().getParameterType - "+arrlist.get(i).getPmParameter().getParameterType());
+//			log.info("arrlist getPmParameter().getParameterId - "+arrlist.get(i).getPmParameter().getParameterId());
+//			log.info("==================================================== ");
+//		}
 		if(!procurementCatTypeList.isEmpty()){
 			for(PmProcurementCatType cattype : procurementCatTypeList){
 				for(PmParameterDesc paramdesc : arrlist){
-					if(cattype.getProcurementType().getParameterId() == paramdesc.getPmParameter().getParameterId()){
+					if(cattype.getProcurementType().getParameterId().equals(paramdesc.getPmParameter().getParameterId())){
 						filteredlist.add(paramdesc);
 						break;
 					}
