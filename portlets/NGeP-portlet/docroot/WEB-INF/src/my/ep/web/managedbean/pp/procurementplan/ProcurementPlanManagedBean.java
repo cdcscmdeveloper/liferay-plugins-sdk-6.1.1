@@ -60,6 +60,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private String maxYear = "31/12/2050";
 	private String minYear = "01/01/2010";
 	private String minInvitationYear = "01/01/2010";
+	private String maxInvitationYear = "01/01/2050";
 	private boolean fromTaskList = false;
 	private PmParameter selectedCatSearch;
 	private String pageStyle;
@@ -1423,6 +1424,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 	public void setMinInvitationYear(String minInvitationYear) {
 		this.minInvitationYear = minInvitationYear;
+	}
+
+	public String getMaxInvitationYear() {
+		return maxInvitationYear;
+	}
+
+	public void setMaxInvitationYear(String maxInvitationYear) {
+		this.maxInvitationYear = maxInvitationYear;
 	}
 
 	public PmParameter getSelectedCatSearch() {
