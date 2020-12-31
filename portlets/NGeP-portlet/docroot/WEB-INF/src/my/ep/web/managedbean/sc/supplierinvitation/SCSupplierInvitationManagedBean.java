@@ -23,6 +23,7 @@ public class SCSupplierInvitationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	
 	private String selectedInvitationType;
+	private int sizeSelectedInvitation;
 	private Map<Long,String> urlMap;
 
 	/**
@@ -51,6 +52,14 @@ public class SCSupplierInvitationManagedBean extends BaseManagedBean{
 	 */
 	public void setUrlMap(Map<Long, String> urlMap) {
 		this.urlMap = urlMap;
+	}
+
+	public int getSizeSelectedInvitation() {
+		return sizeSelectedInvitation;
+	}
+
+	public void setSizeSelectedInvitation(int sizeSelectedInvitation) {
+		this.sizeSelectedInvitation = sizeSelectedInvitation;
 	}
 	
 }
