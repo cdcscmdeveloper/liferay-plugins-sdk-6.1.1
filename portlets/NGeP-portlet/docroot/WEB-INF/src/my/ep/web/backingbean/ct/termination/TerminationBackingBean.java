@@ -417,16 +417,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 					messageId = MessageConst.INFO_700025;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
-				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)) {
-					messageId = MessageConst.INFO_700091;
 					//#16025 - START
+				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700093;
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700021;
 					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-						messageId = MessageConst.INFO_700092;
+						messageId = MessageConst.INFO_700094;
 					} else { 
-						//messageId = MessageConst.INFO_700093; // Central Contract
+						messageId = MessageConst.INFO_700095; // Central Contract
 					}
 					//#16025 - END
 				} else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
@@ -1203,7 +1203,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	 * Call save suspension method once authentication done
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
-		if (BpmOutcomeConst.BPM_ENDORSE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+		//#16025 - START
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+		//#16025 - END	
 			validateContractTermination(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
