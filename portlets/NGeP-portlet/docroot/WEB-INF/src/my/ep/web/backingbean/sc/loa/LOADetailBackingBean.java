@@ -421,17 +421,52 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * 		the previous page url.
 	 * @param isReadonly
 	 * 		the readonly flag
-	 * @param enableDownloadAllDocuments
-	 * 		either user can download documents
 	 * 
 	 * @return the supplier loa page
 	 */
 	public String retrieveSupplierLOADtl(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly) {
+		// #26226 - Start
+		Map<MapKeyEnum, Object> otherArgs = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.longValue()) {
+			otherArgs = new HashMap<>();
+			otherArgs.put(MapKeyEnum.enableDownloadAllDocuments, Boolean.TRUE);
+		}
+		return retrieveSupplierLOADtlPriv(sourceId, loaId, previousPageUrl, isReadonly, otherArgs);
+		// #26226 - End
+	}
+	
+	/**
+	 * Get the supplier loa details.
+	 * 
+	 * @param sourceId 
+	 * 		the source id (qt id / rn id
+	 * @param loaId 
+	 * 		the loa id
+	 * @param previousPageUrl
+	 * 		the previous page url.
+	 * @param isReadonly
+	 * 		the readonly flag
+	 * @param otherArgs
+	 * 		enableDownloadAllDocuments - java.lang.Boolean
+	 * 		either user can download all attachments/documents or not
+	 * 
+	 * @return the supplier loa page
+	 */
+	private String retrieveSupplierLOADtlPriv(Long sourceId, Long loaId, String previousPageUrl, boolean isReadonly, Map<MapKeyEnum, Object> otherArgs) {
 		debugLogger("retrieveSupplierLOADtl");
 		try {
+			//to avoid otherArgs is null checking next time
+			if(otherArgs == null){
+				otherArgs = new HashMap<MapKeyEnum, Object>();
+			}
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setBackToPreviousPage(previousPageUrl);
 			getManagedBean().setReadOnly(isReadonly);
+			if(otherArgs.containsKey(MapKeyEnum.enableDownloadAllDocuments) && otherArgs.get(MapKeyEnum.enableDownloadAllDocuments) instanceof Boolean){
+				Object o = otherArgs.get(MapKeyEnum.enableDownloadAllDocuments);
+				if(o instanceof Boolean){	getManagedBean().setEnableDownloadAllDocuments((Boolean)o);	}
+			}
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
@@ -447,6 +482,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
+			
+			// setting supplier proposal
+			getManagedBean().setScQtProposal(resDTO.getSupplierProposal());
 			
 			//Enhancement #24259 #24269
 //			isGSTRegActive();
