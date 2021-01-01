@@ -175,8 +175,9 @@
 							<p:outputLabel value="#{status.index + 1.}" />
 							<p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" rendered="#{status.index == 0}" /> 
 							</td>
-							<td><p:inputText readonly="true" value="#{bod.name}" /></td>
-							<td>&#160;</td>
+							<td><p:inputText readonly="true" value="#{bod.name}"
+							style="width: -webkit-fill-available;"/></td>
+							<td>&#160;</td>	
 						</tr>
 						</ui:repeat>
 					</c:when>
