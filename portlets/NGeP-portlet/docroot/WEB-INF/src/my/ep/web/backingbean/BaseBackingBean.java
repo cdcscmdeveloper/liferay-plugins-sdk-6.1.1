@@ -346,6 +346,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		String taskId = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("taskId");
+		
+		claimTaskByTaskId(taskId);
+
+	}
+	
+	/**
+	 * Claim bpm task group
+	 */
+	public void claimBpmTaskGroup(String taskId) {
 
 		claimTaskByTaskId(taskId);
 
