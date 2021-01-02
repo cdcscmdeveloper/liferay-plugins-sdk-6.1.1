@@ -18,6 +18,9 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
@@ -30,8 +33,10 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -149,6 +154,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"contract-suspension");
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME,
 					"contract-suspension");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME,
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, 
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME,
+					"contract-reqadmin");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
@@ -955,7 +966,31 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 		log.info("**********claimTask");
 		
+		/*21387 - basri*/
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
+		
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("docNumber");
+		
+		String docType = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("docType");
+	
+		
+		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+		    List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
+		    
+		    for(WorklistItemVO a : list){
+		    	String var = a.getDocNumber();
+		    	String taski = a.getTaskId();
+		    	if(var.equalsIgnoreCase(docNumber)){
+		    		claimBpmTaskGroup(taski);
+		    	}
+		    }
+		}else{
 			claimBpmTask();
+		}
+		/*21387 - basri*/
 			
 			this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
