@@ -807,7 +807,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.resAddDistrictList}" />
 											<p:ajax event="change" update="basicResAddCityList"
-												listener="#{smPersonnelBackingBean.updateResAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmDistrict.districtId)}" />
+												listener="#{smPersonnelBackingBean.updateResAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmDistrict.districtId)}" />
 										</p:selectOneMenu> <p:message id="basicResAddDistrictListMsg"
 											for="basicResAddDistrictList" showSummary="true"
 											showDetail="false" display="icon" /></td>
@@ -983,7 +983,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.offAddDistrictList}" />
 											<p:ajax event="change" update="basicOffAddCityList"
-												listener="#{smPersonnelBackingBean.updateOffAddLists(null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmDistrict.districtId)}" />
+												listener="#{smPersonnelBackingBean.updateOffAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmDistrict.districtId)}" />
 										</p:selectOneMenu> <p:message id="basicOffAddDistrictListMsg"
 											for="basicOffAddDistrictList" showSummary="true"
 											showDetail="false" display="icon" /></td>
