@@ -48,6 +48,11 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
+
+	/*
+	 * commonly used as a flag to user's permission to download documents/attachment
+	 */
+	private Boolean enableDownloadAllDocuments = Boolean.FALSE;
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
@@ -436,6 +441,14 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
+	}
+
+	public Boolean getEnableDownloadAllDocuments() {
+		return enableDownloadAllDocuments;
+	}
+
+	public void setEnableDownloadAllDocuments(Boolean enableDownloadAllDocuments) {
+		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
 	}
 	
 	public boolean isSsmIntegrationActive() {
