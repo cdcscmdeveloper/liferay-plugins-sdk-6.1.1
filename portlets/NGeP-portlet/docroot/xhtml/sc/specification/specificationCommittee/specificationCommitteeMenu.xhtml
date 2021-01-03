@@ -14,18 +14,21 @@
 						styleClass="sidemenu">
 
 						<p:menuitem value="#{lbl['lbl.sc.general.info']}" update="@form"
-							action="#{specificationBackingBean.qtChecklistTabChange(0)}" />
+							action="#{specificationBackingBean.qtChecklistTabChange(0)}" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 						<p:menuitem
 							value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 							action="#{specificationBackingBean.qtChecklistTabChange(1)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.tech.check.list']}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(2)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 
 
@@ -33,29 +36,34 @@
 						<p:menuitem value="#{lbl['lbl.sc.spec.finance.check.list']}"
 						    action="#{specificationBackingBean.qtChecklistTabChange(3)}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(1)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.tech.scoring']}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(4)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.financial.scoring']}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(5)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.recommendation']}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(6)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.delivery.service.address']}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
-							update="@form" />
+							update="@form" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
@@ -63,7 +71,8 @@
 								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PA' 
 								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
-								update="@form" />
+								update="@form" 
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 						</c:if>
 
@@ -71,7 +80,8 @@
 						<p:menuitem
 							value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 							actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
-							update="@form" />
+							update="@form"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  />
 
 
 					</p:tabMenu></td>
@@ -191,4 +201,7 @@
 <ui:include src="/xhtml/sc/specification/clone/cloneDetails.xhtml" />
 
 
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
+	</p:blockUI>
 </ui:composition>
