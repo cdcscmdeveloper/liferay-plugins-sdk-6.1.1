@@ -7402,10 +7402,11 @@ public class SmApplicationUtil {
 		remark.setRemark(remarks);
 		// remark.setRoleCode(roleCode);
 
-		PmRole role = new PmRole();
-		role.setRoleCode(roleCode);
-		remark.setPmRole(role);
-
+		if (roleCode != null) {
+			PmRole role = new PmRole();
+			role.setRoleCode(roleCode);
+			remark.setPmRole(role);
+		}
 		saveSmRemarks(remark);
 	}
 	// #29664 - end
