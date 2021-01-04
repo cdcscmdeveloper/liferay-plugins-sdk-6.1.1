@@ -792,10 +792,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			List<String> itemSpecList = new ArrayList<String>();
 			for(int i=0;i<requestItemSO.retrieveNewOfferSpec(requestItemId).size();i++){
-				if(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec().isEmpty()){
-					continue;
-				}else{			
-					itemSpecList.add(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec());			
+				if(!requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec().isEmpty()){
+					itemSpecList.add(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec());
 				}
 			}
 			getManagedBean().setItemSpecification(itemSpecList);
