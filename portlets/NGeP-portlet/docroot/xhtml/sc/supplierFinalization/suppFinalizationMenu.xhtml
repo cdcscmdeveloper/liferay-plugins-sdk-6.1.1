@@ -31,12 +31,6 @@
 		<ui:param name="isSecretaryUser" 
 				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />	
 				  
-		<ui:param name="isMofFinalization" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofFinalization}" />	
-				  
-		<ui:param name="isMofSelection" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />	
-				  
 	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
@@ -163,8 +157,8 @@
 		
 		
 					
-			<!-- ***28834 start -->
 			
+			<!-- ***28834 starts -->
 			<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="false">
@@ -185,9 +179,9 @@
 					onclick="confirmBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-			<!-- ***28834 end -->
+		<!-- ***28834 ends -->
 		
-		<!-- ***28834 start -->
+		<!-- ***28834 starts -->
 		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="true">
@@ -200,8 +194,7 @@
 			<p:spacer height="1" />
 			
 		</p:dialog>
-		
-		<!-- ***28834 end -->
+		<!-- ***28834 ends -->
 		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
@@ -213,7 +206,7 @@
 				<tr>
 					<td align="center"><h:graphicImage
 							value="/css/images/design/exclamation.png" /> <p:outputLabel
-							value="#{lbl['lbl.sc.popup.finalupdateasattended']}" /></td>
+							value="#{lbl['lbl.btn.dialog.cofirm.submit.msg']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
