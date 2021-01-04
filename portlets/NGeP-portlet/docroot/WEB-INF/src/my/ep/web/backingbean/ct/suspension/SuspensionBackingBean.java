@@ -802,8 +802,11 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				getManagedBean().setSupplierOffer(null);
 				getManagedBean().setNewOfferSpec(null);
 			}else{
-				getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
-				getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());
+				for(int i=0;i<requestItemSO.retrieveNewOfferSpec(requestItemId).size();i++){
+					getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
+					getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());
+					break;
+				}
 			}
 		}
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
