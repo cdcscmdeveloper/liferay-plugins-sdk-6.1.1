@@ -295,9 +295,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		//201228@akmal - Enhancement27624 - Start
 		this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getSelectedPlan().getPlanYear().toString());
-		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
-			this.getManagedBean().setDisablePlanSearchDet(true);
-		else
+//		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
+//			this.getManagedBean().setDisablePlanSearchDet(true);
+//		else
 			this.getManagedBean().setDisablePlanSearchDet(false);
 		//201228@akmal - Enhancement27624 - End
 
@@ -340,7 +340,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			else
 				loadPlanDetails(id, true);
 			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
-				this.getManagedBean().setDisablePlanSearchDet(true);
+//				this.getManagedBean().setDisablePlanSearchDet(true);
+				this.getManagedBean().setDisablePlanSearchDet(false);
 				this.getManagedBean().setPageStyle("m_approved");
 			}
 			else

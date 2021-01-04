@@ -38,7 +38,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 								<f:selectItem itemLabel="#{lbl['lbl.pp.all']}"
 								itemValue="#{null}" />
 								<f:selectItems value="#{pPlanBackingBean.retrievePplanTypeCategory()}" 
-								var="parameter" itemValue="#{parameter.parameterDescId}"
+								var="parameter" itemValue="#{parameter.pmParameter.parameterId}"
 								itemLabel="#{parameter.codeName}"/>
 								<p:ajax event="change" update="pDetProcMthdSearch" listener="#{pPlanBackingBean.onSelectCategorySearch(pPlanBackingBean.managedBean.planSearchBean.categoryType.parameterCode)}" process="@this" />
 						<!-- 201111@akmal - Enhancement27624 - End -->
@@ -171,7 +171,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</table>
 		<div style="text-align: right;">
 		<!-- 201111@akmal - Enhancement27624 - Start -->
-			<p:commandButton value="#{lbl['lbl.cm.search']}"
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
 				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
 				action="#{pPlanBackingBean.searchPlanDetails()}"
 				update="@form"
