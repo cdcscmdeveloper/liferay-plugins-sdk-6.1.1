@@ -95,6 +95,7 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -739,6 +740,10 @@ public class EvaluationBackingBean extends
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
 								.getMeetingStatus().getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						if (scQtMeeting.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_SUSPENDED)) { //29473-start
+						this.getManagedBean().setHasPreviousMeeting(true);
+					}//29473-End
 					}
 					this.getManagedBean().setScQtMeetings(
 							resDTO.getMeetingDtls());

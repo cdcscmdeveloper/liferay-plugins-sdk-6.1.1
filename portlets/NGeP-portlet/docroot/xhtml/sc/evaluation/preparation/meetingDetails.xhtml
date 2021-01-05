@@ -25,11 +25,14 @@
 			<ac:paginator for="evaluationmeetingDetails" />
 
 			<!-- 	<p:column selectionMode="multiple" style="width:2%"></p:column> -->
+			<ui:param name="disableMeeting"
+				      value="#{meeting.recordStatusFlg ne DbValueConst.recordStatusActive
+										or evaluationBackingBean.managedBean.readOnly}" />
 
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
-						disabled="#{evaluationBackingBean.managedBean.readOnly}"
+						disabled="#{evaluationBackingBean.managedBean.hasPreviousMeeting or evaluationBackingBean.managedBean.readOnly}"
 						value="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=evaluationPreparationMeetingDtlsId])"
@@ -37,7 +40,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					disabled="#{disableMeeting}"
 					value="#{meeting.selected}">
 					<p:ajax partialSubmit="true" process="@this"
 						update="@([id$=evaluationPreparationMeetingDtlsId])" />
@@ -56,7 +59,7 @@
 
 				<ac:dateTime id="evaluationMeetingId"
 					required="true" label="#{lbl['lbl.sc.meeting.date']}"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					disabled="#{disableMeeting}"
 					value="#{meeting.meetingDate}" update="@([id$=evaluationMeetingId])"
 					rowIndex="#{index}">
 				</ac:dateTime>
@@ -78,7 +81,7 @@
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					onkeyup="limitTextArea(this,255);"
 					onkeydown="limitTextArea(this,255);"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					disabled="#{disableMeeting}"
 					maxlength="255" cols="40" id="evaluationMeetingLocation"
 					required="true" label="#{lbl['lbl.sc.meeting.location']}">
 					<p:ajax event="change" process="@this" partialSubmit="true"
@@ -100,7 +103,7 @@
 
 				<p:selectOneMenu id="meetingstatus" required="true"
 					style="width:120px;"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					disabled="#{disableMeeting}"
 					label="#{lbl['lbl.sc.status']}" value="#{meeting.meetingStatusStr}">
 					<f:selectItems
 						value="#{evaluationBackingBean.getStatusDropdownValues('SC', 'MS')}" />
@@ -114,7 +117,7 @@
 
 
 				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="40"
-					disabled="#{evaluationBackingBean.managedBean.readOnly}"
+					disabled="#{disableMeeting}"
 					onkeyup="limitTextArea(this,100);"
 					onkeydown="limitTextArea(this,100);" maxlength="100">
 					<p:ajax event="change" process="@this" partialSubmit="true"

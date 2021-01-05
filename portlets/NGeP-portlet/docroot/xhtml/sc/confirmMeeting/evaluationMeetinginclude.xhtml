@@ -36,16 +36,19 @@
 			selection="#{evaluationMeetingBackingBean.managedBean.meetingMultiSelect}"
 			editable="true" rowIndexVar="index" rowKey="#{meeting}">
 			<ac:paginator for="evaluationmeetingDetails" />
+			<ui:param name="disableMeeting"
+				      value="#{meeting.recordStatusFlg ne DbValueConst.recordStatusActive}" />
 			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
+					disabled="#{evaluationMeetingBackingBean.managedBean.hasPreviousMeeting}"
 						value="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
 							 update="@([id$=evaluationConfirmmeetingId])"
 							listener="#{evaluationMeetingBackingBean.selectAll(evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll, evaluationMeetingBackingBean.managedBean.scQtMeetings)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox value="#{meeting.selected}">
+				<p:selectBooleanCheckbox disabled="#{disableMeeting}" value="#{meeting.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationConfirmmeetingId])" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -56,6 +59,7 @@
 				</f:facet>
                   
 					<ac:dateTime id="meetingDate"
+					disabled="#{disableMeeting}"
       required="true"
       label="#{lbl['lbl.sc.meeting.date']}"
       value="#{meeting.meetingDate}"
@@ -73,6 +77,7 @@
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
+				disabled="#{disableMeeting}"
 					style="width:75%;" maxlength="255" onkeyup="limitTextArea(this,255);" onkeydown="limitTextArea(this,255);"
 						onmouseout="limitTextArea(this,255);"
 					label="#{lbl['lbl.sc.meeting.location']}" id="locationId"
