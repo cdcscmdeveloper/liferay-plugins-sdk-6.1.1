@@ -508,6 +508,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25037-END
 	
 	private boolean itemSampleReq; //#11104-start
+	
+	private boolean hasPreviousMeeting;//#29473
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3456,4 +3458,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.itemSampleReq = itemSampleReq;
 	}
 	//#11104-End
+
+	/**29473_start
+	 * @return the hasPreviousMeeting
+	 */
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	/**
+	 * @param hasPreviousMeeting the hasPreviousMeeting to set
+	 */
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
+	}
+	//#29473-End
+	
 }
