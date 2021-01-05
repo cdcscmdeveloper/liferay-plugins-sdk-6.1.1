@@ -1358,14 +1358,14 @@ public class PpReportsBackingBean extends
 				List<Object[]> newList = new ArrayList<Object[]>();
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
-					System.out.println("Bean ESR - cf5");
+					log.info("Bean ESR - cf5");
 					Double cf5 = getRptRequestSO().getSumOfExpCFAmnt("CF5",((BigDecimal)row[12]).toString(),((BigDecimal)row[13]).toString(),params);
-					System.out.println("Result cf5: " + cf5);
-					System.out.println("Bean ESR - cf6");
+					log.info("Result cf5: " + cf5);
+					log.info("Bean ESR - cf6");
 					Double cf6 = getRptRequestSO().getSumOfExpCFAmnt("CF6",((BigDecimal)row[12]).toString(),((BigDecimal)row[13]).toString(),params);
-					System.out.println("Result cf6: " + cf6);
+					log.info("Result cf6: " + cf6);
 					Double amountExpenditure = cf5 + cf6;
-					System.out.println("Result amount: " + amountExpenditure);
+					log.info("Result amount: " + amountExpenditure);
 					Double percentageExpenditure = amountExpenditure / ((BigDecimal)row[10]).doubleValue() * 100;
 					
 					//add calculated amountExpenditure in objectlist for usage in another tab
