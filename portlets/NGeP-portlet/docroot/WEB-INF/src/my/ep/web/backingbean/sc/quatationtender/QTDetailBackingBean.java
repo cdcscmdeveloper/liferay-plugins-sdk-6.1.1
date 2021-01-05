@@ -9539,6 +9539,30 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	
+	public boolean isOthersApprovalForInstruction(){
+		boolean isForInstruction = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		String procurementCategory = scQt.getPmProcurementCategory().getParameterCode();
+	    if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory)){
+        	if(null != statusId && 
+      			   (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || 
+      			    QTStatusConst.CMT_PENDING_APPROVAL.equals(statusId) || 
+      			    QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+      				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
+         		isForInstruction = true;   
+         	}    
+	    } 
+        if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory)){
+        	if(null != statusId && 
+     			   (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+     				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
+        		isForInstruction = true;   
+        	}  	   
+		}
+        return isForInstruction; 
+	}
+	
 	public boolean isOthersApprovalMandatoryForAttachment(){
 		boolean isMandatoryForUpload = false;
 		ScQt scQt = this.getManagedBean().getQt();
