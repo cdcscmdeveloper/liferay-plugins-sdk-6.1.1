@@ -224,9 +224,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.resetPlanSearchBean();
 		generateSearchOptions();
 		setupOrgProfile();
-		//200911@akmal - Enhancement27624 - Start
+		//201228@akmal - Enhancement27624 - Start
 		setScreenVariables();
-		//200911@akmal - Enhancement27624 - End
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
+		//201228@akmal - Enhancement27624 - End
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -241,6 +242,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//201228@akmal - Enhancement27624 - Start
 		this.getManagedBean().setDisablePlanSearchDet(true);
 		this.getManagedBean().setPageStyle("create");
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		//201228@akmal - Enhancement27624 - End
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
@@ -298,7 +300,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
 //			this.getManagedBean().setDisablePlanSearchDet(true);
 //		else
-			this.getManagedBean().setDisablePlanSearchDet(false);
+		this.getManagedBean().setDisablePlanSearchDet(false);
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		//201228@akmal - Enhancement27624 - End
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -348,6 +351,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setDisablePlanSearchDet(false);
 			loadDefaultButtons();
 			this.getManagedBean().setPlanId(id);
+			this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 			//201229@akmal - Enhancement27624 - End
 		}
 		
@@ -5652,11 +5656,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				"lbl.pp.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				getFacesScopes().getUserLocale()));
 		
-		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		return items;
 	}
 	
-	//200911@akmal - Enhancement27624 - End
+	//201228@akmal - Enhancement27624 - End
 
 	/**
 	 * To Retrieve Plan Status List
