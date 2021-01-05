@@ -1347,13 +1347,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().getSmSupplier().getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE && 
 				(
 					checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
-					&& 
+					|| 
 					checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())
 				)) {
 			getManagedBean().setBypassFlag1(1);
 		} else if (	admin!=null && 
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && appl==null
+				activeAppl==null && appl==null && checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null
 			) {
 				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 				getManagedBean().setBypassFlag1(1);
