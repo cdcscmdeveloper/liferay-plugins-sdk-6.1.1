@@ -1121,7 +1121,7 @@ public class PpReportsBackingBean extends
 							if((BigDecimal)row[15]!=null){
 								obj[6]="("+((BigDecimal)row[15]).toString()+")";
 								dVal = ((BigDecimal)row[15]).doubleValue();
-							}else if(StringUtils.isNotBlank(obj[6].toString()))
+							}else if(!obj[6].toString().equals("(0.00)"))
 								dVal = Double.parseDouble(obj[6].toString().replaceAll("[()]", ""));
 							
 							//percentage
@@ -1134,7 +1134,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							ministryList.put(((BigDecimal)row[17]).intValueExact(), new Object[]{
 								count,(String)row[16],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],(Double)row[18],
-								(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"",percentageExpenditure
+								(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
 						}
@@ -1202,7 +1202,7 @@ public class PpReportsBackingBean extends
 							if((BigDecimal)row[15]!=null){
 								obj[7]="("+((BigDecimal)row[15]).toString()+")";
 								dVal = ((BigDecimal)row[15]).doubleValue();
-							}else if(StringUtils.isNotBlank(obj[7].toString()))
+							}else if(!obj[7].toString().equals("(0.00)"))
 								dVal = Double.parseDouble(obj[7].toString().replaceAll("[()]", ""));
 							
 							//percentage
@@ -1215,7 +1215,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct /((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[1]), new Object[]{
 								count,Integer.valueOf((String)row[1]),(String)row[2],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
-								(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"",percentageExpenditure
+								(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
 						}
@@ -1282,7 +1282,7 @@ public class PpReportsBackingBean extends
 						if((BigDecimal)row[15]!=null){
 							obj[8]="("+((BigDecimal)row[15]).toString()+")";
 							dVal = ((BigDecimal)row[15]).doubleValue();
-						}else if(StringUtils.isNotBlank(obj[8].toString()))
+						}else if(!obj[8].toString().equals("(0.00)"))
 							dVal = Double.parseDouble(obj[8].toString().replaceAll("[()]", ""));
 						
 						//percentage
@@ -1295,7 +1295,7 @@ public class PpReportsBackingBean extends
 						Double percentageExpenditure = amntMinusDeduct /((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[3]), new Object[]{
 							count,(String)row[2],Integer.valueOf((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
-							(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"",percentageExpenditure
+							(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
 							});
 						count++;
 					}
@@ -1358,9 +1358,14 @@ public class PpReportsBackingBean extends
 				List<Object[]> newList = new ArrayList<Object[]>();
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
+					System.out.println("Bean ESR - cf5");
 					Double cf5 = getRptRequestSO().getSumOfExpCFAmnt("CF5",((BigDecimal)row[12]).toString(),((BigDecimal)row[13]).toString(),params);
+					System.out.println("Result cf5: " + cf5);
+					System.out.println("Bean ESR - cf6");
 					Double cf6 = getRptRequestSO().getSumOfExpCFAmnt("CF6",((BigDecimal)row[12]).toString(),((BigDecimal)row[13]).toString(),params);
+					System.out.println("Result cf6: " + cf6);
 					Double amountExpenditure = cf5 + cf6;
+					System.out.println("Result amount: " + amountExpenditure);
 					Double percentageExpenditure = amountExpenditure / ((BigDecimal)row[10]).doubleValue() * 100;
 					
 					//add calculated amountExpenditure in objectlist for usage in another tab
@@ -1432,7 +1437,7 @@ public class PpReportsBackingBean extends
 							if((BigDecimal)row[11]!=null){
 								obj[6]="("+((BigDecimal)row[11]).toString()+")";
 								dVal = ((BigDecimal)row[11]).doubleValue();
-							}else if(StringUtils.isNotBlank(obj[6].toString()))
+							}else if(!obj[6].toString().equals("(0.00)"))
 								dVal = Double.parseDouble(obj[6].toString().replaceAll("[()]", ""));
 							
 							//percentage
@@ -1446,7 +1451,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							ministryList.put(((BigDecimal)row[1]).intValueExact(), new Object[]{
 								count,(String)row[0],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
-								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"",percentageExpenditure
+								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
 						}
@@ -1513,7 +1518,7 @@ public class PpReportsBackingBean extends
 							if((BigDecimal)row[11]!=null){
 								obj[7]="("+((BigDecimal)row[11]).toString()+")";
 								dVal = ((BigDecimal)row[11]).doubleValue();
-							}else if(StringUtils.isNotBlank(obj[7].toString()))
+							}else if(!obj[7].toString().equals("(0.00)"))
 								dVal = Double.parseDouble(obj[7].toString().replaceAll("[()]", ""));
 							
 							//percentage
@@ -1527,7 +1532,7 @@ public class PpReportsBackingBean extends
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[3]), new Object[]{
 								count,Integer.parseInt((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
-								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"",percentageExpenditure
+								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
 						}
@@ -1593,7 +1598,7 @@ public class PpReportsBackingBean extends
 						if((BigDecimal)row[11]!=null){
 							obj[8]="("+((BigDecimal)row[11]).toString()+")";
 							dVal = ((BigDecimal)row[11]).doubleValue();
-						}else if(StringUtils.isNotBlank(obj[8].toString()))
+						}else if(!obj[8].toString().equals("(0.00)"))
 							dVal = Double.parseDouble(obj[8].toString().replaceAll("[()]", ""));
 												
 						//percentage
@@ -1608,7 +1613,7 @@ public class PpReportsBackingBean extends
 						Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[5]), new Object[]{
 							count,(String)row[4],Integer.parseInt((String)row[5]),(String)row[6],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,
-							(Double)row[14],(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"",percentageExpenditure
+							(Double)row[14],(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
 							});
 						count++;
 					}
@@ -1639,8 +1644,8 @@ public class PpReportsBackingBean extends
 		
 		//start kementerian tab
 		ArrayList<String> columnHeaderListMinistry = new ArrayList<String>(Arrays.asList(
-				"Bil.","Kementerian / Jabatan","Anggaran Peruntukan Menggunakan eP (RM)",
-				"Prestasi Perbelanjaan Sehingga "+ today+" (RM)","Peratusan Penggunaan eP Sehingga "+ today+" (%)"
+				"BIL.","KEMENTERIAN / JABATAN","ANGGARAN PERUNTUKAN MENGGUNAKAN eP (RM)",
+				"PRESTASI PERBELANJAAN SEHINGGA "+ today+" (RM)","PERATUSAN PENGGUNAAN eP SEHINGGA "+ today+" (%)"
 		));
 		Sheet sheetItemList = createSheetBase(wb, createHelper, "Senarai Kementerian", titleReport, 
 				columnHeaderListMinistry, columnHeaderListMinistry.size(), false,null);
@@ -1685,13 +1690,13 @@ public class PpReportsBackingBean extends
 				//add value next of merge cell (jumlah)
 				Cell cellTotalRecordItem2 = totalRecordRowItem.createCell(2);
 				cellTotalRecordItem2.setCellValue(total2);
-				cellTotalRecordItem2.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,false,true,true));
+				cellTotalRecordItem2.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
 				Cell cellTotalRecordItem3 = totalRecordRowItem.createCell(3);
 				cellTotalRecordItem3.setCellValue(total3);
-				cellTotalRecordItem3.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,false,true,true));
+				cellTotalRecordItem3.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
 				Cell cellTotalRecordItem4 = totalRecordRowItem.createCell(4);
 				cellTotalRecordItem4.setCellValue(total2 == 0? 0.00 : total3/total2*100.00);
-				cellTotalRecordItem4.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,false,true,true));
+				cellTotalRecordItem4.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
 			}
         
         }catch(EpException e){
