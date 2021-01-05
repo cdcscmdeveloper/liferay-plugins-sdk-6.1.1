@@ -294,10 +294,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setFromTaskList(true);
 
 		//201228@akmal - Enhancement27624 - Start
-		this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getSelectedPlan().getPlanYear().toString());
-		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
-			this.getManagedBean().setDisablePlanSearchDet(true);
-		else
+		this.getManagedBean().setMaxYear("31/12/"+Calendar.getInstance().get(Calendar.YEAR));
+//		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
+//			this.getManagedBean().setDisablePlanSearchDet(true);
+//		else
 			this.getManagedBean().setDisablePlanSearchDet(false);
 		//201228@akmal - Enhancement27624 - End
 
@@ -340,7 +340,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			else
 				loadPlanDetails(id, true);
 			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
-				this.getManagedBean().setDisablePlanSearchDet(true);
+//				this.getManagedBean().setDisablePlanSearchDet(true);
+				this.getManagedBean().setDisablePlanSearchDet(false);
 				this.getManagedBean().setPageStyle("m_approved");
 			}
 			else
@@ -4949,10 +4950,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		  } 
 		  if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
 			  isPlanYearEmpty = false;
-			//201209@akmal - 27624 - Start
+			//201228@akmal - 27624 - Start
 			  isEmpty = false;
-			  this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getPlanSearchBean().getYear());
-			//201209@akmal - 27624 - End
+			  this.getManagedBean().setMaxYear("31/12/"+Calendar.getInstance().get(Calendar.YEAR));
+			//201228@akmal - 27624 - End
 		  }
 		  if(this.getManagedBean().getPlanSearchBean().getPlanType().getParameterCode()!=null){
 			  isPlanTypeEmpty = false;
@@ -5057,7 +5058,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if(this.getManagedBean().isFromTaskList()){
 			generatePageModeForProcess(this.getManagedBean().getTaskName());
 			this.loadPlanDetails(this.getManagedBean().getPlanId(), false);
-			this.getManagedBean().setMaxYear("31/12/"+this.getManagedBean().getSelectedPlan().getPlanYear().toString());
+			this.getManagedBean().setMaxYear("31/12/"+Calendar.getInstance().get(Calendar.YEAR));
 			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
 				this.getManagedBean().setDisablePlanSearchDet(true);
 			
