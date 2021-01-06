@@ -1214,7 +1214,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		if(SmApplicationUtil.isMofAccEffDatePassedCurrDate(getManagedBean().getSmSupplier())){
 			if (!getManagedBean().isExistingUser()) {
-				throw new EpException(MessageConst.ERROR_721087);
+//#28765 Bypass				throw new EpException(MessageConst.ERROR_721087);
 			}
 		}
 		//SupplierSearchReqDTO ssreqDTO = new SupplierSearchReqDTO();
