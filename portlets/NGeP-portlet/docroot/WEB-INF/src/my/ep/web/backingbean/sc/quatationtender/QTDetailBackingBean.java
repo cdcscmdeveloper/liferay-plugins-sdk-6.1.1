@@ -39,7 +39,6 @@ import javax.persistence.criteria.JoinType;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
-import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -273,7 +272,6 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTDetailBackingBean.
  * 
@@ -1779,7 +1777,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (!this.getManagedBean().getQt().isPanel()) {
 			if (this.getManagedBean().getQt().getQtType()
 					.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
-				// TODO need to check why updating the twice.. sagar
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getQtCategoryList();
 				if (CollectionUtils.isNotEmpty(openList)) {
@@ -3059,7 +3056,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tabBean.setIcon("ui-icon-endorse");
 			}
 		}
-		if (committeTabs.size() > 0) {
+		if (!committeTabs.isEmpty()) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
 					committeTabs.get(this.getManagedBean()
@@ -3114,10 +3111,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 		return finalizationSecratary;
-	}
-
-	private ICommitteSO getCommitteSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 	}
 
 	/**
@@ -4156,13 +4149,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									ParameterConst.APPROVAL_DECISION_TYPE_REJECTED,
 									ParameterConst.APPROVAL_DECISION_TYPE_APPROVED };
 							if (!Arrays.asList(actionArr).contains(state)) {
-								//log.info("---> request is in progress");
 								requestContent.setBrandNew(false);
 								requestContent.setRequireApproval(true);
 								requestContent.setSelectable(!state.equalsIgnoreCase(ParameterConst.APPROVAL_DECISION_TYPE_REVISED));
 								this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
 							}else{
-								//log.info("---> request is completed");
 								ScQtRequestContent newRequestContent = new ScQtRequestContent();
 								newRequestContent.setBrandNew(true);
 								newRequestContent.setScQt(scQt);
@@ -4182,7 +4173,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
 						}
 					} else {
-						//log.info("---> new all the way");
 						ScQtRequestContent newRequestContent = new ScQtRequestContent();
 						newRequestContent.setBrandNew(true);
 						newRequestContent.setScQt(scQt);
@@ -4234,7 +4224,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				backingBean.getDeskOfficerAdminAssistant();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				detailSO = null;
@@ -5342,7 +5331,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getTemplateSpecZoneDtls();
 
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
-				// TODO Code needs to be remove
 				// setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
 
 				for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
@@ -8391,7 +8379,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		log.debug("qtDetailhandleFileUpload - START");
-		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
+		//List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			log.debug("qtDetailhandleFileUpload - START");
 			ScAttachment scAttachment = null;
@@ -8418,7 +8406,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//attachments.add(attachment);
 			//getManagedBean().setAttachments(attachments);
 		}
-		attachments=null;
+		//attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
 	}
 	
@@ -9259,8 +9247,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		Long statusId = wfStatus==null ? 0L: wfStatus.getPmStatus().getStatusId();
 
-		//boolean pending = false;
-				//Arrays.asList(completeArr).contains(statusId) && !this.getManagedBean().getRequestContent().isBrandNew();
 		this.getManagedBean().setDoaRequestEditable(true);
 		if(wfStatus == null){
 			FacesScopes fs = new FacesScopes();
@@ -9545,6 +9531,30 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} finally {
 			detailSO = null;
 		}
+	}
+	
+	public boolean isOthersApprovalForInstruction(){
+		boolean isForInstruction = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		String procurementCategory = scQt.getPmProcurementCategory().getParameterCode();
+	    if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory)){
+        	if(null != statusId && 
+      			   (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || 
+      			    QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId) || 
+      			    QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+      				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
+         		isForInstruction = true;   
+         	}    
+	    } 
+        if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory)){
+        	if(null != statusId && 
+     			   (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+     				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
+        		isForInstruction = true;   
+        	}  	   
+		}
+        return isForInstruction; 
 	}
 	
 	public boolean isOthersApprovalMandatoryForAttachment(){

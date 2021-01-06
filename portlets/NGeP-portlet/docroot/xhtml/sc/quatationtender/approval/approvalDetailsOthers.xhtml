@@ -8,13 +8,14 @@
 
 	<ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
 	<!-- #25077 Start -->
+	<ui:param name="isOthersApprovalForInstruction" value="#{qTDetailBB.isOthersApprovalForInstruction()}" />
 	<ui:param name="isOthersApprovalMandatoryForAttachment" value="#{qTDetailBB.isOthersApprovalMandatoryForAttachment()}" />
 	<!-- #25077 End -->
 	
 	<p:panel>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}" escape="false" />
 		<!-- #25077 Start -->
-		<c:if test="#{isOthersApprovalMandatoryForAttachment}">
+		<c:if test="#{isOthersApprovalForInstruction}">
 	    <br /><h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.instruction']}" escape="false" />
 	    </c:if> 
 	    <!-- #25077 End -->
