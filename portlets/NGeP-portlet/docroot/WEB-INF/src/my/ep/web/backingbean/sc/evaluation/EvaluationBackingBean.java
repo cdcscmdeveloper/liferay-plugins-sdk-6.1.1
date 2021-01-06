@@ -6806,7 +6806,8 @@ public void saveComplianceSample() {
 				if (null != meeting.getMeetingStatus()
 						&& null != meeting.getMeetingStatus().getStatusId()
 						&& QTStatusConst.MS_DONE.equals(meeting
-								.getMeetingStatus().getStatusId())) {
+								.getMeetingStatus().getStatusId())&& meeting.getRecordStatusFlg().equals(
+										DbValueConst.RECORD_STATUS_ACTIVE)) { //#29473_start
 					i++;
 
 				}
