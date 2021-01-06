@@ -32,6 +32,12 @@
 		</style>
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+			<br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.pospec']}"/>
+			<br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.dospec']}"/>
+			<br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.dospectwo']}"/>
 			<table>
 				<tr>
 					<td style="width: 190px;"/>
@@ -110,7 +116,8 @@
 					</p:selectOneMenu></td>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" /></td>
 				<td><p:inputText size="28" maxlength="17" 
-						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText></td>
+						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.purchase.no.example']}"/></td>
 			</tr>
 			<tr>
 			<!-- #21150 - Document type become mandatory  -->
@@ -126,7 +133,7 @@
 					</p:selectOneMenu></td>
 			<td ><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" /></td>
 			<td><p:inputText size="28" value="#{flDocumentBackingBean.managedBean.searchDocNo}" />
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no']}"/>	
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.document.no.example']}"/>	
 			</td>
 			</tr>
 			</table>
