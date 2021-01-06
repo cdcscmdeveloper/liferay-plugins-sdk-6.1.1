@@ -9547,7 +9547,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	    if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory)){
         	if(null != statusId && 
       			   (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || 
-      			    QTStatusConst.CMT_PENDING_APPROVAL.equals(statusId) || 
+      			    QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId) || 
       			    QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
       				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
          		isForInstruction = true;   
