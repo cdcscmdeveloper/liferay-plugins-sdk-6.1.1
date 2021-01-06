@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -151,8 +153,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public ApprovalBackingBean() {
 
 	}
-
-	// TODO Need to check why this code... vidya
 
 	/**
 	 * Inits the.
@@ -754,6 +754,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					List<TabBean> cTabs = this.getManagedBean().getScCommitteeMemberTabList();
 					String currentCommitteeType = cTabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()).getTabType();
 					getManagedBean().setRoleFilterList(getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), currentCommitteeType));
+				//#25037-start
+					Collections.sort(this.getManagedBean().getScCommitteeMemberTabList(), new Comparator<TabBean>() {
+						List<String> sortOrder = Arrays.asList("SC", "EC", "OC", "TEC", "FEC");
+						public int compare(TabBean o1, TabBean o2) {
+									return Integer.valueOf(
+											sortOrder.indexOf(o1.getTabType())).compareTo(
+											Integer.valueOf(sortOrder.indexOf(o2.getTabType())));
+						}
+					});
+				//#25037-end
+				
 				}
 				if(this.getManagedBean().isCommitteeReviseFlow()){
 					getManagedBean().setRoleFilterList(new String[] {ParameterConst.COMMITTEE_ROLE_SECRETARY});
@@ -851,10 +862,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().copyBPMTaskDetails(qtDetailBB.getManagedBean());
 			qtDetailBB.getManagedBean().setReadOnly(readOnlyOri);
 			
-			ScQt mb1 = this.getManagedBean().getQt();
-			ScQt mb2 = qtDetailBB.getManagedBean().getQt();
-			ScQtApproval mbAppr1 = this.getManagedBean().getScQtApproval();
-			ScQtApproval mbAppr2 = qtDetailBB.getManagedBean().getScQtApproval();
+			//ScQt mb1 = this.getManagedBean().getQt();
+			//ScQt mb2 = qtDetailBB.getManagedBean().getQt();
+			//ScQtApproval mbAppr1 = this.getManagedBean().getScQtApproval();
+			//ScQtApproval mbAppr2 = qtDetailBB.getManagedBean().getScQtApproval();
 			
 			/*logger.info("mb1.isApprovalPBM() : " + mb1.isApprovalPBM() + "   ****** mb2.isApprovalPBM() : "+mb2.isApprovalPBM());
 			logger.info("mb1.isBsvRequired() : " + mb1.isBsvRequired() + "   ****** mb2.isBsvRequired() : "+mb2.isBsvRequired());
@@ -2314,10 +2325,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
 					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
 						 this.getManagedBean().setSpecUpdateInProgress(true);
-						 //FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish", null)));
-						 //Start - 15391
-						 RequestContext.getCurrentInstance().execute("specCommAlert.show()");
-						 //End - 15391
+						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null))); //#15391
 						 inProgress = true;
 						 break;
 					 }
