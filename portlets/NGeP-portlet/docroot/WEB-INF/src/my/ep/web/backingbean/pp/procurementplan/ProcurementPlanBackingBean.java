@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.pp.procurementplan;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -91,7 +92,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.glaccount.GlAccountBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
@@ -125,7 +125,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "pPlanBackingBean")
 @ViewScoped
-public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> {
+public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> implements Serializable {
 	/**
 	 * addUpdateInfo
 	 */
@@ -167,7 +167,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private static boolean isMandatory = false;
 	private static String pageType = "";
 	
-	private GlAccountBackingBean glAccBackingBean = new GlAccountBackingBean();
+	//private GlAccountBackingBean glAccBackingBean = new GlAccountBackingBean();
 	//200911@akmal - Enhancement27624 - End
 	private static Map<List<PpProcurementItem>,List<PpProcurementItem>> ppItemMap = 
     		new HashMap<List<PpProcurementItem>,List<PpProcurementItem>>();
@@ -191,12 +191,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * 
 	 * @param message
 	 */
+	/*
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.info(message);
 		}
 		log.info(message);
 	}
+	*/
 	
 	/**
 	 * get faces scopes
@@ -211,7 +213,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * Pre-loading from Search Plan
 	 */
 	public void preLoading(boolean isTrackingDiary){
-		log.info("preLoading");
 		this.getManagedBean().setBackAllow(true);
 //		this.getManagedBean().get
 //		FacesContext.getCurrentInstance().getExternalContext().get
@@ -224,9 +225,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.resetPlanSearchBean();
 		generateSearchOptions();
 		setupOrgProfile();
-		//200911@akmal - Enhancement27624 - Start
+		//201228@akmal - Enhancement27624 - Start
 		setScreenVariables();
-		//200911@akmal - Enhancement27624 - End
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
+		//201228@akmal - Enhancement27624 - End
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -241,6 +243,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//201228@akmal - Enhancement27624 - Start
 		this.getManagedBean().setDisablePlanSearchDet(true);
 		this.getManagedBean().setPageStyle("create");
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		//201228@akmal - Enhancement27624 - End
 		this.resetManagedBean();
 		this.retrievePlanTypeMapper();
@@ -266,25 +269,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			return;
 		}
 		Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
-
-//		//only for PLAN OFFICER/ PLAN APPROVER/ PLAN VERIFIER (from tasklist)
-//		if(isRolePlanner() || isRoleApprover() || isRoleVerifier()){
-//			String[] outcome = new String[res.getAction().length + 1];
-//			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-//			int i = 1;
-//			for (String action : res.getAction()) {
-//				outcome[i++] = action;
-//			}
-//			this.getManagedBean().setOutComes(outcome);
-//		}
 		
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setBackAllow(false);
 		generatePageModeForProcess(this.getManagedBean().getTaskName());
-		
-//		this.getManagedBean().setBpmStatusCreator(res.getCreator());
-//		this.getManagedBean().setBpmStatusDate(new Timestamp(res.getCreateDate().getTimeInMillis()));
-//		this.getManagedBean().setBpmStatusId(res.getDocStatus().longValue());
+
 
 		// Procurement Plan
 		PPPlanDataType planObj = (PPPlanDataType) obj;
@@ -298,7 +287,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //		if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
 //			this.getManagedBean().setDisablePlanSearchDet(true);
 //		else
-			this.getManagedBean().setDisablePlanSearchDet(false);
+		this.getManagedBean().setDisablePlanSearchDet(false);
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		//201228@akmal - Enhancement27624 - End
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -311,7 +301,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return xhtml
 	 */
 	public String redirectToSearchPlan(){
-		log.info("redirectToSearchPlan");
 		try{
 			initialSearchPlan();
 		}catch (Exception e){
@@ -327,7 +316,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return xhtml
 	 */
 	public String redirectToMaintainPlan(Long id,String action,boolean isTrackingDiary) throws Exception{
-		log.info("redirectToMaintainPlan");
 		this.resetManagedBean();
 		this.getManagedBean().setBtnValue(action);
 		this.getManagedBean().setTrackingDiary(isTrackingDiary);
@@ -335,19 +323,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
 			//201229@akmal - Enhancement27624 - Start
-			if(this.getManagedBean().isFromTaskList())
+			if(this.getManagedBean().isFromTaskList()) {
 				loadPlanDetails(id, false);
-			else
+			} else {
 				loadPlanDetails(id, true);
+			}
 			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
 //				this.getManagedBean().setDisablePlanSearchDet(true);
 				this.getManagedBean().setDisablePlanSearchDet(false);
 				this.getManagedBean().setPageStyle("m_approved");
-			}
-			else
+			} else {
 				this.getManagedBean().setDisablePlanSearchDet(false);
+			}
 			loadDefaultButtons();
 			this.getManagedBean().setPlanId(id);
+			this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 			//201229@akmal - Enhancement27624 - End
 		}
 		
@@ -362,7 +352,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return boolean
 	 */
 	public boolean compareUserNameInsensitive(String username) {
-		log.info("compareUserNameInsensitive");
 		boolean result = false;
 		FacesScopes facesScopes = new FacesScopes();
 		if (username != null
@@ -371,7 +360,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		} else {
 			result =  false;
 		}
-		log.info("compareUserNameInsensitive: " + result);	
 		return result;
 	}
 
@@ -831,11 +819,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 	}
-	
+	/*
 	private void resetPpProcurementItemFields() {
 		
-		log.info("resetPpProcurementItemFields");
-		log.info("After delete, size= "+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size()+"\n");
 		
 		List<Long> getFromItems = new ArrayList<Long>();
 		
@@ -845,25 +831,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 		
-		for (PpProcurementItem pp: this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
-			//For cloning
-			/*pp.setCloneEnabled(false);
-			pp.setDisableForPindaan(false);
-			//For update reason
-			pp.setReasonForUpdateEnabled(true);
-			pp.setBrandNew(false);
-			//For status
-			pp.setStatusEnabled(false);
-			pp.setCloneEnabled(false);
-			pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);*/
-				
-			log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+
-					", getFromPpItem= "+pp.getFromPpItem());
-			log.info("cloneEnabled= "+pp.isCloneEnabled()+", disableForPindaan= "+pp.isDisableForPindaan()+
-					", brandNew= "+pp.isBrandNew()+", statusEnabled= "+pp.isStatusEnabled()+
-					", reasonForUpdateEnabled= "+pp.isReasonForUpdateEnabled()+
-					", recordStatusFlg= "+pp.getRecordStatusFlg());
-			
+		for (PpProcurementItem pp: this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {	
 			if (pp.isOriginal()) {
 				// if there are any clones under it
 				if (getFromItems.size() > 0) {
@@ -896,19 +864,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				pp.setDisableForPindaan(false);
 				pp.setStatusEnabled(false);
 			}
-		
-			log.info("*******************************FINAL VALUES****************************************");
-			log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+
-					", getFromPpItem= "+pp.getFromPpItem());
-			log.info("cloneEnabled= "+pp.isCloneEnabled()+", disableForPindaan= "+pp.isDisableForPindaan()+
-					", brandNew= "+pp.isBrandNew()+", statusEnabled= "+pp.isStatusEnabled()+
-					", reasonForUpdateEnabled= "+pp.isReasonForUpdateEnabled()+
-					", recordStatusFlg= "+pp.getRecordStatusFlg());
 			
 		}
 		
 	}
-	
+	*/
 
 	/**
 	 * Load plan details by id
@@ -1116,7 +1076,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			    Collections.sort(this.getManagedBean().getEpItemsB(), new Comparator<PpExpenditureItem>() {  
 					@Override
 						public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
-							// TODO Auto-generated method stub
 												
 							return (o1.getPmGlAccount().getGlAccCode() + o1.getCreatedDate()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getCreatedDate());							
 						}
@@ -1131,7 +1090,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			    Collections.sort(this.getManagedBean().getEpItemsT(), new Comparator<PpExpenditureItem>() {  
 					@Override
 						public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
-							// TODO Auto-generated method stub
 											
 						return (o1.getPmGlAccount().getGlAccCode() + o1.getCreatedDate()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getCreatedDate());							
 														
@@ -1146,7 +1104,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	            Collections.sort(this.getManagedBean().getEpItemsP(), new Comparator<PpExpenditureItem>() {  
 					@Override
 						public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
-							// TODO Auto-generated method stub
 												
 						return (o1.getPmGlAccount().getGlAccCode() + o1.getCreatedDate()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getCreatedDate());							
 								
@@ -1161,7 +1118,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			     Collections.sort(this.getManagedBean().getEpItemsS(), new Comparator<PpExpenditureItem>() {  
 						@Override
 							public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
-								// TODO Auto-generated method stub
 													
 							return (o1.getPmGlAccount().getGlAccCode() + o1.getCreatedDate()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getCreatedDate());							
 						  }
@@ -1175,7 +1131,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 Collections.sort(this.getManagedBean().getEpItemsH(), new Comparator<PpExpenditureItem>() {  
 						@Override
 							public int compare(PpExpenditureItem o1, PpExpenditureItem o2) {
-								// TODO Auto-generated method stub
 													
 							return (o1.getPmGlAccount().getGlAccCode() + o1.getCreatedDate()).compareTo(o2.getPmGlAccount().getGlAccCode() +  o2.getCreatedDate());							
 								
@@ -1880,7 +1835,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public SelectItem[] getPlanYearOptions(boolean brandNew) {
 		log.info("getPlanYearOptions");
-		//TODO comment this for testing 
 		if(brandNew){			
 			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())){
 				PmParameter parameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.PLAN_TYPE_PT, ParameterConst.PLAN_TYPE_PROCUREMENT);
@@ -3175,7 +3129,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		if(isEmpty){
-			//TODO SAM add error msg exception not null
 		}
 		
 		validateEpItem(ParameterConst.VOT_MENGURUS);
@@ -3924,12 +3877,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		  //24975@06112020@azza - Start
-		  for(PpRemark setEditRemark : epItem.getPpRemarks()){
+		  //for(PpRemark setEditRemark : epItem.getPpRemarks()){
 			  if (epItem.isChangePencilToNote()== true){
    				  this.getManagedBean().setDisable(true);
      		    }else{
      			  this.getManagedBean().setDisable(false);
-			}
+			//}
 		}
 		  //24975@06112020@azza - End
 
@@ -3937,7 +3890,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedItemRemarkDesc(epItem.getPpRemarks().isEmpty() ? "": epItem.getPpRemarks().get(0).getRemark());
 		
 		
-		log.info("loadEpItemRemarks - End");
+		//log.info("loadEpItemRemarks - End");
 		
 	}
 	
@@ -4305,9 +4258,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					throw new EpException(MessageConst.ERROR_730035);
 				}
 			}*/
-		}else{
-			// SAM TODO error msg at least one item is required
 		}
+		/*else{
+
+		}*/
 	}
 	/**
 	 * Delete selected procurement items
@@ -4937,38 +4891,40 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * search plan
 	 */
 	public void searchPlan(){
-		log.info("searchPlan");
 		this.getManagedBean().setSearch(true);
-		boolean isEmpty = true;
+		//boolean isEmpty = true;
 		//200911@akmal - Enhancement27624 - Start
 		boolean isPlanYearEmpty = true;
 		boolean isPlanTypeEmpty = true;
 		//200911@akmal - Enhancement27624 - End
-		  if(!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getPlanNumber())){
-			  isEmpty = false;
-		//200911@akmal - Enhancement27624 - Start
-		  } 
+		  /*Not Used
+		   if(!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getPlanNumber())){
+			  //isEmpty = false;
+			  //200911@akmal - Enhancement27624 - Start
+		  }*/
 		  if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
 			  isPlanYearEmpty = false;
-			//201228@akmal - 27624 - Start
-			  isEmpty = false;
+			  //201228@akmal - 27624 - Start
+			  //isEmpty = false;
 			  this.getManagedBean().setMaxYear("31/12/"+Calendar.getInstance().get(Calendar.YEAR));
-			//201228@akmal - 27624 - End
+			  //201228@akmal - 27624 - End
 		  }
 		  if(this.getManagedBean().getPlanSearchBean().getPlanType().getParameterCode()!=null){
 			  isPlanTypeEmpty = false;
-			//201105@akmal - 27624 - Start
-			  isEmpty = false;
-			//201105@akmal - 27624 - End
-		//200911@akmal - Enhancement27624 - End
+			  //201105@akmal - 27624 - Start
+			  //isEmpty = false;
+			  //201105@akmal - 27624 - End
+			  //200911@akmal - Enhancement27624 - End
 		  }
+		  /*Not Used
 		  if(this.getManagedBean().getPlanSearchBean().getVotType().getParameterId()!=null){
-			  isEmpty = false;
+			  //isEmpty = false;
 		  }else if((this.getManagedBean().getPlanSearchBean().getPtj()!=null && this.getManagedBean().getPlanSearchBean().getPtj().getOrgProfileId() != null)
 				  || this.getManagedBean().getPlanSearchBean().getKptj()!=null && this.getManagedBean().getPlanSearchBean().getKptj().getOrgProfileId() != null
 				  || this.getManagedBean().getPlanSearchBean().getMinistry()!=null && this.getManagedBean().getPlanSearchBean().getMinistry().getOrgProfileId() != null){
-			  isEmpty = false;
+			  //isEmpty = false;
 		  }
+		  */
 		  
 		//201209@akmal - Enhancement27624 - Start
 		  if(isPlanTypeEmpty){
@@ -5652,11 +5608,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				"lbl.pp.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				getFacesScopes().getUserLocale()));
 		
-		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		return items;
 	}
 	
-	//200911@akmal - Enhancement27624 - End
+	//201228@akmal - Enhancement27624 - End
 
 	/**
 	 * To Retrieve Plan Status List
@@ -6412,6 +6367,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	/**
 	 * validate if Update is required
 	 */
+	/*
 	private void UpdateReasonRequired(){
 		log.info("remarkIsRequired");
 		if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
@@ -6420,6 +6376,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 	}
+	*/
 	
 	/**
 	 * Handle update reason close popup
