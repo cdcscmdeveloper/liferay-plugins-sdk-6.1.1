@@ -42,6 +42,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -575,6 +576,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();
 	//#29315
 	private boolean flagMandatoryEpfNo;
+	
+	//#28807 - START
+	private SmApplDocFile smApplDocFile;
+	//#28807 - END
 	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
@@ -4381,4 +4386,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSdoRemark(String sdoRemark) {
 		this.sdoRemark = sdoRemark;
 	}
+	
+	//#28807 - Start
+	public SmApplDocFile getSmApplDocFile() {
+		return smApplDocFile;
+	}
+
+	public void setSmApplDocFile(SmApplDocFile smApplDocFile) {
+		this.smApplDocFile = smApplDocFile;
+	}
+	//#28807 - End
 }
