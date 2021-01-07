@@ -2717,4 +2717,23 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	//#28774 - End
+	
+	//#24964 - start
+	public void addAdditionalLicense(){
+		SmSvDocLicense license = new SmSvDocLicense();
+		license.setSmSvTask(getManagedBean().getSmSvTask());
+		license.setSmApplSupportDoc(new SmApplSupportDoc());
+		license.getSmApplSupportDoc().setPmDocument(new PmDocument());
+		getManagedBean().getSmSvTask().getSmSvDocLicenses().add(license);
+	}
+	
+	public void removeAdditionalLicense(){
+		if(getManagedBean().getSelectedAdtLicense() == null || getManagedBean().getSelectedAdtLicense().isEmpty()) return;
+		for(SmSvDocLicense license : getManagedBean().getSelectedAdtLicense()){
+			getManagedBean().getSmSvTask().getSmSvDocLicenses().remove(license);
+		}
+		getManagedBean().setSelectedAdtLicense(null);
+	}
+	//#24964 - end
+	
 }
