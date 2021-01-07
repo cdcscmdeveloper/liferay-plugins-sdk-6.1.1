@@ -1168,7 +1168,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmReplaceSupplierAdminDoc replaceSupplierAdminDoc = new SmReplaceSupplierAdminDoc();
 		replaceSupplierAdminDoc.setPmDocument(document);
 		SmReplaceSupplierAdminDocFile adminDocFile = new SmReplaceSupplierAdminDocFile();
-		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList<SmReplaceSupplierAdminDocFile>());
+		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList());
 		replaceSupplierAdminDoc.getSmReplacesupplieradminDocFiles().add(adminDocFile);
 		log.info("--------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>.."+replaceSupplierAdminDoc.getPmDocument().getDocName());
 		getManagedBean().getSmReplaceSupplierAdminDocs().add(replaceSupplierAdminDoc);
@@ -1343,7 +1343,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 			getManagedBean().setBypassFlag1(1);
 		} else if (	admin!=null && 
 				getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF) && getManagedBean().getOldAdmin().getPmUser().getUserId()!=null && 
-				activeAppl==null && appl==null && checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null
+				activeAppl==null && appl==null && (
+						checkCatalogueUpload(getManagedBean().getSmSupplier().getSupplierId())==null 
+						|| 
+						checkPendingSoftCertRequest(getManagedBean().getSmSupplier().getSupplierId())	
+				)
 			) {
 				log.info("MOF ACCOUNT DOES NOT HAVE ACTIVEAPPL VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
 				getManagedBean().setBypassFlag1(1);
