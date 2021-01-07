@@ -1809,14 +1809,15 @@ public class FinancialOrgBackingBean extends
 			}
 		}
 	}
-	
-	public void disableBankActiveStatus(Integer status, Long finAccId){
+	//20210107@Jacky - Enhancement#28836 - Start
+	public void disableBankActiveStatus(Integer status, String bankAcc,  Long finAccId){
 		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 		List<PmFinancialAcc> finAccList = getManagedBean().getFinancialOrg().getPmFinancialAccs();
 		if (status == 0){
 			for(PmFinancialAcc finAcc: finAccList){
-				if(finAcc.getFinancialAccId().equals(finAccId)){
-					List<BigDecimal> flWfStatList = finanOrgSO.retrievePendingFulfilment(getManagedBean().getFinancialOrg().getFinancialOrgId());
+				if(finAcc.getAccountNo().equals(bankAcc) && finAcc.getFinancialAccId().equals(finAccId)){
+					List<BigDecimal> flWfStatList = finanOrgSO.retrievePendingFulfilmentByBankAcc(bankAcc);
+	//20210107@Jacky - Enhancement#28836 - End
 					for(BigDecimal wfStat: flWfStatList){
 						if(wfStat.longValue() == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL
 							||	wfStat.longValue() == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL
@@ -1838,7 +1839,9 @@ public class FinancialOrgBackingBean extends
 							//20201216@Jacky - Enhancement#28836 - End
 						}
 					}
-					List<BigDecimal> ctWfStatList = finanOrgSO.retrievePendingContract(getManagedBean().getFinancialOrg().getFinancialOrgId());
+					//20210107@Jacky - Enhancement#28836 - Start
+					List<BigDecimal> ctWfStatList = finanOrgSO.retrievePendingContractByBankAcc(bankAcc);
+					//20210107@Jacky - Enhancement#28836 - End
 					for(BigDecimal ctWfStat: ctWfStatList){
 						if(ctWfStat.longValue() == ContractStatusConst.RF_PENDING_SUBMISSION
 								|| ctWfStat.longValue() == ContractStatusConst.RF_PENDING_ACKNOWLEDGEMENT
@@ -1849,10 +1852,8 @@ public class FinancialOrgBackingBean extends
 								|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_SUBMISSION
 								|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_ACKNOWLEDGEMENT
 								|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_ENDORSEMENT){
-							//20201216@Jacky - Enhancement#28836 - Start
 							finAcc.setRecordStatusFlg(1);
 							throw new EpException(MessageConst.ERROR_775216);
-							//20201216@Jacky - Enhancement#28836 - End
 						}
 					}
 				}
@@ -1880,9 +1881,7 @@ public class FinancialOrgBackingBean extends
 				||	wfStat.longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL){
 				desc.setSelected(true);
 				getManagedBean().getServiceTypes().add("FC");
-				//20201215@Jacky - Enhancement#28836 - Start
 				getManagedBean().setTabActiveIndex(1);
-				//20201215@Jacky - Enhancement#28836 - End
 				throw new EpException(MessageConst.ERROR_775217, new String[] {desc.getCodeName() + ""});
 			}
 		}
@@ -1899,9 +1898,7 @@ public class FinancialOrgBackingBean extends
 					|| ctWfStat.longValue() == ContractStatusConst.UF_PENDING_ENDORSEMENT){
 				desc.setSelected(true);
 				getManagedBean().getServiceTypes().add("FC");
-				//20201215@Jacky - Enhancement#28836 - Start
 				getManagedBean().setTabActiveIndex(1);
-				//20201215@Jacky - Enhancement#28836 - End
 				throw new EpException(MessageConst.ERROR_775217, new String[] {desc.getCodeName() + ""});
 			}
 		}

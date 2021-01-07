@@ -3812,7 +3812,8 @@ public class OrganisationBackingBean extends
 	}
 	
 	//20201105@Jacky - Enhancement#28836 - Start
-	public void disableActiveStatus(Integer status, Long supBankId){
+	//20210107@Jacky - Enhancement#28836 - Start
+	public void disableActiveStatus(Integer status, Long supBankId, String bankAcc){
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile().getOrgProfileId());
 		reqDTO.setFetchGovtSeller(true);
@@ -3823,8 +3824,9 @@ public class OrganisationBackingBean extends
 		
 		if (status == 0){
 			for(SmSupplierBank suppBank: suppBankList){
-				if(suppBank.getSupplierBankId().equals(supBankId)){
-					List<BigDecimal> wfStatList = orgProfileSO.retrievePendingFulfilment(orgProfile.getOrgProfileId());
+				if(suppBank.getSupplierBankId().equals(supBankId) && suppBank.getAccountNo().equals(bankAcc)){
+					List<BigDecimal> wfStatList = orgProfileSO.retrievePendingFulfilmentByBankAcc(bankAcc);
+	//20210107@Jacky - Enhancement#28836 - End
 					//20201217@Jacky - Enhancement#28836 - Start
 					long startTime = System.currentTimeMillis();
 					log.info("Execution start took {" + (System.currentTimeMillis() - startTime) + "}ms");
