@@ -382,7 +382,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//#21489-end
 			
 			//Bug #20701 Problem to generate DO - to monitor
-			//end Bug #20701			
+			//end Bug #20701            
 			
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
@@ -407,9 +407,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			
 			//24893 - start
-			
+
 			//24893 - end
-			
+
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			//26646-start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
@@ -447,12 +447,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				else {
 					reqDTO.setFlRequestId(resDTO.getFlRequestId());
 					resDTO = iFulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
-		            setFulfilmentRequestField(resDTO);
+					setFulfilmentRequestField(resDTO);
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			} 
-
+			
 		}  finally {
 			iFulfilmentRequestSO = null;
 			userSO = null;
@@ -1288,8 +1288,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//#14650 - Logan - Beginning
 			checkAP59();
 			//#14650 Ending		
-			
-			
+			//29728 - start
+			if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
+				if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null) {
+					isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(), 
+							getManagedBean().getFlRequest().getSmSupplier().getSupplierId());
+				}
+			}
+		    //29728 - end			
 		}else if(contractId != null){
 			/*Start- 13984 - CrList - Back Button*/
 			if(getManagedBean().getBackFlag()!= 1){
@@ -3778,16 +3788,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Long supplierBranchCode = (Long) e.getComponent().getAttributes().get("value");
-		if(supplierBranchCode!=null) {
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setSupplierBranchCode(supplierBranchCode);
-			reqDTO.setLatestApplId(getManagedBean().getFlRequest().getSmSupplier().getSmAppl().getApplId());
-			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchCode(reqDTO);
-			
-			SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
-			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
-			updateSupplierBranchAddress(supplierBranch,supplierDtl);
+		if(supplierBranchCode!=null) {			
+			//29728 - start
+			if(!isSelectedBranchDeleted(supplierBranchCode, getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+				IFulfilmentRequestSO requestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setSupplierBranchCode(supplierBranchCode);
+				reqDTO.setLatestApplId(getManagedBean().getFlRequest().getSmSupplier().getSmAppl().getApplId());
+				FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchCode(reqDTO);
+				
+				SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+				FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
+				updateSupplierBranchAddress(supplierBranch,supplierDtl);
+			}//29728 - end			
 		} else { // reset to HQ info
 			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -4568,6 +4581,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
+		//29728 - start
+		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome) 
+				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null 
+					&& isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(), 
+							getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+				getManagedBean().setSelectedTabIndex(0);
+				return null;
+			}				
+		}
+		//29728 - end
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateContractRequest(outcome);
