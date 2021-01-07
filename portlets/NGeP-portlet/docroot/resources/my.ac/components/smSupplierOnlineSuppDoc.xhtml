@@ -138,17 +138,21 @@
 				<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
 					value="#{lbl['lbl.sm.suppDoc.document.hdrCpyRmrks']}"
 					style="float: left;white-space: normal;" />										
-				<h:commandLink id="file" value="#{backingBean.getShortFileName(table.smApplDocFiles[0].fileName)}" rendered="#{not empty table.smApplDocFiles and !table.pmDocument.hardCopyReq}">
-            		<p:fileDownload value="#{backingBean.commonDownload(table.smApplDocFiles[0].filePath,table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].fileName)}" />
-        		</h:commandLink>
-			    <p:tooltip for="file" value="#{table.smApplDocFiles[0].fileName}" position="top"/>
-				
-				<p:spacer width="10" />
-				<p:commandLink 
-					rendered="#{fn:length(table.smApplDocFiles[0].fileName) > 1}"				
-					action="#{backingBean.onDeleteSupDocFileAttachment(table,index)}" update="@form">
-					<p:graphicImage value="/css/images/design/trash.png" />
-				</p:commandLink>
+				<!-- #28807 - Start -->
+				<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
+					<h:commandLink id="file" value="#{backingBean.getShortFileName(applDocs.fileName)}" rendered="#{not empty applDocs and !table.pmDocument.hardCopyReq}">
+            			<p:fileDownload value="#{backingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
+        			</h:commandLink>
+			    	<p:tooltip for="file" value="#{applDocs.fileName}" position="top"/>
+					<p:spacer width="10" />
+					<p:commandLink 
+						rendered="#{fn:length(applDocs.fileName) > 1}"				
+						action="#{backingBean.onDeleteSupDocFileAttachment(table,index,applDocs)}" update="@form">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink>
+					<br/>
+				</ui:repeat>
+				<!-- #28807 - End -->
 			</p:column>
 		</p:dataTable>
 		
@@ -157,18 +161,20 @@
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
 			onShow="singleUploadListener(uploadWV);"
 			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
+			<!-- #28807 - Start -->
 			<p:fileUpload widgetVar="uploadWV" 
 				allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
 				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
 				invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
-				update="#{cc.attrs.tableId}" oncomplete="#{cc.attrs.uploadDialogId}.hide();" 
+				update="#{cc.attrs.tableId}"
 				uploadLabel="#{lbl['lbl.btn.upload']}"  
-				label="#{lbl['lbl.btn.choose']}" 
+				label="#{lbl['lbl.btn.addfile']}" 
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				multiple="false"
-				showButtons="false" />
+				multiple="true"
+				showButtons="false"/>
+			<!-- #28807 - End -->
 		</p:dialog>
 
 		<!-- harris -->
