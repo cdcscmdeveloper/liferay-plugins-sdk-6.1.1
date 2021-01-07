@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
+import my.ep.persistence.entity.sm.SmSvAssistantOfficer;
 import my.ep.persistence.entity.sm.SmSvEquipment;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
 import my.ep.persistence.entity.sm.SmSvMachine;
@@ -127,6 +128,10 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Object oriSelectedManufacturingDtl;
 	
 	private List<SmPersonnel> staffLs;
+	
+	//#28774 - Start
+	private SmSvAssistantOfficer selectedAssistantOfficer;
+	//#28774 - End
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -750,5 +755,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setSelectedManufacturer(SmManufacturingDtl selectedManufacturer) {
 		this.selectedManufacturer = selectedManufacturer;
 	}
-	
+
+	//#28744 - Start
+	public SmSvAssistantOfficer getSelectedAssistantOfficer() {
+		return selectedAssistantOfficer;
+	}
+
+	public void setSelectedAssistantOfficer(SmSvAssistantOfficer selectedAssistantOfficer) {
+		this.selectedAssistantOfficer = selectedAssistantOfficer;
+	}
+	//#28774 - End
 }
