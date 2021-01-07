@@ -41,7 +41,8 @@
 							
 								<p:commandLink
 									id="allLink" action="#{notifyBackingBean.retrieveNotifyList}"
-									update=":form:pnldetail, :form:pnlemptydetail, :form:notifyTable, :form:searchItem, :form:searchValue">
+									update=":form:pnldetail, :form:pnlemptydetail, :form:notifyTable, :form:searchItem, :form:searchValue"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 									
 									<h:outputText value="#{lbl['lbl.portal.notify.all']}"/>
 									
@@ -55,7 +56,8 @@
 									&#160;
 							
 								<p:commandLink action="#{notifyBackingBean.retrieveUnreadNotifyList}"
-									id="unreadLink" update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable">
+									id="unreadLink" update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 									
 									<h:outputText value="#{lbl['lbl.portal.notify.unread']}"/>
 									
@@ -67,7 +69,8 @@
 								
 									<p:commandButton value="#{lbl['lbl.portal.notify.btn.refresh']}"
 										action="#{notifyBackingBean.retrieveNotifyList}"
-										update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable, :form:searchItem, :form:searchValue" /> 
+										update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable, :form:searchItem, :form:searchValue" 
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /> 
 										
 									<p:commandButton id="deleteBtn"
 										value="#{lbl['lbl.portal.notify.btn.delete']}"
@@ -168,11 +171,15 @@
 									<p:ajax event="change" listener="#{notifyBackingBean.searchItem}" update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable, :form:searchItem, :form:searchValue"/>
 								</p:selectOneMenu>
 				
-								<p:inputText id="searchValue" size="20" value="#{notifyBackingBean.managedBean.searchValue}" mask="#{notifyBackingBean.mask}" style="width: 400px; !important" >
+								<p:inputText id="searchValue" size="20" value="#{notifyBackingBean.managedBean.searchValue}" mask="#{notifyBackingBean.mask}" style="width: 400px; !important" 
+										onkeypress="if (event.keyCode == 13) { notifySearch.jq.click(); return false; }">
 									<p:ajax event="change" listener="#{notifyBackingBean.searchValue}"/>
 								</p:inputText>
 				
 								<p:commandButton id="searchBtn"
+										onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()"
+										widgetVar="notifySearch"
 										value="#{lbl['lbl.portal.notify.search']}"
 										action="#{notifyBackingBean.searchNotify}"
 										update=":form:pnldetail, :form:pnlemptydetail,:form:notifyTable"/>
@@ -269,6 +276,10 @@
 				</tr>
 			</table>
 			
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:confirmDialog message="#{lbl['lbl.btn.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.btn.dialog.cofirm.header']}" widgetVar="confirmation">
 	
 			<div align="right">
