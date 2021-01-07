@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -61,6 +62,8 @@ import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -4976,6 +4979,22 @@ public class SimpleQuoteBackingBean extends
 			startDate = cal.getTime();
 			scQuote.setStartDate(startDate);
 		}
+		
+		// #29800 - start
+		if (CollectionUtils.isEmpty(getManagedBean().getPanelItems())) {
+			if (getManagedBean().getScQuote().getPanelItem() != null) {
+				PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+				reqDTO.setPanelItemId(getManagedBean().getScQuote().getPanelItem().getPanelItemId());
+				IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
+				PanelSupplierResDTO resDTO = panelSupplierSO.retrieveSupplierByPanelItem(reqDTO);
+				if ((resDTO != null) && (resDTO.getCtPanelItem() != null)) {
+					getManagedBean().setPanelItems(new ArrayList<CtPanelItem>());
+					getManagedBean().getPanelItems().add(resDTO.getCtPanelItem());
+				}
+			}
+		}
+		// #29800 - end
 
 		// page navigation to simple quote
 		FacesContext fc = FacesContext.getCurrentInstance();
