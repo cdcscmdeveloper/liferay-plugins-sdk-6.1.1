@@ -159,6 +159,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 
 	//#25037-END
+	
+	private boolean hasPreviousMeeting;//#29473
 
 	/**
 	 * Gets the today.
@@ -913,6 +915,19 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.prevCommitteeMembers = prevCommitteeMembers;
 	}
 	//#25037
+	/**29473_start
+	 * @return the hasPreviousMeeting
+	 */
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
 
+	/**
+	 * @param hasPreviousMeeting the hasPreviousMeeting to set
+	 */
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
+	}
+	//#29473-End
 
 }
