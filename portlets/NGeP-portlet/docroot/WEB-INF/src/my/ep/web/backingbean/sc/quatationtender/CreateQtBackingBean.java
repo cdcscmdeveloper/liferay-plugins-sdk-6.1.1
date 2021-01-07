@@ -2605,6 +2605,7 @@ public class CreateQtBackingBean extends
 					valueBean.setApprovalDate(new Date());
 					valueBean.setIsApproved(true);
 					//#29425 - start
+					log.info("Value of newValue object = " + newValue);
 					QTDetailBackingBean qtDtl = new QTDetailBackingBean();
 					qtDtl.validateNewValueForValidityDays((int) newValue);
 					//#29425 - end
