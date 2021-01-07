@@ -2604,6 +2604,10 @@ public class CreateQtBackingBean extends
 				} else {
 					valueBean.setApprovalDate(new Date());
 					valueBean.setIsApproved(true);
+					//#29425 - start
+					QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+					qtDtl.validateNewValueForValidityDays((int) newValue);
+					//#29425 - end
 				}
 			} else {
 				amendMentBean.getValueMap().remove(field);
