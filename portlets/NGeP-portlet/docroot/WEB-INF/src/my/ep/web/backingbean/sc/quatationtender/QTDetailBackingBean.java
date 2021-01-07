@@ -9249,9 +9249,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	//#29425 - start
 	public void validateNewValueForValidityDays(int newValue) {
 		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-					&& newValue == 0) {
+		if (newValue == 0) {
 			this.getManagedBean().setNewValidityDays(newValue);
 			this.getManagedBean().setNewValueValidity(true);
 		}
