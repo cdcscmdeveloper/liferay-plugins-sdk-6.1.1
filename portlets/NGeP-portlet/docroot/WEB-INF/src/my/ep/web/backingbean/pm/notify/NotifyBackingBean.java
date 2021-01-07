@@ -18,8 +18,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
@@ -28,8 +26,6 @@ import my.ep.dto.pm.common.notify.NotifyResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
-import my.ep.type.aut.SearchCondition;
-import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -37,6 +33,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.notify.NotifyManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
@@ -60,25 +57,22 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 
 	public void retrieveNotifyList() {
-		
-		
 		debugLogger("retrieveNotifyList");
-
 		this.getManagedBean().setUnRead(false);
 		this.getManagedBean().setSearchItem("1");
 		this.getManagedBean().setSearchValue("");
 		
-		notifyDataModel.resetData();
-		notifyDataModel.reloadData();
-		resetSelectedNotify();
+		searchNotify();
 	}
 
 	public void retrieveUnreadNotifyList() {
 		debugLogger("retrieveUnreadNotifyList");
-
 		this.getManagedBean().setUnRead(true);
+		
+		searchNotificationsByCriteria();
 		notifyDataModel.reloadData();
-		resetSelectedNotify();
+		//resetSelectedNotify();
+		resetSelectedNotifyObj();
 	}
 
 	public void removeNotifys() {
@@ -123,7 +117,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						+ "]");
 				
 				if (resDTO.isSuccessful()) {
-					resetSelectedNotify();
+					resetSelectedNotifyObj();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -141,7 +135,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			}
 		}
 		
-		resetSelectedNotify();
+		resetSelectedNotifyObj();
 	}
 
 	public void selectedNotify() {
@@ -285,7 +279,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 						+ "]");
 				
 				if (resDTO.isSuccessful()) {
-					resetSelectedNotify();
+					resetSelectedNotifyObj();
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -425,72 +419,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	
 	@PostConstruct
 	public void init() {
-		
-		resultBean = new ArrayList<Object[]>();
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("pageChangeListener");
-		}
-
-		INotifySO ntfSO;
-		
-		try {
-			FacesScopes facesScopes = new FacesScopes();
-			PmUser user = facesScopes.getUserSessionBean();
-			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
-
-			if (user == null) {
-				logger.error("User is empty.");
-			} else {
-				ntfSO = (INotifySO) BusinessDelegate.getInstance()
-						.getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								INotifySO.class);
-				
-				NotifyReqDTO reqDTO = new NotifyReqDTO();
-				reqDTO.setNativeSearchBean(searchBean);
-				reqDTO.setUserId(user.getUserId());
-				
-				NotifyResDTO resDTO = ntfSO.searchNativeNotifyList(reqDTO);
-				
-				System.out.println("resDTO.isSuccessful= "+resDTO.isSuccessful());
-				
-				if (resDTO.isSuccessful()) {
-					
-					if (resDTO.getNativeSearchResultBeanObj() != null) {
-						
-						if (!resDTO.getNativeSearchResultBeanObj().getResultList().isEmpty() &&
-								resDTO.getNativeSearchResultBeanObj().getResultList() != null) {
-							
-							resultBean = resDTO.getNativeSearchResultBeanObj().getResultList();
-							
-							//getManagedBean().setFilteredSelectedNotifyObj(resultBean);
-							
-							System.out.println("resultBean.size= "+resultBean.size());
-							
-							/*if (getManagedBean().getFilteredSelectedNotifyObj() != null &&
-									!getManagedBean().getFilteredSelectedNotifyObj().isEmpty()) {
-								
-								Object[] messages = null;
-								
-								for (int j = 0; j < getManagedBean().getFilteredSelectedNotifyObj().size(); j++) {
-									messages = (Object[]) resDTO.getNativeSearchList().get(j);
-									getManagedBean().setSelectedNotifyObj(messages);
-								}
-							}*/
-						}
-					}
-					
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			ntfSO = null;
-		}
-		
-		filteredNotifyDataModel = new FilteredNotifyDataModel(resultBean);
-		
+		// Constructed a common method for searching notifications with or without any filter criteria
+		searchNotificationsByCriteria();
 	}
 	
 	private class FilteredNotifyDataModel extends LazyDataModel<Object[]> {
@@ -591,12 +521,11 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 	
 	public void searchNotify() {
-		
 		//this.getManagedBean().setSelectedNotify(new PmNotifyUser());
-		
+		searchNotificationsByCriteria();
 		notifyDataModel.resetData();
 		notifyDataModel.reloadData();
-		resetSelectedNotify();
+		resetSelectedNotifyObj();
 	}
 	
 	public void searchItem(AjaxBehaviorEvent event) {
@@ -644,9 +573,9 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		return date;
 	}
 	
-	private void resetSelectedNotify() {
-		getManagedBean().setSelectedNotify(null);
-	}
+//	private void resetSelectedNotify() {
+//		getManagedBean().setSelectedNotify(null);
+//	}
 
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
@@ -794,4 +723,98 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 	// #14291 - End
 	
+	// 20210107@fadhli - #29697 - Start
+	public void searchNotificationsByCriteria() {
+		resultBean = new ArrayList<Object[]>();
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("searchNotificationsByCriteria");
+		}
+
+		INotifySO ntfSO;
+		
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			PmUser user = facesScopes.getUserSessionBean();
+			ISearchBean<Object[]> searchBean = new SearchBean<Object[]>();
+
+			if (user == null) {
+				logger.error("User is empty.");
+			} else {
+				ntfSO = (INotifySO) BusinessDelegate.getInstance()
+						.getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								INotifySO.class);
+				
+				NotifyReqDTO reqDTO = new NotifyReqDTO();
+				
+				// 
+				
+				// Re-purpose the already existing SearchFilterBean to include additional search criteria to be used
+				// in the new native query search. These SearchFilterBeans are just dummies and need to be removed
+				// back manually after usage in DAO class
+				if (getManagedBean().isUnRead()) {
+					SearchFilterBean searchFilterBean = new SearchFilterBean();
+					searchFilterBean.setSearchField("unread");
+					searchFilterBean.setSearchValue("0");
+					searchBean.getDataFilterBeans().add(searchFilterBean);
+				}
+				
+				if (null != getManagedBean().getSearchItem() && !getManagedBean().getSearchItem().equals("1")) {
+					SearchFilterBean searchFilterBean = new SearchFilterBean();
+					if (getManagedBean().getSearchItem().equals("2")) {
+						searchFilterBean.setSearchField("sender");
+					} else if (getManagedBean().getSearchItem().equals("3")) {
+						searchFilterBean.setSearchField("subject");
+					} else if (getManagedBean().getSearchItem().equals("4")) {
+						searchFilterBean.setSearchField("content");
+					}
+					searchFilterBean.setSearchValue(getManagedBean().getSearchValue().trim());
+					searchBean.getDataFilterBeans().add(searchFilterBean);
+				}
+				
+				reqDTO.setNativeSearchBean(searchBean);
+				reqDTO.setUserId(user.getUserId());
+				
+				NotifyResDTO resDTO = ntfSO.searchNativeNotifyList(reqDTO);
+				
+				System.out.println("resDTO.isSuccessful= "+resDTO.isSuccessful());
+				
+				if (resDTO.isSuccessful()) {
+					
+					if (resDTO.getNativeSearchResultBeanObj() != null) {
+						
+						if (!resDTO.getNativeSearchResultBeanObj().getResultList().isEmpty() &&
+								resDTO.getNativeSearchResultBeanObj().getResultList() != null) {
+							
+							resultBean = resDTO.getNativeSearchResultBeanObj().getResultList();
+							
+							//getManagedBean().setFilteredSelectedNotifyObj(resultBean);
+							
+							System.out.println("resultBean.size= "+resultBean.size());
+							
+							/*if (getManagedBean().getFilteredSelectedNotifyObj() != null &&
+									!getManagedBean().getFilteredSelectedNotifyObj().isEmpty()) {
+								
+								Object[] messages = null;
+								
+								for (int j = 0; j < getManagedBean().getFilteredSelectedNotifyObj().size(); j++) {
+									messages = (Object[]) resDTO.getNativeSearchList().get(j);
+									getManagedBean().setSelectedNotifyObj(messages);
+								}
+							}*/
+						}
+					}
+					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ntfSO = null;
+		}
+		
+		filteredNotifyDataModel = new FilteredNotifyDataModel(resultBean);
+	}
+	//	20210107@fadhli - #29697 - End
 }
