@@ -49,6 +49,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -655,18 +656,9 @@ private boolean checkStatus(Long statusId){
 			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 	
 }
-
+//#115391 - start
 public boolean isSpecCommittee() {
-	boolean committeeTrue = false;
-	FacesScopes facesScopes = new FacesScopes();
-	if(facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
-			|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
-			|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())) {
-		committeeTrue = true;
-	}
-	return committeeTrue;
-}
-
-	
-	
+	return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+}	
+//#15391 - end
 }
