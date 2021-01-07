@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.applicationView;
 import java.util.Date;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -54,6 +56,9 @@ public class ViewApplHistoryManagedBean extends
 	private List<SmBulkApplicationVO> smBulkApplicationVO;
 	private SmAttachment cancellationAttachment;
 	private SmMofAccount currMof;
+	//#11641 - Start
+	private SmApplInquiry selectedInquiryResponse;
+	//#11641 - End
 
 	//25792 - start
 	private Date currentDate = new Date();
@@ -392,4 +397,13 @@ public class ViewApplHistoryManagedBean extends
 		this.SearchDocumentMode = SearchDocumentMode;
 	}
 	//28771 - end
+	//#11641 - Start
+	public SmApplInquiry getSelectedInquiryResponse() {
+		return selectedInquiryResponse;
+	}
+
+	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
+		this.selectedInquiryResponse = selectedInquiryResponse;
+	}
+	//#11641 - End
 }
