@@ -9248,13 +9248,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	//#29425 - start
 	public void validateNewValueForValidityDays(int newValue) {
-		log.info("Value of newValue int = " + newValue);
 		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
 		if (newValue == 0) {
 			this.getManagedBean().setNewValidityDays(newValue);
 			this.getManagedBean().setNewValueValidity(true);
 		}
 		validateValidityDays(newValue);
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
+			this.getManagedBean().setNewValueValidity(false);
+		}
 		if (ParameterConst.PROCUREMENT_MODE_TENDER
 				.equalsIgnoreCase(procureMentMode.getParameterCode())
 					&& newValue != 0
@@ -9271,9 +9274,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	public void validateValidityDays(int validityDays) {
 		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (ParameterConst.PROCUREMENT_MODE_TENDER
-				.equalsIgnoreCase(procureMentMode.getParameterCode())
-				 && validityDays == 0) {
+		if (validityDays == 0) {
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { 
 							ResourceBundleUtils.getMessage(

@@ -2597,6 +2597,11 @@ public class CreateQtBackingBean extends
 		}
 		valueBean.setNewValue(newValue);
 		
+		//#29425 - start
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+		qtDtl.validateNewValueForValidityDays((int) newValue);
+		//#29425 - end
+		
 		if (valueBean.getOldValue() != null && newValue != null) {
 			if (!valueBean.getOldValue().equals(newValue)) {
 				if (ptjApprovalReqFlg) {
@@ -2604,11 +2609,6 @@ public class CreateQtBackingBean extends
 				} else {
 					valueBean.setApprovalDate(new Date());
 					valueBean.setIsApproved(true);
-					//#29425 - start
-					log.info("Value of newValue object = " + newValue);
-					QTDetailBackingBean qtDtl = new QTDetailBackingBean();
-					qtDtl.validateNewValueForValidityDays((int) newValue);
-					//#29425 - end
 				}
 			} else {
 				amendMentBean.getValueMap().remove(field);
