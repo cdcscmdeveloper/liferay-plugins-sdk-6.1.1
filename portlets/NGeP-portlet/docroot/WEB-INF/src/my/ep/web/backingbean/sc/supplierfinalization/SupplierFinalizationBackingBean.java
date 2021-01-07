@@ -4783,7 +4783,6 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setReEvaluate(false);
 		this.getManagedBean().setRePublish(false);
 		this.getManagedBean().setForwardToHigherAuthority(false);
-		this.getManagedBean().setMofRefinalized(false);//27502
 		
 		getManagedBean().setSelectedItem(null);
 		this.getManagedBean().setRecommendedSupplier(null);
@@ -4909,12 +4908,6 @@ public class SupplierFinalizationBackingBean extends
 			
 			if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 				this.getManagedBean().setRecommendSupplier(true);
-				
-				 // #27502 -- Start				
-				if (isBpkCentralContract) {
-					this.getManagedBean().setMofRefinalized(true);
-				}
-				
 				if (isInitialDecisionFwdToHighAuth) {
 					resetDecisionForwardToHigherAuthority(scQtFinalization);
 				}
@@ -5618,15 +5611,6 @@ public class SupplierFinalizationBackingBean extends
 				
 				if (isItemize) {	
 					setSelectedSupplierCodesByItem();
-					// #27668 - Start
-					if(ParameterConst.RECOMMEND_BY_AWARD.equals(finalizationMethodStr)){
-						 this.getManagedBean().setShowDefalutSupplierListTblMultiple(false);
-					}
-					if(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(finalizationMethodStr) || 
-					   ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)){
-						 this.getManagedBean().setShowDefalutSupplierListTblSingle(false);
-					}
-					// #27668 - End	
 				} else {
 					createShortlistedSuppliersDataModel();
 				}
