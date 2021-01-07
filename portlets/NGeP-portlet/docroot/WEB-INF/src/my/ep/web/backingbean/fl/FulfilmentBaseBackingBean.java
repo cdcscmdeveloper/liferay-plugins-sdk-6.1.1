@@ -887,7 +887,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		reqDTO.setSupplierId(supplierId);
 		MofRegistrationResDTO resDTO = mofRegistrationSO.isSupplierBranchDeleted(reqDTO);
 		if(resDTO.isSupplierBranchDeleted()) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			FacesContext.getCurrentInstance().addMessage("delBranchMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_745087, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			return true;
