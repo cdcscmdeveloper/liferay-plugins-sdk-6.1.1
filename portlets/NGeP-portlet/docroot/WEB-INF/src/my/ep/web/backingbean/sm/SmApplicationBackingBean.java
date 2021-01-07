@@ -1193,13 +1193,18 @@ public class SmApplicationBackingBean extends
 		if(getManagedBean().isApproverUser()){
 			if(!EntityHelper.isCollectionEmpty(appl.getSmApplRejectReasons())) {
 				getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+				List<Long> reasonIdList = new ArrayList<Long>();
 				for(SmApplRejectReason smApplRejectReason : appl.getSmApplRejectReasons()){
 						for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
 							if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
 								getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
+								reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
 							}
 						}			
 				}
+				getManagedBean().setReasonId(
+						reasonIdList.toArray(new Long[reasonIdList.size()]));
+				verifySelectedRejectReasons();
 			}
 		}
 		
@@ -3325,7 +3330,10 @@ public class SmApplicationBackingBean extends
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
 							if (StringUtils.isBlank(getManagedBean()
 									.getApplnRejectionRemarks())) {
-								throw new EpException("Rejection Remarks is mandatory.");
+								//15629 - Start
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+										null));
+								//15629 - End
 							}
 						}
 						
@@ -14330,7 +14338,8 @@ public class SmApplicationBackingBean extends
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
 							if (StringUtils.isBlank(getManagedBean()
 									.getApplnRejectionRemarks())) {
-								throw new EpException("Recommend Rejection Remarks is mandatory.");
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+										null));
 							}
 						}
 						
@@ -14349,7 +14358,8 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			throw new EpException("Recommend Rejection reason is mandatory."); //21937		
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+					null)); //21937		
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
