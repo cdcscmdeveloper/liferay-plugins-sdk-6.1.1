@@ -274,18 +274,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	// #27502 - Start 
 	private boolean isMofFinalization;
-	private boolean mofRefinalized;
 	private boolean isBpkCentralContract;
 	// #27502 - Start 
 	
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
-	
-	// #27668 - Start
-	private boolean showDefalutSupplierListTblSingle=true;
-	private boolean showDefalutSupplierListTblMultiple=true;
-	// #27668 - End
 	
 	/**
 	 * @return the activeIndex
@@ -2365,32 +2359,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
 		this.haveSupplierRejection = haveSupplierRejection;
-	}
-
-	// #27668 - Start
-	public boolean isShowDefalutSupplierListTblSingle() {
-		return showDefalutSupplierListTblSingle;
-	}
-
-	public void setShowDefalutSupplierListTblSingle(boolean showDefalutSupplierListTblSingle) {
-		this.showDefalutSupplierListTblSingle = showDefalutSupplierListTblSingle;
-	}
-
-	public boolean isShowDefalutSupplierListTblMultiple() {
-		return showDefalutSupplierListTblMultiple;
-	}
-
-	public void setShowDefalutSupplierListTblMultiple(boolean showDefalutSupplierListTblMultiple) {
-		this.showDefalutSupplierListTblMultiple = showDefalutSupplierListTblMultiple;
-	}
-	// #27668 - End
-
-	public boolean isMofRefinalized() {
-		return mofRefinalized;
-	}
-
-	public void setMofRefinalized(boolean mofRefinalized) {
-		this.mofRefinalized = mofRefinalized;
 	}
 
 	//27502 - Start.
