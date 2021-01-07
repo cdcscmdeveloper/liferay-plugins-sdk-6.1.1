@@ -713,7 +713,7 @@ public class SmPersonnelBackingBean extends
 					.getBasicSmPersonnelResidentialAddress().getSmAddress();
 			
 			if (address.getAddress1() != null) {
-				updateResAddLists(address.getPmCountry().getCountryId(), address.getPmState().getStateId()
+				updateResAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId()
 						.toString(), address.getPmDivision(), address.getPmDistrict().getDistrictId()
 						.toString());
 			}
@@ -742,7 +742,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()
 					.add(getManagedBean().getBasicSmPersonnelResidentialAddress());
 			
-			updateResAddLists(getManagedBean().getDefaultCountryId(), "", "", "");
+			updateResAddLists(getManagedBean().getDefaultCountryId().toString(), "", "", "");
 		}
 		
 		//Office
@@ -753,7 +753,7 @@ public class SmPersonnelBackingBean extends
 					.getBasicSmPersonnelOfficeAddress().getSmAddress();
 			
 			if (address.getAddress1() != null) {
-				updateOffAddLists(address.getPmCountry().getCountryId(), address.getPmState().getStateId()
+				updateOffAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId()
 						.toString(), address.getPmDivision(), address.getPmDistrict().getDistrictId()
 						.toString());
 			}
@@ -782,7 +782,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()
 					.add(getManagedBean().getBasicSmPersonnelOfficeAddress());
 			
-			updateOffAddLists(getManagedBean().getDefaultCountryId(), "", "", "");
+			updateOffAddLists(getManagedBean().getDefaultCountryId().toString(), "", "", "");
 		}
 		//9569 - End
 	}
@@ -1055,11 +1055,10 @@ public class SmPersonnelBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	public void updateResAddLists(Long countryId, String stateId, String divisionId,
+	public void updateResAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
-		if (countryId != null) {
-			getManagedBean().setResAddStateList(
-					SmCommonUtil.getStateList(countryId));
+		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
+			getManagedBean().setResAddStateList(SmCommonUtil.getStateList(Long.valueOf(countryId)));
 			getManagedBean().setResAddDistrictList(null);
 			getManagedBean().setResAddCityList(null);
 		}
@@ -1120,11 +1119,11 @@ public class SmPersonnelBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	public void updateOffAddLists(Long countryId, String stateId, String divisionId,
+	public void updateOffAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
-		if (countryId != null) {
+		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setOffAddStateList(
-					SmCommonUtil.getStateList(countryId));
+					SmCommonUtil.getStateList(Long.valueOf(countryId)));
 			getManagedBean().setOffAddDistrictList(null);
 			getManagedBean().setOffAddCityList(null);
 		}
@@ -1423,10 +1422,10 @@ public class SmPersonnelBackingBean extends
 
 				SmAddress s1 = new SmAddress();
 				SmAddress s2 = new SmAddress();
-				//9526 - Start
+				//9569 - Start
 				SmAddress s3 = new SmAddress(); //residential Address
 				SmAddress s4 = new SmAddress(); // Office Address
-				//9526 - End
+				//9569 - End
 
 				/* Construct Mailing Address Object */
 				CountryReqDTO reqCountryDTO = new CountryReqDTO();
@@ -1454,7 +1453,7 @@ public class SmPersonnelBackingBean extends
 				s2.setPmDistrict(new PmDistrict());
 				s2.setPmCity(new PmCity());
 				
-				//9526 - Start
+				//9569 - Start
 				/* Construct Residential Address Object */
 				reqCountryDTO = new CountryReqDTO();
 				reqCountryDTO.setCountryId(getManagedBean()
@@ -1478,7 +1477,7 @@ public class SmPersonnelBackingBean extends
 				s4.setPmDivision(new PmDivision());
 				s4.setPmDistrict(new PmDistrict());
 				s4.setPmCity(new PmCity());
-				//9526 - End
+				//9569 - End
 				
 				List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
 				SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
@@ -1495,7 +1494,7 @@ public class SmPersonnelBackingBean extends
 				mailPersonnelAddress.setSmPersonnel(smPersonnel);
 				getManagedBean().setBasicSmPersonnelMailingAddress(
 						mailPersonnelAddress);
-				//9526 - Start
+				//9569 - Start
 				//res address
 				SmPersonnelAddress resPersonnelAddress = new SmPersonnelAddress();
 				resPersonnelAddress
@@ -1514,17 +1513,17 @@ public class SmPersonnelBackingBean extends
 				getManagedBean().setBasicSmPersonnelOfficeAddress(
 						offPersonnelAddress);
 				//office address end
-				//9526 - End
+				//9569 - End
 				smPersonnelAddresses.add(getManagedBean()
 						.getBasicSmPersonnelPermanentAddress());
 				smPersonnelAddresses.add(getManagedBean()
 						.getBasicSmPersonnelMailingAddress());
-				//9526 - Start
+				//9569 - Start
 				smPersonnelAddresses.add(getManagedBean()
 						.getBasicSmPersonnelResidentialAddress());
 				smPersonnelAddresses.add(getManagedBean()
 						.getBasicSmPersonnelOfficeAddress());
-				//9526 - End
+				//9569 - End
 				smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
 
 				getCountryList();
@@ -2545,7 +2544,7 @@ public class SmPersonnelBackingBean extends
 	
 	//9569 - Start
 	//Residential
-	private void updateResAddLists(Long countryId, String stateId, PmDivision division,
+	private void updateResAddLists(String countryId, String stateId, PmDivision division,
 			String districtId){
 		String divisionId = "";
 		if(division != null && division.getDivisionId() != null)
@@ -2553,7 +2552,7 @@ public class SmPersonnelBackingBean extends
 		updateResAddLists(countryId, stateId, divisionId, districtId);
 	}
 	//Office
-	private void updateOffAddLists(Long countryId, String stateId, PmDivision division,
+	private void updateOffAddLists(String countryId, String stateId, PmDivision division,
 			String districtId){
 		String divisionId = "";
 		if(division != null && division.getDivisionId() != null)
@@ -2766,7 +2765,8 @@ public class SmPersonnelBackingBean extends
 			if(personnel.getEpRole() == null){
 				personnel.setEpRole("");
 			}
-			if (!personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+		
+			if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
 				PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 				PersonnelResDTO resDTO1 = new PersonnelResDTO();
 				if (personnel.getPmUser() != null) {
