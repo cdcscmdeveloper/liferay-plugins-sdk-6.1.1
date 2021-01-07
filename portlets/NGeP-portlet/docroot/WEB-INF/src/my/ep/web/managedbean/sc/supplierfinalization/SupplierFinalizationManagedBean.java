@@ -2353,14 +2353,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setMofFinalization(boolean isMofFinalization) {
 		this.isMofFinalization = isMofFinalization;
 	}
-	
-	// #27668 - Start
-	public boolean isShowDefalutSupplierListTblSingle() {
-		return showDefalutSupplierListTblSingle;
-	}
 
-	public void setShowDefalutSupplierListTblSingle(boolean showDefalutSupplierListTblSingle) {
-		this.showDefalutSupplierListTblSingle = showDefalutSupplierListTblSingle;
+	public boolean isHaveSupplierRejection() {
+		return haveSupplierRejection;
 	}
 
 	public void setHaveSupplierRejection(boolean haveSupplierRejection) {
