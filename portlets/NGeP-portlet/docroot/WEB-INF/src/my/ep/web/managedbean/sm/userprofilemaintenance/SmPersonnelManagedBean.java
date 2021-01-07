@@ -51,6 +51,29 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmPersonnel basicSmPersonnel;
 	private SmPersonnelAddress basicSmPersonnelMailingAddress;
 	private SmPersonnelAddress basicSmPersonnelPermanentAddress;
+	//9569 - Start
+	private SmPersonnelAddress basicSmPersonnelResidentialAddress;
+	private SmPersonnelAddress basicSmPersonnelOfficeAddress;
+	private List<SelectItem> resAddCountryList;
+	private List<SelectItem> resAddStateList;
+	private List<SelectItem> resAddDistrictList;
+	private List<SelectItem> resAddCityList;
+	private List<SelectItem> offAddCountryList;
+	private List<SelectItem> offAddStateList;
+	private List<SelectItem> offAddDistrictList;
+	private List<SelectItem> offAddCityList;
+	
+	private List<SelectItem> resAddDivisionList;
+	private List<SelectItem> offAddDivisionList;
+	
+	private SmPersonnelAddress updateSmPersonnelOffAddress;
+	private SmPersonnelAddress updateSmPersonnelResAddress;
+	
+	private Long resDivisionId;
+	private boolean resDivisionBox=true;
+	private Long offDivisionId;
+	private boolean offDivisionBox=true;
+	//9569 - End
 	private List<SelectItem> mailAddCountryList;
 	private List<SelectItem> mailAddStateList;
 	private List<SelectItem> mailAddDistrictList;
@@ -860,5 +883,148 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setDisableRoleSelection(boolean disableRoleSelection) {
 		this.disableRoleSelection = disableRoleSelection;
 	}
-	
+
+	public SmPersonnelAddress getBasicSmPersonnelResidentialAddress() {
+		return basicSmPersonnelResidentialAddress;
+	}
+
+	public void setBasicSmPersonnelResidentialAddress(SmPersonnelAddress basicSmPersonnelResidentialAddress) {
+		this.basicSmPersonnelResidentialAddress = basicSmPersonnelResidentialAddress;
+	}
+
+	public List<SelectItem> getResAddCountryList() {
+		return resAddCountryList;
+	}
+
+	public void setResAddCountryList(List<SelectItem> resAddCountryList) {
+		this.resAddCountryList = resAddCountryList;
+	}
+
+	public List<SelectItem> getResAddStateList() {
+		return resAddStateList;
+	}
+
+	public void setResAddStateList(List<SelectItem> resAddStateList) {
+		this.resAddStateList = resAddStateList;
+	}
+
+	public List<SelectItem> getResAddDistrictList() {
+		return resAddDistrictList;
+	}
+
+	public void setResAddDistrictList(List<SelectItem> resAddDistrictList) {
+		this.resAddDistrictList = resAddDistrictList;
+	}
+
+	public List<SelectItem> getResAddCityList() {
+		return resAddCityList;
+	}
+
+	public void setResAddCityList(List<SelectItem> resAddCityList) {
+		this.resAddCityList = resAddCityList;
+	}
+
+	public List<SelectItem> getOffAddCountryList() {
+		return offAddCountryList;
+	}
+
+	public void setOffAddCountryList(List<SelectItem> offAddCountryList) {
+		this.offAddCountryList = offAddCountryList;
+	}
+
+	public List<SelectItem> getOffAddStateList() {
+		return offAddStateList;
+	}
+
+	public void setOffAddStateList(List<SelectItem> offAddStateList) {
+		this.offAddStateList = offAddStateList;
+	}
+
+	public List<SelectItem> getOffAddDistrictList() {
+		return offAddDistrictList;
+	}
+
+	public void setOffAddDistrictList(List<SelectItem> offAddDistrictList) {
+		this.offAddDistrictList = offAddDistrictList;
+	}
+
+	public List<SelectItem> getOffAddCityList() {
+		return offAddCityList;
+	}
+
+	public void setOffAddCityList(List<SelectItem> offAddCityList) {
+		this.offAddCityList = offAddCityList;
+	}
+
+	public List<SelectItem> getResAddDivisionList() {
+		return resAddDivisionList;
+	}
+
+	public void setResAddDivisionList(List<SelectItem> resAddDivisionList) {
+		this.resAddDivisionList = resAddDivisionList;
+	}
+
+	public List<SelectItem> getOffAddDivisionList() {
+		return offAddDivisionList;
+	}
+
+	public void setOffAddDivisionList(List<SelectItem> offAddDivisionList) {
+		this.offAddDivisionList = offAddDivisionList;
+	}
+
+	public SmPersonnelAddress getUpdateSmPersonnelOffAddress() {
+		return updateSmPersonnelOffAddress;
+	}
+
+	public void setUpdateSmPersonnelOffAddress(SmPersonnelAddress updateSmPersonnelOffAddress) {
+		this.updateSmPersonnelOffAddress = updateSmPersonnelOffAddress;
+	}
+
+	public SmPersonnelAddress getUpdateSmPersonnelResAddress() {
+		return updateSmPersonnelResAddress;
+	}
+
+	public void setUpdateSmPersonnelResAddress(SmPersonnelAddress updateSmPersonnelResAddress) {
+		this.updateSmPersonnelResAddress = updateSmPersonnelResAddress;
+	}
+
+	public Long getResDivisionId() {
+		return resDivisionId;
+	}
+
+	public void setResDivisionId(Long resDivisionId) {
+		this.resDivisionId = resDivisionId;
+	}
+
+	public boolean isResDivisionBox() {
+		return resDivisionBox;
+	}
+
+	public void setResDivisionBox(boolean resDivisionBox) {
+		this.resDivisionBox = resDivisionBox;
+	}
+
+	public Long getOffDivisionId() {
+		return offDivisionId;
+	}
+
+	public void setOffDivisionId(Long offDivisionId) {
+		this.offDivisionId = offDivisionId;
+	}
+
+	public boolean isOffDivisionBox() {
+		return offDivisionBox;
+	}
+
+	public void setOffDivisionBox(boolean offDivisionBox) {
+		this.offDivisionBox = offDivisionBox;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelOfficeAddress() {
+		return basicSmPersonnelOfficeAddress;
+	}
+
+	public void setBasicSmPersonnelOfficeAddress(SmPersonnelAddress basicSmPersonnelOfficeAddress) {
+		this.basicSmPersonnelOfficeAddress = basicSmPersonnelOfficeAddress;
+	}
 }
