@@ -278,8 +278,16 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			sumDanAmt = sumOrderedAmt.subtract(sumRecalledAmt).subtract(sumInvoiceAmt);
 			danAmount=sumDanAmt.toString().replace("-", "");
 		}
-		getManagedBean().setOrderedAmtTotal(sumOrderedAmt);
-		getManagedBean().setInvAmtTotal(sumInvoiceAmt);
+		//29599-start
+		BigDecimal totalOrderedAmt = getTotalOrderedAmt(getManagedBean().getAdjustment().getFlRequest().getFulfilmentReqId());
+		BigDecimal totaInvAmt = new BigDecimal(0);
+		
+		if(adjustment.getFlInvoice()!=null){
+			totaInvAmt=adjustment.getFlInvoice().getInvoiceAmtNew();
+		}
+		//29599-end
+		getManagedBean().setOrderedAmtTotal(totalOrderedAmt);
+		getManagedBean().setInvAmtTotal(totaInvAmt);
 		getManagedBean().setDanAmtTotal(new BigDecimal(danAmount));
 	}
 		
@@ -643,4 +651,20 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		}
 		return null; 
 	}
+	
+	//29599-start
+	private BigDecimal getTotalOrderedAmt(Long flReqId){
+		BigDecimal totalAmt = new BigDecimal(0);
+		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		List<FlDeliveryAddress> deliveryAddressList = fulfilmentSO.retrieveDeliveryAddressByRequestId(flReqId);
+		if(!deliveryAddressList.isEmpty()){
+			for(FlDeliveryAddress flDeliveryAddress : deliveryAddressList){
+				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+					totalAmt = totalAmt.add(itemAddr.getOrderedAmt());
+				}
+			}
+		}
+		return totalAmt;
+	}
+	//29599-end
 }
