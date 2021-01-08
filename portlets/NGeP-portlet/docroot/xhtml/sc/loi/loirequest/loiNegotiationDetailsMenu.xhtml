@@ -120,7 +120,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoTerm.selectTerm}"
-					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !lOIDetailBackingBean.managedBean.buttonFlag)) }">
+					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !isPendingSubmissionStatus)) }"><!-- #29007	Vinod added !isPendingSubmissionStatus -->
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 						listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />
 				</p:selectBooleanCheckbox>
@@ -192,7 +192,7 @@
 				process="@this" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addSuppliersProposalSpecificationUpdate}"
 				update="negoTermstbl"
-				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}" />
+				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingSubmissionStatus}" />
 			<!-- #29007	Vinod End -->
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
