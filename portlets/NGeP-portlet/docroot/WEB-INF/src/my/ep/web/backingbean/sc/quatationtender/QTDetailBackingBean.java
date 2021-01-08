@@ -9232,11 +9232,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
 			validateValidityDays(this.getManagedBean().getNewValidityDays());
 		}
-		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
+		disableNewValueValidity();
 		if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() || this.getManagedBean().isNewValueValidity()){
 		//#29425 - end
 			ScQt scQt = this.getManagedBean().getQt();
@@ -9326,6 +9322,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 		return 0;
+	}
+	
+	private void disableNewValueValidity() {
+		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
+			this.getManagedBean().setNewValueValidity(false);
+		}
 	}
 	//#29425 - end
 	public String getDoaaRequestStatus() {
@@ -9529,6 +9533,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
 			validateValidityDays(this.getManagedBean().getNewValidityDays());
 		}
+		disableNewValueValidity();
 		if(statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
 			if((this.getManagedBean().isNewValueValidity() || this.getManagedBean().isShowPopUpBPKApprovalNeeded()) && showPopup){
 		//#29425 - end
