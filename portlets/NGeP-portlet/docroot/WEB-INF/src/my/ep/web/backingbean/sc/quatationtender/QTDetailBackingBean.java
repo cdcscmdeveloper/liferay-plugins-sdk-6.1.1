@@ -9229,7 +9229,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		//#25077 - Start
 		//#29425 - start
-		if (this.getManagedBean().isNewValueValidity() && this.getManagedBean().getNewValidityDays() == 0) {
+		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
 			validateValidityDays(this.getManagedBean().getNewValidityDays());
 		}
 		if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() || this.getManagedBean().isNewValueValidity()){
@@ -9253,6 +9253,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
 		if (newValue == 0) {
 			this.getManagedBean().setNewValidityDays(newValue);
+			this.getManagedBean().setNewValueValidity(true);
+		}
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())
+					&& newValue > 90) {
 			this.getManagedBean().setNewValueValidity(true);
 		}
 		validateValidityDays(newValue);
@@ -9519,8 +9524,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void checkPopUpBPKApprovalNeeded(boolean showPopup){	
 		ScQt scQt = this.getManagedBean().getQt();
 		Long statusId = scQt.getQtStatus().getStatusId();
+		//#29425 - start
+		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
+			validateValidityDays(this.getManagedBean().getNewValidityDays());
+		}
 		if(statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
-			if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() && showPopup){
+			if((this.getManagedBean().isNewValueValidity() || this.getManagedBean().isShowPopUpBPKApprovalNeeded()) && showPopup){
+		//#29425 - end
 				 RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlg.show()");
 			} 
 		}
