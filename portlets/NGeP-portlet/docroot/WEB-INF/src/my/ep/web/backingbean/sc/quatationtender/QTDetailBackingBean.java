@@ -9232,6 +9232,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (this.getManagedBean().isNewValueValidity() && (this.getManagedBean().getNewValidityDays() == 0 || this.getManagedBean().getNewValidityDays() > 90)) {
 			validateValidityDays(this.getManagedBean().getNewValidityDays());
 		}
+		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
+		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
+				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
+			this.getManagedBean().setNewValueValidity(false);
+		}
 		if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() || this.getManagedBean().isNewValueValidity()){
 		//#29425 - end
 			ScQt scQt = this.getManagedBean().getQt();
@@ -9261,10 +9266,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setNewValueValidity(true);
 		}
 		validateValidityDays(newValue);
-		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
-				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
-			this.getManagedBean().setNewValueValidity(false);
-		}
 		if (ParameterConst.PROCUREMENT_MODE_TENDER
 				.equalsIgnoreCase(procureMentMode.getParameterCode())
 					&& newValue != 0
