@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.pp.procurementplan;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -113,6 +115,10 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 //#24975
 
@@ -224,12 +230,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.resetPlanSearchBean();
 		generateSearchOptions();
 		setupOrgProfile();
-		//201228@akmal - Enhancement27624 - Start
-		setScreenVariables();
+		//210108@akmal - Enhancement27624 - Start
 		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
-		//201228@akmal - Enhancement27624 - End
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
+		 try{
+			 PortletRequest pr = (javax.portlet.PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("javax.portlet.request");
+			 Method method = pr.getClass().getMethod("getOriginalHttpServletRequest");
+			 HttpServletRequest httpServletRequest = (HttpServletRequest)method.invoke(pr, new Object[] {});
+			 //friendlyURL
+			 String plid = httpServletRequest.getParameter("p_l_id");
+			 ThemeDisplay theme = (ThemeDisplay) pr.getAttribute(WebKeys.THEME_DISPLAY);
+			 Layout selectedLayout = LayoutLocalServiceUtil.getLayout(Long.valueOf(plid));
+			 String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
+			 if(urlliferay.contains("plan-maintenance"))
+				 this.getManagedBean().setAudit(false);
+			 else if(urlliferay.contains("procurement-plan-search"))
+				 this.getManagedBean().setAudit(true);
+			 //if procurement-plan-search = audit /web/dashboard/procurement-plan-search 
+			 //if plan-maintenance = plan maintenance /web/dashboard/plan-maintenance
+		 }
+		 catch(Exception e){
+			 log.error(e.getStackTrace());
+		 }
+		setScreenVariables();
+		//210108@akmal - Enhancement27624 - End
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
 	
@@ -1899,12 +1924,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				return items;
 			}
 		}else{
-			//200911@akmal - Enhancement27624 - Start
+			//210108@akmal - Enhancement27624 - Start
 			SelectItem[] items;
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
 		
-			if(isMandatory()){
+			if(this.getManagedBean().isAudit()){
 				currentYear = startyear;
 				int diff = nextYear - currentYear + 1;
 				items = new SelectItem[diff+1];
@@ -1926,7 +1951,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				return items;
 			}
 			
-			//200911@akmal - Enhancement27624 - End
+			//210108@akmal - Enhancement27624 - End
 		}
 	}
 	
@@ -4973,8 +4998,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				  || this.getManagedBean().getPlanSearchBean().getMinistry()!=null && this.getManagedBean().getPlanSearchBean().getMinistry().getOrgProfileId() != null){
 			  isEmpty = false;
 		  }
+		//210108@akmal - Enhancement27624 - Start
+		  if(!this.getManagedBean().isAudit()){
+			  isPlanTypeEmpty = false;
+			  isPlanYearEmpty = false;
+		  }
 		  
-		//201209@akmal - Enhancement27624 - Start
 		  if(isPlanTypeEmpty){
 			  FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_730016, 
@@ -4990,7 +5019,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		  if(!isPlanTypeEmpty && !isPlanYearEmpty){
 			  ppPlanDataModel.reloadData();
 		  }
-		//201209@akmal - Enhancement27624 - End
+		//210108@akmal - Enhancement27624 - End
 		
 	}
 	
@@ -5059,6 +5088,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().getPlanSearchBean().setUpdatedDateFrom(null);
 		this.getManagedBean().getPlanSearchBean().setUpdatedDateTo(null);
 		this.getManagedBean().getPlanSearchBean().setStatus(null);
+		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
+		this.getManagedBean().setSelectedCatSearch(null);
 		if(this.getManagedBean().isFromTaskList()){
 			generatePageModeForProcess(this.getManagedBean().getTaskName());
 			this.loadPlanDetails(this.getManagedBean().getPlanId(), false);

@@ -64,6 +64,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean fromTaskList = false;
 	private PmParameter selectedCatSearch;
 	private String pageStyle;
+	private boolean isAudit=false;
 	//201208@akmal - Enhancement27624 - End
 	private String btnValue;
 	
@@ -1448,6 +1449,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 	public void setPageStyle(String pageStyle) {
 		this.pageStyle = pageStyle;
+	}
+
+	public boolean isAudit() {
+		return isAudit;
+	}
+
+	public void setAudit(boolean isAudit) {
+		this.isAudit = isAudit;
 	}
 
 	public boolean isFromTaskList() {
