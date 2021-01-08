@@ -6417,7 +6417,7 @@ public class LOIDetailBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		boolean alredyAdded = false;
 		for(ScLoiTerm scLoiTerm : scNegoTerms){
-			if(scLoiTerm.getTermDesc() == message){
+			if(scLoiTerm.getTermDesc().equals(message)){
 				alredyAdded = true;
 				break;
 			}
@@ -6433,7 +6433,6 @@ public class LOIDetailBackingBean extends
 			
 			negoTerm.setScLoi(scLoi);
 			negoTerm.setModified(true);
-			
 			scNegoTerms.add(negoTerm);
 			scLoi.setScNegoTerms(scNegoTerms);
 		}
