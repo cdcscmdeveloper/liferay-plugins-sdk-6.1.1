@@ -71,6 +71,10 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -80,6 +84,7 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
@@ -147,6 +152,7 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -155,6 +161,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
@@ -186,9 +193,11 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
@@ -3161,6 +3170,35 @@ public class SpecificationBackingBean extends
 
 				}
 			}
+		
+			//#25037-start
+			ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
+			ScCommittee committee = qtCommittee!=null ? qtCommittee.getScCommittee(): null;
+			List<ScCommitteeMember> memberList = committee!=null ? committee.getScCommitteeMembers(): new ArrayList<ScCommitteeMember>();
+			if(CollectionUtils.isNotEmpty(memberList) && CollectionUtils.isNotEmpty(committeeActivities)){
+				qtCommittee = committeeActivities.get(0).getScQtCommittee();
+				Map<Object, Object> map = CustomUtils.listToMap(committeeActivities, "getScCommitteeMember.getCommitteeMemberId");
+				List<ScQtCommitteeActivity> missingActivities = new ArrayList<ScQtCommitteeActivity>();
+				for (ScCommitteeMember member : memberList) {
+					if(map.get(member.getCommitteeMemberId())==null){
+						ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+						activity.setScQtCommittee(qtCommittee);
+						activity.setScCommitteeMember(member);
+						setUserDetails(activity);
+						missingActivities.add(activity);
+					}
+				}
+				committeeActivities.addAll(missingActivities);
+				Collections.sort(committeeActivities, new Comparator<ScQtCommitteeActivity>() {
+					List<String> sortOrder = Arrays.asList("C", "S", "M");
+					public int compare(ScQtCommitteeActivity o1, ScQtCommitteeActivity o2) {
+						return Integer.valueOf(sortOrder.indexOf(o1.getScCommitteeMember().getMemberRole().getParameterCode()))
+								.compareTo(
+										Integer.valueOf(sortOrder.indexOf(o2
+												.getScCommitteeMember().getMemberRole().getParameterCode())));
+					}
+				});
+			}			//#25037-end
 			this.getManagedBean().setCommitteeActivities(committeeActivities);
 
 		} finally {
@@ -16843,5 +16881,46 @@ public class SpecificationBackingBean extends
 		}	
 	}
 	// #25039#67#76 - end
+
+	//#25037-start
+	public void submitAction(String outcome){
+		assertConcurrentComittteeChangesApproval();
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
+		} else {
+			specCommitteBpmTask(outcome);
+		}
+	}
+
+	private void assertConcurrentComittteeChangesApproval(){
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
+		String[] scoringTaskNames = new String[] {
+				SCProcessNameConst.FINALISE_SCORING,
+				SCProcessNameConst.ENDORSE_SCORING,
+				SCProcessNameConst.SIGNOFF_SCORING };
+		String[] approvalTaskName = new String[]{
+				SCProcessNameConst.APPROVE_COMMITTEE,
+				SCProcessNameConst.REVISE_COMMITTEE
+		};
+
+		if(Arrays.asList(scoringTaskNames).contains(taskName)){
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			ScQt qt = this.getManagedBean().getQt();
+			bpmReqDTO.setDocNumber(qt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
+				if(StringUtils.isNotBlank(currentVO.getTaskName())){
+					if(Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())){
+						throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
+					}
+				}
+			 }
+		}	
+	}
+	//#25037-end
 
 }

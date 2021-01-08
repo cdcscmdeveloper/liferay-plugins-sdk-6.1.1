@@ -5497,6 +5497,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if(this.getManagedBean().isShowHistory() && Arrays.asList(new String[]{"SC", "EC", "OC", "TEC", "FEC"}).contains(committeeType)){
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
 		}
+		if(committeTabBean!=null){
+			List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
+			this.getManagedBean().setMemberHistoryList(historyList);
+		}
 	}
 
 	/**
@@ -6074,7 +6078,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the string
 	 */
-	public void submitQtDetailsFormMaintanace() {
+	public void submitQtDetailsFormMaintanace() {//#25037
+		submitQtDetailsFormMaintanace(false);
+	}
+
+	public void submitQtDetailsFormMaintanace(boolean confirmResetReendorse) {//#25037
 		log.debug("submitQtDetailsFormMaintanace");
 		IQTDetailSO detailSO;
 		try {
@@ -6084,8 +6092,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			updateApprovalDetails(this.getManagedBean().getQt());
 			retrieveApprovalTabDtl();
-			
-			validateIsCommitteeFormed();//#25037
+
+			//#25037-start
+			boolean showPopup = validateIsCommitteeFormed(confirmResetReendorse);
+			if(showPopup){
+				return;
+			}
+			//#25037-end
+
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
@@ -9589,8 +9603,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	// 25077 - End
 	
-	//#25037 - start
-  	private void validateIsCommitteeFormed(){
+    //#13344 start
+    public boolean isCommitteeApprovalTask(String taskName) {
+     	return (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName));
+    }
+    //#13344 end
+    
+    //#25037 - start
+  	public boolean validateIsCommitteeFormed(boolean showPopup){
+  		ScCommittee specCommittee = null;
   		if(CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
   			for(TabBean committeeTab: this.getManagedBean().getScCommitteeMemberTabList()){
   				ScQtCommittee qtCommittee = committeeTab.getScQtCommittee();
@@ -9601,18 +9622,46 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   							|| committee.isApprovalReq()){
   						QTCommitteBackingBean committeeBB = new QTCommitteBackingBean();
   						committeeBB.checkCommitteFormedOrNot();
+  						if(committee.getCommitteeType().getParameterCode()
+  								.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)){
+  							specCommittee = committee;
+  						}
   					}
   				}
   			}
+
+  			if(specCommittee!=null && showPopup){
+  				boolean modified = isCommitteeModified(specCommittee.getScCommitteeMembers(), getMemberHistoryList(specCommittee));
+  				if(modified && specCommittee.isApprovalReq()){
+  	  				RequestContext.getCurrentInstance().execute("confirmReendorseOnReassignmentPopup.show()");
+  	  				return true;
+  	  			}
+  			}	
   		}
+		return false;
   	}
+  	private boolean isCommitteeModified(List<ScCommitteeMember> currentList, List<QtCommitteeMemberBean> previousList){
+		if(CollectionUtils.isEmpty(previousList)){
+			previousList = new ArrayList<QtCommitteeMemberBean>();
+		}
+		if(CollectionUtils.isEmpty(currentList)){
+			currentList = new ArrayList<ScCommitteeMember>();
+		}
+		String[] previousListArr = new String[previousList.size()];
+		String[] currentListArr = new String[currentList.size()];
+		for(int i=0;i<previousListArr.length;i++){
+			QtCommitteeMemberBean m = previousList.get(i);
+			previousListArr[i] = m.getIdentificationNo().concat(m.getMemberRole());
+		}
+		for(int i=0;i<currentListArr.length;i++){
+			ScCommitteeMember m = currentList.get(i);
+			currentListArr[i] = m.getIcPassport().concat(m.getMemberRole().getParameterCode());
+		}
+		Arrays.sort(previousListArr);  
+		Arrays.sort(currentListArr);  
+		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
+	}
   	//#25037 - end
-	
-    //#13344 start
-    public boolean isCommitteeApprovalTask(String taskName) {
-     	return (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName));
-    }
-    //#13344 end
     
 }
 
