@@ -907,7 +907,9 @@ public class SmPersonnelBackingBean extends
 			//#13320 - added division - start
 			if(srcAddr.getPmDivision() != null){
 				srcAddr.setDivisionId(srcAddr.getPmDivision().getDivisionId());
-				getManagedBean().setMailDivisionId(srcAddr.getDivisionId());	
+				getManagedBean().setMailDivisionId(srcAddr.getDivisionId());
+				getManagedBean().setResDivisionId(srcAddr.getDivisionId());
+				getManagedBean().setOffDivisionId(srcAddr.getDivisionId());
 			}
 			
 			destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
@@ -922,6 +924,20 @@ public class SmPersonnelBackingBean extends
 					.getPmState().getStateId().toString(), destAddr
 					.getSmAddress().getPmDivision(), destAddr
 					.getSmAddress().getPmDistrict().getDistrictId().toString());
+			
+			//9596 - Start
+			updateResAddLists(destAddr.getSmAddress().getPmCountry()
+					.getCountryId().toString(), destAddr.getSmAddress()
+					.getPmState().getStateId().toString(), destAddr
+					.getSmAddress().getPmDivision(), destAddr
+					.getSmAddress().getPmDistrict().getDistrictId().toString());
+			
+			updateOffAddLists(destAddr.getSmAddress().getPmCountry()
+					.getCountryId().toString(), destAddr.getSmAddress()
+					.getPmState().getStateId().toString(), destAddr
+					.getSmAddress().getPmDivision(), destAddr
+					.getSmAddress().getPmDistrict().getDistrictId().toString());
+			//9596 - End
 			//#13320 - added division - end
 		}
 	}
