@@ -19,7 +19,6 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvAssistantOfficer;
-import my.ep.persistence.entity.sm.SmSvDocLicense;
 import my.ep.persistence.entity.sm.SmSvEquipment;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
 import my.ep.persistence.entity.sm.SmSvMachine;
@@ -127,7 +126,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private List<SmManufacturingDtl> manufacturingDtlLs;
 	private SmManufacturingDtl selectedManufacturer;
 	private Object oriSelectedManufacturingDtl;
-	private List<SmSvDocLicense> selectedAdtLicense;
 	
 	private List<SmPersonnel> staffLs;
 	
@@ -767,12 +765,4 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedAssistantOfficer = selectedAssistantOfficer;
 	}
 	//#28774 - End
-
-	public List<SmSvDocLicense> getSelectedAdtLicense() {
-		return selectedAdtLicense;
-	}
-
-	public void setSelectedAdtLicense(List<SmSvDocLicense> selectedAdtLicense) {
-		this.selectedAdtLicense = selectedAdtLicense;
-	}
 }
