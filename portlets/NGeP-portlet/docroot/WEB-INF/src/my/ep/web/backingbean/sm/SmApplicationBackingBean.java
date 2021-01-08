@@ -1192,6 +1192,7 @@ public class SmApplicationBackingBean extends
 		//#15629 - START		
 		if(getManagedBean().isApproverUser()){
 			if(!EntityHelper.isCollectionEmpty(appl.getSmApplRejectReasons())) {
+				
 				getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
 				List<Long> reasonIdList = new ArrayList<Long>();
 				for(SmApplRejectReason smApplRejectReason : appl.getSmApplRejectReasons()){
@@ -3340,6 +3341,9 @@ public class SmApplicationBackingBean extends
 						SmApplRejectReason rej = new SmApplRejectReason();
 						rej.setPmReason(desc.getPmReason());
 						rej.setSmAppl(getManagedBean().getSmAppl());
+						//	Refs #15629 - Start - 8/1/2021
+						rej.setReasonByPo(getManagedBean().isPoUser() ? true : false);
+						//	Refs #15629 - End - 8/1/2021
 						resList.add(rej);
 						log.info("Reason Id === " + resId);
 						// sb.append(++count).append(". ");
@@ -3359,17 +3363,19 @@ public class SmApplicationBackingBean extends
 			//21937		
 		}
 
-		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
-				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
-						.isEmpty()) {
-			log.info(" ***** Already exisiting records ******* "
-					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
-							.size());
-			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
-			log.info(" *****Size after reset******* "
-					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
-							.size());
-		}
+		//		Refs #15629 - Start - 8/1/2021 - comment out
+		//		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+		//				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+		//						.isEmpty()) {
+		//			log.info(" ***** Already exisiting records ******* "
+		//					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+		//							.size());
+		//			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
+		//			log.info(" *****Size after reset******* "
+		//					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+		//							.size());
+		//		}
+		//		Refs #15629 - End - 8/1/2021 - comment out
 		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
 		getManagedBean().setReasonDesc(sb.toString());
 	}
@@ -14346,6 +14352,9 @@ public class SmApplicationBackingBean extends
 						SmApplRejectReason rej = new SmApplRejectReason();
 						rej.setPmReason(desc.getPmReason());
 						rej.setSmAppl(getManagedBean().getSmAppl());
+						//	Refs #15629 - Start - 8/1/2021
+						rej.setReasonByPo(getManagedBean().isPoUser() ? true : false);
+						//	Refs #15629 - End - 8/1/2021
 						resList.add(rej);
 						log.info("Reason Id === " + resId);
 						// sb.append(++count).append(". ");
