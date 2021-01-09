@@ -120,7 +120,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
-
+	private List<PmUser> contractAdminlist;
+	
 	private String contractId;
 	private String itemname;
 	private String itemtype;
@@ -148,6 +149,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	//20997
 	private PmUom selectedSearchItem;
+	
+	//25956
+	private boolean viewOnly = false; /*#25956 notification setting*/
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1311,6 +1315,15 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		ServiceListingPagingDataModel = serviceListingPagingDataModel;
 	}
 	
+	//#25956 Start
+	public List<PmUser> getContractAdminlist() {
+		return contractAdminlist;
+	}
+	public void setContractAdminlist(List<PmUser> contractAdminlist) {
+		this.contractAdminlist = contractAdminlist;
+	}
+	//#25956 End
+	
 	//26753 - start
 	/**
 	 * @return the updateCommittee
@@ -1388,5 +1401,12 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedSearchItem = selectedSearchItem;
 	}
 	//#20997 - End
+	
+	public boolean isViewOnly() {
+		return viewOnly;
+	}
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
+	}
 
 }
