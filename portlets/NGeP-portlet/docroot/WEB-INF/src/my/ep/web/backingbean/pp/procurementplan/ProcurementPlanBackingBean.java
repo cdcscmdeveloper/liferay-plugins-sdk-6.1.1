@@ -2776,18 +2776,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @return xhtml
 	 * @throws Exception
 	 */
-	//201228@akmal - Enhancement27624 - Start
+	//210108@akmal - Enhancement27624 - Start
 	public void onSelectCategorySearch(Long id){
 		log.info("The category search id " + id);
 		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
-		for(PmProcurementCatType pmProcCat : pmProcCats ){
-			if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
-				this.getManagedBean().setSelectedCatSearch(pmProcCat.getProcurementCat());
-				break;
+		if(id.equals(Long.valueOf(0L)))
+			this.getManagedBean().setSelectedCatSearch(null);
+		else{
+			for(PmProcurementCatType pmProcCat : pmProcCats ){
+				if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
+					this.getManagedBean().setSelectedCatSearch(pmProcCat.getProcurementCat());
+					break;
+				}
 			}
 		}
 	}
-	//201228@akmal - Enhancement27624 - End
+	//210108@akmal - Enhancement27624 - End
 	
 	public void onSelectCategory(Long id, int index){
 		log.info("The category id " + id);
