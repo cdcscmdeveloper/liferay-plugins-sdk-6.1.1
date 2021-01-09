@@ -59,7 +59,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td>
 					<p:outputPanel id="planTypeId">
 						<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
-						<p:outputLabel value="*" styleClass="mandatory" rendered="pPlanBackingBean.managedBean.isAudit"/>
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{pPlanBackingBean.managedBean.isAudit()}"/>
 					</p:outputPanel>
 				</td>
 				<!-- 210108@akmal - Enhancement27624 - End -->
@@ -87,7 +87,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<!-- 210108@akmal - Enhancement27624 - Start -->
 					<p:outputPanel id="planYearId">
 						<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
-						<p:outputLabel value="*" styleClass="mandatory" rendered="pPlanBackingBean.managedBean.isAudit"/>
+						<p:outputLabel value="*" styleClass="mandatory" rendered="#{pPlanBackingBean.managedBean.isAudit()}"/>
 					</p:outputPanel>
 				<!-- 210108@akmal - Enhancement27624 - End -->
 				</th>
