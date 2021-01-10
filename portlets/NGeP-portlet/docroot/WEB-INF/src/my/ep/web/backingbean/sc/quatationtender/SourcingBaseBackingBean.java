@@ -32,14 +32,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.Deflater;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -64,7 +60,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -81,7 +76,6 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -90,7 +84,6 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -110,7 +103,6 @@ import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
-import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
@@ -157,7 +149,6 @@ import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -188,8 +179,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -215,7 +204,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -240,7 +228,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-import my.ep.type.sc.EvaluationReport;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -5101,7 +5089,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
          */
         public void closeScQtFinalizationReport(ScQtFinalizationReport finalizationReport) {
           IQTSuppFinalizationSO qtSuppFinalizationSO;
-
+          // 18685 - Start.
+          boolean reportFound = false;
           try {
             qtSuppFinalizationSO = BusinessDelegate.getInstance()
                 .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -5128,7 +5117,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
                 for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
                   if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
                     getManagedBean().getNewBriefingPaperReportList().get(index).setReportContent(scQtFinalizationReport.getReportContent());
-                    //getManagedBean().getSelectedBriefingReport().setReportContent(scQtFinalizationReport.getReportContent());
+                    reportFound = true;
                     break;
                   }
                   index++;
@@ -5136,7 +5125,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
             }
             // 18685 - End.
           } finally {
-             qtSuppFinalizationSO = null;
+	    	  if (!reportFound) {
+	          	finalizationReport.setReportContent("");
+	          }
+              qtSuppFinalizationSO = null;
           }
      }
      // #18685-End.   
