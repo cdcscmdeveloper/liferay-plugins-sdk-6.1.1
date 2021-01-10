@@ -39,7 +39,6 @@ import javax.persistence.criteria.JoinType;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtAmendMentValueBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
-import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -824,9 +823,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
-			//#25077 - Start 
-			quationTenderReqDTO.getQtdetail().setMitiApproval(true);
-			//#25077 - End
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
@@ -9564,24 +9560,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public boolean isOthersApprovalForInstruction(){
 		boolean isForInstruction = false;
 		ScQt scQt = this.getManagedBean().getQt();
-		Long statusId = scQt.getQtStatus().getStatusId();
 		String procurementCategory = scQt.getPmProcurementCategory().getParameterCode();
-	    if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory)){
-        	if(null != statusId && 
-      			   (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || 
-      			    QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId) || 
-      			    QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
-      				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
-         		isForInstruction = true;   
-         	}    
-	    } 
-        if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory)){
-        	if(null != statusId && 
-     			   (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
-     				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
-        		isForInstruction = true;   
-        	}  	   
-		}
+		if(null != procurementCategory && 
+			       (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory) ||
+			    	ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory))){
+			   isForInstruction = true;   
+		} 
         return isForInstruction; 
 	}
 	
