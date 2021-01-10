@@ -8248,7 +8248,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
-		String finalMsg = "";
+		StringBuilder finalMsg = new StringBuilder();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null; 
 		String dafaltValue = "T/B";
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
@@ -8261,10 +8261,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				PmUser pmUser = facesScopes.getUserSessionBean();
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String date = df.format(scLoiLoaItem.getChangedDate());
-				finalMsg = populateLabelLampiranA3(date,pmUser.getUserName());
+				if(scLoiLoaItem.getLoaSpecJustification() != null){
+					finalMsg.append(scLoiLoaItem.getLoaSpecJustification());
+					finalMsg.append(" "+populateLabelLampiranA3(date,pmUser.getUserName()));
+				}
 				
 				if(scLoiLoaItem.getLoaSpecJustification() != null){
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg);
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMsg.toString());
 				}
 				
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
