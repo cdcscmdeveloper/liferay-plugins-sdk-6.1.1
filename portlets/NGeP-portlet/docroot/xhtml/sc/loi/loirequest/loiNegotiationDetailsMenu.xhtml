@@ -120,7 +120,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoTerm.selectTerm}"
-					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !isPendingSubmissionStatus)) }"><!-- #29007	Vinod added !isPendingSubmissionStatus -->
+					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and !isPendingSubmissionStatus) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and isPendingSubmissionStatus and !lOIDetailBackingBean.managedBean.buttonFlag) or(empty negoTerm.pmTerm and !lOIDetailBackingBean.managedBean.buttonFlag))}"><!-- #29007	Vinod added !isPendingSubmissionStatus -->
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 						listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />
 				</p:selectBooleanCheckbox>
