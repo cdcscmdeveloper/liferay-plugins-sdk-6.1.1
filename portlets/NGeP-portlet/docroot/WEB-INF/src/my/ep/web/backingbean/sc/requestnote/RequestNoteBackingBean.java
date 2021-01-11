@@ -3457,12 +3457,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//28878 - Start
 		if(prSize >= 1){
 			requestNoteReqDTO.setPurchaseRequestId(getManagedBean().getPurchaseRequestId());
-			log.info("Bug 28878: Start requestNoteReqDTO.getPurchaseRequestId : " + requestNoteReqDTO.getPurchaseRequestId());
+			log.info("Bug 28878: requestNoteReqDTO.getPurchaseRequestId : " + requestNoteReqDTO.getPurchaseRequestId());
 			getManagedBean().setLoginIdAssignees(getRequestNoteSO().getloginIdAssigneeSuppByPrId(requestNoteReqDTO));
+			log.info("Bug 28878: getLoginIdAssignees : " + getManagedBean().getLoginIdAssignees());
 			log.info("Bug 28878: Start getRequestNoteSO().cancelPendingItemCodificationMulti");
 			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodificationMulti(requestNoteReqDTO, getManagedBean().getSelectedPrDtls(), getManagedBean().getLoginIdAssignees());
 			log.info("Bug 28878: End getRequestNoteSO().cancelPendingItemCodificationMulti");
-		}else if (prSize == 1) {
+		}else if (prSize == 1) { // 28878 - End
 			log.info("Bug 28878: Start getRequestNoteSO().cancelPendingItemCodification");
 			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
 			log.info("Bug 28878: End getRequestNoteSO().cancelPendingItemCodification");
