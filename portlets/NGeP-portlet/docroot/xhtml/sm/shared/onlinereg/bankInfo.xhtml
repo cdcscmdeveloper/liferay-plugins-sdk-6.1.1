@@ -17,6 +17,10 @@
 }
 </style>
 	<p:panel header="#{lbl['lbl.sm.bankinformation']}" toggleable="true" id="pnlBankInfo">
+<!--#12492-START TASHA-->
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.insertcmpnybank.instruction']}" escape="false">
+		</h:outputText>
+<!--#12492-END TASHA-->
 		<p:dataTable var="bankInfo" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}"
 			selection="#{registrationBackingBean.managedBean.selectedSuppBanks}" 
