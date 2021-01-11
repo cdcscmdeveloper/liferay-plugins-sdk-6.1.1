@@ -159,7 +159,7 @@
 
 					<ui:fragment
 						rendered="#{stageTwoTechnical.pmDocument eq null and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
-						<c:if test="#{(specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())) or specificationBackingBean.managedBean.isChecklist()}">
+						<c:if test="#{specificationBackingBean.isQTStatusChecklistScoring() or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision())}">
 						<p:selectOneMenu style="width:170px;" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							id="techChecklistTitletypenotnullType"
@@ -179,7 +179,7 @@
 							<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 							</c:if>
-							<c:if test="#{specificationBackingBean.managedBean.specMaintenance and !specificationBackingBean.managedBean.isChecklist()}">
+							<c:if test="#{specificationBackingBean.managedBean.specMaintenance}">
 							<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 							</c:if>
