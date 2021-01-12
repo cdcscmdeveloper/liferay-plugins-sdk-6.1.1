@@ -1047,8 +1047,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// check agreement
 		checkAgreementMandatory();
 
-		// check performance bond
-		checkPerformanceBondMandatory();
+		// check performance bond		
+		//Bug #29885 start isPendingSubmissionStatus or isPendingRevisionStatus
+		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa.getPmStatus().getStatusId().longValue()) || 
+				QTStatusConst.LOA_PENDING_REVISION .equals(scLoa.getPmStatus().getStatusId().longValue())){
+			checkPerformanceBondMandatory();
+		}
+		//Bug #29885 end
 		
 		//Enhancement #24259 #24269
 //		scLoa = calcBondAmount(scLoa, false);
@@ -5623,9 +5628,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		System.out.println("____ checkPerformanceBondMandatory docId: "+loa.getScLoiLoa().getDocId()
 				+" docType: " +loa.getScLoiLoa().getDocType() +" isBondReq: "+isBondReq+" overallContractAmtOrLoaAmt: "+overallContractAmtOrLoaAmt);
 		
-		if(loa.isBrandNew()){
+		//Bug #29885 start
+		if(loa.isBrandNew() || isBondReq){ 
 			loa.setBondReq(isBondReq);
 		}
+		//Bug #29885 end
 		getManagedBean().setPerformanceBondMandatory(isBondReq);
 	}
 
