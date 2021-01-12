@@ -29,11 +29,12 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private boolean accTypeDisabled;
 	private boolean accClassDisabled;
 	private String selectedGoSoObjCode;
-	//200911@akmal - Enhancement27624 - Start
+	//210801@akmal - Enhancement27624 - Start
 	private String selectionMode;
 	private List<VPmGo> vPmGolist;
 	private String saveObject;
-	//200911@akmal - Enhancement27624 - End
+	private boolean disableSelectbtn=false;
+	//210801@akmal - Enhancement27624 - End
 	
 	public PmGoSearchManagedBean(){
 		
@@ -220,7 +221,7 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	public void setSelectedGoSoObjCode(String selectedGoSoObjCode) {
 		this.selectedGoSoObjCode = selectedGoSoObjCode;
 	}
-	//200911@akmal - Enhancement27624 - Start
+	//210801@akmal - Enhancement27624 - Start
 	public String getSelectionMode() {
 		return selectionMode;
 	}
@@ -244,6 +245,14 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	public void setSaveObject(String saveObject) {
 		this.saveObject = saveObject;
 	}
-	//200911@akmal - Enhancement27624 - End
+
+	public boolean isDisableSelectbtn() {
+		return disableSelectbtn;
+	}
+
+	public void setDisableSelectbtn(boolean disableSelectbtn) {
+		this.disableSelectbtn = disableSelectbtn;
+	}
+	//210801@akmal - Enhancement27624 - End
 	
 }
