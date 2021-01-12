@@ -205,8 +205,7 @@ public class PpReportsBackingBean extends
 			Long orgProfileId = getManagedBean().getCurrentActiveOrg().getOrgProfileId();
 			if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
 					&&(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
-						|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
-							|| ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){ //#27472 add N type 
+							|| ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
 				if(isRolePlanner() || isRoleVerifier()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));					
 					getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));					
@@ -222,8 +221,7 @@ public class PpReportsBackingBean extends
 					if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
 						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setDisabledMinistryLov(true);
-					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())
-							|| ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){ //#27472 add N type 				
+					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){					
 						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
 						getManagedBean().setSelectedPegawaiPengawal(retrievePegawaiPegawalOrgProfile(orgProfileId));	
 						getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(orgProfileId));
@@ -236,7 +234,9 @@ public class PpReportsBackingBean extends
 					getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); //#27472
 					getManagedBean().setDisabledMinistryLov(true);
 				}
-			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null){ //#27472 remove group org type N
+			}else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() ==null 
+					|| (getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+					&& ParameterConst.ORG_AUTH_TYPE_ORG_GROUP.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType()))){
 				// usual org hierarchy 
 				if(isRolePlanner() || isRoleVerifier() || isRoleApprover()){
 					getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
@@ -626,8 +626,8 @@ public class PpReportsBackingBean extends
 			if(resultList.isEmpty())
 		        createNotFoundRecord(wb,sheetItemList,columnHeaderListItem);
 			else{
-				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-				//[7]alamat,[8]plan,[9]title,[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate
+				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]alamat,[8]plan,[9]title,
+				//[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate,[16]proctypehierarchy
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
 					
@@ -660,8 +660,8 @@ public class PpReportsBackingBean extends
 				if(resultList.isEmpty())
 					createNotFoundRecord(wb,sheetMinistryList,columnHeaderListMinistry);
 				else{
-					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-					//[7]alamat,[8]plan,[9]title,[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate					
+					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]alamat,[8]plan,[9]title,
+					//[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate,[16]proctypehierarchy
 
 					sortBySelectedObject(resultList,1); //1:ministry
 					
@@ -706,8 +706,8 @@ public class PpReportsBackingBean extends
 		        if(resultList.isEmpty())
 		        	createNotFoundRecord(wb,sheetKumpPtjList,columnHeaderListKumpPtj);
 				else{
-					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-					//[7]alamat,[8]plan,[9]title,[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate
+					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]alamat,[8]plan,[9]title,
+					//[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate,[16]proctypehierarchy
 
 					sortBySelectedObject(resultList,3); //1:kumptjcode
 					
@@ -753,8 +753,8 @@ public class PpReportsBackingBean extends
 	        if(resultList.isEmpty())
 	        	createNotFoundRecord(wb,sheetPtjList,columnHeaderListPtj);
 			else{
-				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-				//[7]alamat,[8]plan,[9]title,[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate
+				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]alamat,[8]plan,[9]title,
+				//[10]desc,[11]cat,[12]method,[13]esimateAmt[14]invDate[15]chngeDate,[16]proctypehierarchy
 
 				sortBySelectedObject(resultList,5); //1:ptjCode
 				
@@ -825,7 +825,7 @@ public class PpReportsBackingBean extends
 		        createNotFoundRecord(wb,sheetItemList,columnHeaderListItem);
 			else{
 				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt
+				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
 					
@@ -860,16 +860,17 @@ public class PpReportsBackingBean extends
 					createNotFoundRecord(wb,sheetMinistryList,columnHeaderListMinistry);
 				else{
 					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt
+					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
 					
-					sortBySelectedObject(resultList,1);
+					//sortBySelectedObject(resultList,1);
 					
 					Integer count = 1;
 					for(int m=0; m<resultList.size(); m++){
 						Object[] row = resultList.get(m); //get whole object
 						
-						if(ministryList.containsKey(((BigDecimal)row[1]).intValue())){ //find key in map
-							Object[] obj = ministryList.get(((BigDecimal)row[1]).intValue());
+						//if(ministryList.containsKey(((BigDecimal)row[1]).intValue())){ //find key in map
+						if(ministryList.containsKey(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()))){ //find key in map
+							Object[] obj = ministryList.get(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()));
 							
 							Integer oldCountValue = (Integer)obj[2]; //old count
 							obj[2] = ((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact() + oldCountValue;
@@ -877,14 +878,23 @@ public class PpReportsBackingBean extends
 							BigDecimal oldValue = (BigDecimal)obj[4]; //old anggaran
 							obj[4] = ((BigDecimal)row[10]).add(oldValue);
 							
-							ministryList.put(((BigDecimal)row[1]).intValue(), obj);
-						}else{						
-							ministryList.put(((BigDecimal)row[1]).intValue(), new Object[]{
+							ministryList.put(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()), obj);
+						}else{
+							ministryList.put(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()), new Object[]{
 								count,(String)row[0],((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact(),
 								(String)row[8],((BigDecimal)row[10])
 								});
 							count++;
 						}
+					}
+					
+					//reset the numbering because of kaedah sorting
+					Integer bil = 1;
+					for (Map.Entry<Integer, Object[]> entry : ministryList.entrySet()) {
+						Object[] obj = entry.getValue();
+						obj[0] = bil;
+						entry.setValue(obj);
+						bil++;
 					}
 
 					insertInCell(wb,createHelper,ministryList,sheetMinistryList);
@@ -914,7 +924,7 @@ public class PpReportsBackingBean extends
 		        	createNotFoundRecord(wb,sheetKumpPtjList,columnHeaderListKumpPtj);
 				else{
 					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt
+					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
 					
 					sortBySelectedObject(resultList,3);
 					
@@ -922,21 +932,30 @@ public class PpReportsBackingBean extends
 					for(int m=0; m<resultList.size(); m++){
 						Object[] row = resultList.get(m); //get whole object
 						
-						if(kumpPtjList.containsKey(Integer.valueOf((String)row[3]))){ //find key in map
-							Object[] obj = kumpPtjList.get(Integer.valueOf((String)row[3]));
+						if(kumpPtjList.containsKey(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()))){ //find key in map
+							Object[] obj = kumpPtjList.get(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()));
 							Integer oldCountValue = (Integer)obj[3]; //old count
 							obj[3] = ((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact() + oldCountValue;
 							
 							BigDecimal oldValue = (BigDecimal)obj[5]; //old anggaran
 							obj[5] = ((BigDecimal)row[10]).add(oldValue);
-							kumpPtjList.put(Integer.valueOf((String)row[3]), obj);
-						}else{						
-							kumpPtjList.put(Integer.valueOf((String)row[3]), new Object[]{
+							kumpPtjList.put(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()), obj);
+						}else{
+							kumpPtjList.put(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()), new Object[]{
 								count,Integer.valueOf((String)row[3]),(String)row[4],((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact(),
 								(String)row[8],((BigDecimal)row[10])
 								});
 							count++;
 						}
+					}
+					
+					//reset the numbering because of kaedah sorting
+					Integer bil = 1;
+					for (Map.Entry<Integer, Object[]> entry : kumpPtjList.entrySet()) {
+						Object[] obj = entry.getValue();
+						obj[0] = bil;
+						entry.setValue(obj);
+						bil++;
 					}
 
 					insertInCell(wb,createHelper,kumpPtjList,sheetKumpPtjList);
@@ -964,7 +983,7 @@ public class PpReportsBackingBean extends
 	        	createNotFoundRecord(wb,sheetPtjList,columnHeaderListPtj);
 			else{
 				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt
+				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
 				
 				sortBySelectedObject(resultList,5);
 				
@@ -977,7 +996,7 @@ public class PpReportsBackingBean extends
 						BigDecimal oldValue = (BigDecimal)obj[5];
 						obj[5] = ((BigDecimal)row[10]).add(oldValue); //add existing anggaran amaun with new object
 						ptjList.put(Integer.valueOf((String)row[5]), obj);
-					}else{						
+					}else{
 						ptjList.put(Integer.valueOf((String)row[5]), new Object[]{
 							count,(String)row[4],Integer.parseInt((String)row[5]),(String)row[6],(String)row[7],((BigDecimal)row[10])
 							});
@@ -1026,7 +1045,7 @@ public class PpReportsBackingBean extends
 	        	else if(i==4)sheetItemList.setColumnWidth(i, 15*256); //Col : Kod PTJ
 	        	else if(i==5)sheetItemList.setColumnWidth(i, 45*256); //Col : Nama PTJ
 	        	else if(i==6)sheetItemList.setColumnWidth(i, 20*256); //Col : Nombor Pelan
-	        	else if(i==7)sheetItemList.setColumnWidth(i, 25*256); //Col : Jenis VOT
+	        	else if(i==7)sheetItemList.setColumnWidth(i, 30*256); //Col : Jenis VOT
 	        	else if(i==8)sheetItemList.setColumnWidth(i, 15*256); //Col : Kod Akaun
 	        	else if(i==9)sheetItemList.setColumnWidth(i, 25*256); //Col : Jenis Perbelanjaan
 	        	else if(i==10)sheetItemList.setColumnWidth(i, 25*256); //Col : Jumlah Bajet yang diluluskan
@@ -1041,7 +1060,7 @@ public class PpReportsBackingBean extends
 		        createNotFoundRecord(wb,sheetItemList,columnHeaderListItem);
 			else{
 				//[0]pegawai,[1]kumptjCode,[2]kumpptj,[3]ptjcode,[4]ptj,[5]plan,[6]vot,[7]glCode,[8]expType,[9]bdgetAmt,[10]plnAmnt,[11]unusedAmt,
-				//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis
+				//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]vottypehierarchy
 				List<Object[]> newList = new ArrayList<Object[]>();
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
@@ -1050,7 +1069,7 @@ public class PpReportsBackingBean extends
 					Double percentageExpenditure = amountExpenditure / ((BigDecimal)row[10]).doubleValue() * 100;
 					
 					//add calculated amountExpenditure in objectlist for usage in another tab
-					row = appendValue(row, amountExpenditure); //its become obj[18]
+					row = appendValue(row, amountExpenditure); //its become obj[19]
 					newList.add(row);
 					
 					itemList.put(m, new Object[]{
@@ -1091,7 +1110,7 @@ public class PpReportsBackingBean extends
 					createNotFoundRecord(wb,sheetMinistryList,columnHeaderListMinistry);
 				else{
 					//[0]pegawai,[1]kumptjCode,[2]kumpptj,[3]ptjcode,[4]ptj,[5]plan,[6]vot,[7]glCode,[8]expType,[9]bdgetAmt,[10]plnAmnt,[11]unusedAmt,
-					//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]amaun
+					//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]vottypehierarchy,[19]amaun
 					
 					sortBySelectedObject(resultList,17);
 					
@@ -1112,7 +1131,7 @@ public class PpReportsBackingBean extends
 							obj[4] = ((BigDecimal)row[11]).add(oldUnusedValue);
 
 							Double oldAmountValue = (Double)obj[5]; //old amount
-							obj[5] = (Double)row[18] + oldAmountValue;
+							obj[5] = (Double)row[19] + oldAmountValue;
 							
 							//BigDecimal oldDeductValue = (BigDecimal)obj[6]; //old deduct
 							//obj[6] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
@@ -1130,10 +1149,10 @@ public class PpReportsBackingBean extends
 
 							ministryList.put(((BigDecimal)row[17]).intValueExact(), obj);
 						}else{
-							Double amntMinusDeduct = ((Double)row[18]) - ((BigDecimal)row[15]!=null?((BigDecimal)row[15]).doubleValue():0.0);
+							Double amntMinusDeduct = ((Double)row[19]) - ((BigDecimal)row[15]!=null?((BigDecimal)row[15]).doubleValue():0.0);
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							ministryList.put(((BigDecimal)row[17]).intValueExact(), new Object[]{
-								count,(String)row[16],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],(Double)row[18],
+								count,(String)row[16],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],(Double)row[19],
 								(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
@@ -1172,7 +1191,7 @@ public class PpReportsBackingBean extends
 					createNotFoundRecord(wb,sheetKumpPtjList,columnHeaderListKumpPtj);
 				else{
 					//[0]pegawai,[1]kumptjCode,[2]kumpptj,[3]ptjcode,[4]ptj,[5]plan,[6]vot,[7]glCode,[8]expType,[9]bdgetAmt,[10]plnAmnt,[11]unusedAmt,
-					//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]amaun
+					//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]vottypehierarchy,[19]amaun
 					
 					sortBySelectedObject(resultList,1);
 					
@@ -1193,7 +1212,7 @@ public class PpReportsBackingBean extends
 							obj[5] = ((BigDecimal)row[11]).add(oldUnusedValue);
 
 							Double oldAmountValue = (Double)obj[6]; //old amount
-							obj[6] = (Double)row[18] + oldAmountValue;
+							obj[6] = (Double)row[19] + oldAmountValue;
 							
 							//BigDecimal oldDeductValue = (BigDecimal)obj[7]; //old deduct
 							//obj[7] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
@@ -1211,11 +1230,11 @@ public class PpReportsBackingBean extends
 
 							kumpPtjList.put(Integer.parseInt((String)row[1]), obj);
 						}else{
-							Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
+							Double amntMinusDeduct = (Double)row[19] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
 							Double percentageExpenditure = amntMinusDeduct /((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[1]), new Object[]{
 								count,Integer.valueOf((String)row[1]),(String)row[2],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
-								(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
+								(Double)row[19],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
 						}
@@ -1252,7 +1271,7 @@ public class PpReportsBackingBean extends
 	        	createNotFoundRecord(wb,sheetPtjList,columnHeaderListPtj);
 			else{
 				//[0]pegawai,[1]kumptjCode,[2]kumpptj,[3]ptjcode,[4]ptj,[5]plan,[6]vot,[7]glCode,[8]expType,[9]bdgetAmt,[10]plnAmnt,[11]unusedAmt,
-				//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]amaun
+				//[12]orgprofileid,[13]votType,[14]justifikasi,[15]deduct,[16]ministry,[17]pminis,[18]vottypehierarchy,[19]amaun
 				
 				sortBySelectedObject(resultList,3);
 				
@@ -1273,7 +1292,7 @@ public class PpReportsBackingBean extends
 						obj[6] = ((BigDecimal)row[11]).add(oldUnusedValue);
 
 						Double oldAmountValue = (Double)obj[7]; //old amount
-						obj[7] = (Double)row[18] + oldAmountValue;
+						obj[7] = (Double)row[19] + oldAmountValue;
 						
 						//BigDecimal oldDeductValue = (BigDecimal)obj[8]; //old deduct
 						//obj[8] = ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).add(oldDeductValue);
@@ -1291,11 +1310,11 @@ public class PpReportsBackingBean extends
 
 						ptjList.put(Integer.parseInt((String)row[3]), obj);
 					}else{
-						Double amntMinusDeduct = (Double)row[18] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
+						Double amntMinusDeduct = (Double)row[19] - ((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
 						Double percentageExpenditure = amntMinusDeduct /((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[3]), new Object[]{
 							count,(String)row[2],Integer.valueOf((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],(BigDecimal)row[11],
-							(Double)row[18],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
+							(Double)row[19],(BigDecimal)row[15]!=null?"("+((BigDecimal)row[15]).toString()+")":"(0.00)",percentageExpenditure
 							});
 						count++;
 					}
@@ -1354,22 +1373,17 @@ public class PpReportsBackingBean extends
 		        createNotFoundRecord(wb,sheetItemList,columnHeaderListItem);
 			else{
 				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]plan,[8]vot,[9]bdgetAmt,[10]plnAmnt,[11]deduct,
-				//[12]orgprofileid,[13]votType
+				//[12]orgprofileid,[13]votType,[14]vottypehierarchy
 				List<Object[]> newList = new ArrayList<Object[]>();
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
-					log.info("Bean ESR - cf5");
 					Double cf5 = getRptRequestSO().getSumOfExpCFAmnt("CF5",((BigDecimal)row[12]).toString(),((BigDecimal)row[13]).toString(),params);
-					log.info("Result cf5: " + cf5);
-					log.info("Bean ESR - cf6");
 					Double cf6 = getRptRequestSO().getSumOfExpCFAmnt("CF6",((BigDecimal)row[12]).toString(),((BigDecimal)row[13]).toString(),params);
-					log.info("Result cf6: " + cf6);
 					Double amountExpenditure = cf5 + cf6;
-					log.info("Result amount: " + amountExpenditure);
 					Double percentageExpenditure = amountExpenditure / ((BigDecimal)row[10]).doubleValue() * 100;
 					
 					//add calculated amountExpenditure in objectlist for usage in another tab
-					row = appendValue(row, amountExpenditure); //its become obj[14]
+					row = appendValue(row, amountExpenditure); //its become obj[15]
 					newList.add(row);
 					
 					itemList.put(m, new Object[]{
@@ -1408,7 +1422,7 @@ public class PpReportsBackingBean extends
 					createNotFoundRecord(wb,sheetMinistryList,columnHeaderListMinistry);
 				else{
 					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]plan,[8]vot,[9]bdgetAmt,[10]plnAmnt,[11]deduct,
-					//[12]orgprofileid,[13]votType,[14]amount
+					//[12]orgprofileid,[13]votType,[14]vottypehierarchy,[15]amount
 					
 					sortBySelectedObject(resultList,1);
 					
@@ -1428,7 +1442,7 @@ public class PpReportsBackingBean extends
 							obj[4] = ((BigDecimal)obj[2]).subtract((BigDecimal)obj[3]); //unused
 
 							Double oldAmountValue = (Double)obj[5]; //old amount
-							obj[5] = (Double)row[14] + oldAmountValue;
+							obj[5] = (Double)row[15] + oldAmountValue;
 							
 							//BigDecimal oldDeductValue = (BigDecimal)obj[6]; //old deduct
 							//obj[6] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
@@ -1447,10 +1461,10 @@ public class PpReportsBackingBean extends
 							ministryList.put(((BigDecimal)row[1]).intValueExact(), obj);
 						}else{
 							BigDecimal unUsedAmnt = ((BigDecimal)row[9]).subtract((BigDecimal)row[10]);
-							Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
+							Double amntMinusDeduct = (Double)row[15] - ((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							ministryList.put(((BigDecimal)row[1]).intValueExact(), new Object[]{
-								count,(String)row[0],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
+								count,(String)row[0],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[15],
 								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
@@ -1489,7 +1503,7 @@ public class PpReportsBackingBean extends
 					createNotFoundRecord(wb,sheetKumpPtjList,columnHeaderListKumpPtj);
 				else{
 					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]plan,[8]vot,[9]bdgetAmt,[10]plnAmnt,[11]deduct,
-					//[12]orgprofileid,[13]votType,[14]amount
+					//[12]orgprofileid,[13]votType,[14]vottypehierarchy,[15]amount
 					
 					sortBySelectedObject(resultList,3);
 					
@@ -1509,7 +1523,7 @@ public class PpReportsBackingBean extends
 							obj[5] = ((BigDecimal)obj[3]).subtract((BigDecimal)obj[4]); //unused
 
 							Double oldAmountValue = (Double)obj[6]; //old amount
-							obj[6] = (Double)row[14] + oldAmountValue;
+							obj[6] = (Double)row[15] + oldAmountValue;
 							
 							//BigDecimal oldDeductValue = (BigDecimal)obj[7]; //old deduct
 							//obj[7] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
@@ -1528,10 +1542,10 @@ public class PpReportsBackingBean extends
 							kumpPtjList.put(Integer.parseInt((String)row[3]), obj);
 						}else{
 							BigDecimal unUsedAmnt = ((BigDecimal)row[9]).subtract((BigDecimal)row[10]);
-							Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
+							Double amntMinusDeduct = (Double)row[15] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
 							Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 							kumpPtjList.put(Integer.parseInt((String)row[3]), new Object[]{
-								count,Integer.parseInt((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[14],
+								count,Integer.parseInt((String)row[3]),(String)row[4],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,(Double)row[15],
 								(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
 								});
 							count++;
@@ -1569,7 +1583,7 @@ public class PpReportsBackingBean extends
 	        	createNotFoundRecord(wb,sheetPtjList,columnHeaderListPtj);
 			else{
 				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,[7]plan,[8]vot,[9]bdgetAmt,[10]plnAmnt,[11]deduct,
-				//[12]orgprofileid,[13]votType,[14]amount
+				//[12]orgprofileid,[13]votType,[14]vottypehierarchy,[15]amount
 				
 				sortBySelectedObject(resultList,5);
 				
@@ -1589,7 +1603,7 @@ public class PpReportsBackingBean extends
 						obj[6] = ((BigDecimal)obj[4]).subtract((BigDecimal)obj[5]); //unused
 
 						Double oldAmountValue = (Double)obj[7]; //old amount
-						obj[7] = (Double)row[14] + oldAmountValue;
+						obj[7] = (Double)row[15] + oldAmountValue;
 						
 						//BigDecimal oldDeductValue = (BigDecimal)obj[8]; //old deduct
 						//obj[8] = ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).add(oldDeductValue);
@@ -1609,11 +1623,11 @@ public class PpReportsBackingBean extends
 						ptjList.put(Integer.parseInt((String)row[5]), obj);
 					}else{
 						BigDecimal unUsedAmnt = ((BigDecimal)row[9]).subtract((BigDecimal)row[10]);
-						Double amntMinusDeduct = (Double)row[14] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
+						Double amntMinusDeduct = (Double)row[15] - ((BigDecimal)row[11]!=null?(BigDecimal)row[11]:BigDecimal.ZERO).doubleValue();
 						Double percentageExpenditure = amntMinusDeduct/((BigDecimal)row[10]).doubleValue()*100;
 						ptjList.put(Integer.parseInt((String)row[5]), new Object[]{
 							count,(String)row[4],Integer.parseInt((String)row[5]),(String)row[6],(BigDecimal)row[9],(BigDecimal)row[10],unUsedAmnt,
-							(Double)row[14],(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
+							(Double)row[15],(BigDecimal)row[11]!=null?"("+((BigDecimal)row[11]).toString()+")":"(0.00)",percentageExpenditure
 							});
 						count++;
 					}
@@ -1682,12 +1696,14 @@ public class PpReportsBackingBean extends
 				
 				//total footer
 		        Row totalRecordRowItem = sheetItemList.createRow(sheetItemList.getLastRowNum()+1);
-				Cell cellTotalRecordItem = totalRecordRowItem.createCell(0);
-				cellTotalRecordItem.setCellValue("Jumlah");
-				sheetItemList.addMergedRegion(new CellRangeAddress(sheetItemList.getLastRowNum(),sheetItemList.getLastRowNum(),0,1)); 
-				cellTotalRecordItem.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,false,true,true));
-				
-				//add value next of merge cell (jumlah)
+		        
+		        for (int i = 0; i <= 1; ++i) {
+		            Cell cell = totalRecordRowItem.createCell(i);
+		            cell.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,false,true,true));
+		            if (i == 0) {
+		                cell.setCellValue("Jumlah");
+		            } 
+		        }
 				Cell cellTotalRecordItem2 = totalRecordRowItem.createCell(2);
 				cellTotalRecordItem2.setCellValue(total2);
 				cellTotalRecordItem2.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
@@ -1697,6 +1713,9 @@ public class PpReportsBackingBean extends
 				Cell cellTotalRecordItem4 = totalRecordRowItem.createCell(4);
 				cellTotalRecordItem4.setCellValue(total2 == 0? 0.00 : total3/total2*100.00);
 				cellTotalRecordItem4.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
+				
+				sheetItemList.addMergedRegion(new CellRangeAddress(sheetItemList.getLastRowNum(),sheetItemList.getLastRowNum(),0,1)); 
+
 			}
         
         }catch(EpException e){
@@ -1714,7 +1733,7 @@ public class PpReportsBackingBean extends
 		try{
 			Workbook wb = new XSSFWorkbook();
 			CreationHelper createHelper = wb.getCreationHelper();
-			String titleReport = "LAPORAN PINDAAN ANGGARAN PERUNTUKAN MENGGUNAKAN SISTEM EPEROLEHAN(eP) BAGI TAHUN "+ getManagedBean().getSelectedYear();
+			String titleReport = "LAPORAN PINDAAN ANGGARAN PERUNTUKAN MENGGUNAKAN SISTEM EPEROLEHAN (eP) BAGI TAHUN "+ getManagedBean().getSelectedYear();
 			Map<Integer, Object[]> collectionList = new TreeMap<Integer, Object[]>();
 			List<Object[]> resultList = getRptRequestSO().generatePPData(params,PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL);
 			
@@ -1751,41 +1770,89 @@ public class PpReportsBackingBean extends
 	        if(resultList.isEmpty())
 	        	createNotFoundRecord(wb,sheetItemList,columnHeaderListItem);
 			else{
-				//[0]MINISTRY_NAME,[1]PEGAWAI,[2]KMP_CODE,[3]KUMP_PTJ,[4]PTJCODE,[5]PTJ,[6]PLAN_NO,[7]CODE_NAME,[8]GL_ACC_CODE,
-				//[9]DESCRIPTION,[10]ASAL,[11]DIPINDA,[12]JUSTIFIKASI,[13]APPROVE_DATE,[14]ITEM_STATUS,[15]EXPENDITURE_ITEM_ID,[16]FROM_PPITEM
+				//[0]MINISTRY_NAME,[1]PEGAWAI,[2]KMP_CODE,[3]KUMP_PTJ,[4]PTJCODE,[5]PTJ,[6]PLAN_NO,[7]CODE_NAME,[8]GL_ACC_CODE,[9]DESCRIPTION,
+				//[10]ASAL,[11]DIPINDA,[12]JUSTIFIKASI,[13]APPROVE_DATE,[14]ITEM_STATUS,[15]EXPENDITURE_ITEM_ID,[16]FROM_PPITEM,[17]TYPESORT
 				
-				Integer count = 1;
+				Integer count = 2;
+				Integer bil = 1;
 				BigDecimal oldVal = new BigDecimal(0);
 				BigDecimal origin = new BigDecimal(0);
+				
+				Boolean proceed=true;
+				String newRemark="";
+				String oldRemark="";
+				String newDateStr="";
+				String oldDateStr="";
+				BigDecimal oldPinda = new BigDecimal(0);
+				BigDecimal pinda = new BigDecimal(0);
+				
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
 					
 					if(m>0){
 						BigDecimal fromVal = (BigDecimal)row[16];
 						if(oldVal.equals(fromVal)){
-							count++;
 							oldVal = (BigDecimal)row[15];
+							oldRemark = newRemark;
+							newRemark = row[12]!=null? (String)row[12]:"";
+							oldDateStr = newDateStr;
+							newDateStr = row[13]!=null? (String)row[13]:"";
+							oldPinda = pinda;
+							pinda = (BigDecimal)row[11];
+							
+							if(oldPinda.equals(pinda) && ((String)row[14]).equals("TIDAK AKTIF")){
+								proceed = false; //skip
+							}else if(oldPinda.equals((BigDecimal)row[11]) && ((String)row[14]).equals("AKTIF")){
+								newRemark = oldRemark;
+								newDateStr = oldDateStr;
+								count++;
+							}else
+								count++;
+							
+						}else{
+							
+							if(((BigDecimal)row[10]).compareTo((BigDecimal)row[11]) == 0 && ((String)row[14]).equals("AKTIF")){
+								proceed=false; //skip
+							}else{
+								oldVal = (BigDecimal)row[15];
+								origin = (BigDecimal)row[10];
+								newRemark = row[12]!=null? (String)row[12]:"";
+								newDateStr = row[13]!=null? (String)row[13]:"";
+								pinda = (BigDecimal)row[11];
+								count=2;
+							}
+						}
+					}else{
+						if(((BigDecimal)row[10]).compareTo((BigDecimal)row[11]) == 0 && ((String)row[14]).equals("AKTIF")){
+							proceed=false; //skip
 						}else{
 							oldVal = (BigDecimal)row[15];
 							origin = (BigDecimal)row[10];
-							count=1;
+							newRemark = row[12]!=null? (String)row[12]:"";
+							newDateStr = row[13]!=null? (String)row[13]:"";
+							pinda = (BigDecimal)row[11];
 						}
-					}else{
-						oldVal = (BigDecimal)row[15];
-						origin = (BigDecimal)row[10];
 					}
 					
-					collectionList.put(m, new Object[]{
-						Integer.valueOf(m+1),(String)row[0],(String)row[1],Integer.parseInt((String)row[2]),(String)row[3],
-						Integer.parseInt((String)row[4]),(String)row[5],row[6] != null ? (String)row[6] : "",
-						row[7] != null ? (String)row[7] : "",row[8] != null ? (String)row[8] : "",row[9] != null ? (String)row[9] : "",
-						origin,row[11] != null ? ((BigDecimal)row[11]).doubleValue() : 0.00,row[12] != null ? (String)row[12] : "",
-						row[13] != null ? (String)row[13] : "",row[13] != null ? (String)row[14] : "",Integer.valueOf(count)
-					});
+					if(proceed){
+						collectionList.put(m, new Object[]{
+							bil,(String)row[0],(String)row[1],Integer.parseInt((String)row[2]),(String)row[3],
+							Integer.parseInt((String)row[4]),(String)row[5],row[6] != null ? (String)row[6] : "",
+							row[7] != null ? (String)row[7] : "",row[8] != null ? (String)row[8] : "",row[9] != null ? (String)row[9] : "",
+							origin,pinda,newRemark,newDateStr,row[14] != null ? (String)row[14] : "",Integer.valueOf(count)
+						});
+						bil++;
+					}
+					
+					proceed = true;//reset
 					
 				}
 				
-				insertInCell(wb,createHelper,collectionList,sheetItemList);
+				//need checking again because have skip mehtod
+				if(!collectionList.isEmpty()){
+					insertInCell(wb,createHelper,collectionList,sheetItemList);
+				}else
+					createNotFoundRecord(wb,sheetItemList,columnHeaderListItem);
 			}
 	
 			//end senarai item tab
