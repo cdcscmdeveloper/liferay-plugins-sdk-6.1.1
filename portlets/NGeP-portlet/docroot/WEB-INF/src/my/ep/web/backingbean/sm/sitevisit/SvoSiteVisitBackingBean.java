@@ -2011,22 +2011,26 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
 					//#25294 Start
-					String poLoginId = "";
+					String poName = "<<Processing Officer Name>>";
 					if(getManagedBean().getBpmPojo() != null){
-						poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
+						String poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
 
 						if(StringUtils.isNotBlank(poLoginId)){
 							PmUser poUser = PmCommonUtil.retrieveUserByLoginId(poLoginId);
 
 							if(poUser != null){
 							//	context.put("poName", poUser.getUserName());
+								poName = poUser.getUserName();
+							}
+							else {
+								poName = "<<Processing Officer Name>>";
 							}
 						}
 					}
 					//#25294 End
 					//#25294 Start - pass second parameter to INFO_721210
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
-							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(),poLoginId},
+							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(),poName},
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					//#25294 End
