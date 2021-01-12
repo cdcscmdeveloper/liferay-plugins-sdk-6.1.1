@@ -14763,6 +14763,17 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+		//#15391 - start
+		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+			for (int i = 0; i < checklistRemoveList.size(); i++) {
+				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+					checklistRemoveList.remove(i);
+				}
+			}
+
+		}
+		//#15391 - end
 		spReqDTO.setOutcome(action);
 
 		signoffCommitteeActivity(spReqDTO, action);
@@ -14772,7 +14783,8 @@ public class SpecificationBackingBean extends
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,
 					scQt.getQtId(), scQt.getQtNo());
 		}
-
+		
+		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
