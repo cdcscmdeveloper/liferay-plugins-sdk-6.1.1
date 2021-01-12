@@ -163,10 +163,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	
 	//28221 - start
-	private PmUser user;
-	private boolean userActive = false;
-	private Long newSupplierId;
+	private PmUser suppInvoiceSubmitted;
+	private boolean suppInvoiceActive = true;
+	private Long newSupplierUserId;
 	//28221 - end
 	/**
 	 * Gets the doc type.
@@ -1615,29 +1616,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	}
 	//24893 - end
 	//28221 - start
-	public PmUser getUser() {
-		return user;
+
+
+	public PmUser getSuppInvoiceSubmitted() {
+		return suppInvoiceSubmitted;
 	}
 
-	public void setUser(PmUser user) {
-		this.user = user;
+	public boolean isSuppInvoiceActive() {
+		return suppInvoiceActive;
 	}
 
-	public boolean isUserActive() {
-		return userActive;
+	public void setSuppInvoiceActive(boolean suppInvoiceActive) {
+		this.suppInvoiceActive = suppInvoiceActive;
 	}
 
-	public void setUserActive(boolean userActive) {
-		this.userActive = userActive;
+	public void setSuppInvoiceSubmitted(PmUser suppInvoiceSubmitted) {
+		this.suppInvoiceSubmitted = suppInvoiceSubmitted;
 	}
 
-	public Long getNewSupplierId() {
-		return newSupplierId;
+	public Long getNewSupplierUserId() {
+		return newSupplierUserId;
 	}
 
-	public void setNewSupplierId(Long newSupplierId) {
-		this.newSupplierId = newSupplierId;
+	public void setNewSupplierUserId(Long newSupplierUserId) {
+		this.newSupplierUserId = newSupplierUserId;
 	}
+
+
 
 	//28221 - end
 
