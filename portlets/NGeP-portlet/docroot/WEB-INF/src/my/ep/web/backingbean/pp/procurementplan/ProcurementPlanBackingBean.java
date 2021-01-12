@@ -232,6 +232,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		setupOrgProfile();
 		//210108@akmal - Enhancement27624 - Start
 		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
+//		if(this.getManagedBean().getvPmGolist()!=null)
+			this.getManagedBean().getvPmGolist().clear();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		 try{
@@ -327,6 +329,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //		else
 		this.getManagedBean().setDisablePlanSearchDet(false);
 		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
+		this.getManagedBean().getvPmGolist().clear();
 		//201228@akmal - Enhancement27624 - End
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -377,6 +380,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			loadDefaultButtons();
 			this.getManagedBean().setPlanId(id);
 			this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
+			this.getManagedBean().getvPmGolist().clear();
 			//201229@akmal - Enhancement27624 - End
 		}
 		
@@ -1089,11 +1093,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						this.resetPpExpenditureItems(ppPlan.getPpExpenditureItems());
 						//24975@04112020@azza - End
 						loadEpItems(ppPlan);
-
+						
+						//210108@akmal - Enhancement27624 - Start
+						
+						//210108@akmal - Enhancement27624 - End
 						// set searchbean			    					
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 						calculatePpGrandTotal();
-						// set searchbean
+						
+						//210108@akmal - Enhancement27624 - Start
+						if(!this.getManagedBean().getTempPpItemList().isEmpty())
+							ppPlan.getPpProcurementItems().addAll(this.getManagedBean().getTempPpItemList());
+						//210108@akmal - Enhancement27624 - Start
 					}
 					updatePlanYearControl();
 					
@@ -4227,6 +4238,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			ppItem.setInvitationDate(date.getTime());
 		}
 		this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
+		//210108@akmal - Enhancement27624 - Start
+		this.getManagedBean().getTempPpItemList().add(ppItem);
+		//210108@akmal - Enhancement27624 - End
 		
 	}
 	/**
@@ -4420,7 +4434,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							}
 							// 24975@20112020 - End
 				      }
-			       }	
+			       }
+				
 				}
 				//24975@04112020@azza - End
 				//Add deleted item
@@ -4436,6 +4451,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//remove deleted item from list
 		for(PpProcurementItem procurementItem: this.getManagedBean().getDeletePpItems()){
 			this.getManagedBean().getSelectedPlan().getPpProcurementItems().remove(procurementItem);
+			//210108@akmal - Enhancement27624 - Start
+			this.getManagedBean().getTempPpItemList().remove(procurementItem);
+			//210108@akmal - Enhancement27624 - End
 		}
 		//24975@04112020@azza - Start
 //		resetPpProcurementItemFields();
@@ -5076,14 +5094,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		reqDTO.setUpdatedDateTo(searchbean.getUpdatedDateTo());
 		reqDTO.setStatus(searchbean.getPlanDetstatus());
 		reqDTO.setPlanType(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode());
-		reqDTO.setvPmGolist(this.getManagedBean().getvPmGolist());
+		reqDTO.getvPmGolist().addAll(this.getManagedBean().getvPmGolist());
 		
 		return reqDTO;
 	}
 	
-	//201228@akmal - Enhancement27624 - Start
+	//210801@akmal - Enhancement27624 - Start
 	public void resetPlanDetailSearch() throws Exception{
 		this.getManagedBean().getvPmGolist().clear();
+		this.getManagedBean().getvPmGomap().clear();
 		this.getManagedBean().getPlanSearchBean().setProcurementType(null);
 		this.getManagedBean().getPlanSearchBean().setCategoryType(null);
 		this.getManagedBean().getPlanSearchBean().setTitleOrDesc(null);
@@ -5108,7 +5127,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			redirectToMaintainPlan(this.getManagedBean().getPlanId(), 
 				this.getManagedBean().getBtnValue(), this.getManagedBean().isTrackingDiary());
 	}
-	//201228@akmal - Enhancement27624 - End
+	//210801@akmal - Enhancement27624 - End
 
 	/**
 	 * @return the ppPlanDataModel
@@ -5917,16 +5936,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	
-	//200911@akmal - Enhancement27624 - Start
+	//210801@akmal - Enhancement27624 - Start
 	/**
 	 * Action after select list of GL Account In LOV
 	 * 
 	 * @param vPmGoList
 	 */
 	public void selectGlAccountAction(List<VPmGo> vPmGoList){
-		this.getManagedBean().setvPmGolist(vPmGoList);
+		Iterator<VPmGo> iterator = vPmGoList.iterator();
+		while (iterator.hasNext()) {
+			VPmGo obj = iterator.next();
+		    if (!this.getManagedBean().getvPmGomap().containsKey(obj.getGlAccCode())) {
+		    	this.getManagedBean().getvPmGomap().put(obj.getGlAccCode(),obj);
+		    }
+		}
+		this.getManagedBean().getvPmGolist().clear();
+		this.getManagedBean().getvPmGolist().addAll(this.getManagedBean().getvPmGomap().values());
 	}
-	//200911@akmal - Enhancement27624 - End
+	//210801@akmal - Enhancement27624 - End
 
 	/**
 	 * To Retrieve Kumpulan PTJ Id
