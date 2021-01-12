@@ -4234,9 +4234,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}else{
 					 // group org hierarchy
 					if(ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(orgProfileId));
+						//Bug#29887@07012021 - Start 
+						getManagedBean().setSelectedMinistry(getManagedBean().getCurrentActiveOrg()); 
 						getManagedBean().setDisabledMinistryLov(true);
-						getManagedBean().getPlanSearchBean().setMinistry(retrieveMinistryOrgProfile(orgProfileId));
+						getManagedBean().getPlanSearchBean().setMinistry(getManagedBean().getCurrentActiveOrg());
+						//Bug#29887@07012021 - End
 					}else if(ParameterConst.ORG_AUTH_TYPE_KUMPULAN_PTJ.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
 //						List<PmOrgProfile> orgProfileList = PpCommonUtil.retrieveOrgProfileListFromGroupOrgType(orgProfileId,
 //								OrganizationType.MINISTRY.value(), ParameterConst.ORG_AUTH_TYPE_MINISTRY);
