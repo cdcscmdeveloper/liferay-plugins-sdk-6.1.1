@@ -2010,10 +2010,26 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if (resDTO.isSuccessful()) {
 
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
+					//#25294 Start
+					String poLoginId = "";
+					if(getManagedBean().getBpmPojo() != null){
+						poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
+
+						if(StringUtils.isNotBlank(poLoginId)){
+							PmUser poUser = PmCommonUtil.retrieveUserByLoginId(poLoginId);
+
+							if(poUser != null){
+							//	context.put("poName", poUser.getUserName());
+							}
+						}
+					}
+					//#25294 End
+					//#25294 Start - pass second parameter to INFO_721210
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
-							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo()},
+							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(),poLoginId},
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
+					//#25294 End
 				}else{
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
