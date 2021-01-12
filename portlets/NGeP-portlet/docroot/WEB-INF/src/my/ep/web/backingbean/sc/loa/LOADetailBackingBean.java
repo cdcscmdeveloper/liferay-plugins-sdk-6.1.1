@@ -155,6 +155,7 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -370,7 +371,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		removeUnwantedLampiranA3Report(1);
 		//#29006 - end
 		//#29007 Start Vinod
-		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,QTStatusConst.LOA_PENDING_VERIFICATION,
 			QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT).contains(scLoa.getPmStatus().getStatusId())) {
 					getManagedBean().setSpecificationAndSupplierDialogFlagQT(true);
 		}
@@ -1740,8 +1741,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 				} 
 
-				String prefixName = scLoaReport.getTitle().replaceAll(
-						SourcingConstants.REG_EXP_WHITE_SPACE, "");
+				String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll("/", "-")
+						: scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");//#29007 Vinod changed setting title for lampiranA3
 				scLoaReportAttachmentGenerated.setTempFileName(prefixName);
 				scAttachments.add(scLoaReportAttachmentGenerated);
 			}
@@ -8085,6 +8086,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				specReqDto.setTplSpecAnswer(tplSpecAnswer);
 				
 			}
+			boolean qtMaint = isQTMaintenanceScreen();
+			if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
+				getManagedBean().setSupPropSpecDisable(false);
+			}else if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+					&& !qtMaint) {
+				getManagedBean().setSupPropSpecDisable(false);
+			}else{
+				getManagedBean().setSupPropSpecDisable(true);
+			}
+			
 			specReqDto.setSpecSearchForApp(true);
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			
@@ -8323,6 +8335,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.submitAction();
 			return;
 		}
+	}
+	public void verifyConformationForLampiranA3(String bpmAction){
+		log.info("verifyConformationForLampiranA3");
+		int recordCount = 0;
+		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					recordCount++;
+				}
+			}
+		}
+		if(recordCount>0 && this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+			this.getManagedBean().setLoaBpmVerify(bpmAction);
+			RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.show()");
+		}else{
+			//this.approveBeforeupdateBpmTaskAction(bpmAction);
+			return;
+		}
+	}
+	public boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	/*#29007 End Vinod*/
 

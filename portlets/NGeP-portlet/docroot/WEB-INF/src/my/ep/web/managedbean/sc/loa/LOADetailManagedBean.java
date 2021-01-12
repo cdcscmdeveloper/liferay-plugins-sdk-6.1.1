@@ -318,10 +318,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#11134
 	private List<ScLoaRemark> supplierRemarks;
 	/*#29007 Start Vinod*/
+	private boolean supPropSpecDisable = false;
 	private boolean supPropSpecUpdate = false;
 	private boolean specificationAndSupplierDialogFlagQT = false;
 	private String itemNamePopup;
 	private String specKeyword;
+	private String loaBpmVerify;
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	/*#29007 End Vinod*/
@@ -1811,6 +1813,18 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	public void setSpecificationAndSupplierDialogFlagQT(boolean specificationAndSupplierDialogFlagQT) {
 		this.specificationAndSupplierDialogFlagQT = specificationAndSupplierDialogFlagQT;
+	}
+	public String getLoaBpmVerify() {
+		return loaBpmVerify;
+	}
+	public void setLoaBpmVerify(String loaBpmVerify) {
+		this.loaBpmVerify = loaBpmVerify;
+	}
+	public boolean isSupPropSpecDisable() {
+		return supPropSpecDisable;
+	}
+	public void setSupPropSpecDisable(boolean supPropSpecDisable) {
+		this.supPropSpecDisable = supPropSpecDisable;
 	}
 	/*#29007 End Vinod*/
 }
