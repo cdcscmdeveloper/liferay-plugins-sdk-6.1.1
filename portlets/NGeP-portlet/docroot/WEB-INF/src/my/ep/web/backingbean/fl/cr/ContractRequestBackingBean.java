@@ -1294,9 +1294,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
 					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL) 
 					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
-				if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null) {
-					isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(), 
-							getManagedBean().getFlRequest().getSmSupplier().getSupplierId());
+				if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null 
+						&& isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(), 
+								getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+					getManagedBean().setBranchNeedToBeChanged(true);
 				}
 			}
 		    //29728 - end			
@@ -3813,6 +3814,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
 		getSupplierGst(getManagedBean().getFlRequest(), false);
+		//29728 - start
+		getManagedBean().setBranchNeedToBeChanged(false);
+		//29728 - end
 	}
 	
 	/**
@@ -4589,7 +4593,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 							getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
 				getManagedBean().setSelectedTabIndex(0);
 				return null;
-			}				
+			}
+			if(getManagedBean().isBranchNeedToBeChanged()){
+				FacesContext.getCurrentInstance().addMessage("delBranchMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745087, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				getManagedBean().setSelectedTabIndex(0);
+				return null;
+			}
 		}
 		//29728 - end
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
