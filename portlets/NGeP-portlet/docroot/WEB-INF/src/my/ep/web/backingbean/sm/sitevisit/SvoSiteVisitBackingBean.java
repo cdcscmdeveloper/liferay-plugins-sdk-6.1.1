@@ -2010,7 +2010,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if (resDTO.isSuccessful()) {
 
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
-					//#25294 Start
+					//Start 25294  - Site Visit Grouping Enhancement -28775
 					String poName = "<<Processing Officer Name>>";
 					if(getManagedBean().getBpmPojo() != null){
 						String poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
@@ -2027,13 +2027,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							}
 						}
 					}
-					//#25294 End
-					//#25294 Start - pass second parameter to INFO_721210
+					//End 25294  - Site Visit Grouping Enhancement -28775
+					//Start pass second parameter to INFO_721210 #25294  - Site Visit Grouping Enhancement -28775
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
 							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(),poName},
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-					//#25294 End
+					//End 25294  - Site Visit Grouping Enhancement -28775
 				}else{
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
