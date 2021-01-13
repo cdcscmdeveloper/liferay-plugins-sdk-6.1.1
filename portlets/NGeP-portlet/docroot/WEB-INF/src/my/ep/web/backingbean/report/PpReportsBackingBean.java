@@ -386,7 +386,8 @@ public class PpReportsBackingBean extends
 			year = year + 1;
 			//[#24976],[#24974] - start
 			if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode()) 
-					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())
+					|| PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL.equals(this.getManagedBean().getReportCode())) { //[#29484]
 				range = 8;
 			}
 			//[#24976],[#24974] - end
@@ -395,7 +396,8 @@ public class PpReportsBackingBean extends
 			}
 		}		
 		//[#24976] - start
-		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL.equals(this.getManagedBean().getReportCode())) {//[#29484]
 			this.getManagedBean().setSelectedYear(yearFrom);
 		}
 		//[#24976] - end
@@ -582,7 +584,7 @@ public class PpReportsBackingBean extends
 		}
 		getRptRequestSO().updateExcelPPReportName(resDTO.getRequestId(),reportName);
 	}
-	
+
 	//#27472 Procurement Plan Detailed Report
 	public void generateExlPPDR(String reportName, int tierLevel, String ministryName, LinkedHashMap<String, String> params){
         try{
@@ -826,8 +828,12 @@ public class PpReportsBackingBean extends
 			else{
 				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
 				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
+				List<Object[]> newList = new ArrayList<Object[]>();
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
+					row = appendValue(row, Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString())); //become object[12]
+					row = appendValue(row, Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString())); //become object[13]
+					newList.add(row);
 					
 					itemList.put(m, new Object[]{
 						Integer.valueOf(m+1),
@@ -836,6 +842,8 @@ public class PpReportsBackingBean extends
 					});
 				}
 				insertInCell(wb,createHelper,itemList,sheetItemList);
+				resultList.clear();
+				resultList.addAll(newList);
 			}
 	
 	        //end senarai item tab
@@ -860,17 +868,17 @@ public class PpReportsBackingBean extends
 					createNotFoundRecord(wb,sheetMinistryList,columnHeaderListMinistry);
 				else{
 					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
+					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy,[12]codeministry+proctype,[13]codekmp+proctype
 					
-					//sortBySelectedObject(resultList,1);
+					sortBySelectedObject(resultList,12);
 					
 					Integer count = 1;
 					for(int m=0; m<resultList.size(); m++){
 						Object[] row = resultList.get(m); //get whole object
 						
 						//if(ministryList.containsKey(((BigDecimal)row[1]).intValue())){ //find key in map
-						if(ministryList.containsKey(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()))){ //find key in map
-							Object[] obj = ministryList.get(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()));
+						if(ministryList.containsKey((Integer) row[12])){ //find key in map
+							Object[] obj = ministryList.get((Integer) row[12]);
 							
 							Integer oldCountValue = (Integer)obj[2]; //old count
 							obj[2] = ((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact() + oldCountValue;
@@ -878,9 +886,9 @@ public class PpReportsBackingBean extends
 							BigDecimal oldValue = (BigDecimal)obj[4]; //old anggaran
 							obj[4] = ((BigDecimal)row[10]).add(oldValue);
 							
-							ministryList.put(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()), obj);
+							ministryList.put((Integer) row[12], obj);
 						}else{
-							ministryList.put(Integer.valueOf(((BigDecimal)row[1]).toString()+((BigDecimal)row[11]).toString()), new Object[]{
+							ministryList.put((Integer) row[12], new Object[]{
 								count,(String)row[0],((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact(),
 								(String)row[8],((BigDecimal)row[10])
 								});
@@ -888,15 +896,6 @@ public class PpReportsBackingBean extends
 						}
 					}
 					
-					//reset the numbering because of kaedah sorting
-					Integer bil = 1;
-					for (Map.Entry<Integer, Object[]> entry : ministryList.entrySet()) {
-						Object[] obj = entry.getValue();
-						obj[0] = bil;
-						entry.setValue(obj);
-						bil++;
-					}
-
 					insertInCell(wb,createHelper,ministryList,sheetMinistryList);
 				}
 	        }
@@ -924,24 +923,24 @@ public class PpReportsBackingBean extends
 		        	createNotFoundRecord(wb,sheetKumpPtjList,columnHeaderListKumpPtj);
 				else{
 					//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
+					//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy,[12]codeministry+proctype,[13]codekmp+proctype
 					
-					sortBySelectedObject(resultList,3);
+					sortBySelectedObject(resultList,13);
 					
 					Integer count = 1;					
 					for(int m=0; m<resultList.size(); m++){
 						Object[] row = resultList.get(m); //get whole object
 						
-						if(kumpPtjList.containsKey(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()))){ //find key in map
-							Object[] obj = kumpPtjList.get(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()));
+						if(kumpPtjList.containsKey((Integer) row[13])){ //find key in map
+							Object[] obj = kumpPtjList.get((Integer) row[13]);
 							Integer oldCountValue = (Integer)obj[3]; //old count
 							obj[3] = ((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact() + oldCountValue;
 							
 							BigDecimal oldValue = (BigDecimal)obj[5]; //old anggaran
 							obj[5] = ((BigDecimal)row[10]).add(oldValue);
-							kumpPtjList.put(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()), obj);
+							kumpPtjList.put((Integer) row[13], obj);
 						}else{
-							kumpPtjList.put(Integer.valueOf((String)row[3]+((BigDecimal)row[11]).toString()), new Object[]{
+							kumpPtjList.put((Integer) row[13], new Object[]{
 								count,Integer.valueOf((String)row[3]),(String)row[4],((BigDecimal)row[9]==null? new BigDecimal(0):(BigDecimal)row[9]).intValueExact(),
 								(String)row[8],((BigDecimal)row[10])
 								});
@@ -949,15 +948,6 @@ public class PpReportsBackingBean extends
 						}
 					}
 					
-					//reset the numbering because of kaedah sorting
-					Integer bil = 1;
-					for (Map.Entry<Integer, Object[]> entry : kumpPtjList.entrySet()) {
-						Object[] obj = entry.getValue();
-						obj[0] = bil;
-						entry.setValue(obj);
-						bil++;
-					}
-
 					insertInCell(wb,createHelper,kumpPtjList,sheetKumpPtjList);
 				}
 	        }
@@ -983,7 +973,7 @@ public class PpReportsBackingBean extends
 	        	createNotFoundRecord(wb,sheetPtjList,columnHeaderListPtj);
 			else{
 				//[0]ministry,[1]pminis,[2]pegawai,[3]kumptjCode,[4]kumpptj,[5]ptjcode,[6]ptj,
-				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy
+				//[7]plan,[8]proctype,[9]bil,[10]esimateAmt,[11]proctypehierarchy,[12]codeministry+proctype,[13]codekmp+proctype
 				
 				sortBySelectedObject(resultList,5);
 				
