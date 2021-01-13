@@ -293,17 +293,17 @@ public class PmReportsBackingBean extends
 					.toString());
 		}
 		
-		// 28833 start
+		// shafie #28833 start
 		if (getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_MINISTRY ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
-			String PG2G = "0"; 
+			String PG2G = null; 
 			if (getManagedBean().isGovtSeller()){
 				PG2G = "1";
 			}
 			map.put(PmReportConst.PARAM_PM_G2G, PG2G);
 		} 
-		// 28833 end
+		// shafie #28833 - end
 	}
 
 	// User Profile List
@@ -477,17 +477,17 @@ public class PmReportsBackingBean extends
 	//Monthly User and Role Report
 	private void constructPm013Map(LinkedHashMap<String, String> map) {
 		if (getManagedBean().getSelectedMinistry() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_TYPE_MINISTRY, 
+			map.put(PmReportConst.PARAM_PM_MINISTRY, 
 					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
 		}
 		
 		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_TYPE_KUMPULAN_PTJ, 
+			map.put(PmReportConst.PARAM_PM_KUMPULAN_PTJ, 
 					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
 		}
 		
 		if (getManagedBean().getSelectedPTJ() != null) {
-			map.put(PmReportConst.PARAM_PM_ORG_TYPE_PTJ, 
+			map.put(PmReportConst.PARAM_PM_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
 		}
 		
@@ -501,6 +501,7 @@ public class PmReportsBackingBean extends
 					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
 							.getFromDate()));
 		}
+		
 	}
 	//shafie - #29486 - end
 	
