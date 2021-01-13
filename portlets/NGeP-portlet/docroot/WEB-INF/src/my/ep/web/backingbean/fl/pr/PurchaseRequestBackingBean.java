@@ -1500,13 +1500,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 				}
 				//29728 - start
-				if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null) {
-					if(isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
-							getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
-						getManagedBean().setBranchNeedToBeChanged(true);
-					} else {
-						getManagedBean().setBranchNeedToBeChanged(false);
-					}
+				if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
+						&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
+								getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+					getManagedBean().setBranchNeedToBeChanged(true);
 				}
 				//29728 - end
 			}
