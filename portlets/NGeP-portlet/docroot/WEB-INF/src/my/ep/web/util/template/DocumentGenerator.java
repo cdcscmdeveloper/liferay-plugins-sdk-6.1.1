@@ -379,7 +379,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		Text t2 = factory.createText();
 		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : _____________");
 		Text t3 = factory.createText();
-		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak ini");
+		// 25025 - Start.
+		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
+		// 25025 - End.
 		Text t4 = factory.createText();
 		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
 		run.getContent().add(t1);
