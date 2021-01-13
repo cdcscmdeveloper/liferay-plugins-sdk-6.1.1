@@ -583,7 +583,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 											<p:ajax event="change"
-												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
+												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId" process="@this" partialSubmit="true"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null,null)}" />
 										</p:selectOneMenu> <p:message id="basicMailAddCountryListMsg"
 											for="basicMailAddCountryList" showSummary="true"
@@ -604,7 +604,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 											<p:ajax event="change"
-												update="basicMailAddDistrictList, basicMailAddCityList"
+												update="basicMailAddDistrictList, basicMailAddCityList" process="@this" partialSubmit="true"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null,null)}" />
 										</p:selectOneMenu> <p:message id="basicMailAddStateListMsg"
 											for="basicMailAddStateList" showSummary="true"
@@ -627,7 +627,7 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
-											<p:ajax event="change" update="basicMailAddCityList"
+											<p:ajax event="change" update="basicMailAddCityList" process="@this" partialSubmit="true"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
 										</p:selectOneMenu> <p:message id="basicMailAddDistrictListMsg"
 											for="basicMailAddDistrictList" showSummary="true"
@@ -647,6 +647,7 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
+											<p:ajax process="@this" partialSubmit="true"/>
 										</p:selectOneMenu> <p:message id="basicMailAddCityListMsg"
 											for="basicMailAddCityList" showSummary="true"
 											showDetail="false" display="icon" /></td>
@@ -889,7 +890,7 @@
 												partialSubmit="true" process="@this"
 												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
          										 smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress)}" />
-										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}" /></td>
 									<td></td>
 								</tr>
 								<tr>
