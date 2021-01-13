@@ -144,7 +144,10 @@
 							<h:outputText value="#{DOMaintenanceBackingBean.requestTypeDescription(currentApprovalRequest.approvalType.parameterId)}"/>
 						</td>
 						<td>
-							<h:outputText value="#{currentApproval.scQt.qtNo}"/>
+							<p:commandLink process="@this" partialSubmit="true"
+								action="#{qTDetailBB.editQuationTenderDetails(currentApproval.scQt, false, true, view.viewId)}">
+								<h:outputText value="#{currentApproval.scQt.qtNo}" />
+							</p:commandLink>
 						</td>
 					</tr>
 				</tbody>
