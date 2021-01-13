@@ -313,7 +313,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			danAmount=sumDanAmt.toString().replace("-", "");
 		}
 		//29599-start
-		BigDecimal totalOrderedAmt = getTotalOrderedAmt(getManagedBean().getAdjustment().getFlRequest().getFulfilmentReqId());
+		BigDecimal totalOrderedAmt = getTotalOrderedAmt(adjustment.getFlRequest().getFulfilmentReqId());//29917
 		BigDecimal totaInvAmt = new BigDecimal(0);
 		
 		if(adjustment.getFlInvoice()!=null){
