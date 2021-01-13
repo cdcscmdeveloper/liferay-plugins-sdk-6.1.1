@@ -1302,6 +1302,31 @@ public class SmPersonnelBackingBean extends
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
+		//9569 - Start
+		SmPersonnelAddress mail = new SmPersonnelAddress();
+		mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
+		mail.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		mail.getSmAddress().setPmCountry(new PmCountry());
+		mail.setSameAsPerm(false);
+		mail.setSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnelMailingAddress(mail);
+		
+		SmPersonnelAddress off = new SmPersonnelAddress();
+		off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
+		off.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		off.getSmAddress().setPmCountry(new PmCountry());
+		off.setSameAsPerm(false);
+		off.setSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnelOfficeAddress(off);
+		
+		SmPersonnelAddress res = new SmPersonnelAddress();
+		res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+		res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		res.getSmAddress().setPmCountry(new PmCountry());
+		res.setSameAsPerm(false);
+		res.setSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnelResidentialAddress(res);
+		//9569 - End
 		if (smPersonnel.getTitle() == null) {
 			smPersonnel.setTitle(new PmSalutation());
 		}
@@ -1309,14 +1334,15 @@ public class SmPersonnelBackingBean extends
 		if (getManagedBean().isViewOnlyPersonnel()) {
 			setPersonnelViewOnlyAddresses(smPersonnel);
 		} else {
-			List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
-
-			if (smPersonnel.getSmPersonnelAddresses() != null
-					&& smPersonnel.getSmPersonnelAddresses().size() > 0) {
-
-				smPersonnel.getSmPersonnelAddresses().size();
-				smPAList.addAll(smPersonnel.getSmPersonnelAddresses());
-				for (SmPersonnelAddress smPA : smPAList) {
+			//9569 - Start
+			//List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
+				//smPersonnel.getSmPersonnelAddresses().size();
+				//smPAList.addAll(smPersonnel.getSmPersonnelAddresses());
+				
+				if (smPersonnel.getSmPersonnelAddresses() != null
+					      && smPersonnel.getSmPersonnelAddresses().size() > 0){
+			
+				for (SmPersonnelAddress smPA : smPersonnel.getSmPersonnelAddresses()) {
 					SmAddress address = new SmAddress();
 					address.setPmCountry(new PmCountry());
 					address.setPmState(new PmState());
@@ -1326,6 +1352,8 @@ public class SmPersonnelBackingBean extends
 					address.setPmDivision(new PmDivision());
 					if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.MAIL_ADD)) {
+						//9569 - Start
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1351,8 +1379,10 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelMailingAddress(smPA);
+						}
 					} else if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.PERM_ADD)) {
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1378,10 +1408,12 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelPermanentAddress(smPA);
+						}
 					}
 					//#9569 - Start
 					else if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1405,8 +1437,10 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelResidentialAddress(smPA);
+						}
 					}else if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1430,6 +1464,7 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelOfficeAddress(smPA);
+						}
 					}
 					//#9569 - End
 				}
@@ -2740,7 +2775,6 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setSmPersonnelList(smPersonnelList);
 	}
 	
-	
 	/**
 	 * Navigate to personnel edit page
 	 * 
@@ -2750,6 +2784,9 @@ public class SmPersonnelBackingBean extends
 	public String navigateToUpdateMOFUserPage(String personnelId) {
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
+		//9569 - Start
+		resetAll();
+		//9569 - End
 		getPersonnelInfoById(personnelId);
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
 		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
@@ -2763,6 +2800,15 @@ public class SmPersonnelBackingBean extends
 				.getBasicSmPersonnel()));
 		return "mofUserProfile.xhtml";
 	}
+	
+	//9569 - Start
+	public void resetAll(){
+		this.getManagedBean().setBasicSmPersonnelPermanentAddress(new SmPersonnelAddress());
+		this.getManagedBean().setBasicSmPersonnelMailingAddress(new SmPersonnelAddress());
+		this.getManagedBean().setBasicSmPersonnelResidentialAddress(new SmPersonnelAddress());
+		this.getManagedBean().setBasicSmPersonnelOfficeAddress(new SmPersonnelAddress());
+	}
+	//9569 - End
 
 	/**
 	 * Back to search page
