@@ -386,8 +386,7 @@ public class PpReportsBackingBean extends
 			year = year + 1;
 			//[#24976],[#24974] - start
 			if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode()) 
-					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())
-					|| PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL.equals(this.getManagedBean().getReportCode())) { //[#29484]
+					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
 				range = 8;
 			}
 			//[#24976],[#24974] - end
@@ -396,8 +395,7 @@ public class PpReportsBackingBean extends
 			}
 		}		
 		//[#24976] - start
-		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())
-				|| PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL.equals(this.getManagedBean().getReportCode())) {//[#29484]
+		if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
 			this.getManagedBean().setSelectedYear(yearFrom);
 		}
 		//[#24976] - end
