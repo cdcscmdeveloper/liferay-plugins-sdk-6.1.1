@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel header="#{lbl['lbl.sm.sitevisit.licenseinsurance']}"> 
+	<p:panel header="#{lbl['lbl.sm.sitevisit.licenseinsurance']}" id="financialPanel"> 
 		<p:dataTable id="dtFinanceDoc" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocLs}" var="finDoc">
 			<p:column>
@@ -54,6 +54,12 @@
 			var="addFinDoc" selection="#{svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}" rowKey="#{addFinDoc}">
 
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
+			<!-- #24964 -->
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnFinancialDocDelete')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnFinancialDocDelete')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('btnFinancialDocDelete')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('btnFinancialDocDelete')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('btnFinancialDocDelete')}" />
 			<p:column>
 				<f:facet name="header">
 						<h:outputText value="*" styleClass="mandatory" />
@@ -96,9 +102,11 @@
 				<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{!viewFlag}"
 					action="#{svoSiteVisitBackingBean.addFinancialDoc}"
 					update="dtAddFinDocId" />
+				<!-- #24964 -->
 				<p:commandButton value="#{lbl['lbl.btn.delete']}" rendered="#{!viewFlag}"
 					oncomplete="financialDocDeletePopUp.show();"
-					update="dtAddFinDocId">
+					update="dtAddFinDocId"  id="btnFinancialDocDelete"
+					disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}">
 					<f:param name="disabledValidation" value="true" />
 				</p:commandButton>
 			</div>
@@ -110,5 +118,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('dtAddFinDocId')}"/>
+		update=":#{p:component('pnlAddFinancialDoc')}"/>
 </ui:composition>

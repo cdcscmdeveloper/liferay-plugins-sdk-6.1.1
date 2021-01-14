@@ -10,6 +10,12 @@
 			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAdtMachines}" rowKey="#{addMachineDtl}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag and not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvAdtMachines}"/>
+			<!-- #24964 -->
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnAddtMachineDelete')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnAddtMachineDelete')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('btnAddtMachineDelete')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('btnAddtMachineDelete')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('btnAddtMachineDelete')}" />
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.manufacturing.type.machine']}
@@ -84,13 +90,15 @@
 				update="addlMachineDtTbl,adtMachineDlg">
 			</p:commandButton>
 			
+			<!-- #24964 -->
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" oncomplete="additionalMachineDeletePopUp.show();"
-				rendered="#{!viewFlag}" update="addlMachineDtTbl">
+				rendered="#{!viewFlag}" update="addlMachineDtTbl" id="btnAddtMachineDelete"
+				disabled="#{empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAdtMachines}">
 			</p:commandButton>
 		</div>
 	</p:panel>
 
-	<p:dialog id="adtMachineDlg" header="#{lbl['lbl.sm.sitevisit.additional.machine']}" widgetVar="adtMacDlg" 
+	<p:dialog id="adtMachineDlg" header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}" widgetVar="adtMacDlg" 
 		modal="true" width="600" dynamic="true">
 		<p:messages id="dlgMessages" showDetail="true" autoUpdate="#{!empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 		<table>
@@ -146,15 +154,20 @@
 			
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.sitevist.remarks']}" />
-					<p:outputLabel value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod eq 'O' ? '*' : ''}" 
-					id="lblPurchaseMethodRemark" styleClass="mandatory" />
+					<p:outputPanel id="lblPurchaseMethodRemark">
+					<ui:fragment rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod eq 'O'}">
+						<p:outputLabel value="#{lbl['lbl.sm.sitevist.remarks']}"/>
+						<p:outputLabel value="*"  styleClass="mandatory" />
+					</ui:fragment>
+					</p:outputPanel>
 				</td>
 				<td>
-					<p:inputText maxlength="50" id="txtPurchaseMethodRemark" size="50" label="#{lbl['lbl.sm.sitevist.remarks']}" 
+					<p:outputPanel id="txtPurchaseMethodRemark">
+					<p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.sitevist.remarks']}" 
 						value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethodRemark}" 
-						disabled="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod ne 'O'}" 
-						required="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod eq 'O'}" /></td>
+						rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod eq 'O'}" 
+						required="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.purchaseMethod eq 'O'}" />
+					</p:outputPanel></td>
 			</tr>
 
 			<tr>
@@ -172,7 +185,7 @@
 		</table>
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" update="addlMachineDtTbl" rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" update="addlMachineDtTbl" rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
 				action="#{svoSiteVisitBackingBean.addAdditionalMachineToList}" >
 				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>
@@ -190,5 +203,5 @@
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('addlMachineDtTbl')}"/>
+		update=":#{p:component('pnlAdtMachine')}"/>
 </ui:composition>
