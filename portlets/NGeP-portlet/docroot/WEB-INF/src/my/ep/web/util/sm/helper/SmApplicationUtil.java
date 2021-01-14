@@ -90,8 +90,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -3718,6 +3716,8 @@ public class SmApplicationUtil {
 		managedBean.setActiveCategoryList(addtnlList);
 		managedBean.setApprovedCategoryList(existingList);
 	}
+	
+	//14150
 
 	/**
 	 * Sort SmSupplierCategory by category type and category level code
@@ -3738,40 +3738,25 @@ public class SmApplicationUtil {
 						+ s2.getPmCategoryL3().getCategoryL3Code());
 			}
 		});
-
-		// sort by category type
-		Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
-			@Override
-			public int compare(final SmSupplierCategory s1,
-					final SmSupplierCategory s2) {
-				return Boolean.compare(s1.isSpecialCategory(),
-						s2.isSpecialCategory());
-			}
-		});
 	}
 	
-	//14150
 	/**
-	 * Sort SmSupplierCategory by category level code
+	 * Sort SmSupplierCategory by category type and category level type
 	 * 
 	 * @param apprvList
 	 */
-	public static void sortSupplierCategoryCode(List<SmSupplierCategory> apprvList) {
-		// sort by code
-		Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
-			@Override
-			public int compare(final SmSupplierCategory s1,
-					final SmSupplierCategory s2) {
-				return (s1.getPmCategoryL1().getCategoryL1Code()
-						+ s1.getPmCategoryL2().getCategoryL2Code() + s1
-						.getPmCategoryL3().getCategoryL3Code()).compareTo(s2
-						.getPmCategoryL1().getCategoryL1Code()
-						+ s2.getPmCategoryL2().getCategoryL2Code()
-						+ s2.getPmCategoryL3().getCategoryL3Code());
-			}
-		});
+	public static void sortSupplierCategoryType(List<SmSupplierCategory> apprvList) {
+	// sort by category type
+	Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
+		@Override
+		public int compare(final SmSupplierCategory s1,
+				final SmSupplierCategory s2) {
+			return Boolean.compare(s1.isSpecialCategory(),
+					s2.isSpecialCategory());
+		}
+	});
 	}
-
+	
 	/**
 	 * Sort personnels by role in company
 	 * 
