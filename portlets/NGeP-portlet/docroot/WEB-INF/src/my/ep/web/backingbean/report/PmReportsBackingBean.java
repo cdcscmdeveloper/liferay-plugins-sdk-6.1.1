@@ -297,11 +297,11 @@ public class PmReportsBackingBean extends
 		if (getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_MINISTRY ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
-			String PG2G = null; 
 			if (getManagedBean().isGovtSeller()){
+				String PG2G = null; 
 				PG2G = "1";
+				map.put(PmReportConst.PARAM_PM_G2G, PG2G);
 			}
-			map.put(PmReportConst.PARAM_PM_G2G, PG2G);
 		} 
 		// shafie #28833 - end
 	}
@@ -867,6 +867,17 @@ public class PmReportsBackingBean extends
 	public boolean isMinistryJabatanAdmin(){
 		boolean Admin = false;
 		
+		List<PmUserOrg> userOrgList = PmCommonUtil
+				.retrieveActiveOrgWithoutRole(getFacesScopes()
+						.getUserSessionBean().getUserId(), false);
+		
+		if (userOrgList == null || userOrgList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770105);			
+		}
+
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
 		if(getFacesScopes().hasRoleUser(
 				RoleCode.MINISTRY_ADMIN.value()) ||
 			getFacesScopes().hasRoleUser(
@@ -875,6 +886,15 @@ public class PmReportsBackingBean extends
 			
 			setSelectedMinistryforMinistryJabatanAdmin();			
 		}
+		else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+				&& ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
+			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+				
+				Admin = true;
+			}
+		}
+		
+		
 		return Admin;
 	}
 	
@@ -888,7 +908,7 @@ public class PmReportsBackingBean extends
 		}
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		/*this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);*/	
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(pmOrgProfile);
