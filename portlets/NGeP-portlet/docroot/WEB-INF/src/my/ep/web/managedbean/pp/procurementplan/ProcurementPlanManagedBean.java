@@ -58,6 +58,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean approvedPlan;
 	//210801@akmal - Enhancement27624 - Start
 	private boolean isPlanDetailSearch;
+	private boolean isPlanDetailReset;
 	private Long planId;
 	private List<VPmGo> vPmGolist;
 	private Map<String, VPmGo> vPmGomap;
@@ -69,8 +70,8 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean fromTaskList = false;
 	private PmParameter selectedCatSearch;
 	private String pageStyle;
+	private String prevAction;
 	private boolean fromAudit=false;
-	private List<PpProcurementItem> tempPpItemList;
 	//210801@akmal - Enhancement27624 - End
 	private String btnValue;
 	
@@ -1384,6 +1385,14 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.isPlanDetailSearch = isPlanDetailSearch;
 	}
 
+	public boolean isPlanDetailReset() {
+		return isPlanDetailReset;
+	}
+
+	public void setPlanDetailReset(boolean isPlanDetailReset) {
+		this.isPlanDetailReset = isPlanDetailReset;
+	}
+
 	public Long getPlanId() {
 		return planId;
 	}
@@ -1466,21 +1475,20 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.pageStyle = pageStyle;
 	}
 
+	public String getPrevAction() {
+		return prevAction;
+	}
+
+	public void setPrevAction(String prevAction) {
+		this.prevAction = prevAction;
+	}
+
 	public boolean isAudit() {
 		return fromAudit;
 	}
 
 	public void setAudit(boolean isAudit) {
 		this.fromAudit = isAudit;
-	}
-
-	public List<PpProcurementItem> getTempPpItemList() {
-		if(tempPpItemList==null) tempPpItemList = new ArrayList<PpProcurementItem>();
-		return tempPpItemList;
-	}
-
-	public void setTempPpItemList(List<PpProcurementItem> tempPpItemList) {
-		this.tempPpItemList = tempPpItemList;
 	}
 
 	public boolean isFromTaskList() {
