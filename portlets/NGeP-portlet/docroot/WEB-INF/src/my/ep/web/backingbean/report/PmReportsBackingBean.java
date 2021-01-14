@@ -298,8 +298,7 @@ public class PmReportsBackingBean extends
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_KUMPULAN_PTJ ||
 		getManagedBean().getSelectedOrgType().getParameterId() == PmReportConst.ORG_TYPE_PTJ) {
 			if (getManagedBean().isGovtSeller()){
-				String PG2G = null; 
-				PG2G = "1";
+				String PG2G = "1";
 				map.put(PmReportConst.PARAM_PM_G2G, PG2G);
 			}
 		} 
@@ -644,9 +643,9 @@ public class PmReportsBackingBean extends
 		getManagedBean().setApplicantName(null);
 		getManagedBean().setSelectedApplicationStatus(null);
 		//shafie - #28833 - start
-		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+		if(!getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) && !isInternalAuditorUnderMinistry()){
 			getManagedBean().setSelectedMinistry(null);
-		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) || isInternalAuditorUnderMinistry()){
 			setCurrentActiveOrg();
 		}
 		getManagedBean().setSelectedKumpulanPTJ(null);
@@ -878,22 +877,13 @@ public class PmReportsBackingBean extends
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		
-		if(getFacesScopes().hasRoleUser(
-				RoleCode.MINISTRY_ADMIN.value()) ||
-			getFacesScopes().hasRoleUser(
-				RoleCode.JABATAN_ADMIN.value())){
-			Admin = true;
+		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) ||
+			getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
+			isInternalAuditorUnderMinistry()){
 			
+			Admin = true;			
 			setSelectedMinistryforMinistryJabatanAdmin();			
-		}
-		else if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
-				&& ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
-			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-				
-				Admin = true;
-			}
-		}
-		
+		}		
 		
 		return Admin;
 	}
@@ -918,7 +908,22 @@ public class PmReportsBackingBean extends
 			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 		}
+		else if (isInternalAuditorUnderMinistry()){
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+		}
 		
+	}
+	
+	public boolean isInternalAuditorUnderMinistry(){
+		boolean role = false;
+		if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
+				&& ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
+			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+				role = true;
+			}
+		}
+		return role;
 	}
 	
 	/**
@@ -1090,6 +1095,10 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
 		}
 		else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+		}
+		else if (isInternalAuditorUnderMinistry()){
 			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 		}
