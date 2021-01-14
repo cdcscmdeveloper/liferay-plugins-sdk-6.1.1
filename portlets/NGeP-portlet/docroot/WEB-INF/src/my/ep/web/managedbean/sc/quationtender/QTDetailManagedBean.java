@@ -1589,16 +1589,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
 
-	/**
-	 * Sets the panel suppliers.
-	 * 
-	 * @param panelSuppliers
-	 *            the new panel suppliers
-	 */
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
-
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	// ***25692
@@ -1606,6 +1596,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * approval. some part is readOnly, some part is updatable 
 	 */
 	private boolean approvalEditableSection;
+
+	//#25077 - Start
+	private ScQtApprovalRequest historyApprovalRequests;
+	private boolean showPopUpBPKApprovalNeeded = false;
+	private String previousApprovalTabName;
+	//#25077 - End
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -3755,6 +3751,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setUploadUpdateId(String uploadUpdateId) {
 		this.uploadUpdateId = uploadUpdateId;
+	}
+	
+	/**
+	 * Sets the panel suppliers.
+	 * 
+	 * @param panelSuppliers
+	 *            the new panel suppliers
+	 */
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
 	}
 
 	/**
@@ -10050,5 +10056,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
 	}
+	
+	//#25077 - Start
+	public ScQtApprovalRequest getHistoryApprovalRequests() {
+		return historyApprovalRequests;
+	}
+
+	public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
+		this.historyApprovalRequests = historyApprovalRequests;
+	}
+	
+	public boolean isShowPopUpBPKApprovalNeeded() {
+		return showPopUpBPKApprovalNeeded;
+	}
+
+	public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
+		this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+	}
+	
+	/**
+	 * @return the previousApprovalTabName
+	 */
+	public String getPreviousApprovalTabName() {
+		return previousApprovalTabName;
+	}
+	
+	/**
+	 * @param previousApprovalTabName the previousApprovalTabName to set
+	 */
+	public void setPreviousApprovalTabName(String previousApprovalTabName) {
+		this.previousApprovalTabName = previousApprovalTabName;
+	}
+	//#25077 - End
 
 }

@@ -3914,6 +3914,11 @@ public class QTDetailBackingBean extends
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
+						
+						//#25077 - Start
+						checkDefaultSettingPopUpBPKApprovalNeeded(scQt);
+						//#25077 - End
+						
 						// this.getManagedBean().setContractType(scQt.getContractType());
 						if (this.getManagedBean().getQt().isZonal()) {							
 							if (null != this.getManagedBean().getQt()
@@ -4487,12 +4492,42 @@ public class QTDetailBackingBean extends
 
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedApprovalTabIndex);
+		
+		// #25077 - #80 - Start.
+		if (null != approvalTabBean &&  StringUtils.isNotEmpty(approvalTabBean.getTabType())
+				&& "OTH".equals(this.getManagedBean().getPreviousApprovalTabName()) && !"OTH".equals(approvalTabBean.getTabType())) {
+			IQTDetailSO detailSO;
+			
+			try {
+				this.getManagedBean().setSaveFlow(false);
+				
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = prepareQTInfo();
+				reqDTO.getQtdetail().setOtherApproval(true);
+				// #25077 - #91 - Start
+				reqDTO.getQtdetail().setMitiApproval(true);
+				// #25077 - #91 - End
+				
+				detailSO.validateApprovalDetails(reqDTO);
+			} finally {
+				detailSO = null;
+			}
+		}
+		// #25077 - #80 - End.
 
 		this.getManagedBean().setSelectedApprovalTabIndex(
 				selectedApprovalTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
 		this.getManagedBean()
 				.setScQtApproval(approvalTabBean.getScQtApproval());
+		
+		// #25077 - #80 - Start.
+		if (null != approvalTabBean && StringUtils.isNotEmpty(approvalTabBean.getTabType())) {
+			this.getManagedBean().setPreviousApprovalTabName(approvalTabBean.getTabType());
+		}
+		// #25077 - #80 - End.
 	}
 
 	/**
@@ -4539,6 +4574,9 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setTaskName(taskName);
 			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
 			setAmmendMentBean(resDTO.getAmendMentBean());
+			
+			checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
+			
 			break;
 		case 1:
 			detailSO.validateSupplierQualificationDtls(reqDTO);
@@ -4548,6 +4586,9 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
+			
+			checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
+			
 			break;
 		case 2:
 			//Added the validation for committee while save - 13342
@@ -4590,6 +4631,9 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setSelectedApprovalTabIndex(selectedApprovalTabIndex);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			retrieveApprovalTabDtl();
+			
+			checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
+			
 			break;
 		case 4:
 			if (isinvokeValidations(getManagedBean().getQt())) {
@@ -4620,6 +4664,8 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveScheduleTabDtl();
+				
+				checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
 			}
 			break;
 		case 6:
@@ -4656,6 +4702,8 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setCurrentStatusId(currentStatus);
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
+				
+				checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
 			}
 			break;
 		}
@@ -4736,6 +4784,10 @@ public class QTDetailBackingBean extends
 						if (isQTStatusBtwScheduleDocAndBeforePublished(getManagedBean()
 								.getQt().getQtStatus().getStatusId())) {
 							reqDTO.getQtdetail().setFCApproval(true);
+							// #25077 - Start.
+							reqDTO.getQtdetail().setOtherApproval(true); // #25077 - #80
+							reqDTO.getQtdetail().setMitiApproval(true); // #25077 - #91
+							// #25077 - End
 						}
 						
 					detailSO.validateApprovalDetails(reqDTO);
@@ -6840,4 +6892,157 @@ public class QTDetailBackingBean extends
 			) return true;
 		return false;
 	}
+	
+	// 25077 - Start
+	public void checkPopUpBPKApprovalNeeded(boolean showPopup) {	
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		
+		if(statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
+			if(this.getManagedBean().isShowPopUpBPKApprovalNeeded() && showPopup){
+				 RequestContext.getCurrentInstance().execute("bpkApprovalNeededDlg.show()");
+			} 
+		}
+	}
+	
+	public void checkDefaultSettingPopUpBPKApprovalNeeded(ScQt scQt) {
+		IQTDetailSO detailSO;
+		
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			Long statusId = scQt.getQtStatus().getStatusId();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_BPK);
+		
+			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
+		
+			if(null!=resDTO && null!=resDTO.getQtApproval()) {
+				ScQtApproval bpkApproval = resDTO.getQtApproval();
+			
+				if(this.getManagedBean().isMaintanceFlow() == false) { 					
+				   if(null != statusId && statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)){
+	            	 
+					   if(bpkApproval.getApprovalCategory().getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_BPK)){
+						  this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.TRUE);
+	   				   }else{
+	   					  this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.FALSE);
+	   				   }
+			       }
+					
+				   if(null != statusId && statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+					   
+					    QuationTenderReqDTO reqDTOCategories = new QuationTenderReqDTO();
+						reqDTOCategories.setQtdetail(scQt);
+						QuationTenderResDTO resDTOCategories = detailSO.retriveQTSuppQulCriDetails(reqDTOCategories);
+						
+						if(null != resDTOCategories.getCategories()){
+							List<ScQtCategory> categoryResults = resDTOCategories.getCategories();
+							boolean printed = false;
+					    	printed = isPrintedForBumiputraOnly(categoryResults,printed);
+					    	
+					    	if(printed){
+					    	   if(scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_ALL)){
+					    		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.TRUE);  
+					    	   }
+					    	
+					    	   if(scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)){
+					    		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.FALSE); 
+					    	   }
+					    	} else {
+					    	   if(scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_ALL)){
+						    	   this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.FALSE);  
+						       }
+					    	   
+					    	   if(scQt.getOpenFor().equals(ParameterConst.OPEN_FOR_BUMI)){
+					    		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.TRUE); 
+					    	   }
+					    	}
+					    } 
+				   }
+				
+				}
+			}
+		} finally {
+			detailSO = null;
+		}
+	}
+	
+	public void checkSettingPopUpBPKApprovalNeeded(ScQt scQt) {
+		IQTDetailSO detailSO;
+		
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			    Long statusId = scQt.getQtStatus().getStatusId();
+			  
+			    if(this.getManagedBean().isMaintanceFlow() == false && 
+				    null != statusId && (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || 
+			    		statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION))){
+			    	
+			    	QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			    	reqDTO.setQtdetail(scQt);
+		    		
+			    	QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+		    	
+		    		if(null != resDTO && null != resDTO.getApproval()){
+						List<ScQtApproval> listOfApprovals = resDTO.getApproval();
+						if (listOfApprovals != null) {
+							
+							for (ScQtApproval bpkApproval : listOfApprovals) {
+								String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();
+								if (!bpkApproval.isDeleted()){
+									
+									if(ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
+									    this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.TRUE);
+									}else{
+										this.getManagedBean().setShowPopUpBPKApprovalNeeded(Boolean.FALSE);
+									}
+								}
+							}
+						}
+		    		}
+			    }
+		} finally {
+			detailSO = null;
+		}
+	}
+	
+	public boolean isOthersApprovalForInstruction(){
+		boolean isForInstruction = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		String procurementCategory = scQt.getPmProcurementCategory().getParameterCode();
+		
+		if(null != procurementCategory && 
+			       (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory) ||
+			    	ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory))){
+			   isForInstruction = true;   
+		} 
+		
+        return isForInstruction; 
+	}
+	
+	public boolean isOthersApprovalMandatoryForAttachment(){
+		boolean isMandatoryForUpload = false;
+		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
+		String procurementCategory = scQt.getPmProcurementCategory().getParameterCode();
+	
+		if(null != statusId && 
+			   (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))) {
+	       if(null != procurementCategory && 
+			       (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory) ||
+			    	ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory))){
+	    	   isMandatoryForUpload = true;   
+		   } 
+		}
+		
+        return isMandatoryForUpload; 
+	}
+	// 25077 - End
+	
 }

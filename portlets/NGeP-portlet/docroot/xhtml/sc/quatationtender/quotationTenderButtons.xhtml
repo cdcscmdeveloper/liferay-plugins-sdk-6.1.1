@@ -42,10 +42,21 @@
 							value="#{qTDetailBB.managedBean.outComes}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<ui:param name="bpAction" value="SUBMIT" />
+							<!-- #25077 Start -->
+							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button"
+									actionListener="#{qTDetailBB.checkPopUpBPKApprovalNeeded(true)}"
+									update="@([id$=#{bpkApprovalNeededId}])" 
+									rendered="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" />	
+							</c:if>	
+							<!-- #25077 End -->
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
+								rendered="#{!qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</c:when>
@@ -97,5 +108,41 @@
 					onclick="cancelQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
+		
+		<!-- 25077 Start -->
+		<p:dialog id="bpkApprovalNeededIds" widgetVar="bpkApprovalNeededDlgs"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
+			height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="bpkApprovalNeededDlgs.hide();submitConfirmPopUp2.show();" 
+					partialSubmit="true" process="@form" update="@form" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="bpkApprovalNeededDlgs.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<p:dialog id="bpkApprovalNeededId" widgetVar="bpkApprovalNeededDlg"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
+			height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="bpkApprovalNeededDlg.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
+					partialSubmit="true" process="@form" update="@form"
+					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="bpkApprovalNeededDlg.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<!-- 25077 End -->
 	
 </ui:composition>
