@@ -39,9 +39,9 @@
 			</tr>
 			<!-- #15629 start -->
 			<tr>
-				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rejection.reasons']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.rejection.reasons.bulk']}" /></td>
 				<td>
-					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.rejectReason}" 
+					<p:outputLabel styleClass="outputLabel-view" escape="false" value="#{viewSmApplBackingBean.managedBean.rejectReason}" 
 						rendered="#{not empty viewSmApplBackingBean.managedBean.rejectReason}" />
 				    <p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
 						rendered="#{empty viewSmApplBackingBean.managedBean.rejectReason}" />
