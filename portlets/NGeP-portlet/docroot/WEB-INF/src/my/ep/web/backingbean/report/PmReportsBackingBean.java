@@ -865,18 +865,7 @@ public class PmReportsBackingBean extends
 	
 	public boolean isMinistryJabatanAdmin(){
 		boolean Admin = false;
-		
-		List<PmUserOrg> userOrgList = PmCommonUtil
-				.retrieveActiveOrgWithoutRole(getFacesScopes()
-						.getUserSessionBean().getUserId(), false);
-		
-		if (userOrgList == null || userOrgList.isEmpty()) {
-			throw new EpException(MessageConst.ERROR_770105);			
-		}
-
-		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-		
+	
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) ||
 			getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
 			isInternalAuditorUnderMinistry()){
@@ -898,7 +887,7 @@ public class PmReportsBackingBean extends
 		}
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-		/*this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);*/	
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);	
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(pmOrgProfile);
@@ -917,6 +906,18 @@ public class PmReportsBackingBean extends
 	
 	public boolean isInternalAuditorUnderMinistry(){
 		boolean role = false;
+		
+		List<PmUserOrg> userOrgList = PmCommonUtil
+				.retrieveActiveOrgWithoutRole(getFacesScopes()
+						.getUserSessionBean().getUserId(), false);
+		
+		if (userOrgList == null || userOrgList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770105);			
+		}
+
+		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
+		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
+		
 		if(getManagedBean().getCurrentActiveOrg().getGroupOrgType() !=null 
 				&& ParameterConst.ORG_AUTH_TYPE_MINISTRY.equals(getManagedBean().getCurrentActiveOrg().getGroupOrgType())){
 			if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
@@ -1083,12 +1084,6 @@ public class PmReportsBackingBean extends
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		//#28833 -shafie -start
-		/*if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(getManagedBean().getReportCode())) {
-			getManagedBean().setSelectedMinistry(null);
-			getManagedBean().setSelectedKumpulanPTJ(null);
-			getManagedBean().setSelectedPTJ(null);
-
-		}*/
 		
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			getManagedBean().setSelectedMinistry(pmOrgProfile);
