@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.pm.taskassign;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -2640,7 +2639,9 @@ public class TaskReassignmentBackingBean extends
 			filteredAdminRoles.add("JABATAN_ADMIN");
 			filteredAdminRoles.add("MINISTRY_ADMIN");
 			filteredAdminRoles.add("PTJ_ADMIN");
-			//filteredAdminRoles.add("BPK_ADMIN");
+			/* 27827 - START */
+			filteredAdminRoles.add("BPK_ADMIN");
+			/* 27827 - END */
 			
 
 			searchBean.getDataFilterBeans().add(
@@ -2859,6 +2860,48 @@ public class TaskReassignmentBackingBean extends
 				
 			
 			break;
+		/* 27827 - START */
+		case ProfileManagementConst.REASSIGN_TYPE_PTJ_AND_BPK:
+			//11 - Include PTJ & BPK
+
+			if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ||
+				getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				log.info("----- User PTJ, JABATAN OR MINISTRY -----");
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						orgProfileId));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.bpk",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						true));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmZone.zoneId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						1L));
+			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())) {
+				log.info("----- User BPK -----");
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						orgProfileId));
+			} else {
+				log.info("----- User EPADMIN, EPADMIN2 -----");
+				List<String> paramcodes=new ArrayList<String>();
+				paramcodes.add(ParameterConst.ORG_TYPE_PTJ);
+				paramcodes.add(ParameterConst.ORG_TYPE_BPK);
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+						SearchOperator.OPERATOR_IN.value(),
+						paramcodes));
+			}
+
+			break;
+		/* 27827 - END */
 		default:
 			// not allow to search
 			isSearched = true;
