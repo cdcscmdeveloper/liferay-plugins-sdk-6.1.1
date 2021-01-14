@@ -1162,6 +1162,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setContractExpired(true);
 			}
 			
+			//Enhancement 15851 - Prefix for supplemental contract letter
+			//start
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() != null){
+				if(StringUtils.isNotBlank(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getLoaNo())){
+					ctBackingBean.getManagedBean().setHasAmendmentLoaNo(true);
+				}
+			}
+			//Enhancement 15851 - end
+			
 		} finally {
 			contractAmendmentSO = null;
 			reqDTO = null;
