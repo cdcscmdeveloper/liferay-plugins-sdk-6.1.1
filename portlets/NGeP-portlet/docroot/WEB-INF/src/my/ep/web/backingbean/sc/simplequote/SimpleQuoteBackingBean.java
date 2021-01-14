@@ -520,7 +520,10 @@ public class SimpleQuoteBackingBean extends
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
 						// #3761 - start
-//						throw new EpException(MessageConst.ERROR_760160);
+						// #29800 - start
+						log.debug("ERROR-760160: panelItem is not null, panelItem category is General.");
+						// #29800 - end
+						throw new EpException(MessageConst.ERROR_760160);
 						// #3761 - end
 					} 
 					else if(panelItem != null && panelItem.getItemCategoryId()
@@ -613,6 +616,9 @@ public class SimpleQuoteBackingBean extends
 						}
 						// #3761 - start
 						if (getManagedBean().getScQuoteSession() == null) {
+							// #29800 - start
+							log.debug("ERROR-700027: getManagedBean().getScQuoteSession() is null");
+							// #29800 - end
 							throw new EpException(MessageConst.ERROR_700027, new String[] { itemName });
 						}
 						// #3761 - end
@@ -819,6 +825,9 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setEndDate(cloneScQuote.getEndDate());
 			scQuote.setMultipleQuote(cloneScQuote.getMultipleQuote());
 			getDurationToolTip();
+			// #29800 - start
+			scQuote.setRemarks(cloneScQuote.getRemarks());
+			// #29800 - end
 		}
 		if ((docId != null) && docId > 0) {
 			getManagedBean().setSupplierItemDocId(docId);
@@ -1640,6 +1649,10 @@ public class SimpleQuoteBackingBean extends
 			}
 			if (quoteResDTO != null && quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+				
+				// #29800 - start
+				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
+				// #29800 - end
 
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
 					reqDTO.setQuoteId(scQuote.getQuoteId());
@@ -2373,6 +2386,11 @@ public class SimpleQuoteBackingBean extends
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,
 							scQuote.getQuoteNo(), Boolean.TRUE);
 				}
+				
+				// #29800 - start
+				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
+				// #29800 - end
+				
 				// clear SQ data
 				super.renewSesionObject();
 
@@ -4751,7 +4769,18 @@ public class SimpleQuoteBackingBean extends
 	public void preRenderView() {
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		// #29800 - start
+		SCDirectPurchaseDataType directPurchaseDataType = null;
+		if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() != null) {
+			// user comes from Treasury Circular page
+			directPurchaseDataType = getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession();
+		} else {
+			// user comes from pages other than Treasury Circular page, like
+			// Task List page
+			directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		}
+		getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(directPurchaseDataType);
+		// #29800 - end
 
 		// pid expiry date
 		if(directPurchaseDataType.getPidExpiryDate() != null){
@@ -4864,6 +4893,24 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().getPanelItems().add(resDTO.getCtPanelItem());
 				}
 			}
+		}
+		
+		// Populate General Information tab details saved in session
+		// after returning from Treasury Circular Page
+		if (getManagedBean().getScQuoteSession() != null) {
+			ScQuote cloneScQuote = getManagedBean().getScQuoteSession();
+			getManagedBean().setScQuoteSession(null);
+			scQuote.setPanel(cloneScQuote.isPanel());
+			scQuote.setTitle(cloneScQuote.getTitle());
+			scQuote.setScQuoteAttachment(cloneScQuote.getScQuoteAttachment());
+			scQuote.setProcurementTypeCategory(cloneScQuote.getProcurementTypeCategory());
+			scQuote.setProcurementType(cloneScQuote.getProcurementType());
+			scQuote.setZonal(cloneScQuote.isZonal());
+			scQuote.setStartDate(cloneScQuote.getStartDate());
+			scQuote.setEndDate(cloneScQuote.getEndDate());
+			scQuote.setMultipleQuote(cloneScQuote.getMultipleQuote());
+			getDurationToolTip();
+			scQuote.setRemarks(cloneScQuote.getRemarks());
 		}
 		// #29800 - end
 
@@ -5996,6 +6043,9 @@ public class SimpleQuoteBackingBean extends
 		super.renewSesionObject();
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
+		// #29800 - start
+		getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
+		// #29800 - end
 		return "catalogueSearch";
 	}
 
@@ -7797,6 +7847,15 @@ public class SimpleQuoteBackingBean extends
 				
 				ScQuote clonedScQuote = (ScQuote) getManagedBean().getScQuote().cloneEntity();
 				getManagedBean().setScQuoteSession(clonedScQuote);
+				
+				// #29800 - start
+				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() != null) {
+					// This determines the correct initialization method to use when
+					// returning from Treasury Circular page
+					ppBB.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
+							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
+				}
+				// #29800 - start
 				
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()

@@ -16,6 +16,7 @@ import org.primefaces.model.TreeNode;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -124,6 +125,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
 	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
 	// #3761 - end
+	// #29800 - start
+	private SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession;
+	// #29800 - end
 
 	/**
 	 * @return the circular
@@ -986,5 +990,17 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.serviceTemplateSpecBean = serviceTemplateSpecBean;
 	}
 	// #3761 - end
+
+	// #29800 - start
+	public SCDirectPurchaseDataType getPreRenderViewDirectPurchaseDataTypeSession() {
+		return preRenderViewDirectPurchaseDataTypeSession;
+	}
+
+	public void setPreRenderViewDirectPurchaseDataTypeSession(SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession) {
+		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
+	}
+	// #29800 - end
+
+
 
 }
