@@ -53,7 +53,7 @@
 			<tr>
 				<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.price.inquiry.item.name']}"></h:outputLabel></td>
 				<td colspan="3">
-					<h:outputText 
+					<h:outputText style="width:24%;white-space: normal;"
 					value="#{lOADetailBackingBean.managedBean.itemNamePopup}" />
 				</td>
 			</tr>
@@ -80,10 +80,10 @@
 				
 				<ac:paginator for="specList" />
 				<p:column headerText="#{lbl['lbl.sc.specification']}" style="width:30%;white-space:normal; text-align: center;" >
-					<h:outputText value="#{spec.tplSpecQuestion.clSpecDetail}" />
+					<h:outputText style="width:24%;white-space: normal;" value="#{spec.tplSpecQuestion.clSpecDetail}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.supplier.offer']}" style="width:30%;white-space:normal; text-align: center;" >
-					<h:outputText value="#{spec.answerRemark}" />
+					<h:outputText style="width:24%;white-space: normal;" value="#{spec.answerRemark}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:40%;white-space:normal; text-align: center;" >
 					<p:inputTextarea style="width:200px; margin-bottom:5px;" maxlength="1000" rows="5" autoResize="false" 
