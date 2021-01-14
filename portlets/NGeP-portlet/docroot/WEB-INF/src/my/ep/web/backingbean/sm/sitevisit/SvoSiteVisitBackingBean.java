@@ -2787,7 +2787,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		} else {
 			throw new EpException(MessageConst.ERROR_722534, new String[] { "Manufacturer" });
 		}
-
+		*/
+		//#24964 - start
+		if(getManagedBean().getSelectedManufacturingList() == null) return;
+		for (SmManufacturingDtl man : getManagedBean().getSelectedManufacturingList()){
+			getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls().remove(man);
+		}
+		getManagedBean().setSelectedManufacturingList(null);
+		//#24964 - end
 	}
 	
 	// #24964 - start
