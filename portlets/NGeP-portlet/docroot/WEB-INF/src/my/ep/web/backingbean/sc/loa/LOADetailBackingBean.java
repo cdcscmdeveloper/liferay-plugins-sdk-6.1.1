@@ -8358,7 +8358,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setLoaBpmVerify(bpmAction);
 			RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.show()");
 		}else{
-			//this.approveBeforeupdateBpmTaskAction(bpmAction);
+			this.approveBeforeupdateBpmTaskAction(bpmAction);
 			return;
 		}
 	}
