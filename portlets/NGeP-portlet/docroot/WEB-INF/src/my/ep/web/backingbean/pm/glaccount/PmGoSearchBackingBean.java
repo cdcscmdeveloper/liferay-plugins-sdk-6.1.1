@@ -86,13 +86,14 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			Long kptjId = Long.parseLong(facesScopes.getParameter("kptjId"));
 			//210801@akmal - Enhancement27624 - Start
 			String selectionMode = facesScopes.getParameter("selectionMode");
-			if(selectionMode != null && selectionMode.equals("multiple"))
+			if(selectionMode != null && selectionMode.equals("multiple")){
 				getManagedBean().setSelectionMode(selectionMode);
+				getManagedBean().setDisableSelectbtn(true);
+			}
 			else
 				getManagedBean().setSelectionMode("single");
 			String saveObject = facesScopes.getParameter("saveObject");
 			getManagedBean().setSaveObject(saveObject);
-			getManagedBean().setDisableSelectbtn(true);
 			//210801@akmal - Enhancement27624 - End
 			getManagedBean().setIndex(index);
 			getManagedBean().setType(type);
