@@ -57,8 +57,8 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean backAllow;
 	private boolean approvedPlan;
 	//210801@akmal - Enhancement27624 - Start
-	private boolean isPlanDetailSearch;
-	private boolean isPlanDetailReset;
+	private boolean isPlanDetailSearch = false;
+	private boolean isPlanDetailReset = false;
 	private Long planId;
 	private List<VPmGo> vPmGolist;
 	private Map<String, VPmGo> vPmGomap;

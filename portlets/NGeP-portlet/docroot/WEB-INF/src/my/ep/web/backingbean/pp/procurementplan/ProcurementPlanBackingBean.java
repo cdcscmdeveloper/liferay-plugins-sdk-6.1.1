@@ -975,6 +975,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setPlanDetSearch(true);
 				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
 			}
+			else if(this.getManagedBean().isPlanDetailReset()){
+				reqDTO.setPlanDetReset(true);
+				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
+			}
 			//200911@akmal - Enhancement27624 - End
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
@@ -5085,16 +5089,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	public ProcurementPlanReqDTO parseSearchBean(ProcurementPlanSearchBean searchbean, ProcurementPlanReqDTO reqDTO){
 		
-		reqDTO.setTitleOrDesc(searchbean.getTitleOrDesc());
-		reqDTO.setCategoryType(searchbean.getCategoryType());
-		reqDTO.setProcurementType(searchbean.getProcurementType());
-		reqDTO.setInvitationDateFrom(searchbean.getInvitationDateFrom());
-		reqDTO.setInvitationDateTo(searchbean.getInvitationDateTo());
-		reqDTO.setUpdatedDateFrom(searchbean.getUpdatedDateFrom());
-		reqDTO.setUpdatedDateTo(searchbean.getUpdatedDateTo());
-		reqDTO.setStatus(searchbean.getPlanDetstatus());
+		if(!this.getManagedBean().isPlanDetailReset()){
+			reqDTO.setTitleOrDesc(searchbean.getTitleOrDesc());
+			reqDTO.setCategoryType(searchbean.getCategoryType());
+			reqDTO.setProcurementType(searchbean.getProcurementType());
+			reqDTO.setInvitationDateFrom(searchbean.getInvitationDateFrom());
+			reqDTO.setInvitationDateTo(searchbean.getInvitationDateTo());
+			reqDTO.setUpdatedDateFrom(searchbean.getUpdatedDateFrom());
+			reqDTO.setUpdatedDateTo(searchbean.getUpdatedDateTo());
+			reqDTO.setStatus(searchbean.getPlanDetstatus());
+			reqDTO.getvPmGolist().addAll(this.getManagedBean().getvPmGolist());
+		}
 		reqDTO.setPlanType(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode());
-		reqDTO.getvPmGolist().addAll(this.getManagedBean().getvPmGolist());
 		
 		return reqDTO;
 	}
@@ -5102,7 +5108,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	//210801@akmal - Enhancement27624 - Start
 	public void resetPlanDetailSearch() throws Exception{
 		this.getManagedBean().setPlanDetailReset(true);
-//		if(!this.getManagedBean().getPrevAction().equalsIgnoreCase("search"))
+//		
 		
 		this.getManagedBean().getvPmGolist().clear();
 		this.getManagedBean().getvPmGomap().clear();
@@ -5116,7 +5122,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().getPlanSearchBean().setStatus(null);
 		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		this.getManagedBean().setSelectedCatSearch(null);
-		this.getManagedBean().setPrevAction("reset");
 		
 		if((this.getManagedBean().getSelectedPlan().isUpdatable() && !this.getManagedBean().isTrackingDiary())
 				|| this.getManagedBean().isFromTaskList()){
@@ -5128,6 +5133,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			this.getManagedBean().setMaxYear("31/12/"+Calendar.getInstance().get(Calendar.YEAR));
 			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId())))
 				this.getManagedBean().setDisablePlanSearchDet(true);
+//			if(this.getManagedBean().getPrevAction().equalsIgnoreCase("search"))
+			this.getManagedBean().setPrevAction("reset");
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAINTAIN);
