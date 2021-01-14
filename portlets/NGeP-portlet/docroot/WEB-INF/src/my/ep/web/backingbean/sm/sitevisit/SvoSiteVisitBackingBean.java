@@ -2780,7 +2780,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * of the application.
 	 */
 	public void removeAdditionalManufacturingDtl() {
-		if (getManagedBean().getSelectedManufacturingList().size() > 0) {
+		//CR 28774: Static Code Analysis
+		/*
+		if (!getManagedBean().getSelectedManufacturingList().isEmpty()) {
 			EntityHelper.compareAndRemoveEntityFromList(getManagedBean().getSelectedManufacturingList(), getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls(),
 					"manufacturingDtlId");
 			getManagedBean().getSelectedManufacturingList().clear();
