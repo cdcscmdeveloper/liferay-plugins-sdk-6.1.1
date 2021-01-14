@@ -3,7 +3,6 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 
 /**
  * QTConstants for constants for sourcing.

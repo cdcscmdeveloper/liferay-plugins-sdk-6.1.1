@@ -79,9 +79,15 @@
 
 
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}" style="width:10%;">
+			<h:outputText value="#{evaluationBackingBean.getParameterDesc(sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode)}"></h:outputText>
+			</p:column>
+				
 				<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
-					style="width:10%">
-					<h:outputText value="#{sampleItem.subLableNo}"></h:outputText>
+					style="width:15%">
+					
+					#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo} - #{sampleItem.subLableNo}
 
 				</p:column>
 
@@ -98,7 +104,7 @@
 						value="#{sampleItem. submissionStatus.parameterId}">
 
 						<f:selectItems
-							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.sampleSubmissionStatus)}"></f:selectItems>
+							value="#{evaluationBackingBean.getSampleSubmissionDropDownValues(ParameterTypeConst.sampleSubmissionStatus)}"></f:selectItems>
 
 
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -107,7 +113,7 @@
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
+				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:20%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100" onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
 						onmouseout="limitTextArea(this,100);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
