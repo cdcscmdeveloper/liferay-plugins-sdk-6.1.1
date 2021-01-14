@@ -1079,6 +1079,8 @@ public class SmApplicationBackingBean extends
 				}							
 				//26238 - end
 
+				// #29583 - start
+				/* comment - this code does not exist in prd
 				// checked whether supplier already MOF, should not allowed to
 				// proceed if already MOF (#25601)
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -1087,6 +1089,8 @@ public class SmApplicationBackingBean extends
 						.isValid()) {
 					throw new EpException(MessageConst.ERROR_722674);
 				}
+				*/
+				// #29583 - end
 
 				String currSuppType = currSupp.getSmAppl().getSupplierType();
 

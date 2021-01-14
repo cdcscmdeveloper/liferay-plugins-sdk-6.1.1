@@ -296,6 +296,15 @@ public class ViewApplHistoryBackingBean extends
 			} else {
 				//START 27951
 				if(!this.getManagedBean().isCheckRoleSSM()){
+					// #29583 - start
+					// checked whether supplier already registered(20199)
+					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setSupplierId(getManagedBean().getSmAppl().getSmSupplier().getSupplierId());
+					if (SmServiceLookup.getMofRegistrationSO().alreadyMof(reqDTO)
+							.isValid()) {
+						throw new EpException(MessageConst.ERROR_722674);
+					}
+					// #29583 - end
 					this.getManagedBean().getPersonnelsRole().clear();
 					this.getManagedBean().setPreRegistration(true);
 					RequestContext.getCurrentInstance().execute(
