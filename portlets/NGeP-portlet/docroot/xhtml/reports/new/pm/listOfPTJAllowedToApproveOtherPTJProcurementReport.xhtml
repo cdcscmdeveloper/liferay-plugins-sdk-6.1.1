@@ -21,13 +21,13 @@
 						postUpdateListener="pmReportsBackingBean.updateMinistrySearchCriteria" 
 						conditionField="#{pmReportsBackingBean.constructMinistryConditionFields()}" />				
 				</td>
-			</tr>			
+			</tr>		
 			<tr>
 				<td style="white-space: nowrap">
 					<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.jabatan']}" />
 				</td>
 				<td>
-					<ac:lov id="PtjGroupsearch" lovId="PM_ORG_PROFILE_PTJ_GROUP"
+					<ac:lov id="PtjKumpulansearch" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
 						headerText="#{lbl['lbl.pm.org.ptj.search.jabatan']}" update="@form"
 						saveObject="pmReportsBackingBean.managedBean.selectedKumpulanPTJ"
 						value="#{pmReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
