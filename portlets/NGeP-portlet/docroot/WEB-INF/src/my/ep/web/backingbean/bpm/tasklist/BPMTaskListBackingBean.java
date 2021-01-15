@@ -929,10 +929,6 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	public void preRenderTaskView() {
 		log.info("......................preRenderTaskView");
 		log.info("THE SERVER INFO : " + new FacesScopes().getRequest().getServerName() +" " + new FacesScopes().getRequest().getServerPort());
-		log.info("THE SERVER INFO 02: " + EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.PORTAL_BASE_URL) + " " +EpPropertiesUtils.getInstance().getProperty(
-						EpPropertiesConst.SERVER_URL) + " "+ EpPropertiesUtils.getInstance().getProperty(
-								EpPropertiesConst.SERVER_DOMAIN));
 		this.getManagedBean().setViewBy("");
 		this.getManagedBean().setViewByGroup("");
 		this.getManagedBean().setDocNo("");
