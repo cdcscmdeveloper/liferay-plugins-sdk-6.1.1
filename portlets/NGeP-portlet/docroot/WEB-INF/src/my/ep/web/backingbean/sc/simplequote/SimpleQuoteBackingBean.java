@@ -840,6 +840,24 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setSupplierItemDocId(docId);
 		}
 		// #3761 - end
+		// #29800 - start
+		if (CollectionUtils.isEmpty(getManagedBean().getPanelItems())) {
+			// Populate items and their specifications especially after
+			// returning from Treasury Circular page (with Simple
+			// Quote No.)
+			if (getManagedBean().getScQuote().getPanelItem() != null) {
+				PanelSupplierReqDTO reqDTOPanelItem = new PanelSupplierReqDTO();
+				reqDTOPanelItem.setPanelItemId(getManagedBean().getScQuote().getPanelItem().getPanelItemId());
+				IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
+				PanelSupplierResDTO resDTOPanelItem = panelSupplierSO.retrieveSupplierByPanelItem(reqDTOPanelItem);
+				if ((resDTOPanelItem != null) && (resDTOPanelItem.getCtPanelItem() != null)) {
+					getManagedBean().setPanelItems(new ArrayList<CtPanelItem>());
+					getManagedBean().getPanelItems().add(resDTOPanelItem.getCtPanelItem());
+				}
+			}
+		}
+		// #29800 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -1657,9 +1675,7 @@ public class SimpleQuoteBackingBean extends
 			if (quoteResDTO != null && quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 				
-				// #29800 - start
 				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
-				// #29800 - end
 
 				if (BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)) {
 					reqDTO.setQuoteId(scQuote.getQuoteId());
