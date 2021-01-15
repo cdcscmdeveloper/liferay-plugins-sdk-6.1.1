@@ -15,7 +15,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBakingBean;
+import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ListOfCircularRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.StatementOfOrderRptBackingBean;
 import my.ep.web.constant.report.CtReportConst;
@@ -97,7 +97,7 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		my.ep.web.backingbean.report.ct.panel.ListOfCircularRptBackingBean panelListOfCircularRptBB = 
 				new my.ep.web.backingbean.report.ct.panel.ListOfCircularRptBackingBean();
 		//#29416 - baking bean for contract item monitoring report
-		ContractItemMonitoringCCRptBakingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBakingBean();
+		ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
 		
 		// reset common search criteria
 		resetSearch();
@@ -139,44 +139,50 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	
 			PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 	
-			if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-				getManagedBean().setDisableOrgField(true);
-				getManagedBean().setDisableMinistryField(true);
-				getManagedBean().setSelectedMinistry(
-						retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-				getManagedBean().setSelectedKumpulanPTJ(
-						retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-				getManagedBean().setSelectedPTJ(pmOrgProfile);
+			if (!getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL) 
+					|| !getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL)){
 				
-			
-				
-				
-				
-			} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-				getManagedBean().setSelectedMinistry(
-						pmOrgProfile);
-				getManagedBean().setDisableMinistryField(true);
+				if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+					getManagedBean().setDisableOrgField(true);
+					getManagedBean().setDisableMinistryField(true);
+					getManagedBean().setSelectedMinistry(
+							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					getManagedBean().setSelectedKumpulanPTJ(
+							retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					getManagedBean().setSelectedPTJ(pmOrgProfile);
+		
+				} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+					getManagedBean().setSelectedMinistry(
+							pmOrgProfile);
+					getManagedBean().setDisableMinistryField(true);
+				}
 			}
+			
 			//29416 start
 			if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_MC_VAL) 
 					|| getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_RPT_CC_VAL)){
 				
+				ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
 				
-				//#Assign val to ContractItemMonitoringCCRptBakingBean
-				ContractItemMonitoringCCRptBakingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBakingBean();
-				ccContractItemMonitoringRptBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
-				ccContractItemMonitoringRptBB.getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getSelectedKumpulanPTJ());
-				ccContractItemMonitoringRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
-				
-				if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
-						|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
-						|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
+				if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+					getManagedBean().setSelectedMinistry(
+							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					getManagedBean().setSelectedKumpulanPTJ(
+							retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					getManagedBean().setSelectedPTJ(pmOrgProfile);
 					
+				
+					//#Assign val to ContractItemMonitoringCCRptBakingBean
+					ccContractItemMonitoringRptBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
+					ccContractItemMonitoringRptBB.getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getSelectedKumpulanPTJ());
+					ccContractItemMonitoringRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					//cc
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableMinistryField(true);
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
@@ -185,16 +191,20 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
 				}
 				
-				if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-						|| getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value())){
+						|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+						|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())){
 					//cc
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableMinistryField(false);
 					//mc
 					getManagedBean().setDisableMinistryField(false);
 				}
+				
+			
 				
 			}
 			//29416 end
