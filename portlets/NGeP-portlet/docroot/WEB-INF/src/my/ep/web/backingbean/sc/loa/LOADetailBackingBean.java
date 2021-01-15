@@ -8073,7 +8073,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().getScLoa().setScLoiLoaItems(resDTO.getScLoiLoaItemList());
 		}
 	}
-	public void searchSupplierSpecification(ScLoiLoaItem loiLoaItem){
+	public void searchSupplierSpecification(ScLoiLoaItem loiLoaItem,boolean mainSearch){
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 			TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
 			this.getManagedBean().setItemNamePopup(loiLoaItem.getScRequestItem().getItemName());
@@ -8109,6 +8109,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			
 			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
+			this.getManagedBean().setScLoiLoaItem(loiLoaItem);
+			if(mainSearch){
+				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext()
+												.getSession(false);
+				portletSession.setAttribute("selectedScLoiLoaItem", loiLoaItem);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, "/xhtml/sc/loa/loarequest/loaSuppliersProposalSpecificationUpdatePopup.xhtml");
+			}
 	}
 	public void saveSupplierSpecification(boolean isComplete){
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
@@ -8149,7 +8158,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 											 							  MessageUtils.getMessage(MessageConst.INFO_100002,
 											 							  null, MessageUtils.BUNDLE_COMMON_MESSAGES,
 											 							  new FacesScopes().getUserLocale())));
-					RequestContext.getCurrentInstance().execute("loaSuppliersProposalSpecificationUpdatePopup.hide()");
+					onBackToZoneItemDetailsTab();
 				}else{
 				TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
 				
@@ -8282,6 +8291,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String date = df.format(scLoiLoaItem.getChangedDate());
 				if(scLoiLoaItem.getLoaSpecJustification() != null){
+					finalMsg.append("Dikemas kini atas sebab ");
 					finalMsg.append(scLoiLoaItem.getLoaSpecJustification());
 					finalMsg.append(" "+populateLabelLampiranA3(date,pmUser.getUserName()));
 				}

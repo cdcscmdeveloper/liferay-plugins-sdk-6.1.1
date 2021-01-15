@@ -1,5 +1,6 @@
  <!-- * @author vinod #29007 -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,17 +8,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-<p:dialog id="loaSuppliersProposalSpecificationUpdatePopup"
-			header="#{lbl['lbl.sc.suppliers.proposal.specification.update']}"
-			widgetVar="loaSuppliersProposalSpecificationUpdatePopup" modal="true" width="600"
-			height="500" closable="true" position="top">
-			
-			<p:messages id="loaSuppliersProposalSpecificationUpdatePopupMsg" showDetail="true"
+<ui:define name="contentSection">
+<p:messages id="loaSuppliersProposalSpecificationUpdateMsg" showDetail="true"
 					autoUpdate="true" closable="true" showSummary="false"
 					severity="error, info" />
 					
 	<table style="width: 100%;">
 			<tr>
+				<td colspan="4" style="text-align: left">
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" action="#{lOADetailBackingBean.onBackToZoneItemDetailsTab}">
+					</p:commandButton>
+				</td>
 				<td colspan="4" style="text-align: right">
 					<p:commandButton value="#{lbl['lbl.btn.save']}" disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" action="#{lOADetailBackingBean.saveSupplierSpecification(false)}">
 					</p:commandButton>
@@ -39,7 +40,7 @@
 		</table>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="specList"
-				action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem)}"
+				action="#{lOADetailBackingBean.searchSupplierSpecification(lOADetailBackingBean.managedBean.scLoiLoaItem,false)}"
 				styleClass="BtnSpacing" process="@this,specKeyword"  />
 			<p:commandButton value="#{lbl['lbl.btn.reset']}" styleClass="BtnSpacing" action="#{lOADetailBackingBean.resetSpecKeyword}" 
 							 update="itemNameSearchCriteriaId" partialSubmit="true" process="@this" />
@@ -65,7 +66,7 @@
 					<p:inputTextarea label="#{lbl['lbl.sc.justification']}" id="justification" 
 					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
 					value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
-					style="width:670px; margin-bottom:5px;" maxlength="1000"  rows="5" autoResize="false">
+					style="width:800px; margin-bottom:5px;" maxlength="1000"  rows="5" autoResize="false">
 						<p:ajax event="change" process="@this" update="@this"></p:ajax>	
 					</p:inputTextarea>
 					<ac:iconTooltip value="#{lbl['lbl.sc.justification.tooltip']}" />
@@ -86,13 +87,16 @@
 					<h:outputText style="width:24%;white-space: normal;" value="#{spec.answerRemark}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:40%;white-space:normal; text-align: center;" >
-					<p:inputTextarea style="width:200px; margin-bottom:5px;" maxlength="1000" rows="5" autoResize="false" 
-					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" value="#{spec.newSupplierOffer}">
+					<p:inputTextarea id="newOfferedSpec" style="width:calc(100% - 15px);" maxlength="1000" rows="5" autoResize="false" 
+					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" value="#{spec.newSupplierOffer}"
+					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+					onmouseout="limitTextArea(this,1000);">
 						<p:ajax event="change" process="@this" update="@this"></p:ajax>	
+						<f:validateLength for="newOfferedSpec" maximum="1000" />
 					</p:inputTextarea>
+					<p:message id="newOfferedSpecMsg" for="newOfferedSpec" display="icon" />
 				</p:column>
 		</p:dataTable>
 </p:panel>
-</p:dialog>
-
+</ui:define>
 </ui:composition>
