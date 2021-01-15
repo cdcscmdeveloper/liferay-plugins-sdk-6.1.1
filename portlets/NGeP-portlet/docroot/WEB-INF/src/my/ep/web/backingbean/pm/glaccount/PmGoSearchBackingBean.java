@@ -25,6 +25,8 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.VPmGo;
@@ -64,10 +66,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		// Paging for listing
 	private IPagingDataModel<VPmGo> pmGoDataModel = new PmGoPagingDataModel();
 
-	//200911@akmal - Enhancement27624 - Start
-	private List<VPmGo> selectedEntities;
+	//210108@akmal - Enhancement27624 - Start
+	private List<VPmGo> selectedEntities = new ArrayList<VPmGo>();
 	private Map<String,VPmGo> persistedEntities = new HashMap<String,VPmGo>();
-	//200911@akmal - Enhancement27624 - End
+	//210108@akmal - Enhancement27624 - End
 	
 	public PmGoSearchBackingBean() {
 
@@ -82,15 +84,17 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			String type = facesScopes.getParameter("type");
 			String update = facesScopes.getParameter("update");
 			Long kptjId = Long.parseLong(facesScopes.getParameter("kptjId"));
-			//200911@akmal - Enhancement27624 - Start
+			//210801@akmal - Enhancement27624 - Start
 			String selectionMode = facesScopes.getParameter("selectionMode");
-			if(selectionMode != null && selectionMode.equals("multiple"))
+			if(selectionMode != null && selectionMode.equals("multiple")){
 				getManagedBean().setSelectionMode(selectionMode);
+				getManagedBean().setDisableSelectbtn(true);
+			}
 			else
 				getManagedBean().setSelectionMode("single");
 			String saveObject = facesScopes.getParameter("saveObject");
 			getManagedBean().setSaveObject(saveObject);
-			//200911@akmal - Enhancement27624 - End
+			//210801@akmal - Enhancement27624 - End
 			getManagedBean().setIndex(index);
 			getManagedBean().setType(type);
 			getManagedBean().setUpdate(update);
@@ -498,12 +502,16 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		return items;
 	}
 
-	//200911@akmal - Enhancement27624 - Start
+	//210801@akmal - Enhancement27624 - Start
 	public void onSelectRow(SelectEvent event){
 		VPmGo value = (VPmGo) event.getObject();
 			String key = value.getGlAccCode();
 			if(!persistedEntities.containsKey(key)) 
 				persistedEntities.put(key, value);
+			if(selectedEntities.isEmpty())
+				getManagedBean().setDisableSelectbtn(true);
+			else
+				getManagedBean().setDisableSelectbtn(false);
 	}
 	
 	public void onUnselectRow(UnselectEvent event){
@@ -511,6 +519,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			String key = value.getGlAccCode();
 			if(persistedEntities.containsKey(key)) 
 				persistedEntities.remove(key);
+			if(selectedEntities.isEmpty())
+				getManagedBean().setDisableSelectbtn(true);
+			else
+				getManagedBean().setDisableSelectbtn(false);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -523,6 +535,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 				else
 					persistedEntities.put(key,value);
 		}
+		if(selectedEntities.isEmpty())
+			getManagedBean().setDisableSelectbtn(true);
+		else
+			getManagedBean().setDisableSelectbtn(false);
 	}
 	
 	public void onPageChange(PageEvent event){
@@ -532,6 +548,10 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			if(!persistedEntities.containsKey(key))
 				persistedEntities.put(key, item);
 		}
+		if(selectedEntities.isEmpty())
+			getManagedBean().setDisableSelectbtn(true);
+		else
+			getManagedBean().setDisableSelectbtn(false);
 	}
 	
 	public void populateSelectedItems(){
@@ -553,6 +573,6 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 	public void setPersistedEntities(Map<String,VPmGo> persistedEntities) {
 		this.persistedEntities = persistedEntities;
 	}
-	//200911@akmal - Enhancement27624 - End
+	//210801@akmal - Enhancement27624 - End
 
 }

@@ -3,11 +3,15 @@
  */
 package my.ep.web.managedbean.pp.procurementplan;
 
+//210801@akmal - Enhancement27624 - Start
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+//210801@akmal - Enhancement27624 - End
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -52,10 +56,12 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean isSearch;
 	private boolean backAllow;
 	private boolean approvedPlan;
-	//201208@akmal - Enhancement27624 - Start
-	private boolean isPlanDetailSearch;
+	//210801@akmal - Enhancement27624 - Start
+	private boolean isPlanDetailSearch = false;
+	private boolean isPlanDetailReset = false;
 	private Long planId;
 	private List<VPmGo> vPmGolist;
+	private Map<String, VPmGo> vPmGomap;
 	private boolean disablePlanSearchDet = false;
 	private String maxYear = "31/12/2050";
 	private String minYear = "01/01/2010";
@@ -64,7 +70,9 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private boolean fromTaskList = false;
 	private PmParameter selectedCatSearch;
 	private String pageStyle;
-	//201208@akmal - Enhancement27624 - End
+	private String prevAction;
+	private boolean fromAudit=false;
+	//210801@akmal - Enhancement27624 - End
 	private String btnValue;
 	
 	private PpWorkflowStatus ppWorkflowStatus;
@@ -1368,13 +1376,21 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	}
 	//25549@18092020 - end
 	
-	//201208@akmal - Enhancement27624 - Start
+	//210801@akmal - Enhancement27624 - Start
 	public boolean isPlanDetailSearch() {
 		return isPlanDetailSearch;
 	}
 
 	public void setPlanDetailSearch(boolean isPlanDetailSearch) {
 		this.isPlanDetailSearch = isPlanDetailSearch;
+	}
+
+	public boolean isPlanDetailReset() {
+		return isPlanDetailReset;
+	}
+
+	public void setPlanDetailReset(boolean isPlanDetailReset) {
+		this.isPlanDetailReset = isPlanDetailReset;
 	}
 
 	public Long getPlanId() {
@@ -1392,6 +1408,15 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 
 	public void setvPmGolist(List<VPmGo> vPmGolist) {
 		this.vPmGolist = vPmGolist;
+	}
+
+	public Map<String,VPmGo> getvPmGomap() {
+		if(vPmGomap==null) vPmGomap=new HashMap<String,VPmGo>();
+		return vPmGomap;
+	}
+
+	public void setvPmGomap(Map<String,VPmGo> vPmGomap) {
+		this.vPmGomap = vPmGomap;
 	}
 
 	public boolean isDisablePlanSearchDet() {
@@ -1450,6 +1475,22 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.pageStyle = pageStyle;
 	}
 
+	public String getPrevAction() {
+		return prevAction;
+	}
+
+	public void setPrevAction(String prevAction) {
+		this.prevAction = prevAction;
+	}
+
+	public boolean isAudit() {
+		return fromAudit;
+	}
+
+	public void setAudit(boolean isAudit) {
+		this.fromAudit = isAudit;
+	}
+
 	public boolean isFromTaskList() {
 		return fromTaskList;
 	}
@@ -1457,7 +1498,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setFromTaskList(boolean fromTaskList) {
 		this.fromTaskList = fromTaskList;
 	}
-	//201208@akmal - Enhancement27624 - End
+	//210801@akmal - Enhancement27624 - End
 
 	//12112020@azza - 28760 - Start
 	public boolean isFlagCancelButton() {
