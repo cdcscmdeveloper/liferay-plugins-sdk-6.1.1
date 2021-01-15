@@ -2556,8 +2556,8 @@ public class SmApplicationBackingBean extends
 				SmApplicationUtil.updateApplBranchCodeIfEmpty(getManagedBean()
 						.getSmAppl());
 				//START SSM AUTO CALCULATE SHARE
-				// 28466
-				if(getManagedBean().getSmAppl().isApplValidWithSsm()&& !this.getManagedBean().isSsmIntegrationActive()){
+				// #28466 - fix reopen
+				if (getManagedBean().getSmAppl().isApplValidWithSsm()) {
 					calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
 					setApplicationShareHolders(getManagedBean().getSmAppl().getSmPersonnels());
 					calculateCapital();
@@ -11376,10 +11376,12 @@ public class SmApplicationBackingBean extends
 			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(
 					getManagedBean().getSmAppl().getSmCompanyBasic(),
 					getManagedBean().getBusinessTypeVal());
-			validatePaidCaptialAmt(false);
+			// #28466 start - fix reopen
 			SmCommonUtil
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 							.getSmAppl().getSmCompanyBasic());
+			validatePaidCaptialAmt(false);
+			// #28466 end - fix reopen
 			SmCommonUtil.calcAllEquityOwnerPercent(getManagedBean());
 			//25929 - start
 			SmCommonUtil.calculateEquityCompanyPercent(getManagedBean());
