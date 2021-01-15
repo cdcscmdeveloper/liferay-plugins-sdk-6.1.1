@@ -5,6 +5,7 @@ package my.ep.web.managedbean;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,6 +141,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList();
 	private SmAddress smAddress;
 	
+	//28767
+	private List<SmPersonnel> personnelDirectorManager = new ArrayList();
+	private List<SmPersonnel> personnelMembers = new ArrayList();
+	private BigDecimal totalShare;
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -882,8 +887,35 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCommitteModified(boolean committeModified) {
 		this.committeModified = committeModified;
 	}
-	
-	
+
+	//28767
+	public List<SmPersonnel> getPersonnelDirectorManager() {
+		return personnelDirectorManager;
+	}
+
+	public void setPersonnelDirectorManager(List<SmPersonnel> personnelDirectorManager) {
+		this.personnelDirectorManager = personnelDirectorManager;
+	}
+
+	public List<SmPersonnel> getPersonnelMembers() {
+		return personnelMembers;
+	}
+
+	public void setPersonnelMembers(List<SmPersonnel> personnelMembers) {
+		this.personnelMembers = personnelMembers;
+	}
+
+	public BigDecimal getTotalShare() {
+		return totalShare;
+	}
+
+	public void setTotalShare(BigDecimal totalShare) {
+		this.totalShare = totalShare;
+	}
+
+
+
+
 }
 
 
