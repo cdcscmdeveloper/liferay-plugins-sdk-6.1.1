@@ -153,6 +153,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String disciplinaryApprovedFlag;
 	private String justification;
 	//Enhancement #26186 end
+	//#29793 start
+	private boolean disciplinaryActionNotification;
+	private boolean disciplinaryActionCancel;
+	private Date disciplinaryActionStartDate;
+	private Date disciplinaryActionEndDate;
+	//#29793 end
 	
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
@@ -1423,6 +1429,40 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setJustification(String justification) {
 		this.justification = justification;
 	}
+	
+	//#29793 start
+	public boolean isDisciplinaryActionNotification() {
+		return disciplinaryActionNotification;
+	}
+
+	public void setDisciplinaryActionNotification(boolean disciplinaryActionNotification) {
+		this.disciplinaryActionNotification = disciplinaryActionNotification;
+	}
+	
+	public boolean isDisciplinaryActionCancel() {
+		return disciplinaryActionCancel;
+	}
+
+	public void setDisciplinaryActionCancel(boolean disciplinaryActionCancel) {
+		this.disciplinaryActionCancel = disciplinaryActionCancel;
+	}
+	
+	public Date getDisciplinaryActionStartDate() {
+		return disciplinaryActionStartDate;
+	}
+
+	public void setDisciplinaryActionStartDate(Date disciplinaryActionStartDate) {
+		this.disciplinaryActionStartDate = disciplinaryActionStartDate;
+	}
+	
+	public Date getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+
+	public void setDisciplinaryActionEndDate(Date disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+	//#29793 end
 
 	//Enhancement #26186 end
 	
