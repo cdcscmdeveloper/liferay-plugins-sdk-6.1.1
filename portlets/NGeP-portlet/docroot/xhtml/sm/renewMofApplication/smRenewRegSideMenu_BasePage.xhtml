@@ -132,6 +132,10 @@
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
 				<ui:include src="step3RenewAppln_CaptialAndEquityStatusInfo.xhtml" />
 			</c:if>
+			<!-- 28767 -->
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 99}">
+				<ui:include src="step9RenewAppln_AnnualInfo.xhtml" />
+			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
 				<ui:include src="step5RenewAppln_BankInfo.xhtml" />
 			</c:if>

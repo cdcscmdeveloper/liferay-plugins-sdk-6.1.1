@@ -62,6 +62,10 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step3ViewProfileCaptialAndEquityStatusInfo.xhtml" />
 					</c:if>
+					<!-- 28767 -->
+					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 99}">
+						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step9ViewAnnualInfo.xhtml" />
+					</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileBankInfo.xhtml" />
 					</c:if>

@@ -53,6 +53,22 @@
 				tabNo="3" label="#{lbl['lbl.sm.capitalStepLbl']}" />
 		</p:menuitem>
 		
+		<!-- 28767 -->
+		<c:choose>
+		<c:when test="#{backingBean.managedBean.smAppl.applType eq 'R'}">
+				<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}">
+					<p:menuitem>
+						<ac:smApplMenuItem
+						backingBean = "#{backingBean}"
+						section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO}" 
+						tabNo="99" label="#{lbl['lbl.sm.annualInfoStepLbl']}" />
+					</p:menuitem>
+			 	  </c:when>
+				<c:otherwise></c:otherwise>
+		</c:when>
+		<c:otherwise></c:otherwise>
+		</c:choose>		
+		<!-- 28767 -->
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
