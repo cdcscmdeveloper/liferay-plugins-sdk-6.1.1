@@ -503,7 +503,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_DO_REASSIGNMENT_APPROVAL);
 			// 25627
 			//START - 22211
-			temp.put(SCProcessNameConst.SUPPLIER_DP_ACCEPTANCE_PROCESS_NAME
+			temp.put(SCProcessNameConst.DIRECT_PURCHASE_MAINTENANCE
 					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
