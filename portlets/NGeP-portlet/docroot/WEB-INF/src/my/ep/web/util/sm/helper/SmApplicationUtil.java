@@ -1092,7 +1092,7 @@ public class SmApplicationUtil {
 				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null
 				 //#29718 --START--
 						&& managedBean.getSmAppl().getApplType().equals("R")
-						&& (fac.getFacilityType().equals("B") || fac.getFacilityType().equals("H"))) {
+						&& fac.getFacilityType() == "B" || fac.getFacilityType() == "H") {
 				//#29718 --END--
 					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
