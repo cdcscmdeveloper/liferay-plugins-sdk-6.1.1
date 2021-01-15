@@ -146,9 +146,8 @@
 				<c:if
 					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 					<p:commandLink id="itemName"
-						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem)}"
-						oncomplete="loaSuppliersProposalSpecificationUpdatePopup.show();"
-						partialSubmit="true" process="@this" update="@([id$=loaSuppliersProposalSpecificationUpdatePopup])">
+						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
+						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
 					</p:commandLink>
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
@@ -238,7 +237,6 @@
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 	</c:if>
-	<ui:include src="loaSuppliersProposalSpecificationUpdatePopup.xhtml" /><!-- #29007 Added Vinod -->
 
 	<!-- #29006 - start -->
 	<p:dialog id="specAndSupplierOfferDlg"
