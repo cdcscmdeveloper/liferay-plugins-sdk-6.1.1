@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -95,6 +96,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.DeskOfficerMaintenanceSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
 import my.ep.web.util.EpPortletUtil;
@@ -524,16 +526,18 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			getManagedBean().setSelectedQtIds(new ArrayList<Long>());
-			getManagedBean().setQtNoDeskOfficerMap(null);
+			// #25627 - Start.
+			//getManagedBean().setSelectedQtIds(new ArrayList<Long>());
+			//getManagedBean().setQtNoDeskOfficerMap(null);
 			IQTDetailSO detailSO;
 			IQTSuppFinalizationSO sfDetailSO;
 			try {
-				if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds())) {
+				/*if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds())) {
 					getManagedBean().getSelectedQtIds().clear(); 
-				}
-				getManagedBean().setDisableAssignTo(true);
-				getManagedBean().setDisableSubmit(true);
+				}*/
+				//getManagedBean().setDisableAssignTo(true);
+				//getManagedBean().setDisableSubmit(true);
+				// #25627 - End.
 				
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -617,6 +621,19 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
                     // #25627 -End.
                 }
 			qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+			// #25627 - Start.
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds()) 
+					&& getManagedBean().getSelectedQtIds().size() > 0) {
+				if (CollectionUtils.isNotEmpty(resDTO.getQtResultBean().getResultList())
+						&& resDTO.getQtResultBean().getResultList().size() > 0) {
+					for (ScQt scqt : resDTO.getQtResultBean().getResultList()) {
+						if (getManagedBean().getSelectedQtIds().toString().contains(String.valueOf(scqt.getQtId()))) {
+							scqt.setSelected(true);
+						}
+					}
+				}
+			}
+			// #25627 - End.
 			return resDTO.getQtResultBean();
 			}catch(Exception e){
 				handleException(e);
@@ -1080,7 +1097,14 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			} 
 			newDeskOfficer = null;
 		}
-		return "N/A";			
+		// #25627 - Start.
+		Locale locale = new FacesScopes().getUserLocale();
+		if (ReportConst.ENG_LANGUAGE_CODE.equals(locale.getLanguage())) {
+			return "N/A";			
+		} else {
+			return "T/B";
+		}
+		// #25627 - End.
 	}
 	
 	/**
