@@ -11380,8 +11380,6 @@ public class SmApplicationBackingBean extends
 			SmCommonUtil
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 							.getSmAppl().getSmCompanyBasic());
-			validatePaidCaptialAmt(false);
-			// #28466 end - fix reopen
 			SmCommonUtil.calcAllEquityOwnerPercent(getManagedBean());
 			//25929 - start
 			SmCommonUtil.calculateEquityCompanyPercent(getManagedBean());
@@ -11410,7 +11408,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setCurrLocalCompanyEquity(
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getLocalCompanyEquity());
-
+			validatePaidCaptialAmt(false);
+			// #28466 end - fix reopen
 		} catch (NumberFormatException ne) {
 			throw new EpException(MessageConst.ERROR_722522);
 		}
