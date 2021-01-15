@@ -519,12 +519,13 @@ public class SimpleQuoteBackingBean extends
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
-						// #3761 - start
 						// #29800 - start
-						log.debug("ERROR-760160: panelItem is not null, panelItem category is General.");
+						// Do not show Exception is user returns from Treasury
+						// Circular page
+						if (getManagedBean().getScQuoteSession() == null) {
+							throw new EpException(MessageConst.ERROR_760160);
+						}
 						// #29800 - end
-						throw new EpException(MessageConst.ERROR_760160);
-						// #3761 - end
 					} 
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
@@ -570,7 +571,13 @@ public class SimpleQuoteBackingBean extends
 				
 				if (selectedPanelItem != null && selectedPanelItem.getItemCategoryId() != null) {
 					if (!isPanelItemAddable(selectedPanelItem)) {
-						throw new EpException(MessageConst.ERROR_760160);
+						// #29800 - start
+						// Do not show Exception is user returns from Treasury
+						// Circular page
+						if (getManagedBean().getScQuoteSession() == null) {
+							throw new EpException(MessageConst.ERROR_760160);
+						}
+						// #29800 - end
 					}
 					
 					if (selectedPanelItem.getItemCategoryId()
@@ -617,7 +624,7 @@ public class SimpleQuoteBackingBean extends
 						// #3761 - start
 						if (getManagedBean().getScQuoteSession() == null) {
 							// #29800 - start
-							log.debug("ERROR-700027: getManagedBean().getScQuoteSession() is null");
+							debugLogger("ERROR-700027: getManagedBean().getScQuoteSession() is null");
 							// #29800 - end
 							throw new EpException(MessageConst.ERROR_700027, new String[] { itemName });
 						}
@@ -7956,4 +7963,17 @@ public class SimpleQuoteBackingBean extends
 			}			
 		}
 		//#29209 - end
+		
+		// #29800 - start
+		/**
+		 * This method removes SCDirectPurchaseDataType saved in session so that its
+		 * initialization can be done properly in preRenderView() method. This is
+		 * called when the user enters SImple Quote page from Task List page and not
+		 * Treasury Circular page.
+		 */
+		public void preRenderView2() {
+			getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
+			preRenderView();
+		}
+		// #29800 - end
 }
