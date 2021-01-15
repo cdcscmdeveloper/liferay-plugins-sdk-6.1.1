@@ -898,8 +898,8 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 		}
 		else if (isInternalAuditorUnderMinistry()){
-			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			getManagedBean().setSelectedMinistry(pmOrgProfile);
+			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
 		}
 		
 	}
@@ -1094,8 +1094,8 @@ public class PmReportsBackingBean extends
 			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
 		}
 		else if (isInternalAuditorUnderMinistry()){
-			getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-			this.getManagedBean().getPmSearchBean().setMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+			getManagedBean().setSelectedMinistry(pmOrgProfile);
+			this.getManagedBean().getPmSearchBean().setMinistry(pmOrgProfile);
 		}
 		//#28833 -shafie -end
 		
