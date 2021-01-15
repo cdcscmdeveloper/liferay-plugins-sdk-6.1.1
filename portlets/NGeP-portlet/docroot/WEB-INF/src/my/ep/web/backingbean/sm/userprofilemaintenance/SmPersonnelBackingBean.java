@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.userprofilemaintenance;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 // 9569 start
 import java.util.Collections;
@@ -2675,6 +2676,13 @@ public class SmPersonnelBackingBean extends
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 			roles.add(role);
+			
+			//9569 - Start
+			/*SelectItem role = new SelectItem();
+			role.setValue("");
+			role.setLabel(SmCommonUtil.getMessage("lbl.sm.ep.role.select.one", null));
+			roles.add(role);*/
+			//9569 - End
 
 			role = new SelectItem();
 			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
@@ -2837,6 +2845,8 @@ public class SmPersonnelBackingBean extends
 					resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
 				}else{
 					personnel.setEpRole(getManagedBean().getEpRoleTrans());
+					personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 					List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 					smPersonnelList.add(personnel);
 					reqDTO1.setSmPersonnelList(smPersonnelList);
