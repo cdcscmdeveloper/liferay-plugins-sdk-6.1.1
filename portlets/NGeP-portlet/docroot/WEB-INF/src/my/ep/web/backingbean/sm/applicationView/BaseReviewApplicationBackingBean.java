@@ -48,6 +48,8 @@ import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
+import my.ep.dto.sm.common.ssm.SsmReqDTO;
+import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -82,6 +84,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplAuditors;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
@@ -103,6 +106,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmPersonnelSecretaries;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
@@ -586,6 +590,61 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (statusDesc != null) {
 			getManagedBean().setCurrRegStatus(statusDesc.getStatusName());
 		}
+		
+		//28767
+		/*SsmReqDTO ssmReqDTO = new SsmReqDTO();
+		SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+		if(ssmResDTO.getSmApplIndebtedness() != null){
+			ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
+			this.getManagedBean().getSmAppl().setSmApplIndebtedness(ssmResDTO.getSmApplIndebtedness());
+		}
+		
+		if(ssmResDTO.getSmPersonnelSecretaries() != null){
+			this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
+			for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
+				personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
+				this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
+			}
+		}
+		
+		for(SmPersonnelSecretaries personnelSec : this.getManagedBean().getSmAppl().getSmPersonnelSecretaries()){
+			if(personnelSec.getSecDesignation() != null){
+				String designation = populateDesignationSSM(personnelSec.getSecDesignation());
+				personnelSec.setSecDesignation(designation);
+			}
+		}
+		
+		if(ssmResDTO.getSmApplAuditors()!= null){
+			this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
+			for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
+				auditors.setSmAppl(this.getManagedBean().getSmAppl());
+				this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
+			}
+		}
+		*/
+		this.getManagedBean().getPersonnelDirectorManager().clear();
+		this.getManagedBean().getPersonnelMembers().clear();
+		BigDecimal sum = new BigDecimal(0);
+		for(SmPersonnel personnel:this.getManagedBean().getSmAppl().getSmPersonnels()){
+			BigDecimal shareAmt = personnel.getShareAmt();
+				if(personnel.getDesignation() != null){
+					String designation = populateDesignationSSM(personnel.getDesignation());
+					personnel.setDesignation(designation);
+				}
+				if(personnel.isDirector() || personnel.isManagement()){
+				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
+				}
+				if(personnel.isEquityOwner()){
+					if(shareAmt != null && !personnel.getShareAmt().equals(null)){
+						sum =  sum.add(shareAmt);
+						getManagedBean().setTotalShare(sum);
+						
+					}
+					this.getManagedBean().getPersonnelMembers().add(personnel);
+				}
+		
+		}
+		
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
