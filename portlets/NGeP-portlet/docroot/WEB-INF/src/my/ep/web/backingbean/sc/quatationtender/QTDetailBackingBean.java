@@ -823,6 +823,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			quationTenderReqDTO.setUserLocale(facesScopes.getUserLocale());
 			quationTenderReqDTO.getQtdetail().setOtherApproval(true);
+			//#25077 - Start 
+			quationTenderReqDTO.getQtdetail().setMitiApproval(true);
+			//#25077 - End
 			quationTenderReqDTO.setDeskOfficer(facesScopes.getUserSessionBean());
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
@@ -5494,8 +5497,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
 		}
 		if(committeTabBean!=null){
-			List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
-			this.getManagedBean().setMemberHistoryList(historyList);
+			if(null!=committeTabBean.getScQtCommittee()){//Bug #29903-start
+				List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
+				this.getManagedBean().setMemberHistoryList(historyList);
+				}//Bug #29903-End
 		}
 	}
 
@@ -9557,12 +9562,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public boolean isOthersApprovalForInstruction(){
 		boolean isForInstruction = false;
 		ScQt scQt = this.getManagedBean().getQt();
+		Long statusId = scQt.getQtStatus().getStatusId();
 		String procurementCategory = scQt.getPmProcurementCategory().getParameterCode();
-		if(null != procurementCategory && 
-			       (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory) ||
-			    	ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory))){
-			   isForInstruction = true;   
-		} 
+	    if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(procurementCategory)){
+        	if(null != statusId && 
+      			   (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId) || 
+      			    QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(statusId) || 
+      			    QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+      				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
+         		isForInstruction = true;   
+         	}    
+	    } 
+        if(null != procurementCategory && ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(procurementCategory)){
+        	if(null != statusId && 
+     			   (QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId) || 
+     				QTStatusConst.QT_REVISION_PUBLICATION.equals(statusId))){
+        		isForInstruction = true;   
+        	}  	   
+		}
         return isForInstruction; 
 	}
 	
