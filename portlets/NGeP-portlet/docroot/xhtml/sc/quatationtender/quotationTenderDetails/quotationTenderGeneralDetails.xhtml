@@ -23,20 +23,31 @@
 		value="#{qTDetailBB.managedBean.showAndHideAmounts}" />
 	<ui:param name="expectTotalIndPriceBelowThreshold"
 		value="#{createQtBB.expectTotalIndPriceBelowThreshold(scQt,'createQt')}" />
-		
+	<!-- 25638 start -->
+	<ui:param name="isStatusInQTReviseGroupStatus" 
+		value="#{createQtBB.isStatusInQTReviseGroupStatus(scQt.qtStatus.statusId)}" />
+	<ui:param name="isMaintenanceFlow"  
+		value="#{qTDetailBB.managedBean.maintanceFlow}" />
+	<!-- 25638 end -->		
 	<ac:lovPopup />
 
-	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}"
-		toggleable="true">
+	<p:panel id="qtdetailsid" header="#{lbl['lbl.sc.general.info']}" toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.instruction']}" escape="false"
 			rendered="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+		<!-- 25638 start -->
+		<br/>
+		<c:if test="#{!isMaintenanceFlow}">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.instruction.revise']}" escape="false" 
+				rendered="#{isStatusInQTReviseGroupStatus}" />
+		</c:if>		
+		<!-- 25638 end -->
+			
 			<ui:fragment rendered="#{!scQt.panel and (qtStatusChecklistScoring or qtStatusAfterChecklistScoring)}">
 				<ui:param name="checkCategoryCodemedicine" value="#{createQtBB.isMultipleProposalCategory(scQt, null)}"></ui:param>
 			<ui:fragment rendered="#{checkCategoryCodemedicine}">
 			<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.qt.procurement.medicine.general.info']}" escape="false"
-			 />
+			value="#{lbl['lbl.sc.qt.procurement.medicine.general.info']}" escape="false" />
 			</ui:fragment>
 			</ui:fragment>
 		<table style="width: 100%;">

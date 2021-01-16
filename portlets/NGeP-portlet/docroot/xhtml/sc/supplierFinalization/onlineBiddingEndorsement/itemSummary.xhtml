@@ -50,6 +50,9 @@
 		</p:dataTable>
 	</p:panel>
 	
+	<h:outputText styleClass="instruction" escape="false" rendered="#{suppFinalBiddingBackingBean.managedBean.displayReviseInstrn}"
+			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
+			
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
