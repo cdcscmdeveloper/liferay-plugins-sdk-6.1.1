@@ -438,8 +438,11 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().getResetSupplierList() == null) {
 			this.getManagedBean().setResetSupplierList(
 					new HashSet<ScQtEvaluationResultDtl>());
-		}		
-
+		} 
+		
+		// #25638 - Start
+		displayReviseInstrn(getManagedBean().getCommitteeList());
+		// #25638 - End
 	}
 	
 	private void loadRecommededSuppliersIntoCachedData(boolean isItemized) {
@@ -1779,74 +1782,115 @@ public class SupplierFinalizationBackingBean extends
 	 * @param outcome
 	 *            the task to be performed by BPM
 	 */
-	public void submitSuppFinalization() {
-		log.info("submitSuppFinalization");
+	//25638 - Start
+	public void submitSuppFinalization(String... revise) {
+		//25638 - End
 		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
-		
-		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
-		List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
-		finalizationReports.addAll(this.getManagedBean().getDocumentList());
-		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
-		scQtFinalization.setScQtFinalizationReports(finalizationReports);
-		Long currentStatusId = getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
-					.equals(currentStatusId) || 
-				QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(currentStatusId)) {
-			this.getManagedBean().setSubmit(true);
-		}
 
-		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
-		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId)) {
-			if (CollectionUtils.isNotEmpty(
-					this.getManagedBean().getCommitteeList())) {
-				int totalMembersEndorsed = 0;
-				int totalMembersAttended = 0;
-				boolean isChairperson = false;
-				for (ScQtCommitteeActivity scQtCommitteeActivity 
-									: getManagedBean().getCommitteeList()) {
-					if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
-							.equals(getFacesScopes().getUserSessionBean().getUserId())) {
-						if (scQtCommitteeActivity.getScCommitteeMember()
+		//25638 - Start
+		if (revise.length == 0 && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			validateRemarks();
+			
+			RequestContext.getCurrentInstance().execute("reviseSuppFinalizationDlgs.show()");
+		} else {
+			//25638 - End
+			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
+			finalizationReports.addAll(this.getManagedBean().getDocumentList());
+			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+			scQtFinalization.setScQtFinalizationReports(finalizationReports);
+			Long currentStatusId = getManagedBean().getCurrentStatusId();
+			
+			// #25638 - Start.
+			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId) || 
+					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(currentStatusId)
+					|| QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(currentStatusId)
+					|| QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.equals(currentStatusId)
+					|| QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.equals(currentStatusId)
+			        ) { 
+				// #25638 - End.
+				this.getManagedBean().setSubmit(true);
+			}
+	
+			SuppFinalizationReqDTO reqDTO = preSubmitValidation();
+	
+			// #25638 - Start.
+			if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
+			
+				if (CollectionUtils.isNotEmpty(
+						this.getManagedBean().getCommitteeList())	&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+					// #25638 - End.
+					int totalMembersEndorsed = 0;
+					int totalMembersAttended = 0;
+					boolean isChairperson = false;
+					for (ScQtCommitteeActivity scQtCommitteeActivity 
+										: getManagedBean().getCommitteeList()) {
+						if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
+								.equals(getFacesScopes().getUserSessionBean().getUserId())) {
+							if (scQtCommitteeActivity.getScCommitteeMember()
+									.getMemberRole().getParameterCode().equals(
+											ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+								isChairperson = true;
+							}
+						}
+						if (scQtCommitteeActivity.isAttended()) {
+							++totalMembersAttended;
+						}
+						if (scQtCommitteeActivity.isSignedOff() && 
+								!scQtCommitteeActivity.getScCommitteeMember()
 								.getMemberRole().getParameterCode().equals(
 										ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-							isChairperson = true;
+							++totalMembersEndorsed;
 						}
 					}
-					if (scQtCommitteeActivity.isAttended()) {
-						++totalMembersAttended;
-					}
-					if (scQtCommitteeActivity.isSignedOff() && 
-							!scQtCommitteeActivity.getScCommitteeMember()
-							.getMemberRole().getParameterCode().equals(
-									ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-						++totalMembersEndorsed;
+					
+					if (isChairperson && 
+							totalMembersEndorsed != 
+									(totalMembersAttended - 1)) {
+						throw new EpException(MessageConst.ERROR_760265);
 					}
 				}
+				// #25638 - Start
+				PmUser secretaryUser = null;
 				
-				if (isChairperson && 
-						totalMembersEndorsed != 
-								(totalMembersAttended - 1)) {
-					throw new EpException(MessageConst.ERROR_760265);
+				if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) { 
+				    reviseSignOff();
+					validateRemarks();
+					
+					for (ScQtCommitteeActivity committeeActivity : getManagedBean().getCommitteeList()) {
+						 if (null != committeeActivity && null != committeeActivity.getScCommitteeMember()
+								 && null != committeeActivity.getScCommitteeMember().getMemberRole()
+								 && "S".equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode())) {
+							 secretaryUser = committeeActivity.getScCommitteeMember().getPmUser();
+							 reqDTO.setPmUser(secretaryUser);
+							 
+							 break;
+						 }
+					 }
+				} 
+				//25638 - End
+				
+				String committeeType = getManagedBean().getCommitteeType();
+				CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
+				ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
+				// #25638 - Start.
+				if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && StringUtils.isNotBlank(committeeType) && 
+						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
+						isDigiSigningRequired(committeeResDTO.getRoleCode(),
+												this.getManagedBean().getCommitteeList())) {
+					//25638 - End
+					this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+					RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				} else {
+					updateBPMTask(outcome, null, reqDTO);
 				}
-			}
-			
-			String committeeType = getManagedBean().getCommitteeType();
-			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
-			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
-			if (StringUtils.isNotBlank(committeeType) && 
-					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
-					isDigiSigningRequired(committeeResDTO.getRoleCode(),
-											this.getManagedBean().getCommitteeList())) {
-				this.getManagedBean().setAutoUpdate(Boolean.FALSE);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			} else {
+				signOff();
 				updateBPMTask(outcome, null, reqDTO);
 			}
-		} else {
-			signOff();
-			updateBPMTask(outcome, null, reqDTO);
 		}
+		//25638 - End
 	}
 	
 	/**
@@ -2164,19 +2208,24 @@ public class SupplierFinalizationBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				String msgCode = null;
+				
+				// #25638 - Start
+				String label = "lbl.sc.sf.supplier.finalization";
+				
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					msgCode = MessageConst.INFO_700067;
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					msgCode = MessageConst.INFO_776042;
+					label = "lbl.sc.quotation.tender";
 				} else {
 					msgCode = getMessgeConstant(outcome);
 				}
-				commonMessageAcknowledmentPage(msgCode,
-						ResourceBundleUtils.getMessage(
-								"lbl.sc.sf.supplier.finalization", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()), 
-						getManagedBean().getScQt().getQtNo());
+				
+				successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
+						.getQtNo(), Boolean.TRUE);
+				super.renewSesionObject();
+				// #25638 - End
 			}
-
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -3681,23 +3730,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
-	}
-
-	private void commonMessageAcknowledmentPage(String messageId,
-			String variable1, String variable2) {
-		log.info("commonMessageAcknowledmentPage");
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(messageId, new String[] { variable1,
-								variable2 },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								getFacesScopes().getUserLocale())));
-		// clear data
-		super.renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
 	/**
@@ -7181,5 +7213,61 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// #25426 ruzaimah - End	
+	
+	//25638 - Start 
+	public void reviseSuppFinalization() {
+		updateBPMTask(this.getManagedBean().getOutcome(), null, null);
+	}
+	
+	private void reviseSignOff() {
+		if (StringUtils.isNotBlank(getManagedBean().getCommitteeType())) {
+			
+			for (ScQtCommitteeActivity scQtCommitteeActivity : getManagedBean().getCommitteeList()) {
+                  scQtCommitteeActivity.setSignedOff(false);
+			}
+		}
+    }
+	
+	private void validateRemarks() {
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()
+				|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SIGN_OFF.longValue())) {
+			boolean remarksNotFound = true;
+			
+			if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+				for (ScQtFinalizationRemarks finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+				  
+					if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+						if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+							
+							if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+		                        remarksNotFound = true;
+		                        break;
+							} else {
+								remarksNotFound = false;
+							}
+						}
+					}
+				}
+			} else {
+				initializeFinalizationRemarks();
+			}
+			
+			if (remarksNotFound) {
+				throw new EpException(MessageConst.ERR_775152);
+			}
+		}
+	}
+	
+	/**
+	 * Gets the qt award so.
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTAwardSO getQtAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	//25638 - End
 					
 }
