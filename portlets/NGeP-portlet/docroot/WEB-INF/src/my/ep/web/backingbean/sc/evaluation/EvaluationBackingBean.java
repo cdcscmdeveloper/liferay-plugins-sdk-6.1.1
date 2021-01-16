@@ -8371,6 +8371,8 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 		committeSO=null;
+		
+		//#25638 -start-
 		if (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
 				.getManagedBean().getCurrentStatusId())
 				|| QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL.equals(this
@@ -8379,8 +8381,8 @@ private void retriveCommitteeRemarksList(){
 						.getManagedBean().getCurrentStatusId())
 				|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this
 						.getManagedBean().getCurrentStatusId())
-				|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.OC_PENDING_OPENING_REVISION, QTStatusConst.OC_ORDERED_STATUSES)		
-				) {
+				|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(), QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION, QTStatusConst.OC_ORDERED_STATUSES)		
+				) { //#25638 -end-
 			this.getManagedBean().setStatusOnly(false);
 
 		} else {
