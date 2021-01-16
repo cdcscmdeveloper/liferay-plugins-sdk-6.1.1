@@ -292,6 +292,7 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.epRoleTrans}"
 								style="width: 207px;margin-bottom: 5px;" required="true">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								<p:ajax event="change" partialSubmit="true" process="@this"
