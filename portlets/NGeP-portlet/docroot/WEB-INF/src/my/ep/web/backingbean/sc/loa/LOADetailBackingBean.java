@@ -8123,14 +8123,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-							MessageConst.ERROR_775161, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-			return;
-		}
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		if(this.getManagedBean().getTplSpecAnswerList() != null || this.getManagedBean().getNewSupplierJustification() != null){
 			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
