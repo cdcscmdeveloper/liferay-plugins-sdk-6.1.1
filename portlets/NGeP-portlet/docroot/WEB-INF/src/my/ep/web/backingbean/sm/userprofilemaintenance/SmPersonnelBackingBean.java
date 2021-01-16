@@ -2832,31 +2832,6 @@ public class SmPersonnelBackingBean extends
 		try {
 			// Personnel role
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
-			if(personnel.getEpRole() == null){
-				personnel.setEpRole("");
-			}
-		
-			if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-				PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-				PersonnelResDTO resDTO1 = new PersonnelResDTO();
-				if (personnel.getPmUser() != null) {
-					reqDTO1.setSmPersonnel(personnel);
-					reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-					resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
-				}else{
-					personnel.setEpRole(getManagedBean().getEpRoleTrans());
-					personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-					smPersonnelList.add(personnel);
-					reqDTO1.setSmPersonnelList(smPersonnelList);
-					reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-					resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
-				}
-				if (!resDTO1.isSuccessful()) {
-					throw new EpException(MessageConst.ERROR_722632);
-				}
-			}
 			// Personnel address
 			//This is to save all the address(9569)
 			SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
@@ -2891,8 +2866,37 @@ public class SmPersonnelBackingBean extends
 			//9569 - End
 			PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
 			reqDTO2.setSmPersonnel(personnel);
-			PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-			if (resDTO2.isSuccessful()) {
+			
+			if(personnel.getEpRole() == null){
+				personnel.setEpRole("");
+			}
+			boolean success = true;
+			if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+				PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+				PersonnelResDTO resDTO1 = new PersonnelResDTO();
+				if (personnel.getPmUser() != null) {
+					reqDTO1.setSmPersonnel(personnel);
+					reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+					resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+				}else{
+					personnel.setEpRole(getManagedBean().getEpRoleTrans());
+					personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+					smPersonnelList.add(personnel);
+					reqDTO1.setSmPersonnelList(smPersonnelList);
+					reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+					resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+				}
+				if (!resDTO1.isSuccessful()) {
+					success = false;
+					throw new EpException(MessageConst.ERROR_722632);
+				}
+			}else{
+				PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+				success = resDTO2.isSuccessful();
+			}		
+			if (success) {
 				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
 			} else {
 				throw new EpException(MessageConst.ERROR_722632);
