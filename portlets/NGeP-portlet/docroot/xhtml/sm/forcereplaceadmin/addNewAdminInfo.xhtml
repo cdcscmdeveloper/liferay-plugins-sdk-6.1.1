@@ -15,7 +15,8 @@
 .splNotesFontBank{
 	color: rgb(79, 0, 255);
 	font-weight: bold;
-	float: left
+	float: left;
+	position:initial
 }
 
 .ui-dialog-content > .ui-icon {
@@ -305,7 +306,7 @@
 		widget="declareDeletePopUp"
 		okAction="forceReplaceSuppAdminBackingBean.declare()"
 		width="400" height="100"
-		position=""
+		position="initial"
 		title="#{lbl['lbl.msg.confirm.declare.header']}"
 		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
 		update=":form"/>
