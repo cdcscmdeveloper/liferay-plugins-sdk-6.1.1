@@ -64,6 +64,7 @@
 				</td>
 				<td colspan="3">
 					<p:inputTextarea label="#{lbl['lbl.sc.justification']}" id="justification" 
+					required="true"
 					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
 					value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
 					style="width:800px; margin-bottom:5px;" maxlength="1000"  rows="5" autoResize="false">
@@ -87,12 +88,11 @@
 					<h:outputText style="width:24%;white-space: normal;" value="#{spec.answerRemark}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:40%;white-space:normal; text-align: center;" >
-					<p:inputTextarea id="newOfferedSpec" style="width:calc(100% - 15px);" maxlength="1000" rows="5" autoResize="false" 
-					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" value="#{spec.newSupplierOffer}"
-					onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+					<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 15px);" value="#{spec.newSupplierOffer}" 
+					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 					onmouseout="limitTextArea(this,1000);">
-						<p:ajax event="change" process="@this" update="@this"></p:ajax>	
-						<f:validateLength for="newOfferedSpec" maximum="1000" />
+					<p:ajax event="change" process="@this" update="@this" />
+					<f:validateLength for="newOfferedSpec" maximum="1000" />
 					</p:inputTextarea>
 					<p:message id="newOfferedSpecMsg" for="newOfferedSpec" display="icon" />
 				</p:column>
