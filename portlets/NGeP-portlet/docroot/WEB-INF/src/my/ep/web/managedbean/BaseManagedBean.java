@@ -104,8 +104,13 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> smPersonnelDirectorSsm = new ArrayList();
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList();
 	private SmAddress smAddress;
+	//27346-end
+
+	// #25638 - Start		
+	private boolean displayReviseInstrn;
+	// #25638 - End	
 	
-	
+	//27346-start 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -595,7 +600,21 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setResubmitAppl(boolean resubmitAppl) {
 		this.resubmitAppl = resubmitAppl;
 	}
-	
-	
-	
+
+	// #25638 - Start
+	/**
+	 * @return the displayReviseInstrn
+	 */
+	public boolean isDisplayReviseInstrn() {
+		return displayReviseInstrn;
+	}
+
+	/**
+	 * @param displayReviseInstrn the displayReviseInstrn to set
+	 */
+	public void setDisplayReviseInstrn(boolean displayReviseInstrn) {
+		this.displayReviseInstrn = displayReviseInstrn;
+	}
+	// #25638 - End
+		
 }

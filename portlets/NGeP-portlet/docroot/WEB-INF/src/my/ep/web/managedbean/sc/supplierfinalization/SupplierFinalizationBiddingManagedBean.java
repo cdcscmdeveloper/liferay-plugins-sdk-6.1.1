@@ -24,6 +24,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -146,6 +147,10 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	/** The auto update. */
 	private boolean autoUpdate = Boolean.TRUE;
 	private List<ScQtFinalizationReport> documentList;
+	
+	//25638 - Start.
+	private List<ScQtFinalizationRemarks> finalizationRemarks;
+	//25638 - End.
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1244,5 +1249,21 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	public void setDocumentList(List<ScQtFinalizationReport> documentList) {
 		this.documentList = documentList;
 	}
+	
+	//25638 - Start.
+	/**
+	 * @return the finalizationRemarks
+	 */
+	public List<ScQtFinalizationRemarks> getFinalizationRemarks() {
+		return finalizationRemarks;
+	}
+
+	/**
+	 * @param finalizationRemarks the finalizationRemarks to set
+	 */
+	public void setFinalizationRemarks(List<ScQtFinalizationRemarks> finalizationRemarks) {
+		this.finalizationRemarks = finalizationRemarks;
+	}
+	//25638 - End.
 
 }
