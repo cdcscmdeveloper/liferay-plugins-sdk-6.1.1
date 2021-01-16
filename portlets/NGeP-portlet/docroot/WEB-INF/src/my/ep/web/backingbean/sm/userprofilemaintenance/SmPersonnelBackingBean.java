@@ -2677,13 +2677,6 @@ public class SmPersonnelBackingBean extends
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 			roles.add(role);
 			
-			//9569 - Start
-			/*SelectItem role = new SelectItem();
-			role.setValue("");
-			role.setLabel(SmCommonUtil.getMessage("lbl.sm.ep.role.select.one", null));
-			roles.add(role);*/
-			//9569 - End
-
 			role = new SelectItem();
 			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
@@ -2716,6 +2709,24 @@ public class SmPersonnelBackingBean extends
 		} else if (userAuth == 0) {
 			// non-authorized user role
 			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.FL_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			getManagedBean().setRoleList(roles);
+		}else if(userAuth == 3){
+
+			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
+			role.setValue(RoleCode.CM_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
 			role.setValue(RoleCode.FL_USER.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 			roles.add(role);
@@ -2802,7 +2813,7 @@ public class SmPersonnelBackingBean extends
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
 		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-				epRoleList(2);
+				epRoleList(3);
 				}
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
@@ -2821,8 +2832,9 @@ public class SmPersonnelBackingBean extends
 	/**
 	 * Back to search page
 	 */
-	public String cancelUserMOFUpdate() {
-		return "supplierUserMaintenance.xhtml";
+	public void cancelUserMOFUpdate() {
+		preRenderSmUserMaintenance();
+		//return "supplierUserMaintenance.xhtml";
 	}
 
 	/**
@@ -2882,6 +2894,7 @@ public class SmPersonnelBackingBean extends
 					personnel.setEpRole(getManagedBean().getEpRoleTrans());
 					personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 					List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 					smPersonnelList.add(personnel);
 					reqDTO1.setSmPersonnelList(smPersonnelList);
