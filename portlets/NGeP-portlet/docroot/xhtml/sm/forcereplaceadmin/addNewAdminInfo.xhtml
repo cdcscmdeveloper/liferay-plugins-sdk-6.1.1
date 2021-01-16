@@ -10,27 +10,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-<!-- #28765 Start -->	
-<style>
-ac {
-position:initial !important
-}
-ac:confirmationPopup {
-position:initial !important
-}
-
-.splNotesFontBank{
-	color: rgb(79, 0, 255);
-	font-weight: bold;
-	float: left;
-	position:initial !important
-}
-
-.ui-dialog-content > .ui-icon {
-    display: none;
-}
-</style>
-<!-- #28765 End -->
+	
 	<ui:define name="resourceSection">
 		<script>
 			$('#portlet_forceReplaceSupplierAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.force.replace.suppadmin']}");
@@ -56,7 +36,24 @@ position:initial !important
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
 					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
 					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"/>
-					
+					<ac:confirmationPopup id="declareDeletePopUpId"
+		widget="declareDeletePopUp"
+		okAction="forceReplaceSuppAdminBackingBean.declare()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.declare.header']}"
+		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
+		update=":form"/>
+				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
+			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
+			<div class="ppLeftBtn">
+			<f:facet name="message">
+                   <h:outputText value="TEST" styleClass=""  escape="false"/>
+          </f:facet>
+			</div>
+		<div class="ppRightBtn">		    
+		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
 		<!-- #28765 End -->
 				<!-- 
 					<p:commandButton value="#{lbl['lbl.sm.declare']}" id="declareBtnId" update=":form"
@@ -309,25 +306,6 @@ position:initial !important
 					</tr>
 				</table>
 			<br />
-<ac:confirmationPopup id="declareDeletePopUpId"
-		widget="declareDeletePopUp"
-		okAction="forceReplaceSuppAdminBackingBean.declare()"
-		width="400" height="100"
-		position="initial"
-		title="#{lbl['lbl.msg.confirm.declare.header']}"
-		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
-		update=":form"/>
-				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
-			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
-			<div class="ppLeftBtn">
-			<f:facet name="message">
-                   <h:outputText value="TEST" styleClass=""  escape="false"/>
-          </f:facet>
-			</div>
-		<div class="ppRightBtn">		    
-		 	<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="declareAlertPopUp.hide();" type="button" />
-		</div>
-		</p:confirmDialog>
+
 	</ui:define>
-	
 </ui:composition>
