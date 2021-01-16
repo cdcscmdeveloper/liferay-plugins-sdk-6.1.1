@@ -136,6 +136,7 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+import my.ep.factory.EpLogger;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -151,6 +152,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
+	private static Logger log2 = EpLogger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private ContractBackingBean ctBB = new ContractBackingBean();
 
@@ -387,42 +389,48 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
-		System.out.println("----------------------- in backAction - start ----------------------");
+		log.info("----------------------- in backAction - start ----------------------");		
 		if(getManagedBean().isChkCancelPage()) {
 			getManagedBean().setChkCancelPage(false);
 			return "cancelCircularBase.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isFromCircularNotice()) {
-			System.out.println("----------------------- in backAction - here 001 ");
+			log.info("----------------------- in backAction - here 001 ");			
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isDifferentModule()){
-			System.out.println("----------------------- in backAction - here 002 ");
+			log.info("----------------------- in backAction - here 002 ");			
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
-			System.out.println("----------------------- in backAction - here 1 ");
+			log.info("----------------------- in backAction - here 1 ");			
 			//#3761 - start
 			if (StringUtils.equals(getManagedBean().getGotoPreviewPage(), "simpleQuoteMain")) {
-				System.out.println("----------------------- in backAction - here 2 ");
+				log.info("----------------------- in backAction - here 2 ");				
 				SimpleQuoteBackingBean sqbb = new SimpleQuoteBackingBean();
-				System.out.println("----------------------- in backAction - here 3 ");
+				log.info("----------------------- in backAction - here 3 ");				
 				sqbb.getManagedBean().setPanelItemFlag(false);
-				System.out.println("----------------------- in backAction - here 4 ");
+				log.info("----------------------- in backAction - here 4 ");				
 				sqbb.getManagedBean().setG2GFlag(false);
-				System.out.println("----------------------- in backAction - here 5 ");
+				log.info("----------------------- in backAction - here 5 ");				
 				sqbb.getManagedBean().setActiveIndex(0);
-				System.out.println("----------------------- in backAction - here 6 ");
-				sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true,
-						null);
-				System.out.println("----------------------- in backAction - here 7 ");
+				// #29800 - start
+				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
+					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+				} else {
+					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
+							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
+					sqbb.preRenderView();
+				}
+				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
+				// #29800 - end
 				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
-				System.out.println("----------------------- in backAction - here 8 ");
+				log.info("----------------------- in backAction - here 8 ");				
 				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
-				System.out.println("----------------------- in backAction - here 9 ");
+				log.info("----------------------- in backAction - here 9 ");				
 			}
 			// #3761 - end
-			System.out.println("----------------------- in backAction - here 10 ");
+			log.info("----------------------- in backAction - here 10 ");			
 			return getManagedBean().getGotoPreviewPage();
 		} else {
-			System.out.println("----------------------- in backAction - here 11 ");
+			log.info("----------------------- in backAction - here 11 ");			
 			return "search.xhtml?faces-redirect=true";
 		}
 	}
