@@ -2876,38 +2876,41 @@ public class SmPersonnelBackingBean extends
 		    reqDTO2.setSmPersonnel(personnel);
 		    
 		    //start updating role
-		    SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
-		    if(personnel1.getEpRole() == null){
-		      personnel1.setEpRole("");
+		   // SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
+		    if(personnel.getEpRole() == null){
+		    	personnel.setEpRole("");
 		    }
 
-		    if (getManagedBean().getEpRoleTrans() != null && !personnel1.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+		    if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
 		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
-		      if (personnel1.getPmUser() != null) {
-		        reqDTO1.setSmPersonnel(personnel1);
+		      if (personnel.getPmUser() != null) {
+		        reqDTO1.setSmPersonnel(personnel);
 		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
 		        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
 		      }else{
-		        personnel1.setEpRole(getManagedBean().getEpRoleTrans());
-		        personnel1.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-		        personnel1.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		        personnel1.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    	  personnel.setEpRole(getManagedBean().getEpRoleTrans());
+		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		    	  personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		    	  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		        List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-		        smPersonnelList.add(personnel1);
+		        smPersonnelList.add(personnel);
 		        reqDTO1.setSmPersonnelList(smPersonnelList);
 		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
-		        if (!resDTO1.isSuccessful()) {
+		      
+		      }
+		      if (!resDTO1.isSuccessful()) {
 		          throw new EpException(MessageConst.ERROR_722632);
 		        }
-		      }
+		    }else{
+		    	  PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+				    if (!resDTO2.isSuccessful()) {
+				      throw new EpException(MessageConst.ERROR_722632);
+				    }
 		    }
 
-		    PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-		    if (!resDTO2.isSuccessful()) {
-		      throw new EpException(MessageConst.ERROR_722632);
-		    }
+		  
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
