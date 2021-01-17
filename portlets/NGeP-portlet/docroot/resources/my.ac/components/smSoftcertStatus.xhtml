@@ -28,7 +28,7 @@
 				rendered="#{cc.attrs.personnel.softcertFlg eq '6' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
 			<h:outputText styleClass="outputLabel-view" escape="false"
 				value="#{lbl['lbl.sm.person.composition.pending.request']}"
-				rendered="#{cc.attrs.personnel.softcertFlg eq '4'}" />
+				rendered="#{cc.attrs.personnel.softcertFlg eq '4'} and cc.attrs.personnel.epRole ne 'CM_USER'}" />
 			<h:outputText styleClass="outputLabel-view" escape="false"
 				value="#{lbl['lbl.sm.person.composition.processing']}"
 				rendered="#{cc.attrs.personnel.softcertFlg eq '3' and cc.attrs.personnel.epRole ne 'CM_USER'}" />
