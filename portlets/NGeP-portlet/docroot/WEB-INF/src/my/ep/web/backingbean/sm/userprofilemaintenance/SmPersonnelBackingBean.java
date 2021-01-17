@@ -2898,16 +2898,19 @@ public class SmPersonnelBackingBean extends
 		        reqDTO1.setSmPersonnelList(smPersonnelList);
 		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
-		        if (!resDTO1.isSuccessful()) {
+		      
+		      }
+		      if (!resDTO1.isSuccessful()) {
 		          throw new EpException(MessageConst.ERROR_722632);
 		        }
-		      }
+		    }else{
+		    	  PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+				    if (!resDTO2.isSuccessful()) {
+				      throw new EpException(MessageConst.ERROR_722632);
+				    }
 		    }
 
-		    PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-		    if (!resDTO2.isSuccessful()) {
-		      throw new EpException(MessageConst.ERROR_722632);
-		    }
+		  
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
