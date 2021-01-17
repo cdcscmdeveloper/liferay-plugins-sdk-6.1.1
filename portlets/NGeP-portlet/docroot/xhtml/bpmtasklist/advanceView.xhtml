@@ -7,12 +7,10 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
 	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true" toggleable="true">
 
 		<p:outputPanel id="outPnlGroupSearch">
 			<table style="width: 100%">
-
 				<tr>
 					<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.doc.no']} : " /></td>
 					<td width="40%"><p:inputText size="60" value="#{bpmTasklistBackingBean.managedBean.docNoGroup}"></p:inputText></td>
@@ -38,7 +36,8 @@
 								itemLabel="#{docStatus.statusName}" var="docStatus"
 								itemValue="#{docStatus.statusDescId}"></f:selectItems>
 							<p:ajax event="change" update="outPnlGroupSearch"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
+					</td>
 
 					<td width="10%"></td>
 					<td width="40%"></td>
@@ -94,6 +93,29 @@
 						</p:selectOneMenu>
 					</td>
 				</tr>
+				<tr>
+				<td width="10%"><p:outputLabel value="Created Date From : " /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="groupTaskCreatedDateFrom"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.groupTaskCreatedDateFrom}"
+						/>
+						
+				</td>
+				<td width="10%"><p:outputLabel value="Created Date To : " /></td>
+				<td width="40%">
+					<p:calendar showOn="button" navigator="true"
+						display="inline" required="false" readonlyInput="false"
+						label="#{lbl['lbl.cm.doc.createdDate']}" id="groupTaskCreatedDateTo"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
+						value="#{bpmTasklistBackingBean.managedBean.groupTaskCreatedDateTo}"
+						/>
+				</td>
+			</tr>
 
 			</table>
 		</p:outputPanel>
@@ -102,10 +124,9 @@
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{bpmTasklistBackingBean.refreshAdvanceTaskList}"
-				update="taskListGroupId" value="#{lbl['lbl.btn.search']}"></p:commandButton>
+				update="taskListGroupId" value="#{lbl['lbl.btn.search']}">
+			</p:commandButton>
 		</div>
-
-
 	</p:panel>
 
 	<div class="clear"></div>
