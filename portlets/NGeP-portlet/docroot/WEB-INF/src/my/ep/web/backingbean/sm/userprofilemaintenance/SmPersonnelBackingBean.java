@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.userprofilemaintenance;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 // 9569 start
 import java.util.Collections;
@@ -1302,6 +1303,31 @@ public class SmPersonnelBackingBean extends
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
+		//9569 - Start
+		SmPersonnelAddress mail = new SmPersonnelAddress();
+		mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
+		mail.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		mail.getSmAddress().setPmCountry(new PmCountry());
+		mail.setSameAsPerm(false);
+		mail.setSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnelMailingAddress(mail);
+		
+		SmPersonnelAddress off = new SmPersonnelAddress();
+		off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
+		off.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		off.getSmAddress().setPmCountry(new PmCountry());
+		off.setSameAsPerm(false);
+		off.setSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnelOfficeAddress(off);
+		
+		SmPersonnelAddress res = new SmPersonnelAddress();
+		res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
+		res.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+		res.getSmAddress().setPmCountry(new PmCountry());
+		res.setSameAsPerm(false);
+		res.setSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnelResidentialAddress(res);
+		//9569 - End
 		if (smPersonnel.getTitle() == null) {
 			smPersonnel.setTitle(new PmSalutation());
 		}
@@ -1309,14 +1335,15 @@ public class SmPersonnelBackingBean extends
 		if (getManagedBean().isViewOnlyPersonnel()) {
 			setPersonnelViewOnlyAddresses(smPersonnel);
 		} else {
-			List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
-
-			if (smPersonnel.getSmPersonnelAddresses() != null
-					&& smPersonnel.getSmPersonnelAddresses().size() > 0) {
-
-				smPersonnel.getSmPersonnelAddresses().size();
-				smPAList.addAll(smPersonnel.getSmPersonnelAddresses());
-				for (SmPersonnelAddress smPA : smPAList) {
+			//9569 - Start
+			//List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
+				//smPersonnel.getSmPersonnelAddresses().size();
+				//smPAList.addAll(smPersonnel.getSmPersonnelAddresses());
+				
+				if (smPersonnel.getSmPersonnelAddresses() != null
+					      && smPersonnel.getSmPersonnelAddresses().size() > 0){
+			
+				for (SmPersonnelAddress smPA : smPersonnel.getSmPersonnelAddresses()) {
 					SmAddress address = new SmAddress();
 					address.setPmCountry(new PmCountry());
 					address.setPmState(new PmState());
@@ -1326,6 +1353,8 @@ public class SmPersonnelBackingBean extends
 					address.setPmDivision(new PmDivision());
 					if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.MAIL_ADD)) {
+						//9569 - Start
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1351,8 +1380,10 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelMailingAddress(smPA);
+						}
 					} else if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.PERM_ADD)) {
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1378,10 +1409,12 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelPermanentAddress(smPA);
+						}
 					}
 					//#9569 - Start
 					else if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1405,8 +1438,10 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelResidentialAddress(smPA);
+						}
 					}else if (smPA.getAddressType().equalsIgnoreCase(
 							SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+						if(smPA.getSmAddress() != null && smPA.getSmAddress().getAddressId() != null){
 						address.setAddress1(smPA.getSmAddress().getAddress1());
 						address.setAddress2(smPA.getSmAddress().getAddress2());
 						address.setAddress3(smPA.getSmAddress().getAddress3());
@@ -1430,6 +1465,7 @@ public class SmPersonnelBackingBean extends
 						smPA.setSmAddress(address);
 						this.getManagedBean()
 								.setBasicSmPersonnelOfficeAddress(smPA);
+						}
 					}
 					//#9569 - End
 				}
@@ -2640,7 +2676,7 @@ public class SmPersonnelBackingBean extends
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 			roles.add(role);
-
+			
 			role = new SelectItem();
 			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
@@ -2673,6 +2709,24 @@ public class SmPersonnelBackingBean extends
 		} else if (userAuth == 0) {
 			// non-authorized user role
 			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.FL_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			getManagedBean().setRoleList(roles);
+		}else if(userAuth == 3){
+
+			SelectItem role = new SelectItem();
+			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
+			role.setValue(RoleCode.CM_USER.value());
+			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+			roles.add(role);
+
+			role = new SelectItem();
 			role.setValue(RoleCode.FL_USER.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 			roles.add(role);
@@ -2740,7 +2794,6 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setSmPersonnelList(smPersonnelList);
 	}
 	
-	
 	/**
 	 * Navigate to personnel edit page
 	 * 
@@ -2750,6 +2803,9 @@ public class SmPersonnelBackingBean extends
 	public String navigateToUpdateMOFUserPage(String personnelId) {
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
+		//9569 - Start
+		resetAll();
+		//9569 - End
 		getPersonnelInfoById(personnelId);
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
 		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
@@ -2757,95 +2813,118 @@ public class SmPersonnelBackingBean extends
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
 		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-				epRoleList(2);
+				epRoleList(3);
 				}
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
 		return "mofUserProfile.xhtml";
 	}
+	
+	//9569 - Start
+	public void resetAll(){
+		this.getManagedBean().setBasicSmPersonnelPermanentAddress(new SmPersonnelAddress());
+		this.getManagedBean().setBasicSmPersonnelMailingAddress(new SmPersonnelAddress());
+		this.getManagedBean().setBasicSmPersonnelResidentialAddress(new SmPersonnelAddress());
+		this.getManagedBean().setBasicSmPersonnelOfficeAddress(new SmPersonnelAddress());
+	}
+	//9569 - End
 
 	/**
 	 * Back to search page
 	 */
-	public String cancelUserMOFUpdate() {
-		return "supplierUserMaintenance.xhtml";
+	public void cancelUserMOFUpdate() {
+		preRenderSmUserMaintenance();
+		//return "supplierUserMaintenance.xhtml";
 	}
 
 	/**
 	 * Save personnel update
 	 */
-	public void saveUserMOFUpdate() {
-		try {
-			// Personnel role
+	//9569 - Start
+	public void saveUserMOFUpdate(){
+		  try{
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
-			if(personnel.getEpRole() == null){
-				personnel.setEpRole("");
-			}
-		
-			if (getManagedBean().getEpRoleTrans() != null && !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-				PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-				PersonnelResDTO resDTO1 = new PersonnelResDTO();
-				if (personnel.getPmUser() != null) {
-					reqDTO1.setSmPersonnel(personnel);
-					reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
-					resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
-				}else{
-					personnel.setEpRole(getManagedBean().getEpRoleTrans());
-					List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-					smPersonnelList.add(personnel);
-					reqDTO1.setSmPersonnelList(smPersonnelList);
-					reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-					resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
-				}
-				if (!resDTO1.isSuccessful()) {
-					throw new EpException(MessageConst.ERROR_722632);
-				}
-			}
-			// Personnel address
-			//This is to save all the address(9569)
-			SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
-			//9569 - Start
-			SmPersonnelAddress personnelAddress1 = getManagedBean().getBasicSmPersonnelResidentialAddress();
-			SmPersonnelAddress personnelAddress2 = getManagedBean().getBasicSmPersonnelOfficeAddress();
-			//9569 - End
-			if(personnelAddress.isSameAsPerm()){
-				getManagedBean().setBasicSmPersonnelMailingAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-				getManagedBean().getBasicSmPersonnelMailingAddress().setSameAsPerm(true);
-			}
-			//9569 - Start
-			if(personnelAddress1.isSameAsPerm()){
-				getManagedBean().setBasicSmPersonnelResidentialAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-				getManagedBean().getBasicSmPersonnelResidentialAddress().setSameAsPerm(true);
-			}
-			if(personnelAddress2.isSameAsPerm()){
-				getManagedBean().setBasicSmPersonnelOfficeAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-				getManagedBean().getBasicSmPersonnelOfficeAddress().setSameAsPerm(true);
-			}
-			//9569 - End
-			
-			for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
-				if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
-					per.getSmAddress().setPmDivision(null);
-				}
-			}
-			personnel.getSmPersonnelAddresses().add(personnelAddress);
-			//9569 - Start
-			personnel.getSmPersonnelAddresses().add(personnelAddress1);
-			personnel.getSmPersonnelAddresses().add(personnelAddress2);
-			//9569 - End
-			PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
-			reqDTO2.setSmPersonnel(personnel);
-			PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-			if (resDTO2.isSuccessful()) {
-				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
-			} else {
-				throw new EpException(MessageConst.ERROR_722632);
-			}
-		} catch (Exception ex) {
-			throw new EpException(MessageConst.ERROR_722632);
-		}
-	}
+		    
+		    //This is to save all the address
+		    SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
+		    SmPersonnelAddress personnelAddress1 = getManagedBean().getBasicSmPersonnelResidentialAddress();
+		    SmPersonnelAddress personnelAddress2 = getManagedBean().getBasicSmPersonnelOfficeAddress();
 
+		    if(personnelAddress.isSameAsPerm()){
+		      getManagedBean().setBasicSmPersonnelMailingAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
+		      getManagedBean().getBasicSmPersonnelMailingAddress().setSameAsPerm(true);
+		    }
+		    if(personnelAddress1.isSameAsPerm()){
+		      getManagedBean().setBasicSmPersonnelResidentialAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
+		      getManagedBean().getBasicSmPersonnelResidentialAddress().setSameAsPerm(true);
+		    }
+		    if(personnelAddress2.isSameAsPerm()){
+		      getManagedBean().setBasicSmPersonnelOfficeAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
+		      getManagedBean().getBasicSmPersonnelOfficeAddress().setSameAsPerm(true);
+		    }
+
+		    for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
+		      if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
+		        per.getSmAddress().setPmDivision(null);
+		      }
+		    }
+		    personnel.getSmPersonnelAddresses().add(personnelAddress);
+		    personnel.getSmPersonnelAddresses().add(personnelAddress1);
+		    personnel.getSmPersonnelAddresses().add(personnelAddress2);
+		    
+		    PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
+		    reqDTO2.setSmPersonnel(personnel);
+		    
+		    //start updating role
+		    SmPersonnel personnel1 = getManagedBean().getBasicSmPersonnel();
+		    if(personnel1.getEpRole() == null){
+		      personnel1.setEpRole("");
+		    }
+
+		    if (getManagedBean().getEpRoleTrans() != null && !personnel1.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
+		      if (personnel1.getPmUser() != null) {
+		        reqDTO1.setSmPersonnel(personnel1);
+		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
+		        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
+		      }else{
+		        personnel1.setEpRole(getManagedBean().getEpRoleTrans());
+		        personnel1.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		        personnel1.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		        personnel1.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		        List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+		        smPersonnelList.add(personnel1);
+		        reqDTO1.setSmPersonnelList(smPersonnelList);
+		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+		        if (!resDTO1.isSuccessful()) {
+		          throw new EpException(MessageConst.ERROR_722632);
+		        }
+		      }
+		    }
+
+		    PersonnelResDTO resDTO2 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+		    if (!resDTO2.isSuccessful()) {
+		      throw new EpException(MessageConst.ERROR_722632);
+		    }
+		    //Make sure table is updated
+			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
+			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
+			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3)
+					.getSmPersonnelList();
+			sortPersonnelByEpRole(smPersonnelList2);
+			getManagedBean().setSmPersonnelList(smPersonnelList2);
+			countAuthUserWithRole(smPersonnelList2);
+			countContractSigner(smPersonnelList2);
+			epRoleList(2);
+		    SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+
+		  }catch (Exception ex){
+		      throw new EpException(MessageConst.ERROR_722632);
+		  }
+		}
+//9569 - End
 	/**
 	 * Sort personnel list based Ep Role
 	 * 

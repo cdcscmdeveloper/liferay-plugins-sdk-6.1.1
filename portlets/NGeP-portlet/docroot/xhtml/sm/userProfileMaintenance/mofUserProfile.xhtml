@@ -292,6 +292,7 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.epRoleTrans}"
 								style="width: 207px;margin-bottom: 5px;" required="true">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.roleList}" />
 								<p:ajax event="change" partialSubmit="true" process="@this"
@@ -583,7 +584,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 											<p:ajax event="change"
-												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId"
+												update="basicMailAddStateList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId" process="@this" partialSubmit="true"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null,null)}" />
 										</p:selectOneMenu> <p:message id="basicMailAddCountryListMsg"
 											for="basicMailAddCountryList" showSummary="true"
@@ -604,7 +605,7 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 											<p:ajax event="change"
-												update="basicMailAddDistrictList, basicMailAddCityList"
+												update="basicMailAddDistrictList, basicMailAddCityList" process="@this" partialSubmit="true"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId,null,null)}" />
 										</p:selectOneMenu> <p:message id="basicMailAddStateListMsg"
 											for="basicMailAddStateList" showSummary="true"
@@ -627,7 +628,7 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
-											<p:ajax event="change" update="basicMailAddCityList"
+											<p:ajax event="change" update="basicMailAddCityList" process="@this" partialSubmit="true"
 												listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,null,smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
 										</p:selectOneMenu> <p:message id="basicMailAddDistrictListMsg"
 											for="basicMailAddDistrictList" showSummary="true"
@@ -647,6 +648,7 @@
 												itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
+											<p:ajax process="@this" partialSubmit="true"/>
 										</p:selectOneMenu> <p:message id="basicMailAddCityListMsg"
 											for="basicMailAddCityList" showSummary="true"
 											showDetail="false" display="icon" /></td>
@@ -723,7 +725,8 @@
 											size="35"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}" />
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm 
+														or smPersonnelBackingBean.managedBean.editMode}" />
 										<p:message id="resAdd1Msg" for="resAdd1" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -733,7 +736,8 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.address2}"
 											size="35"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}" /></td>
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}" /></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -741,7 +745,8 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.address3}"
 											size="35"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}" /></td>
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}" /></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -753,7 +758,8 @@
 									<td><p:selectOneMenu id="basicResAddCountryList"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											label="#{lbl['lbl.sm.country']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -775,7 +781,8 @@
 									<td><p:selectOneMenu
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											label="#{lbl['lbl.sm.state']}" id="basicResAddStateList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmState.stateId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -798,7 +805,8 @@
 									<td><p:selectOneMenu
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											id="basicResAddDistrictList"
 											label="#{lbl['lbl.sm.district']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmDistrict.districtId}"
@@ -819,7 +827,8 @@
 									<td><p:selectOneMenu
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											id="basicResAddCityList" label="#{lbl['lbl.sm.towncity']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.pmCity.cityId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -845,7 +854,8 @@
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.postcode}"
 													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+																or smPersonnelBackingBean.managedBean.editMode}"
 													size="35">
 													<f:validator validatorId="postcodeValidator" />
 												</p:inputText>
@@ -861,7 +871,8 @@
 													id="basicResAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.smAddress.postcode}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
-													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}"
+													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm
+																or smPersonnelBackingBean.managedBean.editMode}"
 													size="35">
 												</p:inputText>
 												<p:message id="basicResAddPostCodeForeignMsg"
@@ -889,7 +900,7 @@
 												partialSubmit="true" process="@this"
 												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
          										 smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress)}" />
-										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+										</p:selectBooleanCheckbox> <p:outputLabel value="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}" /></td>
 									<td></td>
 								</tr>
 								<tr>
@@ -901,7 +912,8 @@
 											size="35"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}" />
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}" />
 										<p:message id="offAdd1Msg" for="offAdd1" showSummary="true"
 											showDetail="false" display="icon" /></td>
 								</tr>
@@ -911,7 +923,8 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.address2}"
 											size="35"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}" /></td>
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}" /></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -919,7 +932,8 @@
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.address3}"
 											size="35"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}" /></td>
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}" /></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -931,7 +945,8 @@
 									<td><p:selectOneMenu id="basicOffAddCountryList"
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											label="#{lbl['lbl.sm.country']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -952,7 +967,8 @@
 									<td><p:selectOneMenu
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											label="#{lbl['lbl.sm.state']}" id="basicOffAddStateList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmState.stateId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -975,7 +991,8 @@
 									<td><p:selectOneMenu
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											id="basicOffAddDistrictList"
 											label="#{lbl['lbl.sm.district']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmDistrict.districtId}"
@@ -996,7 +1013,8 @@
 									<td><p:selectOneMenu
 											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+														or smPersonnelBackingBean.managedBean.editMode}"
 											id="basicOffAddCityList" label="#{lbl['lbl.sm.towncity']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.pmCity.cityId}"
 											style="width: 207px;margin-bottom: 5px;">
@@ -1022,7 +1040,8 @@
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.postcode}"
 													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+																or smPersonnelBackingBean.managedBean.editMode}"
 													size="35">
 													<f:validator validatorId="postcodeValidator" />
 												</p:inputText>
@@ -1038,7 +1057,8 @@
 													id="basicOffAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.smAddress.postcode}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
-													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm}"
+													disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsPerm
+																or smPersonnelBackingBean.managedBean.editMode}"
 													size="35">
 												</p:inputText>
 												<p:message id="basicOffAddPostCodeForeignMsg"
