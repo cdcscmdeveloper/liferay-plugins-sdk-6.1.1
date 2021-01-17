@@ -135,7 +135,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String sort_byGroup;
 	private boolean ascendingGroup = true;
 	private boolean fromSearchBttn = false;
-
+	private Date  myTaskCreatedDateFrom;
+	private Date  myTaskCreatedDateTo;
+	private Date groupTaskCreatedDateFrom;
+	private Date  groupTaskCreatedDateTo;
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -460,7 +463,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					reqDTO.setStatus(getDocStatus());
 				}
 				
-				//sort by
+				//Start - Task list sorting n search criteria date from and date to by Najmi 
 				//log.info("getSort_by() = "+getSort_by());
 				if (isFromSearchBttn()) {
 					if (getSort_by() != null && !getSort_by().equals("")) {
@@ -498,10 +501,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}				 			
 				
 				reqDTO.setIsAsc(isAscending());
-
+				
+				log.info("date from = "+getMyTaskCreatedDateFrom() + " date to = "+getMyTaskCreatedDateTo());
+				
+				reqDTO.setCreatedDateFrom(getMyTaskCreatedDateFrom());
+				reqDTO.setCreatedDateTo(getMyTaskCreatedDateTo());
+				
+				//End - Task list sorting n search criteria date from and date to by Najmi 
+				
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsTest(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
@@ -643,7 +653,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setIsClaimed(false);
 				reqDTO.setCtxToken(token);
 				
-				//sort by
+				//Start - Task list sorting n search criteria date from and date to by Najmi 
 				//log.info("getSort_by() = "+getSort_byGroup());
 				if (isFromSearchBttn()) {
 					if (getSort_byGroup() != null && !getSort_byGroup().equals("")) {
@@ -682,9 +692,16 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				reqDTO.setIsAsc(isAscendingGroup());
 				
+				log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
+				
+				reqDTO.setCreatedDateFrom(getGroupTaskCreatedDateFrom());
+				reqDTO.setCreatedDateTo(getGroupTaskCreatedDateTo());
+				
+				//End - Task list sorting n search criteria date from and date to by Najmi 
+				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsTest(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
@@ -1827,6 +1844,38 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setFromSearchBttn(boolean fromSearchBttn) {
 		this.fromSearchBttn = fromSearchBttn;
+	}
+
+	public Date getMyTaskCreatedDateFrom() {
+		return myTaskCreatedDateFrom;
+	}
+
+	public void setMyTaskCreatedDateFrom(Date myTaskCreatedDateFrom) {
+		this.myTaskCreatedDateFrom = myTaskCreatedDateFrom;
+	}
+
+	public Date getMyTaskCreatedDateTo() {
+		return myTaskCreatedDateTo;
+	}
+
+	public void setMyTaskCreatedDateTo(Date myTaskCreatedDateTo) {
+		this.myTaskCreatedDateTo = myTaskCreatedDateTo;
+	}
+
+	public Date getGroupTaskCreatedDateFrom() {
+		return groupTaskCreatedDateFrom;
+	}
+
+	public void setGroupTaskCreatedDateFrom(Date groupTaskCreatedDateFrom) {
+		this.groupTaskCreatedDateFrom = groupTaskCreatedDateFrom;
+	}
+
+	public Date getGroupTaskCreatedDateTo() {
+		return groupTaskCreatedDateTo;
+	}
+
+	public void setGroupTaskCreatedDateTo(Date groupTaskCreatedDateTo) {
+		this.groupTaskCreatedDateTo = groupTaskCreatedDateTo;
 	}
 	
 }
