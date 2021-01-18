@@ -2898,6 +2898,8 @@ public class SmPersonnelBackingBean extends
 		        reqDTO1.setSmPersonnelList(smPersonnelList);
 		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+		        reqDTO2.setSmPersonnel(personnel);
+		        SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
 		      
 		      }
 		      if (!resDTO1.isSuccessful()) {
