@@ -1087,7 +1087,11 @@ public class SmApplicationUtil {
 		}
 		if (facility != null) {
 			for (SmFacility fac : facility) {
-				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null) {
+				if (fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null
+				 //#29718 --START--
+						&& managedBean.getSmAppl().getApplType().equals("R")
+						&& fac.getFacilityType() == "B" || fac.getFacilityType() == "H") {
+				//#29718 --END--
 					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {
 						throw new EpException(SmCommonUtil.getMessage("lbl.sm.coordinate.required.msg",
