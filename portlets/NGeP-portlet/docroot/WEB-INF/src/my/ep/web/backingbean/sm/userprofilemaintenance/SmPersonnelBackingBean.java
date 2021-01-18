@@ -2819,7 +2819,7 @@ public class SmPersonnelBackingBean extends
 		epRoleList(getManagedBean().getBasicSmPersonnel(),getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
-		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
 			epRoleList(getManagedBean().getBasicSmPersonnel(),2);
 		}
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
