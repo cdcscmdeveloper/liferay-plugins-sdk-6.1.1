@@ -2869,8 +2869,14 @@ public class SmPersonnelBackingBean extends
 		      }
 		    }
 		    personnel.getSmPersonnelAddresses().add(personnelAddress);
-		    personnel.getSmPersonnelAddresses().add(personnelAddress1);
-		    personnel.getSmPersonnelAddresses().add(personnelAddress2);
+		    
+		    //To check if the address not empty
+		    if(getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().getAddress1() != null){
+		    	personnel.getSmPersonnelAddresses().add(personnelAddress1);
+		    }
+		    if(getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getAddress1() != null){
+		    	personnel.getSmPersonnelAddresses().add(personnelAddress2);
+		    }
 		    
 		    PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
 		    reqDTO2.setSmPersonnel(personnel);
@@ -2913,8 +2919,6 @@ public class SmPersonnelBackingBean extends
 				      throw new EpException(MessageConst.ERROR_722632);
 				    }
 		    }
-
-		  
 		    //Make sure table is updated
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
