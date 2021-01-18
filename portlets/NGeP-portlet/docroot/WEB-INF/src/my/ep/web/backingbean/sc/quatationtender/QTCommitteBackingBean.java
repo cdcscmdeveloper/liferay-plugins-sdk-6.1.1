@@ -2049,7 +2049,17 @@ public class QTCommitteBackingBean extends
 				|| Arrays.asList(QTStatusConst.CMT_REVISION_APPROVAL_GROUP).contains(committeStatus)) {
 			return false;
 		} 
-
+		
+		if (scQt != null && Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(currentStatusId)
+				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType)) { 
+			//specification maintenance cannot be concurrent to spec committee maintenance
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId());
+			wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
+			Long specStatusId = wfStatus.getPmStatus()==null ? 0L:wfStatus.getPmStatus().getStatusId();
+			Long[] specStatusArr = new Long[]{QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION};
+			return !Arrays.asList(specStatusArr).contains(specStatusId);
+		}
+		
 		return true;
 
 	}
