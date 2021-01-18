@@ -14761,6 +14761,9 @@ public class SpecificationBackingBean extends
 		log.debug("start updateSpecCommitteMaintenaceDtls" + action);
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		ScQt scQt = this.getManagedBean().getQt();
+		
+		assertSpecCommitteeMaintenanceInProgress(scQt);//#25037
+		
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		//#15391 - start
@@ -17586,6 +17589,30 @@ if(null!=allTechnicalChecklist){
 				}
 			 }
 		}	
+	}
+	
+	private void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
+		//specification maintenance cannot be concurrent to spec committee maintenance
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		reqDTO.setQtId(qt.getQtId());
+		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
+		if(qtCommittee!=null){
+			ScCommittee scCommittee = qtCommittee.getScCommittee();
+			if(scCommittee!=null){
+				Long statusId = scCommittee.getCommitteStatus().getStatusId();
+				statusId = statusId==null ? 0L: statusId;
+				if (!Arrays
+						.asList(new Long[] {
+								QTStatusConst.CMT_COMPLETED,
+								QTStatusConst.CMT_PENDING_SUBMISSION})
+						.contains(statusId)) {
+					throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
+				}
+			}
+		}
 	}
 	//#25037-end
 
