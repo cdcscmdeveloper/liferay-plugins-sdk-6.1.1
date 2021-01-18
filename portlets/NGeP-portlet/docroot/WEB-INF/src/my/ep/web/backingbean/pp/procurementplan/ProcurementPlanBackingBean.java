@@ -375,9 +375,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //				this.getManagedBean().setDisablePlanSearchDet(true);
 				this.getManagedBean().setDisablePlanSearchDet(false);
 				this.getManagedBean().setPageStyle("m_approved");
-			}else{
+			}else{//24975@19012021 - azza - start
 				this.getManagedBean().setDisablePlanSearchDet(false);
-			}
+			}//24975@19012021 - azza - end
 			loadDefaultButtons();
 			this.getManagedBean().setPlanId(id);
 			this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
@@ -855,32 +855,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (ppItem.isCloneEnabled() && !ppItem.isAllowAnotherPindaan() &&
 				!ppItem.isReviseReject() && !ppItem.isRejected()) {
 			log.info("curItem=  "+ppItem.getProcurementTitle());
-			ppItem.setChangePencilToNote(true);
-			
-//			if (ppItem.getPpUpdateReasons() != null || 
-//					!ppItem.getPpUpdateReasons().isEmpty()) {
-//				
-//				PpUpdateReason updateReason = ppItem.getPpUpdateReasons().get(0);
-//				updateReason.setDisableReasonField(true);
-				
-//				 for (PpUpdateReason updateReasons : ppItem.getPpUpdateReasons()){
-//						if (updateReasons.getDocId().equals(ppItem.getProcurementItemId())) {
-//							updateReasons.setReasonDesc(null);
-//							if (updateReasons.isDisableReasonField()) {
-//								updateReasons.setDisableReasonField(false);
-//							}
-//						}
-//					}
-//				}// 24975
-//				
-//				
-//				
-//				ppProcurementItem.getPpUpdateReasons().get(0);
+			ppItem.setChangePencilToNote(true);		
 			}
 		}
-		
-//	}
-	
+			
 	private void resetPpProcurementItemFields() {
 		
 		log.info("resetPpProcurementItemFields");
@@ -6259,8 +6237,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
-	    		/*newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
-		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());*/
+	    		/*newPpItem.getProcurementCat().setParameterId(originalPpItem.getProcurementCat().getParameterId());
+		    	newPpItem.getProcurementType().setParameterId(originalPpItem.getProcurementType().getParameterId());*/
 	    		newPpItem.setProcurementCat(new PmParameter());
 	    		newPpItem.setProcurementType(new PmParameter());
 	    		 //24975@06112020@azza - End
