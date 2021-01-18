@@ -6329,10 +6329,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		else if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_SUBMISSION)){
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
 				getManagedBean().setDisciplinaryActionCancel(false);
 			}
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
+					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
 				getManagedBean().setDisciplinaryActionCancel(false);
 			}
 		}
