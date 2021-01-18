@@ -3749,16 +3749,23 @@ public class SmApplicationUtil {
 						+ s2.getPmCategoryL3().getCategoryL3Code());
 			}
 		});
-
-		// sort by category type
-		Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
-			@Override
-			public int compare(final SmSupplierCategory s1,
-					final SmSupplierCategory s2) {
-				return Boolean.compare(s1.isSpecialCategory(),
-						s2.isSpecialCategory());
-			}
-		});
+	}
+	
+	/**
+	 * Sort SmSupplierCategory by category type and category level type
+	 * 
+	 * @param apprvList
+	 */
+	public static void sortSupplierCategoryType(List<SmSupplierCategory> apprvList) {
+	// sort by category type
+	Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
+		@Override
+		public int compare(final SmSupplierCategory s1,
+				final SmSupplierCategory s2) {
+			return Boolean.compare(s1.isSpecialCategory(),
+					s2.isSpecialCategory());
+		}
+	});
 	}
 
 	/**
