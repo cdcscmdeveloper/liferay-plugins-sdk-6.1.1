@@ -27,6 +27,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 
 @ManagedBean(name = "smPersonnelMB")
 @SessionScoped
@@ -52,6 +53,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmPersonnelAddress basicSmPersonnelMailingAddress;
 	private SmPersonnelAddress basicSmPersonnelPermanentAddress;
 	//9569 - Start
+	private SmAuthorizedPersonnelCountVO authVO;
+	private boolean validSmUserLimit;
+	private List<SelectItem> ePRoleList;
 	private SmPersonnelAddress basicSmPersonnelResidentialAddress;
 	private SmPersonnelAddress basicSmPersonnelOfficeAddress;
 	private List<SelectItem> resAddCountryList;
@@ -1026,5 +1030,29 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setBasicSmPersonnelOfficeAddress(SmPersonnelAddress basicSmPersonnelOfficeAddress) {
 		this.basicSmPersonnelOfficeAddress = basicSmPersonnelOfficeAddress;
+	}
+
+	public SmAuthorizedPersonnelCountVO getAuthVO() {
+		return authVO;
+	}
+
+	public void setAuthVO(SmAuthorizedPersonnelCountVO authVO) {
+		this.authVO = authVO;
+	}
+
+	public boolean isValidSmUserLimit() {
+		return validSmUserLimit;
+	}
+
+	public void setValidSmUserLimit(boolean validSmUserLimit) {
+		this.validSmUserLimit = validSmUserLimit;
+	}
+
+	public List<SelectItem> getePRoleList() {
+		return ePRoleList;
+	}
+
+	public void setePRoleList(List<SelectItem> ePRoleList) {
+		this.ePRoleList = ePRoleList;
 	}
 }

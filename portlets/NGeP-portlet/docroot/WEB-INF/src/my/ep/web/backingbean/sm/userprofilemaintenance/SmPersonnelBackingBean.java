@@ -67,6 +67,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -2624,6 +2625,7 @@ public class SmPersonnelBackingBean extends
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
 		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierByEpNo(supplierSearchReqDTO);
+		smSupplier = searchResDTO.getSmSupplier();
 		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
 			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
 				allowAccess = false;
@@ -2654,7 +2656,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setSmPersonnelList(smPersonnelList);
 			countAuthUserWithRole(smPersonnelList);
 			countContractSigner(smPersonnelList);
-			epRoleList(2);
+			epRoleList(null,2);
 			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
 			getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 			getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
@@ -2668,7 +2670,7 @@ public class SmPersonnelBackingBean extends
 	 * 
 	 * @param userAuth
 	 */
-	private void epRoleList(int userAuth) {
+	private void epRoleList(SmPersonnel personnel,int userAuth) {
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		if (userAuth == 2) {
 			// all role
@@ -2725,12 +2727,12 @@ public class SmPersonnelBackingBean extends
 			role.setValue(RoleCode.CM_USER.value());
 			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
 			roles.add(role);
-
-			role = new SelectItem();
-			role.setValue(RoleCode.FL_USER.value());
-			role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
-			roles.add(role);
-
+			if(getManagedBean().getAuthUserCount()>9){
+				role = new SelectItem();
+				role.setValue(RoleCode.FL_USER.value());
+				role.setLabel(getEpRoleDescByRoleCode(role.getValue().toString()));
+				roles.add(role);
+			}
 			getManagedBean().setRoleList(roles);
 		}
 	}
@@ -2809,12 +2811,17 @@ public class SmPersonnelBackingBean extends
 		getPersonnelInfoById(personnelId);
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
 		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
-		epRoleList(getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
+		//set role checking
+		//SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil.getSmAuthorizedPersonnelCountVO(getManagedBean().getSmAppl());
+	//	getManagedBean().setAuthVO(countVO);
+	//	getManagedBean().setValidSmUserLimit(countVO.isReachAuthorizedPersonnelLimit());
+		//buildRoleList(getManagedBean().getBasicSmPersonnel());
+		epRoleList(getManagedBean().getBasicSmPersonnel(),getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
 		if(sc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-				epRoleList(3);
-				}
+			epRoleList(getManagedBean().getBasicSmPersonnel(),2);
+		}
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
 		return "mofUserProfile.xhtml";
@@ -2935,7 +2942,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setSmPersonnelList(smPersonnelList2);
 			countAuthUserWithRole(smPersonnelList2);
 			countContractSigner(smPersonnelList2);
-			epRoleList(2);
+			epRoleList(null,2);
 		    SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
 
 		  }catch (Exception ex){
@@ -3033,6 +3040,14 @@ public class SmPersonnelBackingBean extends
 		}
 		return retVal;
 	}
+	
+	public void buildRoleList(SmPersonnel personnel) {
+		getManagedBean().setRoleList(
+				SmApplicationUtil.getPersonnelRoleItems(personnel,
+						getManagedBean().getSmAppl(), getManagedBean()
+								.getAuthVO()));
+	}
+	
 	// 9569 end
 
 }
