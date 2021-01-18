@@ -6261,6 +6261,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		 //24975@06112020@azza - Start
 	    		/*newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
 		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());*/
+	    		newPpItem.setProcurementCat(new PmParameter());
+	    		newPpItem.setProcurementType(new PmParameter());
 	    		 //24975@06112020@azza - End
 		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
 		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
