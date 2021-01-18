@@ -2899,7 +2899,9 @@ public class SmPersonnelBackingBean extends
 		        reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		        resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
 		        reqDTO2.setSmPersonnel(personnel);
+		        log.info("End first update------------------------------------------------------");
 		        SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
+		        log.info("End second update------------------------------------------------------");
 		      
 		      }
 		      if (!resDTO1.isSuccessful()) {
