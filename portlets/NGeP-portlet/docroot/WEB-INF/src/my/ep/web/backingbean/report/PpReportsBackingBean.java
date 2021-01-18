@@ -2022,10 +2022,11 @@ public class PpReportsBackingBean extends
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
 		String titleReport = "LAPORAN JUMLAH PERANCANGAN PEROLEHAN DAN PERBELANJAAN YANG DILULUSKAN MENGIKUT KEMENTERIAN.";
-		//String tahun = "TAHUN "+ getManagedBean().getSelectedYear();
-		//Map<Integer, Object[]> collectionList = new TreeMap<Integer, Object[]>();
-		//Double total2 = 0.0;
-		//Double total3 = 0.0;
+		String tahun = "TAHUN "+ getManagedBean().getSelectedYear(); //second row
+		Map<Integer, Object[]> collectionList = new TreeMap<Integer, Object[]>();
+		Integer total1 = 0;
+		Integer total2 = 0;
+		Integer total3 = 0;
 		
 		//start kementerian tab
 		ArrayList<String> columnHeaderListMinistry = new ArrayList<String>(Arrays.asList(
@@ -2033,7 +2034,7 @@ public class PpReportsBackingBean extends
 				"BILANGAN PERANCANGAN PEROLEHAN DILULUSKAN","BILANGAN PERANCANGAN PERBELANJAAN DILULUSKAN"
 		));
 		Sheet sheetItemList = createSheetBase(wb, createHelper, "Senarai Kementerian", titleReport, 
-				columnHeaderListMinistry, columnHeaderListMinistry.size(), false,null);
+				columnHeaderListMinistry, columnHeaderListMinistry.size(),true,tahun);
         
 		// Resize all columns to fit the content size
         for(int i = 0; i < columnHeaderListMinistry.size(); i++) {   
@@ -2044,24 +2045,24 @@ public class PpReportsBackingBean extends
         	else if(i==4)sheetItemList.setColumnWidth(i, 30*256); //Col : Bil PE
         }
         
-        createNotFoundRecord(wb,sheetItemList,columnHeaderListMinistry); //delete later
-        /** uncomment later
         try{
 			List<Object[]> resultList = getRptRequestSO().generatePPData(params,PpReportConst.PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL);
+			//[0]MINISTRY_NAME,[1]TOT_ENBL_ACTIVE_PTJ,[2]APPROVE_PP_PTJ,[3]APPROV_PE_PTJ
 			if(resultList.isEmpty())
 				createNotFoundRecord(wb,sheetItemList,columnHeaderListMinistry);
 			else{
 				for(int m=0; m<resultList.size(); m++){
 					Object[] row = resultList.get(m);
-					total2 += row[1] != null ? ((BigDecimal)row[1]).doubleValue() : 0.00;
-					total3 += row[2] != null ? ((BigDecimal)row[2]).doubleValue() : 0.00;
+					total1 += row[1] != null ? ((BigDecimal)row[1]).intValueExact() : 0;
+					total2 += row[2] != null ? ((BigDecimal)row[2]).intValueExact() : 0;
+					total3 += row[3] != null ? ((BigDecimal)row[3]).intValueExact() : 0;
 					
 					collectionList.put(m, new Object[]{
 						Integer.valueOf(m+1),
 						row[0] != null ? (String)row[0] : "",
-						row[1] != null ? ((BigDecimal)row[1]).doubleValue() : 0.00,
-						row[2] != null ? ((BigDecimal)row[2]).doubleValue() : 0.00,
-						row[3] != null ? Double.parseDouble((String)row[3]) : 0.00
+						row[1] != null ? ((BigDecimal)row[1]).intValueExact() : 0,
+						row[2] != null ? ((BigDecimal)row[2]).intValueExact() : 0,
+						row[3] != null ? ((BigDecimal)row[3]).intValueExact() : 0
 					});
 				}
 				
@@ -2078,14 +2079,14 @@ public class PpReportsBackingBean extends
 		            } 
 		        }
 				Cell cellTotalRecordItem2 = totalRecordRowItem.createCell(2);
-				cellTotalRecordItem2.setCellValue(total2);
-				cellTotalRecordItem2.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
+				cellTotalRecordItem2.setCellValue(total1);
+				cellTotalRecordItem2.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true,true));
 				Cell cellTotalRecordItem3 = totalRecordRowItem.createCell(3);
-				cellTotalRecordItem3.setCellValue(total3);
-				cellTotalRecordItem3.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
+				cellTotalRecordItem3.setCellValue(total2);
+				cellTotalRecordItem3.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true,true));
 				Cell cellTotalRecordItem4 = totalRecordRowItem.createCell(4);
-				cellTotalRecordItem4.setCellValue(total2 == 0? 0.00 : total3/total2*100.00);
-				cellTotalRecordItem4.setCellStyle(columnStyle(wb,createHelper,true,true,false,true,false,true,false,true));
+				cellTotalRecordItem4.setCellValue(total3);
+				cellTotalRecordItem4.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true,true));
 				
 				sheetItemList.addMergedRegion(new CellRangeAddress(sheetItemList.getLastRowNum(),sheetItemList.getLastRowNum(),0,1)); 
 
@@ -2094,7 +2095,7 @@ public class PpReportsBackingBean extends
         }catch(EpException e){
         	getRptRequestSO().updateFailedExcelReport(new BigDecimal(reportName));
 			throw new EpException(e.getMessage());
-		}*/
+		}
 
 		//end kementerian tab
         	          
