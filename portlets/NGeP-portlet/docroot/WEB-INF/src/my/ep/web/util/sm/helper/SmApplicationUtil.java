@@ -3727,6 +3727,8 @@ public class SmApplicationUtil {
 		managedBean.setActiveCategoryList(addtnlList);
 		managedBean.setApprovedCategoryList(existingList);
 	}
+	
+	//14150
 
 	/**
 	 * Sort SmSupplierCategory by category type and category level code
