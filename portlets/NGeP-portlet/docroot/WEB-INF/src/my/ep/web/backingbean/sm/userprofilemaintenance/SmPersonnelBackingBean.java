@@ -2891,6 +2891,9 @@ public class SmPersonnelBackingBean extends
 		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
 		      if (personnel.getPmUser() != null) {
+			    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value())){
+			    	personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+			    }
 		        reqDTO1.setSmPersonnel(personnel);
 		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
 		        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);
@@ -2898,7 +2901,11 @@ public class SmPersonnelBackingBean extends
 		    	  personnel.setEpRole(getManagedBean().getEpRoleTrans());
 		    	  personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		    	  personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		    	  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
+		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    	  }else{
+		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);	 
+		    	  }
 		        List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 		        smPersonnelList.add(personnel);
 		        reqDTO1.setSmPersonnelList(smPersonnelList);
