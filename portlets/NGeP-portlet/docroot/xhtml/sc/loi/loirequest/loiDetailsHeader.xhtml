@@ -9,19 +9,30 @@
 			style="width: 100%">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td width="10%"><h:outputLabel
-							value="#{lbl['lbl.sc.loiloa.loi.no']}" /></td>
+					<td width="10%">
+						<h:outputLabel value="#{lbl['lbl.sc.loiloa.loi.no']}" />
+						<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
+					</td>
 					<td class="header-info-text" width="15%">
 						#{lOIDetailBackingBean.managedBean.scLoi.brandNew ?
 						lbl['lbl.sc.system.generated'] :
-						lOIDetailBackingBean.managedBean.scLoi.loiNo}</td>
+						lOIDetailBackingBean.managedBean.scLoi.loiNo} 
+						<!-- #28780 start -->
+						<p:commandLink process="@this" partialSubmit="true"
+							action="#{qTDetailBB.editQuationTenderDetails(lOIDetailBackingBean.managedBean.scQt, false, true, view.viewId)}">
+							<h:outputText
+								value="#{lOIDetailBackingBean.managedBean.scQt.qtNo}"
+								escape="false" />
+						</p:commandLink> 
+						<!-- #28780 end -->
+					</td>
 					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 					</td>
 					<td class="header-info-text" width="35%">
-					#{lOIDetailBackingBean.retrievePTJByOrgProfileId
-(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.pmOrgProfile.orgProfileId,
-lOIDetailBackingBean.isQTStatusPublished(lOIDetailBackingBean.managedBean.currentStatusId)?lOIDetailBackingBean.managedBean.scQt.publishDate : lOIDetailBackingBean.managedBean.scQt.createdDate)}
-						</td>
+						#{lOIDetailBackingBean.retrievePTJByOrgProfileId
+						(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.pmOrgProfile.orgProfileId,
+						lOIDetailBackingBean.isQTStatusPublished(lOIDetailBackingBean.managedBean.currentStatusId)?lOIDetailBackingBean.managedBean.scQt.publishDate
+						: lOIDetailBackingBean.managedBean.scQt.createdDate)}</td>
 					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
 					</td>
 					<td class="header-info-text" width="20%">
