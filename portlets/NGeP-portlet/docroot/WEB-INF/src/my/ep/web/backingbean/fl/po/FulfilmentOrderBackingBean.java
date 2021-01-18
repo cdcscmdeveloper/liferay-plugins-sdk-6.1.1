@@ -1109,6 +1109,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					String messageId = MessageConst.INFO_700005;
 					String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 					String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+					String docType = getManagedBean().getFulfilmentOrder().getDocType();
+					if(docType.equalsIgnoreCase("PO"))
+						messagePrefix="Purchase Order";
+					else
+						messagePrefix="Contract Order";
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)) {
 						messageId = MessageConst.INFO_745022;
 					}
@@ -1223,6 +1228,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 						String messageId = MessageConst.INFO_700033;
 						String documentType = getManagedBean().getFulfilmentOrder().getDocType();
 						String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+						
+						String docType = getManagedBean().getFulfilmentOrder().getDocType();
+						if(docType.equalsIgnoreCase("PO"))
+							messagePrefix="Purchase Order";
+						else
+							messagePrefix="Contract Order";
+						
 						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_PROCEED)) {
 							messageId = MessageConst.INFO_745023;
 						}
