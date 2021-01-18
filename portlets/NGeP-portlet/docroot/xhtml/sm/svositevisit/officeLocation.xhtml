@@ -47,11 +47,13 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" readonly="#{viewFlag}"
+				<!-- #9583 -->
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtSignBoardRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
 					
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk" readonly="#{viewFlag}"
+				<!-- #9583 -->
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtShareWithRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
 			</tr>
 			
@@ -59,8 +61,8 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
-				<td>
-				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				<td><!-- #9583 -->
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
 				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}">
 					<f:validateLength maximum="255" />
 				</p:inputTextarea>
