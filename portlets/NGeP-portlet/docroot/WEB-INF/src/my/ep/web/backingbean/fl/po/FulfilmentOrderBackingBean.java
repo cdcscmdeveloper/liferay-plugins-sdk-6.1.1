@@ -2303,6 +2303,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				//#29389 logan Start
+				String docType = getManagedBean().getFulfilmentOrder().getDocType();
+				if(docType.equalsIgnoreCase("PO"))
+					messagePrefix="Purchase Order";
+				else
+					messagePrefix="Contract Order";
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 									messageId = MessageConst.INFO_745024;
 				}
