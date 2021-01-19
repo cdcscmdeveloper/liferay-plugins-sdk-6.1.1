@@ -132,7 +132,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "pPlanBackingBean")
 @ViewScoped
-public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> implements Serializable {
+public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> {
 	/**
 	 * addUpdateInfo
 	 */
@@ -350,17 +350,18 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrieveVotTypeMapper();
 		if(id!=null && id>0){
 			//201229@akmal - Enhancement27624 - Start
-			if(this.getManagedBean().isFromTaskList())
+			if(this.getManagedBean().isFromTaskList()){ //24975@06112020@azza - Start
 				loadPlanDetails(id, false);
-			else
+			}else{
 				loadPlanDetails(id, true);
+			} //24975@06112020@azza - End
 			if("approved".equalsIgnoreCase(getStatusDescById(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
 //				this.getManagedBean().setDisablePlanSearchDet(true);
 				this.getManagedBean().setDisablePlanSearchDet(false);
 				this.getManagedBean().setPageStyle("m_approved");
-			}
-			else
+			}else{//24975@19012021 - azza - start
 				this.getManagedBean().setDisablePlanSearchDet(false);
+			}//24975@19012021 - azza - end
 			loadDefaultButtons();
 			this.getManagedBean().setPlanId(id);
 			this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
@@ -836,17 +837,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (ppItem.isCloneEnabled() && !ppItem.isAllowAnotherPindaan() &&
 				!ppItem.isReviseReject() && !ppItem.isRejected()) {
 			log.info("curItem=  "+ppItem.getProcurementTitle());
-			ppItem.setChangePencilToNote(true);
-			
-			if (ppItem.getPpUpdateReasons() != null || 
-					!ppItem.getPpUpdateReasons().isEmpty()) {
-				PpUpdateReason updateReason = ppItem.getPpUpdateReasons().get(0);
-				updateReason.setDisableReasonField(true);
+			ppItem.setChangePencilToNote(true);		
 			}
 		}
-		
-	}
-	/*
+			
 	private void resetPpProcurementItemFields() {
 		
 		
@@ -3922,12 +3916,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		  //24975@06112020@azza - Start
-		  //for(PpRemark setEditRemark : epItem.getPpRemarks()){
+		  for(PpRemark setEditRemark : epItem.getPpRemarks()){
 			  if (epItem.isChangePencilToNote()== true){
    				  this.getManagedBean().setDisable(true);
      		    }else{
      			  this.getManagedBean().setDisable(false);
-			//}
+			}
 		}
 		  //24975@06112020@azza - End
 
@@ -3935,7 +3929,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedItemRemarkDesc(epItem.getPpRemarks().isEmpty() ? "": epItem.getPpRemarks().get(0).getRemark());
 		
 		
-		//log.info("loadEpItemRemarks - End");
+		log.info("loadEpItemRemarks - End");
 		
 	}
 	
@@ -4943,7 +4937,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		boolean isPlanTypeEmpty = true;
 		//200911@akmal - Enhancement27624 - End
 		  if(!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getPlanNumber())){
-			  isEmpty = false;
+			  
 		//200911@akmal - Enhancement27624 - Start
 		  } 
 		  if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
@@ -5024,10 +5018,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		if(this.getManagedBean().isFromTaskList()){
 			loadPlanDetails(this.getManagedBean().getPlanId(), false);
-		}
-		else
+		}else{//210116@azza - Enhancement24975- Start
 			loadPlanDetails(this.getManagedBean().getPlanId(), true);
-		
+		}//210116@azza - Enhancement24975- End
 		this.getManagedBean().setPrevAction("search");
 		//210111@akmal - Enhancement27624 - End
 	}
@@ -6189,8 +6182,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
-	    		newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
-		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());
+	    		 //24975@06112020@azza - Start
+	    		/*newPpItem.getProcurementCat().setParameterId(originalPpItem.getProcurementCat().getParameterId());
+		    	newPpItem.getProcurementType().setParameterId(originalPpItem.getProcurementType().getParameterId());*/
+	    		newPpItem.setProcurementCat(new PmParameter());
+	    		newPpItem.setProcurementType(new PmParameter());
+	    		 //24975@06112020@azza - End
 		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
 		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
 		    	newPpItem.setEstimatedAmt(originalPpItem.getEstimatedAmt());
@@ -6335,8 +6332,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
 		}
 	}
-		loadUpdateReasons(ppItem.getPpUpdateReasons());
-		//loadUpdateReasons(ppItem);
+		//loadUpdateReasons(ppItem.getPpUpdateReasons());
+	    //24975 - Start
+		loadUpdateReasons(ppItem);
+		//24975 - End
 		//24975@20112020 - start
 		if(ppItem.isIndicator() == true){
 			ppItem.setIndicator(false);
@@ -6348,27 +6347,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * Initial or load reject reasons
 	 * @param ppUpdateReasons
 	 */
-	
-	public void loadUpdateReasons(List<PpUpdateReason> ppUpdateReasons) {
+	 //24975@06112020@azza - Start
+	public void loadUpdateReasons(PpProcurementItem ppItem) {
 		log.info("loadUpdateReasons - Start");
 		this.getManagedBean().setConfirmReason(false);
 		this.getManagedBean().setSelectedReasonDesc("");
 		this.getManagedBean().setSelectedUpdateReasons(null);
 		boolean newReason = false;
 		
-		if(ppUpdateReasons==null){
-			//ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
-			ppUpdateReasons = new ArrayList<PpUpdateReason>();
+		if(ppItem.getPpUpdateReasons()==null){
+			ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
+			//ppUpdateReasons = new ArrayList<PpUpdateReason>();
 		}
 		
-		if (!ppUpdateReasons.isEmpty()){
-			if(!ppUpdateReasons.get(0).isBrandNew()){
+		if (!ppItem.getPpUpdateReasons().isEmpty()){
+			if(!ppItem.getPpUpdateReasons().get(0).isBrandNew()){
 				//newReason = true;
 			}
 		}
 
 		// if reason is empty
-		if (ppUpdateReasons.isEmpty() || ppUpdateReasons.size() == 0) {
+		if (ppItem.getPpUpdateReasons().isEmpty() || ppItem.getPpUpdateReasons().size() == 0) {
 			newReason = true;
 		}
 		log.info("newReason: "+newReason);
@@ -6387,14 +6386,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			roleCode.setRoleCode(getOneRoleByStatus(this.getManagedBean().getSelectedPlan()));
 			reason.setRoleCode(roleCode);
 			//reason.setDocId(ppUpdateReasons.getProcurementItemId());
-			ppUpdateReasons.add(0, reason);
-			//ppItem.getPpUpdateReasons().add(0, reason);
+			//ppUpdateReasons.add(0, reason);
+			ppItem.getPpUpdateReasons().add(0, reason);
 			log.info("doc id : " + reason.getDocId());
 		}
+
+		 for(PpUpdateReason setEditRemark : ppItem.getPpUpdateReasons()){
+			  if (ppItem.isChangePencilToNote()== true){
+				  log.info("PpUpdateReason true");
+				  this.getManagedBean().setDisable(true);
+   		    }else{
+   		         log.info("PpUpdateReason false");
+   			     this.getManagedBean().setDisable(false);
+			}
+		}
 	
-		this.getManagedBean().setSelectedUpdateReasons(ppUpdateReasons);
-		this.getManagedBean().setSelectedReasonDesc(ppUpdateReasons.isEmpty() ? "": ppUpdateReasons.get(0).getReasonDesc());
-		
+		this.getManagedBean().setSelectedUpdateReasons(ppItem.getPpUpdateReasons());
+		this.getManagedBean().setSelectedReasonDesc(ppItem.getPpUpdateReasons().isEmpty() ? "": ppItem.getPpUpdateReasons().get(0).getReasonDesc());
+		 //24975@06112020@azza - End
 		log.info("loadUpdateReasons - End");
 	}
 	

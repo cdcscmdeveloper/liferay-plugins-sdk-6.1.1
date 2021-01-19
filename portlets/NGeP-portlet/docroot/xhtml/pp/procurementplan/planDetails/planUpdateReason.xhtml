@@ -31,7 +31,7 @@
 							 onkeyup="limitTextArea(this,200);"
 							onkeydown="limitTextArea(this,200);"
 							required="#{!empty param['disableValidation']}"
-							disabled="#{reason.disableReasonField}">
+							disabled="#{pPlanBackingBean.managedBean.disable}"> <!-- #24975@18012021 -->
 							<p:ajax event="change" process="@this" />
 						</p:inputTextarea>
 						<!-- enable this for phase 2 and disable phase 1 section to test 
