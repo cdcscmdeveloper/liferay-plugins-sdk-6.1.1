@@ -132,7 +132,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "pPlanBackingBean")
 @ViewScoped
-public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> {
+public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanManagedBean> implements Serializable {
 	/**
 	 * addUpdateInfo
 	 */
@@ -837,10 +837,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (ppItem.isCloneEnabled() && !ppItem.isAllowAnotherPindaan() &&
 				!ppItem.isReviseReject() && !ppItem.isRejected()) {
 			log.info("curItem=  "+ppItem.getProcurementTitle());
-			ppItem.setChangePencilToNote(true);		
+			ppItem.setChangePencilToNote(true);
+			
+			if (ppItem.getPpUpdateReasons() != null || 
+					!ppItem.getPpUpdateReasons().isEmpty()) {
+				PpUpdateReason updateReason = ppItem.getPpUpdateReasons().get(0);
+				updateReason.setDisableReasonField(true);
 			}
 		}
-			
+		
+	}
+	/*
 	private void resetPpProcurementItemFields() {
 		
 		
@@ -4937,7 +4944,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		boolean isPlanTypeEmpty = true;
 		//200911@akmal - Enhancement27624 - End
 		  if(!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getPlanNumber())){
-			  
+			  isEmpty = false;
 		//200911@akmal - Enhancement27624 - Start
 		  } 
 		  if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
