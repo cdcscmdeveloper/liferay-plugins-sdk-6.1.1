@@ -14363,8 +14363,13 @@ public class SmApplicationBackingBean extends
 	 * Search recommend rejected reason
 	 */
 	public void searchRecommendRejectedReason() {
+		
 		// reset selected recommend reject reason during search
-		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//		#15629 -- start - 19/1/2020
+		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
+			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		} 
+		//		#15629 -- end - 19/1/2020
 		// reset remark for other and remove remark required flag during search
 		getManagedBean().setRecommendReasonId(null);
 		// reset selected recommend reject reason remarks during search
