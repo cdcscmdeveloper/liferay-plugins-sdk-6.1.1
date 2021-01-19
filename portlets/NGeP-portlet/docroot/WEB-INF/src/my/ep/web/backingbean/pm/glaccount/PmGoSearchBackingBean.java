@@ -104,7 +104,9 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		}	
 	}
 	
+	//210118@akmal - Enhancement27624 - Start
 	public void resetAction(){
+		log.info("resetAction - START");
 		getManagedBean().setLazy(false);
 		getManagedBean().setDesc(null);
 		getManagedBean().setSelectedAccClass(null);
@@ -118,8 +120,11 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		persistedEntities.clear();
 		//200911@akmal - Enhancement27624 - End
 		getPmGoDataModel().resetData();
+		log.info("selectedEntities - "+selectedEntities.size());
+		log.info("persistedEntities - "+persistedEntities.size());
+		log.info("resetAction - END");
 	}
-	
+	//210118@akmal - Enhancement27624 - End
 	
 	public List<PmParameterDesc> retrieveAccountType() {
 		log.info("retrieveAccountType");
