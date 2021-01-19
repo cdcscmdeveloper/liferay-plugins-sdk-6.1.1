@@ -64,6 +64,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
+import java.text.DecimalFormat;
+import my.ep.web.util.CommonUtils;
 
 //END #27472
 
@@ -1014,6 +1016,10 @@ public class PpReportsBackingBean extends
 			Map<Integer, Object[]> ministryList = new TreeMap<Integer, Object[]>();
 			Map<Integer, Object[]> kumpPtjList = new TreeMap<Integer, Object[]>();
 			Map<Integer, Object[]> ptjList = new TreeMap<Integer, Object[]>();
+			//start #27472 change format for deduction
+			CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			//end
 			
 			//start senarai item tab
 			ArrayList<String> columnHeaderListItem = new ArrayList<String>(Arrays.asList(
@@ -1126,10 +1132,10 @@ public class PpReportsBackingBean extends
 							
 							Double dVal = 0.00;
 							if((BigDecimal)row[15]!=null){
-								obj[6]="("+((BigDecimal)row[15]).toString()+")";
+								obj[6]="("+ nf.format((BigDecimal)row[15])+")"; //#27472 change format for deduction
 								dVal = ((BigDecimal)row[15]).doubleValue();
 							}else if(!obj[6].toString().equals("(0.00)"))
-								dVal = Double.parseDouble(obj[6].toString().replaceAll("[()]", ""));
+								dVal = Double.parseDouble(obj[6].toString().replaceAll("[(,)]", "")); //#27472 change format for deduction
 							
 							//percentage
 							Double amntMinusDeduct = (Double)obj[5] - dVal;
@@ -1207,10 +1213,10 @@ public class PpReportsBackingBean extends
 							
 							Double dVal = 0.00;
 							if((BigDecimal)row[15]!=null){
-								obj[7]="("+((BigDecimal)row[15]).toString()+")";
+								obj[7]="("+ nf.format((BigDecimal)row[15])+")"; //#27472 change format for deduction
 								dVal = ((BigDecimal)row[15]).doubleValue();
 							}else if(!obj[7].toString().equals("(0.00)"))
-								dVal = Double.parseDouble(obj[7].toString().replaceAll("[()]", ""));
+								dVal = Double.parseDouble(obj[7].toString().replaceAll("[(,)]", "")); //#27472 change format for deduction
 							
 							//percentage
 							Double amntMinusDeduct = ((Double)obj[6]) - dVal;
@@ -1287,10 +1293,10 @@ public class PpReportsBackingBean extends
 						
 						Double dVal = 0.00;
 						if((BigDecimal)row[15]!=null){
-							obj[8]="("+((BigDecimal)row[15]).toString()+")";
+							obj[8]="("+ nf.format((BigDecimal)row[15])+")"; //#27472 change format for deduction
 							dVal = ((BigDecimal)row[15]).doubleValue();
 						}else if(!obj[8].toString().equals("(0.00)"))
-							dVal = Double.parseDouble(obj[8].toString().replaceAll("[()]", ""));
+							dVal = Double.parseDouble(obj[8].toString().replaceAll("[(,)]", "")); //#27472 change format for deduction
 						
 						//percentage
 						Double amntMinusDeduct = (Double)obj[7] - dVal;//((BigDecimal)row[15]!=null?(BigDecimal)row[15]:BigDecimal.ZERO).doubleValue();
@@ -1331,6 +1337,10 @@ public class PpReportsBackingBean extends
 			Map<Integer, Object[]> ministryList = new TreeMap<Integer, Object[]>();
 			Map<Integer, Object[]> kumpPtjList = new TreeMap<Integer, Object[]>();
 			Map<Integer, Object[]> ptjList = new TreeMap<Integer, Object[]>();
+			//start #27472 change format for deduction
+			CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			//end
 			
 			//start senarai item tab
 			ArrayList<String> columnHeaderListItem = new ArrayList<String>(Arrays.asList(
@@ -1437,10 +1447,10 @@ public class PpReportsBackingBean extends
 							
 							Double dVal = 0.00;
 							if((BigDecimal)row[11]!=null){
-								obj[6]="("+((BigDecimal)row[11]).toString()+")";
+								obj[6]="("+ nf.format((BigDecimal)row[11])+")"; //#27472 change format for deduction
 								dVal = ((BigDecimal)row[11]).doubleValue();
 							}else if(!obj[6].toString().equals("(0.00)"))
-								dVal = Double.parseDouble(obj[6].toString().replaceAll("[()]", ""));
+								dVal = Double.parseDouble(obj[6].toString().replaceAll("[(,)]", "")); //#27472 change format for deduction
 							
 							//percentage
 							Double amntMinusDeduct = (Double)obj[5] - dVal;//((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
@@ -1518,10 +1528,10 @@ public class PpReportsBackingBean extends
 							
 							Double dVal = 0.00;
 							if((BigDecimal)row[11]!=null){
-								obj[7]="("+((BigDecimal)row[11]).toString()+")";
+								obj[7]="("+ nf.format((BigDecimal)row[11])+")"; //#27472 change format for deduction
 								dVal = ((BigDecimal)row[11]).doubleValue();
 							}else if(!obj[7].toString().equals("(0.00)"))
-								dVal = Double.parseDouble(obj[7].toString().replaceAll("[()]", ""));
+								dVal = Double.parseDouble(obj[7].toString().replaceAll("[(,)]", "")); //#27472 change format for deduction
 							
 							//percentage
 							Double amntMinusDeduct = (Double)obj[6] - dVal;//((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
@@ -1598,10 +1608,10 @@ public class PpReportsBackingBean extends
 						
 						Double dVal = 0.00;
 						if((BigDecimal)row[11]!=null){
-							obj[8]="("+((BigDecimal)row[11]).toString()+")";
+							obj[8]="("+ nf.format((BigDecimal)row[11])+")"; //#27472 change format for deduction
 							dVal = ((BigDecimal)row[11]).doubleValue();
 						}else if(!obj[8].toString().equals("(0.00)"))
-							dVal = Double.parseDouble(obj[8].toString().replaceAll("[()]", ""));
+							dVal = Double.parseDouble(obj[8].toString().replaceAll("[(,)]", "")); //#27472 change format for deduction
 												
 						//percentage
 						Double amntMinusDeduct = (Double)obj[7] - dVal;//((BigDecimal)row[11]!=null ? ((BigDecimal)row[11]).doubleValue():0.00);
