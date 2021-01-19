@@ -89,24 +89,23 @@
 				<h:outputText  value="#{agencyData.orgProfile.orgCode}" style="float:left;text-align:left;"/><br />
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
-		     
-		 	<p:ajax event="cellEdit" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" update=":form:tableAgencyDetails,:form:messages"/>
 			
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}" />
 					<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"></link>
-			 </f:facet>
-			   
-               <p:cellEditor>           
-                 
-                    <f:facet name="input"><p:inputText id="modelInput" value="#{agencyData.ceilingAmount}" style="width:80px" maxlength="23" label="#{lbl['lbl.ct.ceiling.amount']}"			
+			 </f:facet>			   
+               <p:cellEditor>                            
+                    <f:facet name="input">
+                    <p:inputText id="modelInput" value="#{agencyData.ceilingAmount}" style="width:80px" maxlength="23" label="#{lbl['lbl.ct.ceiling.amount']}"			
 				     disabled="#{ctBackingBean.managedBean.disableAmendDetails
            		        						or (ctBackingBean.managedBean.contractVer.ctAgencies ne null and ctBackingBean.managedBean.contractVer.ctAgencies.size() eq 1)}" 
 					 styleClass="ppRightBtn"
-					 rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"/></f:facet>
-					
+					 rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" >
+					  <p:ajax event="change" update=":form:tableAgencyDetails,:form:messages" listener="#{ctBackingBean.validateCeilingAmount(agencyData)}" />
+					 </p:inputText>			 
+					 </f:facet>					
 					 <f:facet name="output"><h:outputText value="#{agencyData.ceilingAmount}" style="float:right;text-align:right;">
                      <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />															  
