@@ -855,7 +855,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		if (ppItem.isCloneEnabled() && !ppItem.isAllowAnotherPindaan() &&
 				!ppItem.isReviseReject() && !ppItem.isRejected()) {
 			log.info("curItem=  "+ppItem.getProcurementTitle());
-			ppItem.setChangePencilToNote(true);		
+			ppItem.setChangePencilToNote(true);
+			
+			//24975@19022021 -  [delete previous code cause bug task list blank]
 			}
 		}
 			
