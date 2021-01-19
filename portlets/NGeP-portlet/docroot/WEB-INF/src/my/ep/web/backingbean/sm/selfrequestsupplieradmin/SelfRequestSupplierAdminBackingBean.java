@@ -119,6 +119,20 @@ public class SelfRequestSupplierAdminBackingBean extends
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721098, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
 											""));
 							throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+						}//27382 - Dissolved Conversion to LLP
+						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+							if(businessTypeIsROC(this.getManagedBean().getSupplier().getBusinessType())){
+								fc.addMessage("ssmInvalid",
+										new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) }),
+												""));
+								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+									}
+							if(businessTypeIsROB(this.getManagedBean().getSupplier().getBusinessType())){
+								fc.addMessage("ssmInvalid",
+										new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) }),
+												""));
+								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+									}
 						}else{ 
 						fc.addMessage("ssmInvalid",
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
