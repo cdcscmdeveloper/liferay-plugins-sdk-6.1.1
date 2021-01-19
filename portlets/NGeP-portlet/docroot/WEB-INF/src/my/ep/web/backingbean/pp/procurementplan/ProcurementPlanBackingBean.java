@@ -891,7 +891,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 	}
-	*/
+	
 
 	/**
 	 * Load plan details by id
