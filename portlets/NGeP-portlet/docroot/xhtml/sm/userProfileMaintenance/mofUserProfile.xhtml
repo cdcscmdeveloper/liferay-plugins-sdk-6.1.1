@@ -281,10 +281,7 @@
 							</p:selectOneRadio>
 						</p:outputPanel></td>
 				</tr>
-				<p:outputPanel
-					rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.authorizedFlg eq 1 
-				or (smPersonnelBackingBean.managedBean.basicSmPersonnel.authorizedFlg eq 0 
-				and smPersonnelBackingBean.managedBean.authUserCount gt 9)}">
+				<p:outputPanel	rendered="#{not empty smPersonnelBackingBean.managedBean.roleList}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
 						<td><p:selectOneMenu id="basicBURole" disabled="#{smPersonnelBackingBean.managedBean.disableRoleSelection}"
