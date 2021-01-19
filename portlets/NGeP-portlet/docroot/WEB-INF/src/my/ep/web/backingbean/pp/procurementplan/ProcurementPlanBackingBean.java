@@ -842,9 +842,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			//24975@19022021 -  [delete previous code cause bug task list blank]
 			}
 		}
-		
-	}
-	/*
+			
 	private void resetPpProcurementItemFields() {
 		
 		
