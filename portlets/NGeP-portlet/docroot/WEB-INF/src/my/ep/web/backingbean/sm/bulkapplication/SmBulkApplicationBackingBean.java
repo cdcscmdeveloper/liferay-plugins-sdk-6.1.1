@@ -639,18 +639,13 @@ public class SmBulkApplicationBackingBean extends
 			//			#15629 -- start - 19/1/2020
 			if(!EntityHelper.isCollectionEmpty(vo.getAppl().getSmApplRejectReasons())) {
 				
-				List<Long> reasonIdList = new ArrayList<Long>();
 				for(SmApplRejectReason smApplRejectReason : vo.getAppl().getSmApplRejectReasons()){
 						for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
 							if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
 								vo.getSelectedReasonDescs().add(pmReasonDesc);
-								reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
 							}
 						}			
 				}
-				//				getManagedBean().setReasonId(
-				//						reasonIdList.toArray(new Long[reasonIdList.size()]));
-				//				verifySelectedRejectReasons();
 			}
 			//			#15629 -- end - 19/1/2020
 			vo.setReasonDescList(getManagedBean().getReasonDescList());
