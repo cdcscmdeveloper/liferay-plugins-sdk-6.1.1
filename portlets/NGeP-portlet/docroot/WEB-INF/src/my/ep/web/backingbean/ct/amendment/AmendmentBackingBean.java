@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6298,7 +6299,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//Enhancement #26186 start - retrieve disciplinary info 
 	
 	//#29793 start
+	
+	/**
+	 * Reformat date to control issue 
+	 * when there's date that return nullPointerException value when format is not right when comparing 
+	 */
+	public Date reformatDate(Date receiveDate) {
+		try{
+			if(receiveDate!=null){
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");		
+				receiveDate = sdf.parse(sdf.format(receiveDate));	
+			}
+		}
+		catch(ParseException e){
+			e.printStackTrace();
+		}
+		
+		return receiveDate;
+	}
+	
+	
 	public void setDisciplinaryAction(){
+		
 		getManagedBean().setDisciplinaryActionCancel(false);
 		checkDisciplinaryAction();
 			
@@ -6306,27 +6328,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setDisciplinaryActionCancel(true);
 		}
 		
-		if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MEETING_DECISION) || 
+		if((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MEETING_DECISION) || 
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_SIGN_OFF) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF) ||
-				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION)){
+				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION)) 
+				&& getManagedBean().isDisciplinaryAction()){
 			if((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) &&
 					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) 
 					|| (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null &&
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate()))){
+					reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate())))){
 				getManagedBean().setDisciplinaryActionCancel(false);
 			}
 			if((getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME) &&
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null)
+					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() == null)
 					|| (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null &&
-					ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate()))){
+					reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate())))){
 				getManagedBean().setDisciplinaryActionCancel(false);
 			}
 		}
-		else if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_SUBMISSION) ||
+		else if((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_SUBMISSION) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_REVISION) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_APPROVAL) ||
-				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL)){
+				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL))
+				&& getManagedBean().isDisciplinaryAction()){
 			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 			ContractResDTO resContractDTO = contractAmendmentSO.retrieveDisciplinaryActionByContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			
@@ -6358,11 +6382,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+					&& reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate()))){
 				getManagedBean().setDisciplinaryActionCancel(false);
 			}
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+					&& reformatDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()).before(reformatDate(getManagedBean().getDisciplinaryActionStartDate()))){
 				getManagedBean().setDisciplinaryActionCancel(false);
 			}
 		}
