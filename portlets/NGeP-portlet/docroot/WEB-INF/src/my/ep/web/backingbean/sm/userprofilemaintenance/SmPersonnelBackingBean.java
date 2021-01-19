@@ -2623,8 +2623,9 @@ public class SmPersonnelBackingBean extends
 		boolean allowAccess = true;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setSupplierId(smSupplier.getSupplierId());
 		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
-		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierByEpNo(supplierSearchReqDTO);
+		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(supplierSearchReqDTO);
 		smSupplier = searchResDTO.getSmSupplier();
 		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
 			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
@@ -2805,6 +2806,12 @@ public class SmPersonnelBackingBean extends
 	public String navigateToUpdateMOFUserPage(String personnelId) {
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryByCode(reqDTO);
+		getManagedBean().setDefaultCountryId(
+				resDTO.getPmCountry().getCountryId());
 		//9569 - Start
 		resetAll();
 		//9569 - End
