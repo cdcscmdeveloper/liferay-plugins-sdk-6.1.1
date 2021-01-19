@@ -2623,8 +2623,9 @@ public class SmPersonnelBackingBean extends
 		boolean allowAccess = true;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setSupplierId(smSupplier.getSupplierId());
 		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
-		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierByEpNo(supplierSearchReqDTO);
+		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(supplierSearchReqDTO);
 		smSupplier = searchResDTO.getSmSupplier();
 		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
 			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
@@ -2805,6 +2806,12 @@ public class SmPersonnelBackingBean extends
 	public String navigateToUpdateMOFUserPage(String personnelId) {
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		CountryResDTO resDTO = SmServiceLookup.getCountrySO()
+				.retrieveCountryByCode(reqDTO);
+		getManagedBean().setDefaultCountryId(
+				resDTO.getPmCountry().getCountryId());
 		//9569 - Start
 		resetAll();
 		//9569 - End
@@ -2812,16 +2819,16 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setEpRoleTrans(getManagedBean().getBasicSmPersonnel().getEpRole());
 		getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
 		//set role checking
-		//SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil.getSmAuthorizedPersonnelCountVO(getManagedBean().getSmAppl());
-	//	getManagedBean().setAuthVO(countVO);
-	//	getManagedBean().setValidSmUserLimit(countVO.isReachAuthorizedPersonnelLimit());
-		//buildRoleList(getManagedBean().getBasicSmPersonnel());
-		epRoleList(getManagedBean().getBasicSmPersonnel(),getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
+		SmAuthorizedPersonnelCountVO countVO = SmApplicationUtil.getSmAuthorizedPersonnelCountVO(getManagedBean().getSmAppl());
+		getManagedBean().setAuthVO(countVO);
+		getManagedBean().setValidSmUserLimit(countVO.isReachAuthorizedPersonnelLimit());
+		buildRoleList(getManagedBean().getBasicSmPersonnel());
+		//epRoleList(getManagedBean().getBasicSmPersonnel(),getManagedBean().getBasicSmPersonnel().getAuthorizedFlg());
 		initializeLists();
 		log.info(getManagedBean().getBasicSmPersonnel().getTitle().getSalutationName());
-		if(getManagedBean().getBasicSmPersonnel().getEpRole() != null && getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+		/*if(getManagedBean().getBasicSmPersonnel().getEpRole() != null && getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())){
 			epRoleList(getManagedBean().getBasicSmPersonnel(),2);
-		}
+		}*/
 		getManagedBean().setDisableRoleSelection(disableEpRoleDropDown(getManagedBean()
 				.getBasicSmPersonnel()));
 		return "mofUserProfile.xhtml";
