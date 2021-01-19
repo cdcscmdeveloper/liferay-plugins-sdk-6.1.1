@@ -6306,10 +6306,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setDisciplinaryActionCancel(true);
 		}
 		
-		if(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MEETING_DECISION) || 
+		if((ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MEETING_DECISION) || 
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_SIGN_OFF) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF) ||
-				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION)){
+				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION))
+				&& getManagedBean().isDisciplinaryActionCancel()){
 
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
 					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
@@ -6324,43 +6325,48 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_REVISION) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_APPROVAL) ||
 				ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId().equals(ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL)){
-			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-			ContractResDTO resContractDTO = contractAmendmentSO.retrieveDisciplinaryActionByContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 			
-			ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(resContractDTO.getCtDisciplinaryAction());
-			if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions() != null) {
-				if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == null) {
+			if(getManagedBean().isDisciplinaryAction()){
+				IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+				ContractResDTO resContractDTO = contractAmendmentSO.retrieveDisciplinaryActionByContractVerId(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+				
+				ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(resContractDTO.getCtDisciplinaryAction());
+				if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions() != null) {
+					if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == null) {
+						getManagedBean().setDisciplinaryApprovedFlag("");
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 1) {
+						getManagedBean().setDisciplinaryApprovedFlag("A");
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 0) {
+						getManagedBean().setDisciplinaryApprovedFlag("R");
+					}
+						
+					if(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
+						ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setJustification("");
+					}
+				} else {
+						
+				//set discplinary action if null
+					CtDisciplinaryAction ctDisciplinaryActions = new CtDisciplinaryAction();
+					ctDisciplinaryActions.setApprove(false);
+					ctDisciplinaryActions.setApproveFlag(0);
+					ctDisciplinaryActions.setJustification(null);
+					ctDisciplinaryActions.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
+						
+					ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(ctDisciplinaryActions);
 					getManagedBean().setDisciplinaryApprovedFlag("");
-				} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 1) {
-					getManagedBean().setDisciplinaryApprovedFlag("A");
-				} else if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 0) {
-					getManagedBean().setDisciplinaryApprovedFlag("R");
+					getManagedBean().setJustification("");
 				}
-					
-				if(ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
-					ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().setJustification("");
-				}
-			} else {
-					
-			//set discplinary action if null
-				CtDisciplinaryAction ctDisciplinaryActions = new CtDisciplinaryAction();
-				ctDisciplinaryActions.setApprove(false);
-				ctDisciplinaryActions.setApproveFlag(0);
-				ctDisciplinaryActions.setJustification(null);
-				ctDisciplinaryActions.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
-					
-				ctBackingBean.getManagedBean().getContractVer().setCtDisciplinaryActions(ctDisciplinaryActions);
-				getManagedBean().setDisciplinaryApprovedFlag("");
-				getManagedBean().setJustification("");
 			}
 			
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
-				getManagedBean().setDisciplinaryActionCancel(false);
-			}
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
-				getManagedBean().setDisciplinaryActionCancel(false);
+			if(getManagedBean().isDisciplinaryActionCancel()){
+				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+					getManagedBean().setDisciplinaryActionCancel(false);
+				}
+				if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() != null
+						&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate().before(getManagedBean().getDisciplinaryActionStartDate())){
+					getManagedBean().setDisciplinaryActionCancel(false);
+				}
 			}
 		}
 		log.info("getManagedBean().isDisciplinaryActionCancel() :" + getManagedBean().isDisciplinaryActionCancel());
