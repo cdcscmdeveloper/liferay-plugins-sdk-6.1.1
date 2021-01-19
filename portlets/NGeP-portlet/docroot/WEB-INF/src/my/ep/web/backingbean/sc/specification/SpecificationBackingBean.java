@@ -17307,45 +17307,6 @@ if(null!=allTechnicalChecklist){
 }
 }
 	//#25037-start
-	public void submitAction(String outcome){
-		assertConcurrentComittteeChangesApproval();
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
-		} else {
-			specCommitteBpmTask(outcome);
-		}
-	}
-
-	private void assertConcurrentComittteeChangesApproval(){
-		String taskName = this.getManagedBean().getTaskName();
-		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
-		String[] scoringTaskNames = new String[] {
-				SCProcessNameConst.FINALISE_SCORING,
-				SCProcessNameConst.ENDORSE_SCORING,
-				SCProcessNameConst.SIGNOFF_SCORING };
-		String[] approvalTaskName = new String[]{
-				SCProcessNameConst.APPROVE_COMMITTEE,
-				SCProcessNameConst.REVISE_COMMITTEE
-		};
-
-		if(Arrays.asList(scoringTaskNames).contains(taskName)){
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			ScQt qt = this.getManagedBean().getQt();
-			bpmReqDTO.setDocNumber(qt.getQtNo());
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-			for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
-				if(StringUtils.isNotBlank(currentVO.getTaskName())){
-					if(Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())){
-						throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
-					}
-				}
-			 }
-		}	
-	}
-	
 	private void assertSpecCommitteeMaintenanceInProgress(ScQt qt){
 		//specification maintenance cannot be concurrent to spec committee maintenance
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
