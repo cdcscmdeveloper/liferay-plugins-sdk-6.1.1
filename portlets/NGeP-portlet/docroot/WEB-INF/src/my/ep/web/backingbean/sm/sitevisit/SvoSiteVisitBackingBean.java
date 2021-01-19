@@ -2039,10 +2039,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
 				}			
-				renewSesionObject();
+				//#9608 - start
+				//renewSesionObject();
+				int index = getManagedBean().getActiveIndex();
+				retrieveSiteVisitInfo("");
+				getManagedBean().setActiveIndex(index);
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
-				
-				return "/xhtml/common/acknowledge.xhtml";
+				return null;
+				//return "/xhtml/common/acknowledge.xhtml";
+				//#9608 - end
 			} else {
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
 			}
