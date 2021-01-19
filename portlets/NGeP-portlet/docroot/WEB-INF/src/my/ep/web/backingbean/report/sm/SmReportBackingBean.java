@@ -1864,8 +1864,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						fpxCount++;
 					}else{						
 						if(m > 0){							
-							Object[] previousRow = (Object[]) reportList.get(m-1);
-							if(!row[5].toString().equals(previousRow[5].toString())){								
+							// #14203 - Row list issue
+							//Object[] previousRow = (Object[]) reportList.get(m-1);
+							//if(!row[5].toString().equals(previousRow[5].toString())){								
 								creditList.put(creditCount, new Object[] {
 										(Date) row[4],//Tarikh Transaksi
 										(Date) row[3],//Tarikh Resit
@@ -1886,7 +1887,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 										netPrice,//Jumlah Keseluruhan
 										row[16].toString()//Status
 									});
-							}
+							// #14203 - Row list issue
+							//}
 						} else {														
 							creditList.put(creditCount, new Object[] {
 									(Date) row[4],//Tarikh Transaksi
@@ -2137,7 +2139,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowCC++);
 				}else{
-					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0));					
+					// #14203 - Row list issue
+					//sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0));					
 				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNoCC = (String)objectArr[2];
