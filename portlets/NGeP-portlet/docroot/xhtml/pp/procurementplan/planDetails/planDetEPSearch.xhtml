@@ -50,10 +50,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					 </tr>
 					 <tr>
 					 	<td>
-					 	<!-- 201105@akmal - 27624 - Start -->
+					 	<!-- 210118@akmal - 27624 - Start -->
 						 	<p:dataTable id="accCodeResult" 
 						 		emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
-						 		styleClass="ppTablePlanItem" rows="5"
+						 		styleClass="ppTablePlanItem" rows="0"
 						 		style="width: 400px;" 
 						 		var="pmGo" value="#{pPlanBackingBean.managedBean.vPmGolist}"
 								rendered="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">	
@@ -64,7 +64,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 									<h:outputText value="#{pmGo.desc}" />
 								</p:column>
 							</p:dataTable>
-						 <!-- 201105@akmal - 27624 - End -->
+						 <!-- 210118@akmal - 27624 - End -->
 						</td>
 					 </tr>
 				</table>		
@@ -151,6 +151,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
 				action="#{pPlanBackingBean.resetPlanDetailSearch()}"
+				oncomplete="#{pmGoSearchBackingBean.resetAction()}"
 				update="@form"> 
 			</p:commandButton>
 		<!-- 201111@akmal - Enhancement27624 - End -->
