@@ -32,6 +32,7 @@
 			</p:outputPanel>
 			</tr>
 
+			<!-- #9583 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<td>
@@ -39,19 +40,21 @@
 	
 					</p:selectBooleanCheckbox>
 				</td>
+
 				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
+				
 				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" readonly="#{viewFlag}">
 					</p:selectBooleanCheckbox>
 				</td>
-			</tr>
+			</tr> -->
 			
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<!-- #9583 -->
 				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtSignBoardRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
 					
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
 				<!-- #9583 -->
 				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="1000" id="txtShareWithRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>

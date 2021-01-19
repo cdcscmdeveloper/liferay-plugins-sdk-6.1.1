@@ -2241,6 +2241,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 
+	/*//9583 - start
 	public void signBoardOnChange(){
 		if(!getManagedBean().getSmSvTask().getSmSvOffice().isSignboardValid()){
 			
@@ -2254,7 +2255,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().getSmSvTask().getSmSvOffice().setShareWithRemark(null);
 		}
 	}
-	
+	*/ //9583 - end
 	/**
 	 * review site visit report
 	 */
