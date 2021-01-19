@@ -165,22 +165,20 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" /> </td>
 					<td><p:inputText id="basicBUEpf"
 							label="#{lbl['lbl.sm.person.epfNo']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epfNo}"
-							size="35" required="true"
+							size="35" 
 							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /> <p:message
 							id="basicBUEpfMsg" for="basicBUEpf" showSummary="true"
 							showDetail="false" display="icon" /></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /> </td>
 					<td><p:inputText id="basicBUWrk"
 							label="#{lbl['lbl.sm.person.exp']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.workExperienceYear}"
-							size="35" required="true"
+							size="35" 
 							disabled="#{smPersonnelBackingBean.managedBean.editMode}" /> <p:message
 							id="basicBUWrkMsg" for="basicBUWrk" showSummary="true"
 							showDetail="false" display="icon" /></td>
