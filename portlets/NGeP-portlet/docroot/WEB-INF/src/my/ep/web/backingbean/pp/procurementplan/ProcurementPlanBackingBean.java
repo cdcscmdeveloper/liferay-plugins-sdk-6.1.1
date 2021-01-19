@@ -839,10 +839,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("curItem=  "+ppItem.getProcurementTitle());
 			ppItem.setChangePencilToNote(true);
 			
-			if (ppItem.getPpUpdateReasons() != null || 
-					!ppItem.getPpUpdateReasons().isEmpty()) {
-				PpUpdateReason updateReason = ppItem.getPpUpdateReasons().get(0);
-				updateReason.setDisableReasonField(true);
+			//24975@19022021 -  [delete previous code cause bug task list blank]
 			}
 		}
 		
