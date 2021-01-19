@@ -2907,6 +2907,7 @@ public class SmPersonnelBackingBean extends
 		      if (personnel.getPmUser() != null) {
 			    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value())){
 			    	personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+			    	personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 			    }
 		        reqDTO1.setSmPersonnel(personnel);
 		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
@@ -2918,7 +2919,8 @@ public class SmPersonnelBackingBean extends
 		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
 		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		    	  }else{
-		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);	 
+		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 		    	  }
 		        List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
 		        smPersonnelList.add(personnel);
