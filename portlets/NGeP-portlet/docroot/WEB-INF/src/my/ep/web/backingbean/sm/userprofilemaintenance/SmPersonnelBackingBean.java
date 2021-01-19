@@ -2907,6 +2907,7 @@ public class SmPersonnelBackingBean extends
 		      if (personnel.getPmUser() != null) {
 			    if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.CM_USER.value())){
 			    	personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
+			    	personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
 			    }
 		        reqDTO1.setSmPersonnel(personnel);
 		        reqDTO1.setNewEpRole(getManagedBean().getEpRoleTrans());
