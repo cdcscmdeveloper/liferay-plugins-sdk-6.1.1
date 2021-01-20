@@ -282,7 +282,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50"
+					<td><p:inputText maxlength="250"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.brand']}" id="smMachBrand"
 							value="#{backingBean.managedBean.selectedMachine.brandName}"
@@ -295,7 +295,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="50"
+					<td><p:inputText maxlength="250"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.machine.function']}" id="smMachFnc"
 							value="#{backingBean.managedBean.selectedMachine.machineFunction}"
@@ -356,7 +356,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
-					<td><p:inputText maxlength="50"
+					<td><p:inputText maxlength="250"
 							value="#{backingBean.managedBean.selectedMachine.guarantorName}"
 							size="35" >
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
