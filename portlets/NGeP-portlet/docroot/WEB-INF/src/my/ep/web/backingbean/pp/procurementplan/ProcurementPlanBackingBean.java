@@ -5067,10 +5067,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //			throw new EpException(MessageConst.ERROR_730027);
 		}
 		this.getManagedBean().setPlanDetailSearch(true);
-		//210111@akmal - Enhancement27624 - Start
+		//210120@akmal - Enhancement27624 - Start
 		if((this.getManagedBean().getSelectedPlan().isUpdatable() && !this.getManagedBean().isTrackingDiary())
 				|| this.getManagedBean().isFromTaskList()){
-			savePlan(BpmOutcomeConst.BPM_SAVE);
+			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty())
+				savePlan(BpmOutcomeConst.BPM_SAVE);
 		}
 		if(this.getManagedBean().isFromTaskList()){
 			loadPlanDetails(this.getManagedBean().getPlanId(), false);
@@ -5078,7 +5079,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			loadPlanDetails(this.getManagedBean().getPlanId(), true);
 		}//210116@azza - Enhancement24975- End
 		this.getManagedBean().setPrevAction("search");
-		//210111@akmal - Enhancement27624 - End
+		//210120@akmal - Enhancement27624 - End
 	}
 	//210111@akmal - Enhancement27624 - End
 	
@@ -5118,10 +5119,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().getPlanSearchBean().setPlanDetstatus(99L);
 		this.getManagedBean().setSelectedCatSearch(null);
 		
+		//210120@akmal - Enhancement27624 - Start
 		if((this.getManagedBean().getSelectedPlan().isUpdatable() && !this.getManagedBean().isTrackingDiary())
 				|| this.getManagedBean().isFromTaskList()){
-			savePlan(BpmOutcomeConst.BPM_SAVE);
+			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty())
+				savePlan(BpmOutcomeConst.BPM_SAVE);
 		}
+		//210120@akmal - Enhancement27624 - End
 		if(this.getManagedBean().isFromTaskList()){
 			generatePageModeForProcess(this.getManagedBean().getTaskName());
 			this.loadPlanDetails(this.getManagedBean().getPlanId(), false);
