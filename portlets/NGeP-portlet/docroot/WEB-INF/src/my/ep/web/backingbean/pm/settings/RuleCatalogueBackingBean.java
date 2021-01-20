@@ -1520,39 +1520,45 @@ public class RuleCatalogueBackingBean extends
 						// hit error and return
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
 						case '1':
-							if (ruleTypeDesc.getRuleType().getRangeType() == 1
-									&& baseValueToCompare.getGroupValueId()
-											.equals(value.getGroupValueId())) {
-
-								throw new EpException(
-										MessageConst.ERROR_770110,
-										new String[] { ruleTypeDesc
-												.getRuleDesc() });
-							} else {
-
-								throw new EpException(
-										MessageConst.ERROR_770109,
-										new String[] { ruleTypeDesc
-												.getRuleDesc() });
+							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
+								if (ruleTypeDesc.getRuleType().getRangeType() == 1
+										&& baseValueToCompare.getGroupValueId()
+												.equals(value.getGroupValueId())) {
+	
+									throw new EpException(
+											MessageConst.ERROR_770110,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								} else {
+	
+									throw new EpException(
+											MessageConst.ERROR_770109,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								}
 							}
 						case '2':
-							if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
-									.getParameterCode().equalsIgnoreCase("c")) {
-								throw new EpException(
-										MessageConst.ERROR_770199,
-										new String[] {
-												ruleTypeDesc.getRuleDesc(),
-												value.getCategoryDisplayValue() });
-							} else {
-								throw new EpException(
-										MessageConst.ERROR_770110,
-										new String[] { ruleTypeDesc
-												.getRuleDesc() });
+							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
+								if (ruleTypeDesc.getRuleType().getRuleDataTypeId()
+										.getParameterCode().equalsIgnoreCase("c")) {
+									throw new EpException(
+											MessageConst.ERROR_770199,
+											new String[] {
+													ruleTypeDesc.getRuleDesc(),
+													value.getCategoryDisplayValue() });
+								} else {
+									throw new EpException(
+											MessageConst.ERROR_770110,
+											new String[] { ruleTypeDesc
+													.getRuleDesc() });
+								}
 							}
 
 						case '3':
-							throw new EpException(MessageConst.ERROR_770154,
-									new String[] { ruleTypeDesc.getRuleDesc() });
+							if (!ruleTypeDesc.getRuleType().getRuleType().equals("LOPO")) {
+								throw new EpException(MessageConst.ERROR_770154,
+										new String[] { ruleTypeDesc.getRuleDesc() });
+							}
 
 						}
 
@@ -3098,6 +3104,9 @@ public class RuleCatalogueBackingBean extends
 					.getSelectedRuleDescType().getRuleType();
 			PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 			newRuleValue.setRuleType(configRuleType);
+						
+			/*Calendar forwardedEffDate = Calendar.getInstance();
+			Date nextDay;*/
 			newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
 
 			// if
@@ -5348,5 +5357,23 @@ public class RuleCatalogueBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERR_900046);
 		}
-	}	
+	}
+	
+	public void onRuleType(org.primefaces.event.SelectEvent event) {
+
+		String selectedRuleType = null;
+		
+        if (getManagedBean().getSelectedRuleDescType() != null) {
+        	selectedRuleType = getManagedBean().getSelectedRuleDescType()
+        			.getRuleType().getRuleType();
+        	
+        	if (selectedRuleType.equals("LOPO")) {
+        		getManagedBean().setLOPOSelected(true);
+        	} else {
+        		getManagedBean().setLOPOSelected(false);
+        	}
+        }
+        
+	}
+	
 }
