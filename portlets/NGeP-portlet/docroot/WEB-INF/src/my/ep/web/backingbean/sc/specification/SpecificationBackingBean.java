@@ -10706,6 +10706,7 @@ public class SpecificationBackingBean extends
 
 			//25638 Revise at SC,EC,OC,TEC,FEC,FC - Start
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+				log.info("BPM_REVISE? = " + action);
 				retriveCommitteeEndorsment();   //Added the line 25638 Enhancement 
 				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
 				
@@ -10725,6 +10726,7 @@ public class SpecificationBackingBean extends
 				
 				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
 			} else {
+				log.info("BPM_APPROVE? = " + action);
 				getManagedBean().setAutoUpdate(false);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
