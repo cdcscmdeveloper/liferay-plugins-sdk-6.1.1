@@ -6988,7 +6988,17 @@ public class SmApplicationBackingBean extends
 					cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 				}
 			}
-		}
+		} else if (getManagedBean().isSupplierUser() // start 29847
+				&& getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				&& getManagedBean().getSmAppl().getSmSupplierCategories() != null) {
+			for (Iterator<SmSupplierCategory> iterator = getManagedBean().getSmAppl().getSmSupplierCategories()
+					.iterator(); iterator.hasNext();) {
+				SmSupplierCategory smSupplierCategory = iterator.next();
+				if (smSupplierCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
+					iterator.remove();
+				}
+			}
+		} // end 29847
 	}
 
 	/**
