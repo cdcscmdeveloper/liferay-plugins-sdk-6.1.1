@@ -1185,11 +1185,15 @@ public class SmApplicationBackingBean extends
 		}
 		retrieveBusinessTypeList();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
-
+		//#15629 - START	
+		String suppType = getManagedBean().getSmAppl().getSupplierType();
+		if(suppType == null || "".equalsIgnoreCase(suppType)){
+			suppType = appl.getSupplierType();
+		}
 		getManagedBean().setReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmAppl().getSupplierType(), getManagedBean()
+				SmApplicationUtil.retrieveMofRejectReason(suppType, getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
+		//#15629 - END	
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -1220,9 +1224,12 @@ public class SmApplicationBackingBean extends
 		}
 		
 		if(getManagedBean().isPoUser()){
+		String suppTypePo = getManagedBean().getSmAppl().getSupplierType();
+		if((suppTypePo == null || "".equalsIgnoreCase(suppTypePo)) && appl != null){
+			suppTypePo = appl.getSupplierType();
+		}
 		getManagedBean().setRecommendReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
-						.getSmAppl().getSupplierType(), getManagedBean()
+				SmApplicationUtil.retrieveMofRejectReason(suppTypePo, getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
 		getManagedBean().setRecommendReasonDescList(
 				getManagedBean().getRecommendReasonDescInitList());
