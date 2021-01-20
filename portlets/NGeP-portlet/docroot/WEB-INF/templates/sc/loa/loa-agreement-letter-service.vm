@@ -350,7 +350,7 @@ u {
 						</p>
 						
 						<p>
-							<span class="text_family">(g)	syarikat tuan gagal membekalkan barang/menyempurnakan perkhidmatan dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span>
+							<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span>
 						</p>
 						
 						<p>
@@ -632,7 +632,8 @@ u {
 				</tr>
 				<tr>
 					<td align="left" style="padding-left: 8px;" colspan="3"><span
-						class="text_family_red">* senarai item, kuantiti dan/atau tempoh serta jadual penyempurnaan perkhidmatan yang
+						class="text_family_red">* senarai item, kuantiti, jenis
+							perkhidmatan dan/atau tempoh serta jadual penyempurnaan perkhidmatan yang
 							ditetapkan seperti di <b><i>Lampiran A2</i></b>
 					</span></td>
 				</tr>
