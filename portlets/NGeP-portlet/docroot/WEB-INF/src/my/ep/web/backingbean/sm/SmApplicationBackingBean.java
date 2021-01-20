@@ -1774,7 +1774,15 @@ public class SmApplicationBackingBean extends
 							}//27382 - Terminated 
 							if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
 								throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-							}else{ 
+							}//27382 - Dissolved Conversion to LLP
+							if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+								if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
+									throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+								}
+								if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+									throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+								}
+								}else{ 
 							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 							}
 						//27382 - end
@@ -13845,7 +13853,15 @@ public class SmApplicationBackingBean extends
 				}//27382 - Terminated 
 				if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
 					throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-				}else{ 
+				}//27382 - Dissolved Conversion to LLP
+				if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+					if(businessTypeIsROC(this.getManagedBean().getSmSupplier().getBusinessType())){
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+					}
+					if(businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType())){
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+					}
+					}else{ 
 				throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 				}
 			//27382 - end

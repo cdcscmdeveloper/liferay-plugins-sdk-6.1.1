@@ -343,7 +343,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
 					case "T":
 						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});			
-					case "B":
+					case "B": //27382 - Dissolved Conversion to LLP
+						if(businessTypeIsROC(businessType)){
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+						}
+						if(businessTypeIsROB(businessType)){
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+						}
 					case "W":
 					case "D":
 					case "R":
@@ -2011,7 +2017,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//27382 - Terminated 
 					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
 						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-					}else{ 
+					}
+					//27382 - Dissolved Conversion to LLP
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+					if(businessTypeIsROC(smSupp.getBusinessType())){
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+					}
+					if(businessTypeIsROB(smSupp.getBusinessType())){
+						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+					}
+					}
+					else{ 
 					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 					}
 				//27382 - end
@@ -2216,7 +2232,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							//27382 - Terminated 
 							if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
 								throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-							}else{ 
+							}
+							//27382 - Dissolved Conversion to LLP
+							if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+							if(businessTypeIsROC(smSupp.getBusinessType())){
+								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+							}
+							if(businessTypeIsROB(smSupp.getBusinessType())){
+								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+							}
+							}
+							else{ 
 							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
 							}
 						//27382 - end
