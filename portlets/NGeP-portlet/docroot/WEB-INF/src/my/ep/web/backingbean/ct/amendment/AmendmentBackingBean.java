@@ -2226,7 +2226,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					if (getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("R") || 
 							ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getApproveFlag() == 0){
-						if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null){
+						if (ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == null ||
+								ctBackingBean.getManagedBean().getContractVer().getCtDisciplinaryActions().getJustification() == ""){
 							setTabValue("CNT");
 							throw new EpException(MessageConst.ERROR_100022, 
 									new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks", 
