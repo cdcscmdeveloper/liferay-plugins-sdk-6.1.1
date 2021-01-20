@@ -124,6 +124,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -4098,9 +4100,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
 		
 		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		if (!getManagedBean().getSpecificationList().isEmpty()) {
 		getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
 		getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
 		getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());	
+		} else {
+		getManagedBean().setSupplierOffer(null);
+		getManagedBean().setNewOfferedSpec(null);
+		getManagedBean().setItemSpecification(null);
+		}
 		
 		flItemAddr.setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
@@ -4193,14 +4201,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractResDTO ciResDTO = null;
 		cireqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		ciResDTO = contractSO.retrieveContract(cireqDTO);
+		
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
+		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
+		AwardSupplierResDTO resLoaDTO = new AwardSupplierResDTO();
+		if (ciResDTO.getContract().getLoa() != null) {
+		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
+		resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
 
-		if (ciResDTO.getContract().getProcurementMode()
-				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
-				ciResDTO.getContract().getProcurementMode()
-				.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			getManagedBean().setDpFlag(true);
-		} else {
-			getManagedBean().setDpFlag(false);
+			if (resLoaDTO.getScLoa().getProcurementMode()
+					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
+					resLoaDTO.getScLoa().getProcurementMode()
+					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				getManagedBean().setDpFlag(true);
+			} else {
+				getManagedBean().setDpFlag(false);
+			}
 		}
 	}
 
