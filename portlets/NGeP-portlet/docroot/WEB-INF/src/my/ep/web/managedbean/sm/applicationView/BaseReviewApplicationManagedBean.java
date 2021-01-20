@@ -265,7 +265,19 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	//25792 - end
 	
 	private boolean viewSupplierMaintenancePage; // #26639
+	
+	//28771 - start
+	private String supportingDocMode;
+	
+	public String getSupportingDocMode() {
+		return supportingDocMode;
+	}
 
+	public void setSupportingDocMode(String supportingDocMode) {
+		this.supportingDocMode = supportingDocMode;
+	}
+	//28771- end
+		
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
