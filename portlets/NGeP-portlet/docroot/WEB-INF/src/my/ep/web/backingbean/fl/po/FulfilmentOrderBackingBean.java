@@ -1140,7 +1140,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 
 				if (getManagedBean().getCarryForward() != null) {
 				
-				  if ((d1.compareTo(d3) < 0||d1.compareTo(d3)==0) && d1.compareTo(d2) > 0)  {
+				  if ((d1.compareTo(d3) < 0||d1.compareTo(d3)==0) && (d1.compareTo(d2) > 0||d1.compareTo(d2)==0))  {
 						reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
 					}else{
 						throw new EpException(MessageConst.ERROR_776107);
