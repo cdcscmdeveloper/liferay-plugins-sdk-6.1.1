@@ -89,7 +89,7 @@
 				<h:outputText  value="#{agencyData.orgProfile.orgCode}" style="float:left;text-align:left;"/><br />
 				<h:outputText value="#{agencyData.orgProfile.orgName}" style="float:left;text-align:left;" />
 			</p:column>
-			
+			<!-- Start Fixing - #28827 -->
 			 <p:column style="width:10%;white-space:normal;">
 			 <f:facet name="header" styleClass="column-align-center">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}" />
@@ -111,13 +111,12 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />															  
 					   </h:outputText></f:facet>					  	
                </p:cellEditor> 
-
                     <ui:fragment  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
                          <div style="text-align:center;">
                           <i class="fa fa-pencil-square-o"></i>              
                          </div>
                     </ui:fragment>							 					  
-                
+                <!-- End Fixing  #28827 -->
            </p:column> 
            
 			<p:column rowspan="2" style="width:8%;"
