@@ -227,13 +227,15 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<!-- #28466 start - remove #27308 showstopper -->
 					<td><p:inputText id="equiCompShrAmt"
-							disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.selectedEquityCompany.ssmData}"
+							disabled="#{!backingBean.managedBean.valueReqd}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.shrAmt']}"
 							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 							value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
 							size="35">
+					<!-- #28466 start - remove #27308 showstopper -->
 							<f:validateDoubleRange for="contractorContractVal"
 								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
 								maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
