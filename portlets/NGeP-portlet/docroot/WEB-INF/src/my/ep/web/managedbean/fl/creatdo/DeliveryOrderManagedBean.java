@@ -138,6 +138,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String itemSpecification;
 	private String itemName;
 	private boolean dpFlag;
+	private boolean contractFlag;
 	private List<ScRequestItemSpecOffer> specificationList;
 	//28855 -end
 	/**
@@ -1333,6 +1334,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setDpFlag(boolean dpFlag) {
 		this.dpFlag = dpFlag;
+	}
+
+	public boolean isContractFlag() {
+		return contractFlag;
+	}
+
+	public void setContractFlag(boolean contractFlag) {
+		this.contractFlag = contractFlag;
 	}
 
 	public List<ScRequestItemSpecOffer> getSpecificationList() {
