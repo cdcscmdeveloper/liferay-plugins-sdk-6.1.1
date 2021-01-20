@@ -14345,7 +14345,10 @@ public class SmApplicationBackingBean extends
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
 							if (StringUtils.isBlank(getManagedBean()
 									.getApplnRejectionRemarks())) {
-								throw new EpException("Recommend Rejection Remarks is mandatory.");
+								//#15629 - Start - Add comment to merge sit 20/1/2021
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+										null));
+								//#15629 - End - Add comment to merge sit 20/1/2021
 							}
 						}
 						
@@ -14367,7 +14370,11 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			throw new EpException("Recommend Rejection reason is mandatory."); //21937		
+			//#15629 - Start - Add comment to merge sit 20/1/2021
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+					null));
+			//#15629 - End - Add comment to merge sit 20/1/2021
+			//21937		
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
