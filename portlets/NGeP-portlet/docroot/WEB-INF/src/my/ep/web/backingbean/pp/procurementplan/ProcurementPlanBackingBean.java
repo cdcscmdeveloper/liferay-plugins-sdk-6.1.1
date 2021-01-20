@@ -5070,6 +5070,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//210120@akmal - Enhancement27624 - Start
 		if((this.getManagedBean().getSelectedPlan().isUpdatable() && !this.getManagedBean().isTrackingDiary())
 				|| this.getManagedBean().isFromTaskList()){
+			log.info("getPpProcurementItems-"+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size());
+			log.info("getPpExpenditureItems-"+this.getManagedBean().getSelectedPlan().getPpExpenditureItems().size());
 			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty())
 				savePlan(BpmOutcomeConst.BPM_SAVE);
 		}
@@ -5103,9 +5105,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	//210801@akmal - Enhancement27624 - Start
 	public void resetPlanDetailSearch() throws Exception{
+		log.info("resetPlanDetailSearch");
 		this.getManagedBean().setPlanDetailReset(true);
-//		
-		
 		this.getManagedBean().getvPmGolist().clear();
 		this.getManagedBean().getvPmGomap().clear();
 		this.getManagedBean().getPlanSearchBean().setProcurementType(null);
@@ -5122,6 +5123,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		//210120@akmal - Enhancement27624 - Start
 		if((this.getManagedBean().getSelectedPlan().isUpdatable() && !this.getManagedBean().isTrackingDiary())
 				|| this.getManagedBean().isFromTaskList()){
+			log.info("getPpProcurementItems-"+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size());
+			log.info("getPpExpenditureItems-"+this.getManagedBean().getSelectedPlan().getPpExpenditureItems().size());
 			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty())
 				savePlan(BpmOutcomeConst.BPM_SAVE);
 		}
