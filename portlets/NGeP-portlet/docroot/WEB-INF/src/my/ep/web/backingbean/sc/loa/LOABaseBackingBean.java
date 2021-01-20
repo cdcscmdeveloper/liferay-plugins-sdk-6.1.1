@@ -21,6 +21,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -186,4 +187,25 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		}
 		return null;
 	}
+	
+	// #26770 - Start.
+	/**
+	 * @param scQt
+	 * @return
+	 */
+	protected boolean isQuotationOrTender(ScQt scQt) {
+		boolean isQuotation = true;
+		PmParameter procurementMode = scQt.getProcurementMode();
+		if (procurementMode != null
+				&& procurementMode.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			isQuotation = true;
+		} else if (procurementMode != null
+				&& procurementMode.getParameterCode().equals(
+						ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			isQuotation = false;
+		}
+		return isQuotation;
+	}
+	// #26770 - End.
 }
