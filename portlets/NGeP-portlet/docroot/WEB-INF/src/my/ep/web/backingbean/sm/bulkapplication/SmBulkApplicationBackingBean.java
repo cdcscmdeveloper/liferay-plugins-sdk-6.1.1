@@ -170,7 +170,10 @@ public class SmBulkApplicationBackingBean extends
 
 	public void rejectBulkApplication() {
 		setSelectedRejectedResonsToVO();
-		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+		// #15629 -- start - 20/1/2020
+		//		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+		submitReject();
+		// #15629 -- end - 20/1/2020
 	}
 
 	public void submitReject() {
@@ -230,7 +233,9 @@ public class SmBulkApplicationBackingBean extends
 				throw new EpException(ex.getMessage()); //21937
 			}
 		}
-		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
+		// #15629 -- start - 20/1/2020
+		//		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
+		// #15629 -- end - 20/1/2020
 		showSuccessApplicationMsg(successSubmittedList, "REJECT");
 	}
 
