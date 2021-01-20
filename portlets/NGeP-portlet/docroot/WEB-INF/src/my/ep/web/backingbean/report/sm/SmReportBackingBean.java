@@ -2128,6 +2128,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
 			int countRowCC = 1;
+			//START -Bug:#29454 , CR:#14203
+			int mergeRowFirst = 0;
+			int mergeRowLast = 0;
 			String receiptNoCC = "";
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
@@ -2136,12 +2139,26 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				Cell cellBil = row.createCell(0);
 				if(receiptNoCC == ""){
 					cellBil.setCellValue(countRowCC++);
+					mergeRowFirst = rowid;
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowCC++);
+					mergeRowFirst = rowid;
+					mergeRowLast = 0;
 				}else{
-					// #14203 - Row list issue
-					//sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0));					
+					//Fix issue on overlaping mergion during merge more than 2 row
+					mergeRowLast = rowid;
+					if(key < keyIdCredit.size()){
+						if(key == (keyIdCredit.size() - 1)){
+							sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+						}else{
+							Object[] objectArrMerge = creditList.get(key+1);
+							if(!receiptNoCC.equalsIgnoreCase((String)objectArrMerge[2])){
+								sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+							}
+						}						
+					}
 				}
+				//END -Bug:#29454 , CR:#14203
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNoCC = (String)objectArr[2];
 				for (int x=0; x<objectArr.length; x++) {
@@ -2293,8 +2310,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-//	    	String fullPath = "D:\\reports\\dev\\"+requestId+".xlsx";
-	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
+	    	//String fullPath = "D:\\reports\\dev\\report3.xlsx";
+	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
