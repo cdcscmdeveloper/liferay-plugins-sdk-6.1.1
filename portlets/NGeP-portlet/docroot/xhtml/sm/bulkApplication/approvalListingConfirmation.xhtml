@@ -144,13 +144,15 @@
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.approveBulkApplication}" />
 				&#160;
+			<!-- #15629 start -->
 		    <p:commandButton
 				value="#{lbl['lbl.btn.reject']}"
-				id="rejectBtnId" update=":#{p:component('rejectDialogId')}" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()" process="@this"
+				id="rejectBtnId" update="@form" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()" process="@this,:#{p:component('resultPanelId')}"
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.rejectBulkApplication}" />
 			&#160;
+			<!-- #15629 end -->
 			<p:commandButton
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.onReleaseBpmTask}" process="@this"
