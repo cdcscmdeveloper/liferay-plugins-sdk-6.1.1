@@ -1185,15 +1185,11 @@ public class SmApplicationBackingBean extends
 		}
 		retrieveBusinessTypeList();
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
-		//#15629 - START	
-		String suppType = getManagedBean().getSmAppl().getSupplierType();
-		if(suppType == null || "".equalsIgnoreCase(suppType)){
-			suppType = appl.getSupplierType();
-		}
+
 		getManagedBean().setReasonDescInitList(
-				SmApplicationUtil.retrieveMofRejectReason(suppType, getManagedBean()
+				SmApplicationUtil.retrieveMofRejectReason(getManagedBean()
+						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmSupplier().getBusinessType(), applicationType));
-		//#15629 - END	
 		getManagedBean().setReasonDescList(
 				getManagedBean().getReasonDescInitList());
 		getManagedBean().setRejectionOtherReasonId(
@@ -9999,23 +9995,16 @@ public class SmApplicationBackingBean extends
 						new String[] { zone.getZoneName() });
 			} else {
 				List<PmUser> displayApproverList = new ArrayList<>();
-				int a = 1;
 				for (PmUser user : approverList) {
-					
 					if (!user.getUserId().equals(getManagedBean().getSmAppl().getPoUserId())) {
-						if(a ==1){
 						displayApproverList.add(user);
-						}a=a+1;
-						continue;
 					}
-					
 				}
 				int i = 0;
 				for (PmUser user : displayApproverList) {
 					i++;
 					bf.append("<tr><td>").append(i).append(")</td><td>")
 							.append(user.getUserName()).append("</td></tr>");
-					continue;
 				}
 			}
 			/*#28154 - end*/
