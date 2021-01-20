@@ -10682,6 +10682,7 @@ public class SpecificationBackingBean extends
 	 * @return navigate to acknowledgement page.
 	 */
 	public void specCommitteBpmTask(String action) {
+		log.info("::::::::specCommitteBpmTask Start:::::::");
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
