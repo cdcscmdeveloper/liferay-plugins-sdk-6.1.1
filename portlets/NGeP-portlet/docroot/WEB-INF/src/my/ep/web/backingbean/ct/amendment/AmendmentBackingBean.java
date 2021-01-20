@@ -2215,7 +2215,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				} **/
 				
-				//Enhancement 26186 start
+				//Enhancement 26186 start #29793 start
 				if (getManagedBean().isDisciplinaryAction()){					
 					if (getManagedBean().getDisciplinaryApprovedFlag()==null 
 							|| getManagedBean().getDisciplinaryApprovedFlag().equalsIgnoreCase("") ){
@@ -2235,7 +2235,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}						
 					}
 				}
-				//Enhancement 26186 end
+				//Enhancement 26186 end #29793 end
 			} 
 		}
 
