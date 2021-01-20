@@ -251,7 +251,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 			List<PmUser> listOfApprover = null;
-			if(reqDTO.isDan()){
+			if(reqDTO.isDan() || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ){ //  #28956 set approverlist for submit wihout DAN;
 				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
 				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverLimit(sumItemAmt);
