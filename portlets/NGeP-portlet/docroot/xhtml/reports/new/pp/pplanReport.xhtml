@@ -226,7 +226,11 @@
 				<p:selectOneMenu id="ppYearPerformance"
 					label="#{lbl['lbl.rpt.yearone']}"
 					value="#{ppReportsBackingBean.managedBean.selectedYear}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					<!--start #29484 remove select one for pp_008-->
+					<c:if test="#{isPPPerformanceReport}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>				
+					</c:if>
+					<!--end #29484-->
 					<f:selectItems value="#{ppReportsBackingBean.generateCommonYearList()}"></f:selectItems>
 				</p:selectOneMenu>
 				<!-- #27472 change id-->
@@ -236,7 +240,7 @@
 			<!-- #27472 start-->
 			<td width="20%">
 				<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isPPPerformanceReport}"/> <!-- #29484 remove mandatory label for pp_008 -->
 			</td>
 			<td width="20%">
 				<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">
