@@ -1175,7 +1175,7 @@ public class SmApplicationBackingBean extends
 		assignSupplierBusinessType(getManagedBean().getSmSupplier());
 		//#15629 - START	
 		String suppType = getManagedBean().getSmAppl().getSupplierType();
-		if(suppType == null || "".equalsIgnoreCase(suppType)){
+		if((suppType == null || "".equalsIgnoreCase(suppType)) && appl!= null){
 			suppType = appl.getSupplierType();
 		}
 		getManagedBean().setReasonDescInitList(
