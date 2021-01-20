@@ -2268,58 +2268,62 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flTemp = (FlFulfilmentItemAddr)selectedNode.getData();
 			selectedItemAddressList.add(flTemp.getScRequestItem().getRequestNoteItemId());
 		}
-		boolean isVotSOrAmanahExist = false;
-		//boolean isVotBOrPOrTExist = false;
-		boolean isVotBOrTExist = false;
-		boolean isVotPExist = false;
-		
-		String votFundType = null;
-		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId())) {
-					continue;
-				}
-				if(itemAddress.getPmVotFund()!=null) {
-					if(null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())){
-						votFundType=itemAddress.getPmVotFund().getVotFundType();
-					}else{
-						votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
-					}
-
-					if(votFundType.equalsIgnoreCase(VotFundType.SETIA.value()) || votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
-						isVotSOrAmanahExist = true;
-						break;
-					} else if(votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value()) || votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
-						isVotBOrTExist = true;
-						break;
-					} else if(votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value()) ) {
-						isVotPExist = true;
-
-						break;
-					}
-				}
-			}
-			if(isVotSOrAmanahExist || isVotBOrTExist || isVotPExist) {
-				break;
-			}
-		}		
+		//#28718 - Start
+//		boolean isVotSOrAmanahExist = false;
+//		//boolean isVotBOrPOrTExist = false;
+//		boolean isVotBOrTExist = false;
+//		boolean isVotPExist = false;
+//		
+//		String votFundType = null;
+//		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+//			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+//				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId())) {
+//					continue;
+//				}
+//				if(itemAddress.getPmVotFund()!=null) {
+//					if(null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())){
+//						votFundType=itemAddress.getPmVotFund().getVotFundType();
+//					}else{
+//						votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
+//					}
+//
+//					if(votFundType.equalsIgnoreCase(VotFundType.SETIA.value()) || votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
+//						isVotSOrAmanahExist = true;
+//						break;
+//					} else if(votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value()) || votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+//						isVotBOrTExist = true;
+//						break;
+//					} else if(votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value()) ) {
+//						isVotPExist = true;
+//
+//						break;
+//					}
+//				}
+//			}
+//			if(isVotSOrAmanahExist || isVotBOrTExist || isVotPExist) {
+//				break;
+//			}
+//		}
+		//#28718 - End	
 		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || 
-				pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
-				if(isVotSOrAmanahExist || isVotPExist) {
-					throw new EpException(MessageConst.ERROR_740005);
-				}
-				
-			} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
-					if(isVotSOrAmanahExist || isVotBOrTExist) {
-						throw new EpException(MessageConst.ERROR_740005);
-					}
-			} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.SETIA.value()) || 
-					pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())) {
-				if(isVotBOrTExist || isVotPExist) {
-					throw new EpException(MessageConst.ERROR_740005);
-				}
-		}
+		//#28718 - Start
+//		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || 
+//				pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+//				if(isVotSOrAmanahExist || isVotPExist) {
+//					throw new EpException(MessageConst.ERROR_740005);
+//				}
+//				
+//			} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
+//					if(isVotSOrAmanahExist || isVotBOrTExist) {
+//						throw new EpException(MessageConst.ERROR_740005);
+//					}
+//			} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.SETIA.value()) || 
+//					pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())) {
+//				if(isVotBOrTExist || isVotPExist) {
+//					throw new EpException(MessageConst.ERROR_740005);
+//				}
+//		}
+		//#28718 - End
 		
 		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
 			if(getManagedBean().getPmPrgActivity()==null) {
@@ -3275,9 +3279,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
+		//#28718 - Start
+		boolean bCheck = true;
+		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
+		//#28718 - End
 		//29728 - start
 		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome) 
 				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			//#28718 - Start
+			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				bCheck = checkTriggeredNewPR();
+			}
+			//#28718 - Start
 			if(!getManagedBean().isBranchNeedToBeChanged() && getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null 
 					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
 							getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
@@ -3316,7 +3329,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 				return null;
 			}
-			return fulfillmentRequestAction(outcome);
+			//#28718 - Start
+			if(bCheck){
+				return fulfillmentRequestAction(outcome);
+			}else{
+				return null;
+			}
+			//#28718 - End		
 		}
 	}
 	
@@ -4990,5 +5009,73 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 		//29401-end
-	
+		
+		//#28718 - Start
+		private boolean checkTriggeredNewPR() {
+//			chargeLineValidation();
+			Long currentStatusId = null;
+
+			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+
+			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
+
+			if (currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
+					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)) {
+
+				boolean isVotSOrAmanahExist = false;
+				boolean isVotBOrTExist = false;
+				boolean isVotPExist = false;
+
+				String votFundType = null;
+				for (FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+					for (FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()) {
+						if (itemAddress.getPmVotFund() != null) {
+							if (null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())) {
+								votFundType = itemAddress.getPmVotFund().getVotFundType();
+							} else {
+								votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())
+										.getVotFundType();
+							}
+
+							if (votFundType.equalsIgnoreCase(VotFundType.SETIA.value())
+									|| votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
+								isVotSOrAmanahExist = true;
+							} else if (votFundType.equalsIgnoreCase(VotFundType.BEKALAN.value())
+									|| votFundType.equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
+								isVotBOrTExist = true;
+							} else if (votFundType.equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
+								isVotPExist = true;
+							}
+						}
+					}
+					if((isVotSOrAmanahExist && isVotBOrTExist) || (isVotSOrAmanahExist && isVotPExist) 
+							|| (isVotBOrTExist && isVotPExist)){
+						
+						getManagedBean().setTriggerPRErrorMsg(Boolean.TRUE);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		public void triggeredNewPR() throws Exception{
+			
+			IFulfilmentRequestSO fulfilmentRequestSO = null;
+					
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+			reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
+			fulfilmentRequestSO.triggerNewPurchaseRequest(reqDTO);
+
+			String[] param = null;
+			successMessage(MessageConst.INFO_745088, param);
+		}
+		//#28718 - End
 }
