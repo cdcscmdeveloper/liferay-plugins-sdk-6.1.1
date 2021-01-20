@@ -888,9 +888,15 @@ public class SmPersonnelBackingBean extends
 		}
 	}
 
+	
+	public void onTickOfficeSameAsCompany(SmPersonnelAddress destAddr){
+		SmAddress compAddr = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+		onTickSameAsAddress(compAddr, destAddr);
+	}
+	
 	public void onTickSameAsAddress(SmAddress srcAddr,
 			SmPersonnelAddress destAddr) {
-
+		
 		if(!destAddr.isSameAsPerm()) return;
 		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
 				|| srcAddr.getPmState() == null
@@ -1009,10 +1015,16 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updateMailAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
+		//NEW #9569
+		if (this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision() == null){
+			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().setPmDivision(new PmDivision());
+		}
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setMailAddStateList(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
 			getManagedBean().setMailAddDistrictList(null);
+			//NEW 9569
+			getManagedBean().setMailAddDivisionList(null);
 			getManagedBean().setMailAddCityList(null);
 		}
 		
@@ -1022,6 +1034,8 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().
 				setPmState(state);
 			getManagedBean().setMailAddCityList(null);
+			//NEW #9569
+			getManagedBean().setMailAddDivisionList(null);
 			getManagedBean().setMailDivisionBox(!state.getAdoptDivision());
 			
 			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){				
@@ -2872,9 +2886,9 @@ public class SmPersonnelBackingBean extends
 		      getManagedBean().setBasicSmPersonnelResidentialAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
 		      getManagedBean().getBasicSmPersonnelResidentialAddress().setSameAsPerm(true);
 		    }
-		    if(personnelAddress2.isSameAsPerm()){
+		    if(personnelAddress2.isSameAsComp()){
 		      getManagedBean().setBasicSmPersonnelOfficeAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-		      getManagedBean().getBasicSmPersonnelOfficeAddress().setSameAsPerm(true);
+		      getManagedBean().getBasicSmPersonnelOfficeAddress().setSameAsComp(true);
 		    }
 
 		    for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
