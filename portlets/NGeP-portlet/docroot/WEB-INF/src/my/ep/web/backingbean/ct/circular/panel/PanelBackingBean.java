@@ -666,7 +666,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 
 			 //#cr 28713 - start
-			if(getManagedBean().getCircularVer().getCircularAttachments() == null ){
+			if(getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ){
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
