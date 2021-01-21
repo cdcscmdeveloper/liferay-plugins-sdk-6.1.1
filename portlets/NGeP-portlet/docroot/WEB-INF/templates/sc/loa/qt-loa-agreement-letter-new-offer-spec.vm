@@ -2,7 +2,7 @@
 <head>
 	<style>
 @page {
-	size: A4 portrait;
+	size: A4 landscape;
 }
 
 @page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
