@@ -1060,8 +1060,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					reportListMap.put(m, new Object[]{
 						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
-						//26307 - add card type & #14203 - uppercase perihal
-						row[5].toString(),row[6].toString().toUpperCase(),cardType,amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
+						// #14203 - uppercase perihal
+						row[5].toString(),row[6].toString().toUpperCase(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
 					});
 				}
 			}
@@ -1378,8 +1378,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								// 26307 - add card type & #14203 - uppercase perihal
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),cardType,
+								//#14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
