@@ -574,7 +574,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 			getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
 			getManagedBean().setCityItems(null);
 			addr.getPmState().setAdoptDivision(true);
-		}else{
+			//29939 - Self request error
+		}else if(addr.getPmState()!= null){
 			addr.getPmState().setAdoptDivision(false);
 		} 
 		if(states !=null && states.getAdoptDivision()) {
