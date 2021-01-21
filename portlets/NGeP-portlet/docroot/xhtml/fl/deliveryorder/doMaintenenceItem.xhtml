@@ -81,7 +81,7 @@
 	
 	<p:dialog id="doItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
 		widgetVar="doItemInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="300" resizable="false" style="overflow:scroll">
+		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
@@ -115,7 +115,7 @@
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{!createDOBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="30" rows="10" id="itemSpecification"
+			<p:inputTextarea cols="35" rows="10" id="itemSpecification"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -124,7 +124,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="30" rows="10" id="supplierOffer"
+			<p:inputTextarea cols="35" rows="10" id="supplierOffer"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -133,7 +133,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="30" rows="10" id="newOfferedSpec"
+			<p:inputTextarea cols="35" rows="10" id="newOfferedSpec"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
