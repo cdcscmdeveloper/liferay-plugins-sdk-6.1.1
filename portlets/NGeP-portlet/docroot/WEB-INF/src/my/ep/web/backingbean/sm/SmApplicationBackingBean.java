@@ -9428,7 +9428,8 @@ public class SmApplicationBackingBean extends
 		
 		//#12483 - START
 		if(res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
-			PmUser po = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, getManagedBean().getSmAppl().getPoUserId());
+			PmUser po = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, 
+							SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.PO_HQ));
 			if(po.getRecordStatusFlg() == 1){
 				reqDTO.setPoLoginId(po.getLoginId());
 			}else{
@@ -9894,10 +9895,20 @@ public class SmApplicationBackingBean extends
 					}
 
 					actionDesc = SupplierManagementConst.PO_ESCALATE_APPROVER;
-					successMsg = SmCommonUtil.getOutputMsgBundle(
-							MessageConst.INFO_700014,
-							new String[] { applNo, statusDesc,
-									getApproverListForSuccessMsg() });
+					//#12483 - START
+					PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, 
+							SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
+					if(!this.getManagedBean().getSmAppl().getSmApplRevises().isEmpty() && approver.getRecordStatusFlg() == 1){
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700014,
+								new String[] { applNo, statusDesc, "<tr><td>1) </td><td>"+approver.getUserName()+"</td></tr>" });
+					} else {
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700014,
+								new String[] { applNo, statusDesc,
+										getApproverListForSuccessMsg() });
+					}
+					//#12483 - END
 				} else if (res
 						.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)) {
 					successMsg = SmCommonUtil.getOutputMsgBundle(
@@ -9939,13 +9950,25 @@ public class SmApplicationBackingBean extends
 					zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
 					PmZone zone = SmServiceLookup.getZoneSO()
 							.retrieveZoneByStateId(zoneReqDTO).getPmZone();
-					String approverLoginIds = SmCommonUtil
-							.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(),
-									"UPS_APPROVER", getManagedBean()
-											.getSmAppl().getSupplierType(),
-									getManagedBean().getSmAppl().getApplType(),
-									getManagedBean().getSmAppl()
-											.getApplCategoryType());
+					//#12483 - START
+					String approverLoginIds = null;
+					PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, 
+							SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
+					
+					if(res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.ESCALATE) 
+						&& !this.getManagedBean().getSmAppl().getSmApplRevises().isEmpty()
+						&& approver.getRecordStatusFlg() == 1){
+							approverLoginIds = approver.getLoginId();
+					}else{
+						approverLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(),
+								"UPS_APPROVER", getManagedBean()
+										.getSmAppl().getSupplierType(),
+								getManagedBean().getSmAppl().getApplType(),
+								getManagedBean().getSmAppl()
+										.getApplCategoryType());
+					}
+					//#12483 - END					
+					
 					reqDTO.setApproverLoginIds(approverLoginIds);
 				}
 				reqDTO.setChangedBy(new FacesScopes().getUserSessionBean()
