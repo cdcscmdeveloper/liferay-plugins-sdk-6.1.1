@@ -873,6 +873,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			PmUser user = PmCommonUtil.retrieveUserById(approverUser.getUserId(), false);    
 						
 			awardDataType.setApprover(user.getLoginId());
+			
+			Long currentStatusId = scLoa.getPmStatus().getStatusId().longValue();
+			awardDataType.setBidNumber(currentStatusId.toString());
 						
 			populatePayLoad(awardDataType,scLoa);			
 			getManagedBean().setPayLoad(awardDataType);
@@ -1062,7 +1065,8 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				{
 				    Thread.currentThread().interrupt();
 				}
-				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome);
+				long previousStatusId = Long.parseLong(((SCAwardSupplierDataType) reqDTO.getPayLoad()).getBidNumber());
+				updateCancelLoaCurrentWorkflowStatus(scLoa,outcome,previousStatusId);
 				
 				String RequestNoteNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
 				scLoa = resDTO.getScLoa();								
@@ -3166,7 +3170,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 	}
 		
-	protected void updateCancelLoaCurrentWorkflowStatus(ScLoa scLoa, String outcome) {		
+	protected void updateCancelLoaCurrentWorkflowStatus(ScLoa scLoa, String outcome, Long previousStatus) {		
 		IScWorkFlowStatusSO workFlowStatusSO;
 					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -3178,7 +3182,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
 		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){
 //			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
-			workFlowStatus.setPmStatus(getPmStatusByStatusId(workFlowStatusSO.retrievePreviousStatus(reqDTO)));
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(previousStatus));
 			log.info("-----Check 62523L------ " + workFlowStatus.getPmStatus().getStatusId());
 		}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){			
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));	
