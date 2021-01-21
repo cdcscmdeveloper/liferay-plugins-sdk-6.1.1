@@ -2990,25 +2990,49 @@ public class SmPersonnelBackingBean extends
 						per.setSort(3);
 					} else if (per.getEpRole().equalsIgnoreCase(RoleCode.FL_USER.value())) {
 						per.setSort(4);
+					}else{
+						per.setSort(5);
 					}
 				} else {
 					per.setSort(5);
 				}
 			}
 			// sort by name
-			Collections.sort(smPersonnelList, new Comparator<SmPersonnel>() {
-				@Override
-				public int compare(final SmPersonnel s1, final SmPersonnel s2) {
-					return (s1.getName()).compareTo(s2.getName());
-				}
-			});
+			Collections.sort(smPersonnelList,
+					new Comparator<SmPersonnel>() {
+						@Override
+						public int compare(final SmPersonnel s1,
+								final SmPersonnel s2) {
+							return (s1.getName()).compareTo(s2.getName());
+						}
+					});
+
 			// sort by sort
-			Collections.sort(smPersonnelList, new Comparator<SmPersonnel>() {
-				@Override
-				public int compare(final SmPersonnel s1, final SmPersonnel s2) {
-					return (s2.getSort() > s1.getSort() ? -1 : (s1.getSort() == s2.getSort() ? 0 : 1));
-				}
-			});
+			Collections.sort(smPersonnelList,
+					new Comparator<SmPersonnel>() {
+						@Override
+						public int compare(final SmPersonnel s1,
+								final SmPersonnel s2) {
+							return (s2.getSort() > s1.getSort() ? -1 : (s1
+									.getSort() == s2.getSort() ? 0 : 1));
+						}
+					});
+			
+			/*// sort by name
+				Collections.sort(smPersonnelList, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1, final SmPersonnel s2) {
+						return (s1.getName()).compareTo(s2.getName());
+					}
+				});
+				// sort by sort
+				Collections.sort(smPersonnelList, new Comparator<SmPersonnel>() {
+					@Override
+					public int compare(final SmPersonnel s1, final SmPersonnel s2) {
+						return (s2.getSort() > s1.getSort() ? -1 : (s1.getSort() == s2.getSort() ? 0 : 1));
+					}
+				});*/
+
 		}
 	}
 
