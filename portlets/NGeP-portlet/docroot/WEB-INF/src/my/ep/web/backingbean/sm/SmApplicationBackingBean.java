@@ -1676,6 +1676,20 @@ public class SmApplicationBackingBean extends
 			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
 			if (latestRejectedAppl != null) {
+				//	Refs #15629 - Start - 21/1/2021
+				if(!EntityHelper.isCollectionEmpty(latestRejectedAppl
+						.getSmApplRejectReasons())){
+
+					Iterator<SmApplRejectReason> smApplRejectReasonIter = latestRejectedAppl
+							.getSmApplRejectReasons().iterator();
+				    while(smApplRejectReasonIter.hasNext()){
+				    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+				        if(smApplRejectReason.isReasonByPo()){
+				        	smApplRejectReasonIter.remove();
+				          }
+				      }
+				}
+				// Refs #15629 - End - 21/1/2021
 				getManagedBean()
 						.setRejectReasonsMsg(
 								SmCommonUtil
