@@ -237,16 +237,16 @@ u {
 				<tr>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">&nbsp;</td>
 					#if ($isZonal)
-					#if ($tplSpecAnswer.newSupplierOffer != $null || $tplSpecAnswer.newSupplierOffer != "" )
-					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="4">$tplSpecAnswer.newSupplierOffer</td>
-					#else
+					#if ($tplSpecAnswer.newSupplierOffer == $null || $tplSpecAnswer.newSupplierOffer == "" )
 					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="4">$tplSpecAnswer.tplSpecQuestion.clSpecDetail</td>
+					#else
+					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="4">$tplSpecAnswer.newSupplierOffer</td>
 					#end
 					#else
-					#if ($tplSpecAnswer.newSupplierOffer != $null || $tplSpecAnswer.newSupplierOffer != "" )
-					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="3">$tplSpecAnswer.newSupplierOffer</td>
-					#else
+					#if ($tplSpecAnswer.newSupplierOffer == $null || $tplSpecAnswer.newSupplierOffer == "" )
 					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="3">$tplSpecAnswer.tplSpecQuestion.clSpecDetail</td>
+					#else
+					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="3">$tplSpecAnswer.newSupplierOffer</td>
 					#end
 					#end
 					#if ($tplSpecAnswer.answerText != $null )
@@ -375,16 +375,16 @@ u {
 				<tr>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">&nbsp;</td>
 					#if ($isZonal)
-					#if ($tplSpecAnswer.newSupplierOffer != $null || $tplSpecAnswer.newSupplierOffer != "" )
-					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="6">$tplSpecAnswer.newSupplierOffer</td>
-					#else
+					#if ($tplSpecAnswer.newSupplierOffer == $null || $tplSpecAnswer.newSupplierOffer == "" )
 					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="6">$tplSpecAnswer.tplSpecQuestion.clSpecDetail</td>
+					#else
+					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="6">$tplSpecAnswer.newSupplierOffer</td>
 					#end
 					#else
-					#if ($tplSpecAnswer.newSupplierOffer != $null || $tplSpecAnswer.newSupplierOffer != "" )
-					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="5">$tplSpecAnswer.newSupplierOffer</td>
-					#else
+					#if ($tplSpecAnswer.newSupplierOffer == $null || $tplSpecAnswer.newSupplierOffer == "" )
 					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="5">$tplSpecAnswer.tplSpecQuestion.clSpecDetail</td>
+					#else
+					<td bgcolor="#d0eaee"  class="standard border-bottom left-right" style="text-align: center; padding-left: 5px; font-size:10px;" colspan="5">$tplSpecAnswer.newSupplierOffer</td>
 					#end
 					#end
 					#if ($tplSpecAnswer.answerText != $null )
