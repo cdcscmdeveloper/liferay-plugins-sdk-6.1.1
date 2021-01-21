@@ -3159,10 +3159,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		RequestContext.getCurrentInstance().execute("hideLovMsg();");
 		validateEpItem(paramCode); // disabled this if no validation required at this stage
 		PpExpenditureItem epItem = new PpExpenditureItem();
-		//21012021@24975 - Start
-		epItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		epItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		epItem.setChangedDate(new Timestamp(new Date().getTime()));
+//		//21012021@24975 - Start
+//		epItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+//		epItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//		epItem.setChangedDate(new Timestamp(new Date().getTime()));
+//		log.info("setCreatedDate" + new Timestamp(System.currentTimeMillis()));
 		//21012021@24975 - End
 		epItem.setPmGlAccount(new PmGlAccount());
 		epItem.setVotFundType(new PmParameter());
@@ -4226,9 +4227,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		
 		PpProcurementItem ppItem = new PpProcurementItem();
 		//21012021@24975 - Start
-		ppItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		ppItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		ppItem.setChangedDate(new Timestamp(new Date().getTime()));
+//		ppItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+//		ppItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//		ppItem.setChangedDate(new Timestamp(new Date().getTime()));
+//		log.info("setCreatedDate" + new Timestamp(System.currentTimeMillis()));
 		//21012021@24975 - End
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
