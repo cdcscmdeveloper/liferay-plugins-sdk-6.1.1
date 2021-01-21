@@ -1258,6 +1258,13 @@ public class SupplierManagementConst {
 		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
 	// #29156 -START
+	
+	//#12483 - START
+	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE(){
+		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
+	}
+	//#12483 - END
+
 
 	public String getSM_APPL_PAGE_TYPE_ANNUALINFO() {
 		return SM_APPL_PAGE_TYPE_ANNUALINFO;
