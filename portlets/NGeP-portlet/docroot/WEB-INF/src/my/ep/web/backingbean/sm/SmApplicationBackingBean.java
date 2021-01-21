@@ -1801,8 +1801,8 @@ public class SmApplicationBackingBean extends
 							String[] copyProp = {"companyName","robExpiryDate","businessDesc","annualRevenue","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}else{
-							// 28466 - add paid up capital
-							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM","paidUpCapital"};
+							// 28466 - add paid up capital, 28767 add registerAdressSSM
+							String[] copyProp = {"companyName","robExpiryDate","authorizedCapital","nonBumiEquity","annualRevenue","bumiEquity","localCompanyEquity","foreignCompanyEquity","foreignerEquity","govtEquity","govtUnitrustEquity","businessDesc","revenueSsmNull","robExpirySsmNull","authorizedCapitalSsmNull","companySsmStatus","annualRevenueSSM","paidUpCapitalSSM","paidUpCapital","registerAdressSSM"};
 							EntityHelper.copyEntityPropertiesOnly(ssmResDTO.getSmCompanyBasic(),this.getManagedBean().getSmAppl().getSmCompanyBasic(),copyProp);							
 						}
 						//#27165
@@ -5035,12 +5035,14 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.show()");
 		
 		//#27308 - 13/03/2020 START
-		if(getManagedBean().getSelectedEquityCompany().isSsmData()  
-				&& (businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType()) 
-				|| getManagedBean().getSelectedEquityCompany().getShareAmt() != null 
-				|| getManagedBean().getSelectedEquityCompany().getShareAmt().compareTo(BigDecimal.ZERO) == 0)){
-			throw new EpException(MessageConst.ERROR_722680);
-		}
+		// #28466 start - remove #27308 showstopper
+//		if(getManagedBean().getSelectedEquityCompany().isSsmData()  
+//				&& (businessTypeIsROC(getManagedBean().getSmSupplier().getBusinessType()) 
+//				|| getManagedBean().getSelectedEquityCompany().getShareAmt() != null 
+//				|| getManagedBean().getSelectedEquityCompany().getShareAmt().compareTo(BigDecimal.ZERO) == 0)){
+//			throw new EpException(MessageConst.ERROR_722680);
+//		}
+		// #28466 end - remove #27308 showstopper
 		//#27308 - 13/03/2020 END
 	}
 
