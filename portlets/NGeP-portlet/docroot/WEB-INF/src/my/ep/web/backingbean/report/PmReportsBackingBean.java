@@ -495,11 +495,16 @@ public class PmReportsBackingBean extends
 					.toString());
 		}
 		
-		if (getManagedBean().getFromDate() != null) {
+		if (getManagedBean().getMonth() != null) {
 			map.put(PmReportConst.PARAM_PM_MONTH, DateUtils.dateToString(
-					CommonConstants.DEFAULT_DATE_FORMAT, getManagedBean()
-							.getFromDate()));
+					CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY, getManagedBean()
+					.getMonth()));
+			
 		}
+		log.info("Month Picked : " + DateUtils.dateToString(
+				CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY, getManagedBean()
+				.getMonth()));
+		log.info("Mapping: " + map.toString());
 		
 	}
 	//shafie - #29486 - end
