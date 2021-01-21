@@ -6,34 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-<!-- <script type="text/javascript">
-	$(document).ready(function()
-	{   
-    	$(".monthPicker").datepicker({
-        	dateFormat: 'MM/yy',
-        	changeMonth: true,
-       		changeYear: true,
-        	showButtonPanel: true,
+	<style type="text/css">
+		.ui-datepicker-calendar{
+			display : none;		
+		}
+	</style>
 
-        	onClose: function(dateText, inst) {
-            	var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-            	var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            	$(this).val($.datepicker.formatDate('MM/yy', new Date(year, month, 1)));
-        	}
-    	});
-
-    	$(".monthPicker").focus(function () {
-        	$(".ui-datepicker-calendar").hide();
-        	$("#ui-datepicker-div").position({
-            	my: "center top",
-            	at: "center bottom",
-            	of: $(this)
-        	});
-    	});
-	});
-</script> -->
-
-<script type="text/javascript" src="/NGeP-portlet/js/wp/al/jquery.ticker.js" />
 	<p:outputPanel id="opDefinedSearch">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">			
 			<tr>
@@ -55,7 +33,7 @@
 					<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.jabatan']}" /><p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<ac:lov id="PtjGroupsearchRpt" lovId="PM_ORG_PROFILE_PTJ_GROUP"
+					<ac:lov id="PtjGroupsearchRpt" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
 						headerText="#{lbl['lbl.pm.org.ptj.search.jabatan']}" update="@form"
 						disabled = "#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName == null}"
 						saveObject="pmReportsBackingBean.managedBean.selectedKumpulanPTJ"
@@ -93,28 +71,17 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.month']}" /></td>
-				<td><!-- <p:calendar showOn="button" display="inline"
-						readonlyInput="true" 
-						value="#{pmReportsBackingBean.managedBean.month}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_MONTH_YEAR)}" 
-						size="9">						
-					</p:calendar> -->
-					<input type="text" id="month" name="month" class="monthPicker" /></td>
-
+				<td>
+					<p:calendar id="MonthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"
+					value="#{pmReportsBackingBean.managedBean.month}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_MONTH_YEAR)}">
+						<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this" />
+						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
+					</p:calendar>
+				</td>
+		
 			</tr>
 		</table>
-		<!-- <p:datePicker value="#{managedBean.date}" view="month" 
-        pattern="MM/yyyy" yearNavigator="true" yearRange="1986:2025" monthNavigator="true"/> -->
-		<!-- pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"> -->
-		<!-- <p:calendar showOn="button" navigator="true"
-					display="inline" readonlyInput="true" size="9"
-					value="#{pmReportsBackingBean.managedBean.fromDate}"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					<p:ajax event="dateSelect" partialSubmit="true" process="@this"
-						update="@this" />
-					<p:ajax event="change" partialSubmit="true" process="@this"
-						update="@this" />
-				</p:calendar> -->
 
 	</p:outputPanel>
 	
