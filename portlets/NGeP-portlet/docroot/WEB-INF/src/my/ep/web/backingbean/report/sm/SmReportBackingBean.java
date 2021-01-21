@@ -1060,8 +1060,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					reportListMap.put(m, new Object[]{
 						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
-						// #14203 - uppercase perihal
-						row[5].toString(),row[6].toString().toUpperCase(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
+						//26307 - add card type & #14203 - uppercase perihal
+						row[5].toString(),row[6].toString().toUpperCase(),cardType,amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
 					});
 				}
 			}
@@ -1378,8 +1378,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								//#14203 - uppercase perihal
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
+								// 26307 - add card type & #14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),cardType,
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
@@ -1811,8 +1811,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						fpxCount++;
 					}else{						
 						if(m > 0){							
-							Object[] previousRow = (Object[]) reportList.get(m-1);
-							if(!row[5].toString().equals(previousRow[5].toString())){								
+							// #14203 - Row list issue
+							//Object[] previousRow = (Object[]) reportList.get(m-1);
+							//if(!row[5].toString().equals(previousRow[5].toString())){								
 								creditList.put(creditCount, new Object[] {
 										(Date) row[4],//Tarikh Transaksi
 										(Date) row[3],//Tarikh Resit
@@ -1831,7 +1832,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 										netPrice,//Jumlah Keseluruhan
 										row[16].toString()//Status
 									});
-							}
+							// #14203 - Row list issue
+							//}
 						} else {														
 							creditList.put(creditCount, new Object[] {
 									(Date) row[4],//Tarikh Transaksi
@@ -2079,7 +2081,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowCC++);
 				}else{
-					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0));					
+					// #14203 - Row list issue
+					//sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0));					
 				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNoCC = (String)objectArr[2];
