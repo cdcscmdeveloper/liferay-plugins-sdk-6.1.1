@@ -20,7 +20,8 @@
 				<td width="10%"><p:outputLabel
 						value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td width="90%"><p:selectOneMenu style="margin-top:5px;width:300px;"
+				<!-- #27472 - change width style -->
+				<td width="90%"><p:selectOneMenu style="margin-top:5px;width:560px;"
 						label="#{lbl['lbl.rpt.rptName']}" id="somReportName"
 						value="#{ppReportsBackingBean.managedBean.reportCode}"
 						required="true">
@@ -66,7 +67,8 @@
 				<div align="right" style="width: 100%">
 					<p:commandButton id="generateBtnId"
 						value="#{lbl['lbl.btn.generate']}" process="@form" update="@form"
-						action="#{ppReportsBackingBean.generatePpReport()}">
+						action="#{ppReportsBackingBean.generatePpReport()}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"> <!--#27472-->
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 					<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"

@@ -2847,5 +2847,16 @@ public class PmCommonUtil implements Serializable{
 		return orgResDTO.getPmOrgProfile();
 	}
 	/* 27827 - END */
-
+	
+	//START #27472 get list of roles
+	public static List<PmUserRole> getUserRolesByUserId(Long userId) {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserIds(new ArrayList<Long>());
+		reqDTO.getUserIds().add(userId);
+		
+		return userSO.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
+	}
+	//END #27472
 }
