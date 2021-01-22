@@ -14,9 +14,9 @@
 		<h:outputScript library="js" name="logout.js" />
 	</ui:define>
 	
-	<ui:define name="contentSection">1
+	<ui:define name="contentSection">
 		<p:messages for="validationMsg" showDetail="true" closable="true" showSummary="false" escape="false"/>		
-	    <p:messages id="messages1" showSummary="false" showDetail="true"  escape="false" autoUpdate="true" closable="true" severity="error, info, warn" />	    
+	    <p:messages id="messages1" showSummary="false" showDetail="true"  escape="false" autoUpdate="true" closable="true" severity="error" />	    
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
