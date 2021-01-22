@@ -14610,25 +14610,21 @@ public class SmApplicationBackingBean extends
 	
 	//29380  - Site Visit Grouping Enhancement -28775 - Start
 	
-	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
-		boolean result=false;
-		log.info("Record Status Dockyard=="+categoryVar.getRecordStatusFlg());
-		log.info("Category3 ID dockyard==="+dockyardCatVar.getCategoryL3Id());
-		log.info("Category3 ID dockyard==="+categoryVar.getPmCategoryL3().getCategoryL3Id());
+	public String checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
 		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
-				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id())){
-			if( (dockyardCatVar.getCategoryL3Code().equalsIgnoreCase("99") && 
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")) 
-					||
-					(dockyardCatVar.getFullCatcode().equalsIgnoreCase("220701") &&
-						categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22") &&
-						categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("07") &&
-						categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("01")) 
-					){
-					result=true;
+				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
+			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase("99") && 
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99") ){
+				return categoryVar.getOtherDesc();
+			}	
+			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase("220701") &&
+					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22") &&
+					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("07") &&
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("01")){
+				return categoryVar.getOtherDesc();
 			}
 		}
-		return result;
+		return null;
 	}
 	
 	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
