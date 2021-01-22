@@ -310,6 +310,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private String newSupplierOffered;
 	private String newSupplierJustification;
 	private boolean oldNewSuppOfferSameFlag;
+	private boolean updateSupplierLinkFlag = false;
+	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
 	//#29006 - end
 	
 	//#19336
@@ -1744,6 +1746,21 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setOldNewSuppOfferSameFlag(boolean oldNewSuppOfferSameFlag) {
 		this.oldNewSuppOfferSameFlag = oldNewSuppOfferSameFlag;
 	}
+	public boolean isUpdateSupplierLinkFlag() {
+		return updateSupplierLinkFlag;
+	}
+
+	public void setUpdateSupplierLinkFlag(boolean updateSupplierLinkFlag) {
+		this.updateSupplierLinkFlag = updateSupplierLinkFlag;
+	}
+	
+	public Map<Long, List<TplSpecAnswer>> getScLoiLoaItemAnswerMap() {
+		return scLoiLoaItemAnswerMap;
+	}
+
+	public void setScLoiLoaItemAnswerMap(Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap) {
+		this.scLoiLoaItemAnswerMap = scLoiLoaItemAnswerMap;
+	}
 	//#29006 - end
 
 	public String getSourcePage() {
@@ -1827,6 +1844,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.supPropSpecDisable = supPropSpecDisable;
 	}
 	/*#29007 End Vinod*/
+
 }
 
 
