@@ -109,9 +109,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
 						//27382 - start
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
-							fc.addMessage("ssmInvalid",
+							/*fc.addMessage("ssmInvalid",
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721097, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
-											""));
+											""));*/
 							throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 						}//27382 - Terminated 
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
