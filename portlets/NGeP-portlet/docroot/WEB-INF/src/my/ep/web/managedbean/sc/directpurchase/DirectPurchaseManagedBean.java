@@ -117,6 +117,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private boolean viewAsPTJ;
 	
 	private boolean viewAsSupplier;
+	
+	//Start - #25396
+	private boolean disableMinistryPtjLov = false;
+	private boolean showMinistryPtjField = true;
+	//End - #25396
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -605,4 +610,22 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setDpmDocumentDataModel(IPagingDataModel<Object[]> dpmDocumentDataModel) {
 		this.dpmDocumentDataModel = dpmDocumentDataModel;
 	}*/
+	
+	//Start - #25396
+	public boolean isDisableMinistryPtjLov() {
+		return disableMinistryPtjLov; 
+	}
+	
+	public void setDisableMinistryPtjLov(boolean disableMinistryPtjLov) {
+		this.disableMinistryPtjLov = disableMinistryPtjLov;
+	}
+	
+	public boolean isShowMinistryPtjField() {
+		return showMinistryPtjField; 
+	}
+	
+	public void setShowMinistryPtjField(boolean showMinistryPtjField) {
+		this.showMinistryPtjField = showMinistryPtjField;
+	}
+	//End - #25396
 }
