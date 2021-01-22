@@ -127,7 +127,12 @@
 						<h:outputText value="#{personnel.pmCountry.countryName}" />
 					</p:column>
 					<p:column
-						headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
+						headerText="#{lbl['lbl.sm.person.composition.certStatus']}" rendered="#{personnel.epRole eq null or personnel.epRole eq ''}">
+						<h:outputText 
+							value="#{lbl['lbl.txt.na']}" />
+					</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sm.person.composition.certStatus']}" rendered="#{personnel.epRole ne null and personnel.epRole ne ''}">
 						<ac:smSoftcertStatus personnel="#{personnel}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
