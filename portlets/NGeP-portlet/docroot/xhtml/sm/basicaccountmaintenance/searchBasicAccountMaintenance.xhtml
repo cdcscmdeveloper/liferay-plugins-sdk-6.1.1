@@ -78,11 +78,11 @@
 					<!-- new requirement for wording #29778 -START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}"
 						style="width :15%;white-space : normal">
-						<!-- bug #29156 -START ,29690  -->
+						<!-- bug #29156 -START ,29690,29948  -->
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
 							rendered="#{smSupplier.recordStatusFlg eq 1 and empty smSupplier.typeDisciplinaryAction}" />
 						<h:outputText value="#{lbl['lbl.sm.status.inactive']}"
-							rendered="#{smSupplier.recordStatusFlg eq 0 or(smSupplier.recordStatusFlg eq 2)}" />
+							rendered="#{smSupplier.recordStatusFlg eq 0 and empty smSupplier.typeDisciplinaryAction or(smSupplier.recordStatusFlg eq 2)}" />
 						<!-- bug #28278 -START -->
 						<h:outputText
 							value="#{lbl['lbl.sm.status.deleted.with.transaction']} (#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']})"
