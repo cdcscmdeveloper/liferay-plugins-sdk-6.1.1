@@ -887,13 +887,214 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 	}
+	//9569 - Start
+	public void onTickSameAsPermForMail(SmAddress srcAddr,SmPersonnelAddress destAddr){
+		 Long sourceCountry = srcAddr.getPmCountry().getCountryId();
+		 Long sourceState =  srcAddr.getPmState().getStateId();
+		 PmDivision sourceDivision = srcAddr.getPmDivision();
+		 Long sourceDistrict = srcAddr.getPmDistrict().getDistrictId();
+		 Long sourceCity = srcAddr.getPmCity().getCityId();
+		 
+		if(destAddr.isSameAsPerm() == true){
+			SmAddress destiAddress = destAddr.getSmAddress();
+			Long destiCountry = destAddr.getSmAddress().getPmCountry().getCountryId();
+			Long destiState = destAddr.getSmAddress().getPmState().getStateId();
+			PmDivision destiDivision = destAddr.getSmAddress().getPmDivision();
+			Long destiDistrict = destAddr.getSmAddress().getPmDistrict().getDistrictId();
+			Long destiCity = destAddr.getSmAddress().getPmCity().getCityId();
+			
+			if(destiAddress.getAddress1() != null){
+				getManagedBean().getBasicSmPersonnelPrevAddress1().setSmAddress(destiAddress);
+			}else{
+				getManagedBean().getBasicSmPersonnelPrevAddress1().setSmAddress(new SmAddress());
+			}
+			
+			if(destiCountry !=null){
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmCountry().setCountryId(destiCountry);
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmState().setStateId(destiState);
+				
+				if(destiDivision.getDivisionId() !=null){
+					getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmDivision(destiDivision);
+				}else{
+					getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmDivision(new PmDivision());
+				}
+				
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmDistrict().setDistrictId(destiDistrict);
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmCity().setCityId(destiCity);
+			}else{
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmCountry(new PmCountry());
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmState(new PmState());
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmDivision(new PmDivision());
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().setPmCity(new PmCity());		
+			}
 
-	
-	public void onTickOfficeSameAsCompany(SmPersonnelAddress destAddr){
-		SmAddress compAddr = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
-		onTickSameAsAddress(compAddr, destAddr);
+			destAddr.setSmAddress(srcAddr);
+			updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
+		}else{
+			SmAddress prevAddr = getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress();
+			Long prevCountry = getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmCountry().getCountryId();
+			Long prevState = getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmState().getStateId();
+			PmDivision prevDivision = getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmDivision();
+			Long prevDistrict = getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmDistrict().getDistrictId();
+			Long prevCity = getManagedBean().getBasicSmPersonnelPrevAddress1().getSmAddress().getPmCity().getCityId();
+			
+		if(prevAddr.getAddress1() == null && prevCountry == null){
+				destAddr.setSmAddress(new SmAddress());
+				destAddr.getSmAddress().setPmCountry(new PmCountry());
+				destAddr.getSmAddress().setPmState(new PmState());
+				destAddr.getSmAddress().setPmDivision(new PmDivision());
+				destAddr.getSmAddress().setPmDistrict(new PmDistrict());
+				destAddr.getSmAddress().setPmCity(new PmCity());			
+			}else{	
+					destAddr.setSmAddress(prevAddr);
+					updateMailAddLists(prevCountry.toString(), prevState.toString(), prevDivision, prevDistrict.toString());
+			}
+		}
+	}
+
+	public void onTickSameAsPermForRes(SmAddress srcAddr,SmPersonnelAddress destAddr){
+		 Long sourceCountry = srcAddr.getPmCountry().getCountryId();
+		 Long sourceState =  srcAddr.getPmState().getStateId();
+		 PmDivision sourceDivision = srcAddr.getPmDivision();
+		 Long sourceDistrict = srcAddr.getPmDistrict().getDistrictId();
+		 Long sourceCity = srcAddr.getPmCity().getCityId();
+		 
+		if(destAddr.isSameAsPerm() == true){
+			SmAddress destiAddress = destAddr.getSmAddress();
+			Long destiCountry = destAddr.getSmAddress().getPmCountry().getCountryId();
+			Long destiState = destAddr.getSmAddress().getPmState().getStateId();
+			PmDivision destiDivision = destAddr.getSmAddress().getPmDivision();
+			Long destiDistrict = destAddr.getSmAddress().getPmDistrict().getDistrictId();
+			Long destiCity = destAddr.getSmAddress().getPmCity().getCityId();
+			
+			if(destiAddress.getAddress1() != null){
+				getManagedBean().getBasicSmPersonnelPrevAddress2().setSmAddress(destiAddress);
+			}else{
+				getManagedBean().getBasicSmPersonnelPrevAddress2().setSmAddress(new SmAddress());
+			}
+			
+			if(destiCountry !=null){
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmCountry().setCountryId(destiCountry);
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmState().setStateId(destiState);
+				
+				if(destiDivision.getDivisionId() !=null){
+					getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmDivision(destiDivision);
+				}else{
+					getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmDivision(new PmDivision());
+				}
+				
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmDistrict().setDistrictId(destiDistrict);
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmCity().setCityId(destiCity);
+			}else{
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmCountry(new PmCountry());
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmState(new PmState());
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmDivision(new PmDivision());
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().setPmCity(new PmCity());		
+			}
+
+			destAddr.setSmAddress(srcAddr);
+			updateResAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
+		}else{
+			SmAddress prevAddr = getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress();
+			Long prevCountry = getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmCountry().getCountryId();
+			Long prevState = getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmState().getStateId();
+			PmDivision prevDivision = getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmDivision();
+			Long prevDistrict = getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmDistrict().getDistrictId();
+			Long prevCity = getManagedBean().getBasicSmPersonnelPrevAddress2().getSmAddress().getPmCity().getCityId();
+			
+		if(prevAddr.getAddress1() == null && prevCountry == null){
+				destAddr.setSmAddress(new SmAddress());
+				destAddr.getSmAddress().setPmCountry(new PmCountry());
+				destAddr.getSmAddress().setPmState(new PmState());
+				destAddr.getSmAddress().setPmDivision(new PmDivision());
+				destAddr.getSmAddress().setPmDistrict(new PmDistrict());
+				destAddr.getSmAddress().setPmCity(new PmCity());			
+			}else{	
+				
+					destAddr.setSmAddress(prevAddr);
+					updateResAddLists(prevCountry.toString(), prevState.toString(), prevDivision, prevDistrict.toString());
+				
+			}
+		}
 	}
 	
+	public void onTickOfficeSameAsCompany(){
+		SmAddress compAddr = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
+		Long compCountry = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId();
+		Long compState = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId();
+		PmDivision compDivision = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision();
+		Long compDistrict = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId();
+		Long compCity = this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId();
+		
+		if(getManagedBean().getBasicSmPersonnelOfficeAddress().isSameAsComp() == true){
+			SmAddress offAddr = getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress();
+			Long offCountry = getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getPmCountry().getCountryId();
+			Long offState = getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getPmState().getStateId();
+			PmDivision offDivision = getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getPmDivision();
+			Long offDistrict = getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getPmDistrict().getDistrictId();
+			Long offCity = getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getPmCity().getCityId();
+			
+			if(offAddr.getAddress1() != null){
+				getManagedBean().getBasicSmPersonnelPrevAddress().setSmAddress(offAddr);
+			}else{
+				getManagedBean().getBasicSmPersonnelPrevAddress().setSmAddress(new SmAddress());
+			}
+			
+			if(offCountry !=null){
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmCountry().setCountryId(offCountry);
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmState().setStateId(offState);
+				
+				if(offDivision.getDivisionId() !=null){
+					getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmDivision(offDivision);
+				}else{
+					getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmDivision(new PmDivision());
+				}
+				
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmDistrict().setDistrictId(offDistrict);
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmCity().setCityId(offCity);
+			}else{
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmCountry(new PmCountry());
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmState(new PmState());
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmDivision(new PmDivision());
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().setPmCity(new PmCity());		
+			}
+			
+			getManagedBean().getBasicSmPersonnelOfficeAddress().setSmAddress(compAddr);
+			updateOffAddLists(compCountry.toString(), compState.toString(), compDivision, compDistrict.toString());
+			
+		}else{
+			SmAddress prevAddr = getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress();
+			Long prevCountry = getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmCountry().getCountryId();
+			Long prevState = getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmState().getStateId();
+			PmDivision prevDivision = getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmDivision();
+			Long prevDistrict = getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmDistrict().getDistrictId();
+			Long prevCity = getManagedBean().getBasicSmPersonnelPrevAddress().getSmAddress().getPmCity().getCityId();
+			
+			/*getManagedBean().getBasicSmPersonnelOfficeAddress().setSmAddress(prevAddr);
+			updateOffAddLists(prevCountry.toString(), prevState.toString(), prevDivision, prevDistrict.toString());*/
+			log.info("This is the previous Address 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + prevAddr.getAddress1());
+			log.info("This is the previous Address Country ID >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + prevCountry);
+			
+		if(prevAddr.getAddress1() == null && prevCountry == null){
+			   // this.getManagedBean().setBasicSmPersonnelOfficeAddress(new SmPersonnelAddress());
+				getManagedBean().getBasicSmPersonnelOfficeAddress().setSmAddress(new SmAddress());
+				log.info("This is the previous Address Country ID >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + prevCountry);
+				getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().setPmCountry(new PmCountry());
+				getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().setPmState(new PmState());
+				getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().setPmDivision(new PmDivision());
+				getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().setPmDistrict(new PmDistrict());
+				getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().setPmCity(new PmCity());		
+				
+			}else{
+				getManagedBean().getBasicSmPersonnelOfficeAddress().setSmAddress(prevAddr);
+				updateOffAddLists(prevCountry.toString(), prevState.toString(), prevDivision, prevDistrict.toString());
+			}
+		}
+	}
+	//9569 - End
 	public void onTickSameAsAddress(SmAddress srcAddr,
 			SmPersonnelAddress destAddr) {
 		
@@ -915,9 +1116,7 @@ public class SmPersonnelBackingBean extends
 			//#13320 - added division - start
 			if(srcAddr.getPmDivision() != null){
 				srcAddr.setDivisionId(srcAddr.getPmDivision().getDivisionId());
-				getManagedBean().setMailDivisionId(srcAddr.getDivisionId());
-				getManagedBean().setResDivisionId(srcAddr.getDivisionId());
-				getManagedBean().setOffDivisionId(srcAddr.getDivisionId());
+				getManagedBean().setMailDivisionId(srcAddr.getDivisionId()); 
 			}
 			
 			destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
@@ -932,20 +1131,6 @@ public class SmPersonnelBackingBean extends
 					.getPmState().getStateId().toString(), destAddr
 					.getSmAddress().getPmDivision(), destAddr
 					.getSmAddress().getPmDistrict().getDistrictId().toString());
-			
-			//9596 - Start
-			updateResAddLists(destAddr.getSmAddress().getPmCountry()
-					.getCountryId().toString(), destAddr.getSmAddress()
-					.getPmState().getStateId().toString(), destAddr
-					.getSmAddress().getPmDivision(), destAddr
-					.getSmAddress().getPmDistrict().getDistrictId().toString());
-			
-			updateOffAddLists(destAddr.getSmAddress().getPmCountry()
-					.getCountryId().toString(), destAddr.getSmAddress()
-					.getPmState().getStateId().toString(), destAddr
-					.getSmAddress().getPmDivision(), destAddr
-					.getSmAddress().getPmDistrict().getDistrictId().toString());
-			//9596 - End
 			//#13320 - added division - end
 		}
 	}
@@ -1015,7 +1200,7 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updateMailAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
-		//NEW #9569
+		//9569 - Start
 		if (this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision() == null){
 			this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().setPmDivision(new PmDivision());
 		}
@@ -1023,8 +1208,8 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setMailAddStateList(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
 			getManagedBean().setMailAddDistrictList(null);
-			//NEW 9569
 			getManagedBean().setMailAddDivisionList(null);
+			//9569 - End
 			getManagedBean().setMailAddCityList(null);
 		}
 		
@@ -1034,9 +1219,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().
 				setPmState(state);
 			getManagedBean().setMailAddCityList(null);
-			//NEW #9569
 			getManagedBean().setMailAddDivisionList(null);
-			getManagedBean().setMailDivisionBox(!state.getAdoptDivision());
 			
 			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){				
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
@@ -1089,19 +1272,26 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updateResAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
+		//#9569 - Start
+		if (this.getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().getPmDivision() == null){
+			this.getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().setPmDivision(new PmDivision());
+		}
+
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setResAddStateList(SmCommonUtil.getStateList(Long.valueOf(countryId)));
+			getManagedBean().setResAddDivisionList(null);
+			//9569 - End
 			getManagedBean().setResAddDistrictList(null);
 			getManagedBean().setResAddCityList(null);
 		}
 		
-		//#13320 - added division - start
 		if(!stateId.isEmpty() || stateId.equalsIgnoreCase("null")) {
 			PmState state = SmCommonUtil.getInstance().getStateById(Long.valueOf(stateId));
 			getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().
 				setPmState(state);
+			getManagedBean().setResAddDivisionList(null);
 			getManagedBean().setResAddCityList(null);
-			getManagedBean().setResDivisionBox(!state.getAdoptDivision());
+			//getManagedBean().setResDivisionBox(!state.getAdoptDivision());
 			
 			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){				
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
@@ -1153,9 +1343,16 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updateOffAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
+		//9569 - Start
+		if (this.getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getPmDivision() == null){
+			this.getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().setPmDivision(new PmDivision());
+		}
+		
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setOffAddStateList(
 					SmCommonUtil.getStateList(Long.valueOf(countryId)));
+			getManagedBean().setOffAddDivisionList(null);
+			//9569 - End
 			getManagedBean().setOffAddDistrictList(null);
 			getManagedBean().setOffAddCityList(null);
 		}
@@ -1165,8 +1362,9 @@ public class SmPersonnelBackingBean extends
 			PmState state = SmCommonUtil.getInstance().getStateById(Long.valueOf(stateId));
 			getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().
 				setPmState(state);
+			getManagedBean().setOffAddDivisionList(null);
 			getManagedBean().setOffAddCityList(null);
-			getManagedBean().setOffDivisionBox(!state.getAdoptDivision());
+			//getManagedBean().setOffDivisionBox(!state.getAdoptDivision());
 			
 			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){				
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
@@ -1219,9 +1417,17 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void updatePermAddLists(String countryId, String stateId, String divisionId,
 			String districtId) {
+		
+		//9569 - Start
+		if (this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDivision() == null){
+			this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().setPmDivision(new PmDivision());
+		}
+		
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
 			getManagedBean().setPermAddStateList(
-					SmCommonUtil.getStateList(Long.valueOf(countryId)));
+					SmCommonUtil.getStateList(Long.valueOf(countryId)));	
+			getManagedBean().setPermAddDivisionList(null);
+			//9569 - End
 			getManagedBean().setPermAddDistrictList(null);
 			getManagedBean().setPermAddCityList(null);
 		}
@@ -1230,8 +1436,9 @@ public class SmPersonnelBackingBean extends
 			PmState state = SmCommonUtil.getInstance().getStateById(Long.valueOf(stateId));
 			getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().
 				setPmState(state);
+			getManagedBean().setPermAddDivisionList(null);
 			getManagedBean().setPermAddCityList(null);
-			getManagedBean().setDivisionBox(!state.getAdoptDivision());
+			//getManagedBean().setDivisionBox(!state.getAdoptDivision());
 			
 			if(state.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 				List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(state.getStateId());
@@ -2878,21 +3085,8 @@ public class SmPersonnelBackingBean extends
 		    SmPersonnelAddress personnelAddress1 = getManagedBean().getBasicSmPersonnelResidentialAddress();
 		    SmPersonnelAddress personnelAddress2 = getManagedBean().getBasicSmPersonnelOfficeAddress();
 
-		    if(personnelAddress.isSameAsPerm()){
-		      getManagedBean().setBasicSmPersonnelMailingAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-		      getManagedBean().getBasicSmPersonnelMailingAddress().setSameAsPerm(true);
-		    }
-		    if(personnelAddress1.isSameAsPerm()){
-		      getManagedBean().setBasicSmPersonnelResidentialAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-		      getManagedBean().getBasicSmPersonnelResidentialAddress().setSameAsPerm(true);
-		    }
-		    if(personnelAddress2.isSameAsComp()){
-		      getManagedBean().setBasicSmPersonnelOfficeAddress(getManagedBean().getBasicSmPersonnelPermanentAddress());
-		      getManagedBean().getBasicSmPersonnelOfficeAddress().setSameAsComp(true);
-		    }
-
 		    for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
-		      if (!per.getSmAddress().getPmState().getStateId().equals(SupplierManagementConst.SARAWAK_CODE)){
+		      if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 		        per.getSmAddress().setPmDivision(null);
 		      }
 		    }
