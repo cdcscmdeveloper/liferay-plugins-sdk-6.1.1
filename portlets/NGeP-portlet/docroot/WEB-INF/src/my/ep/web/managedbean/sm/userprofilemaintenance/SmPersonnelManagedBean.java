@@ -58,6 +58,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> ePRoleList;
 	private SmPersonnelAddress basicSmPersonnelResidentialAddress;
 	private SmPersonnelAddress basicSmPersonnelOfficeAddress;
+	private SmPersonnelAddress basicSmPersonnelPrevAddress = new SmPersonnelAddress();
+	private SmPersonnelAddress basicSmPersonnelPrevAddress1 = new SmPersonnelAddress();
+	private SmPersonnelAddress basicSmPersonnelPrevAddress2= new SmPersonnelAddress();
 	private List<SelectItem> resAddCountryList;
 	private List<SelectItem> resAddStateList;
 	private List<SelectItem> resAddDistrictList;
@@ -1054,5 +1057,29 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setePRoleList(List<SelectItem> ePRoleList) {
 		this.ePRoleList = ePRoleList;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelPrevAddress() {
+		return basicSmPersonnelPrevAddress;
+	}
+
+	public void setBasicSmPersonnelPrevAddress(SmPersonnelAddress basicSmPersonnelPrevAddress) {
+		this.basicSmPersonnelPrevAddress = basicSmPersonnelPrevAddress;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelPrevAddress1() {
+		return basicSmPersonnelPrevAddress1;
+	}
+
+	public void setBasicSmPersonnelPrevAddress1(SmPersonnelAddress basicSmPersonnelPrevAddress1) {
+		this.basicSmPersonnelPrevAddress1 = basicSmPersonnelPrevAddress1;
+	}
+
+	public SmPersonnelAddress getBasicSmPersonnelPrevAddress2() {
+		return basicSmPersonnelPrevAddress2;
+	}
+
+	public void setBasicSmPersonnelPrevAddress2(SmPersonnelAddress basicSmPersonnelPrevAddress2) {
+		this.basicSmPersonnelPrevAddress2 = basicSmPersonnelPrevAddress2;
 	}
 }
