@@ -1500,9 +1500,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 				}
 				//29728 - start
-				if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null) {
-					isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
-							getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+				if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
+						&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
+								getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+					getManagedBean().setBranchNeedToBeChanged(true);
 				}
 				//29728 - end
 			}
@@ -2774,6 +2775,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
 		getSupplierGst(getManagedBean().getFulfilmentRequest(), false);
+		//29728 - start
+		getManagedBean().setBranchNeedToBeChanged(false);
+		//29728 - end
 	}
 	
 	/**
@@ -3274,12 +3278,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//29728 - start
 		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome) 
 				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
-			if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null 
+			if(!getManagedBean().isBranchNeedToBeChanged() && getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null 
 					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
 							getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
 				getManagedBean().setSelectedTabIndex(0);
 				return null;
-			}				
+			} 
+			if(getManagedBean().isBranchNeedToBeChanged()){
+				FacesContext.getCurrentInstance().addMessage("delBranchMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745087, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				getManagedBean().setSelectedTabIndex(0);
+				return null;
+			}
 		}
 		//29728 - end
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
