@@ -155,7 +155,7 @@
 						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{smPersonnelBackingBean.navigateToUpdateMOFUserPage(personnel.personnelId)}"
-							update="@all">
+							update="@form">
 							<p:graphicImage value="/css/images/design/edit.png"
 								title="#{lbl['lbl.sm.edit']}"></p:graphicImage>
 						</p:commandLink>
