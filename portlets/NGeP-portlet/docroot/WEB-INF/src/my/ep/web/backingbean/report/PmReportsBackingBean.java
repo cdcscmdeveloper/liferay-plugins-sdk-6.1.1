@@ -504,9 +504,24 @@ public class PmReportsBackingBean extends
 		log.info("Month Picked : " + DateUtils.dateToString(
 				CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY, getManagedBean()
 				.getMonth()));
+		log.info("Month: " + getManagedBean().getMonth());
 		log.info("Mapping: " + map.toString());
 		
 	}
+	
+/*	public void UpdateMonth(){
+		
+		Map<String,String> requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	    log.info("before: " + getManagedBean().getMonth());
+	    Calendar c = Calendar.getInstance();
+	    c.setTime(getManagedBean().getMonth());
+	    c.set(Calendar.MONTH, Integer.parseInt(requestParams.get(":opDefinedSearch:monthPicker")) - 1);
+	    c.set(Calendar.YEAR, Integer.parseInt(requestParams.get(":opDefinedSearch:monthPicker")));
+	    getManagedBean().setMonth(c.getTime());
+
+	    log.info("after: " + getManagedBean().getMonth());
+
+	}*/
 	//shafie - #29486 - end
 	
 	//No of Company Profile and Market Research Access Application
