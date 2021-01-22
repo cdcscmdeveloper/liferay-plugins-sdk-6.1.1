@@ -3107,6 +3107,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		RequestContext.getCurrentInstance().execute("hideLovMsg();");
 		validateEpItem(paramCode); // disabled this if no validation required at this stage
 		PpExpenditureItem epItem = new PpExpenditureItem();
+		//24975@22012021 - start
+		epItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		epItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		log.info("setCreatedDate " + new Timestamp(System.currentTimeMillis()) + " setCreatedBy " + getFacesScopes().getUserSessionBean().getUserId());
+		//24975@22012021 - end
 		epItem.setPmGlAccount(new PmGlAccount());
 		epItem.setVotFundType(new PmParameter());
 		epItem.setEditable(true);
@@ -4167,6 +4172,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		validatePpItem(); // disabled this if no validation required at this stage
 		
 		PpProcurementItem ppItem = new PpProcurementItem();
+		//24975@22012021 - start
+		ppItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		ppItem.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		log.info("setCreatedDate " + new Timestamp(System.currentTimeMillis()) + " setCreatedBy " + getFacesScopes().getUserSessionBean().getUserId());
+		//24975@22012021 - end
 		ppItem.setProcurementCat(new PmParameter());
 		ppItem.setProcurementType(new PmParameter());
 		ppItem.setEditable(true);
