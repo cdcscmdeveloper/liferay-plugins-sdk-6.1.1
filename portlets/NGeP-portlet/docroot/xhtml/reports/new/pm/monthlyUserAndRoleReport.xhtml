@@ -11,6 +11,47 @@
 			display : none;		
 		}
 	</style>
+	<!-- <script type="text/javascript">
+	function GenerateCal() {
+    	year = $(".ui-datepicker-year").val();
+    	month = $(".ui-datepicker-month").val();
+    	month1 = $('#month').val(month);
+    	month2 = $('#month').val();
+    	
+    	console.log("year : " +year);
+    	console.log("month : " +month);
+    	console.log("month1 : " +month1);
+    	console.log("month dalam hidden value : " +month2);
+    }
+	</script> -->
+	
+	<script type="text/javascript">
+	$(document).ready(function()
+	{   
+    	$(".monthPicker").datepicker({
+        	dateFormat: 'MM/yy',
+        	changeMonth: true,
+       		changeYear: true,
+        	showButtonPanel: true,
+        	yearRange : '-7:+0',
+
+        	onClose: function(dateText, inst) {
+            	var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            	var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            	$(this).val($.datepicker.formatDate('MM/yy', new Date(year, month, 1)));
+        	}
+    	});
+
+    	$(".monthPicker").focus(function () {
+        	$(".ui-datepicker-calendar").hide();
+        	$("#ui-datepicker-div").position({
+            	my: "center top",
+            	at: "center bottom",
+            	of: $(this)
+        	});
+    	});
+	});
+</script>
 
 	<p:outputPanel id="opDefinedSearch">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">			
@@ -69,16 +110,21 @@
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 					</p:selectOneMenu></td>
 			</tr>
+			<br/>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.month']}" /></td>
 				<td>
-					<p:calendar id="MonthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"
+					<!-- <p:calendar id="monthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"
 					value="#{pmReportsBackingBean.managedBean.month}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_MONTH_YEAR)}">
 						<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this" />
-						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
-					</p:calendar>
+						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" listener="#{pmReportsBackingBean.updateMonth}" />
+					</p:calendar> -->
+					<input type="text" id="month" class="monthPicker" value="#{pmReportsBackingBean.managedBean.month}"/>
 				</td>
+				<!-- <td width="15%"><p:commandButton value="Generate" onclick="if(#{conditionOK}){GenerateCal()}">
+				</p:commandButton>
+				<input id="month" value="#{pmReportsBackingBean.managedBean.monthPick}" /></td> -->
 		
 			</tr>
 		</table>
