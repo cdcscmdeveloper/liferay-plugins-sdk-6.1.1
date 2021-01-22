@@ -2310,7 +2310,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String taskName = this.getManagedBean().getTaskName();
 		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
 		String[] taskNames = new String[]{SCProcessNameConst.PREPARE_QT_SCHEDULE, SCProcessNameConst.APPROVE_PUBLICATION};
-		String[] specTaskName = new String[]{SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING};
+		String[] specTaskName = new String[]{SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING};//15391
 
 		if(Arrays.asList(taskNames).contains(taskName)){
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
