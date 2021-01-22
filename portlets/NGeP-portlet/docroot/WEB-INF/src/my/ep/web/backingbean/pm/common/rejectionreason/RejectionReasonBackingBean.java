@@ -59,7 +59,9 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.ReasonHelper;
-
+//20210122@Jacky - Enhancement#29764 - Start
+import org.apache.commons.lang3.ArrayUtils;
+//20210122@Jacky - Enhancement#29764 - Start
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 /**
@@ -965,7 +967,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public SelectItem[] sourcingMethodOptions() {
 		log.info("sourcingMethodOptions");
-		return getDropdownValuesBySearchBean(ParameterTypeConst.SOURCING_METHOD,getCatCirSearchBean());
+		//20210122@Jacky - Enhancement#29764 - Start
+		SelectItem[] sourMeth = getDropdownValuesBySearchBean(ParameterTypeConst.SOURCING_METHOD,getCatCirSearchBean());
+		if(this.getManagedBean().getSelectedReason().isBrandNew()){
+			return sourMeth;
+		}else if(this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId() == 475 && this.getManagedBean().getSelectedReason().getReasonCode().equals("A")){
+	        int index = 3; 
+	        sourMeth = ArrayUtils.remove(sourMeth, index);
+			return sourMeth;
+		}else{
+			return sourMeth;
+		}
+		//20210122@Jacky - Enhancement#29764 - End
 	}
 	/**
 	 * retrieve reasonApplicability doc type
@@ -981,19 +994,22 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
     PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
 	List<String> parameterCodes = new ArrayList<String>();
-	parameterCodes.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
-	if(getManagedBean().getSelectedReason().getSourceMethod() != null && getManagedBean().getSelectedReason().getSourceMethod().getParameterId() != null && 
-			!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
-		parameterCodes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-	}
-	parameterCodes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-	reasonApplicablitySearchBean.getDataFilterBeans().add(
-			new SearchFilterBean(
-					"pmParameter.parameterCode",
-					SearchOperator.OPERATOR_IN.value(),
-					parameterCodes));
-	
-	return reasonApplicablitySearchBean;
+	//20210122@Jacky - Enhancement#29764 - Start
+		parameterCodes.add(ParameterConst.DOCTYPE_DIRECT_PURCHASE);
+		parameterCodes.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
+		if(getManagedBean().getSelectedReason().getSourceMethod() != null && getManagedBean().getSelectedReason().getSourceMethod().getParameterId() != null && 
+				!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
+			parameterCodes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		}
+		parameterCodes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+		reasonApplicablitySearchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(),
+						parameterCodes));
+		
+		return reasonApplicablitySearchBean;
+		//20210122@Jacky - Enhancement#29764 - End
 	}
 	
 	/**
