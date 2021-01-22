@@ -86,7 +86,9 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class ContractRequestManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
+	//29728 - start
+  	private boolean isBranchNeedToBeChanged;
+  	//29728 - end
 	public ContractRequestManagedBean(){
 
 	}
@@ -3175,4 +3177,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.catalogueFlag = catalogueFlag;
 	}
 	//end-13984 - CrList - Back Button
+
+	//29728 - start
+	/**
+	 * @return the isBranchNeedToChange
+	 */
+	public boolean isBranchNeedToBeChanged() {
+		return isBranchNeedToBeChanged;
+	}
+
+	/**
+	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
+	 */
+	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
+		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
+	}
+	//29728 - end
 }

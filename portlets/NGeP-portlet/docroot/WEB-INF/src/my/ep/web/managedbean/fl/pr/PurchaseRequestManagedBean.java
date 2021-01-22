@@ -301,6 +301,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	//29728 - start
+	private boolean isBranchNeedToBeChanged;
+	//29728 - end
 /**
  * Gets the charge line item root.
  *
@@ -3349,4 +3352,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.chargePTJOrg = chargePTJOrg;
 	}
 	//24893 - end
+	//29728 - start
+	/**
+	 * @return the isBranchNeedToChange
+	 */
+	public boolean isBranchNeedToBeChanged() {
+		return isBranchNeedToBeChanged;
+	}
+
+	/**
+	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
+	 */
+	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
+		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
+	}
+	//29728 - end
 }
