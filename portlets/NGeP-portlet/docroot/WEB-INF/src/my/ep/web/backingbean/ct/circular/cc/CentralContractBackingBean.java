@@ -638,7 +638,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			 
 			 //#cr 28713 - start
 			 if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
-					 && (getManagedBean().getCircularVer().getCircularAttachments() == null ) ){
+					 && (getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ) ){
 				 throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 						 ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			 } //#cr 28713 - end
