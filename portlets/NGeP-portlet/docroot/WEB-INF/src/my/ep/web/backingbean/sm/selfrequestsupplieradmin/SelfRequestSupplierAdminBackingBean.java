@@ -103,48 +103,52 @@ public class SelfRequestSupplierAdminBackingBean extends
 				ssmReqDTO.setBusinessType(this.getManagedBean().getSupplier().getBusinessType());
 				ssmReqDTO.setCheckOnly(true);				
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+				//27382
+				this.getManagedBean().setStatusFromSSM("");
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 					//check the business/company registration status in ssm
 					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+					this.getManagedBean().setStatusFromSSM(ssmResDTO.getStatusFromSSM());
 					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+						this.getManagedBean().setAutoUpdate(false);
 						//27382 - start
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
-							fc.addMessage("ssmInvalid",
+							/*fc.addMessage("ssmInvalid",
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721097, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
-											""));
+											""));*/
 							throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 						}//27382 - Terminated 
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
-							fc.addMessage("ssmInvalid",
+							/*fc.addMessage("ssmInvalid",
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721098, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
-											""));
+											""));*/
 							throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 						}//27382 - Dissolved Conversion to LLP
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
 							if(businessTypeIsROC(this.getManagedBean().getSupplier().getBusinessType())){
-								fc.addMessage("ssmInvalid",
-										new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) }),
-												""));
-								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null) });
+								/*fc.addMessage("ssmInvalid",
+										new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null), ""}),
+												""));*/
+								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null),"" });
 									}
 							if(businessTypeIsROB(this.getManagedBean().getSupplier().getBusinessType())){
-								fc.addMessage("ssmInvalid",
-										new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) }),
-												""));
-								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null) });
+								/*fc.addMessage("ssmInvalid",
+										new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null), ""}),
+												""));*/
+								throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null),""});
 									}
 						}else{ 
-						fc.addMessage("ssmInvalid",
+						/*fc.addMessage("ssmInvalid",
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721070, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
-										""));
+										""));*/
 						throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 						}
 					}//27382 - start
 				} else{
 					if("70001".equalsIgnoreCase(ssmResDTO.getStatusCode())){
-						fc.addMessage("ssmInvalid",
+						/*fc.addMessage("ssmInvalid",
 								new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721081, new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""}),
-										""));
+										""));*/
 						throw new EpException(MessageConst.ERROR_721081,new String[]{SmCommonUtil.getOutputMsgBundle(this.getManagedBean().getStatusDescFromSSM(),null), ""});
 					}else{
 						//SSM CHANGES START #27541 - 10/03/2020
@@ -152,9 +156,9 @@ public class SelfRequestSupplierAdminBackingBean extends
 							SmCommonUtil.ssmError(ssmResDTO);
 						}catch(Exception e){
 							String message = MessageUtils.getMessage(e.getMessage(),MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale());
-							fc.addMessage("ssmInvalid",
+							/*fc.addMessage("ssmInvalid",
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getMessage(message,null),
-											""));
+											""));*/
 
 							if (message != null) {
 								throw new EpException(message + "(ERR-"
@@ -364,6 +368,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		StringBuilder fullMsg = new StringBuilder();
 		getManagedBean().setDisabledNextBtn(false);
+		//27382
+		this.getManagedBean().setStatusFromSSM("");
 		if (StringUtils.isBlank(mofNo)) {
 			getManagedBean().setDisabledNextBtn(true);
 			fullMsg.append(SmCommonUtil.getMessage("lbl.sm.required.msg",
