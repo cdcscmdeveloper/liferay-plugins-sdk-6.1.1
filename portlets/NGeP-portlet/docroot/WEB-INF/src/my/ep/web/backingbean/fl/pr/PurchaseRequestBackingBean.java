@@ -3430,9 +3430,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
 			
-		} catch (EpException ex){
-			log.error("File : PurchaseRequestBackingBean, Method: validateFulfilmentRequest, Message: "+ex.getMessage());
 		}
+		//CR-25147: Static Code Analysis - shaqimi start
+		finally{
+			fulfilmentRequestSO = null;
+		}
+		//CR-25147L Static Code Analysis - shaqimi end
 	}
 	
 	/**
