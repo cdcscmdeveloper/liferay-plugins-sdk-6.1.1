@@ -201,6 +201,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				getManagedBean().setGovernment(Boolean.TRUE);
 				getManagedBean().setViewAsPTJ(Boolean.TRUE);
 				getManagedBean().setViewAsSupplier(Boolean.FALSE);
+				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
+				getManagedBean().setShowMinistryPtjField(Boolean.TRUE);
 				
 				PmTrackingDiaryBackingBean  pmTrackingDiaryBackingBean= new PmTrackingDiaryBackingBean();
 				pmTrackingDiaryBackingBean.getManagedBean().setUseViewAsOption(Boolean.TRUE);
@@ -211,7 +213,8 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
 				getManagedBean().setGovernment(Boolean.FALSE);
 				getManagedBean().setViewAsPTJ(Boolean.FALSE);
-				getManagedBean().setViewAsSupplier(Boolean.TRUE);				
+				getManagedBean().setViewAsSupplier(Boolean.TRUE);	
+				getManagedBean().setShowMinistryPtjField(Boolean.FALSE);
 				
 				PmTrackingDiaryBackingBean  pmTrackingDiaryBackingBean= new PmTrackingDiaryBackingBean();
 				pmTrackingDiaryBackingBean.getManagedBean().setUseViewAsOption(Boolean.TRUE);
