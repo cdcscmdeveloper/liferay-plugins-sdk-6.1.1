@@ -80,22 +80,33 @@
 				var="spec" rowIndexVar="rowIndex" rowKey="#{spec}" rows="10"
 				width="100%">
 				
-				<ac:paginator for="specList" />
-				<p:column headerText="#{lbl['lbl.sc.specification']}" style="width:30%;white-space:normal; text-align: left;" >
-					<h:outputText style="width:24%;white-space: normal;" value="#{spec.tplSpecQuestion.clSpecDetail}" />
+		<p:columnGroup type="header">
+			<p:row>
+				<p:column headerText="#{lbl['lbl.sc.specification']}" style="width:30%;white-space:normal; text-align: center" >
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.supplier.offer']}" style="width:30%;white-space:normal; text-align: left;" >
-					<h:outputText style="width:24%;white-space: normal;" value="#{spec.answerRemark}" />
+				<p:column headerText="#{lbl['lbl.sc.supplier.offer']}" style="width:30%;white-space:normal; text-align: center" >
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:40%;white-space:normal; text-align: center;" >
-					<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 15px);" value="#{spec.newSupplierOffer}" 
-					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
-					onmouseout="limitTextArea(this,1000);">
-					<p:ajax event="change" process="@this" update="@this" />
-					<f:validateLength for="newOfferedSpec" maximum="1000" />
-					</p:inputTextarea>
-					<p:message id="newOfferedSpecMsg" for="newOfferedSpec" display="icon" />
 				</p:column>
+			</p:row>
+		</p:columnGroup>
+		
+		<p:column style="width:30%; text-align: left;">
+			<h:outputText style="width:24%;white-space: normal;" value="#{spec.tplSpecQuestion.clSpecDetail}" />
+		</p:column>
+		<p:column style="width:30%; text-align: left;">
+			<h:outputText style="width:24%;white-space: normal;" value="#{spec.answerRemark}" />
+		</p:column>
+		<p:column style="width:40%; text-align: center;">
+			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 15px);" value="#{spec.newSupplierOffer}" 
+				disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
+				onmouseout="limitTextArea(this,1000);">
+			<p:ajax event="change" process="@this" update="@this" />
+			<f:validateLength for="newOfferedSpec" maximum="1000" />
+			</p:inputTextarea>
+			<p:message id="newOfferedSpecMsg" for="newOfferedSpec" display="icon" />
+		</p:column>
+				
 		</p:dataTable>
 </p:panel>
 </ui:define>
