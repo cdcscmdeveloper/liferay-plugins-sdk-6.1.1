@@ -103,10 +103,14 @@ public class SelfRequestSupplierAdminBackingBean extends
 				ssmReqDTO.setBusinessType(this.getManagedBean().getSupplier().getBusinessType());
 				ssmReqDTO.setCheckOnly(true);				
 				SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+				//27382
+				this.getManagedBean().setStatusFromSSM("");
 				if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 					//check the business/company registration status in ssm
 					this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
+					this.getManagedBean().setStatusFromSSM(ssmResDTO.getStatusFromSSM());
 					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
+						this.getManagedBean().setAutoUpdate(false);
 						//27382 - start
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
 							/*fc.addMessage("ssmInvalid",
@@ -364,6 +368,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		StringBuilder fullMsg = new StringBuilder();
 		getManagedBean().setDisabledNextBtn(false);
+		//27382
+		this.getManagedBean().setStatusFromSSM("");
 		if (StringUtils.isBlank(mofNo)) {
 			getManagedBean().setDisabledNextBtn(true);
 			fullMsg.append(SmCommonUtil.getMessage("lbl.sm.required.msg",
