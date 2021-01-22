@@ -14612,6 +14612,9 @@ public class SmApplicationBackingBean extends
 	
 	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
 		boolean result=false;
+		log.info("Record Status Dockyard=="+categoryVar.getRecordStatusFlg());
+		log.info("Category3 ID dockyard==="+dockyardCatVar.getCategoryL3Id());
+		log.info("Category3 ID dockyard==="+categoryVar.getPmCategoryL3().getCategoryL3Id());
 		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
 				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id())){
 			if( (dockyardCatVar.getCategoryL3Code().equalsIgnoreCase("99") && 
