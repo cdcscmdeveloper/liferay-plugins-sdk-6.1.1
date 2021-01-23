@@ -3077,6 +3077,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setOutcome(action);
 			reqDTO.setUserRole(getUserRoleValue());
 			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
+			reqDTO.setSaveSubPlan(true);
 			if(!ppPlan.isBrandNew()){
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}
@@ -3098,7 +3099,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 		}
 		catch(Exception e){
-			
+			log.error(e.getStackTrace());
 		}
 		finally{
 			log.info("saveSubPlan - End");
