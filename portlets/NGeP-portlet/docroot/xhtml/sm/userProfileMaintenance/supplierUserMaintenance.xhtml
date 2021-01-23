@@ -63,6 +63,8 @@
 									value="#{smPersonnelBackingBean.managedBean.spSoftcertFlg}">
 									<f:selectItem itemLabel="#{lbl['lbl.cm.selectOne']}"
 										itemValue="0" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.maintenance.not.required']}"
+										itemValue="99" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.softcert.flg.pending']}"
 										itemValue="4" />
 									<f:selectItem
@@ -135,7 +137,7 @@
 						headerText="#{lbl['lbl.sm.person.composition.certStatus']}" rendered="#{personnel.epRole ne null and personnel.epRole ne ''}">
 						<ac:smSoftcertStatus personnel="#{personnel}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
+					<p:column headerText="#{lbl['lbl.sm.accountstatus']}">
 						<h:outputText 
 							value="#{lbl['lbl.sm.accountstatus.active']}"
 							rendered="#{personnel.recordStatusFlg eq '1'}" />

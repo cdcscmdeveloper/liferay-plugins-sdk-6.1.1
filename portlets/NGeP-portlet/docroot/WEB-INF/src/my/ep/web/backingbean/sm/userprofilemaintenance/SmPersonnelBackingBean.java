@@ -2974,6 +2974,13 @@ public class SmPersonnelBackingBean extends
 	 * Search personnel based on criteria
 	 */
 	public void searchMOFSmPersonnel() {
+		//since default value in drop down is defaulted by "0" to get "not required" data need to be in "0"
+		//therefore, in backingBean "select one" is actually equals to 99
+		if(getManagedBean().getSpSoftcertFlg() == 0){
+			getManagedBean().setSpSoftcertFlg(99);
+		}else if(getManagedBean().getSpSoftcertFlg() == 99){
+			getManagedBean().setSpSoftcertFlg(0);
+		}
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		getManagedBean().setSmSupplier(smSupplier);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -2981,7 +2988,7 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setApplId(smSupplier.getSmAppl().getApplId());
 		reqDTO.setHasActiveAppl(false);
 		if (getManagedBean().getSpName().isEmpty() && getManagedBean().getSpCountryId() == null
-				&& getManagedBean().getSpSoftcertFlg() == 0 && getManagedBean().getSpRecordStatus() == 0
+				&& getManagedBean().getSpSoftcertFlg() == 99 && getManagedBean().getSpRecordStatus() == 0
 				&& getManagedBean().getSpEpRole() == null) {
 			reqDTO.setSmPersonnel(null);
 		} else {
@@ -3005,17 +3012,22 @@ public class SmPersonnelBackingBean extends
 				reqDTO.getSmPersonnel().setRecordStatusFlg(this.getManagedBean().getSpRecordStatus());
 			}
 
-			if (getManagedBean().getSpSoftcertFlg() == 0) {
-				reqDTO.getSmPersonnel().setSoftcertFlg(0);
-			} else if (getManagedBean().getSpSoftcertFlg() != 0) {
+			if (getManagedBean().getSpSoftcertFlg() == 99) {
+				reqDTO.getSmPersonnel().setSoftcertFlg(99);
+			} else if (getManagedBean().getSpSoftcertFlg() != 99) {
 				reqDTO.getSmPersonnel().setSoftcertFlg(this.getManagedBean().getSpSoftcertFlg());
 			}
-
 		}
 		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
 				.getSmPersonnelList();
 		sortPersonnelByEpRole(smPersonnelList);
 		getManagedBean().setSmPersonnelList(smPersonnelList);
+		//change back value for the softcert flag
+		if(getManagedBean().getSpSoftcertFlg() == 0){
+			getManagedBean().setSpSoftcertFlg(99);
+		}else if(getManagedBean().getSpSoftcertFlg() == 99){
+			getManagedBean().setSpSoftcertFlg(0);
+		}
 	}
 	
 	/**
