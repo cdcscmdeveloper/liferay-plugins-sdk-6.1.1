@@ -28,10 +28,10 @@
 		value="#{PpReportConst.ppTotalApprovedPpPeMinistryRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
 	<!--//[#29484] - end  -->
 	
-	<!--//[#24974] - start  -->
+	<!--//[#24974,#27472] - start  -->
 	<ui:param name="isPPBudgetAllocationAmendmentReport"
 		value="#{PpReportConst.ppBudgetAllocationAmendmentRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
-	<!--//[#24974] - end  -->
+	<!--//[#24974,#27472] - end  -->
 	<c:if test="#{not (isPPPerformanceReport or isPpPeTotal)}">	<!--[#24976]--> <!--//[#29484]-->
 	<table style="width: 100%;">
 		<tr>
@@ -148,7 +148,7 @@
 			</tr>
 		</c:if>
 		
-		<c:if test="#{not isPPBudgetAllocationAmendmentReport}"> <!--[#24974]-->
+		<c:if test="#{not isPPBudgetAllocationAmendmentReport}"> <!--[#24974,#27472]-->
 			<tr>
 				<!-- #27472 change width-->
 				<td width="20%"><p:outputLabel
@@ -176,7 +176,7 @@
 				</c:if>
 	
 			</tr>
-		</c:if> <!--[#24974]-->
+		</c:if> <!--[#24974,#27472]-->
 		
 		<tr>
 			<!-- #27472 change width-->
