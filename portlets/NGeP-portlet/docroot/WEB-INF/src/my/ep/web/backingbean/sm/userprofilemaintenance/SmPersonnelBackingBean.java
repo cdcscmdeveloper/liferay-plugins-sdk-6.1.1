@@ -2974,6 +2974,13 @@ public class SmPersonnelBackingBean extends
 	 * Search personnel based on criteria
 	 */
 	public void searchMOFSmPersonnel() {
+		//since default value in drop down is defaulted by "0" to get "not required" data need to be in "0"
+		//therefore, in backingBean "select one" is actually equals to 99
+		if(getManagedBean().getSpSoftcertFlg() == 0){
+			getManagedBean().setSpSoftcertFlg(99);
+		}else if(getManagedBean().getSpSoftcertFlg() == 99){
+			getManagedBean().setSpSoftcertFlg(0);
+		}
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 		getManagedBean().setSmSupplier(smSupplier);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -2981,7 +2988,7 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setApplId(smSupplier.getSmAppl().getApplId());
 		reqDTO.setHasActiveAppl(false);
 		if (getManagedBean().getSpName().isEmpty() && getManagedBean().getSpCountryId() == null
-				&& getManagedBean().getSpSoftcertFlg() == 0 && getManagedBean().getSpRecordStatus() == 0
+				&& getManagedBean().getSpSoftcertFlg() == 99 && getManagedBean().getSpRecordStatus() == 0
 				&& getManagedBean().getSpEpRole() == null) {
 			reqDTO.setSmPersonnel(null);
 		} else {
@@ -3005,17 +3012,22 @@ public class SmPersonnelBackingBean extends
 				reqDTO.getSmPersonnel().setRecordStatusFlg(this.getManagedBean().getSpRecordStatus());
 			}
 
-			if (getManagedBean().getSpSoftcertFlg() == 0) {
-				reqDTO.getSmPersonnel().setSoftcertFlg(0);
-			} else if (getManagedBean().getSpSoftcertFlg() != 0) {
+			if (getManagedBean().getSpSoftcertFlg() == 99) {
+				reqDTO.getSmPersonnel().setSoftcertFlg(99);
+			} else if (getManagedBean().getSpSoftcertFlg() != 99) {
 				reqDTO.getSmPersonnel().setSoftcertFlg(this.getManagedBean().getSpSoftcertFlg());
 			}
-
 		}
 		List<SmPersonnel> smPersonnelList = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO)
 				.getSmPersonnelList();
 		sortPersonnelByEpRole(smPersonnelList);
 		getManagedBean().setSmPersonnelList(smPersonnelList);
+		//change back value for the softcert flag
+		if(getManagedBean().getSpSoftcertFlg() == 0){
+			getManagedBean().setSpSoftcertFlg(99);
+		}else if(getManagedBean().getSpSoftcertFlg() == 99){
+			getManagedBean().setSpSoftcertFlg(0);
+		}
 	}
 	
 	/**
@@ -3075,31 +3087,42 @@ public class SmPersonnelBackingBean extends
 	/**
 	 * Save personnel update
 	 */
+	public void setAddress(List<SmPersonnelAddress> smPersonnelAddresses,SmPersonnelAddress personnelAddress){
+		SmPersonnelAddress personnelAdd = (SmPersonnelAddress) EntityHelper.getEntityBySinglePropertyFromList(personnelAddress.getPersonnelAddressId(),smPersonnelAddresses,"personnelAddressId");
+		if(personnelAdd == null){
+			smPersonnelAddresses.add(personnelAddress);
+		}
+	}
 	//9569 - Start
 	public void saveUserMOFUpdate(){
 		  try{
 			SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
-		    
 		    //This is to save all the address
+			SmPersonnelAddress personnelAddressPer = getManagedBean().getBasicSmPersonnelPermanentAddress();
 		    SmPersonnelAddress personnelAddress = getManagedBean().getBasicSmPersonnelMailingAddress();
 		    SmPersonnelAddress personnelAddress1 = getManagedBean().getBasicSmPersonnelResidentialAddress();
 		    SmPersonnelAddress personnelAddress2 = getManagedBean().getBasicSmPersonnelOfficeAddress();
-
-		    for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
-		      if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-		        per.getSmAddress().setPmDivision(null);
-		      }
-		    }
-		    personnel.getSmPersonnelAddresses().add(personnelAddress);
+		    
+		    //personnel.getSmPersonnelAddresses().add(personnelAddressPer);
+		    setAddress(personnel.getSmPersonnelAddresses(),personnelAddressPer);
+		   // personnel.getSmPersonnelAddresses().add(personnelAddress);
+		    setAddress(personnel.getSmPersonnelAddresses(),personnelAddress);
 		    
 		    //To check if the address not empty
 		    if(getManagedBean().getBasicSmPersonnelResidentialAddress().getSmAddress().getAddress1() != null){
-		    	personnel.getSmPersonnelAddresses().add(personnelAddress1);
+		    	//personnel.getSmPersonnelAddresses().add(personnelAddress1);
+		    	setAddress(personnel.getSmPersonnelAddresses(),personnelAddress1);
 		    }
 		    if(getManagedBean().getBasicSmPersonnelOfficeAddress().getSmAddress().getAddress1() != null){
-		    	personnel.getSmPersonnelAddresses().add(personnelAddress2);
+		    	//personnel.getSmPersonnelAddresses().add(personnelAddress2);
+		    	setAddress(personnel.getSmPersonnelAddresses(),personnelAddress2);
 		    }
 		    
+		    for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
+		      if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+		    	  per.getSmAddress().setPmDivision(null);
+		      }
+		    }
 		    PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
 		    reqDTO2.setSmPersonnel(personnel);
 		    
