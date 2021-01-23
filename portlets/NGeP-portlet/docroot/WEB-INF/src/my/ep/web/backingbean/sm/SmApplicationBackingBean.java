@@ -14610,32 +14610,32 @@ public class SmApplicationBackingBean extends
 	
 	//29380  - Site Visit Grouping Enhancement -28775 - Start
 	
-	public String checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
+	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
+		boolean result=false;
 		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
 			log.info("NUll Here");
-			return "";
+			return result;
 		}
-		log.info("1");
+		log.info("Before Enter Checking********");
 		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
 				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
-			log.info("2");
-			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase("99") && 
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99") ){
-				log.info("3");
+			log.info("Checking 1*****");
+			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
+				log.info("Checking 2 Code 99******");
 				log.info("Return==="+categoryVar.getOtherDesc());
-				return categoryVar.getOtherDesc();
+				result=true;
 			}	
-			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase("220701") &&
-					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22") &&
-					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("07") &&
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("01")){
-				log.info("4");
+			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
+					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
+					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701)){
+				log.info("Checking 2 Code 220701*******");
 				log.info("Return==="+categoryVar.getOtherDesc());
-				return categoryVar.getOtherDesc();
+				result=true;
 			}
 		}
-		log.info("5");
-		return "Kosong";
+		return result;
 	}
 	
 	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
