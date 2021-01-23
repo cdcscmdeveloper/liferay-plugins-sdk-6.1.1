@@ -3018,6 +3018,94 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		return null;
 	}
 	
+	//210121@akmal - Enhancement27624 - Start
+	public void saveSubPlan(String action) throws Exception{
+		long startTime = System.currentTimeMillis();
+		log.info("saveSubPlan - START");
+//		log.info("the action: " + action);
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
+		PpPlan ppPlan = null; 
+		List <PpRejectReason> rejectReasons = null;
+		List <PpRemark> itemRemarks = null;
+		List <PpRemark> justifications = null;
+		String docType = "";
+		PpRemark remark = null;
+		boolean brandNew = false;
+		List <PpUpdateReason> updateReasons = null;
+		
+		try{
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			ppPlan = this.getManagedBean().getSelectedPlan();
+			
+//			validationPlanSubmit(action, ppPlan);
+			
+			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				validateAllEpItems();
+				getAllEpItem(ppPlan);
+			}
+			else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				validatePpItem();
+			}
+			
+			log.info("Call method getFinalItemList...");
+			getFinalItemList(ppPlan);
+			itemRemarks = getAllItemRemarks(ppPlan); 
+			
+			updateReasons = deleteUpdateReasons(ppPlan);
+			
+			//Get Justification 
+			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				justifications = getAllJustifications(ppPlan);
+			}
+						
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setPpRemark(remark);
+			reqDTO.setPpRemarks(itemRemarks);
+			
+			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {
+				reqDTO.setUpdateReasonList(updateReasons);
+			}
+			if (ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())) {
+				reqDTO.setJustifications(justifications);
+			}			
+						
+						
+			reqDTO.setPpPlan(ppPlan);
+			reqDTO.setOutcome(action);
+			reqDTO.setUserRole(getUserRoleValue());
+			reqDTO.setDocTitle(PpCommonUtil.getDocTitle(ppPlan));
+			if(!ppPlan.isBrandNew()){
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			}
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);			
+	
+			if (this.getManagedBean().getDeletePpItems() == null) {
+				this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
+			}
+			log.info("Before save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size()); 
+			reqDTO.setDeletedPpItemList(this.getManagedBean().getDeletePpItems());
+
+//			reqSO.
+			
+			resDTO = reqSO.savePlan(reqDTO);
+	
+			this.getManagedBean().getDeletePpItems().clear();
+			log.info("After save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size());
+			if (resDTO.isSuccessful()) {
+			}
+		}
+		catch(Exception e){
+			
+		}
+		finally{
+			log.info("saveSubPlan - End");
+		}
+	}
+	//210121@akmal - Enhancement27624 - End
+	
 	/* --------------------------------------------------------- Button Submit - END -----------------------------------------------------------------*/
 	
 
@@ -5082,8 +5170,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				|| this.getManagedBean().isFromTaskList()){
 			log.info("getPpProcurementItems-"+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size());
 			log.info("getPpExpenditureItems-"+this.getManagedBean().getSelectedPlan().getPpExpenditureItems().size());
-			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty())
-				savePlan(BpmOutcomeConst.BPM_SAVE);
+			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty()){
+//				savePlan(BpmOutcomeConst.BPM_SAVE);
+				saveSubPlan(BpmOutcomeConst.BPM_SAVE);
+			}
 		}
 		if(this.getManagedBean().isFromTaskList()){
 			loadPlanDetails(this.getManagedBean().getPlanId(), false);
@@ -5135,8 +5225,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				|| this.getManagedBean().isFromTaskList()){
 			log.info("getPpProcurementItems-"+this.getManagedBean().getSelectedPlan().getPpProcurementItems().size());
 			log.info("getPpExpenditureItems-"+this.getManagedBean().getSelectedPlan().getPpExpenditureItems().size());
-			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty())
-				savePlan(BpmOutcomeConst.BPM_SAVE);
+			if(!this.getManagedBean().getSelectedPlan().getPpProcurementItems().isEmpty() || !this.getManagedBean().getSelectedPlan().getPpExpenditureItems().isEmpty()){
+//				savePlan(BpmOutcomeConst.BPM_SAVE);
+				saveSubPlan(BpmOutcomeConst.BPM_SAVE);
+			}
 		}
 		//210120@akmal - Enhancement27624 - End
 		if(this.getManagedBean().isFromTaskList()){
