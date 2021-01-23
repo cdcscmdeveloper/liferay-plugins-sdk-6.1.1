@@ -688,10 +688,13 @@ public class SupplierManagementConst {
 	
 	////29380  - Site Visit Grouping Enhancement -28775 - Start
 	// Category Code for L1 L2 L3
+
+	public static final String CATEGORY_CODE_L1_22 = "22";
+	public static final String CATEGORY_CODE_L2_07 = "07";
+	public static final String CATEGORY_CODE_L3_01 = "01";
+	public static final String CATEGORY_CODE_L3_99 = "99";
 	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
 	
-	// Category Code L3
-	public static final String CATEGORY_CODE_L3_99 = "99";
 	//29380  - Site Visit Grouping Enhancement -28775 - End
 
 	// Getters for panel info
