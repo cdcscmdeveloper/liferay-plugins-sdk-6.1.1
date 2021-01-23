@@ -14611,6 +14611,10 @@ public class SmApplicationBackingBean extends
 	//29380  - Site Visit Grouping Enhancement -28775 - Start
 	
 	public String checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
+		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
+			log.info("NUll Here");
+			return "";
+		}
 		log.info("1");
 		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
 				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
