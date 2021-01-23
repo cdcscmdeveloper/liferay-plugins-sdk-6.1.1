@@ -152,10 +152,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
-	private static Logger log2 = EpLogger.getLogger(PanelBackingBean.class);
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private ContractBackingBean ctBB = new ContractBackingBean();
-
+	
 	/**
 	 * The function constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -389,27 +388,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
-		log.info("----------------------- in backAction - start ----------------------");		
 		if(getManagedBean().isChkCancelPage()) {
 			getManagedBean().setChkCancelPage(false);
 			return "cancelCircularBase.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isFromCircularNotice()) {
-			log.info("----------------------- in backAction - here 001 ");			
 			return "../portal/circularListing.xhtml?faces-redirect=true";
 		} else if(getManagedBean().isDifferentModule()){
-			log.info("----------------------- in backAction - here 002 ");			
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
-			log.info("----------------------- in backAction - here 1 ");			
 			//#3761 - start
 			if (StringUtils.equals(getManagedBean().getGotoPreviewPage(), "simpleQuoteMain")) {
-				log.info("----------------------- in backAction - here 2 ");				
 				SimpleQuoteBackingBean sqbb = new SimpleQuoteBackingBean();
-				log.info("----------------------- in backAction - here 3 ");				
 				sqbb.getManagedBean().setPanelItemFlag(false);
-				log.info("----------------------- in backAction - here 4 ");				
 				sqbb.getManagedBean().setG2GFlag(false);
-				log.info("----------------------- in backAction - here 5 ");				
 				sqbb.getManagedBean().setActiveIndex(0);
 				// #29800 - start
 				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
@@ -422,15 +413,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
 				// #29800 - end
 				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
-				log.info("----------------------- in backAction - here 8 ");				
 				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
-				log.info("----------------------- in backAction - here 9 ");				
 			}
 			// #3761 - end
-			log.info("----------------------- in backAction - here 10 ");			
 			return getManagedBean().getGotoPreviewPage();
 		} else {
-			log.info("----------------------- in backAction - here 11 ");			
 			return "search.xhtml?faces-redirect=true";
 		}
 	}
@@ -679,7 +666,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 
 			 //#cr 28713 - start
-			if(getManagedBean().getCircularVer().getCircularAttachments() == null ){
+			if(getManagedBean().getCircularVer().getCircularAttachments().size() < 1 ){
 				throw new EpException(MessageConst.ERROR_100022, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.letter", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
