@@ -23,8 +23,8 @@
 					<tr>
 					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}">
 						<td style="white-space: nowrap; float: left;" >
-							<p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{backingBean.checkOtherDescDockyard(dockyardCatVar, categoryVar)}" 
-							rendered="#{backingBean.checkOtherDescDockyard(dockyardCatVar, categoryVar) ne 'Kosong'}" />
+							<p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
+							rendered="#{backingBean.checkOtherDescDockyard(dockyardCatVar, categoryVar)}" />
 						</td>
 					</ui:repeat>
 					</tr>
