@@ -685,6 +685,14 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
+	
+	////29380  - Site Visit Grouping Enhancement -28775 - Start
+	// Category Code for L1 L2 L3
+	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
+	
+	// Category Code L3
+	public static final String CATEGORY_CODE_L3_99 = "99";
+	//29380  - Site Visit Grouping Enhancement -28775 - End
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
