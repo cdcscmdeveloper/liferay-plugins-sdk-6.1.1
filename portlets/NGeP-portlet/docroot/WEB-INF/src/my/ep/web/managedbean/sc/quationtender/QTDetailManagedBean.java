@@ -1716,8 +1716,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - end
 
-		
-		
+	//#1873 -start
+	private boolean technicalOtherCheckList;
+	private boolean technicalTemplateEdited;
+	private boolean fromSubmit;
+	//#1873 -end
+
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10699,6 +10703,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.newValidityDays = newValidityDays;
 		}
 		//#29425 - end
+
+		public boolean isTechnicalOtherCheckList() {
+			return technicalOtherCheckList;
+		}
+
+		public void setTechnicalOtherCheckList(boolean technicalOtherCheckList) {
+			this.technicalOtherCheckList = technicalOtherCheckList;
+		}
+
+		public boolean isTechnicalTemplateEdited() {
+			return technicalTemplateEdited;
+		}
+
+		public void setTechnicalTemplateEdited(boolean technicalTemplateEdited) {
+			this.technicalTemplateEdited = technicalTemplateEdited;
+		}
+
+		public boolean isFromSubmit() {
+			return fromSubmit;
+		}
+
+		public void setFromSubmit(boolean fromSubmit) {
+			this.fromSubmit = fromSubmit;
+		}
 
 }
 
