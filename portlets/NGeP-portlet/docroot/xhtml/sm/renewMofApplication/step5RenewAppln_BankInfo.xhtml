@@ -32,22 +32,27 @@
 					<table style="width: 100%">
 						<tr>
 							<td><div align="left" style="width: 100%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary and backingBean.managedBean.smAppl.applValidWithSsm}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
-										actionListener="#{backingBean.setTabValue('4','99')}"
-										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SM_APPL_PAGE_TYPE_ANNUALINFO)}"
-										update=":form" />
 									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary and !backingBean.managedBean.smAppl.applValidWithSsm}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('4','3')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SM_APPL_PAGE_TYPE_EQUITY)}"
+										update=":form" />
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary and backingBean.managedBean.smAppl.applValidWithSsm}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 									actionListener="#{backingBean.setTabValue('5','4')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
+									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO)}"
 									update=":form" />
 								</div></td>
 							<td><div align="right" style="width: 100%">
-									<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary and !backingBean.managedBean.smAppl.applValidWithSsm}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('4','5')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+										update=":form:" />
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary and backingBean.managedBean.smAppl.applValidWithSsm}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('5','6')}"
-										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 										update=":form:" />
 								</div></td>
 						</tr>
