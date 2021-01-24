@@ -74,7 +74,7 @@
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctUpdCommitteeVar)}" />
 							<p:ajax event="valueChange" process="@this" partialSubmit="true"  
 							   update=":form:panelHeaderExceptionUpdateCommittee, updCommitteeTable"
-							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar)}"></p:ajax>
+							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar, ctUpdCommitteeVar.memberRole.parameterId)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>
