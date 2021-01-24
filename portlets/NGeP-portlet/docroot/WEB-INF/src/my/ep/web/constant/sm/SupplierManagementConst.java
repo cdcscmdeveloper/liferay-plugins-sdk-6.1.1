@@ -695,6 +695,25 @@ public class SupplierManagementConst {
 	public static final String CATEGORY_CODE_L3_99 = "99";
 	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
 	
+	public String getCATEGORY_CODE_L3_99() {
+		return CATEGORY_CODE_L3_99;
+	}
+	
+	public String getCATEGORY_CODE_L1_22() {
+		return CATEGORY_CODE_L1_22;
+	}
+	
+	public String getCATEGORY_CODE_L2_07() {
+		return CATEGORY_CODE_L2_07;
+	}
+	
+	public String getCATEGORY_CODE_L3_01() {
+		return CATEGORY_CODE_L3_01;
+	}
+	
+	public String getCATEGORY_CODE_L1_L2_L3_220701() {
+		return CATEGORY_CODE_L1_L2_L3_220701;
+	}
 	//29380  - Site Visit Grouping Enhancement -28775 - End
 
 	// Getters for panel info
