@@ -6694,15 +6694,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#29403 start
 //		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
 		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { 
-			
-			log.info("parameterId: " + parameterId);
-			log.info("curCommitteeMember.getMemberRoleId(): " + curCommitteeMember.getMemberRoleId());
-			log.info("curCommitteeMember.getMemberRole(): " + curCommitteeMember.getMemberRole());
-			
+		
 			int counter = 0;
 			String curParameterCode = "";
 			
 			if (parameterId != null) {
+				if(curCommitteeMember.getMemberRoleId()!=null && !curCommitteeMember.getMemberRoleId().equals(parameterId)){
+					curCommitteeMember.getRepresentativeType().setParameterId(null);
+					curCommitteeMember.setRepresentativeType(null);
+				}
 				curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
 				curCommitteeMember.setMemberRoleId(parameterId);
 			}
@@ -6728,11 +6728,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			
-			log.info("parameterId: " + parameterId);
-			log.info("curCommitteeMember.getMemberRoleId(): " + curCommitteeMember.getMemberRoleId());
-			log.info("curCommitteeMember.getMemberRole(): " + curCommitteeMember.getMemberRole());
-			
+					
 			if (counter > 1) {
 				throw new EpException(MessageConst.ERROR_750008);
 			}
