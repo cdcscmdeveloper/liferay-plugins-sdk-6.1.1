@@ -14594,22 +14594,16 @@ public class SmApplicationBackingBean extends
 			log.info("NUll Here");
 			return result;
 		}
-		log.info("Before Enter Checking********");
 		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
 				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
-			log.info("Checking 1*****");
 			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
 					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
-				log.info("Checking 2 Code 99******");
-				log.info("Return==="+categoryVar.getOtherDesc());
 				result=true;
 			}	
 			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
-					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
-					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701)){
-				log.info("Checking 2 Code 220701*******");
-				log.info("Return==="+categoryVar.getOtherDesc());
+					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
+					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)){
 				result=true;
 			}
 		}
@@ -14618,16 +14612,20 @@ public class SmApplicationBackingBean extends
 	
 	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
 		boolean result=false;
+		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
+			log.info("NUll Here");
+			return result;
+		}
 		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
 				catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id())){
-			if( (catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99") && 
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("99")) ||
-					(catFac.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22") &&
-					catFac.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("07") &&
-					catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("01")) && 
-					(categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22") &&
-						categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("07") &&
-						categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("01")) ){
+			if( (catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
+					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99)) ||
+					(catFac.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
+					catFac.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
+					catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)) && 
+					(categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
+						categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
+						categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)) ){
 				result=true;
 			}
 		}
