@@ -53,6 +53,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -3136,8 +3137,9 @@ public class SmPersonnelBackingBean extends
 		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
 		      if (personnel.getPmUser() != null) {
+		    	  int softcert = checkSoftCert();
 		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
-		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    		  personnel.setSoftcertFlg(softcert);
 		    	  }else{
 		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
@@ -3191,6 +3193,25 @@ public class SmPersonnelBackingBean extends
 		      throw new EpException(MessageConst.ERROR_722632);
 		  }
 		}
+	
+	public int checkSoftCert(){
+		int value = 4;
+		PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		reqDTO1.setSmSupplierId(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+		reqDTO1.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
+		reqDTO1.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
+		SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO1).getSoftcertRequest();
+		if(softcertRequest == null){
+			value = SupplierManagementConst.SOFT_CERT_PENDING_REQ; 
+		}else if(softcertRequest != null && softcertRequest.getPmDigiCert() == null){
+			value = SupplierManagementConst.SOFT_CERT_PROCESSING; 
+		}else if(softcertRequest != null && softcertRequest.getPmDigiCert() != null){
+			value = SupplierManagementConst.SOFT_CERT_ISSUED; 
+		}else{
+			value = getManagedBean().getBasicSmPersonnel().getSoftcertFlg(); 
+		}
+		return value;	
+	}
 //9569 - End
 	/**
 	 * Sort personnel list based Ep Role
