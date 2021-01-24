@@ -192,6 +192,7 @@
 		closable="false" id="approverRevDialog" widgetVar="approverRevDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 		<p:outputPanel layout="block" id="approverReviseBlockPanel">
+			<p:messages id="reviseReasonDialogMsg" showSummary="false" showDetail="true" autoUpdate="false" closable="true" />
 			<br/>
 			<table>
 				<tr>
@@ -208,6 +209,7 @@
 							required="true"
 							requiredMessage="#{lbl['lbl.sm.revise.reason.required']}">
 							<f:validateLength maximum="2500" />
+							<p:ajax process="@this" update="@this"/>
 						</p:inputTextarea>
 					</td>
 				</tr>
@@ -216,7 +218,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					onclick="approverReviseBlockWidget.show()" oncomplete="approverReviseBlockWidget.hide();" 
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','REVISE')}"
-					partialSubmit="true" process="approverReviseBlockPanel" />
+					partialSubmit="true" process="approverReviseBlockPanel, approverRevDialog" update="@([id$=Msg])"/>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelFinalApproveOrReject('approverRevDialog')}"
 					partialSubmit="true" process="@this" />
