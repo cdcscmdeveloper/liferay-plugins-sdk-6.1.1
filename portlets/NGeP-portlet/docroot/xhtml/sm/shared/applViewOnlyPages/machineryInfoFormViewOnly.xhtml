@@ -23,7 +23,7 @@
 												#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 												#{catFac.pmCategoryL3.categoryL3Code}
 											 	(#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}/#{catFac.pmCategoryL3.pmCategoryL2.categoryName}/#{catFac.pmCategoryL3.categoryName})" 
-						style="float: left;white-space: normal; " />
+						style="float: left;white-space: normal; " /><br />
 						<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCategories}">
 							<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" rendered="#{viewSmApplBackingBean.checkOtherDescMachinery(catFac,categoryVar)}"
 							style="float: left;white-space: normal;" />	
