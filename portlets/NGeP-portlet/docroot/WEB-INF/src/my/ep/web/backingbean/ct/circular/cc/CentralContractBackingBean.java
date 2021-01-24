@@ -911,19 +911,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 		boolean ctWorkflowStatusMatch = false;
 		
-		//Bug #29447 - To display Remarks and Attachments for CT Module - Circular Maintenance
-		//start
-		if(!getManagedBean().isViewContract()){
-			if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
-				if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
-					if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
-						ctWorkflowStatusMatch = true;
-					}
+		//Bug #29447 - start
+		if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
+			if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
+				if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
 				}
-			} else { // both also null
-				ctWorkflowStatusMatch = true;
 			}
-
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if(!getManagedBean().isViewContract()){
 			if(remarks.size()==0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
 				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
