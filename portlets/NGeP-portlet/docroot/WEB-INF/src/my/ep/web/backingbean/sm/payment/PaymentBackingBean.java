@@ -649,10 +649,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pymtReqDTO.setPaymentType(getManagedBean().getPaymentType());
 
 			log.info("Debug payment>>>>>");
+			System.out.println("getPaymentType == " + getManagedBean().getPaymentType());
+			System.out.println("getBillType ===== " + pyBill.getBillType());
 			
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 		
-			showPaymentResponse(status, ordId, null,null);
+			showPaymentResponse(status, ordId, null, pyBill.getBillType());
 			this.renewSesionObject();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
