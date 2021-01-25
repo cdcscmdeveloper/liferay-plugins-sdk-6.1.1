@@ -967,18 +967,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public SelectItem[] sourcingMethodOptions() {
 		log.info("sourcingMethodOptions");
-		//20210122@Jacky - Enhancement#29764 - Start
-		SelectItem[] sourMeth = getDropdownValuesBySearchBean(ParameterTypeConst.SOURCING_METHOD,getCatCirSearchBean());
-		if(this.getManagedBean().getSelectedReason().isBrandNew()){
-			return sourMeth;
-		}else if(this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId() == 475 && this.getManagedBean().getSelectedReason().getReasonCode().equals("A")){
-	        int index = 3; 
-	        sourMeth = ArrayUtils.remove(sourMeth, index);
-			return sourMeth;
-		}else{
-			return sourMeth;
-		}
-		//20210122@Jacky - Enhancement#29764 - End
+		//20210125@Jacky - Enhancement#29764 - Start
+		return getDropdownValuesBySearchBean(ParameterTypeConst.SOURCING_METHOD,getCatCirSearchBean());
+		//20210125@Jacky - Enhancement#29764 - End
 	}
 	/**
 	 * retrieve reasonApplicability doc type
