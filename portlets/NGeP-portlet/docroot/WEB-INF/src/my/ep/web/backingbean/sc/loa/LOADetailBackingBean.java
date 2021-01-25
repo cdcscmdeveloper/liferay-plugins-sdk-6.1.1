@@ -8131,6 +8131,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.entrySet()) {
 				if (entry.getKey().compareTo(scLoiLoaItem.getLoiLoaItemId()) == 0) {
 					scLoiLoaItem.setTplSpecAnswerList(entry.getValue());
+					// populate Jenis Pemenuhan and Tempoh (Bulan) columns
+					context.put("jenisPemenuhan", scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getClFulfilmentTypeCode() != null ? getParameterDescForVelocityReport(scLoiLoaItem
+							.getScRequestItem().getTplSpecQuestion().getClFulfilmentTypeCode()) : StringUtils.EMPTY);
+					context.put(
+							"durationMonth",
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() != null ? scLoiLoaItem
+									.getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString()
+									: StringUtils.EMPTY);
 				}
 			}
 		}
