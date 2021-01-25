@@ -147,6 +147,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private static final String templateLangCode = "en";
 	private static final String attachmentType = "SVD";
 	private DecimalFormat formatter = new DecimalFormat("###,##0.00");
+	private static final String changeTab = "tab";//#9608
 	
 	private StreamedContent file;
 	
@@ -347,6 +348,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param catType
 	 */
 	public void changeActiveIndex(int index, SmSvTemplate svTemplate){
+		//#9608
+		saveSiteVisitReport(changeTab);
 		this.getManagedBean().setActiveIndex(index);
 		if(svTemplate != null){
 			if(svTemplate.getSmSvInterviewees() == null){
@@ -2036,12 +2039,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					//End 25294  - Site Visit Grouping Enhancement -28775
-				}else{
+					//#9608 - start
+					return "/xhtml/common/acknowledge.xhtml";
+				}else if(!action.equals(changeTab)){
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
 				}			
-				//#9608 - start
 				//renewSesionObject();
 				int index = getManagedBean().getActiveIndex();
 				retrieveSiteVisitInfo("");
