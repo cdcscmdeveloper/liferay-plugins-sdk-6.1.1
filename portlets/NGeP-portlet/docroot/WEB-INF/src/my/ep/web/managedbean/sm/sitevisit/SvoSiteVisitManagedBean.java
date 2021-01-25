@@ -128,6 +128,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Object oriSelectedManufacturingDtl;
 	
 	private List<SmPersonnel> staffLs;
+	//#29430
+	private boolean fromReport;
 	
 	//#28774 - Start
 	private SmSvAssistantOfficer selectedAssistantOfficer;
@@ -765,4 +767,12 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedAssistantOfficer = selectedAssistantOfficer;
 	}
 	//#28774 - End
+
+	public boolean isFromReport() {
+		return fromReport;
+	}
+
+	public void setFromReport(boolean fromReport) {
+		this.fromReport = fromReport;
+	}
 }
