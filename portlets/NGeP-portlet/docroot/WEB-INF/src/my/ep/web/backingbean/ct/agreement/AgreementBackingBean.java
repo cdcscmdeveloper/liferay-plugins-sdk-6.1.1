@@ -1190,7 +1190,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					}
 					//Deduction in tax
 					else if(res == -1){
-						tempResult = oldTaxAmount.subtract(newTaxAmount);
+						tempResult = oldTaxAmount.add(newTaxAmount);
 						result = (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).add(tempResult);
 					}
 				}else if(gstAmtChange == "N/A"){
@@ -1214,7 +1214,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				if(gstAmtChange == "Deduct" && sTaxAmtChange == "Deduct"){
 					//Deduction in contract and tax						
 					BigDecimal newTotal = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()));					
-					result = oldTotalAmount.subtract(newTotal);
+					result = oldTotalAmount.add(newTotal);
 					
 				}else if((gstAmtChange == "Deduct" && sTaxAmtChange == "Add") || (gstAmtChange == "Add" && sTaxAmtChange == "Deduct") || (gstAmtChange == "Add" && sTaxAmtChange == "Add")){
 					//Deduction in contract				
@@ -1224,15 +1224,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					
 					//addition in tax
 					if(res == 1){						
-						BigDecimal contractAmt = oldContractAmt.subtract(getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount());						
+						BigDecimal contractAmt = oldContractAmt.add(getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount());						
 						BigDecimal newAdditionalTax = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
 						
 						result = contractAmt.add(newAdditionalTax);
 					}
-					//deduction
+					//deduction in tax 
 					else if(res == -1){						
 						BigDecimal newTotalAmount = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()));						
-						result = oldTotalAmount.subtract(newTotalAmount);
+						result = oldTotalAmount.add(newTotalAmount);
 					}					
 				}else if(gstAmtChange == "N/A"){
 					//No changes in GST
@@ -1242,8 +1242,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						result = temp.add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
 					}else{
 						//Deduction in SST
-						tempResult = oldTaxAmount.subtract(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());											
-						result = (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).add(tempResult);
+						BigDecimal contractAmount = oldContractAmt.add(getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount());											
+						BigDecimal oldTaxAmt = oldGstAmt.add(oldSTaxAmt);
+						BigDecimal taxAmount = oldTaxAmt.add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
+						result = contractAmount.add(taxAmount);
 					}
 				}else{
 					//Deduction in contract but no changes in tax							
@@ -1275,7 +1277,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 						result = getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount();
 					}else{
 						//No change in contract and gst, deduction in sst
-						result = oldTaxAmount.subtract(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()); 
+						result = oldTaxAmount.add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()); 
 					}
 				}else{
 					//No changes in all
