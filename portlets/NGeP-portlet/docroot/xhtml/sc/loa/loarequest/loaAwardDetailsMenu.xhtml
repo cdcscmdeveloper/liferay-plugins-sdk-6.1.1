@@ -11,7 +11,6 @@
 	<ui:param name="isZonal" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.zonal}" />
 	<ui:param name="loa" value="#{lOADetailBackingBean.managedBean.scLoa}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
-
 		<!-- #29006 - start -->
 		<p:outputPanel id="supplierUpdateInstructionPanel"
 			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag || isDocTypeQuotation}">
@@ -112,7 +111,7 @@
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
 				#{scLoiLoaItem.scRequestItem.itemName} 
 				<p:spacer width="10" />
-
+				<!-- #29006 - start -->
 				<c:if
 					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}"><!-- #29007 Added isDocTypeQuotation Vinod -->
 					<p:commandLink id="specAndSupplierOfferLink" process="@this"
@@ -127,7 +126,7 @@
 
 				</c:if>
 				<c:if
-					test="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag}">
+					test="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag and !isDocTypeQuotation}">
 					<p:commandLink id="supplierProposalUpdateLink" process="@this"
 						partialSubmit="true"
 						action="#{lOADetailBackingBean.onClickSupplierProposalUpdateLink(scLoiLoaItem)}">
@@ -140,6 +139,7 @@
 					<br />
 					<br />
 				</c:if>
+				<!-- #29006 - end -->
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
 				<!-- #29007 Start Vinod -->
 				<p:spacer width="5" />
