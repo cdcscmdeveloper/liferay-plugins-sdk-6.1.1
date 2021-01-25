@@ -14584,6 +14584,7 @@ public class SmApplicationBackingBean extends
 			}else{
 				if(smApplRevise.getCreatedDate().after(currDate)){
 					currReason = smApplRevise.getReviseReason();
+					currDate   = smApplRevise.getCreatedDate();
 				}
 			}
 		}
