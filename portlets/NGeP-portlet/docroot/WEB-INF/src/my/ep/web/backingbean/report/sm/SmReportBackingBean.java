@@ -1115,6 +1115,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//START HERE POPULATE REPORT ------ 
 		Workbook wb = new XSSFWorkbook(); 
 		CreationHelper createHelper = wb.getCreationHelper();
+		//START - CR:#14203, BUG:#29454
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		//END - CR:#14203, BUG:#29454
 		//Only create Sheet Senarai only if search result return has records.
 		if(!reportListMap.isEmpty()){
 			log.info("LIST IS NOT EMPTY !!!");
@@ -1164,25 +1170,57 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				int rowid = sheetList.getLastRowNum()+1;
 				int countRowFpx = 1;
 				String receiptNo = "";
+				//START - CR: #14203#131 , BUG:#29454
+				int mergeRowFirst = 0;
+				int mergeRowLast = 0;
+				String referenceNo = "";
 				for (Integer key : keyIdList) {
 					Row row = sheetList.createRow(rowid++);
 					Object[] objectArr = reportListMap.get(key);
 					int cellid = 1;
 					Cell cellBil = row.createCell(0);
-					if(receiptNo == ""){
+					if(receiptNo == "" && referenceNo == ""){
 						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirst = rowid;
 					}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
 						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirst = rowid;
+						mergeRowLast = 0;
 					}else{
-						sheetList.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+						//Condition : Current Receipt No. equal to Previous row Receipt No.
+						//Fix issue on overlaping mergion during merge more than 2 row
+						//START - CR: #14203#131 , BUG:#29454
+						//Add checking for Scenario with same Receipt No but has different Reference No.
+						if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+							log.info("Inside Has different reference no !!");
+							//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+							cellBil.setCellValue(countRowFpx++);
+							mergeRowFirst = rowid;
+							mergeRowLast = 0;
+						}else{
+							log.info("Inside Has same reference no !!");
+							mergeRowLast = rowid;
+							if(key < keyIdList.size()){
+								if(key == (keyIdList.size() - 1)){
+									sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								}else{
+									Object[] objectArrMerge = reportListMap.get(key+1);
+									if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+										sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+									}
+								}						
+							}
+						}
+						 
 					}
 					cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 					receiptNo = (String)objectArr[2];
-					
+					referenceNo = (String)objectArr[5];// CR: #14203#131 , BUG:#29454
+					/* CR:#14203, BUG:#29454 , comment this section, move/declare to outside the loop
 					CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
 					CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
 					CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
-					CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+					CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);*/
 					
 					for(int x=0; x<objectArr.length; x++){
 						if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
@@ -1340,8 +1378,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";	    	
-//	    	String fullPath = "D://reports//dev//"+requestId+".xlsx";
-	    	log.info("FULL PATH (CREATE FILE) == "+fullPath);
+	    	//String fullPath = "D://reports//dev//report2.xlsx";
+	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
 	        out.close();
@@ -1873,7 +1911,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 										row[2].toString(),//No Resit
 										row[5].toString(),//Nama Pembekal
 										String.valueOf(row[6]),//No Permohonan
-										row[7].toString(),//No Rujukan
+										row[7] != null ? row[7].toString() : "",//No Rujukan ,CR: #14203, Bug:#29454
 										row[12].toString(),//Jenis Terimaan-Kod
 										//#14203 - uppercase perihal
 										row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
@@ -1896,7 +1934,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									row[2].toString(),//No Resit
 									row[5].toString(),//Nama Pembekal
 									String.valueOf(row[6]),//No Permohonan
-									row[7].toString(),//No Rujukan
+									row[7] != null ? row[7].toString() : "",//No Rujukan ,CR: #14203, Bug:#29454
 									row[12].toString(),//Jenis Terimaan-Kod
 									//#14203 - uppercase perihal
 									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
@@ -1950,6 +1988,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
+		//START - CR:#14203, BUG:#29454
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		//END - CR:#14203, BUG:#29454
 		//Only Create  Sheet of Senarai_FPX , only if search result has return records
 		if(!fpxList.isEmpty()){
 			log.info("FPX LIST IS NOT EMPTY !!!");
@@ -1995,26 +2039,58 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			int rowid = sheetFPX.getLastRowNum()+1;
 			int countRowFpx = 1;
 			String receiptNo = "";
+			//START - CR: #14203#131 , BUG:#29454
+			int mergeRowFirstFpx = 0;
+			int mergeRowLastFpx = 0;
+			String referenceNo = "";
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
 				Object[] objectArr = fpxList.get(key);
 				
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNo == ""){
+				if(receiptNo == "" && referenceNo == ""){
 					cellBil.setCellValue(countRowFpx++);
+					mergeRowFirstFpx = rowid;
 				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowFpx++);
+					mergeRowFirstFpx = rowid;
+					mergeRowLastFpx = 0;
 				}else{
-					sheetFPX.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+					//Condition : Current Receipt No. equal to Previous row Receipt No.
+					//Fix issue on overlaping mergion during merge more than 2 row
+					//START - CR: #14203#131 , BUG:#29454
+					//Add checking for Scenario with same Receipt No but has different Reference No.
+					if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+						log.info("Inside Has different reference no !!");
+						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirstFpx = rowid;
+						mergeRowLastFpx = 0;
+					}else{
+						log.info("Inside Has same reference no !!");
+						mergeRowLastFpx = rowid;
+						if(key < keyIdFpx.size()){
+							if(key == (keyIdFpx.size() - 1)){
+								sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpx-1,mergeRowLastFpx-1,0,0));
+							}else{
+								Object[] objectArrMerge = fpxList.get(key+1);
+								if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+									sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpx-1,mergeRowLastFpx-1,0,0));
+								}
+							}						
+						}
+					}
 				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNo = (String)objectArr[2];
-				
-				CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
-				CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
-				CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
-				CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				referenceNo = (String)objectArr[5];
+				//START - CR:#14203, BUG:#29454 , comment this link, move/declare to outside the loop
+				//CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+				//CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+				//CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+				//CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				//END - CR:#14203, BUG:#29454
 				
 				for(int x=0; x<objectArr.length; x++){
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
@@ -2132,12 +2208,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			int mergeRowFirst = 0;
 			int mergeRowLast = 0;
 			String receiptNoCC = "";
+			String referenceNoCC = "";//CR: #14203#131 , BUG:#29454
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
 				Object[] objectArr = creditList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNoCC == ""){
+				if(receiptNoCC == "" && referenceNoCC == ""){//START - CR: #14203#131 , BUG:#29454
 					cellBil.setCellValue(countRowCC++);
 					mergeRowFirst = rowid;
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
@@ -2145,39 +2222,56 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					mergeRowFirst = rowid;
 					mergeRowLast = 0;
 				}else{
+					//Condition : Current Receipt No. equal to Previous row Receipt No.
 					//Fix issue on overlaping mergion during merge more than 2 row
-					mergeRowLast = rowid;
-					if(key < keyIdCredit.size()){
-						if(key == (keyIdCredit.size() - 1)){
-							sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
-						}else{
-							Object[] objectArrMerge = creditList.get(key+1);
-							if(!receiptNoCC.equalsIgnoreCase((String)objectArrMerge[2])){
+					//START - CR: #14203#131 , BUG:#29454
+					//Add checking for Scenario with same Receipt No but has different Reference No.
+					if(!referenceNoCC.equalsIgnoreCase((String)objectArr[5])){
+						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+						cellBil.setCellValue(countRowCC++);
+						mergeRowFirst = rowid;
+						mergeRowLast = 0;
+					}else{
+						mergeRowLast = rowid;
+						if(key < keyIdCredit.size()){
+							if(key == (keyIdCredit.size() - 1)){
 								sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
-							}
-						}						
+							}else{
+								Object[] objectArrMerge = creditList.get(key+1);
+								if(!receiptNoCC.equalsIgnoreCase((String)objectArrMerge[2])){
+									sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								}
+							}						
+						}
 					}
 				}
-				//END -Bug:#29454 , CR:#14203
+				//END -Bug:#29454 , CR:#14203 ,CR: #14203#131
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNoCC = (String)objectArr[2];
+				referenceNoCC = (String)objectArr[5];//CR: #14203#131 , BUG:#29454
 				for (int x=0; x<objectArr.length; x++) {
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
+					//START - CR: #14203#131 , BUG:#29454
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else{
 						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 						else cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}
+					//END - CR: #14203#131 , BUG:#29454
 					cellid++;
 				}
 			}
