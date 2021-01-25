@@ -13765,8 +13765,8 @@ public class SmApplicationBackingBean extends
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setNonBumiEquity(nonBumiputeraCapital);
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setBumiEquity(bumiputeraCapital);
 			this.getManagedBean().getSmAppl().getSmCompanyBasic().setForeignerEquity(nonMalaysianCapital);
-			// 28466 - to maintain paid up capital from SSM
-			if(!this.getManagedBean().isSsmIntegrationActive()){
+			// 28466 - to maintain paid up capital from SSM - fix reopen
+			if(!SmCommonUtil.getInstance().ssmActive()){
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().setPaidUpCapital(this.getManagedBean().getSmAppl().getSmCompanyBasic().getBumiEquity()
 						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getNonBumiEquity())
 						.add(this.getManagedBean().getSmAppl().getSmCompanyBasic().getLocalCompanyEquity())
