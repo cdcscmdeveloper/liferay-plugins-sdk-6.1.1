@@ -11031,6 +11031,7 @@ public class SpecificationBackingBean extends
 				
 				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
 			} else {
+				log.info("BPM_APPROVE? = " + action);
 				getManagedBean().setAutoUpdate(false);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			}
@@ -15137,7 +15138,6 @@ public class SpecificationBackingBean extends
 		}
 		
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
-		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
@@ -15343,29 +15343,6 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getSpecMaintenanceWorkFlowStatus()
 							.getPmStatus().getStatusId());
 		}
-		//#15391 - start
-		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
-		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
-		log.info("QTID: "+scQt.getQtId());
-		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
-				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
-			this.getManagedBean().setGenInfo(true);
-			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
-				this.getManagedBean().setGenInfo(false);
-			}
-		}
-		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
-				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
-				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))){
-			this.getManagedBean().setChecklist(true);
-			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
-					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())) {
-				this.getManagedBean().setChecklist(false);
-			}
-		}
-		//#15391 - end
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 
@@ -15406,36 +15383,38 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(
 								ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(action);
-			//#15391 - start
+			getManagedBean().setAutoUpdate(false);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		} else {
+			this.getManagedBean().setLocalOutCome(action);
+
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				retriveCommitteeEndorsment();
 				List<ScQtSpecificationRemark> remarks = this.getManagedBean().getSpecificationRemarks();
 				
 				if (null != remarks) {
-					log.info("Hello");
 					for (int i = 0; i < remarks.size(); i++) {
 						ScQtSpecificationRemark Remark = remarks.get(0);
 						String userRemark = remarks.get(i).getRemark();
 						
 						if (null == userRemark || "".equals(userRemark)) {
-							log.info("Hello1");
 							throw new EpException(MessageConst.ERROR_100022,
 									new String[] { ResourceBundleUtils.getMessage(
 												    "lbl.sc.remarks",
 												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												    new FacesScopes().getUserLocale()) });
+						} else if (null == Remark.getRemarkId()) {
+							RequestContext
+									.getCurrentInstance()
+									.execute(
+											"revicespecMaintenanceEndorsmentDlgs.show()");
+						} else {
+							reviseSpecificationCommitteeEndorsmentMaintenance();
 						}
 					}
+
 				}
-				RequestContext
-				.getCurrentInstance()
-				.execute(
-						"revicespecMaintenanceEndorsmentDlgs.show()");
-			} else {
-				getManagedBean().setAutoUpdate(false);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}
-			//#15391 - end
 
 			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
@@ -15505,26 +15484,7 @@ public class SpecificationBackingBean extends
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
-		//#15391 - start
-		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
-		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
-			for (int i = 0; i < checklistRemoveList.size(); i++) {
-				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
-					checklistRemoveList.remove(i);
-				}
-			}
-		}
-		
-		List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
-				.getDeliveryLocRemoveList();
-		if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
-			for (int i = 0; i < deliveryRemoveList.size(); i++) {
-				if (null == deliveryRemoveList.get(i).getQtDeliveryLocId()) {
-					deliveryRemoveList.remove(i);
-				}
-			}
-		}
-		
+
 		signoffCommitteeActivity(spReqDTO, action);
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
@@ -15532,8 +15492,6 @@ public class SpecificationBackingBean extends
 					scQt.getQtId(), scQt.getQtNo());
 		}
 
-		spReqDTO.setTobeRemoveList(checklistRemoveList);
-		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
@@ -15544,6 +15502,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
