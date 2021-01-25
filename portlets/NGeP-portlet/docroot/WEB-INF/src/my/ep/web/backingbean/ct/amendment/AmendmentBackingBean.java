@@ -3289,92 +3289,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new overall contract amount
 	 */
-//	public BigDecimal newOverallContractAmt() {
-//		BigDecimal contractAmt = newContractAmt();
-//		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
-//			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
-//		
-//		}
-//		return contractAmt;
-//	}
-	// Start Fixing - #29589
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
-	   
-	    BigDecimal newgstvalidation = new BigDecimal("0");
-	   // newgst = new BigDecimal(0);
-		//newgst = BigDecimal.valueOf(0); cast
-	
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null)  {
-           
-			BigDecimal newgstamount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount();
-        			
-		    if (newgstamount.compareTo(newgstvalidation) == 0)
-		       {
-		    	 if( ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null){
-		    	     //System.out.println("**-- DEV Env --** newgstamount == newgstvalidation");
-		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
-		    	 }
-		    	   
-		       }
-		    else if(newgstamount.compareTo(newgstvalidation) == 1)
-		       {
-		    	 if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null || ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null  ){
-		    	     //System.out.println("**-- DEV Env --** newgstamount > newgstvalidation");
-		    	     contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount()));
-		    	 }
-		       }
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
+			contractAmt = newContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
 		
 		}
-		  else{
-				if(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount() != null){
-				contractAmt = contractAmt.add(ctBackingBean.getManagedBean().getCtContractAmount().getGstAmount());
-				}
-			}
 		return contractAmt;
 	}
 	
-//	public BigDecimal newOverallContractAmount() {
-//		BigDecimal contractAmount = newOverallContractAmt();
-//	
-//		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
-//			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
-//		
-//		}
-//		return contractAmount;
-//	}
 	
 	public BigDecimal newOverallContractAmount() {
 		BigDecimal contractAmount = newOverallContractAmt();
-		
-		   BigDecimal newsstvalidation = new BigDecimal("0");
+	
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
-			
-			BigDecimal newsstamount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount();
-			
-			if (newsstamount.compareTo(newsstvalidation) == 0)
-			 {    if(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
-				  // System.out.println("**-- DEV Env --** newsstamount == newsstvalidation");
-			       contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
-			     }
-			 }
-		    else if(newsstamount.compareTo(newsstvalidation) == 1)
-		     {
-		    	  if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null || ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
-		    	  //   System.out.println("**-- DEV Env --** newsstamount > newsstvalidation");
-		    	     contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount().add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount()));
-		    	  }
-		     }
-		}
+			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
 		
-		else{
-			if(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount() != null){
-			contractAmount = contractAmount.add(ctBackingBean.getManagedBean().getCtContractAmount().getStaxAmount());
-			}
 		}
 		return contractAmount;
 	}
-	// End - Fixing - #29589 
+	
+	
   
 	/**
 	 * The method used to retrieve the new contract period
@@ -3765,6 +3700,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ctItemMaxQty.setChkIndexOfRow(false);
 		getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty());
 		newItemMaxQty(getManagedBean().getSelectedItem());
+		System.out.println("Process item removed ::::::::::::::: !!"+getManagedBean().getSelectedItem().getCtItemMaxQties().remove(getManagedBean().getCtItemMaxQty()));
+	
+
 	}
 
 	/**
@@ -3811,8 +3749,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//#20997--Start
 		//Bug #29323 - Start
+//		if(getManagedBean().getSelectedItem() != null){	
+//			System.out.println("getManagedBean().getSelectedItem()");
+//			for(CtContractItem itemQtyProduct : ctBackingBean.getManagedBean().getCtItemList()){
+//					for(CtItemMaxQty itemQtyPrice : getManagedBean().getSelectedItem().getCtItemMaxQties() ){
+//			if(itemQtyPrice.isBrandNew() && itemQtyProduct.getCtItemPrices().get(0).getCtContractItem().getContractItemId().equals(getManagedBean().getSelectedItem().getContractItemId())){
+//				itemQtyProduct.getCtItemMaxQties().remove(itemQtyPrice);
+//				itemQtyProduct.getCtItemMaxQties().add(itemQtyPrice);
+//				
+//				}
+//			}		
+//		}
+//	}
 		if(getManagedBean().getSelectedItem() != null){	
-			
+			System.out.println("getManagedBean().getSelectedItem()");
 			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemList()){
 				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId())){
 					itemPrice.getCtItemMaxQties().remove(getManagedBean().getSelectedItem().getCtItemMaxQties());
@@ -3828,7 +3778,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		
 		if(getManagedBean().getSelectedServiceItem() != null){	
-			
+			System.out.println("getManagedBean().getSelectedServiceItem()");
 			for(CtContractItem itemPrice : ctBackingBean.getManagedBean().getCtItemServiceList()){
 				if(itemPrice.getScRequestItem().getRequestNoteItemId().equals(getManagedBean().getSelectedServiceItem().getScRequestItem().getRequestNoteItemId())){
 					itemPrice.getCtItemMaxQties().remove(getManagedBean().getSelectedServiceItem().getCtItemMaxQties());
