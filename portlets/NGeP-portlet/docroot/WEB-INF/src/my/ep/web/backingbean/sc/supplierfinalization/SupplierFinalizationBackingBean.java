@@ -2173,6 +2173,23 @@ public class SupplierFinalizationBackingBean extends
 			}
 			// #25638 - End.
 		} else {
+			// #29921 - Start.
+			String decisionTypeCode = scQtFinalization.getDecision()
+					  .getParameterCode();
+			if (ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode)) {
+				IQTDetailSO qtDetailSO = null;
+				try {
+					qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+					if (null != qtDetailSO) {
+						QuationTenderReqDTO qTreqDTO = new QuationTenderReqDTO();
+						qTreqDTO.setQtdetail(getManagedBean().getScQt());
+						qtDetailSO.updateQTDetails(qTreqDTO); 
+					}
+				} finally {
+					qtDetailSO = null;
+				}
+			}
+			// #29921 - End.
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
 		}
@@ -5841,6 +5858,9 @@ public class SupplierFinalizationBackingBean extends
 		scQtFinalization.setHigherCommitte(parameter);
 		scQtFinalization.setHigherCommitteStr(parameter.getParameterCode());
 		scQtFinalization.setHigherSecretary(new PmUser());
+		// #29921 - Start.
+		getManagedBean().getScQt().setFinalizationCommitte(parameter);
+		// #29921 - End.
 	}
 
 	/**
