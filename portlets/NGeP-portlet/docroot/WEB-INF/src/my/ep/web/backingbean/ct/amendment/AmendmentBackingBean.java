@@ -6686,17 +6686,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		/**
 		 * The method used for validating the duplicate chairperson.
 		 * A warning message will display on screen when more than one chairperson
-		 * is added as committee.
+		 * is added as committee. Also updating current committee member role id.
 		 * 
 		 * @throws Exception  if an exception occurred
 		 * @see    Exception
 		 */
 		//#29403 start
 //		public void validateUpdatedCommitteeListDuplicateChairperson(Long parameterId) throws Exception {
-		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember) throws Exception { 
-			
+		public void validateUpdatedCommitteeListDuplicateChairperson(CtCommitteeMember curCommitteeMember, Long parameterId) throws Exception { 
+		
 			int counter = 0;
 			String curParameterCode = "";
+			
+			if (parameterId != null) {
+				if(curCommitteeMember.getMemberRoleId()!=null && !curCommitteeMember.getMemberRoleId().equals(parameterId)){
+					curCommitteeMember.getRepresentativeType().setParameterId(null);
+					curCommitteeMember.setRepresentativeType(null);
+				}
+				curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
+				curCommitteeMember.setMemberRoleId(parameterId);
+			}
 			
 			if (curCommitteeMember.getMemberRoleId() != null){
 				curParameterCode = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId()).getParameterCode();
@@ -6714,16 +6723,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					
 					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
-							&& allParameterCode == curParameterCode) {					
-						counter++;	
+							&& allParameterCode == curParameterCode) {
+						counter++;
 					}
 				}
 			}
+			
+			log.info("parameterId: " + parameterId);
+			log.info("curCommitteeMember.getMemberRoleId(): " + curCommitteeMember.getMemberRoleId());
+			log.info("curCommitteeMember.getMemberRole(): " + curCommitteeMember.getMemberRole());
+			
 			if (counter > 1) {
 				throw new EpException(MessageConst.ERROR_750008);
 			}
 		}
-		
+		//29403 end
 		
 		//#29403 start
 		/**
