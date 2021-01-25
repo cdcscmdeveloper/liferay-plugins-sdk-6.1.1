@@ -349,7 +349,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void changeActiveIndex(int index, SmSvTemplate svTemplate){
 		//#9608
-		saveSiteVisitReport(changeTab);
+		//saveSiteVisitReport(changeTab);
 		this.getManagedBean().setActiveIndex(index);
 		if(svTemplate != null){
 			if(svTemplate.getSmSvInterviewees() == null){
