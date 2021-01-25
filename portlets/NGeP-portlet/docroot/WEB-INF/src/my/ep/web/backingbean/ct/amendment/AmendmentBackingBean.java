@@ -4964,6 +4964,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			SelectItem[] items = null;
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
+			ISearchResultBean<PmUser> userListDO = null; //Bug #29740
 			try {
 
 				int i = 1;
@@ -4975,23 +4976,48 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//Bug #25326
 				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				//end Bug #25326
+				
+				//Bug #29740 - Add DO PB
+				CommitteReqDTO commReqDO = new CommitteReqDTO();
+				commReqDO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+				commReqDO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+				commReqDO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 								
 				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+					//Bug #29740 - Add DO PB
+					commReqDO.setRoleCode(RoleCode.PPB_SECRETARY.value());
+					userListDO = committeSO.retrieveUserListByCommType(commReqDO).getUserResultBean();
+					
 				} else {
 					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 				}
 				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
 
 				if (userResultList != null && userResultList.getResultList() != null) {
-					items = new SelectItem[userResultList.getResultList().size() + 1];
+					//Bug #29740
+					if(userListDO != null && userListDO.getResultList() != null) {
+						items = new SelectItem[userResultList.getResultList().size() + userListDO.getResultList().size() + 1];
+					} else {
+						items = new SelectItem[userResultList.getResultList().size() + 1];
+					}
+
 					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
 					for (PmUser user : userResultList.getResultList()) {
 						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
 					}
+					
+					//Bug #29740
+					if(userListDO != null && userListDO.getResultList() != null) {
+						for (PmUser userDO : userListDO.getResultList()) {
+							items[i++] = new SelectItem(userDO.getUserId(), userDO.getUserName());
+						}
+					}
+					//Bug #29740 - End
+					
 					// Default the secretary if selection list only have one secretary
 					if (items != null && items.length == 2) {
 						getManagedBean().setSecretaryId((Long)items[1].getValue());
