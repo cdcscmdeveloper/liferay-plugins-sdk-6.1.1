@@ -178,6 +178,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
+			//#25396 - Start
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
+			}
+			//#25396 - End
+			
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
 
