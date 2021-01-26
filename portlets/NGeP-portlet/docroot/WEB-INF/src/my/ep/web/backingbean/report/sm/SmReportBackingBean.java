@@ -1423,7 +1423,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 								(Date) row[3],
 								row[2].toString(),
 								(row[5] != null) ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
-								row[11].toString(),row[12].toString().toUpperCase(),cardType,
+								row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
