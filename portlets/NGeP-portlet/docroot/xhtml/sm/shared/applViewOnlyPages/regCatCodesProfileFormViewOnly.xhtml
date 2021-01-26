@@ -105,7 +105,10 @@
 					rendered="#{aprvdCatBean.recordStatusFlg eq 0 and empty aprvdCatBean.disciplinaryActionId   }" />
 				<!-- #28764 END -->	
 				<h:outputText value="#{lbl['lbl.sm.deleted']}"
-					rendered="#{aprvdCatBean.recordStatusFlg eq 9}" />
+					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and empty aprvdCatBean.disciplinaryActionId}" />
+					
+				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq 9 and not empty aprvdCatBean.disciplinaryActionId}" />
 					
 				<h:outputText value="#{lbl['lbl.sm.status.cancelation.da']}"
 					rendered="#{(aprvdCatBean.recordStatusFlg eq 2 or aprvdCatBean.recordStatusFlg eq 0) and not empty aprvdCatBean.disciplinaryActionId}" />
