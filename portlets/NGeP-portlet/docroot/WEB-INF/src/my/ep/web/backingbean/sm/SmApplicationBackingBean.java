@@ -11902,7 +11902,12 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmSupplier().getBusinessType(), getManagedBean()
 						.getSmAppl().getApplType()));
-		getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+		//	#15629 -- start - 26/1/2020
+		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())) {
+			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+		} 
+		// #15629 -- end - 26/1/2020
+
 	}
 
 	/**
@@ -14323,7 +14328,12 @@ public class SmApplicationBackingBean extends
 						.getSmAppl().getSupplierType(), getManagedBean()
 						.getSmSupplier().getBusinessType(), getManagedBean()
 						.getSmAppl().getApplType()));
-		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//		#15629 -- start - 26/1/2020
+		if(SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedRecommendReasonDescs())) {
+			getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		} 
+		//		#15629 -- end - 26/1/2020
+
 	}
 	
 	/**
