@@ -465,6 +465,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
 				//log.info("getSort_by() = "+getSort_by());
+				/*
 				if (isFromSearchBttn()) {
 					if (getSort_by() != null && !getSort_by().equals("")) {
 						
@@ -502,16 +503,21 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				reqDTO.setIsAsc(isAscending());
 				
+				if (getMyTaskCreatedDateTo() != null) {
+					getMyTaskCreatedDateTo().setHours(23);
+					getMyTaskCreatedDateTo().setMinutes(59);
+				}
+				
 				log.info("date from = "+getMyTaskCreatedDateFrom() + " date to = "+getMyTaskCreatedDateTo());
 				
 				reqDTO.setCreatedDateFrom(getMyTaskCreatedDateFrom());
 				reqDTO.setCreatedDateTo(getMyTaskCreatedDateTo());
-				
+				*/
 				//End - Task list sorting n search criteria date from and date to by Najmi 
 				
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsTest(reqDTO);
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
@@ -655,6 +661,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
 				//log.info("getSort_by() = "+getSort_byGroup());
+				/*
 				if (isFromSearchBttn()) {
 					if (getSort_byGroup() != null && !getSort_byGroup().equals("")) {
 						
@@ -692,16 +699,23 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				reqDTO.setIsAsc(isAscendingGroup());
 				
+				if (getGroupTaskCreatedDateTo() != null) {
+					getGroupTaskCreatedDateTo().setHours(23);
+					getGroupTaskCreatedDateTo().setMinutes(59);
+				}
+				
 				log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
+				
+				
 				
 				reqDTO.setCreatedDateFrom(getGroupTaskCreatedDateFrom());
 				reqDTO.setCreatedDateTo(getGroupTaskCreatedDateTo());
-				
+				*/
 				//End - Task list sorting n search criteria date from and date to by Najmi 
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
-				BpmResponseDTO responseDTO = bpmSO.getWorklistItemsTest(reqDTO);
+				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
