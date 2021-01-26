@@ -1571,6 +1571,12 @@ public class SupplierFinalizationBackingBean extends
 						}
 						
 						}
+					
+					//#29966
+					if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_SUBMIT)){
+						this.getManagedBean().setSubmit(true);
+					}
+					
 						processSuppliersBeforeSaving();
 						if(!skipValidation){
 							if (!getManagedBean().isItemize()) {
