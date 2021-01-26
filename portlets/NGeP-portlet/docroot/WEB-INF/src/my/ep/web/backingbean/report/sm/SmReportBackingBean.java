@@ -1399,6 +1399,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 			reportList = generateSMCollectionReportBasedClassificationCode(params,"L");
 			if(!reportList.isEmpty()){
+				log.info("Main Report Lize Size === "+reportList.size());
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[13] != null ? (BigDecimal)row[13] : BigDecimal.ZERO;
@@ -1410,14 +1411,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
 								//#14203 - uppercase perihal
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
+								(Date) row[3],row[2].toString(),
+								row[5] != null ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
+								row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								//#14203 - uppercase perihal
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString().toUpperCase(),
+								// 26307 - add card type & #14203 - uppercase perihal
+								(Date) row[3],
+								row[2].toString(),
+								(row[5] != null) ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
+								row[11].toString(),row[12].toString().toUpperCase(),cardType,
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
@@ -1455,7 +1461,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
-		
+		//START - CR:#14203#145 , BUG:#29454
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,false,false);
+		//END - CR:#14203#145 , BUG:#29454
 		//Only Create Sheet Senarai_FPX only if search result has return records
 		if(!fpxList.isEmpty()){
 			Sheet sheetFPX = wb.createSheet(sheetName[0]); 
@@ -1499,11 +1510,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				Cell cellBil = row.createCell(0);
 				cellBil.setCellValue(countRowFpx++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				
-				CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
-				CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
-				CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
-				CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,false,false);
 				                                          
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
@@ -1592,24 +1598,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				Cell cellBil = row.createCell(0);
 				cellBil.setCellValue(countRowCC++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				
+				//START - CR:#14203#145 , BUG:#29454
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
 						cell.setCellValue((Date) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
 					}else if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(obj instanceof Double){
 						cell.setCellValue(((Double) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
 					}else{
 						cell.setCellValue((String) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						cell.setCellStyle(columnStyleString);
 					}
 					cellid++;
 				}
+				//END - CR:#14203#145 , BUG:#29454
 			}
 			//Setting Auto filtering in each header column list
 			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCredit.getRowNum(),sheetCC.getLastRowNum(),1,columnsList.length-1));
@@ -2005,13 +2016,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					//START - CR: #14203#131 , BUG:#29454
 					//Add checking for Scenario with same Receipt No but has different Reference No.
 					if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
-						log.info("Inside Has different reference no !!");
+						//log.info("Inside Has different reference no !!");
 						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
 						cellBil.setCellValue(countRowFpx++);
 						mergeRowFirstFpx = rowid;
 						mergeRowLastFpx = 0;
 					}else{
-						log.info("Inside Has same reference no !!");
+						//log.info("Inside Has same reference no !!");
 						mergeRowLastFpx = rowid;
 						if(key < keyIdFpx.size()){
 							if(key == (keyIdFpx.size() - 1)){
