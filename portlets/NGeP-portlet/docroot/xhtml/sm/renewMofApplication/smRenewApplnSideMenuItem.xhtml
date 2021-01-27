@@ -55,17 +55,16 @@
 		
 		<!-- 28767 -->
 		<c:choose>
-		<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
-				<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}" >
-					<p:menuitem rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}">
-						<ac:smApplMenuItem
-						backingBean = "#{backingBean}"
-						section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO}" 
-						tabNo="4" label="#{lbl['lbl.sm.annualInfoStepLbl']}" />
-					</p:menuitem>
-				<c:otherwise></c:otherwise>
-		
-	
+		<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}">
+		<c:when test="#{backingBean.managedBean.smAppl.applType eq 'R' and backingBean.managedBean.smAppl.applValidWithSsm}">
+			 	
+		<p:menuitem>
+			<ac:smApplMenuItem
+				backingBean = "#{backingBean}"
+				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO}" 
+				tabNo="4" label="#{lbl['lbl.sm.annualInfoStepLbl']}" />
+		</p:menuitem>
+			 		
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
@@ -579,11 +578,10 @@
 				</c:choose>
 			</c:otherwise>
 		</c:choose>
-		  </c:when>
-			</c:when>
-	
-	<c:otherwise>
-		<p:menuitem>
+		</c:when>
+		</c:when>
+		<c:otherwise>
+				<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
 				suppEdit="#{backingBean.managedBean.editVO.suppEditBank}"
@@ -1096,10 +1094,8 @@
 				</c:choose>
 			</c:otherwise>
 		</c:choose>
-			</c:otherwise>
-		
-		</c:choose>	
-			<!-- 28767 -->
+		</c:otherwise>
+		</c:choose>
 	</p:tabMenu>
 
 </ui:composition>
