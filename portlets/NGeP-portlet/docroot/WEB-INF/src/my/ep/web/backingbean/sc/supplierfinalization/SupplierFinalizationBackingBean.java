@@ -5133,9 +5133,20 @@ return	remarksNotFound;
 			}
 			excludedDecisionList.add(
 					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
+			
+		}
+		
+		//28834 STARTS
+		
+		if (getManagedBean().isBpkCentralContract()) {
+			if (excludedDecisionList == null) {
+				excludedDecisionList = new ArrayList<String>();
+			}
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RBP);
 		}
+		
+		//28834 Ends
 		
 		
 		
