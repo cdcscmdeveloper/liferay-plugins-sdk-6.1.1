@@ -8309,6 +8309,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			specReqDto.setSpecSearchForApp(true);
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			
+			for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
+				if(tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != ""){
+					tplSpecAnswer.setRenderNewSpec(true);
+				}
+			}
+			
 			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 			this.getManagedBean().setScLoiLoaItem(loiLoaItem);
 			if(mainSearch){
@@ -8567,6 +8573,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	public void addNewOfferedSpec(TplSpecAnswer spec){
+		log.info("addNewOfferedSpec");
+		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
+		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
+			if(tplSpecAnswer.getTplSpecQuestion().getClSpecDetail().equals(specDet)){
+				tplSpecAnswer.setRenderNewSpec(true);
+			}
+		}
+	}
+	public void refreshNewOfferedSpec(TplSpecAnswer spec){
+		log.info("refreshNewOfferedSpec");
+		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
+		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
+			if(tplSpecAnswer.getTplSpecQuestion().getClSpecDetail().equals(specDet)){
+				tplSpecAnswer.setNewSupplierOffer(null);
+			}
+		}
 	}
 	/*#29007 End Vinod*/
 
