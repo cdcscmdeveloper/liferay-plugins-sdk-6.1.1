@@ -2758,11 +2758,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 						// 24333
 						if(outputValue.equalsIgnoreCase("PB") && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() ){ 
-								if (!ctBackingBean.getManagedBean().getContractVer().getCtDeductions().isEmpty()
-								|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)
+								if ((!ctBackingBean.getManagedBean().getContractVer().getCtDeductions().isEmpty()
+								|| ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0) 
+								&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 							getManagedBean().setSelectedTabIndex(5);
-							else
+								}else{
 							getManagedBean().setSelectedTabIndex(4);
+							}
 						}
 						
 					} else if(outputValue.equalsIgnoreCase("IT")) {
