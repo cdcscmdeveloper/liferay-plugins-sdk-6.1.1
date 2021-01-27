@@ -58,7 +58,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.pm.helper.ReasonHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -981,6 +980,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
     PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
 	List<String> parameterCodes = new ArrayList<String>();
+	//20210125@Jacky - Enhancement#29764 - Start
+	parameterCodes.add(ParameterConst.DOCTYPE_DIRECT_PURCHASE);
+	//20210125@Jacky - Enhancement#29764 - End
 	parameterCodes.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
 	if(getManagedBean().getSelectedReason().getSourceMethod() != null && getManagedBean().getSelectedReason().getSourceMethod().getParameterId() != null && 
 			!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
