@@ -5133,19 +5133,11 @@ return	remarksNotFound;
 			}
 			excludedDecisionList.add(
 					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
-		}
-		
-		//28834 starts
-		
-		if (isBpkCentralContract(getManagedBean().getScQt())) {
-			if (excludedDecisionList == null) {
-				excludedDecisionList = new ArrayList<String>();
-			}
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RBP);
 		}
 		
-		//28834 ends
+		
 		
 		/*#25729#142 Start
 		 	If Desk Officer QCA & indicative price 20-50k
