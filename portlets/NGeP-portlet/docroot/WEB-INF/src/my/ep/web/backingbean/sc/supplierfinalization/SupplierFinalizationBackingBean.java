@@ -1448,7 +1448,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					
 					//#29966
-					if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_SUBMIT)){
+					if(this.getManagedBean().getAction() != null && this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_SUBMIT)){
 						this.getManagedBean().setSubmit(true);
 					}
 					
