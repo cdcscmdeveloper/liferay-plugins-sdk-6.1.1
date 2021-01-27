@@ -144,7 +144,8 @@
 			</c:if>
 			<!-- 28767 START -->
 			<c:choose>
-			<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}">
+			<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+			<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}" >
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
 				<ui:include src="step9RenewAppln_AnnualInfo.xhtml" />
 			</c:if>
@@ -427,6 +428,7 @@
 					</c:choose>
 				</c:otherwise>
 			</c:choose>
+			</c:when>
 	</c:when>
 	<c:otherwise>		
 		<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
