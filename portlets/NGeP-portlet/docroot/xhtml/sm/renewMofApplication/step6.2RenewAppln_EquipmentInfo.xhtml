@@ -38,16 +38,30 @@
 					<table style="width: 100%">
 						<tr>
 							<td><div align="left" style="width: 99%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}" 
+										rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('8','7')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
+										update=":form" />
+									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+										rendered="#{!backingBean.managedBean.smAppl.applValidWithSsm}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('7','6')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 										update=":form" />
 								</div></td>
 							<td><div align="right" style="width: 99%">
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 										actionListener="#{backingBean.setTabValue('8','9')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+										update=":form" />
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										rendered="#{!backingBean.managedBean.smAppl.applValidWithSsm}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+										actionListener="#{backingBean.setTabValue('7','8')}"
 										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 										update=":form" />
 								</div></td>

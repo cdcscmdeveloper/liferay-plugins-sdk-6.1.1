@@ -127,7 +127,7 @@
 			<!-- #17906 - bank tab -->
 			<p:messages id="messages" showDetail="true"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				globalOnly="#{backingBean.managedBean.tabActiveIndex eq 5}"
+				globalOnly="#{backingBean.managedBean.tabActiveIndex eq 4}"
 				closable="true" showSummary="false" escape="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
@@ -142,11 +142,11 @@
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
 				<ui:include src="step3RenewAppln_CaptialAndEquityStatusInfo.xhtml" />
 			</c:if>
-			<!-- 28767 START -->
-			<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+			<!-- 28767 -->
+		 <c:choose>
 			<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}" >
-			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+			<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType = 'R'}">
+			 <c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
 				<ui:include src="step9RenewAppln_AnnualInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
@@ -429,9 +429,10 @@
 				</c:otherwise>
 			</c:choose>
 			</c:when>
-	</c:when>
-	<c:otherwise>		
-		<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+			<c:otherwise></c:otherwise>
+			</c:when>
+			<c:otherwise>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
 				<ui:include src="step5RenewAppln_BankInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
@@ -530,8 +531,6 @@
 										</c:otherwise>
 									</c:choose>
 								</c:when>
-								<c:otherwise>
-								</c:otherwise>
 							</c:choose>
 						</c:when>
 						<c:otherwise>
@@ -617,8 +616,6 @@
 										</c:otherwise>
 									</c:choose>
 								</c:when>
-								<c:otherwise>
-								</c:otherwise>
 							</c:choose>
 						</c:otherwise>
 					</c:choose>
@@ -705,14 +702,12 @@
 								</c:otherwise>
 							</c:choose>
 						</c:when>
-						<c:otherwise>
-						</c:otherwise>
 					</c:choose>
 				</c:otherwise>
 			</c:choose>
 			</c:otherwise>
 	</c:choose>
-	<!-- 28767 END -->
+
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
