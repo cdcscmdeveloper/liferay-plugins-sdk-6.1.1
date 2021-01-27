@@ -9203,8 +9203,23 @@ public class SmApplicationBackingBean extends
 	 */
 	public void cancelFinalApproveOrReject(String dialog) {
 		assignValReqdToFalse();
-		resetSearchRejectedReason();
-		getManagedBean().setReasonId(null);
+
+		//		#15629 -- start - 27/1/2020
+		if(!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())){
+				List<Long> reasonIdList = new ArrayList<Long>();
+				for(PmReasonDesc pmReasonDesc : getManagedBean().getSelectedReasonDescs()){
+						reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
+				}			
+
+			getManagedBean().setReasonId(reasonIdList.toArray(new Long[reasonIdList.size()]));
+			verifySelectedRejectReasons();
+			
+		} else {
+			resetSearchRejectedReason();
+			getManagedBean().setReasonId(null);
+		}
+		//		#15629 -- end - 27/1/2020
+		
 		getManagedBean().setRejectReasonReqd(false);
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}
