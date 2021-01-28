@@ -850,10 +850,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	private void checkItemPredecessor(PpProcurementItem ppItem) {
 		
-		log.info("checkItemPredecessor");
+		log.info("checkItemPredecessor" +  ppItem.isReviseNewItem());
 		
 		if (ppItem.isCloneEnabled() && !ppItem.isAllowAnotherPindaan() &&
-				!ppItem.isReviseReject() && !ppItem.isRejected()) {
+				!ppItem.isReviseReject() && !ppItem.isRejected() && !ppItem.isReviseNewItem()) { //28012021@27624
 			log.info("curItem=  "+ppItem.getProcurementTitle());
 			ppItem.setChangePencilToNote(true);
 			
@@ -5037,6 +5037,29 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			bean.setSearchValue(planSearchBean.getYear());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
+		}else{
+			//27012021@27624 - Start
+			log.info("+ getYeardefault "  + Calendar.getInstance().get(Calendar.YEAR));
+			
+			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+			Integer NextYear = currentYear + 1;
+					
+			SearchFilterBean sfbean1 = new SearchFilterBean();
+			sfbean1.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			sfbean1.setSearchField("planYear");
+			sfbean1.setSearchValue(currentYear);
+			sfbean1.setAndOr(SearchCondition.CONDITION_OR.value());
+			
+			SearchFilterBean sfbean2 = new SearchFilterBean();
+			sfbean2.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			sfbean2.setSearchField("planYear");
+			sfbean2.setSearchValue(NextYear);
+			sfbean2.setAndOr(SearchCondition.CONDITION_OR.value());
+			
+			SearchMultiFilterBean beans = new SearchMultiFilterBean(sfbean1,sfbean2);			
+			searchBean.getDataFilterBeans().add(beans);		
+			isEmpty = false;
+			//27012021@27624 - End
 		}
 		// vot type
 		if(planSearchBean.getVotType()!=null && planSearchBean.getVotType().getParameterId()!=null){
@@ -6575,46 +6598,70 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	/**
 	 * Get new rejection reason from UI
+	 * 
 	 * @param ppPlan
 	 * @return List <PpUpdateReason>
 	 */
-	//24975 - start
+	// 28012021@27624 - start
 	private List<PpUpdateReason> deleteUpdateReasons(PpPlan ppPlan) {
 		log.info("getAllUpdateReasons");
 		List<PpUpdateReason> updateReasons = new ArrayList<PpUpdateReason>();
-	  if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){//04122020@24975 - start
-		log.info("----------Before PpPlan save----------");
-		int itemIndex = 0;
-		for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
-			if (ppProcurementItem.getPpUpdateReasons() != null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
-				PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
-				List<PpUpdateReason> PpUpdateReasonDel = PpCommonUtil.retrieveUpdateReason(
-						ppProcurementItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+		if (ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())) {// 04122020@24975
+																									// -
+																									// start
+			log.info("----------Before PpPlan save----------");
+			int itemIndex = 0;
+			for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
+				if (ppProcurementItem.getPpUpdateReasons() != null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
+					PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
+					if (ppProcurementItem.isReviseNewItem() && !this.getManagedBean().isPlanDetailSearch()
+							&& !this.getManagedBean().isPlanDetailReset()) {
+						if (updateReason != null && !StringUtils.isBlank(updateReason.getReasonDesc())) {
+							log.info("azza test ");
+							updateReason.setItemSeq(itemIndex);
+							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
+							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+							ppProcurementItem.setReviseNewItem(false);
+							if (updateReason.getRoleCode() == null
+									|| StringUtils.isBlank(updateReason.getRoleCode().getRoleCode())) {
+								log.info("set setRemarkRole");
+								PmRole roleCode = new PmRole();
+								roleCode.setRoleCode(getOneRoleByStatus(ppPlan));
+								updateReason.setRoleCode(roleCode);
+								updateReason.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan()
+										.getCurrentStatus());
+							}
+							updateReasons.add(updateReason);
+						}
+					} else {
+						List<PpUpdateReason> PpUpdateReasonDel = PpCommonUtil.retrieveUpdateReason(
+								ppProcurementItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 
-				for (PpUpdateReason updateReasonDel : PpUpdateReasonDel) {
-					if (updateReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())) {
-						if (updateReasonDel.getReasonDesc() != null 
-								&& updateReason.getReasonDesc() == null 
-								|| updateReason.getReasonDesc().isEmpty()) {
-							log.info("first getReasonDesc" + updateReasonDel.getReasonDesc());
-							updateReasonDel.setItemSeq(itemIndex);
-							updateReasonDel.setDocId(ppProcurementItem.getProcurementItemId());
-							updateReasonDel.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
-							updateReasonDel.setReasonDesc(updateReasonDel.getReasonDesc());
-							updateReasonDel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-							updateReasons.add(updateReasonDel);
+						for (PpUpdateReason updateReasonDel : PpUpdateReasonDel) {
+							if (updateReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())) {
+								if (updateReasonDel.getReasonDesc() != null && updateReason.getReasonDesc() == null
+										|| updateReason.getReasonDesc().isEmpty()) {
+									log.info("first getReasonDesc" + updateReasonDel.getReasonDesc());
+									updateReasonDel.setItemSeq(itemIndex);
+									updateReasonDel.setDocId(ppProcurementItem.getProcurementItemId());
+									updateReasonDel.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
+									updateReasonDel.setReasonDesc(updateReasonDel.getReasonDesc());
+									updateReasonDel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+									updateReasons.add(updateReasonDel);
+								}
+							}
+
 						}
 					}
-					
+
+					itemIndex++;
 				}
 			}
-			itemIndex++;
-		  }
-	    }//04122020@24975 - end
-		log.info("updateReasons:"+updateReasons);
+		}// 04122020@24975 - end
+		log.info("updateReasons:" + updateReasons);
 		return updateReasons;
 	}
-	//24975 - End 
+	// 28012021@27624 - End
 	/**
 	 * validate if Update is required
 	 */
@@ -8668,6 +8715,19 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItemIndicator.add(setIndicator);
 								indicatorIndex++;
 							}
+						}else if (procurementItems.get(i).isReviseNewItem()) { //28012021@27624 - start
+							if (procurementItems.get(i).getPpUpdateReasons() != null
+									&& procurementItems.get(i).getPpUpdateReasons().isEmpty()
+									|| procurementItems.get(i).getPpUpdateReasons().get(0) == null
+									|| StringUtils.isBlank(procurementItems.get(i).getPpUpdateReasons().get(0)
+											.getReasonDesc())
+									|| procurementItems.get(i).getPpUpdateReasons().get(0).getReasonDesc()
+											.equals("\u200B")) {
+								PpProcurementItem setIndicator = procurementItems.get(i);
+								setIndicator.setIndicator(true);
+								ppItemIndicator.add(setIndicator);
+								indicatorIndex++;
+							}//28012021@27624 - end
 						}
 					}
 					if (indicatorIndex > 0) {
@@ -8678,7 +8738,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		log.info("End checkUpdateForReasonIndicator");
 	    // 24975@19112020 - start
-	}		
+	}	
+	
 }
 	   
 
