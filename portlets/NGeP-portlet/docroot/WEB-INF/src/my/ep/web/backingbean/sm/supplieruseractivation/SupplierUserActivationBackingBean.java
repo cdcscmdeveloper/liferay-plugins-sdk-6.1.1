@@ -272,7 +272,16 @@ public class SupplierUserActivationBackingBean extends
 						this.getManagedBean().setValidActivation(false);
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
-						return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
+						//#15142 - Start
+						if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
+								getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+							return navigateToAck(getManagedBean().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),getManagedBean().getSmPersonnel().getEmail());
+						} else {
+							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),getManagedBean().getSmPersonnel().getEmail());
+						}
+						//#15142 - End
+						//#15142 - to comment previous code for function navigateToAck
+//						return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 
 					}catch(Exception ex){
 						throw new EpException(ex.getMessage());
@@ -306,7 +315,16 @@ public class SupplierUserActivationBackingBean extends
 							this.getManagedBean().setValidActivation(false);
 							//this.getManagedBean().setSmPersonnel(null);
 							//renewSesionObject();
-							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
+							//#15142 - Start
+							if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
+									getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+								return navigateToAck(getManagedBean().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),getManagedBean().getSmPersonnel().getEmail());
+							} else {
+								return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),getManagedBean().getSmPersonnel().getEmail());
+							}
+							//#15142 - End
+							//#15142 - to comment previous code for function navigateToAck
+//							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 							
 						}catch(Exception ex){
 							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
@@ -338,7 +356,8 @@ public class SupplierUserActivationBackingBean extends
 				new FacesMessage(FacesMessage.SEVERITY_ERROR,errMsg, errMsg));
 	}
 	
-	public String navigateToAck(String epNo, String supplierType) {
+	//#15142 Start - modify function to receive parameter which is email 
+	public String navigateToAck(String epNo, String supplierType, String email) {
 		// FacesScopes fs = new FacesScopes();
 		// String server = "http://" + fs.getRequest().getServerName() + ":" +
 		// fs.getRequest().getServerPort();
@@ -357,13 +376,15 @@ public class SupplierUserActivationBackingBean extends
 		
 		String suppTypeLblParam = SmCommonUtil.getMessage(suppTypeLbl, null);
 		
+		//#15142 Start - to send email as parameter
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 						.getMessage(MessageConst.INFO_721001,
-								new String[] { suppTypeLblParam, epNo },
+								new String[] { suppTypeLblParam, epNo, email },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
+		//#15142 End
 
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
