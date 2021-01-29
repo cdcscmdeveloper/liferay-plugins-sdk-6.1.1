@@ -26,8 +26,8 @@
 						style="float: left;white-space: normal; " /><br />
 						<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCategories}">
 							<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" rendered="#{viewSmApplBackingBean.checkOtherDescMachinery(catFac,categoryVar)}"
-							style="float: left;white-space: normal;" />	
-						</ui:repeat>
+							style="float: left;white-space: normal;" /><br />	
+						</ui:repeat> 
 					</ui:repeat>
 				</p:column>
 				<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
