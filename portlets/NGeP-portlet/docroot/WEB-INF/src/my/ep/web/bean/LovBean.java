@@ -3,6 +3,10 @@ package my.ep.web.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.bean.ManagedProperty;
+
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+
 public class LovBean implements Serializable {
 	
 	/**
@@ -27,6 +31,13 @@ public class LovBean implements Serializable {
 	private String autoUpdateValue;
 	private boolean isDisplayResultWhenFirstLoad;
 	private boolean isDisplayResultWhenReset;
+	// #29832 start 
+	//added managedproperty to pass the value from simplequoteBB into LovBB to trigger delete selected list
+	@ManagedProperty(value="#{simpleQuoteBackingBean}")
+	private SimpleQuoteBackingBean simpleQuoteBackingBean;
+	// #29832 end
+
+
 	
 	public String getLovId() {
 		return lovId;
@@ -145,6 +156,21 @@ public class LovBean implements Serializable {
 	public void setDisplayResultWhenReset(boolean isDisplayResultWhenReset) {
 		this.isDisplayResultWhenReset = isDisplayResultWhenReset;
 	}
+	
+	// #29832 start @zaim
+	/**
+	 * @return the simpleQuoteBackingBean
+	 */
+	public SimpleQuoteBackingBean getSimpleQuoteBackingBean() {
+		return simpleQuoteBackingBean;
+	}
+	/**
+	 * @param simpleQuoteBackingBean the simpleQuoteBackingBean to set
+	 */
+	public void setSimpleQuoteBackingBean(SimpleQuoteBackingBean simpleQuoteBackingBean) {
+		this.simpleQuoteBackingBean = simpleQuoteBackingBean;
+	}
+	// #29832 end
 	
 	
 }
