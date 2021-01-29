@@ -182,26 +182,34 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					paramTitle ="scLoiLoa.title";
 				}
 				
-				if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchPtjProfile().getOrgProfileId()));
-					
-				} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							paramPtjGroupAndMinistry+"."
-									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
-											.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchPtjGroupProfile().getOrgProfileId()));
-					
-				} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							paramPtjGroupAndMinistry+"."
-									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
-											.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchMinistryProfile().getOrgProfileId()));
+				//#25396 - start
+				if(isGovernment()) {
+					if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
+						System.out.println("25936 test1 ");
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchPtjProfile().getOrgProfileId()));
+						
+					} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
+						System.out.println("25936 test2 ");
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								paramPtjGroupAndMinistry+"."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT
+												.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchPtjGroupProfile().getOrgProfileId()));
+						
+					} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
+						System.out.println("25936 test3 ");
+						searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								paramPtjGroupAndMinistry+"."
+										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY
+												.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchMinistryProfile().getOrgProfileId()));
+					}
 				}
+				//#25396 - end
+				
 				
 				if (StringUtils.isNotBlank(getSearchDocumentTitle())) {
 					SearchFilterBean filterBean = new SearchFilterBean(paramTitle, SearchOperator.OPERATOR_LIKE.value(),
