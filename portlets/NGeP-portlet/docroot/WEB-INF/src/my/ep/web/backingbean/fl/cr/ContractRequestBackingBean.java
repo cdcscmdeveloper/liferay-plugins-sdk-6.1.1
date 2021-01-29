@@ -1269,6 +1269,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				schInfo = new ArrayList<ScheduleInfo>();
 			}
 			//13984-end
+			//#14650 - Logan - Beginning
+			checkAP59();
+			//#14650 Ending	
 		}else if(contractId != null){
 			/*Start- 13984 - CrList - Back Button*/
 			if(getManagedBean().getBackFlag()!= 1){
@@ -1452,6 +1455,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				schInfo = new ArrayList<ScheduleInfo>();
 			}
 			//13984-end
+			
+
+			//Start #14650 initialize votFundCodeMap
+			Long jabatanOrgProfileId = -1l;
+			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+			if(jabatan!=null) {
+				jabatanOrgProfileId = jabatan.getOrgProfileId();
+			}		
+			getVotFundList(jabatanOrgProfileId);
+			//End#14650
+			
+			//#14650 - Alert message if contract incomplete - Start
+			checkAP59();
+			//#14650 - End
 		}
 			
 		//Default procurement type category to Supply of Goods in case of null
@@ -6676,4 +6693,32 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	//17087- end
+	
+	//14650 start
+	/**
+	 * Check checkAP59: Display warning if AP59.
+	 *	 
+	 */
+	private void checkAP59() {
+		
+		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		if(getManagedBean().getFlRequest().getCtContract().getContractId() != null){
+			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
+			
+			BigDecimal sumOrderedAmt = BigDecimal.ZERO;
+			sumOrderedAmt = calculatesTotalOrderedAmt();
+			reqDTO.setAmount(sumOrderedAmt);
+			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
+		
+			if(!resDTO.isCrComplete()) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				
+			}
+		}		
+	}
+	//14650 end
 }
