@@ -2908,7 +2908,7 @@ return	remarksNotFound;
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(this.getManagedBean().getCurrentStatusId())) {
 				
-				validateFinalizationReports(null);
+				//validateFinalizationReports(null);
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					boolean atleastOneMeetingIsDone = false;
