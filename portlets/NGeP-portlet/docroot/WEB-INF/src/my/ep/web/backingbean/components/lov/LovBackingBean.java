@@ -2,13 +2,10 @@ package my.ep.web.backingbean.components.lov;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-//20200909@akmal - Enhancement28951 - Start
 import java.util.HashMap;
-//20200909@akmal - Enhancement28951 - End
+import java.util.Iterator;
 import java.util.List;
-//20200909@akmal - Enhancement28951 - Start
 import java.util.Map;
-//20200909@akmal - Enhancement28951 - End
 import java.util.ResourceBundle;
 
 import javax.el.MethodExpression;
@@ -37,30 +34,36 @@ import my.ep.dto.cc.lov.LovResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.aut.AutUser;
-//20200909@akmal - Enhancement28951 - Start
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
-//20200909@akmal - Enhancement28951 - End
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-//20200909@akmal - Enhancement28951 - Start
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.event.data.PageEvent;
-//20200909@akmal - Enhancement28951 - End
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.liferay.portal.util.PortalUtil;
+//20200909@akmal - Enhancement28951 - Start
+//20200909@akmal - Enhancement28951 - End
+//20200909@akmal - Enhancement28951 - Start
+//20200909@akmal - Enhancement28951 - End
+//20200909@akmal - Enhancement28951 - Start
+//20200909@akmal - Enhancement28951 - End
+//20200909@akmal - Enhancement28951 - Start
+//20200909@akmal - Enhancement28951 - End
 
 @ManagedBean(name="lovBackingBean")
 @ViewScoped
@@ -406,6 +409,7 @@ public class LovBackingBean implements Serializable {
 		//20200909@akmal - Enhancement28951 - Start
 		if(this.getSelectedEntities() != null){
 			this.getSelectedEntities().clear();
+			
 		}		
 		//20200909@akmal - Enhancement28951 - End
 		if(!getLovBean().isDisplayResultWhenReset()) {
@@ -657,6 +661,7 @@ public class LovBackingBean implements Serializable {
 		                        new Object[] { selectedEntities });
 				}
 	
+			
 				this.resetAction();
 	
 			}
@@ -698,6 +703,18 @@ public class LovBackingBean implements Serializable {
 					return false;
 				}
 			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
+				// #29832 added if else to make sure the selected cb save after tick. 
+				// Default save after click next page onPageChange listener
+				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+					for(BaseEntity item : selectedEntities){
+						if(item instanceof PmBusinessNature){
+							Long key = ((PmBusinessNature) item).getBusinessNatureId();
+							if(!persistedEntities.containsKey(key))
+								persistedEntities.put(key, item);
+							debugLogger("MASUK "+persistedEntities.size());
+						}
+					}
+				}
 				return false;
 			}
 		}
@@ -738,16 +755,32 @@ public class LovBackingBean implements Serializable {
 	
 	public void onPageChange(PageEvent event){
 		// put selected into hashmap
-		for(BaseEntity item : selectedEntities){
-			if(item instanceof PmBusinessNature){
-				Long key = ((PmBusinessNature) item).getBusinessNatureId();
-				if(!persistedEntities.containsKey(key))
-					persistedEntities.put(key, item);
+		
+		//#29832 added if else for Pm_business_nature to skip save selected cb onPageChage
+		if (getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			
+		}else{
+			for(BaseEntity item : selectedEntities){
+				if(item instanceof PmBusinessNature){
+					Long key = ((PmBusinessNature) item).getBusinessNatureId();
+					if(!persistedEntities.containsKey(key))
+						persistedEntities.put(key, item);
+				}
 			}
 		}
+		
 	}
 	
 	public void populateSelectedItems(){
+		
+		//#29832 to remove auto populate checkbox after delete the list
+		if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
+			removeSelectedBusinessNature();
+		}
+		// #29832 end
+
+	
+
 		selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values()); 
 	}
 	//20200909@akmal - Enhancement28951 - End
@@ -839,4 +872,36 @@ public class LovBackingBean implements Serializable {
 		this.persistedEntities = persistedEntities;
 	}
 	//20200909@akmal - Enhancement28951 - End
+	
+	/**
+	 * @author zaim
+	 * #29832 to remove auto populate checkbox after delete the list for business nature
+	 * 
+	 * **/
+	public void removeSelectedBusinessNature(){
+		SimpleQuoteManagedBean simpleQuoteMB = new SimpleQuoteManagedBean();
+	if (getLovBean().getSimpleQuoteBackingBean() != null){
+		simpleQuoteMB = getLovBean().getSimpleQuoteBackingBean().deleteSuccess();
+		
+		if (simpleQuoteMB.getDeletedBusinessNatureMap() != null){
+			if (simpleQuoteMB.getDeletedBusinessNatureMap().size() > 0){
+					for (Long item: simpleQuoteMB.getDeletedBusinessNatureMap().keySet()){
+						debugLogger("Delete key "+item);
+						
+						for(Iterator<Map.Entry<Long, BaseEntity>> it = persistedEntities.entrySet().iterator(); it.hasNext(); ) {
+						    Map.Entry<Long, BaseEntity> entry = it.next();
+						    if(entry.getKey().equals(item)) {
+						        it.remove();
+						    }
+						}
+					}
+					simpleQuoteMB = new SimpleQuoteManagedBean();
+				}
+		}
+	}else {
+		SimpleQuoteBackingBean bb = new SimpleQuoteBackingBean();
+		getLovBean().setSimpleQuoteBackingBean(bb);
+	}
+	}
+	// #29832 end
 }

@@ -154,9 +154,11 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.components.lov.LovBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
+import my.ep.web.bean.LovBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -2717,9 +2719,15 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setDeletedBusinessNatureMap(deletedBusinessNatureMap);
 				}
 			}
+			
+			 getManagedBean()
+				.setSelectedBusinessNature(null);
+			 
 		}
-		 getManagedBean()
-			.setSelectedBusinessNature(null);
+		
+		deleteSuccess();
+		 
+		
 	}
 
 	/**
@@ -4470,7 +4478,13 @@ public class SimpleQuoteBackingBean extends
 							if (!busNatureIds.contains(busiNature
 									.getBusinessNatureId())) {
 								natureQuoteCriterias.add(natureQuoteCriteria);
-							} else {
+							}
+							// #29832 added else if to prevent error after delete the list.
+							else if (busNatureIds.contains(busiNature
+									.getBusinessNatureId())){
+							}
+								else {
+							
 								throw new EpException(
 										MessageConst.ERROR_700027,
 										new String[] { ResourceBundleUtils
@@ -7992,4 +8006,11 @@ public class SimpleQuoteBackingBean extends
 			preRenderView();
 		}
 		// #29800 - end
+		
+		// #29832 @zaim added method to pass the value into lovBackingBean
+		public SimpleQuoteManagedBean deleteSuccess(){
+			
+			return getManagedBean();
+		}
+		// #29832 end
 }
