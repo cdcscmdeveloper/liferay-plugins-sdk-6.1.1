@@ -282,7 +282,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
 		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin
-		if((getManagedBean().isBypassFlag()==false && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
+		//12981
+		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		}
