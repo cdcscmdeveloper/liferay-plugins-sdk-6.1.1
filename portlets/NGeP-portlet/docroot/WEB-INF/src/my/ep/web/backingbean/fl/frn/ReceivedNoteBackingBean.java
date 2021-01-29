@@ -478,6 +478,44 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					noteItem.getRejectionRemarks().add(new FlRemark());
 				}
 			}
+			/*#14650 - Logan - Beginning*/
+			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			
+			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
+				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+							
+				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
+				BigDecimal frnReceivedAmt = BigDecimal.ZERO;
+				FulfilmentReqDTO reqDTOsum = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTOsum = new FulfilmentResDTO();
+				
+				reqDTOsum.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+				if(getManagedBean().getFulfilmentNote()!=null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId()!=null){					
+					reqDTOsum.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
+				}else{
+					reqDTOsum.setRequestNoteId(null);
+				}
+				
+				//get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
+				resDTOsum = receivedNoteSO.retriveSumReceivedAmtByReqId(reqDTOsum);
+				sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
+				//get this FRN amount
+				for(FlFulfilmentNoteItem noteItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()){
+					frnReceivedAmt = frnReceivedAmt.add(noteItem.getReceivedAmt());
+				}				
+				sumReceivedAmt = sumReceivedAmt.add(frnReceivedAmt);				
+
+				reqDTO.setAmount(sumReceivedAmt);
+				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
+				
+				if(!resDTOInvoice.isCrComplete()){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				}
+			}
+			/*#14650 - Ending*/
+			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
