@@ -303,11 +303,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
-		//#28765 - Start
-		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
+		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
+//		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
-		}
+//		}
 		//#28765 - End
 		redirectToSuccessPage(resDto);
 	}
