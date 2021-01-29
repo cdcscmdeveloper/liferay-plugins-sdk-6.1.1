@@ -193,6 +193,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -812,11 +813,11 @@ public class SpecificationBackingBean extends
 					}
 					
 				}
-				if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited()){
+				if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited() && !this.getManagedBean().isFromSubmit()){
 					RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
+					this.getManagedBean().setTechnicalOtherCheckList(false);
 				}else{
 					this.getManagedBean().setTechnicalOtherCheckList(validateTechnicalStandardCheckList());
-					//technicalOtherCheckList = validateTechnicalStandardCheckList();
 				}
 				//#1873 -end
 			}
@@ -13606,7 +13607,6 @@ public class SpecificationBackingBean extends
 	 */
 	private boolean validateTechnicalStandardCheckList() {
 		boolean pmdocument = false;
-		this.getManagedBean().setTechnicalTemplateEdited(false);//#1873
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
 		if (null != techCheckList && !techCheckList.isEmpty()) {
@@ -13676,6 +13676,7 @@ public class SpecificationBackingBean extends
 	 * 
 	 */
 	public void checkListYesConfirmation(String stage) {
+		this.getManagedBean().setTechnicalTemplateEdited(false);//#1873
 		this.getManagedBean().setStandardTemplate(
 				ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 		if (this.getManagedBean().getCheckListYesIndex() == 4
@@ -13800,6 +13801,7 @@ public class SpecificationBackingBean extends
 	 */
 	public String checkListYesConfirmationSubmit(String stage) {
 		String checklistSubmit = CommonUIConst.ACKNOWLEDGE_PAGE;
+		this.getManagedBean().setTechnicalTemplateEdited(false);//#1873
 		if (ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equalsIgnoreCase(stage)) {
 			this.getManagedBean().setTechnicalOtherChecklistSubmit(true);
 			boolean financial = validateFinancialStandardCheckListSubmit();
@@ -17728,15 +17730,52 @@ if(null!=allTechnicalChecklist){
 	}
 	//#25037-end
 	
+	//#1873-start
 	private String buildQuestionCompareString(TplSpecQuestion question){
 		String type = question.getQuestionType();
-		StringBuilder sb = new StringBuilder();
-		sb.append("");
+		StringBuilder sb = new StringBuilder("");
 		if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM)){
 			BigDecimal uomPerDay = question.getClUomPerDay() == null ? new BigDecimal(0): question.getClUomPerDay(); 
 			BigDecimal uomFrequency = question.getClUomFrequency() == null ? new BigDecimal(0): question.getClUomFrequency(); 
 			BigDecimal uomPerMonth = question.getClUomPerMonth() == null ? new BigDecimal(0): question.getClUomPerMonth(); 
 			BigDecimal quantity = question.getClQuantity() == null ? new BigDecimal(0): question.getClQuantity(); 
+			String priceType = question.getClPriceTypeCode() == null ? "": question.getClPriceTypeCode().getParameterCode(); 
+			
+			List<TplSpecTierQty> quantityTier = question.getTplSpecTierQties();
+			StringBuilder quantityTierCompareSb = new StringBuilder("tierQty");
+			if(CollectionUtils.isNotEmpty(quantityTier)){
+				Collections.sort(quantityTier, new Comparator<TplSpecTierQty>() {
+					public int compare(TplSpecTierQty o1, TplSpecTierQty o2) {
+						return o1.getFromQty().compareTo(o2.getFromQty());
+					}
+				});
+				for(TplSpecTierQty qty: quantityTier){
+					BigDecimal fromQty = qty.getFromQty() == null ? new BigDecimal(0): qty.getFromQty(); 
+					BigDecimal toQty = qty.getToQty() == null ? new BigDecimal(0): qty.getToQty(); 
+					quantityTierCompareSb.append(fromQty.doubleValue());
+					quantityTierCompareSb.append(toQty.doubleValue());
+				}
+			}
+			
+			List<TplSpecZoneQty> zoneQuantityTier = question.getTplSpecZoneQties();
+			StringBuilder zoneQuantityTierCompareSb = new StringBuilder("zoneTierQty");
+			if(CollectionUtils.isNotEmpty(zoneQuantityTier)){
+				Collections.sort(zoneQuantityTier, new Comparator<TplSpecZoneQty>() {
+					public int compare(TplSpecZoneQty o1, TplSpecZoneQty o2) {
+						return o1.getTplSpecZoneDtl().getZoneName().compareTo(o2.getTplSpecZoneDtl().getZoneName());
+					}
+				});
+				for(TplSpecZoneQty zQty: zoneQuantityTier){
+					BigDecimal qty = zQty.getQty() == null ? new BigDecimal(0): zQty.getQty(); 
+					String zoneName = zQty.getTplSpecZoneDtl() == null ? "" : zQty.getTplSpecZoneDtl().getZoneName();
+					zoneQuantityTierCompareSb.append(zoneName);
+					zoneQuantityTierCompareSb.append(qty.doubleValue());
+				}
+			}
+
+			sb.append(quantityTierCompareSb.toString());
+			sb.append(zoneQuantityTierCompareSb.toString());
+			sb.append(priceType);
 			sb.append(StringUtils.deleteWhitespace(question.getClItem().toUpperCase()));
 			sb.append(question.getClUom().getUomCode());
 			sb.append(uomFrequency.doubleValue());
@@ -17790,37 +17829,40 @@ if(null!=allTechnicalChecklist){
 			for(TplSpecQuestion q: localQuestions){
 				String type = q.getQuestionType();
 				if(q.getSpecQuestionId()==null){
-					if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM)){
+					if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemAdded")){
 						changesFlag.put("itemAdded", true);
-						this.getManagedBean().setTechnicalTemplateEdited(true);
+						this.getManagedBean().setTechnicalTemplateEdited(true && isOriginallyCompleted);
 					}
-					if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
+					if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationAdded")){
 						changesFlag.put("specificationAdded", true);
 					}
 				}else{
 					TplSpecQuestion question = (TplSpecQuestion)currentQuestionsMap.get(q.getSpecQuestionId());
 					if(question==null){
-						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM)){
+						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemDeleted")){
 							changesFlag.put("itemDeleted", true);
 						}
-						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
+						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationDeleted")){
 							changesFlag.put("specificationDeleted", true);
 						}
 					}else{
 						String currentQuestionStr = buildQuestionCompareString(question);
-						String localQuestionStr = buildQuestionCompareString(q);
-						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM)){
+						String localQuestionStr = buildQuestionCompareString(q);					
+						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")){
 							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
 							if(changesFlag.get("itemUpdated")){
-								this.getManagedBean().setTechnicalTemplateEdited(true);
+								this.getManagedBean().setTechnicalTemplateEdited(true && isOriginallyCompleted);
 							}
 						}
-						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
+						if(type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && !changesFlag.get("specificationUpdated")){
 							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
 						}
 					}
 				}
 			}
+//			for(String s: new String[]{"itemAdded", "specificationAdded", "itemDeleted", "specificationDeleted", "itemUpdated", "specificationUpdated"}){
+//				log.info("---> " + s +" --> " + changesFlag.get(s));
+//			}
 			boolean specQuestionModified = (changesFlag.get("itemAdded") || changesFlag.get("itemUpdated") || changesFlag.get("itemDeleted"));
 			return  specQuestionModified || (!specQuestionModified && !isOriginallyCompleted);
 		}
@@ -17843,7 +17885,6 @@ if(null!=allTechnicalChecklist){
 		if(showFinSpecChangedAlert && this.getManagedBean().isTechnicalTemplateEdited()){
 			this.getManagedBean().setFromSubmit(true);
 			RequestContext.getCurrentInstance().execute("alertFinancialTemplateIncompletePopup.show()");
-			this.getManagedBean().setTechnicalTemplateEdited(false);
 			return true;
 		}
 		return false;
@@ -17857,4 +17898,5 @@ if(null!=allTechnicalChecklist){
 			validateTechnicalStandardCheckList();
 		}
 	}
+	//#1873-end
 }
