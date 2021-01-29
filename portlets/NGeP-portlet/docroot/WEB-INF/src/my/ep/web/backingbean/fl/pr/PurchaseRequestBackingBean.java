@@ -514,6 +514,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 			getManagedBean().setEspkb(true);
 		}
+		//29555 start
+	    getLoginUserName();
+	    //29555 end
 	}
 
 	/**
@@ -1539,6 +1542,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//Redmine Enhancement #12177
 	    addButton();
 	    log.info("end - addButton");
+	    //29555 start
+	    getLoginUserName();
+	    //29555 end
 	    MDC.clear();
 	    if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -1689,6 +1695,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
 		getManagedBean().setPmUserOrg(userOrg);
 	}
+	//29555 start
+		public void getLoginUserName() {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			if(userResDTO.getPmUser().getUserName() != null){
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+			}
+		}
+	//29555 end
 	
 	/**
 	 * Checks if is check flg.
@@ -4397,6 +4414,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prRenderer?faces-redirect=true");
+			//29555 start
+		    getLoginUserName();
+		    //29555 end
 		}
 	}
 	

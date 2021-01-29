@@ -512,6 +512,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setEspkb(true);
 		}
 		getEspkbCommitmentNo();
+		//29555 start
+		getLoginUserName();
+		//29555 end
 	}
 	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
@@ -1561,6 +1564,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setEspkb(true);
 		}
 		
+		//29555 start
+		getLoginUserName();
+		//29555 end
+		
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFlRequest()));
 		getEspkbCommitmentNo();
@@ -1758,6 +1765,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getManagedBean().setPmUserOrg(userOrg);
 
 	}
+	
+	//29555 start
+	public void getLoginUserName() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+		if(userResDTO.getPmUser().getUserName() != null){
+		getManagedBean().setpreparedBy(userResDTO.getPmUser().getUserName());
+		}
+	}
+	//29555 end
 	
 	/**
 	 * check role user is fl_approver
@@ -6070,6 +6089,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
+			//29555 start
+			getLoginUserName();
+			//29555 end
 			getManagedBean().setBackToDocument(null);
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
