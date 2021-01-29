@@ -41,8 +41,8 @@
 					</c:if>
 				<!-- 28767 -->
 					<c:choose>
-					<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R' and backingBean.managedBean.smAppl.applValidWithSsm}">
-					<c:when test="#{backingBean.managedBean.smSupplier.businessType == 'I' or backingBean.managedBean.smSupplier.businessType == 'J'}" >		
+					<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R' and viewSmApplBackingBean.managedBean.smAppl.applValidWithSsm}">
+					<c:when test="#{viewSmApplBackingBean.managedBean.smSupplier.businessType == 'I' or viewSmApplBackingBean.managedBean.smSupplier.businessType == 'J'}" >		
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
 						<ui:include src="step9ViewAnnualInfo.xhtml" />
 					</c:if>
