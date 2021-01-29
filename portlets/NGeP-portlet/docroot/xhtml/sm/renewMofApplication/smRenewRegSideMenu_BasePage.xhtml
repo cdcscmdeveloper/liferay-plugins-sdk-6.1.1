@@ -144,7 +144,7 @@
 			</c:if>
 			<!-- 28767 -->
 		 <c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}}" >
+			<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}" >
 			<c:choose>
 			<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">
 			 <c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
