@@ -112,13 +112,14 @@
 							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"/>
 	                </p:row>
 				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{supportingDocInquiryBackingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:50% !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:50% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:10% !important;" rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:10% !important;" 
+					rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
 						<ui:remove>
 							<p:commandLink value="#{applDocs.fileName}" rendered="#{not empty table.smApplDocFiles}"  ajax="false"
@@ -132,11 +133,12 @@
 						<br />
 					</ui:repeat>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 23% !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 23% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 					<h:inputTextarea value="#{supportingDocInquiryBackingBean.retrieveRemarkByDocId(table.pmDocument)}" disabled="true"
 						style="float:left; white-space:normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width:5% !important; text-align: center  !important;" rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width:5% !important; text-align: center  !important;" 
+					rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<p:commandLink oncomplete="uploadDialogId.show();return false;"
 						process="@this" partialSubmit="true"
 						rendered="#{!table.pmDocument.hardCopyReq}"
@@ -146,7 +148,8 @@
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}" style="width:10% !important;" rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}" style="width:10% !important;" 
+					rendered="#{table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<ui:repeat var="applDocs" value="#{table.newAddedFiles}">
 					<h:commandLink id="file" value="#{supportingDocInquiryBackingBean.getShortFileName(applDocs.fileName)}" rendered="#{not empty applDocs and !table.pmDocument.hardCopyReq}">
             			<p:fileDownload value="#{supportingDocInquiryBackingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />
@@ -196,13 +199,14 @@
 							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"/>
 	                </p:row>
 				</p:columnGroup>	
-				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{supportingDocInquiryBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:50% !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:50% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:10% !important;" rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:10% !important;" 
+					rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
 						<ui:remove>
 							<p:commandLink value="#{applDocs.fileName}" rendered="#{not empty table.smApplDocFiles}"  ajax="false"
@@ -216,11 +220,12 @@
 						<br />
 					</ui:repeat>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:23% !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:23% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 					<h:inputTextarea value="#{supportingDocInquiryBackingBean.retrieveRemarkByDocId(table.pmDocument)}" disabled="true"
 						style="float:left; white-space:normal;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width:5% !important; text-align:center !important" rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width:5% !important; text-align:center !important" 
+					rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<p:commandLink oncomplete="uploadDialogId.show();return false;"
 						process="@this" partialSubmit="true"
 						rendered="#{!table.pmDocument.hardCopyReq}"
@@ -230,7 +235,8 @@
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}" style="width:10% !important;" rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}" style="width:10% !important;" 
+					rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<ui:repeat var="applDocs" value="#{table.newAddedFiles}">
 					<h:commandLink id="file" value="#{supportingDocInquiryBackingBean.getShortFileName(applDocs.fileName)}" rendered="#{not empty applDocs and !table.pmDocument.hardCopyReq}">
             			<p:fileDownload value="#{supportingDocInquiryBackingBean.commonDownload(applDocs.filePath,applDocs.fileName,applDocs.fileName)}" />

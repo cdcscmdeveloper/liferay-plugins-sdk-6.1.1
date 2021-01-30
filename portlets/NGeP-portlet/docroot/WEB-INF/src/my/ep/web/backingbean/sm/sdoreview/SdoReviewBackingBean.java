@@ -237,30 +237,32 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			List<SmApplInquiryDocFile> smApplInquiryDocFiles = new ArrayList<SmApplInquiryDocFile>();
 			
 			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-				
-				SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
-				smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
-				smApplSupportDocInquiry.setSdoRemarks(smApplSupportDoc.getInquiryRemark());
-				smApplSupportDocInquiry.setReceived(smApplSupportDoc.isInquiryReceived());
-				smApplSupportDocInquiry.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
-				smApplSupportDocInquiry.setApplSupportDocInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_SUPPDOC_INQUIRY_SEQ"));
-				
-				smApplSupportDoc.setInquiryRemark("");
-				smApplSupportDoc.setInquiryReceived(false);
-				
-				for(SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()){
+				if(!smApplSupportDoc.isReceived()){
 					
-					SmApplInquiryDocFile smApplInquiryDocFile = new SmApplInquiryDocFile();
-					smApplInquiryDocFile.setApplInquiryDocFileId(reqSO.retrieveSeqNextVal("SM_APPL_INQ_FILE_SEQ"));
-					smApplInquiryDocFile.setFileName(smApplDocFile.getFileName());
-					smApplInquiryDocFile.setFilePath(smApplDocFile.getFilePath());
-					smApplInquiryDocFile.setSmApplSupportDocInquiry(smApplSupportDocInquiry);
+					SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
+					smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
+					smApplSupportDocInquiry.setSdoRemarks(smApplSupportDoc.getInquiryRemark());
+					smApplSupportDocInquiry.setReceived(smApplSupportDoc.isInquiryReceived());
+					smApplSupportDocInquiry.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
+					smApplSupportDocInquiry.setApplSupportDocInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_SUPPDOC_INQUIRY_SEQ"));
 					
-					smApplInquiryDocFiles.add(smApplInquiryDocFile);
+					smApplSupportDoc.setInquiryRemark("");
+					
+					for(SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()){
+						
+						SmApplInquiryDocFile smApplInquiryDocFile = new SmApplInquiryDocFile();
+						smApplInquiryDocFile.setApplInquiryDocFileId(reqSO.retrieveSeqNextVal("SM_APPL_INQ_FILE_SEQ"));
+						smApplInquiryDocFile.setFileName(smApplDocFile.getFileName());
+						smApplInquiryDocFile.setFilePath(smApplDocFile.getFilePath());
+						smApplInquiryDocFile.setSmApplSupportDocInquiry(smApplSupportDocInquiry);
+						
+						smApplInquiryDocFiles.add(smApplInquiryDocFile);
+					}
+					
+					smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
+					smApplSupportDocInquiries.add(smApplSupportDocInquiry);
 				}
 				
-				smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
-				smApplSupportDocInquiries.add(smApplSupportDocInquiry);
 			}
 			this.getManagedBean().getSmApplInquiry().setSmApplSupportDocInquiries(smApplSupportDocInquiries);
 			//#11641 - End
