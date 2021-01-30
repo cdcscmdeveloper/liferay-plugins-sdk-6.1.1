@@ -696,7 +696,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppItem.setBrandNew(false);
 							}
 							
-							if (ppItem.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+							if (ppItem.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) 
+									&& !ppItem.isDisableRow()) { //28012021@27624 
 								if (!ppItem.isCloneEnabled()) {
 									 ppItem.setCloneEnabled(true);
 								}
@@ -8443,7 +8444,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					   Always disable Reason For Update for original ppItem*/	
 					if (!ppItem.isOriginal()) {
 						if (ppItem.getFromPpItem().equals(commonExpenditureItemId)) {
-							 if (ppItem.getRecordStatusFlg() == 9){ 
+							 if (ppItem.getRecordStatusFlg() == 9 && !ppItem.isDisableRow()){ //28012021@27624
 								  ppItem.setCloneEnabled(true);
 								  ppItem.setDisableForPindaan(false);
 						          ppItem.setReasonForUpdateEnabled(true);
@@ -8652,9 +8653,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			  if (Status == 9){
 			      log.info("setActionCloneEnabled " + "true");	
 			      PpExpItem.setDisableRow(true);
+			      PpExpItem.setIsDisableRow(true);//28012021@27624 - start
 			     }else{
 			      log.info("setActionCloneEnabled " + "false");
-			      PpExpItem.setDisableRow(false); 
+			      PpExpItem.setDisableRow(false);
+			      PpExpItem.setIsDisableRow(false); //28012021@27624 - End
 			    }  
 		  }
 	    
@@ -8664,9 +8667,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			  if (Status == 9){
 			      log.info("setActionCloneEnabled " + "true");	
 			      PpItem.setDisableRow(true);
+			      PpItem.setIsDisableRow(true);//28012021@27624 - start
 			     }else{
 			      log.info("setActionCloneEnabled " + "false");
 			      PpItem.setDisableRow(false); 
+			      PpItem.setIsDisableRow(false);//28012021@27624 - end
 			    }  
 	     } 
 	     
