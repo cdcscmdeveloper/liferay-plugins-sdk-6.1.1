@@ -187,17 +187,6 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		// 25792 - end
-	//29380  - Site Visit Grouping Enhancement -28775 -Start
-		if(outputTab == 6 && outputPageType
-				.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)){
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-		}else if(outputTab == 7 && outputPageType
-				.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)){
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-		}else{
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-		}
-	//29380  - Site Visit Grouping Enhancement -28775 -End
 	}
 
 	/**
@@ -1629,6 +1618,7 @@ public class ViewApplHistoryBackingBean extends
 				result=true;
 			}
 		}
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		return result;
 	}
 	
@@ -1646,6 +1636,7 @@ public class ViewApplHistoryBackingBean extends
 				result=true;
 			}
 		}
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		return result;
 	}
 	//29380  - Site Visit Grouping Enhancement -28775 - End
