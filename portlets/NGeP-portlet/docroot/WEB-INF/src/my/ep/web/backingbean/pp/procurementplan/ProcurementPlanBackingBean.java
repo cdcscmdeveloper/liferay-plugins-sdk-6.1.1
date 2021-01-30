@@ -728,11 +728,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		// Attempting to reorder the PpItems only if clones exist
         List<PpProcurementItem> tempOriginalPpItemList = new ArrayList<PpProcurementItem>();
 		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
-		
+				
         for (PpProcurementItem ppItem : ppItems) {
 			if (!this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null) {//28012021@27624 - start
 				tempClonedPpItemList.add(ppItem);
-			} else if (this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null) {
+			} else if (this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null
+					&& !this.getManagedBean().getPlanSearchBean().getTitleOrDesc().isEmpty()) {
 				tempOriginalPpItemList.add(ppItem);
 			} else {
 				tempOriginalPpItemList.add(ppItem);
@@ -6617,11 +6618,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			int itemIndex = 0;
 			for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
 				if (ppProcurementItem.getPpUpdateReasons() != null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
-					PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
 					if (ppProcurementItem.isReviseNewItem() && !this.getManagedBean().isPlanDetailSearch()
 							&& !this.getManagedBean().isPlanDetailReset()) {
+						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
 						if (updateReason != null && !StringUtils.isBlank(updateReason.getReasonDesc())) {
-							log.info("azza test ");
 							updateReason.setItemSeq(itemIndex);
 							updateReason.setDocId(ppProcurementItem.getProcurementItemId());
 							updateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
@@ -6642,6 +6642,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								ppProcurementItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT);
 
 						for (PpUpdateReason updateReasonDel : PpUpdateReasonDel) {
+							PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
 							if (updateReasonDel.getDocId().equals(ppProcurementItem.getProcurementItemId())) {
 								if (updateReasonDel.getReasonDesc() != null && updateReason.getReasonDesc() == null
 										|| updateReason.getReasonDesc().isEmpty()) {
