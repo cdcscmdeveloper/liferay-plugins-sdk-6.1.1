@@ -934,12 +934,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			List<SmMachineDtl> activeMachineDtls = new ArrayList<SmMachineDtl>();
 			SmMachineDtl machDtlTmp = null;
+
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
-				//29380  - Site Visit Grouping Enhancement -28775 - Start
 				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS)) {
-					//29380  - Site Visit Grouping Enhancement -28775 - End
+						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
