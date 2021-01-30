@@ -2416,11 +2416,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								itemRemark.setPpWorkflowStatus(this.getManagedBean().getSelectedPlan().getCurrentStatus());
 							}
 							itemRemarks.add(itemRemark);
+						   }//28012021@27624 
 						}else{	
-							
 							List<PpRemark> PpItemRemarkDel = PpCommonUtil.retrieveRemark(ppExpenditureItem.getExpenditureItemId(), ParameterConst.DOCTYPE_PLAN_EXPENDITURE);
 										
 							for(PpRemark itemRemarkDel : PpItemRemarkDel){
+								PpRemark itemRemark = ppExpenditureItem.getPpRemarks().get(0);//28012021@27624 
 								 if(itemRemarkDel.getDocId().equals(ppExpenditureItem.getExpenditureItemId())){
 									 log.info("first itemRemarkDel1" + itemRemark.getRemark() + itemRemarkDel.getRemark());
 									 if(itemRemarkDel.getRemark()!=null 
@@ -2441,9 +2442,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					itemIndex++;
 					}
 				}
-//			}
-		}
-		
 		return itemRemarks;
 	}
 
