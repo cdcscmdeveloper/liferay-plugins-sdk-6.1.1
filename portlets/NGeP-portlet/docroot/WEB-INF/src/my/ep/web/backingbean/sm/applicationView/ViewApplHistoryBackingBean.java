@@ -187,6 +187,17 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		// 25792 - end
+	//29380  - Site Visit Grouping Enhancement -28775 -Start
+		if(outputTab == 6 && outputPageType
+				.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)){
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+		}else if(outputTab == 7 && outputPageType
+				.equals(my.ep.web.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)){
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+		}else{
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+		}
+	//29380  - Site Visit Grouping Enhancement -28775 -End
 	}
 
 	/**
@@ -1606,8 +1617,7 @@ public class ViewApplHistoryBackingBean extends
 	
 	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
 		boolean result=false;
-		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
-				dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
+		if(dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
 			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
 					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
 				result=true;
@@ -1624,8 +1634,7 @@ public class ViewApplHistoryBackingBean extends
 	
 	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
 		boolean result=false;
-		if(categoryVar.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) &&
-				catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id())){
+		if(catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id())){
 			if( (catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
 					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99)) ||
 					(catFac.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
