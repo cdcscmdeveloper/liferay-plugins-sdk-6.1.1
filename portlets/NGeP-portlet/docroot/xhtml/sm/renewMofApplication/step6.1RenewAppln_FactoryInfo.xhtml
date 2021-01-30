@@ -120,7 +120,8 @@
 							</table>
 						</p:outputPanel>
 					</p:outputPanel>
-					<c:if test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+					<c:choose>
+					<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 					<c:choose>
 					<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">						
 					<div class="nav-wrapper">
@@ -185,8 +186,8 @@
 					</div>					
 					</c:otherwise>
 					</c:choose>
-					</c:if>
-					<c:if test="#{!backingBean.managedBean.smAppl.applValidWithSsm}">
+					</c:when>
+					<c:otherwise>
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
@@ -216,7 +217,8 @@
 							</tr>
 						</table>
 					</div>
-					</c:if>
+				</c:otherwise>
+				</c:choose>
 				</td>
 		</tr>
 

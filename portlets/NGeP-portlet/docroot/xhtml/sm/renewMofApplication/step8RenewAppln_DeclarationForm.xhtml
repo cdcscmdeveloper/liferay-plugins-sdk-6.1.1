@@ -39,7 +39,7 @@
 										<tr>
 											<td><div align="left" style="width: 99%">
 											<c:choose> 
-											<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+											<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm  and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 													<c:choose>
 									 				<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">
 														<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
@@ -77,7 +77,7 @@
 										<tr>
 											<td><div align="left" style="width: 99%">
 											<c:choose> 
-											<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+											<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm  and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 													<c:choose>
 									 				<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">	
 														<p:commandButton value="#{lbl['lbl.sm.prev.section']}" rendered="#{!backingBean.managedBean.editVO.disciplinary}"
@@ -118,7 +118,7 @@
 								<tr>
 									<td><div align="left" style="width: 99%">
 										<c:choose> 
-											<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+											<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm  and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
 											<c:choose>
 									 		<c:when test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">													
 											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" 
