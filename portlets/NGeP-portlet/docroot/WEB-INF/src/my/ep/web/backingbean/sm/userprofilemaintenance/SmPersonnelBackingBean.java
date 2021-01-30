@@ -451,6 +451,9 @@ public class SmPersonnelBackingBean extends
 		
 		// set latest active smAppl
 		getManagedBean().setCurrSmAppl(getCurrActiveSmAppl(smSupplier));
+		// #29576 - start
+		reqDTO.setAppl(getManagedBean().getCurrSmAppl());
+		// #29576 - end
 
 		// set basic SmAppl
 		getManagedBean().setBasicSmAppl(smSupplier.getSmAppl());
