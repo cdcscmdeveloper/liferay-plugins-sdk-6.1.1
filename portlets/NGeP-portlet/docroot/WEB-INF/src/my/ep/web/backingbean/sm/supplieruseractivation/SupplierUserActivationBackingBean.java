@@ -275,9 +275,9 @@ public class SupplierUserActivationBackingBean extends
 						//#15142 - Start
 						if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
 								getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
-							return navigateToAck(resDTO.getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),resDTO.getSmSupplier().getSmPersonnel().getEmail());
+							return navigateToAck(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 						} else {
-							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),resDTO.getSmSupplier().getSmPersonnel().getEmail());
+							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 						}
 						//#15142 - End
 						//#15142 - to comment previous code for function navigateToAck
@@ -318,9 +318,9 @@ public class SupplierUserActivationBackingBean extends
 							//#15142 - Start
 							if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
 									getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
-								return navigateToAck(resDTO.getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),resDTO.getSmSupplier().getSmPersonnel().getEmail());
+								return navigateToAck(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 							} else {
-								return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),resDTO.getSmSupplier().getSmPersonnel().getEmail());
+								return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 							}
 							//#15142 - End
 							//#15142 - to comment previous code for function navigateToAck
