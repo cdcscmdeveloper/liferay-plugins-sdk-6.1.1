@@ -2980,6 +2980,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 			meetingBB.getManagedBean().setFinalBiddingBB(this);
 		}	
 	}
+	public void submitAction(String action) {
+		this.checkIfLoggedinUserIsSecretary();
+		if (this.getManagedBean().isSecretaryUser() 
+				&& this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.FINALISE_FC_SELECTION)) {
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		} else {
+			this.submitBiddingEndorsement(action);
+		}
+	}
 	//#25037-END
 	
 }
