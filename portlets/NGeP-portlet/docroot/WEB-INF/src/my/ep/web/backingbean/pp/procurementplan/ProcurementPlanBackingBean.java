@@ -1455,6 +1455,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							log.info("[SIR#12802] - item pending for approval");
 							ppItem.setSelectable(true); //enabled checkbox
 							//25549@09102020 - start
+							
+							ppItem.setAllowAnotherPindaan(false); // 31012021@24975
 							log.info("item yg menanti: "+ppItem.getProcurementTitle()+
 									",isEditable= " +ppItem.isEditable());
 							//25549@09102020 - end
