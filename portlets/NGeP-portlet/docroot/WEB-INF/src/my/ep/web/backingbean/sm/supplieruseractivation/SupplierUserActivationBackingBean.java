@@ -273,11 +273,15 @@ public class SupplierUserActivationBackingBean extends
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
 						//#15142 - Start
-						if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
-								getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
-							return navigateToAck(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+						if(reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())){
+							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 						} else {
-							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+							if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
+									getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
+								return navigateToAckUser(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+							} else {
+								return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+							}
 						}
 						//#15142 - End
 						//#15142 - to comment previous code for function navigateToAck
@@ -316,11 +320,15 @@ public class SupplierUserActivationBackingBean extends
 							//this.getManagedBean().setSmPersonnel(null);
 							//renewSesionObject();
 							//#15142 - Start
-							if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
-									getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
-								return navigateToAck(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+							if(reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())){
+								return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 							} else {
-								return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+								if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
+										getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
+									return navigateToAckUser(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+								} else {
+									return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+								}
 							}
 							//#15142 - End
 							//#15142 - to comment previous code for function navigateToAck
@@ -357,7 +365,38 @@ public class SupplierUserActivationBackingBean extends
 	}
 	
 	//#15142 Start - modify function to receive parameter which is email 
-	public String navigateToAck(String epNo, String supplierType, String email) {
+	public String navigateToAck(String epNo, String supplierType) {
+		// FacesScopes fs = new FacesScopes();
+		// String server = "http://" + fs.getRequest().getServerName() + ":" +
+		// fs.getRequest().getServerPort();
+		// String loginUrl = "<a href='" + server + "'>" + "login" + "</a>";
+		
+		String suppTypeLbl = null;
+		
+		if(supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
+				supplierType.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			suppTypeLbl = "lbl.sm.basic.account.mof";
+		}else if(supplierType.equalsIgnoreCase(SupplierManagementConst.ACC_GOVT_SELLER)){
+			suppTypeLbl = "lbl.sm.basic.account.govt";
+		}else{
+			suppTypeLbl = "lbl.sm.basic.account.basic";
+		}
+		
+		String suppTypeLblParam = SmCommonUtil.getMessage(suppTypeLbl, null);
+		
+
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_721001,
+								new String[] { suppTypeLblParam, epNo},
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
+	}
+	public String navigateToAckUser(String epNo, String supplierType, String email) {
 		// FacesScopes fs = new FacesScopes();
 		// String server = "http://" + fs.getRequest().getServerName() + ":" +
 		// fs.getRequest().getServerPort();
@@ -380,7 +419,7 @@ public class SupplierUserActivationBackingBean extends
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_721001,
+						.getMessage(MessageConst.INFO_721002,
 								new String[] { suppTypeLblParam, epNo, email },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
