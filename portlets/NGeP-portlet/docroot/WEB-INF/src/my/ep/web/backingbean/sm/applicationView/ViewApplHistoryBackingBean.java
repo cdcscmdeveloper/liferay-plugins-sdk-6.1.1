@@ -1622,7 +1622,6 @@ public class ViewApplHistoryBackingBean extends
 				result=true;
 			}
 		}
-		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		return result;
 	}
 	
@@ -1644,7 +1643,6 @@ public class ViewApplHistoryBackingBean extends
 				result=true;
 			}
 		}
-		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		return result;
 	}
 	//29380  - Site Visit Grouping Enhancement -28775 - End
