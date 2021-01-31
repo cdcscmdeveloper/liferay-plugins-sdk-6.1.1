@@ -273,7 +273,10 @@ public class SupplierUserActivationBackingBean extends
 //							this.getManagedBean().setSmPersonnel(null);
 //							renewSesionObject();
 						//#15142 - Start
-						if(reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())){
+						if(reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()) || 
+								reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || 
+								reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || 
+								reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.G2G_SUPPLIER_ADMIN.value())){
 							return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 						} else {
 							if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
@@ -320,7 +323,10 @@ public class SupplierUserActivationBackingBean extends
 							//this.getManagedBean().setSmPersonnel(null);
 							//renewSesionObject();
 							//#15142 - Start
-							if(reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())){
+							if(reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.SUPPLIER_TEMP.value()) || 
+									reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || 
+									reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value()) || 
+									reqDTO.getSmPersonnel().getEpRole().equals(RoleCode.G2G_SUPPLIER_ADMIN.value())){
 								return navigateToAck(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
 							} else {
 								if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
