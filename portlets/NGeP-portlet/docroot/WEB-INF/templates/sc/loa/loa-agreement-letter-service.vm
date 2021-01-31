@@ -220,7 +220,7 @@ u {
 				</p>
 											
 				<p>
-					<span class="text_family_red">*4.	Adalah dimaklumkan bahawa tiada perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
+					<span class="text_family_red">4.	Adalah dimaklumkan bahawa tiada perkhidmatan boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
 				</p>
 
 				<div class="text_indent">
@@ -250,10 +250,19 @@ u {
 
 				#if($isSL1M == "true")
 					<p>
-						<span class="text_family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
-						And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
-						dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
-						peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+						<span class="text_family">
+						#if ($scLoa.scLoiLoa.docType == "PR")
+								*6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
+									And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
+									dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
+									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+						#else
+								6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
+									And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
+									dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak ____________________________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
+									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+						#end
+					
 					</p>
 					<p>
 						<table width="50%" align="center" style="border-collapse: collapse;">
@@ -281,7 +290,13 @@ u {
 								
 				#else
 					<p>
-						<span class="text_family">6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
+						<span class="text_family">
+						#if ($scLoa.scLoiLoa.docType == "PR")
+							*6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
+						#else
+							6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
+						#end
+						
 					</p>
 				#end
 				

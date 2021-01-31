@@ -237,7 +237,7 @@ u {
 				</p>
 				
 				<p>
-					<span class="text_family_red">*4.	Adalah dimaklumkan bahawa tiada pembekalan barang boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
+					<span class="text_family_red">4.	Adalah dimaklumkan bahawa tiada pembekalan barang boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
 				</p>
 
 				<div class="text_indent">
@@ -268,7 +268,7 @@ u {
 
 				#if($isSL1M == "true")
 					<p>
-						<span class="text_family">6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
+						<span class="text_family">*6.	Syarikat tuan juga adalah dikehendaki melaksanakan program Professional Training
 						And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 						dengan bilangan minimum peserta PROT&Eacute;G&Eacute; sebanyak .................................. orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 						peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
@@ -299,7 +299,7 @@ u {
 					
 				#else
 					<p>
-						<span class="text_family">6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
+						<span class="text_family">*6.	Syarikat tuan juga adalah digalakkan melaksanakan program Professional Training And Education For Growing Entrepreneurs (PROT&Eacute;G&Eacute;) seperti yang ditetapkan oleh Kerajaan.</span>
 					</p>
 					
 				#end
