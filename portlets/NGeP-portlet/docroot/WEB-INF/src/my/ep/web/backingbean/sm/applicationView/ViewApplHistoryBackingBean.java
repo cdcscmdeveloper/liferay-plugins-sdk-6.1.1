@@ -1606,6 +1606,10 @@ public class ViewApplHistoryBackingBean extends
 	
 	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
 		boolean result=false;
+		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
+			log.info("NUll Here");
+			return result;
+		}
 		if(dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
 			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
 					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
@@ -1624,6 +1628,10 @@ public class ViewApplHistoryBackingBean extends
 	
 	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
 		boolean result=false;
+		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
+			log.info("NUll Here");
+			return result;
+		}
 		if(catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id())){
 			if( (catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
 					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99)) ||
