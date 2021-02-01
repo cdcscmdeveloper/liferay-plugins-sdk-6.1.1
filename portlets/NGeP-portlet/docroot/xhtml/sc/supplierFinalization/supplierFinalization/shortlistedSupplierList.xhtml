@@ -79,7 +79,7 @@
 					
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code.info']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -96,29 +96,38 @@
 		               		</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
-		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
-		               			  style="width:5%; text-align:center; white-space:normal;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
-		               			  style="width:10%; white-space:normal;" />		               	
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
-		               			  rendered="#{showSelectionColumn}" />
-		           	</p:row>
-		           	<p:row>
-		              <p:column colspan="1" style="width:7%; white-space:normal;">
+ 		           		<ui:remove>
+ 		           		<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" /> 
+						</ui:remove>
+		              	<p:column rowspan="2" style="width:7%; white-space:normal;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 							</f:facet>
 						</p:column>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
+		                <p:column rowspan="2" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
+ 		                <ui:remove>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
+						</ui:remove>
+		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" 
+		               		rendered="#{haveSupplierRejection}"/>	               	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
+		               			  rendered="#{showSelectionColumn}" />
+		           	</p:row>
+		           	<p:row>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}" 
+		               			  style="width:5%; text-align:center; white-space:normal;" />
+		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}" 
+		               			  style="width:10%; white-space:normal;" />
 		           	</p:row>
 		       	</p:columnGroup>
 				
 				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 								   process="@this" update="@([id$=suppDetailsPopupId])">
+					   <f:setPropertyActionListener value="#{true}"
+												   	 target="#{supplierDetailBackingBean.hasBod}" />
 						<f:setPropertyActionListener value="#{shortlistedSupp.qtEvaluationResult.scQtProposal}"
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
@@ -215,14 +224,15 @@
 				<p:column rendered="#{false}">
 					<h:outputText value="" />
 				</p:column>
-				
-				<p:column style="text-align:center;">
-					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
-											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
-						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
-	         		</p:commandLink> 
-				</p:column>
+				<ui:remove> #11134
+					<p:column style="text-align:center;">
+						<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
+												 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  
+			         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+		         		</p:commandLink> 
+					</p:column>
+				</ui:remove>
 				
 				<p:column style="text-align:center;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
@@ -233,7 +243,11 @@
 				
 				<p:column style="text-align:left;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
-				</p:column>				
+				</p:column>	
+				
+				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
+					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
+				</p:column>			
 								
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
 						  disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
@@ -241,7 +255,7 @@
 														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
 														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
 														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
-			</p:dataTable>		 	    
+			</p:dataTable>							 	    
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
@@ -253,7 +267,7 @@
 					
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code.info']}" style="width:5%; white-space:normal; text-align:center;"/>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -270,23 +284,27 @@
 		               		</f:facet>
 		               	</p:column>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:5%; white-space:normal;"/>
-		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.ranking']}" 
-		               			  style="width:5%; text-align:center; white-space:normal;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
-		               			  style="width:10%; white-space:normal;" />		               	
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
-		               			  rendered="#{showSelectionColumn}" />
-		           	</p:row>
-		           	<p:row>
-		              <p:column colspan="1" style="width:7%; white-space:normal;">
+		               	<p:column rowspan="2" style="width:7%; white-space:normal;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 							</f:facet>
 						</p:column>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
+		                <p:column rowspan="2" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
+     		            <ui:remove>   
+     		            <p:column rowspan="2" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
+     		            </ui:remove>
+		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" 
+		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>		               	
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
+		               			  rendered="#{showSelectionColumn}" />
+		           	</p:row>
+		           	<p:row>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}" 
+		               			  style="width:5%; text-align:center; white-space:normal;" />
+		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}" 
+		               			  style="width:10%; white-space:normal;" />
 		           	</p:row>
 		       	</p:columnGroup>
 				
@@ -390,13 +408,15 @@
 					<h:outputText value="" />
 				</p:column>
 				
-				<p:column style="text-align:center;">
-					<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
-											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
-						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
-	         		</p:commandLink> 
-				</p:column>
+				<ui:remove> #11134
+					<p:column style="text-align:center;">
+						<p:commandLink action="#{suppFinalizationBackingBean.showBoardofDirectors(
+												 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"  
+			         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" />
+		         		</p:commandLink> 
+					</p:column>
+				</ui:remove>
 				
 				<p:column style="text-align:center;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRank}">
@@ -407,7 +427,12 @@
 				
 				<p:column style="text-align:left;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
-				</p:column>				
+				</p:column>
+				
+				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
+					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
+				</p:column>	
+								
 				<ui:remove>
 					Enhancement #19336 START #142
 				</ui:remove>				
@@ -428,8 +453,3 @@
 	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 	
 </ui:composition>
-
-
-
-
-<!-- ***25201 -->
