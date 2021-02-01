@@ -87,12 +87,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.color']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
-				<td><p:autoComplete
+				<!-- 20210201@Jacky - Bug#30013 - Start -->
+				<td><p:autoComplete scrollHeight="250" size="20" 
 						value="#{unspscCodeBackingBean.managedBean.selectedColor}"
 						id="colorPojo"
 						completeMethod="#{unspscCodeBackingBean.autoCompleteColor}"
 						var="color" itemLabel="#{color.colorCode}#{color.colorName==null ? '' : ' - '}#{color.colorName}" itemValue="#{color}"
 						converter="cmColor" forceSelection="true" /></td>
+				<!-- 20210201@Jacky - Bug#30013 - End -->
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestColor}">
 						<p:ajax listener="#{unspscCodeBackingBean.requestNewColor}"

@@ -3848,6 +3848,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					suggestions.add(type);
 				}
 			}
+			//20210201@Jacky - Bug#30013 - Start
+			if(type.getTypeCode() != null){
+				if(type.getTypeCode().toLowerCase().startsWith(query.toLowerCase())){
+					suggestions.add(type);
+				}
+			}
+			//20210201@Jacky - Bug#30013 - Start
 		}
 
 		return suggestions;
@@ -3865,6 +3872,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					suggestions.add(brand);
 				}
 			}
+			//20210201@Jacky - Bug#30013 - Start
+			if(brand.getBrandCode() != null){
+				if(brand.getBrandCode().toLowerCase().startsWith(query.toLowerCase())){
+					suggestions.add(brand);
+				}
+			}
+			//20210201@Jacky - Bug#30013 - End
 		}
 
 		return suggestions;
@@ -3882,6 +3896,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					suggestions.add(brand);
 				}
 			}
+			//20210201@Jacky - Bug#30013 - Start
+			if(brand.getMeasurementCode() != null){
+				if(brand.getMeasurementCode().toLowerCase().startsWith(query.toLowerCase())){
+					suggestions.add(brand);
+				}
+			}
+			//20210201@Jacky - Bug#30013 - End
 		}
 
 		return suggestions;
@@ -3899,6 +3920,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					suggestions.add(color);
 				}
 			}
+			//20210201@Jacky - Bug#30013 - Start
+			if(color.getColorCode() != null){
+				if(color.getColorCode().toLowerCase().startsWith(query.toLowerCase())){
+					suggestions.add(color);
+				}
+			}
+			//20210201@Jacky - Bug#30013 - End
 		}
 
 		return suggestions;
