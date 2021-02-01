@@ -140,9 +140,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private String agreementZipFileName = null;
 	private String agreementZipFilePath = null;
 	
+	//26686 start
 	private String contractAmtChange = null;
 	private String gstAmtChange = null;
-	private String sTaxAmtChange = null;
+	private String sTaxAmtChange = null;	
+	//26686 end
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -1026,10 +1028,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = null;
 		UserResDTO resDTO = null;
-		//#26686 - start(Declare and initialize variable)
-		BigDecimal result = BigDecimal.ZERO;
-		int res;		
-		//#26686 - end
 		
 		try {
 
@@ -1039,241 +1037,19 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 
 			if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
-				reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
-			}			
-			//#26686 - start (Add condition for approval limit)	
+				reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());			
+				}	
 			
-			log.info(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentId());
-			log.info(getManagedBean().getContractVer().getCtContractAmount().getContractAmountId());
+			//#26686 - start 
+			BigDecimal approvalLimit;
+			if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
+				determineContractChanges();					
+				approvalLimit = approvalLimit();
+			} else {
+				approvalLimit = getContractAmt().add(getGstAmt().add(getStaxAmt()));
+			}					
 			
-			log.info("updatedContractAmount : " + getContractAmt());
-			log.info("updatedGstAmount : " + getGstAmt());
-			log.info("updatedStaxAmount : " + getStaxAmt());
-			log.info("additionalContract : " + getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount());
-			log.info("newGstAmount : " + getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount());
-			log.info("newStaxAmount : " + getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
-
-			//Determine the type of changes
-			if(((getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).compareTo(BigDecimal.ZERO)) != 0){				
-				res = (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).compareTo(BigDecimal.ZERO);
-				
-				if(res == 1){
-					contractAmtChange = "Add";
-				}else if(res == -1){
-					contractAmtChange = "Deduct";
-				}
-				
-				if(((getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO)) != 0){
-					res = (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO);
-					
-					if(res == 1){
-						gstAmtChange = "Add";
-					}else if(res == -1){
-						gstAmtChange = "Deduct";
-					}
-					
-					if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
-						res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
-						
-						if(res == 1){
-							sTaxAmtChange = "Add";
-						}else if(res == -1){
-							sTaxAmtChange = "Deduct";
-						}
-					}else{
-						sTaxAmtChange = "N/A";
-					}
-				}else{
-					gstAmtChange = "N/A";
-					
-					if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
-						res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
-						
-						if(res == 1){
-							sTaxAmtChange = "Add";
-						}else if(res == -1){
-							sTaxAmtChange = "Deduct";
-						}
-					}else{
-						sTaxAmtChange = "N/A";
-					}
-				}
-			}else{
-				contractAmtChange = "N/A";
-				
-				if(((getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO)) != 0){
-					res = (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO);
-					
-					if(res == 1){
-						gstAmtChange = "Add";
-					}else if(res == -1){
-						gstAmtChange = "Deduct";
-					}
-					
-					if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
-						res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
-						
-						if(res == 1){
-							sTaxAmtChange = "Add";
-						}else if(res == -1){
-							sTaxAmtChange = "Deduct";
-						}
-					}else{
-						sTaxAmtChange = "N/A";
-					}
-				}else{
-					gstAmtChange = "N/A";
-					
-					if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
-						res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
-						
-						if(res == 1){
-							sTaxAmtChange = "Add";
-						}else if(res == -1){
-							sTaxAmtChange = "Deduct";
-						}
-					}else{
-						sTaxAmtChange = "N/A";
-					}
-				}
-			}				
-			
-			//Calculation of new approval limit
-			
-			BigDecimal newAdditionTotal = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount())); 
-			BigDecimal newAdditionTax = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
-			BigDecimal newAdditionContract = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount();
-			
-			if(contractAmtChange == "Add"){
-				
-				if(gstAmtChange == "Add"){					
-					if(sTaxAmtChange == "Add"){
-						//Addition in contract and tax
-						result = newAdditionTotal;
-					}else{
-						//Addition in contract and gst, no changes in SST
-						result = newAdditionContract.add(newAdditionTax);
-					}
-				}else if((gstAmtChange == "Deduct" && sTaxAmtChange == "Add") || (gstAmtChange == "Add" && sTaxAmtChange == "Deduct")){
-					//BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
-					
-					res = (getGstAmt().add(getStaxAmt())).compareTo(newAdditionTax);
-					
-					//Addition in contract,Deduction in tax
-					if(res == -1){
-						result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
-					}
-					//Addition in contract and tax
-					else if(res == 1){						
-						result = newAdditionTotal; 
-					}
-				}else if(gstAmtChange == "Deduct"){
-					if(sTaxAmtChange == "Deduct"){
-						//Addition in contract, deduction in tax
-						result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
-					}else{
-						//Addition in contract, deduction in GST,no changes in sst
-						result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
-					}
-				}else if(gstAmtChange == "N/A"){					
-					if(sTaxAmtChange == "Add"){
-						//Addition in contract, no changes in GST,Addition in SST
-						result = newAdditionTotal;
-					}else if(sTaxAmtChange == "Deduct"){
-						//Addition in contract, no changes in GST,Deduction in SST																	
-						result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
-					}else{
-						//Addition in contract but no changes in tax
-						result = newAdditionContract;
-					}
-				}
-			}else if(contractAmtChange == "Deduct"){
-				
-				if(gstAmtChange == "Deduct"){
-					if(sTaxAmtChange == "Deduct"){
-						//Deduction in contract and tax	
-
-						result = (getContractAmt().add(getGstAmt()).add(getStaxAmt())).add(newAdditionTotal);
-					}else{
-						//Deduction in contract and gst, no changes in sst
-						result = (getContractAmt().add(getGstAmt()).add(getStaxAmt())).add(newAdditionTotal);					}
-				}else if((gstAmtChange == "Deduct" && sTaxAmtChange == "Add") || (gstAmtChange == "Add" && sTaxAmtChange == "Deduct")){
-					BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
-					
-					res = (getGstAmt().add(getStaxAmt())).compareTo(newTaxAmount);
-					
-					//Deduction in contract,addition in tax
-					if(res == 1){	
-												
-						result = (getContractAmt().add(newAdditionContract)).add(newAdditionTax);
-					}
-					//Deduction in contract and tax
-					else if(res == -1){						
-						result = getContractAmt().add(getGstAmt().add(getStaxAmt())).add(newAdditionTotal);
-					}					
-				}else if(gstAmtChange == "Add"){
-					if(sTaxAmtChange == "Add"){
-						//Deduction in contract, addition in tax
-						result = (getContractAmt().add(newAdditionContract)).add(newAdditionTax);
-					}else{
-						//Deduction in contract, addition in gst, no changes in SST
-						result = (getContractAmt().add(newAdditionContract)).add(newAdditionTax);
-					}
-				}else if(gstAmtChange == "N/A"){
-					if(sTaxAmtChange == "Add"){
-						//Deduction in contract, no changes in gst,Addition in SST
-						result = (getContractAmt().add(newAdditionContract.add(newAdditionTax)));
-					}else if(sTaxAmtChange == "Deduct"){
-						//Deduction in contract, no changes in gst,Deduction in SST						
-						result = (getContractAmt().add(getStaxAmt().add(getGstAmt()))).add(newAdditionTotal);
-					}else{
-						//Deduction in contract but no changes in tax							
-						result = getContractAmt().add(newAdditionContract);
-					}
-				}
-			}else if(contractAmtChange == "N/A"){
-				if(gstAmtChange == "Add"){
-					if(sTaxAmtChange == "Add"){
-						//No changes in contract, addition in tax
-						result = newAdditionTax;
-					}else{
-						//No changes in contract, addition in gst, no changes in SST
-						result = newAdditionTax;
-					}
-				}else if((gstAmtChange == "Add" && sTaxAmtChange == "Deduct") || (gstAmtChange == "Deduct" && sTaxAmtChange == "Add")){					
-					//BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());					
-					res = (getGstAmt().add(getStaxAmt())).compareTo(newAdditionTax);
-					
-					if(res == 1){
-						//No changes in contract, addition in tax
-						result = newAdditionTax;
-					}else if(res == -1){
-						//No changes in contract, deduction in tax						
-						result = (getGstAmt().add(getStaxAmt())).add(newAdditionTax);
-					}					
-				}else if(gstAmtChange == "Deduct"){
-					if(sTaxAmtChange == "Deduct"){
-						//No changes in contract, deduction in tax
-						result = (getGstAmt().add(getStaxAmt())).add(newAdditionTax);
-					}else{
-						//No changes in contract, deduction in gst, no changes in sst
-						result = (getGstAmt().add(getStaxAmt())).add(newAdditionTax);
-					}
-				}else if(gstAmtChange == "N/A"){
-					if(sTaxAmtChange == "Add"){
-						//No change in contract and gst, addition in sst
-						result = newAdditionTax;
-					}else if(sTaxAmtChange == "Deduct"){
-						//No change in contract and gst, deduction in sst
-						result = (getStaxAmt().add(getGstAmt())).add(newAdditionTax);
-					}else{
-						//No changes in all
-						result = getContractAmt().add(getGstAmt().add(getStaxAmt()));
-					}	
-				}			
-			}			
-			log.info("Result : "+result);
-			reqDTO.setApprovalLimit(result);
+			reqDTO.setApprovalLimit(approvalLimit);
 			//#26686 - end
 			resDTO = userSO.retrieveUserListByRole(reqDTO);			
 
@@ -2822,4 +2598,236 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 		commonDownloadUtil(filePath.toString(), ContractConst.DOCNAME_AGREEMENT_GUIDELINE);
 	}
+	
+	//#26686 - start
+	public void determineContractChanges(){
+		int res;
+		
+		//Determine the type of changes
+		if(((getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).compareTo(BigDecimal.ZERO)) != 0){				
+			res = (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).compareTo(BigDecimal.ZERO);
+			
+			if(res == 1){
+				contractAmtChange = ContractConst.ADD_AMOUNT;
+			}else if(res == -1){
+				contractAmtChange = ContractConst.DEDUCT_AMOUNT;
+			}
+			
+			if(((getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO)) != 0){
+				res = (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO);
+				
+				if(res == 1){
+					gstAmtChange = ContractConst.ADD_AMOUNT;
+				}else if(res == -1){
+					gstAmtChange = ContractConst.DEDUCT_AMOUNT;
+				}
+				
+				if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
+					res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
+					
+					if(res == 1){
+						sTaxAmtChange = ContractConst.ADD_AMOUNT;
+					}else if(res == -1){
+						sTaxAmtChange = ContractConst.DEDUCT_AMOUNT;
+					}
+				}else{
+					sTaxAmtChange = ContractConst.NO_CHANGE_AMOUNT; 
+				}
+			}else{
+				gstAmtChange = ContractConst.NO_CHANGE_AMOUNT;
+				
+				if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
+					res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
+					
+					if(res == 1){
+						sTaxAmtChange = ContractConst.ADD_AMOUNT;
+					}else if(res == -1){
+						sTaxAmtChange = ContractConst.DEDUCT_AMOUNT;
+					}
+				}else{
+					sTaxAmtChange = ContractConst.NO_CHANGE_AMOUNT;
+				}
+			}
+		}else{
+			contractAmtChange = ContractConst.NO_CHANGE_AMOUNT;
+			
+			if(((getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO)) != 0){
+				res = (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount()).compareTo(BigDecimal.ZERO);
+				
+				if(res == 1){
+					gstAmtChange = ContractConst.ADD_AMOUNT;
+				}else if(res == -1){
+					gstAmtChange = ContractConst.DEDUCT_AMOUNT;
+				}
+				
+				if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
+					res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
+					
+					if(res == 1){
+						sTaxAmtChange = ContractConst.ADD_AMOUNT;
+					}else if(res == -1){
+						sTaxAmtChange = ContractConst.DEDUCT_AMOUNT;
+					}
+				}else{
+					sTaxAmtChange = ContractConst.NO_CHANGE_AMOUNT;
+				}
+			}else{
+				gstAmtChange = ContractConst.NO_CHANGE_AMOUNT;
+				
+				if(((getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO)) != 0){						
+					res = (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount()).compareTo(BigDecimal.ZERO);
+					
+					if(res == 1){
+						sTaxAmtChange = ContractConst.ADD_AMOUNT;
+					}else if(res == -1){
+						sTaxAmtChange = ContractConst.DEDUCT_AMOUNT;
+					}
+				}else{
+					sTaxAmtChange = ContractConst.NO_CHANGE_AMOUNT;
+				}
+			}
+		}		
+	}
+	
+	public BigDecimal approvalLimit(){
+		//Calculation of new approval limit bases on the changes
+		BigDecimal result = BigDecimal.ZERO;
+		int res;
+		BigDecimal newAdditionTotal = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount())); 
+		BigDecimal newAdditionTax = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
+		BigDecimal newAdditionContract = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount();
+		
+		if(contractAmtChange.equals(ContractConst.ADD_AMOUNT)){
+			
+			if(gstAmtChange.equals(ContractConst.ADD_AMOUNT)){					
+				if(sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)){
+					//Addition in contract and tax
+					result = newAdditionTotal;
+				}else{
+					//Addition in contract and gst, no changes in SST
+					result = newAdditionContract.add(newAdditionTax);
+				}
+			}else if((gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT) && sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)) || (gstAmtChange.equals(ContractConst.ADD_AMOUNT) && sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT))){
+				//BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
+				
+				res = (getGstAmt().add(getStaxAmt())).compareTo(newAdditionTax);
+				
+				//Addition in contract,Deduction in tax
+				if(res == -1){
+					result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
+				}
+				//Addition in contract and tax
+				else if(res == 1){						
+					result = newAdditionTotal; 
+				}
+			}else if(gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+					//Addition in contract, deduction in tax
+					result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
+				}else{
+					//Addition in contract, deduction in GST,no changes in sst
+					result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
+				}
+			}else if(gstAmtChange.equals(ContractConst.NO_CHANGE_AMOUNT)){					
+				if(sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)){
+					//Addition in contract, no changes in GST,Addition in SST
+					result = newAdditionTotal;
+				}else if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+					//Addition in contract, no changes in GST,Deduction in SST																	
+					result = newAdditionContract.add(getGstAmt().add(getStaxAmt()).add(newAdditionTax));
+				}else{
+					//Addition in contract but no changes in tax
+					result = newAdditionContract;
+				}
+			}
+		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+			
+			if(gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+					//Deduction in contract and tax	
+
+					result = (getContractAmt().add(getGstAmt()).add(getStaxAmt())).add(newAdditionTotal);
+				}else{
+					//Deduction in contract and gst, no changes in sst
+					result = (getContractAmt().add(getGstAmt()).add(getStaxAmt())).add(newAdditionTotal);
+					}
+			}else if((gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT) && sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)) || (gstAmtChange.equals(ContractConst.ADD_AMOUNT) && sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT))){
+				BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
+				
+				res = (getGstAmt().add(getStaxAmt())).compareTo(newTaxAmount);
+				
+				//Deduction in contract,addition in tax
+				if(res == 1){	
+											
+					result = (getContractAmt().add(newAdditionContract)).add(newAdditionTax);
+				}
+				//Deduction in contract and tax
+				else if(res == -1){						
+					result = getContractAmt().add(getGstAmt().add(getStaxAmt())).add(newAdditionTotal);
+				}					
+			}else if(gstAmtChange.equals(ContractConst.ADD_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)){
+					//Deduction in contract, addition in tax
+					result = (getContractAmt().add(newAdditionContract)).add(newAdditionTax);
+				}else{
+					//Deduction in contract, addition in gst, no changes in SST
+					result = (getContractAmt().add(newAdditionContract)).add(newAdditionTax);
+				}
+			}else if(gstAmtChange.equals(ContractConst.NO_CHANGE_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)){
+					//Deduction in contract, no changes in gst,Addition in SST
+					result = (getContractAmt().add(newAdditionContract.add(newAdditionTax)));
+				}else if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+					//Deduction in contract, no changes in gst,Deduction in SST						
+					result = (getContractAmt().add(getStaxAmt().add(getGstAmt()))).add(newAdditionTotal);
+				}else{
+					//Deduction in contract but no changes in tax							
+					result = getContractAmt().add(newAdditionContract);
+				}
+			}
+		}else if(contractAmtChange.equals(ContractConst.NO_CHANGE_AMOUNT)){
+			if(gstAmtChange.equals(ContractConst.ADD_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)){
+					//No changes in contract, addition in tax
+					result = newAdditionTax;
+				}else{
+					//No changes in contract, addition in gst, no changes in SST
+					result = newAdditionTax;
+				}
+			}else if((gstAmtChange.equals(ContractConst.ADD_AMOUNT) && sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)) || (gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT) && sTaxAmtChange.equals(ContractConst.ADD_AMOUNT))){					
+				//BigDecimal newTaxAmount = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());					
+				res = (getGstAmt().add(getStaxAmt())).compareTo(newAdditionTax);
+				
+				if(res == 1){
+					//No changes in contract, addition in tax
+					result = newAdditionTax;
+				}else if(res == -1){
+					//No changes in contract, deduction in tax						
+					result = (getGstAmt().add(getStaxAmt())).add(newAdditionTax);
+				}					
+			}else if(gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+					//No changes in contract, deduction in tax
+					result = (getGstAmt().add(getStaxAmt())).add(newAdditionTax);
+				}else{
+					//No changes in contract, deduction in gst, no changes in sst
+					result = (getGstAmt().add(getStaxAmt())).add(newAdditionTax);
+				}
+			}else if(gstAmtChange.equals(ContractConst.NO_CHANGE_AMOUNT)){
+				if(sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)){
+					//No change in contract and gst, addition in sst
+					result = newAdditionTax;
+				}else if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+					//No change in contract and gst, deduction in sst
+					result = (getStaxAmt().add(getGstAmt())).add(newAdditionTax);
+				}else{
+					//No changes in all
+					result = getContractAmt().add(getGstAmt().add(getStaxAmt()));
+				}	
+			}			
+		}				
+		return result;
+	}
+	
+	//#26686 - end
 }
