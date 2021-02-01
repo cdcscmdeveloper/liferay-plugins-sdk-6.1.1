@@ -9607,7 +9607,7 @@ public class SmApplicationBackingBean extends
 						List<SmApplInquiryDocFile> smApplInquiryDocFiles = new ArrayList<SmApplInquiryDocFile>();
 
 						for (SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()) {
-
+							if(!smApplSupportDoc.isVerified()){
 							SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
 							smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
 							smApplSupportDocInquiry.setPoRemarks(smApplSupportDoc.getPoRemarks());
@@ -9632,6 +9632,7 @@ public class SmApplicationBackingBean extends
 
 							smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
 							smApplSupportDocInquiries.add(smApplSupportDocInquiry);
+							}
 						}
 						this.getManagedBean().getPoToSupplierInquiry().setSmApplSupportDocInquiries(smApplSupportDocInquiries);
 						// #14530 - End
