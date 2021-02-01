@@ -730,7 +730,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PpProcurementItem> tempClonedPpItemList = new ArrayList<PpProcurementItem>();
 				
         for (PpProcurementItem ppItem : ppItems) {
-			if (!this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null) {//28012021@27624 - start
+			if (!this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null) {//01022021@27624 - start
+				tempClonedPpItemList.add(ppItem);
+			} else if (this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null
+					&& this.getManagedBean().getPlanSearchBean().getTitleOrDesc().isEmpty()) {
 				tempClonedPpItemList.add(ppItem);
 			} else if (this.getManagedBean().isPlanDetailSearch() && ppItem.getFromPpItem() != null
 					&& !this.getManagedBean().getPlanSearchBean().getTitleOrDesc().isEmpty()) {
@@ -738,7 +741,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			} else {
 				tempOriginalPpItemList.add(ppItem);
         }
-       }//28012021@27624 - end
+       }//01022021@27624 - end
         
         Collections.sort(tempOriginalPpItemList, new Comparator<PpProcurementItem>() {
  		    @Override
@@ -1456,7 +1459,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setSelectable(true); //enabled checkbox
 							//25549@09102020 - start
 							
-							ppItem.setAllowAnotherPindaan(false); // 31012021@24975
+							ppItem.setAllowAnotherPindaan(false); // 31012021@27624
 							log.info("item yg menanti: "+ppItem.getProcurementTitle()+
 									",isEditable= " +ppItem.isEditable());
 							//25549@09102020 - end
@@ -6396,8 +6399,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
-	    		/*newPpItem.getProcurementCat().setParameterId(originalPpItem.getProcurementCat().getParameterId());
-		    	newPpItem.getProcurementType().setParameterId(originalPpItem.getProcurementType().getParameterId());*/
+	    		/*newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
+		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());*/
 	    		newPpItem.setProcurementCat(new PmParameter());
 	    		newPpItem.setProcurementType(new PmParameter());
 	    		 //24975@06112020@azza - End
