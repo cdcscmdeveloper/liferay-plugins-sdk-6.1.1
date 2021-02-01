@@ -252,7 +252,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 			}
 			List<PmUser> listOfApprover = null;
-			if(reqDTO.isDan()){
+			if(reqDTO.isDan() || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) ){ //  #28956 set approverlist for submit wihout DAN;
 				BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(invoice.getFlRequest().getFulfilmentReqId());
 				reqDTO.setGroupId(invoice.getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverLimit(sumItemAmt);
@@ -610,6 +610,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			else{
 				if(!FLProcessNameConst.REVISE_INVOICE.equals(this.getManagedBean().getTaskName())){
+					//29193
+					FLInvoiceDataType paymentReviseObj = (FLInvoiceDataType)obj;
 					String[] outcome = new String[this.getManagedBean().getOutComes().length + 1];
 					outcome[0] = BpmOutcomeConst.BPM_SAVE;
 					int i = 1;
@@ -617,6 +619,18 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						outcome[i++] = action;
 					}
 					this.getManagedBean().setOutComes(outcome);
+					//29193
+					if(paymentReviseObj.getErrorId() != null ){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(Long.parseLong(paymentReviseObj.getErrorId()));
+						IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+						FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
 				}
 				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
