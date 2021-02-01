@@ -7406,9 +7406,9 @@ public class SmApplicationUtil {
 	 * @param string
 	 *            - role code
 	 */
-	// #29664 - start
+	// #29664 & #29663- start
 	public static void manageAndSaveNewSmRemarksWithRoleCode(Long docId, String docType, String remarks, String roleCode) {
-		System.out.println("roleCode = " + roleCode);
+		System.out.println("manageAndSaveNewSmRemarksWithRoleCode | roleCode = " + roleCode);
 		SmRemark remark = new SmRemark();
 		remark.setDocId(docId);
 		remark.setDocType(docType);
@@ -7422,7 +7422,7 @@ public class SmApplicationUtil {
 		}
 		saveSmRemarks(remark);
 	}
-	// #29664 - end
+	// #29664 & #29663 - end
 
 	/**
 	 * Assign the values and save new sm remarks.
@@ -13568,24 +13568,32 @@ public class SmApplicationUtil {
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());
 		reqDTO.setApplId(supplier.getSmAppl().getApplId());
+		System.out.println("bumiApplId ========== " + bumiApplId);
+		System.out.println("lastApprovedApplId == " + lastApprovedApplId);
+		System.out.println("getSupplierId ======= " + supplier.getSupplierId());
+		System.out.println("getApplId =========== " + supplier.getSmAppl().getApplId());
 		
 		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMofCertsBySupplierIdAndByApplIds(reqDTO, lastApprovedApplId);
 
 		VirtualCertReqDTO mofCert = new VirtualCertReqDTO();
 		if (resDTO != null && resDTO.getSmMofCerts() != null) {
+			System.out.println("getSmMofCerts().size() ==> " + resDTO.getSmMofCerts().size());
 			for (SmMofCert cert : resDTO.getSmMofCerts()) {
 				if (cert.getSmAppl().getApplId() == bumiApplId) {
+					System.out.println("1. cert.getSmAppl().getApplId() ==> " + cert.getSmAppl().getApplId());
 					// update record_status = 4
 					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
 					mofCert.setMofCert(cert);
 				}
 				if (cert.getSmAppl().getApplId() == lastApprovedApplId) {
+					System.out.println("2. cert.getSmAppl().getApplId() ==> " + cert.getSmAppl().getApplId());
 					// update record_status = 1
 					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					mofCert.setMofCert(cert);
 				}
 				//28774 - temp stopper
 				if(mofCert.getMofCert() != null){
+					System.out.println("3. mofCert.getMofCert().getMofCertId() ==> " + mofCert.getMofCert().getMofCertId());
 					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
 				}
 			}
