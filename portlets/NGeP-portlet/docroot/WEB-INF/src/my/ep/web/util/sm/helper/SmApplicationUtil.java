@@ -201,6 +201,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.sm.applicationView.ViewSmApplManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -11550,11 +11551,6 @@ public class SmApplicationUtil {
 						}
 					});
 
-			// set for latest inquiry
-			SmApplInquiry currentInquiry = bean.getSmAppl()
-					.getSmApplInquiries().get(0);
-			bean.setPoToSupplierInquiry(currentInquiry);
-
 			// if PO (Inquiry Section)
 			if (bean.isPoUser()) {
 
@@ -11579,6 +11575,60 @@ public class SmApplicationUtil {
 			else if (bean.isSupplierUser()) {
 				bean.getPoToSupplierInquiry()
 						.setResponseText(StringUtils.EMPTY);
+			}
+			//14530
+			else if (bean.isApproverUser()){
+				// set for inquiry histories
+				bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+				for (SmApplInquiry inquiry : bean.getSmAppl()
+						.getSmApplInquiries()) {
+					if (!StringUtils.isBlank(inquiry.getInquirySubject())
+							&& inquiry
+									.getInquirySubject()
+									.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+						bean.getPoSupplierInquiryHistory().add(inquiry);
+					}
+				}
+			}
+		} else {
+			// initialize po inquiry
+			bean.setPoToSupplierInquiry(new SmApplInquiry());
+		}
+	}
+	
+	//14530
+	public static void initPoInquiryApplHistory(ViewSmApplManagedBean bean,
+			boolean isNewInquiry) {
+		bean.setPoToSupplierInquiry(null);
+
+		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
+				.getSmApplInquiries())) {
+
+			// sort created date descendent
+			Collections.sort(bean.getSmAppl().getSmApplInquiries(),
+					new Comparator<SmApplInquiry>() {
+						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+							if (o1.getCreatedDate() == null
+									|| o2.getCreatedDate() == null)
+								return 0;
+							return o2.getCreatedDate().compareTo(
+									o1.getCreatedDate());
+						}
+					});
+			
+			//14530
+			if (bean.isSupplierUser()){
+				// set for inquiry histories
+				bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+				for (SmApplInquiry inquiry : bean.getSmAppl()
+						.getSmApplInquiries()) {
+					if (!StringUtils.isBlank(inquiry.getInquirySubject())
+							&& inquiry
+									.getInquirySubject()
+									.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+						bean.getPoSupplierInquiryHistory().add(inquiry);
+					}
+				}
 			}
 		} else {
 			// initialize po inquiry
