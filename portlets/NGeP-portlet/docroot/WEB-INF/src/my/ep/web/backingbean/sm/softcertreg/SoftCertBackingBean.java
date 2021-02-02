@@ -199,6 +199,27 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @return String
 	 */
 	public void navigateToPaymentPage() {
+		// #29630 - start
+		boolean result = false;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(getManagedBean().getSmAppl().getSmSupplier().getSupplierId());
+		reqDTO.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier()); 
+		if (!getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			for (SoftcertUploadSuppDocVO softCertList : getManagedBean().getSoftcertUploadSuppDocList()) {
+				reqDTO.setUserId(softCertList.getPersonnel().getPmUser().getUserId());
+				SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO()
+						.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+				if (softcertRequest != null && softcertRequest.getPmDigiCert() != null && softcertRequest.getPmDigiCert().getValidFrom() != null
+						&& softcertRequest.getPmDigiCert().getValidTo() != null) {
+					result = DateUtils.isDateOvarlapping(softcertRequest.getPmDigiCert().getValidFrom(),
+							softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
+				}
+				if (!result) {
+					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+				}
+			}
+		}
+		// #29630 - end
 		if (getManagedBean().getSuppDocMode().equals(
 				SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateUploadSuppDoc();
