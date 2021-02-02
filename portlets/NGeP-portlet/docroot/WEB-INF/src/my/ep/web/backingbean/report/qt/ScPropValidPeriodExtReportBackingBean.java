@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.report.qt;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 
 import javax.annotation.PostConstruct;
@@ -55,9 +56,11 @@ public class ScPropValidPeriodExtReportBackingBean extends QtReportBackingBean<S
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		ScReportFieldsSearchBean reportFieldBean = this.getManagedBean().getScReportSearchBean();
 
+		String fromDate = new SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean.getScPublishFromDate());
+		String toDate = new SimpleDateFormat("dd/MM/yyyy").format(reportFieldBean.getScPublishToDate());
 		params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
-		params.put(QtReportConst.PARAM_SUBMIT_FR_DT, reportFieldBean.getScPublishFromDate().toString());
-		params.put(QtReportConst.PARAM_SUBMIT_TO_DT, reportFieldBean.getScPublishToDate().toString());
+		params.put(QtReportConst.PARAM_SUBMIT_FR_DT, fromDate);
+		params.put(QtReportConst.PARAM_SUBMIT_TO_DT, toDate);
 		
 		if (null != reportFieldBean.getPtjProfile()) {
 			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getPtjProfile().getOrgCode());
