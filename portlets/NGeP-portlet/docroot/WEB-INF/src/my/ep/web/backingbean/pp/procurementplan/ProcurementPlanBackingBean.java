@@ -6399,10 +6399,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
-	    		/*newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
-		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());*/
-	    		newPpItem.setProcurementCat(new PmParameter());
-	    		newPpItem.setProcurementType(new PmParameter());
+	    		newPpItem.setProcurementCat(this.onSelectSetCategory(originalPpItem.getProcurementCat().getParameterId(), index));
+		    	newPpItem.setProcurementType(this.onSelectSetCategoryType(originalPpItem.getProcurementType().getParameterId(), index));		    	
 	    		 //24975@06112020@azza - End
 		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
 		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
@@ -8788,7 +8786,32 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		log.info("End checkUpdateForReasonIndicator");
 	    // 24975@19112020 - start
-	}	
+	}
+	
+	public PmParameter onSelectSetCategory(Long id, int index){
+		log.info("The category id " + id);
+		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
+				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementCat(pmProcCat.getProcurementCat());
+				break;
+			}
+		}
+		return this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat();
+	}
+	
+	public PmParameter onSelectSetCategoryType(Long id, int index){
+		log.info("The category type id " + id);
+		Long procurementCatId = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat().getParameterId();
+		List<PmProcurementCatType> pmProcCats= 	PpCommonUtil.retrieveProcurementTypeListByCatId(getFacesScopes().getUserLocale().getLanguage(), procurementCatId);
+		for(PmProcurementCatType pmProcCat : pmProcCats ){
+			if(pmProcCat.getProcurementType().getParameterId().equals(id)){
+				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementType(pmProcCat.getProcurementType());
+				break;
+			}
+		}
+		return this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementType();
+	}
 	
 }
 	   
