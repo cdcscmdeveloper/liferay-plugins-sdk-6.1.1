@@ -214,7 +214,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				reqDTO.setUserId(softCertList.getPersonnel().getPmUser().getUserId());
 				SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO()
 						.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
-				if (softcertRequest.getPmDigiCert() != null && softcertRequest.getPmDigiCert().getValidFrom() != null
+				if (softcertRequest != null && softcertRequest.getPmDigiCert() != null && softcertRequest.getPmDigiCert().getValidFrom() != null
 						&& softcertRequest.getPmDigiCert().getValidTo() != null) {
 					result = DateUtils.isDateOvarlapping(softcertRequest.getPmDigiCert().getValidFrom(),
 							softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
