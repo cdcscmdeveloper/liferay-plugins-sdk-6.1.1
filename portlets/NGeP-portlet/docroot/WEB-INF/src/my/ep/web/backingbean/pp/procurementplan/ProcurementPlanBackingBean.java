@@ -245,13 +245,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 ThemeDisplay theme = (ThemeDisplay) pr.getAttribute(WebKeys.THEME_DISPLAY);
 			 Layout selectedLayout = LayoutLocalServiceUtil.getLayout(Long.valueOf(plid));
 			 String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
-			 if(urlliferay.contains("plan-maintenance"))
+			 if(urlliferay.contains("plan-maintenance")){//2022021@27624 - start
 				 this.getManagedBean().setAudit(false);
-			 else if(urlliferay.contains("procurement-plan-search"))
+		       }else if(urlliferay.contains("procurement-plan-search")){
 				 this.getManagedBean().setAudit(true);
 			 //if procurement-plan-search = audit /web/dashboard/procurement-plan-search 
 			 //if plan-maintenance = plan maintenance /web/dashboard/plan-maintenance
-		 }
+		   }
+		 }//2022021@27624 - end
 		 catch(Exception e){
 			 log.error(e.getStackTrace());
 		 }
