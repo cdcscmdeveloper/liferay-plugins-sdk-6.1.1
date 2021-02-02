@@ -1043,8 +1043,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			//#26686 - start 
 			BigDecimal approvalLimit;
 			if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
-				determineContractChanges();					
-				approvalLimit = approvalLimit();
+				setContractChanges();					
+				approvalLimit = setApprovalLimit();
 			} else {
 				approvalLimit = getContractAmt().add(getGstAmt().add(getStaxAmt()));
 			}					
@@ -1064,6 +1064,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			userSO = null;
 			reqDTO = null;
 			resDTO = null;
+			//#26686 start- reset value from global variable
+			contractAmtChange = null;
+			gstAmtChange = null;
+			sTaxAmtChange = null;
+			//#26686 end
 		}
 		return items;
 	}
@@ -2600,8 +2605,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	}
 	
 	//#26686 - start
-	public void determineContractChanges(){
-		int res;
+	public void setContractChanges(){
+		int res = 0;
 		
 		//Determine the type of changes
 		if(((getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount()).compareTo(BigDecimal.ZERO)) != 0){				
@@ -2689,10 +2694,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}		
 	}
 	
-	public BigDecimal approvalLimit(){
+	public BigDecimal setApprovalLimit(){
 		//Calculation of new approval limit bases on the changes
 		BigDecimal result = BigDecimal.ZERO;
-		int res;
+		int res = 0;
 		BigDecimal newAdditionTotal = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount())); 
 		BigDecimal newAdditionTax = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().add(getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount());
 		BigDecimal newAdditionContract = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount();
