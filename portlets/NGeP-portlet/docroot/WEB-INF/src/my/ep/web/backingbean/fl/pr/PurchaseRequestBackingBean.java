@@ -134,6 +134,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -1697,12 +1698,27 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	}
 	//29555 start
 		public void getLoginUserName() {
+			IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			FlActor actor = null;
+			try{
+			actor = fulfilmentSO.retrieveFlActors(
+					getManagedBean().getFulfilmentRequest().getDocType(),
+					getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
+					FulfilmentConst.Requistioner_Role_Code);
+			}catch(Exception  e){
+				actor = null;
+			}
+			if(actor != null){
+				getManagedBean().setPreparedBy(actor.getUserName());
+				log.info("29555: actor exist");
+			}else{
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 			if(userResDTO.getPmUser().getUserName() != null){
 			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+			}
 			}
 		}
 	//29555 end
