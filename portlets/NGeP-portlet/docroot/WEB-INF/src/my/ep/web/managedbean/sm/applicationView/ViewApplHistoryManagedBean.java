@@ -24,7 +24,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -72,7 +72,7 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	private boolean disciplinaryAction;
 	*/
 	//#29482 - Start
-	private SmStaffAcademic smStaffAcademic;
+	private SmPersonnel smPersonnel;
 	//#29482 - End
 
 	public ViewApplHistoryManagedBean() {
@@ -393,11 +393,11 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	//#11641 - End
 	
 	//#29482 - Start
-	public SmStaffAcademic getSmStaffAcademic() {
-		return smStaffAcademic;
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
 	}
-	public void setSmStaffAcademic(SmStaffAcademic smStaffAcademic) {
-		this.smStaffAcademic = smStaffAcademic;
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
 	}
 	//#29482 - End
 }
