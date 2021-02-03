@@ -288,7 +288,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 					partialSubmit="true" process="@this"
 					action="#{amendmentBackingBean.saveContractAmendment('REVISE')}"
-					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					onstart="reviseConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
 				process="@this" update="@form"
