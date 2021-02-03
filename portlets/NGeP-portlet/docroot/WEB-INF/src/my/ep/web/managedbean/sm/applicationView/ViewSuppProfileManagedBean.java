@@ -21,7 +21,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -182,10 +181,6 @@ public class ViewSuppProfileManagedBean extends
 	//29181: Disciplinary Action - start - 26238
 	private boolean editDisciplinaryActionCheckBox;
 	//29181: Disciplinary Action - end - 26238
-	
-	//#29482 - Start
-	private SmStaffAcademic smStaffAcademic;
-	//#29482 - End
 	
 	public ViewSuppProfileManagedBean() {
 
@@ -970,13 +965,5 @@ public class ViewSuppProfileManagedBean extends
 		this.editDisciplinaryActionCheckBox = editDisciplinaryActionCheckBox;
 	}
 	//29181: Disciplinary Action - end - 26238
-	//#29482 - Start
-	public SmStaffAcademic getSmStaffAcademic() {
-		return smStaffAcademic;
-	}
 
-	public void setSmStaffAcademic(SmStaffAcademic smStaffAcademic) {
-		this.smStaffAcademic = smStaffAcademic;
-	}
-	//#29482 - End
 }
