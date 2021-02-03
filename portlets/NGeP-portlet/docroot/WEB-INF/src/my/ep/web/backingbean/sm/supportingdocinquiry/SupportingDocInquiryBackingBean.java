@@ -49,6 +49,10 @@ import org.primefaces.event.FileUploadEvent;
 @RequestScoped
 public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingDocInquiryManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SupportingDocInquiryBackingBean.class);
 	//#11641 - Start
 	private int mandatoryCounter = 1;
@@ -172,6 +176,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	public String submitInquiryResponse(){
 		log.info("**********submitInquiryResponse*********");
 		try{
+			PmUser user = new FacesScopes().getUserSessionBean();
 			log.info("**********submitInquiryResponse*********");
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
@@ -186,6 +191,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setChangedBy(user.getUserId());
 			
 			//#11641 - START
 			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());

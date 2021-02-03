@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -74,7 +73,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "pmTrackingDiaryManagedBean")
@@ -1052,7 +1050,18 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				if (isFilterBySupplier() ) { 
 					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true); 
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
-						reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
+						//START- Bug #29861 
+						if(ParameterConst.DOCTYPE_SUPPLIER_APPLICATION.equalsIgnoreCase(getSelectedDocType())){
+							//(Valid Only for docType = SR (From SM Module)
+							log.info("DOC_TYPE === >>> SR ");
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									"roleCode",
+									SearchOperator.OPERATOR_IN.value(), 
+									getAllSupplierRoleForSM()));	
+						}else{
+							reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
+						}
+						//END - Bug #29861
 					}
 				}
 
@@ -1183,6 +1192,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				.hasRoleUser(RoleCode.BPK_AUDITOR.value())|| fc.hasRoleUser(RoleCode.DESK_OFFICER.value()));
 	}
 	// CR 25790 - End
+	
+	//START- Bug #29861
+	private List<String> getAllSupplierRoleForSM(){
+		List<String> supplierRoles = new ArrayList<String>();
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.FL_USER.value());
+		supplierRoles.add(RoleCode.SUPPLIER_TEMP.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+		return supplierRoles;
+	}
+	//END - Bug #29861
 
 	//start - #25396
 	public boolean isUseViewAsOption() {
