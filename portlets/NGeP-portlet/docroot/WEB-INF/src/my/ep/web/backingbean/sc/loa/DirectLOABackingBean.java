@@ -1138,8 +1138,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId();
 
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
-				&& BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+		if ((QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				&& BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome))
+				||
+				(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)
+				&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome))) {//#30004 Added for LOA_PENDING_SUBMISSION by Vinod
 			// validate questions and item code
 			TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
 			TplSpecMaster serviceSpecMaster = this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
