@@ -3311,13 +3311,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 	}
-
+    
 	/**
 	 * The method used to retrieve the new overall contract amount
 	 * with addition of new contract amount and new gst amount amount.
 	 * 
 	 * @return new overall contract amount
 	 */
+	// Start - #29589
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
@@ -3337,7 +3338,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		return contractAmount;
 	}
-	
+	// End - #29589
 	
   
 	/**
