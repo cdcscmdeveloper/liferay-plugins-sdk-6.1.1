@@ -2628,6 +2628,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}else if("Y".equalsIgnoreCase(statusCode)){
 					return SmCommonUtil.getMessage("lbl.sm.status.y", null);
 				}
+				//start #29935
+				else if("F".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.winding.up.under.cva", null);
+				}
+				else if("G".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing.under.jm.under.cva", null);
+				}
+				else if("J".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing.under.jm", null);
+				}
+				else if("V".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing.under.cva", null);
+				}
+				//end #29935
 				return "";
 			}
 	
