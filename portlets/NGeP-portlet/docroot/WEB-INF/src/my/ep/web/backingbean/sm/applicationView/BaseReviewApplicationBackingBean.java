@@ -67,7 +67,6 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -878,8 +877,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				// #30021 - start
+//				if (cat.getRecordStatusFlg().compareTo(
+//						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				// #30021 - end
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
@@ -920,7 +921,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							}
 						}
 					}
-				}
+				// #30021 - start
+//				}
+				// #30021 - end
 			}
 
 			getManagedBean().getSmAppl().setSmMachineDtls(activeMachineDtls);
