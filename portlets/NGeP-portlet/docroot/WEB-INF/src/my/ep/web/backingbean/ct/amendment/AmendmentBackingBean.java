@@ -1575,7 +1575,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					//#26688 start
 					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || 
 							getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)){
-						messageId = MessageConst.INFO_700098;
+						messageId = MessageConst.INFO_700100;
 						params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 					}else{
 						messageId = MessageConst.INFO_700009;
