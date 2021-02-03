@@ -20,7 +20,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
@@ -507,8 +507,8 @@ public class ViewSuppProfileBackingBean extends
 	//28281 - end
 	
 	//#29482 - Start
-	public void assignSelAcadQualify(SmStaffAcademic smStaffAcademic) {
-		this.getManagedBean().setSmStaffAcademic(smStaffAcademic);
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		this.getManagedBean().setSmPersonnel(smPersonnel);
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#29482 - End

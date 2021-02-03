@@ -1596,8 +1596,8 @@ public class ViewApplHistoryBackingBean extends
 	//11641 - END
 	
 	//#29482 - Start
-	public void assignSelAcadQualify(SmStaffAcademic smStaffAcademic) {
-		this.getManagedBean().setSmStaffAcademic(smStaffAcademic);
+	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
+		this.getManagedBean().setSmPersonnel(smPersonnel);
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#29482 - End
