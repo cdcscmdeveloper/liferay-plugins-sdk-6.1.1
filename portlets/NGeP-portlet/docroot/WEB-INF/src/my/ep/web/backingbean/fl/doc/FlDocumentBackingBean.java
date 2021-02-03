@@ -1366,27 +1366,32 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	}
 	
 	// 12177 - Start
-	
-	public boolean checkStatusSqExpired(String docNo, Long docStatusId, String docType ){		
-		
-		IQuoteSO quoteSO;
- 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
- 	    QuoteResDTO quoteResDTO = null;
- 	    
- 	   IFulfilmentRequestSO flRequestSO;
- 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
- 	    
+	/**
+	 * 
+	 * @param docId
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return boolean
+	 */
+	public boolean checkStatusSqExpired(String docId, String docNo, Long docStatusId, String docType ){		
+ 	    Long documentId = null;
 	    Long currentStatusId = docStatusId;
 	    Boolean sqExpired = false;
-	       
-	    if(docType.equals("PR")){
+	    
+	    if(docId != null){
+	    	documentId = new Long(docId);
+	    }
+	    
+	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 	    	if( currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION )
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocNo(docNo, docStatusId, docType, false);	
+	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
+	    		QuoteResDTO quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(documentId, docNo, docStatusId, docType, false);	
 	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
 	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
 	    				sqExpired = true;
@@ -1397,47 +1402,48 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		return sqExpired;
 	}
 	
-	
-public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docType ){		
-	
-//		IQuoteSO quoteSO;
-// 	    quoteSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-// 	    QuoteResDTO quoteResDTO = null;
- 	    
- 	   IFulfilmentRequestSO flRequestSO;
- 	   flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
- 	    
+	/**
+	 * Called from: flDocSearch.xhtml - inside datatable.
+	 * 
+	 * Code performance risk: Looping in datatable. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docId
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return
+	 */
+	public boolean checkStatusPIDExpired(String docId, String docNo, Long docStatusId, String docType ){		
 	    Long currentStatusId = docStatusId;
 	    Boolean pidExpired = false;
 	       
-	    if(docType.equals("PR")){
+	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
 	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
 			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
+	    		
+	    		IFulfilmentRequestSO flRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 
 	    		 FulfilmentReqDTO ffReqDTO = new FulfilmentReqDTO();
 				 FulfilmentResDTO ffResDTO = new FulfilmentResDTO();
 				 ffReqDTO.setFlDocNo(docNo);
-				 ffResDTO= flRequestSO.retrieveFulfilmentRequestByDocNo(ffReqDTO);
+				 ffReqDTO.setFlDocId(docId);
+				 ffResDTO= flRequestSO.retrievePIDbyFLDocId(ffReqDTO);//12177 - code refactoring: performance
 
-	    		if (ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-
+	    		if (ffResDTO.getFlFulfilmentRequest().getChangedDate() !=null && ffResDTO.getFlFulfilmentRequest().getPidValidDays()!=null){
 	    			//start search fulfilmenrequest based on doctype is PR
-					
-						 if(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault()!=null){
-							 	Date today  = DateUtils.getCurrentDate();
-								Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getScPurchaseInDefault().getPidValidDays());
-								log.info("pID validity begin");
-								
-									if(ExpDate.before(today)){
-										pidExpired = true;
-									}  
-								
-								log.info("pID validity end");
-						 }	
+	    			Date today  = DateUtils.getCurrentDate();
+					Date ExpDate = DateUtils.addDays(ffResDTO.getFlFulfilmentRequest().getChangedDate(), ffResDTO.getFlFulfilmentRequest().getPidValidDays());//12177
+					if(ExpDate.before(today)){
+						pidExpired = true;
+					}  
 	    		}
 	    	}
 	    }    
@@ -1482,16 +1488,27 @@ public boolean checkStatusPIDExpired(String docNo, Long docStatusId, String docT
 		return validDate;	
 	}
 	
-	public String getDocStatus(String docNo, Long docStatusId, String docType ){
+	/**
+	 * Triggered from: flDocSearch.xhtml - dataTable id="flDocListDt".
+	 * 
+	 * Code performance risk: Executed inside loop - records from search result. 
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */     
+	public String getDocStatus(String docId, String docNo, Long docStatusId, String docType ){
 		
-		if(docNo == null || docStatusId == null || docType == null){
-			return null;
-		}
-		
-		if(checkStatusPIDExpired(docNo,docStatusId,docType)){
+		if(checkStatusPIDExpired(docId, docNo,docStatusId,docType)){
 			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
 		}
-		else if(checkStatusSqExpired(docNo, docStatusId, docType )){
+		else if(checkStatusSqExpired(docId, docNo, docStatusId, docType )){
 			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
 		}
 		Long statusId = null;
