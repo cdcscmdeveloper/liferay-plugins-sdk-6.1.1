@@ -38,7 +38,6 @@ import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.factoring.IFactoringCompaniesSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -610,8 +609,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 			else{
 				if(!FLProcessNameConst.REVISE_INVOICE.equals(this.getManagedBean().getTaskName())){
-					//29193
-					FLInvoiceDataType paymentReviseObj = (FLInvoiceDataType)obj;
 					String[] outcome = new String[this.getManagedBean().getOutComes().length + 1];
 					outcome[0] = BpmOutcomeConst.BPM_SAVE;
 					int i = 1;
@@ -619,21 +616,25 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						outcome[i++] = action;
 					}
 					this.getManagedBean().setOutComes(outcome);
-					//29193
-					if(paymentReviseObj.getErrorId() != null ){
-						getManagedBean().setAutoUpdate(Boolean.FALSE);
-						getManagedBean().setGfmasError(true);
-						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-						errReq.setErrorId(Long.parseLong(paymentReviseObj.getErrorId()));
-						IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-						FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
-						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
-						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
-					}
+
 				}
 				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
+				
+				//29193 all 
+				if(paymentObj.getErrorId() != null & !paymentObj.getErrorId().isEmpty() 
+						&& Long.parseLong(paymentObj.getErrorId()) > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(Long.parseLong(paymentObj.getErrorId()));
+					IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+					FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+				
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
