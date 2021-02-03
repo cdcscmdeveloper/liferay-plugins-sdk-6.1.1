@@ -1571,7 +1571,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					
+					//#26688 start
+					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || 
+							getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)){
+						messageId = MessageConst.INFO_700098;
+						params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
+					}else{
+						messageId = MessageConst.INFO_700009;
+					}
+					//#26688 end
+					
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)) {
 						messageId = MessageConst.INFO_700061;
@@ -2548,7 +2558,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");				
 			}
 			return null;
-		}else {
+		}
+		
+		//#26688 start
+		else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
+//			validateContractAmendment(outcome);
+			validateRemarkCancel(outcome);
+			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)){
+				RequestContext.getCurrentInstance().execute("reviseConfirmDlg.show()");				
+			}			
+			return null;
+		}
+		//#26688 end
+		
+		else {
 			return saveContractAmendment(outcome);
 		}
 	}
