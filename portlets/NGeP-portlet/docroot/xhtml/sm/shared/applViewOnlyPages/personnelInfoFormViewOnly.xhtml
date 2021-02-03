@@ -364,21 +364,21 @@
 		
 	<!-- 29482 Start -->
 		<p:dialog header="#{lbl['lbl.sm.academic.qualification']}" widgetVar="qualifyDialog"
-		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
+		resizable="false" showEffect="fade" closable="true" hideEffect="fade" height="250px"
 		modal="true" id="qualifyDialog" >
 			<p:outputPanel id="academicDetailsPanel" layout="block">
 				<p:dataTable style="width: 100%;table-layout:fixed" var="staffAcademic"  
 				value="#{viewSmApplBackingBean.managedBean.smStaffAcademic}">
-					<p:column headerText="#{lbl['lbl.sm.year']}">
+					<p:column headerText="#{lbl['lbl.sm.year']}" style="width : 10%">
 						<h:outputText value="#{staffAcademic.year}" /> 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.institute']}">
+					<p:column headerText="#{lbl['lbl.sm.institute']}" style="width : 15%">
 						<h:outputText value="#{staffAcademic.instituteName}" /> 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.education.field']}">
+					<p:column headerText="#{lbl['lbl.sm.education.field']}" style="width : 15%">
 						<h:outputText value="#{staffAcademic.pmEduField.fieldName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.major.in']}">
+					<p:column headerText="#{lbl['lbl.sm.major.in']}" style="width : 15%">
 						<h:outputText value="#{staffAcademic.fieldMajor}" />
 					</p:column>
 				</p:dataTable>
