@@ -769,6 +769,13 @@ public class SmSideMenuIconUtil {
 		if (bean.isPoUser()) {
 			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
 					.getApplNo(), "SUP"));
+			//#24964 - start
+			if(bean.getSupplierAppl() == null){
+				SmCommonUtil.createSerFile(bean.getSmAppl(), "SUP");
+				bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
+						.getApplNo(), "SUP"));
+			}
+			//#24964 - end
 		} else if (bean.isApproverUser()) {
 			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
 					.getApplNo(), "SUP"));
