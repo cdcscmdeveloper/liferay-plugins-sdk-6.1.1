@@ -620,19 +620,22 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
-				
+			
 				//29193 all 
-				if(paymentObj.getErrorId() != null && !paymentObj.getErrorId().isEmpty() 
-						&& Long.parseLong(paymentObj.getErrorId()) > 0){
-					getManagedBean().setAutoUpdate(Boolean.FALSE);
-					getManagedBean().setGfmasError(true);
-					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-					errReq.setErrorId(Long.parseLong(paymentObj.getErrorId()));
-					IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-					FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
-					getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
-					getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
-					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				getManagedBean().setGfmasError(false);
+				if(paymentObj.getErrorId() != null && !paymentObj.getErrorId().isEmpty() ){
+					long errorId = Long.parseLong(paymentObj.getErrorId());
+					if(errorId > 0	){
+						getManagedBean().setAutoUpdate(Boolean.FALSE);
+						getManagedBean().setGfmasError(true);
+						FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+						errReq.setErrorId(Long.parseLong(paymentObj.getErrorId()));
+						IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+						FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+						getManagedBean().setGfmasErrorCode(errRes.getErrorCode());
+						getManagedBean().setGfmasErrorDesc(MessageUtils.getMessage("ERR-"+errRes.getErrorCode(), new String[]{}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale()));
+						getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+					}
 				}
 				
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
