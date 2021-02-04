@@ -6372,7 +6372,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		//PpProcurementItem clonedPpItem =  procurementList.get(index);
 	    		PpProcurementItem originalPpItem =  procurementLinkedList.get(index);
 	    		
-	    		PpProcurementItem procList = procurementList.get(index);
 	    		
 	    		/*newPpItem = (PpProcurementItem) procurementList.
 	    				get(index).cloneEntity();*/
@@ -6405,20 +6404,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
-	    		newPpItem.setProcurementCat(procList.getProcurementCat());
-		    	newPpItem.setProcurementType(procList.getProcurementType());		    	
+	    		newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
+		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());		    	
 	    		 //24975@06112020@azza - End
-		    	newPpItem.setProcurementTitle(procList.getProcurementTitle());
-		    	newPpItem.setProcurementDesc(procList.getProcurementDesc());
-		    	newPpItem.setEstimatedAmt(procList.getEstimatedAmt());
+		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
+		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
+		    	newPpItem.setEstimatedAmt(originalPpItem.getEstimatedAmt());
 	    		newPpItem.setEditable(true);
 	    		newPpItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 	    		newPpItem.setBrandNew(true);
 	    		newPpItem.setCloneEnabled(true);
 	    		newPpItem.setDisableForPindaan(true);
-	    		newPpItem.setFromPpItem(procList.getProcurementItemId());
+	    		newPpItem.setFromPpItem(originalPpItem.getProcurementItemId());
 	    		newPpItem.setReasonForUpdateEnabled(false);
-	    		newPpItem.setPpUpdateReasons(procList.getPpUpdateReasons());
+	    		newPpItem.setPpUpdateReasons(originalPpItem.getPpUpdateReasons());
 	    		newPpItem.setStatusEnabled(true);
 	    		newPpItem.setOriginal(false);
 	    		newPpItem.setClonedItem(true);
@@ -6441,7 +6440,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    					newUpdateReason.setRoleCode(roleCode);
 	    				}
 	    				if (newUpdateReason.getDocId() == null) {
-	    					newUpdateReason.setDocId(procList.getProcurementItemId());
+	    					newUpdateReason.setDocId(originalPpItem.getProcurementItemId());
 						}
 	    				if (newUpdateReason.getDocType() == null) {
 	    					newUpdateReason.setDocType(ParameterConst.DOCTYPE_PLAN_PROCUREMENT); 
