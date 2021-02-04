@@ -45,8 +45,9 @@
 		<h:panelGroup layout="block" class="ui-messages ui-widget"
 		rendered="#{(purchaseRequestBackingBean.managedBean.triggerPRErrorMsg)}">
 		<h:panelGroup layout="block" class="ui-messages-error ui-corner-all">
+		<a href="#" class="ui-messages-close" onclick="$(this).parent().slideUp();return false;"><h:outputText class="ui-icon ui-icon-close"></h:outputText></a>
 		<h:outputText class="ui-messages-error-icon" /><ul><li>
-		<h:outputText class="ui-messages-error-detail" />#{lbl['lbl.fl.error.message1']} <p:commandLink id="triggeredNewPR" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{purchaseRequestBackingBean.triggeredNewPR()}" process="@this" partialSubmit="true" update=":form"> <u>#{lbl['lb1.fl.error.message3']}</u> </p:commandLink>#{lbl['lb1.fl.error.message2']}</li></ul>		
+		<h:outputText class="ui-messages-error-detail" />#{lbl['lbl.fl.error.message1']} <p:commandLink id="triggeredNewPR" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{purchaseRequestBackingBean.triggeredNewPR()}" process="@this" partialSubmit="true" update=":form"> <u>#{lbl['lb1.fl.error.message3']}</u> </p:commandLink> #{lbl['lb1.fl.error.message2']}</li></ul>		
 		</h:panelGroup>
 		</h:panelGroup>
 		<!-- #28718 - End -->
