@@ -775,6 +775,13 @@ public class SmSideMenuIconUtil {
 			bean.setPoAppl(getSmApplFromSerFile(bean.getSmAppl().getApplNo(),
 					"PO"));
 		}
+		//#24964 - start
+		if(bean.getSupplierAppl() == null){
+			SmCommonUtil.createSerFile(bean.getSmAppl(), "SUP");
+			bean.setSupplierAppl(getSmApplFromSerFile(bean.getSmAppl()
+					.getApplNo(), "SUP"));
+		}
+		//#24964 - end
 	}
 
 	private static boolean step1CompanyBasicHasDifference(SmAppl applPrev,
