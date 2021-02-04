@@ -214,6 +214,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
 			if (!getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
 				for (SoftcertUploadSuppDocVO softCertList : getManagedBean().getSoftcertUploadSuppDocList()) {
+					if(softCertList.getPersonnel().getPmUser() == null){
+						continue;
+					}
 					reqDTO.setUserId(softCertList.getPersonnel().getPmUser().getUserId());
 					if (!reqDTO.getUserId()
 							.equals(getManagedBean().getLoginUserPersonnelInfo().getPmUser().getUserId())) {
