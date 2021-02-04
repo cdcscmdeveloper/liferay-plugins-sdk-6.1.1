@@ -457,22 +457,27 @@ rowKey="#{exemptedOrgsVar}" >
                  <div class="ppRightBtn">
 		                 <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 		                       update=":form:uploadCircularPg,:form:uploadCircularPg1" 
-		                       action="#{centralContractBackingBean.delCircularVerFile()}" oncomplete="deleteCircularFileDlg.hide();"/>
+		                       action="#{centralContractBackingBean.deleteAttachmentActionByIndex(centralContractBackingBean.managedBean.attachFileIndex)}" oncomplete="deleteCircularFileDlg.hide();"/>
 			            <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteCircularFileDlg.hide();" type="button" />
 		           </div>
           </p:confirmDialog>
           
-	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" resizable="false"
-	    width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	    onShow="singleUploadListener(centralUploadWV);">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" mode="advanced"  dragDropSupport="false"
-		     sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
-			fileUploadListener="#{centralContractBackingBean.fileUpload}"  multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="centralUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-			update="uploadCircularPg,uploadCircularPg1" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadCircularDlg.hide();" >
+	<p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" 
+			resizable="false" width="700px" height="350px" 
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;" 
+				mode="advanced"  dragDropSupport="false"
+				multiple="true"
+			    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" 
+				fileUploadListener="#{centralContractBackingBean.fileUpload}"  
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"  widgetVar="centralUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" 
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+				update="uploadCircularPg,uploadCircularPg1" 
+				label="#{lbl['lbl.btn.choose']}" 
+				uploadLabel="#{lbl['lbl.btn.upload.all']}"
+				cancelLabel="#{lbl['lbl.btn.remove.all']}" >
 		</p:fileUpload>
 		<f:facet name="footer">
 		<div class="ppRightBtn">
