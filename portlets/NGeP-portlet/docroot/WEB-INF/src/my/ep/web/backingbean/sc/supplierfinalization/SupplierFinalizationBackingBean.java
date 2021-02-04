@@ -2371,21 +2371,31 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
 	 */
-	public void submitAction() {
+public void submitAction() {
 		
 		this.checkIfLoggedinUserIsSecretary();
 		if (this.getManagedBean().isSecretaryUser()) {
 			if(this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")){
 				
-				changeMeetingStatusBrief();
-				Boolean remarksNotFound=validationRemarksBrief();
-				if(!remarksNotFound){
-					RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
+				if (!getManagedBean().isBpkCentralContract()) {
+					changeMeetingStatusBrief();
+					Boolean remarksNotFound=validationRemarksBrief();
+					if(!remarksNotFound){
+						RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
+					}
+					else
+					{
+						RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+					}
 				}
 				else
 				{
 					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
 				}
+				
+				//changeMeetingStatusBrief();
+				
+				
 				
 				
 			}else{
