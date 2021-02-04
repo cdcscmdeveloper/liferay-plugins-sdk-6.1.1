@@ -483,8 +483,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setModeReview(false);
 				this.getManagedBean().setModeReviewEditable(false);
 				if(isRolePlanner() 
-						&& !(getManagedBean().getBtnValue() != null 
-						&& ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue()))){
+						&& (getManagedBean().getBtnValue() != null 
+						&& ProcurementPlanConst.ACTION_UPDATE_BTN.equals(getManagedBean().getBtnValue()))){//#27624@322021
 					this.getManagedBean().getSelectedPlan().setUpdatable(true);
 					this.getManagedBean().setModeEditable(true);
 				}
@@ -662,12 +662,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
 									ppItem.setBrandNew(false);
-								} else {
+								} else { 
 									ppItem.setCloneEnabled(false);
 									ppItem.setDisableForPindaan(false);
 									ppItem.setReasonForUpdateEnabled(true);
 									ppItem.setBrandNew(false);
+									//#27624@322021 - start
+									if (!ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())){
 									this.getManagedBean().setModeEditable(true);
+									}//#27624@322021 - end
 								}
 								//24975@04112020@azza - end
 							}
@@ -6315,6 +6318,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		//PpProcurementItem clonedPpItem =  procurementList.get(index);
 	    		PpProcurementItem originalPpItem =  procurementLinkedList.get(index);
 	    		
+	    		
 	    		/*newPpItem = (PpProcurementItem) procurementList.
 	    				get(index).cloneEntity();*/
 	    		newPpItem.setCloned(true);
@@ -6346,10 +6350,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    		newPpItem.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 	    		newPpItem.setChangedDate(new Timestamp(new Date().getTime()));
 	    		 //24975@06112020@azza - Start
-	    		/*newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
-		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());*/
-	    		newPpItem.setProcurementCat(new PmParameter());
-	    		newPpItem.setProcurementType(new PmParameter());
+	    		newPpItem.setProcurementCat(originalPpItem.getProcurementCat());
+		    	newPpItem.setProcurementType(originalPpItem.getProcurementType());		    	
 	    		 //24975@06112020@azza - End
 		    	newPpItem.setProcurementTitle(originalPpItem.getProcurementTitle());
 		    	newPpItem.setProcurementDesc(originalPpItem.getProcurementDesc());
@@ -6450,7 +6452,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 original.setOriginal(true);
 			 original.setCloned(false);
 			 original.setCloneEnabled(true);
+			//#27624@322021 - start
+			 if(!ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())){
 			 this.getManagedBean().setModeEditable(true);
+			 }//#27624@322021 - end
 			 original.setDisableForPindaan(false);
 			//this.getManagedBean().setDisable(false);
 			 original.setEnableRevise(false);
