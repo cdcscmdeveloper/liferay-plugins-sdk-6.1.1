@@ -622,7 +622,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
 				
 				//29193 all 
-				if(paymentObj.getErrorId() != null & !paymentObj.getErrorId().isEmpty() 
+				if(paymentObj.getErrorId() != null && !paymentObj.getErrorId().isEmpty() 
 						&& Long.parseLong(paymentObj.getErrorId()) > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
 					getManagedBean().setGfmasError(true);
