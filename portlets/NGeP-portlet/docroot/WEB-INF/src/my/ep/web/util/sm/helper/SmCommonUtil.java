@@ -984,9 +984,11 @@ public class SmCommonUtil {
 	private static BigDecimal getPercentage(int param, int total) {
 		BigDecimal retVal = BigDecimal.ZERO;
 		if (total != 0) {
-			try {
-				retVal = new BigDecimal(param).divide(new BigDecimal(total), 2,
-						BigDecimal.ROUND_CEILING).multiply(percent);
+			try { 
+				//Bug #29940 - START - The Percentage for Composition of BOD/Management/Staff Company to the nearest 2 decimal place.
+				retVal = new BigDecimal(param).divide(new BigDecimal(total), 4,
+						BigDecimal.ROUND_FLOOR).multiply(percent).setScale(2, RoundingMode.HALF_EVEN);
+				//Bug #29940 - END - The Percentage for Composition of BOD/Management/Staff Company to the nearest 2 decimal place.
 				// retVal = retVal.setScale(2, RoundingMode.CEILING);
 			} catch (ArithmeticException e) {
 				log.info("FAILED GET PERCENTAG:" + e.getMessage());
