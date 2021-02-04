@@ -304,6 +304,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	//#28718 - start
 	private boolean triggerPRErrorMsg = false;
+	private boolean isGrouped;
 	//#28718 - end
 
 	//29728 - start
@@ -3371,8 +3372,21 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setTriggerPRErrorMsg(boolean triggerPRErrorMsg) {
 		this.triggerPRErrorMsg = triggerPRErrorMsg;
 	}
-	//#28718 - end
+	
+	/**
+	 * @return the isGrouped
+	 */
+	public boolean isGrouped() {
+		return isGrouped;
+	}
 
+	/**
+	 * @param isGrouped the isGrouped to set
+	 */
+	public void setGrouped(boolean isGrouped) {
+		this.isGrouped = isGrouped;
+	}
+	//#28718 - end
 	//29728 - start
 	/**
 	 * @return the isBranchNeedToChange
