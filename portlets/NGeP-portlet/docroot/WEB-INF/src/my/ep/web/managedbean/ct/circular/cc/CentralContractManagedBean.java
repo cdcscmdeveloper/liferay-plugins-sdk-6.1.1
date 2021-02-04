@@ -101,6 +101,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<Long, PmUser> userMap;
 	private List<CtCircularPidReason> ctCircularPidReasons;
+	private int attachFileIndex;//#28713
 
 	/**
 	 * @return the updateAction
@@ -817,7 +818,21 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.selectedOrgsProfile = selectedOrgsProfile;
 	}
 
+	//#28713 - start
+	/**
+	 * @return the attachFileIndex
+	 */
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	
+	/**
+	 * @param attachFileIndex the attachFileIndex to set
+	 */
 
-
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}	
+	//#28713 - end
 
 }
