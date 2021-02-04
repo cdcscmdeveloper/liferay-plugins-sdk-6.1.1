@@ -181,13 +181,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	            <!--25549@18092020 -->
        			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
        				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null or (ppItem.disableRow)}"
-					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
+					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
 					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}" process="@this"  />
 				</p:selectOneMenu>
-				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
+			 <p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
 	         <!--24975@azza - end -->
 	        <p:column  style="white-space:nowrap;">
@@ -289,8 +289,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:dataTable>
 		<div class="ppRightBtn">
 		<!-- #25549@20200818 - start --> 
+		<!-- 02022021@#27624 - start --> 
 		     <p:commandButton id="btnClone" value="#{lbl['lbl.btn.clone']}"
-		        disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
+		        disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
 			    action="#{pPlanBackingBean.rowSelectProcurement()}"
 			    update="dtProcurementPlan, ppProcurementCloneid, dtcloneprosearchresults"
 			    onclick="cloneAcquirementPopUp.show()"
@@ -300,11 +301,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<!-- end --> 
 		
 			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
-		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" partialSubmit="true"
-		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/>
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}"  partialSubmit="true"
+		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/> 
 		 		
 			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtProcurementPlan" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
+				<!-- 02022021@#27624 - end --> 
 		</div>
 		
 		<!-- #25549@23122020 - start -->
