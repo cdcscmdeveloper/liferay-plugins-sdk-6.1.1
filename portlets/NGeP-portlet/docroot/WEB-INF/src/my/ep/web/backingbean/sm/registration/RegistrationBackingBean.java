@@ -46,8 +46,6 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -577,7 +575,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									null, my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_COMPLAIN, null,this.getManagedBean().isCompanyValidWithSSM());
 						}
 					}*/
-					
+					//#29582
+					validateInvalidIdType();
 					//set ssm updated name
 					if(suppOwner.isShowNameTextField()){
 						SmPersonnel personnel = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmPersonnelAll(), "identificationNo");
@@ -587,6 +586,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				}
 				setPersonnelToItem();
+				//#29582
+				validateInvalidIdType();
 				//Check Match identification with nationality
 				//check owner
 				for(SmSupplierOwner owner:this.getManagedBean().getSmSuppOwners()){
@@ -822,7 +823,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(!smPersonnel.getEmail().equals(this.getManagedBean().getConfirmEmail())){
 			throw new EpException(MessageConst.ERROR_721020);
 		}
-		
+		//#29582
+		validateInvalidIdType();
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
@@ -4042,6 +4044,36 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setSmPersonnel(personnel);
 		personnelNationalityOnChange();
 	}
+	
+	//#29582-START
+	private void validateInvalidIdType(){
+		List<SmPersonnel> smpersonnel = getManagedBean().getSmPersonnelAll();
+		boolean errMsg = false;
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		for (SmPersonnel per : smpersonnel) {
+			if (per.getIdentificationType().getParameterCode().equals(ParameterConst.IDENTIFICATION_TYPES_INVALID)) {
+				String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+						ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+				sb.append("<br/>");
+				sb.append(++i + ". ");
+				sb.append(per.getName() + " ");
+				sb.append("(" + ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+ " ");
+				sb.append(per.getIdentificationNo() + ", ");
+				sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+ " ");
+				sb.append(per.getIdentificationTypeSsm() + " = ");
+				sb.append(ssmTypeDesc + ")");
+				sb.append("<br/>");
+				errMsg = true;
+				// show alert message here
+			}
+		}
+		if (errMsg) {
+			throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+		}
+	}//#29582-END
 	
 	private void validateNewIC(SmPersonnel smPersonnel, boolean isIndividual){
 		//Validate IC Length

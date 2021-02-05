@@ -1922,14 +1922,14 @@ public class SmApplicationBackingBean extends
 									personnel.setSsmData(true);
 									personnel.setShareAmtSsmNull(true);
 									//SSM CHANGE 11012020
-									//#27315
-									String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace"};
+									//#27315  && #29582
+									String[] copyEquityOwner = {"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull","designationSsmNull","equityOwner","director","pmCountry","directorSsm","equityOwnerSsm","managementSsm","pmRace","identificationType","identificationTypeId","identificationTypeSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}else{
 									personnel.setSsmData(true);
 									//#27315
-									//27408 - Remove Pmcountry for ROC
-									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm"};
+									//27408 - Remove Pmcountry for ROC && #29582
+									String[] copyEquityOwner = {"name","shareAmt","nameInSsm","raceSsmNull","birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull","equityOwner","director","directorSsm","equityOwnerSsm","managementSsm","identificationType","identificationTypeId","identificationTypeSsm"};
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,copyEquityOwner);
 								}
 								validateRole(personnel);
