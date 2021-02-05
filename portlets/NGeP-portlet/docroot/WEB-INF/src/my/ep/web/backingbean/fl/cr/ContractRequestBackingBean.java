@@ -214,7 +214,6 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.jsoup.select.Evaluator.IsEmpty;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -1938,6 +1937,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			CtContractZone ctContractZoneLatestVer = null; //25983
 			Long ctContractZoneId = null;
 			Map<Long, BigDecimal> zonalQtyMap = null;
+			Map<Long, FlAddress> zonAddressMap = new HashMap<Long, FlAddress>();//30035
 			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 				czReqDTO.setContractId(flRequest.getCtContract().getContractId());
 				czReqDTO.setFlAddress(deliveryAddress.getFlAddress());
@@ -1953,12 +1953,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						zonalQtyMap = requestItemZonalQtyMap.get(itemAddr.getScRequestItem());
 						if(zonalQtyMap.containsKey(ctContractZoneId)) {
 							zonalQtyMap.put(ctContractZoneId, zonalQtyMap.get(ctContractZoneId).add(itemAddr.getOrderedQty()));
+							zonAddressMap.put(ctContractZoneId, deliveryAddress.getFlAddress());//30035											
 						} else {
 							zonalQtyMap.put(ctContractZoneId, itemAddr.getOrderedQty());
+							zonAddressMap.put(ctContractZoneId, deliveryAddress.getFlAddress());//30035												
 						}
 					} else{
 						zonalQtyMap = new HashMap<Long, BigDecimal>();
+						zonAddressMap = new HashMap<Long, FlAddress>();//30035
+						
 						zonalQtyMap.put(ctContractZoneId, itemAddr.getOrderedQty());
+						zonAddressMap.put(ctContractZoneId, deliveryAddress.getFlAddress());//30035												
 						requestItemZonalQtyMap.put(itemAddr.getScRequestItem(), zonalQtyMap);
 					}
 				}
@@ -1973,6 +1978,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				zonalQtyMap = requestItemZonalQtyMap.get(requestNoteItem);
 				for(Long contractZoneId : zonalQtyMap.keySet()) {
+					//30035-start
+					FlAddress flAddress = zonAddressMap.get(contractZoneId);
+					czReqDTO.setFlAddress(flAddress);
+					//30035-end
 					ctContractZoneLatestVer = contractZoneSO.retrieveContractZoneByAddressLatestVer(czReqDTO).getCtContractZone(); //25983
 					ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
 					ctReqDTO.setContractZoneId(ctContractZoneLatestVer.getContractZoneId());//25983
