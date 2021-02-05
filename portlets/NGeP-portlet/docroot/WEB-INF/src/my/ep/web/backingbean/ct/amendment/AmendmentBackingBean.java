@@ -2562,8 +2562,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		//#26688 start
 		else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
-//			validateContractAmendment(outcome);
-			validateRemarkCancel(outcome);
+			validateRemarkRevise(outcome);
 			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)){
 				RequestContext.getCurrentInstance().execute("reviseConfirmDlg.show()");				
@@ -7126,5 +7125,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		//#25956 - End
+		
+		
+		//#26688 start
+		/**
+		 * The method used for validating Remark Revise Button.
+		 * A warning message will display on screen when Remark is null
+		 * 
+		 * @throws Exception  if an exception occurred
+		 * @see    Exception
+		 */
+		public void validateRemarkRevise(String action) throws Exception {
+			
+			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+			String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+			String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
+
+			if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
+					&& (supplierRemark == null || supplierRemark.length() == 0)) {
+				setTabValue("AD");
+				throw new EpException(MessageConst.ERROR_100022, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
+
+		}
+		//#26688 end
 
 	}
