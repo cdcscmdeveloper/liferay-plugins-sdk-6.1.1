@@ -5914,16 +5914,20 @@ public class SmCommonUtil {
 	public static void ssmError(SsmResDTO resDTO){
 		switch (resDTO.getStatusCode()) {
 		case "70001":
-			//27214
-			if(resDTO.isPreRegistration()){
-				throw new EpException(MessageConst.ERROR_721086);
-			}else{
-				throw new EpException(MessageConst.ERROR_721078);
-			}			
+			//27214 -> this changes is remove in this case. replace with  27225
+			if(resDTO.getStatusDesc() != null){
+				if(resDTO.getStatusDesc().contains("Nationality")){
+					throw new EpException(MessageConst.ERROR_721094);
+				}else if(resDTO.getStatusDesc().contains("Nature")){
+					throw new EpException(MessageConst.ERROR_721095);
+				}else{
+					throw new EpException(MessageConst.ERROR_721096);
+				}
+			}
 		case "70002":
-			throw new EpException(MessageConst.ERROR_SSM_70002);
+			throw new EpException(MessageConst.ERROR_721071);
 		case "70003":
-			throw new EpException(MessageConst.ERROR_SSM_70003);
+			throw new EpException(MessageConst.ERROR_721071);
 		case "70004":
 			//throw new EpException(MessageConst.ERROR_SSM_70004);
 			throw new EpException(MessageConst.ERROR_721071);
@@ -5934,10 +5938,12 @@ public class SmCommonUtil {
 //			throw new EpException(MessageConst.ERROR_SSM_70006);
 			throw new EpException(MessageConst.ERROR_721071);
 		case "70061":
-			throw new EpException(MessageConst.ERROR_721078);
+			throw new EpException(MessageConst.ERROR_721071);
 			//27264
 		case MessageConst.ERROR_721084:
-			throw new EpException(MessageConst.ERROR_721084);
+			throw new EpException(MessageConst.ERROR_721084);			
+		case "70067"://No SSM Data for requested BusinessRegistrationNo		
+				throw new EpException(MessageConst.ERROR_721078);
 		case "70068"://Encounter Technical Error at SSM
 			//27214  -> this changes is remove in this case. replace with  27225
 			//27225			
