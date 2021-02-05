@@ -743,8 +743,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		this.getManagedBean().setBodLs(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setMgmtLs(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setEquityOwnerLs(new ArrayList<SmPersonnel>());
-		getManagedBean().setStaffLs(new ArrayList<SmPersonnel>());
-
+		this.getManagedBean().setStaffLs(new ArrayList<SmPersonnel>());
+		//#29781 - Start
+		this.getManagedBean().setHigherManagementNames(new ArrayList<String>());
+		this.getManagedBean().setManagementNames(new ArrayList<String>());
+		//#29781 - End
+		
 		for(SmPersonnel personnel : this.getManagedBean().getSmSvTask().getSmAppl().getSmPersonnels()){
 			if(personnel.isDirector()){
 				ttlBOD++;
@@ -1284,6 +1288,33 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("mofRegistrationNo", mofAccountLs.size() > 0 ? mofAccountLs.get(0).getMofNo() : null);
 		context.put("siteVisitNo", getManagedBean().getSiteVisitNo());
 		
+		//#29781 - Start
+		//String accptDate = "";
+		StringBuilder SvO = new StringBuilder();
+		if(svTask.getSmSvOfficers() != null && !svTask.getSmSvOfficers().isEmpty()){
+			for(SmSvOfficer smSvOfficer : svTask.getSmSvOfficers()){
+				SvO.append(smSvOfficer.getPmUser().getUserName());
+			}
+		}else{
+			SvO.append(" ");
+		}
+
+		StringBuilder SvOA = new StringBuilder();
+		int SmSvAssistantOfficersCounter = 0;
+		if(svTask.getSmSvAssistantOfficers() != null && !svTask.getSmSvAssistantOfficers().isEmpty()){
+			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers()){
+				if(SmSvAssistantOfficersCounter < 1 ){
+					SvOA.append(smSvAssistantOfficer.getName());
+				}
+				SmSvAssistantOfficersCounter++;
+			}
+		}else{
+			SvO.append(" ");
+		}
+		context.put("svOfficers", SvO.toString());
+		context.put("svAOfficer", SvOA.toString());
+		//#29781 - End
+	
 		String vmCover = "/sm/sitevisit/sv-main.vm";
 		String fileName = fileInitName + "cover.pdf";
 		//CR 28774: Static Code Analysis Start
