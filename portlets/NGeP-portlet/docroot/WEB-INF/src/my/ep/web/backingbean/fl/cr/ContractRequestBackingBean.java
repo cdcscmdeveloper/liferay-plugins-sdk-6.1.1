@@ -1883,6 +1883,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			CtContractZone ctContractZoneLatestVer = null; //25983
 			Long ctContractZoneId = null;
 			Map<Long, BigDecimal> zonalQtyMap = null;
+			Map<Long, FlAddress> zonAddressMap = new HashMap<Long, FlAddress>();//30035
 			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 				czReqDTO.setContractId(flRequest.getCtContract().getContractId());
 				czReqDTO.setFlAddress(deliveryAddress.getFlAddress());
@@ -1898,12 +1899,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						zonalQtyMap = requestItemZonalQtyMap.get(itemAddr.getScRequestItem());
 						if(zonalQtyMap.containsKey(ctContractZoneId)) {
 							zonalQtyMap.put(ctContractZoneId, zonalQtyMap.get(ctContractZoneId).add(itemAddr.getOrderedQty()));
+							zonAddressMap.put(ctContractZoneId, deliveryAddress.getFlAddress());//30035											
 						} else {
 							zonalQtyMap.put(ctContractZoneId, itemAddr.getOrderedQty());
+							zonAddressMap.put(ctContractZoneId, deliveryAddress.getFlAddress());//30035												
 						}
 					} else{
 						zonalQtyMap = new HashMap<Long, BigDecimal>();
+						zonAddressMap = new HashMap<Long, FlAddress>();//30035
+						
 						zonalQtyMap.put(ctContractZoneId, itemAddr.getOrderedQty());
+						zonAddressMap.put(ctContractZoneId, deliveryAddress.getFlAddress());//30035												
 						requestItemZonalQtyMap.put(itemAddr.getScRequestItem(), zonalQtyMap);
 					}
 				}
@@ -1918,6 +1924,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				zonalQtyMap = requestItemZonalQtyMap.get(requestNoteItem);
 				for(Long contractZoneId : zonalQtyMap.keySet()) {
+					//30035-start
+					FlAddress flAddress = zonAddressMap.get(contractZoneId);
+					czReqDTO.setFlAddress(flAddress);
+					//30035-end
 					ctContractZoneLatestVer = contractZoneSO.retrieveContractZoneByAddressLatestVer(czReqDTO).getCtContractZone(); //25983
 					ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
 					ctReqDTO.setContractZoneId(ctContractZoneLatestVer.getContractZoneId());//25983
@@ -4653,6 +4663,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
+				validateDeliveryAddress(action);//29401
 			}
 			
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -6721,4 +6732,28 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}		
 	}
 	//14650 end
+	
+	//29401-start
+	private void validateDeliveryAddress(String action) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			int checkDelAddr = 1;
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+				if(flDeliveryAddress.getPmAddressId()!=null){
+					reqDTO.setPmOrgProfile(getManagedBean().getFlRequest().getIssuedOrgProfile());
+					reqDTO.setAddressId(flDeliveryAddress.getPmAddressId());
+					AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
+					checkDelAddr = resDTO.getCheckDelAddr();
+		    		if(checkDelAddr==0){
+		    			throw new EpException(MessageConst.ERROR_740068);
+		    		}					
+				}
+				
+			}
+		}
+	}
+	//29401-end
+	
 }

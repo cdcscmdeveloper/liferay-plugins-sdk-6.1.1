@@ -3322,6 +3322,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().getFulfilmentRequest().setStartDate(DateUtils.getStartDate(getManagedBean().getFulfilmentRequest().getEndDate(), getManagedBean().getFulfilmentRequest().getDeliveryTerm(), getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode()));
 					updateDeliveryDate();
 				}
+				validateDeliveryAddress(outcome);//29401
 			} else if(BpmOutcomeConst.BPM_REVISE.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					getManagedBean().setSelectedTabIndex(0);
@@ -4872,4 +4873,28 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return pidExpired;
 	}
 	//12183 - End
+	
+	//29401-start
+		private void validateDeliveryAddress(String outcome) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+					|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				int checkDelAddr = 1;
+				IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+				AddressReqDTO reqDTO = new AddressReqDTO();
+				for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+					if(flDeliveryAddress.getPmAddressId()!=null){
+						reqDTO.setPmOrgProfile(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+						reqDTO.setAddressId(flDeliveryAddress.getPmAddressId());
+						AddressResDTO resDTO = addressSO.ValidateDeliveryAddrByOrgProfileIdAndAddressID(reqDTO);
+						checkDelAddr = resDTO.getCheckDelAddr();
+			    		if(checkDelAddr==0){
+			    			throw new EpException(MessageConst.ERROR_740068);
+			    		}					
+					}
+					
+				}
+			}
+		}
+		//29401-end
+	
 }
