@@ -16,8 +16,24 @@
 		</p:blockUI>
 		<!-- <p:messages id="messages" showDetail="true"  showSummary="false" autoUpdate="#{financialOrgBackingBean.managedBean.showParentMsg}"
 			closable="true" severity="error,info"></p:messages> -->
-		<table style="width: 100%;">
-			<tr>
+		<!-- #29487 - View bank details by factoring user_endorsed - Start -->	
+		<c:choose>
+		  <c:when test="#{financialOrgBackingBean.isRoleFactoringUser()}">
+			<table style="width: 100%;">
+			  <tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+						 update=":form" process="@this"
+						 onstart="blockWidget.show()" 
+						oncomplete="blockWidget.hide()" 
+						action="#{financialOrgBackingBean.backToMain}" style="float:left;" /></td>
+			  </tr>
+			</table>
+			<ui:include src="/xhtml/pm/profileInfo/financialOrg/factoringCompanyProfile.xhtml" />		  
+		  </c:when>  
+		  <c:otherwise>		
+			<table style="width: 100%;">
+			  <tr>
 				<td>
 					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						 update=":form" process="@this"
@@ -40,9 +56,12 @@
 						rendered="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 						<f:param name="disableValidation" value="true" />   
 					</p:commandButton>
-				</td>
-			</tr>
-		</table>	
-		<ui:include src="generalFinancialdetails.xhtml" />
+			   </td>
+		  	 </tr>
+		    </table>	
+			<ui:include src="generalFinancialdetails.xhtml" />
+		  </c:otherwise>
+		</c:choose>
+		<!-- #29487 - View bank details by factoring user_endorsed - End -->		  			
 	</ui:define>
 </ui:composition>
