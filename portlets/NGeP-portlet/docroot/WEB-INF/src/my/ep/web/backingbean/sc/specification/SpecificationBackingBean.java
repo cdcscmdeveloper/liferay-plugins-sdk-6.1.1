@@ -11868,7 +11868,7 @@ public class SpecificationBackingBean extends
 								.intValue() > 0) {
 					checkFinancialSpecEstimations(this.getManagedBean()
 							.getScQtCheckSt2financeProposalList(),
-							scQtCheckList, getManagedBean().getQt());
+							scQtCheckList, getManagedBean().getQt(),true);//20210205@haziq- Bug #30046 
 				}
 				checkFinancialparentSpecQuestion(scQtCheckList);
 			}
@@ -12606,7 +12606,7 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase("SC")) {
 				checkFinancialSpecEstimations(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList(), scQtCheckList,
-						scQt);
+						scQt,false);//20210205@haziq- Bug #30046
 				checkFinancialparentSpecQuestion(scQtCheckList);
 			}
 			scQtCheckList
@@ -15776,7 +15776,7 @@ public class SpecificationBackingBean extends
 
 	private void checkFinancialSpecEstimations(
 			List<ScQtCheckList> financialChecklist, ScQtCheckList qtChecklist,
-			ScQt qt) {
+			ScQt qt, boolean isSave){ //Bug #30046
 		log.info("checkFinancialSpecEstimations");
 		int count = 0;
 		if (CollectionUtils.isNotEmpty(financialChecklist)) {
@@ -15810,8 +15810,12 @@ public class SpecificationBackingBean extends
 						if (tplSpecEstimation.getEstimatedCost() != null) {
 							//20201217@haziq- Bug #29806 - Start
 								BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
-								
-								if (estimatedCost.compareTo(BigDecimal.ZERO) == 0){		
+								//20210205@haziq- Bug #30046 - Start
+								BigDecimal indicativeUnitPrice = tplSpecEstimation.getIndicativeUnitPrice();
+								if (indicativeUnitPrice == null && !isSave) {
+									throw new EpException(MessageConst.ERROR_760520);
+								}
+								else if ( indicativeUnitPrice != null  && estimatedCost.compareTo(BigDecimal.ZERO) == 0){		
 									throw new EpException(MessageConst.ERROR_760519, 
 											new String[]{ 
 											ResourceBundleUtils.getMessage(
@@ -15819,9 +15823,10 @@ public class SpecificationBackingBean extends
 													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 													new FacesScopes().getUserLocale()) });
 								}
+								//20210205@haziq- Bug #30046 - End
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
 										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
-								//20201217@haziq- Bug #29806 - Start
+								//20201217@haziq- Bug #29806 - End
 						}
 					}
 				}
