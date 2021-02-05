@@ -523,7 +523,7 @@ public class SmBulkApplicationBackingBean extends
 		String catNoRemarks = "";
 		int countNoAction = 0;
 		int countNoRemarks = 0;
-		boolean catNoApprove = false; //21937
+		boolean catNoApprove = true; //21937
 
 		sbNoAction.append("<table>");
 		sbNoRemarks.append("<table>");
@@ -545,10 +545,22 @@ public class SmBulkApplicationBackingBean extends
 							+ ",";
 				}
 				//21937 - start
-				if (cat.getApprvrDecFlg() == 0) {
-					catNoApprove = true;
+				if (cat.getApprvrDecFlg() != 0) {
+					catNoApprove = false;
 				} //21937 - end
 			}
+			
+			//21937 - start
+			if(vo.getAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				for (SmSupplierCategory cat : vo.getApprovedCategories()){
+					if (cat.getApprvrDecFlg() == 0 && StringUtils.isBlank(cat.getApproverRemarks())) {
+						catNoRemarks = catNoRemarks + cat.getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+								+ ",";
+					}
+				}
+			}
+			//21937 - end
 
 			if (!catNoAction.equals("")) {
 				sbNoAction.append("<tr>").append("<td>").append(++countNoAction).append(") ").append("</td><td>");
