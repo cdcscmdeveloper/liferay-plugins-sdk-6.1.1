@@ -114,7 +114,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 						.getSmApplRejectReasons().iterator();
 			    while(smApplRejectReasonIter.hasNext()){
 			    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
-			        if(smApplRejectReason.isReasonByPo()){
+			        if(!smApplRejectReason.isReasonByPo()){
 			        	smApplRejectReasonIter.remove();
 			          }
 			      }
