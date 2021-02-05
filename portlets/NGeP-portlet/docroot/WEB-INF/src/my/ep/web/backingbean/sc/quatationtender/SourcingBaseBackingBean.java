@@ -4691,6 +4691,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						// #18685 - End
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
+							// #18685 - Start
+							if (QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue() == getManagedBean().getCurrentStatusId() 
+									&& taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
+								finalizationReport.setPreviousReportContent(finalizationReport.getReportContent());
+								saveScQtFinalizationReport(finalizationReport);
+							}
+							// #18685 - End
 							iterator.remove();
 							continue;
 						} 
