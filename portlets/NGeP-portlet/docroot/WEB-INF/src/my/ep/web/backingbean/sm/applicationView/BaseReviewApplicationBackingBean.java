@@ -2408,12 +2408,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			rejectReasons = SmCommonUtil
 					.getHtmlApplicationRejectReasons(rejectReasonList);
 
-			if (StringUtils.isBlank(rejectReasons)) {
-				rejectReasons = SmApplicationUtil.getSmRemarksByDocTypeAndId(
-						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
-						getManagedBean().getSmAppl().getOriginalAppl()
-								.getApplId());
-			}
+			//			Refs #15629 - Start - 5/2/2021
+			//			if (StringUtils.isBlank(rejectReasons)) {
+			//				rejectReasons = SmApplicationUtil.getSmRemarksByDocTypeAndId(
+			//						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+			//						getManagedBean().getSmAppl().getOriginalAppl()
+			//								.getApplId());
+			//			}
+			//			Refs #15629 - End - 5/2/2021
 
 		} else {
 			if (getManagedBean().getSmAppl().getApplType()
