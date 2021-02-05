@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.financialorg;
 //20201210@Jacky - Enhancement#28836 - Start
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 //20201210@Jacky - Enhancement#28836 - End
 import java.text.SimpleDateFormat;
@@ -17,6 +18,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -62,6 +65,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -78,6 +82,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 /**
  * Backing Bean for Financial Org
  * 
@@ -135,6 +145,31 @@ public class FinancialOrgBackingBean extends
 			new LogKey(1L); 
 		}
 	}
+
+	// #29487 - View bank details by factoring user_endorsed - Start
+	/**
+	 * Login user has factoring user role
+	 * @return boolean
+	 */
+	public boolean isRoleFactoringUser(){
+		boolean isFacUser = false;
+		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			isFacUser = true;
+		}
+		
+		return isFacUser;
+		
+	}
+	
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// #29487 - View bank details by factoring user_endorsed - End
 	
 	/* ------------------ PORLET - START ------------------  */
 	/**
@@ -1904,5 +1939,6 @@ public class FinancialOrgBackingBean extends
 		}
 	}
 	//20201210@Jacky - Enhancement#28836 - End
+	
 
 }
