@@ -207,8 +207,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
-		//getManagedBean().setSvTaskId(744L);
-		this.getManagedBean().setActiveIndex(0);
+		//29430
+		if(!getManagedBean().isFromReport())
+			this.getManagedBean().setActiveIndex(0);
 		
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
@@ -2563,8 +2564,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @throws Exception
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
+		//#29430 - start
+		//refreshPage();
+		getManagedBean().setFromReport(true);
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
+		getManagedBean().setFromReport(false);
+		//#29430 - end
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
 	}
 	
