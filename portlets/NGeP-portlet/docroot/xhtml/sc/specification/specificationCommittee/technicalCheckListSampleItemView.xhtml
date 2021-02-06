@@ -72,14 +72,14 @@
 						<td width="21%"><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.scoring.settings.answer.type']}" /></td>
 						<td width="26%"><p:inputText id="sampleanswerType"
-								value="#{templateSpecBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleSpecQuestion.answerTypeCode)}"
+								value="#{templateSpecBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleSpecQuestion.sampleScoreTypeCode)}"
 								disabled="true" size="15" /></td>
 						<td width="17%"><p:outputLabel
 								value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}" />
 
 						</td>
 						<td width="36%"><p:inputText
-								value="#{templateSpecBackingBean.getParameterDesc(specificationBackingBean.managedBean.sampleSpecQuestion.sampleScoreTypeCode)}"
+								value="#{lbl['lbl.sc.checklist.user.score']}"
 								disabled="true" size="15" /></td>
 					</tr>
 					<tr>
@@ -88,6 +88,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="maxScoresample"
 								style="text-align:right;"
+								onkeypress="if (event.keyCode == 46) { return false; }"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.sampleSpecQuestion.sampleScore}"
 								size="15" maxlength="3" required="true"
