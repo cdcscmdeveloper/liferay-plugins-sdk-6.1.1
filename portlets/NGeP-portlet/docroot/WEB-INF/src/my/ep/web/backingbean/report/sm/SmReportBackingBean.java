@@ -1047,7 +1047,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					reportListMap.put(m, new Object[]{
 						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),String.valueOf(row[4]),row[14].toString(),
-						row[5].toString(),row[6].toString(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
+						// #14203 - uppercase perihal
+						row[5].toString(),row[6].toString().toUpperCase(),amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
 					});
 				}
 			}
@@ -1081,6 +1082,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//START HERE POPULATE REPORT ------ 
 		Workbook wb = new XSSFWorkbook(); 
 		CreationHelper createHelper = wb.getCreationHelper();
+		//START - CR:#14203, BUG:#29454
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		//END - CR:#14203, BUG:#29454
 		//Only create Sheet Senarai only if search result return has records.
 		if(!reportListMap.isEmpty()){
 			log.info("LIST IS NOT EMPTY !!!");
@@ -1130,37 +1137,78 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				int rowid = sheetList.getLastRowNum()+1;
 				int countRowFpx = 1;
 				String receiptNo = "";
+				//START - CR: #14203#131 , BUG:#29454
+				int mergeRowFirst = 0;
+				int mergeRowLast = 0;
+				String referenceNo = "";
 				for (Integer key : keyIdList) {
 					Row row = sheetList.createRow(rowid++);
 					Object[] objectArr = reportListMap.get(key);
 					int cellid = 1;
 					Cell cellBil = row.createCell(0);
-					if(receiptNo == ""){
+					if(receiptNo == "" && referenceNo == ""){
 						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirst = rowid;
 					}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
 						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirst = rowid;
+						mergeRowLast = 0;
 					}else{
-						sheetList.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+						//Condition : Current Receipt No. equal to Previous row Receipt No.
+						//Fix issue on overlaping mergion during merge more than 2 row
+						//START - CR: #14203#131 , BUG:#29454
+						//Add checking for Scenario with same Receipt No but has different Reference No.
+						if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+							log.info("Inside Has different reference no !!");
+							//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+							cellBil.setCellValue(countRowFpx++);
+							mergeRowFirst = rowid;
+							mergeRowLast = 0;
+						}else{
+							log.info("Inside Has same reference no !!");
+							mergeRowLast = rowid;
+							if(key < keyIdList.size()){
+								if(key == (keyIdList.size() - 1)){
+									sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								}else{
+									Object[] objectArrMerge = reportListMap.get(key+1);
+									if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+										sheetList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+									}
+								}						
+							}
+						}
+						 
 					}
 					cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 					receiptNo = (String)objectArr[2];
+					referenceNo = (String)objectArr[5];// CR: #14203#131 , BUG:#29454
+					/* CR:#14203, BUG:#29454 , comment this section, move/declare to outside the loop
+					CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+					CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+					CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+					CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);*/
 					
 					for(int x=0; x<objectArr.length; x++){
 						if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 						Cell cell = row.createCell(cellid);
 						if(objectArr[x] instanceof Date){
 							cell.setCellValue((Date) objectArr[x]);
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+							cell.setCellStyle(columnStyleDate);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 						}else if(objectArr[x] instanceof BigDecimal){
 							cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+							cell.setCellStyle(columnStyleBigDecimal);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 						}else if(objectArr[x] instanceof Double){
 							cell.setCellValue(((Double) objectArr[x]).doubleValue());
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+							cell.setCellStyle(columnStyleDouble);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 						}else{
 							if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 							else cell.setCellValue((String) objectArr[x]);
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+							cell.setCellStyle(columnStyleString);
+//							cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));							
 						}
 						cellid++;
 					}
@@ -1338,6 +1386,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		try{
 			reportList = generateSMCollectionReportBasedClassificationCode(params,"L");
 			if(!reportList.isEmpty()){
+				log.info("Main Report Lize Size === "+reportList.size());
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[13] != null ? (BigDecimal)row[13] : BigDecimal.ZERO;
@@ -1348,24 +1397,53 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal netPrice = (priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge)).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								//#14203 - uppercase perihal
+								(Date) row[3],row[2].toString(),
+								row[5] != null ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
+								row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						fpxCount++;
 					}else{
 						creditList.put(creditCount, new Object[] {
-								(Date) row[3],row[2].toString(),row[5].toString(),row[11].toString(),row[12].toString(),
+								// 26307 - add card type & #14203 - uppercase perihal
+								(Date) row[3],
+								row[2].toString(),
+								(row[5] != null) ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
+								row[11].toString(),row[12].toString().toUpperCase(),
 								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
 						});
 						creditCount++;
 					}
+					//START - CR:#14203#159, BUG:#29454
+					totalPrice = totalPrice.add(priceAmt);
+					totalGst = totalGst.add(gstAmt);
+					totalServiceCharge = totalServiceCharge.add(serviceCharge);
+					totalGstServiceCharge = totalGstServiceCharge.add(gstServiceCharge);
+					totalNetAmount = totalNetAmount.add(netPrice);
+					//END - CR:#14203#159, BUG:#29454
 				}
-			}			
+				//START - CR:#14203#159, BUG:#29454
+				summaryList.put(0, new Object[] {
+					params.get(SmReportConst.PARAM_CODE),(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+				});
+				
+				summaryList.put(1, new Object[] {
+						"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+				});
+				//END - CR:#14203#159, BUG:#29454
+			}else{//START - CR:#14203#159, BUG:#29454
+				summaryList.put(0, new Object[] {
+						"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
+				});
+			}
+			//END - CR:#14203#159, BUG:#29454
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		/*Update #15990 : Include query to get summary of the collection report based on classification code */
-		summaryReportList = generateSMCollectionReportBasedClassificationCode(params,"R");
+		//START - CR:#14203#159, BUG:#29454
+		/*summaryReportList = generateSMCollectionReportBasedClassificationCode(params,"R");
 		if(!summaryReportList.isEmpty()){
 			for(int x=0; x<summaryReportList.size(); x++){
 				Object[] row = (Object[]) summaryReportList.get(x);
@@ -1388,11 +1466,17 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			summaryList.put(summaryReportList.size(), new Object[] {
 					"Keseluruhan",totalCount,totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
 			});
-		}
+		}*/
+		//END - CR:#14203#159, BUG:#29454
 		
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
-		
+		//START - CR:#14203#145 , BUG:#29454
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,false,false);
+		//END - CR:#14203#145 , BUG:#29454
 		//Only Create Sheet Senarai_FPX only if search result has return records
 		if(!fpxList.isEmpty()){
 			Sheet sheetFPX = wb.createSheet(sheetName[0]); 
@@ -1436,21 +1520,25 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				Cell cellBil = row.createCell(0);
 				cellBil.setCellValue(countRowFpx++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				
+				                                          
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
 						cell.setCellValue((Date) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(obj instanceof Double){
 						cell.setCellValue(((Double) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else{
 						cell.setCellValue((String) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						cell.setCellStyle(columnStyleString);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
 					}
 					cellid++;
 				}
@@ -1520,24 +1608,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				Cell cellBil = row.createCell(0);
 				cellBil.setCellValue(countRowCC++);
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
-				
+				//START - CR:#14203#145 , BUG:#29454
 				for (Object obj : objectArr) {
 					Cell cell = row.createCell(cellid);
 					if(obj instanceof Date){
 						cell.setCellValue((Date) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
 					}else if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
 					}else if(obj instanceof Double){
 						cell.setCellValue(((Double) obj).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
 					}else{
 						cell.setCellValue((String) obj);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,false));
+						cell.setCellStyle(columnStyleString);
 					}
 					cellid++;
 				}
+				//END - CR:#14203#145 , BUG:#29454
 			}
 			//Setting Auto filtering in each header column list
 			sheetCC.setAutoFilter(new CellRangeAddress(headerRowListCredit.getRowNum(),sheetCC.getLastRowNum(),1,columnsList.length-1));
@@ -1582,10 +1675,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
             cell.setCellValue(columnsSummaryList[i]);
             cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
         }
-        
-        if(!summaryReportList.isEmpty()){
+        //START - CR:#14203#159, BUG:#29454
+        if(!summaryList.isEmpty()){
 			log.info("SUMMARY LIST IS NOT NULL !!!");
 			Set<Integer> keyIdSummary = summaryList.keySet();
+			int summaryListSize = summaryList.size();
 			int rowid = sheetSummary.getLastRowNum()+1;
 			for (Integer key : keyIdSummary) {
 				Row row = sheetSummary.createRow(rowid++);
@@ -1595,22 +1689,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Cell cell = row.createCell(cellid++);
 					if(obj instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) obj).doubleValue());
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,true,false,true));
 					}else if(obj instanceof Integer){
 						cell.setCellValue(((Integer) obj).intValue());
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
 						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,true,true));
 					}else{
 						cell.setCellValue((String) obj);
-						if(key == 0)cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,false,true));
-						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,false,false,false,false,true));
+						if(key == 0 && summaryListSize > 1)cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,true));
+						else cell.setCellStyle(columnStyle(wb,createHelper,false,true,true,false,false,false,true));
 					}
 				}
 			}
+			if(summaryListSize == 1){
+				Row noRecordRow = sheetSummary.createRow(sheetSummary.getLastRowNum()+1);
+				Cell cellNoRecord = noRecordRow.createCell(0);
+				cellNoRecord.setCellValue("Rekod tidak dijumpai");
+				cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
+				sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
+			}
 		}
         
-        if(reportList.isEmpty()){
+        /*if(reportList.isEmpty()){
         	summaryList.put(0, new Object[] {
 					"Keseluruhan",(fpxCount+creditCount),totalPrice,totalGst,totalServiceCharge,totalGstServiceCharge,totalNetAmount
 			});
@@ -1641,8 +1742,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			cellNoRecord.setCellValue("Rekod tidak dijumpai");
 			cellNoRecord.setCellStyle(titleHeaderStyle(wb,false,false,false,false));
 			sheetSummary.addMergedRegion(new CellRangeAddress(sheetSummary.getLastRowNum(),sheetSummary.getLastRowNum(),0,columnsSummaryList.length-1)); 
-        }
-        
+        }*/
+        //END - CR:#14203#159, BUG:#29454
         // Resize all columns to fit the content size
         for(int i = 0; i < columnsSummaryList.length; i++) {  
         	if(i==0)sheetSummary.setColumnWidth(i, 17*256);//Column : Kod Penjenisan
@@ -1709,19 +1810,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if("M".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE1))){//MOF Registration Fee
 				payType.add("MF");
 				payType.add("RF");
-				paymentTypeDesc.add("Bayaran Pendaftaran");
+				// 14203 - Change Bayaran Pendaftaran
+				paymentTypeDesc.add("Fi Pendaftaran MOF");
 			}
 			
 			if("P".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE2))){//Processing Fee
 				payType.add("PF");
 				payType.add("RPF");
-				paymentTypeDesc.add("Bayaran Proses");
+				// 14203 - Change Bayaran Proses
+				paymentTypeDesc.add("Fi Pemprosesan MOF");
 			}
 			
 			String paymentType = "";
 			if("S".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_TYPE3))){//Soft Certificate Fee
 				payType.add("SF");
-				paymentTypeDesc.add("Bayaran Sijil Digital");
+				// 14203 - Change Bayaran Sijil Digital
+				paymentTypeDesc.add("Fi Sijil Digital");
 			}
 			
 			for(int b=0; b<payType.size(); b++){
@@ -1758,9 +1862,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							row[2].toString(),//No Resit
 							row[5].toString(),//Nama Pembekal
 							String.valueOf(row[6]),//No Permohonan
-							row[7].toString(),//No Rujukan
+							//row[7].toString(),//No Rujukan
+							row[7] != null ? row[7].toString() : "",
 							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
+							//#14203 - uppercase perihal
+							row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
 							priceAmt ,//Harga
 							gstAmt,//GST
 							serviceCharge, // Caj Perkhidmatan 
@@ -1768,26 +1874,53 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 							netPrice,//Amaun Bersih
 							netPrice,//Jumlah Keseluruhan
 							row[16].toString()//Status
-						});
+						});					
 						fpxCount++;
-					}else{
-						creditList.put(creditCount, new Object[] {
-							(Date) row[4],//Tarikh Transaksi
-							(Date) row[3],//Tarikh Resit
-							row[2].toString(),//No Resit
-							row[5].toString(),//Nama Pembekal
-							String.valueOf(row[6]),//No Permohonan
-							row[7].toString(),//No Rujukan
-							row[12].toString(),//Jenis Terimaan-Kod
-							row[13].toString(),//Jenis Terimaan-Perihal
-							priceAmt ,//Harga
-							gstAmt,//GST
-							serviceCharge, // Caj Perkhidmatan 
-							gstServiceCharge,//GST Caj Perkhidmatan
-							netPrice,//Amaun Bersih
-							netPrice,//Jumlah Keseluruhan
-							row[16].toString()//Status
-						});
+					}else{						
+						if(m > 0){							
+							// #14203 - Row list issue
+							//Object[] previousRow = (Object[]) reportList.get(m-1);
+							//if(!row[5].toString().equals(previousRow[5].toString())){								
+								creditList.put(creditCount, new Object[] {
+										(Date) row[4],//Tarikh Transaksi
+										(Date) row[3],//Tarikh Resit
+										row[2].toString(),//No Resit
+										row[5].toString(),//Nama Pembekal
+										String.valueOf(row[6]),//No Permohonan
+										row[7] != null ? row[7].toString() : "",//No Rujukan ,CR: #14203, Bug:#29454
+										row[12].toString(),//Jenis Terimaan-Kod
+										//#14203 - uppercase perihal
+										row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
+										priceAmt ,//Harga
+										gstAmt,//GST
+										serviceCharge, // Caj Perkhidmatan 
+										gstServiceCharge,//GST Caj Perkhidmatan
+										netPrice,//Amaun Bersih
+										netPrice,//Jumlah Keseluruhan
+										row[16].toString()//Status
+									});
+							// #14203 - Row list issue
+							//}
+						} else {														
+							creditList.put(creditCount, new Object[] {
+									(Date) row[4],//Tarikh Transaksi
+									(Date) row[3],//Tarikh Resit
+									row[2].toString(),//No Resit
+									row[5].toString(),//Nama Pembekal
+									String.valueOf(row[6]),//No Permohonan
+									row[7] != null ? row[7].toString() : "",//No Rujukan ,CR: #14203, Bug:#29454
+									row[12].toString(),//Jenis Terimaan-Kod
+									//#14203 - uppercase perihal
+									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
+									priceAmt ,//Harga
+									gstAmt,//GST
+									serviceCharge, // Caj Perkhidmatan 
+									gstServiceCharge,//GST Caj Perkhidmatan
+									netPrice,//Amaun Bersih
+									netPrice,//Jumlah Keseluruhan
+									row[16].toString()//Status
+								});
+						}												
 						creditCount++;
 					}
 				}
@@ -1827,6 +1960,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
+		//START - CR:#14203, BUG:#29454
+		CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+		CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+		CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+		//END - CR:#14203, BUG:#29454
 		//Only Create  Sheet of Senarai_FPX , only if search result has return records
 		if(!fpxList.isEmpty()){
 			log.info("FPX LIST IS NOT EMPTY !!!");
@@ -1872,37 +2011,80 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			int rowid = sheetFPX.getLastRowNum()+1;
 			int countRowFpx = 1;
 			String receiptNo = "";
+			//START - CR: #14203#131 , BUG:#29454
+			int mergeRowFirstFpx = 0;
+			int mergeRowLastFpx = 0;
+			String referenceNo = "";
 			for (Integer key : keyIdFpx) {
 				Row row = sheetFPX.createRow(rowid++);
 				Object[] objectArr = fpxList.get(key);
 				
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNo == ""){
+				if(receiptNo == "" && referenceNo == ""){
 					cellBil.setCellValue(countRowFpx++);
+					mergeRowFirstFpx = rowid;
 				}else if(!receiptNo.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowFpx++);
+					mergeRowFirstFpx = rowid;
+					mergeRowLastFpx = 0;
 				}else{
-					sheetFPX.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 
+					//Condition : Current Receipt No. equal to Previous row Receipt No.
+					//Fix issue on overlaping mergion during merge more than 2 row
+					//START - CR: #14203#131 , BUG:#29454
+					//Add checking for Scenario with same Receipt No but has different Reference No.
+					if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
+						//log.info("Inside Has different reference no !!");
+						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+						cellBil.setCellValue(countRowFpx++);
+						mergeRowFirstFpx = rowid;
+						mergeRowLastFpx = 0;
+					}else{
+						//log.info("Inside Has same reference no !!");
+						mergeRowLastFpx = rowid;
+						if(key < keyIdFpx.size()){
+							if(key == (keyIdFpx.size() - 1)){
+								sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpx-1,mergeRowLastFpx-1,0,0));
+							}else{
+								Object[] objectArrMerge = fpxList.get(key+1);
+								if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
+									sheetFPX.addMergedRegion(new CellRangeAddress(mergeRowFirstFpx-1,mergeRowLastFpx-1,0,0));
+								}
+							}						
+						}
+					}
 				}
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNo = (String)objectArr[2];
+				referenceNo = (String)objectArr[5];
+				//START - CR:#14203, BUG:#29454 , comment this link, move/declare to outside the loop
+				//CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+				//CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+				//CellStyle columnStyleDouble = columnStyle(wb,createHelper,false,false,false,false,true,false,false);
+				//CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				//END - CR:#14203, BUG:#29454
+				
 				for(int x=0; x<objectArr.length; x++){
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else{
-						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
-						else cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+//						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
+//						else cell.setCellValue((String) objectArr[x]);
+						cell.setCellValue((String) objectArr[x]);
+						cell.setCellStyle(columnStyleString);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}
 					cellid++;
 				}
@@ -1993,38 +2175,74 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        Set<Integer> keyIdCredit = creditList.keySet();
 			int rowid = sheetCC.getLastRowNum()+1;
 			int countRowCC = 1;
+			//START -Bug:#29454 , CR:#14203
+			int mergeRowFirst = 0;
+			int mergeRowLast = 0;
 			String receiptNoCC = "";
+			String referenceNoCC = "";//CR: #14203#131 , BUG:#29454
 			for (Integer key : keyIdCredit) {
 				Row row = sheetCC.createRow(rowid++);
 				Object[] objectArr = creditList.get(key);
 				int cellid = 1;
 				Cell cellBil = row.createCell(0);
-				if(receiptNoCC == ""){
+				if(receiptNoCC == "" && referenceNoCC == ""){//START - CR: #14203#131 , BUG:#29454
 					cellBil.setCellValue(countRowCC++);
+					mergeRowFirst = rowid;
 				}else if(!receiptNoCC.equalsIgnoreCase((String)objectArr[2])){
 					cellBil.setCellValue(countRowCC++);
+					mergeRowFirst = rowid;
+					mergeRowLast = 0;
 				}else{
-					sheetCC.addMergedRegion(new CellRangeAddress(rowid-2,rowid-1,0,0)); 	
+					//Condition : Current Receipt No. equal to Previous row Receipt No.
+					//Fix issue on overlaping mergion during merge more than 2 row
+					//START - CR: #14203#131 , BUG:#29454
+					//Add checking for Scenario with same Receipt No but has different Reference No.
+					if(!referenceNoCC.equalsIgnoreCase((String)objectArr[5])){
+						//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
+						cellBil.setCellValue(countRowCC++);
+						mergeRowFirst = rowid;
+						mergeRowLast = 0;
+					}else{
+						mergeRowLast = rowid;
+						if(key < keyIdCredit.size()){
+							if(key == (keyIdCredit.size() - 1)){
+								sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+							}else{
+								Object[] objectArrMerge = creditList.get(key+1);
+								if(!receiptNoCC.equalsIgnoreCase((String)objectArrMerge[2])){
+									sheetCC.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								}
+							}						
+						}
+					}
 				}
+				//END -Bug:#29454 , CR:#14203 ,CR: #14203#131
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNoCC = (String)objectArr[2];
+				referenceNoCC = (String)objectArr[5];//CR: #14203#131 , BUG:#29454
 				for (int x=0; x<objectArr.length; x++) {
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
+					//START - CR: #14203#131 , BUG:#29454
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleDouble);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else{
 						if("null".equalsIgnoreCase((String) objectArr[x]))cell.setCellValue("");
 						else cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);
+						//cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}
+					//END - CR: #14203#131 , BUG:#29454
 					cellid++;
 				}
 			}
@@ -2194,7 +2412,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) reportList.get(m);
 					fullList.put(m, new Object[] {
 						(Date) row[3],row[2].toString(),row[5].toString(),
-						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString(),
+						//#14203 - uppercase perihal
+						row[4].toString(),row[1].toString(),row[7].toString(),row[8].toString().toUpperCase(),
 						(BigDecimal) row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO
 					});
 				}
@@ -2271,20 +2490,29 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				cellBil.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,false,false));
 				receiptNo = (String)objectArr[1];
 				
+				CellStyle columnStyleDate = columnStyle(wb,createHelper,false,false,true,true,false,false,false);
+				CellStyle columnStyleBigDecimal = columnStyle(wb,createHelper,false,false,false,false,true,false,false);					
+				CellStyle columnStyleInteger = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				CellStyle columnStyleString = columnStyle(wb,createHelper,false,false,false,false,false,true,false);
+				
 				for (int x=0; x<objectArr.length; x++) {
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
 						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
+						cell.setCellStyle(columnStyleDate);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,true,false,false,false));
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
+						cell.setCellStyle(columnStyleBigDecimal);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,false));
 					}else if(objectArr[x] instanceof Integer){
 						cell.setCellValue(((Integer) objectArr[x]).intValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleInteger);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}else{
 						cell.setCellValue((String) objectArr[x]);
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
+						cell.setCellStyle(columnStyleString);
+//						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,false));
 					}
 					cellid++;
 				}
@@ -2457,7 +2685,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal totalAll = jan.add(feb).add(mac).add(apr).add(may).add(jun).add(july).add(aug).add(sep).add(oct).add(nov).add(dec);
 							
 					revenueCollectionList.put(m, new Object[]{
-						row[0].toString(),row[1].toString(),
+						//#14203 - uppercase perihal
+						row[0].toString(),row[1].toString().toUpperCase(),
 						(BigDecimal)row[2] != null ? (BigDecimal)row[2] : "-",
 						(BigDecimal)row[3] != null ? (BigDecimal)row[3] : "-",
 						(BigDecimal)row[4] != null ? (BigDecimal)row[4] : "-",
