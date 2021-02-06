@@ -3421,7 +3421,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		
-		// remove empty remark - start
+		// #11134 remove empty remark - start
 		List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
 		List<ScLoaRemark> finalScLoaRemarks = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(scLoaRemarks)){
@@ -3432,7 +3432,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		scLoa.setScLoaRemarks(finalScLoaRemarks);
-		// remove empty remark - end
+		// #11134 remove empty remark - end
 
 		validateLOADetails(scLoa, outcome);
 
