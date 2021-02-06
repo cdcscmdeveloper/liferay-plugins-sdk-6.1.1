@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -17465,13 +17465,13 @@ return null;
  */
 public SelectItem[] getDropDownSampleScoreType(String scoreTyp){	
 	List<String> ScoreTypes = new ArrayList<String>();
-	ScoreTypes.add(ParameterConst.SCORE_TYPE_USER);
+	ScoreTypes.add(ParameterConst.ANSWER_TYPE_TEXT);
 	SelectItem[] items = null;
 	try {
 		items = new SelectItem[ScoreTypes.size()];
 		int i = 0;
 		for (String scoreType : ScoreTypes) {
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SCORE_TYPE);
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.ANSWER_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterCode()
 						.equals(scoreType)) {
@@ -17498,9 +17498,9 @@ public void sampleRequiredChange(TplSpecQuestion specQuestion){
 			ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	ParameterReqDTO  scoreType = new ParameterReqDTO();
 	scoreType
-			.setParameterType(ParameterTypeConst.SCORE_TYPE);
+			.setParameterType(ParameterTypeConst.ANSWER_TYPE);
 	scoreType
-			.setParameterCode(ParameterConst.SCORE_TYPE_USER);
+			.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
 	ParameterResDTO scoreTyperesDTO = parameterSo
 			.retrieveParameterByTypeAndCode(scoreType);
 	specQuestion.setSampleScoreTypeCode(scoreTyperesDTO.getPmParameter());
