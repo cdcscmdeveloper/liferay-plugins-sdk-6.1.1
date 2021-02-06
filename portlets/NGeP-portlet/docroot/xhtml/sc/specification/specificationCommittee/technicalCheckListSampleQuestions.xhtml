@@ -135,7 +135,8 @@
 			<p:column style="white-space: normal;">
 			
 	 	   <h:panelGroup id="sampleQuanity">
-			<p:inputText value="#{technicalSampleQuestion.sampleQuantity}" maxlength="9"  label="#{quantityMsg}"
+			<p:inputText value="#{technicalSampleQuestion.sampleQuantity}" maxlength="9" 
+			 onkeypress="if (event.keyCode == 46) { return false; }"  label="#{quantityMsg}"
 			style="text-align:right"
 			disabled="#{!technicalSampleQuestion.sampleReq or specificationBackingBean.managedBean.readOnly}">
 			<ac:validateNumber integerOnly="true" maxIntegerDigits="9">
@@ -152,7 +153,7 @@
 			value="#{technicalSampleQuestion.sampleScoreTypeCode.parameterId}" >
 				
 			<f:selectItems
-				value="#{specificationBackingBean.getDropDownSampleScoreType(ParameterTypeConst.scoreType)}"></f:selectItems>
+				value="#{specificationBackingBean.getDropDownSampleScoreType(ParameterTypeConst.answerType)}"></f:selectItems>
 			<p:ajax event="change" update="@this"
 				partialSubmit="true" process="@this"  />
 		</h:selectOneMenu>
