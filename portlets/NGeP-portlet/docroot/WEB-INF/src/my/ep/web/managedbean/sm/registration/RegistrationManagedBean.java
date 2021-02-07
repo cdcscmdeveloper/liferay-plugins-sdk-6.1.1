@@ -175,6 +175,10 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private boolean showOwnerPersonnel = false;
 	
+	//14685 - START
+	private boolean showMessage;
+	//14685 - END
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -1046,4 +1050,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
 		this.permenantDivisionLs = permenantDivisionLs;
 	}
+	//14685 - START
+	public boolean isShowMessage() {
+		return showMessage;
+	}
+
+	public void setShowMessage(boolean showMessage) {
+		this.showMessage = showMessage;
+	}
+	//14685 - END
 }

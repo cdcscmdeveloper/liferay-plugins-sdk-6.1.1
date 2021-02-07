@@ -50,6 +50,10 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	private boolean showSst;
 	private boolean showBranchPointOfContact;
 	private Long divisionIds;//13320
+	
+	//14685 - START
+	private boolean showMessage;
+	//14685 - END
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
 		/**
@@ -254,5 +258,13 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	public void setBranchCompanyDivisions(List<SelectItem> branchCompanyDivisions) {
 		this.branchCompanyDivisions = branchCompanyDivisions;
 	}
+	//14685 - START
+	public boolean isShowMessage() {
+		return showMessage;
+	}
 
+	public void setShowMessage(boolean showMessage) {
+		this.showMessage = showMessage;
+	}
+	//14685 - END
 }
