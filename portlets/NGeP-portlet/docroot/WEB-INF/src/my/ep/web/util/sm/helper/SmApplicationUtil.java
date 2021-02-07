@@ -13618,7 +13618,7 @@ public class SmApplicationUtil {
 		System.out.println("lastApprovedApplId == " + lastApprovedApplId);
 		System.out.println("getSupplierId ======= " + supplier.getSupplierId());
 		System.out.println("getApplId =========== " + supplier.getSmAppl().getApplId());
-		
+				
 		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMofCertsBySupplierIdAndByApplIds(reqDTO, lastApprovedApplId);
 
 		VirtualCertReqDTO mofCert = new VirtualCertReqDTO();
@@ -13630,12 +13630,14 @@ public class SmApplicationUtil {
 					// update record_status = 4
 					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
 					mofCert.setMofCert(cert);
+					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
 				}
 				if (cert.getSmAppl().getApplId() == lastApprovedApplId) {
 					System.out.println("2. cert.getSmAppl().getApplId() ==> " + cert.getSmAppl().getApplId());
 					// update record_status = 1
 					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					mofCert.setMofCert(cert);
+					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
 				}
 				//28774 - temp stopper
 				if(mofCert.getMofCert() != null){
