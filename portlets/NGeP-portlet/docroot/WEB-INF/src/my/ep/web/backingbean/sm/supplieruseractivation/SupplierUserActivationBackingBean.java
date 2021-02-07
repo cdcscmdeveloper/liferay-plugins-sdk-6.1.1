@@ -186,6 +186,9 @@ public class SupplierUserActivationBackingBean extends
 			log.info("*********Activation - is Valid**********");
 			String personnelId = String.valueOf(this.getManagedBean().getSmPersonnel().getPersonnelId());
 			String supplierId = String.valueOf(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl());
+			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
+			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getMofNo());
 			String encrpKeyStr = this.getManagedBean().getEncrpKeyStr();
 			
 			log.info("****activation key***" + this.getTempPassword());
