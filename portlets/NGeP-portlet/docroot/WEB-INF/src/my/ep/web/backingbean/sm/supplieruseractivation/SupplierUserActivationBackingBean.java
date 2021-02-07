@@ -282,6 +282,9 @@ public class SupplierUserActivationBackingBean extends
 							if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
 									getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
 								//return navigateToAckUser(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl());
+								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
+								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getMofNo());
 								return navigateToAckUser(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 							} else {
 								return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
@@ -333,6 +336,9 @@ public class SupplierUserActivationBackingBean extends
 								if(getManagedBean().getSmPersonnel().getSmAppl().getSupplierType()!=null && (getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) || 
 										getManagedBean().getSmPersonnel().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT))){
 									//return navigateToAckUser(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
+									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl());
+									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
+									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getMofNo());
 									return navigateToAckUser(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 								} else {
 									return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
