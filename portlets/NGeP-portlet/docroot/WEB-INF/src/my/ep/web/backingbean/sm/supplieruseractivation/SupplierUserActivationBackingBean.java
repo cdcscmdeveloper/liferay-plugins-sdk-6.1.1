@@ -188,8 +188,8 @@ public class SupplierUserActivationBackingBean extends
 			String supplierId = String.valueOf(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl());
 			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
-			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
-			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
+			//log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
+			//log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
 			String encrpKeyStr = this.getManagedBean().getEncrpKeyStr();
 			
 			log.info("****activation key***" + this.getTempPassword());
@@ -288,8 +288,8 @@ public class SupplierUserActivationBackingBean extends
 								//return navigateToAckUser(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl());
 								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
-								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
-								log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
+								//log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
+								//log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
 								return navigateToAckUser(getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 							} else {
 								return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
@@ -343,8 +343,8 @@ public class SupplierUserActivationBackingBean extends
 									//return navigateToAckUser(reqDTO.getSmPersonnel().getSmAppl().getSmSupplier().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl());
 									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
-									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
-									log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
+									//log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
+									//log.info("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
 									return navigateToAckUser(getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 								} else {
 									return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
