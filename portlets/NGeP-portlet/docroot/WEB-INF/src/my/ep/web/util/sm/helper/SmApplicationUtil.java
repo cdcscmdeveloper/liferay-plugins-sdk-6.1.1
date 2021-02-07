@@ -7450,8 +7450,6 @@ public class SmApplicationUtil {
 		remark.setDocId(docId);
 		remark.setDocType(docType);
 		remark.setRemark(remarks);
-		// remark.setRoleCode(roleCode);
-
 		if (roleCode != null) {
 			PmRole role = new PmRole();
 			role.setRoleCode(roleCode);

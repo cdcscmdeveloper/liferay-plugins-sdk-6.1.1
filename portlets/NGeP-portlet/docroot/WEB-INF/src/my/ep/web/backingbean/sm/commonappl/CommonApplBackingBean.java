@@ -315,6 +315,9 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
@@ -322,6 +325,9 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setReviewSiteVisit(
 							smObj.isSiteVisitComplete());
 
@@ -388,6 +394,9 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
@@ -395,6 +404,9 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setReviewSiteVisit(
 							smObj.isSiteVisitComplete());
 				}
@@ -687,6 +699,9 @@ public class CommonApplBackingBean extends
 			// smApplBB.getManagedBean().getSmAppl()
 			// .setApplId(new Long(smObj.getDocumentId()));
 			smApplBB.getManagedBean().setPoUser(true);
+			// #29664 - start
+			smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+			// #29664 - end
 			smApplBB.getManagedBean().setSupplierUser(false);
 			smApplBB.getManagedBean().setApproverUser(false);
 			/*if (srcObj.getSupplierList() != null) {
