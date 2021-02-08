@@ -104,8 +104,8 @@ public class SupplierUserActivationBackingBean extends
 				personnel = resDTO.getSmPersonnel();
 				supplierProfile = personnel.getSmAppl().getSmSupplier();
 				SmMofAccount smMofAccount = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
-						getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId(),
-						getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
+						supplierProfile.getSupplierId(),
+						personnel.getSmAppl().getSupplierType());
 
 				log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount);
 				if(smMofAccount!=null) {
