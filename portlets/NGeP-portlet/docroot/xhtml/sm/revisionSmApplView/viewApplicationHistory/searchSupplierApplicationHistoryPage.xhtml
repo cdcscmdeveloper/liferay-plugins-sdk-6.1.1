@@ -94,12 +94,12 @@
 					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.applicationstatus']}">
+				<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :40%;white-space : normal">
 					<h:outputText value="#{viewSuppProfileBackingBean.getStatusDescription(smAppl)}" />
 				</p:column>	
 				
 <!-- #28771 START -->				
-				<p:column headerText="#{lbl['lbl.sm.supportingDocumentMode']}" style="width :40%;white-space : normal">
+				<p:column headerText="#{lbl['lbl.sm.supportingDocumentMode']}">
 					<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					 rendered="#{empty smAppl[15]}"/>	
 					  <h:outputText value="#{lbl['lbl.sm.suppDoc.online']}"
