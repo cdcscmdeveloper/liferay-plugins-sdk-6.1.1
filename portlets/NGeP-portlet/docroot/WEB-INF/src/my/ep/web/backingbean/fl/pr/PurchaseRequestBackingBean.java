@@ -3321,10 +3321,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
 		//#28718 - Start
-		boolean bCheck = true;
 		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
-		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
-			bCheck = checkTriggeredNewPR();
+		if((BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)) && !checkTriggeredNewPR()){
+			return null;
 		}
 		//#28718 - End
 		//29728 - start
@@ -3369,11 +3368,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				return null;
 			}
 			//#28718 - Start
-			if(bCheck){
-				return fulfillmentRequestAction(outcome);
-			}else{
-				return null;
-			}
+			return fulfillmentRequestAction(outcome);
 			//#28718 - End		
 		}
 	}
