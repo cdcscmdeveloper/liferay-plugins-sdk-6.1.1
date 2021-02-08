@@ -1622,6 +1622,10 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			if(getManagedBean().getStatusId().equals((long)49030))
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark().isEmpty()==true)
+					throw new EpException(MessageConst.ERROR_775165);
+
 			if(flBB.getManagedBean().getRemarkList().size() >0){
 				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
@@ -1636,34 +1640,41 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(resDTO.getApproverGroupUserList().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.approverUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,reqDTO.getUserLocale())});
 			}
-			FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
+			FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(),getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 			listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 			reqDTO.setApproverUserList(listOfApprover);
 			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_745019;
-					
+                
 				if(getManagedBean().getStatusId().equals(FulfilmentStatusConst.AP59_PAYMENT_VIA_AP59)){
 					messageId = MessageConst.INFO_745007;
 				}
+				
+				if (getManagedBean().getStatusId().equals(FulfilmentStatusConst.AP59_NOT_APPROVED)) {
+					messageId = MessageConst.INFO_745025;
+				}
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
-				} 
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
+				}
+				FacesContext.getCurrentInstance().addMessage(
 						null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo()}, 
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								messageId,
+								new String[] {
+										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+												ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo() },
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					getManagedBean().setInvoice(resDTO.getInvoice());
-					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-						getFactoringDtl(); 
+					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(),
+							resDTO.getRemarkList(), resDTO.getAttachmentList());
+					if (getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()) {
+						getFactoringDtl();
 					}
 				}
 			}
