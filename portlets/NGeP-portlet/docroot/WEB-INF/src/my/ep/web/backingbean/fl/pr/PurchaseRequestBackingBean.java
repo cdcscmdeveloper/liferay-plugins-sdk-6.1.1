@@ -5114,7 +5114,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setPurchaseRequestId(getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getPurchaseRequestId());
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_DRAFT);
+			if(getManagedBean().getFulfilmentRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION.longValue()) {
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_DRAFT);
+			} else {
+				reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			}
 			reqDTO.setS1DocNo(flFulfilmentRequest.getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 			reqDTO.setScRequestNoteDtlList(getManagedBean().getRequestNoteWithDtlsList());
 			reqDTO.setClone(Boolean.TRUE);
