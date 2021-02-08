@@ -3262,6 +3262,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 
+			// #11134 remove empty remark - start
+			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
+			List<ScLoaRemark> finalScLoaRemarks = new ArrayList<>();
+			if(CollectionUtils.isNotEmpty(scLoaRemarks)){
+				for(ScLoaRemark each : scLoaRemarks){
+					if(!StringUtils.isEmpty(each.getRemark())){
+						finalScLoaRemarks.add(each);
+					}
+				}
+			}
+			scLoa.setScLoaRemarks(finalScLoaRemarks);
+			// #11134 remove empty remark - end
+
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
