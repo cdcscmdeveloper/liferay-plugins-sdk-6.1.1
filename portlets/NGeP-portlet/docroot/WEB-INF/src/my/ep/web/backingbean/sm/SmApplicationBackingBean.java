@@ -9708,8 +9708,14 @@ public class SmApplicationBackingBean extends
 									.getBpmTaskName()
 									.equalsIgnoreCase(
 											SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
-						reqDTO.setLastApprovedAppl(SmApplicationUtil
-								.getLastApprovedApplictionForSupplier(getManagedBean()));
+						//#29823 - Start
+						if (getManagedBean().getSmAppl() == null){
+							reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+						}
+						//#29823 - end
+						/*reqDTO.setLastApprovedAppl(SmApplicationUtil
+								.getLastApprovedApplictionForSupplier(getManagedBean()));*/
+						
 					}
 					// #29663 - start
 					if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
@@ -9721,6 +9727,15 @@ public class SmApplicationBackingBean extends
 						SmApplicationUtil.rejectSmMofCertForSupplier(getManagedBean().getSmAppl().getSmSupplier(), reqDTO.getLastApprovedAppl());
 					}				
 					// #29663 - end
+					
+					// #29823 - start
+					//For NEW_SM_APPLN_FOR_MOF 
+					if (getManagedBean().getSmAppl()== null) {
+						reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+						getManagedBean().getSmAppl().getSmSupplier().setSmAppl(null);
+					}
+					// #29823 - end
+					
 					if (StringUtils.isNotBlank(mofNo)) {
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700028, new String[] {
