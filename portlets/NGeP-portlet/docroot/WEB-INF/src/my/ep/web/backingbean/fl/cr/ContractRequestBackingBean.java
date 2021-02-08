@@ -1780,16 +1780,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			actor = null;
 		}
 		if(actor != null){
-			getManagedBean().setpreparedBy(actor.getUserName());
 			log.info("29555: actor exist");
+			getManagedBean().setpreparedBy(actor.getUserName());
 		}else{
 			log.info("29555: actor not exist");
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
+		if(getManagedBean().getFlRequest().getCreatedBy() != null){
 		userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
 		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 		if(userResDTO.getPmUser().getUserName() != null){
 		getManagedBean().setpreparedBy(userResDTO.getPmUser().getUserName());
+		}}else{
+			getManagedBean().setpreparedBy(null);
 		}
 		}
 	}
