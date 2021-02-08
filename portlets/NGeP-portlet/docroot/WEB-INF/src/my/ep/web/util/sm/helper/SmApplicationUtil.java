@@ -90,6 +90,8 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -7440,22 +7442,21 @@ public class SmApplicationUtil {
 	 * @param string
 	 *            - role code
 	 */
-	// #29664 - start
+	// #29664 & #29663- start
 	public static void manageAndSaveNewSmRemarksWithRoleCode(Long docId, String docType, String remarks, String roleCode) {
-		System.out.println("roleCode = " + roleCode);
+		System.out.println("manageAndSaveNewSmRemarksWithRoleCode | roleCode = " + roleCode);
 		SmRemark remark = new SmRemark();
 		remark.setDocId(docId);
 		remark.setDocType(docType);
 		remark.setRemark(remarks);
-		// remark.setRoleCode(roleCode);
-
-		PmRole role = new PmRole();
-		role.setRoleCode(roleCode);
-		remark.setPmRole(role);
-
+		if (roleCode != null) {
+			PmRole role = new PmRole();
+			role.setRoleCode(roleCode);
+			remark.setPmRole(role);
+		}
 		saveSmRemarks(remark);
 	}
-	// #29664 - end
+	// #29664 & #29663 - end
 
 	/**
 	 * Assign the values and save new sm remarks.
