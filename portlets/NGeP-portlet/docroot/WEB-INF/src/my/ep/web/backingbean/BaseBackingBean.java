@@ -775,15 +775,33 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					.getInstance().getParameterDescListBySearchBean(
 							parameterType, searchBean);
 
-			items = new SelectItem[parameterDescs.size() + 1];
+			// #27601 - Start - 8/2/2021
+			if((parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+					parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR))){
+				
+				items = new SelectItem[parameterDescs.size()];
+			} else {
+				items = new SelectItem[parameterDescs.size() + 1];	
+			}
+			// #27601 - End - 8/2/2021
 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterCode(), parameterDesc.getCodeName());
+				
+				// #27601 - Start - 8/2/2021
+				if((!parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+						!parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR)) && 
+						!parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("P")){
+
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());	
+					
+				}
+				// #27601 - End - 8/2/2021
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
