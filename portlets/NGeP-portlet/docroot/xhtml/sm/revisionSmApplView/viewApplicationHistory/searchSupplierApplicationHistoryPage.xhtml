@@ -94,7 +94,7 @@
 					<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[1] eq 'R'}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.applicationstatus']}">
+				<p:column headerText="#{lbl['lbl.sm.applicationstatus']}" style="width :40%;white-space : normal">
 					<h:outputText value="#{viewSuppProfileBackingBean.getStatusDescription(smAppl)}" />
 				</p:column>	
 				
