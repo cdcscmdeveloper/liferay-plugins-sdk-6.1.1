@@ -2463,6 +2463,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			FacesScopes facesScopes = new FacesScopes();
 			SCQuotationTenderDataType payload = (SCQuotationTenderDataType)this.getManagedBean().getPayLoad();
 		    ScQt scQt = this.getManagedBean().getQt();
+		    String qtNo = scQt.getQtNo();
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			if(CollectionUtils.isEmpty(this.getManagedBean().getPmuserContactpersonList())){
 				this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());
@@ -2499,18 +2500,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			
 			getQTDetailSO().updateGenericRequestApprovalTask(reqDTO);
-			Map<String, String> msgMap = new HashMap<String, String>();
-			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_APPROVE), "INFO_760518");
-			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_REVISE), "INFO_760519");
-			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_SUBMIT), "INFO_760520");
-			msgMap.put(ParameterConst.DOCTYPE_DOA_ASSIGNMENT.concat(BpmOutcomeConst.BPM_REJECT), "INFO_760521");
-
+			String qtDocTypeDesc = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION);
 			FacesContext fc = FacesContext.getCurrentInstance();
-			String msgCode = msgMap.get(reqDTO.getDocType().concat(reqDTO.getApproverAction()));
+			String msgCode = MessageConst.INFO_700026;
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(msgCode, null,
+							MessageUtils.getMessage(msgCode, new String[]{qtDocTypeDesc, qtNo},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
