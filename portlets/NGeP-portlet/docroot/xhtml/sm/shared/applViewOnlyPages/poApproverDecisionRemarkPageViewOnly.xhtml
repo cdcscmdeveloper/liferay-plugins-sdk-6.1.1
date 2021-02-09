@@ -128,6 +128,21 @@
 						rendered="#{empty viewSmApplBackingBean.managedBean.approverRemarkCreatedDate}" />
 				</td>
 			</tr>
+			<!-- #12483 - START -->
+			<tr>
+				<td style="vertical-align:top !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.revise.reason']}" /></td>
+				<td>
+					<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smApplRevises}" >
+						<ui:repeat var="rev" value="#{viewSmApplBackingBean.managedBean.smAppl.smApplRevises}" varStatus="revStatus">
+							<h:outputText value="#{revStatus.index+1}. #{DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,rev.createdDate)}" /> : <h:outputText value="#{rev.reviseReason}"/>
+							<br />
+						</ui:repeat>
+					</c:if>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.revise.notavailable']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smApplRevises}" />
+				</td>
+			</tr>
+			<!-- #12483 - END -->
 		</table>
 	</p:panel>
 	

@@ -41,12 +41,14 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -105,6 +107,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
+import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -9269,6 +9272,16 @@ public class SmApplicationBackingBean extends
 				// #28534 END
 			}*/
 		}
+		
+		//#12483 - START
+		if(decision.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
+			SmApplRevise smApplRevise = new SmApplRevise();
+			smApplRevise.setReviseReason(this.getManagedBean().getReviseReason());
+			smApplRevise.setSmAppl(this.getManagedBean().getSmAppl());
+			this.getManagedBean().setSmApplRevise(smApplRevise);
+		}
+		//#12483 - STOP
+		
 		log.info("<<<<Appl type>>>>");
 		log.info(getManagedBean().getSmAppl().getApplType());
 		//24964 - end
@@ -9369,7 +9382,29 @@ public class SmApplicationBackingBean extends
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 		reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IReviewApplicationSO.class);
-		reqDTO.setPoLoginId(pmUser.getLoginId());
+		
+		//#12483 - START
+		if(res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
+			PmUser po = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, 
+							SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.PO_HQ));
+			if(po.getRecordStatusFlg() == 1){
+				reqDTO.setPoLoginId(po.getLoginId());
+			}else{
+				IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+				ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+				zoneReqDTO.setStateId(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
+				
+				po = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean().getSmAppl().getSupplierType(), 
+																			  getManagedBean().getSmAppl().getApplType(), 
+																			  getManagedBean().getSmAppl().getApplCategoryType(), 
+																			  zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
+				reqDTO.setPoLoginId(po.getLoginId());
+			}	
+		}else{
+			reqDTO.setPoLoginId(pmUser.getLoginId());
+		}
+		//#12483 - END
+		
 		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
 		reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
 		reqDTO.setOutcome(res);
@@ -9637,8 +9672,16 @@ public class SmApplicationBackingBean extends
 						.updateSmSupplierInfo(getManagedBean(), reqDTO);
 			}
 
+		} 
+		
+		//#12483 - START
+		else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
+			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION);
+			actionDesc = SupplierManagementConst.APPROVER_SEND_REVISE_APPL;
+			reqDTO.setSmApplRevise(this.getManagedBean().getSmApplRevise());
 		}
-
+		//#12483 - END
+		
 		log.info("Before final decision ---"
 				+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
@@ -9842,6 +9885,12 @@ public class SmApplicationBackingBean extends
 					successMsg = SmCommonUtil.getOutputMsgBundle(
 							MessageConst.INFO_700017, new String[] { applNo });
 				}
+				//#12483 - START
+				else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
+					successMsg = SmCommonUtil.getOutputMsgBundle(
+							MessageConst.INFO_700023, new String[] { applNo, PpCommonUtil.retrieveUserByLoginIdOrUserId(reqDTO.getPoLoginId(), null).getUserName() });
+				}
+				//#12483 - END
 				reqDTO.setPoOrApproverDecision(res);
 				SmCommonUtil.getInstance().setUserDetails(
 						this.getManagedBean().getSmAppl());
@@ -9894,8 +9943,14 @@ public class SmApplicationBackingBean extends
 		} else {
 			retMsg = null;
 		}
-		// #26136
-		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
+		//START 12483
+		if(res!= null && res.equalsIgnoreCase("REVISE")){
+			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
+		}else{
+			// #26136
+			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
+		}
+		//END 12483
 		return retMsg;
 	}
 
@@ -14488,4 +14543,23 @@ public class SmApplicationBackingBean extends
 	}
 // #15629 -- end
 	
+	//#12483 - START
+	public String currentReviseReason(){
+		String currReason = null;
+		Timestamp currDate = null;
+		for(SmApplRevise smApplRevise : this.getManagedBean().getSmAppl().getSmApplRevises()){
+			if(currDate==null){
+				currDate = smApplRevise.getCreatedDate();
+				currReason = smApplRevise.getReviseReason();
+			}else{
+				if(smApplRevise.getCreatedDate().after(currDate)){
+					currReason = smApplRevise.getReviseReason();
+					currDate   = smApplRevise.getCreatedDate();
+				}
+			}
+		}
+		
+		return currReason;
+	}
+	//#12483 - END
 }

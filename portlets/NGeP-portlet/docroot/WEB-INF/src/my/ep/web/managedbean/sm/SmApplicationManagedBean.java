@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -583,6 +584,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#28807 - START
 	private SmApplDocFile smApplDocFile;
 	//#28807 - END
+	
+	//#12483 - START
+	private SmApplRevise smApplRevise;
+	private String reviseReason;
+	//#12483 - END
 	
 	//#15629 - START
 	private List<PmReasonDesc> selectedRecommendReasonDescs;
@@ -4339,6 +4345,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.smApplDocFile = smApplDocFile;
 	}
 	//#28807 - End
+
+	//#12483 - START
+	public SmApplRevise getSmApplRevise() {
+		return smApplRevise;
+	}
+
+	public void setSmApplRevise(SmApplRevise smApplRevise) {
+		this.smApplRevise = smApplRevise;
+	}
+
+	public String getReviseReason() {
+		return reviseReason;
+	}
+
+	public void setReviseReason(String reviseReason) {
+		this.reviseReason = reviseReason;
+	}
+	//#12483 - END
 
 	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {

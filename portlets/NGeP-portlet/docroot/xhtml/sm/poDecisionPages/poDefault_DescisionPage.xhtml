@@ -28,8 +28,11 @@
 					<ui:include
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
-			<td><h:inputHidden
-					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+			<td>
+				<!-- #12483 - START -->
+				<h:outputText value="Revision Reason : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+				<!-- #12483 - END -->
+				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
 				
 					<ui:remove>
@@ -57,6 +60,29 @@
 								value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 								partialSubmit="true" process="@this"
 								action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							<!-- #12483 - START -->
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+									update=":form:tt:sendInqDialog" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<c:if
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<p:commandButton
+											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											partialSubmit="true" process="@this"
+											update=":form:tt:svcDialog"
+											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+									</c:if>
+								</c:if>
+							</c:if>
+							<!-- #12483 - END -->
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
