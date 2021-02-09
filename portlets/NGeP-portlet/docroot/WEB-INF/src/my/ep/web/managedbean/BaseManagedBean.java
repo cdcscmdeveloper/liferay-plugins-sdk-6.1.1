@@ -146,6 +146,13 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> personnelMembers = new ArrayList();
 	private BigDecimal totalShare;
 	
+	// start #29956
+	private String termAndConditionCheckOwner;
+	private String termAndConditionCheckOwnerA;
+	private String termAndConditionCheckOwnerC;
+	private String termAndConditionCheckOwnerChangeRole;
+	// end #29956
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -913,9 +920,40 @@ public abstract class BaseManagedBean implements Serializable {
 		this.totalShare = totalShare;
 	}
 
+	// start #29956
+	public String getTermAndConditionCheckOwner() {
+		return termAndConditionCheckOwner;
+	}
 
+	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
+		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
+	}
 
+	public String getTermAndConditionCheckOwnerA() {
+		return termAndConditionCheckOwnerA;
+	}
 
+	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
+		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
+	}
+
+	public String getTermAndConditionCheckOwnerC() {
+		return termAndConditionCheckOwnerC;
+	}
+
+	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
+		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
+	}
+
+	public String getTermAndConditionCheckOwnerChangeRole() {
+		return termAndConditionCheckOwnerChangeRole;
+	}
+
+	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
+		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
+	}
+
+	// end #29956
 }
 
 

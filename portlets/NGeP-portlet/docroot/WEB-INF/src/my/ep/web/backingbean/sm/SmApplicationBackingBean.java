@@ -1920,7 +1920,24 @@ public class SmApplicationBackingBean extends
 											}
 										}
 									}
+								// start #29956 smOwnerSsmPopup
+								if (personnel.getEpRole() != null && !RoleCode.CM_USER.equals(personnel.getEpRole())
+										&& !RoleCode.FL_USER.equals(personnel.getEpRole())) {
+									String[] params = { "" };
+									params[0] = getEpRoleDescByRoleCode(personnel.getEpRole());
+									this.getManagedBean().setTermAndConditionCheckOwner(
+											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", params));
+									this.getManagedBean().setTermAndConditionCheckOwnerA(
+											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", params));
+									this.getManagedBean().setTermAndConditionCheckOwnerC(
+											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", params));
+									this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
 								}
+								// end #29956
+								}
+								
+								
 								
 								if(personnelsRole != null && personnelsRole.size() > 0) {
 									this.getManagedBean().setDontGetSsmData(dontGetSsmData);
@@ -2161,7 +2178,6 @@ public class SmApplicationBackingBean extends
 					}else{
 						this.getManagedBean().setCompanyValidWithSSM(false);
 					}
-					
 					
 				
 					if(!this.getManagedBean().isCompanyValidWithSSM()){
