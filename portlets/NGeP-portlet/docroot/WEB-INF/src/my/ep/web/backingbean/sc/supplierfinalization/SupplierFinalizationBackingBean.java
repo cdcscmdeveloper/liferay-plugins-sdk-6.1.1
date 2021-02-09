@@ -5157,6 +5157,13 @@ return	remarksNotFound;
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RBP);
 		}
+		if (getManagedBean().getQtRefinalized()) {
+			if (excludedDecisionList == null) {
+				excludedDecisionList = new ArrayList<String>();
+			}
+			excludedDecisionList.add(
+					ParameterConst.DECISION_RBP);
+		}
 		
 		//28834 Ends
 		
