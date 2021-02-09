@@ -2800,9 +2800,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void onSelectCategorySearch(Long id){
 		log.info("The category search id " + id);
 		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
-		if(id.equals(Long.valueOf(0L)))
+		if(id.equals(Long.valueOf(0L))){
 			this.getManagedBean().setSelectedCatSearch(null);
-		else{
+		}else{
 			for(PmProcurementCatType pmProcCat : pmProcCats ){
 				if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
 					this.getManagedBean().setSelectedCatSearch(pmProcCat.getProcurementCat());
@@ -8795,32 +8795,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("End checkUpdateForReasonIndicator");
 	    // 24975@19112020 - start
 	}
-	
-	public PmParameter onSelectSetCategory(Long id, int index){
-		log.info("The category id " + id);
-		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
-		for(PmProcurementCatType pmProcCat : pmProcCats ){
-			if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
-				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementCat(pmProcCat.getProcurementCat());
-				break;
-			}
-		}
-		return this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat();
-	}
-	
-	public PmParameter onSelectSetCategoryType(Long id, int index){
-		log.info("The category type id " + id);
-		Long procurementCatId = this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementCat().getParameterId();
-		List<PmProcurementCatType> pmProcCats= 	PpCommonUtil.retrieveProcurementTypeListByCatId(getFacesScopes().getUserLocale().getLanguage(), procurementCatId);
-		for(PmProcurementCatType pmProcCat : pmProcCats ){
-			if(pmProcCat.getProcurementType().getParameterId().equals(id)){
-				this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).setProcurementType(pmProcCat.getProcurementType());
-				break;
-			}
-		}
-		return this.getManagedBean().getSelectedPlan().getPpProcurementItems().get(index).getProcurementType();
-	}
-	
 }
 	   
 
