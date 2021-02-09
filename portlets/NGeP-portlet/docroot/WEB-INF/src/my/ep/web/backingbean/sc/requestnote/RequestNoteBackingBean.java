@@ -3455,7 +3455,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		RequestNoteResDTO requestNoteResDTO = null;
 		//28878 - Start
-		if(prSize >= 1){
+		if(prSize > 1){
 			requestNoteReqDTO.setPurchaseRequestId(getManagedBean().getPurchaseRequestId());
 			log.info("Bug 28878: requestNoteReqDTO.getPurchaseRequestId : " + requestNoteReqDTO.getPurchaseRequestId());
 			getManagedBean().setLoginIdAssignees(getRequestNoteSO().getloginIdAssigneeSuppByPrId(requestNoteReqDTO));
