@@ -291,7 +291,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			// #27502 -- End
 			//28834 starts
-	if (getManagedBean().getQtRefinalized()) {
+			if (getManagedBean().getQtRefinalized() && this.getManagedBean().getOutComes() != null) {
 				
 				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length -1];
 				for (int i=0, k=0; i < this.getManagedBean().getOutComes().length; i++) {
