@@ -37,16 +37,16 @@
 				</table>
 			</p:dataGrid>			
 		</h:panelGrid>
-		
+		<!-- 29417 -->
 	   	<h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth250" rendered="#{agreementBackingBean.managedBean.finalAgreement}">
 			<p:outputLabel value="#{lbl['lbl.ct.signed.date']}"  styleClass="required"/>
 			<h:panelGrid columns="5" styleClass="top-aligned-columns">
 				<p:calendar	value="#{agreementBackingBean.managedBean.agreementContractVer.signedDate}" id="popupButtonCal4" 
 					showOn="button" size="17"   readonlyInput="true"
-					maxdate="#{agreementBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+					mindate="#{agreementBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:spacer width="2"/>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.dated']}" style="margin-top:6px;" />
+				<ac:iconTooltip value="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement ? lbl['lbl.ct.tooltip.signed.dated.supplemental.agreement'] : lbl['lbl.ct.tooltip.signed.dated.agreement']}"  style="margin-top:6px;"/>
 				<p:spacer width="1"/>
 				<p:message for="popupButtonCal4" display="icon" />
 			</h:panelGrid>
