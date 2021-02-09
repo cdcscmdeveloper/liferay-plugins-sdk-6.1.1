@@ -22,9 +22,9 @@
 			required="#{paramRequired}" disabled="#{cc.attrs.disabled}">
 			<f:selectItem itemLabel="#{lbl[defaultLabel]}"
 				itemValue=""></f:selectItem>
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.approve']}"
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.approvedLabel']}"
 				itemValue="A"></f:selectItem>
-			<f:selectItem itemLabel="#{lbl['lbl.rpt.reject']}"
+			<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}"
 				itemValue="R"></f:selectItem>
 			<p:ajax event="change" partialSubmit="true"
 				update="@([id$=Msg])" />
