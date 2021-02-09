@@ -363,10 +363,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_700010;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				//28718 - start
+				if(!getManagedBean().isTriggerPRErrorMsg()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				//28718 - end
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -3322,8 +3326,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public String gpkiSignAction(String outcome) throws Exception{
 		//#28718 - Start
 		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
-		if((BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)) && !checkTriggeredNewPR()){
-			return null;
+		boolean isTriggerNewPRNeeded = false;
+		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			isTriggerNewPRNeeded = checkTriggeredNewPR();
 		}
 		//#28718 - End
 		//29728 - start
@@ -3356,6 +3361,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			// set action
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			//28718 - start
+			if(isTriggerNewPRNeeded) {
+				return null;
+			}
+			//28718 - end
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}else{
@@ -3368,8 +3378,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				return null;
 			}
 			//#28718 - Start
-			return fulfillmentRequestAction(outcome);
-			//#28718 - End		
+			if(isTriggerNewPRNeeded) {			
+				return null;
+			}
+			//#28718 - End	
+			return fulfillmentRequestAction(outcome);				
 		}
 	}
 	
@@ -5091,11 +5104,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							|| (isVotBOrTExist && isVotPExist)){
 						
 						getManagedBean().setTriggerPRErrorMsg(Boolean.TRUE);
-						return false;
+						return true;
 					}
 				}
 			}
-			return true;
+			return false;
 		}
 
 		/**
@@ -5103,7 +5116,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		 * @throws Exception
 		 */
 		public void triggeredNewPR() throws Exception{
-			
+			fulfillmentRequestAction(BpmOutcomeConst.BPM_SAVE);
 			IFulfilmentRequestSO fulfilmentRequestSO;
 					
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -5118,6 +5131,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				reqDTO.setOutcome(BpmOutcomeConst.BPM_DRAFT);
 			} else {
 				reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+				if(getManagedBean().getSelectedApprover() != null){
+					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
+					if(groupUser!=null) {
+						List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+						reqDTO.setApproverUserList(approverUserList);
+						reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+					}
+				}
+				if(reqDTO.getApproverUserList() == null || reqDTO.getApproverUserList().isEmpty()){
+					reqDTO.setBpmApproverList(getManagedBean().getBpmApproverList());
+				}
 			}
 			reqDTO.setS1DocNo(flFulfilmentRequest.getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 			reqDTO.setScRequestNoteDtlList(getManagedBean().getRequestNoteWithDtlsList());
