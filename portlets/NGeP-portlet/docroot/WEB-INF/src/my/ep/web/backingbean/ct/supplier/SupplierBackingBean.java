@@ -1487,9 +1487,10 @@ public void selectFinancialAcc(){
 										ctContractVer.getDocType(),
 										roleCode);
 
-								if (ctActor != null) {
+								if (ctActor != null && ctActor.getUser().getRecordStatusFlg() == 1) {
 									getManagedBean().getContractAdminlist().add(ctActor.getUser());
 								} else {
+								  
 									userReqDTO = new UserReqDTO();	      	  		
 									userReqDTO.setRoleCode(roleCode);
 									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
