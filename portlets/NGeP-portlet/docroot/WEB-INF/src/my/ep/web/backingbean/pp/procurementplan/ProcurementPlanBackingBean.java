@@ -245,13 +245,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 ThemeDisplay theme = (ThemeDisplay) pr.getAttribute(WebKeys.THEME_DISPLAY);
 			 Layout selectedLayout = LayoutLocalServiceUtil.getLayout(Long.valueOf(plid));
 			 String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
-			 if(urlliferay.contains("plan-maintenance"))
+			 if(urlliferay.contains("plan-maintenance")){//09022021@24975 - start
 				 this.getManagedBean().setAudit(false);
-			 else if(urlliferay.contains("procurement-plan-search"))
+		       }else if(urlliferay.contains("procurement-plan-search")){
 				 this.getManagedBean().setAudit(true);
 			 //if procurement-plan-search = audit /web/dashboard/procurement-plan-search 
 			 //if plan-maintenance = plan maintenance /web/dashboard/plan-maintenance
-		 }
+		   }
+		 }//09022021@24975 - End
 		 catch(Exception e){
 			 log.error(e.getStackTrace());
 		 }
@@ -1411,7 +1412,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							ppItem.setSelectable(true); //enabled checkbox
 							//25549@09102020 - start
 							
-							ppItem.setAllowAnotherPindaan(false); // 31012021@27624
+							ppItem.setAllowAnotherPindaan(false); // 31012021@24975
 							log.info("item yg menanti: "+ppItem.getProcurementTitle()+
 									",isEditable= " +ppItem.isEditable());
 							//25549@09102020 - end
@@ -2747,16 +2748,16 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void onSelectCategorySearch(Long id){
 		log.info("The category search id " + id);
 		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
-		if(id.equals(Long.valueOf(0L)))
+		if(id.equals(Long.valueOf(0L))){ //09022021@24975 - start
 			this.getManagedBean().setSelectedCatSearch(null);
-		else{
+		}else{
 			for(PmProcurementCatType pmProcCat : pmProcCats ){
 				if(pmProcCat.getProcurementCat().getParameterId().equals(id)){
 					this.getManagedBean().setSelectedCatSearch(pmProcCat.getProcurementCat());
 					break;
 				}
 			}
-		}
+		}//09022021@24975 - end
 	}
 	//210108@akmal - Enhancement27624 - End
 	
@@ -8739,8 +8740,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		log.info("End checkUpdateForReasonIndicator");
 	    // 24975@19112020 - start
-	}	
-	
+	}
 }
 	   
 
