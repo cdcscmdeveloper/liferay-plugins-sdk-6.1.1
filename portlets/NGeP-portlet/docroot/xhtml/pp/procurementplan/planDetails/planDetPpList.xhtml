@@ -165,14 +165,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        <!--24975@azza - end -->
 	        <p:column>
 	        <!--25549@18092020 -->	
-	        	<!--24975@azza - start -->
+	        	<!--24975@09022021 - start -->
        			<p:selectOneMenu id="somCategory" style="width:99%"
        				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
 						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}"/>
-					<p:ajax event="change" update="somProcurementMethod" listener="#{pPlanBackingBean.onSelectCategory(ppItem.procurementCat.parameterId, index)}" partialSubmit="true" />
+					<p:ajax event="change" update="somProcurementMethod" listener="#{pPlanBackingBean.onSelectCategory(ppItem.procurementCat.parameterId, index)}" 						
+					    immediate="true" partialSubmit="true" />
 				</p:selectOneMenu>
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
@@ -185,11 +186,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
-					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}" process="@this"  />
+					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}"
+					    immediate="true" partialSubmit="true" />
 				</p:selectOneMenu>
 			 <p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
-	         <!--24975@azza - end -->
+	         <!--24975@09022021 - end -->
 	        <p:column  style="white-space:nowrap;">
 	             <!--25549@18092020 -->
 	            <!--24975@azza - start -->
