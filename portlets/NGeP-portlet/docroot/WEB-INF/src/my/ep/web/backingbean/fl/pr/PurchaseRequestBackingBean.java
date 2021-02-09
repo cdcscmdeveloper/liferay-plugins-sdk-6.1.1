@@ -5148,6 +5148,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setClone(Boolean.TRUE);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setRequisitioner(isFlFulfilmentRequisitioner());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			fulfilmentRequestSO.triggerNewPurchaseRequest(reqDTO);
 
 			String[] param = null;
