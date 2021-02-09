@@ -303,11 +303,26 @@ public class SmDeleteCategoryCodeBackingBean extends
 				SmVirtualCertHelper.getInstance().
 				autoGenerateVirtualCert(getManagedBean().getSmAppl().getApplId(), true);
 				
-				assignActiveCategoryList();
+				//assignActiveCategoryList();
 
 				//25963 - update deleted codes in rejected appl, if any
 				updateDeletedCodesInRejAppl();
-
+				//14150 - Start
+				SmSupplier smApplSupplier = getCurrentSupplier();
+				SmAppl smAppl = smApplSupplier.getSmAppl();
+				if (smAppl != null) {
+					log.info("******** The application id is *******" + smAppl.getApplId());
+					getManagedBean().setSmAppl(retriveLatestApplAfterUpdate(smAppl));
+				} else {
+					smAppl = new SmAppl();
+					smAppl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+					getManagedBean().setSmAppl(smAppl);
+				}
+				getManagedBean().setSmSupplier(smApplSupplier);
+				assignActiveCategoryList();
+				SmApplicationUtil.sortSupplierCategory(getManagedBean()
+						.getActiveCategoryList());
+				//14150 - End
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
