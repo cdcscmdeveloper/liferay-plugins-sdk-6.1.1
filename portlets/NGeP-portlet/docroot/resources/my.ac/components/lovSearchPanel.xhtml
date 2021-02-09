@@ -16,7 +16,7 @@
 				<f:selectItems value="#{lovBackingBean.searchOperators}" />
 			</p:selectOneMenu>
 		</ui:remove>
-		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-bottom: 5px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/>
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-bottom: 5px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
 
 		<ui:remove>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchField}">
@@ -33,7 +33,7 @@
 		</ui:remove>
 		
 		<ui:remove>
-		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/>
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchField}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
@@ -48,7 +48,7 @@
 		</ui:remove>
 		
 		<ui:remove>
-		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/>
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchValue}" style="margin-top:6px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }" autocomplete="off"/>
 		</ui:remove>
 		
 		<ui:remove>
@@ -60,7 +60,7 @@
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOperators}" />
 		</p:selectOneMenu>
-		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchValue}" style="margin-top:6px;" />
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchValue}" style="margin-top:6px;" autocomplete="off"/>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchField}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
@@ -69,7 +69,7 @@
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOperators}" />
 		</p:selectOneMenu>
-		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchValue}" style="margin-top:6px;" />
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[4].searchValue}" style="margin-top:6px;" autocomplete="off"/>
 		</ui:remove>
 	</h:panelGrid>
    	
