@@ -1465,6 +1465,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			if (!isValidationSuccessful) {
 				return;
 			}
+			finalizeRemarks(this.getManagedBean().getScQtCommittee().getQtCommitteRemarks());//25037 start - only remove empty remark after successful validation			
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -1549,6 +1550,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setRoleCode(getCommitteeRoleCode());
 			
+			finalizeRemarks(this.getManagedBean().getScQtCommittee().getQtCommitteRemarks());//25037 start - only remove empty remark after successful validation
 			meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
@@ -1681,9 +1683,7 @@ if (CollectionUtils.isNotEmpty(
 			scQtCommittee.getScCommittee().setScCommitteeMembers(
 										   currentCommitteeMembers);
 			reqDTO.setDeletedCommitteeActivityList(deletedCommitteeMembers);
-			
-			finalizeRemarks(scQtCommittee.getQtCommitteRemarks());
-			
+						
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
 			reqDTO.setScQtCommitte(scQtCommittee);
