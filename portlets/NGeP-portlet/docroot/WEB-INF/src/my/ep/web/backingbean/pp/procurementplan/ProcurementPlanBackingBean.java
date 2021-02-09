@@ -245,14 +245,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			 ThemeDisplay theme = (ThemeDisplay) pr.getAttribute(WebKeys.THEME_DISPLAY);
 			 Layout selectedLayout = LayoutLocalServiceUtil.getLayout(Long.valueOf(plid));
 			 String urlliferay = PortalUtil.getLayoutFriendlyURL(selectedLayout, theme);
-			 if(urlliferay.contains("plan-maintenance")){//2022021@27624 - start
+			 if(urlliferay.contains("plan-maintenance")){//09022021@24975 - start
 				 this.getManagedBean().setAudit(false);
 		       }else if(urlliferay.contains("procurement-plan-search")){
 				 this.getManagedBean().setAudit(true);
 			 //if procurement-plan-search = audit /web/dashboard/procurement-plan-search 
 			 //if plan-maintenance = plan maintenance /web/dashboard/plan-maintenance
 		   }
-		 }//2022021@27624 - end
+		 }//09022021@24975 - End
 		 catch(Exception e){
 			 log.error(e.getStackTrace());
 		 }
@@ -2800,7 +2800,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public void onSelectCategorySearch(Long id){
 		log.info("The category search id " + id);
 		List<PmProcurementCatType> pmProcCats= PpCommonUtil.retrieveProcurementCatTypeList(getFacesScopes().getUserLocale().getLanguage());
-		if(id.equals(Long.valueOf(0L))){
+		if(id.equals(Long.valueOf(0L))){ //09022021@24975 - start
 			this.getManagedBean().setSelectedCatSearch(null);
 		}else{
 			for(PmProcurementCatType pmProcCat : pmProcCats ){
@@ -2809,7 +2809,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					break;
 				}
 			}
-		}
+		}//09022021@24975 - end
 	}
 	//210108@akmal - Enhancement27624 - End
 	
