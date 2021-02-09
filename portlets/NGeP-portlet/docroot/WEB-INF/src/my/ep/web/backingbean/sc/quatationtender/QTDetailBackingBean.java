@@ -4181,7 +4181,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if (!Arrays.asList(actionArr).contains(state)) {
 								requestContent.setBrandNew(false);
 								requestContent.setRequireApproval(true);
-								requestContent.setSelectable(!state.equalsIgnoreCase(ParameterConst.APPROVAL_DECISION_TYPE_REVISED));
+								requestContent.setSelectable(false);
 								this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
 							}else{
 								ScQtRequestContent newRequestContent = new ScQtRequestContent();
@@ -9349,7 +9349,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return ResourceBundleUtils.getMessage("lbl.rpt.pendingsubmission", ResourceBundleUtils.BUNDLE_COMMON_LABELS, fs.getUserLocale());
 		}
 
-		Long[] statusArr = new Long[]{QTStatusConst.DAR_PENDING_REVISION, QTStatusConst.DAR_COMPLETED, QTStatusConst.DAR_REJECTED};
+		Long[] statusArr = new Long[]{QTStatusConst.DAR_COMPLETED, QTStatusConst.DAR_REJECTED};
 		if(!Arrays.asList(statusArr).contains(statusId)){
 			this.getManagedBean().setDoaRequestEditable(false);
 		}
