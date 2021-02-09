@@ -103,14 +103,6 @@ public class SupplierUserActivationBackingBean extends
 			if(resDTO.getSmPersonnel() != null) {
 				personnel = resDTO.getSmPersonnel();
 				supplierProfile = personnel.getSmAppl().getSmSupplier();
-				SmMofAccount smMofAccount = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
-						supplierProfile.getSupplierId(),
-						personnel.getSmAppl().getSupplierType());
-
-				log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount);
-				if(smMofAccount!=null) {
-					log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount.getMofNo());
-				}
 			}else{
 				//retrieve for invalid personnel
 				
@@ -197,10 +189,6 @@ public class SupplierUserActivationBackingBean extends
 			log.info("*********Activation - is Valid**********");
 			String personnelId = String.valueOf(this.getManagedBean().getSmPersonnel().getPersonnelId());
 			String supplierId = String.valueOf(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
-			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl());
-			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier());
-			log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount());
-			//log.info("1111111111111111111111111111111111111111 >>> " + getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmMofAccount().getMofNo());
 			String encrpKeyStr = this.getManagedBean().getEncrpKeyStr();
 			
 			log.info("****activation key***" + this.getTempPassword());
@@ -301,9 +289,6 @@ public class SupplierUserActivationBackingBean extends
 								SmMofAccount smMofAccount = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 										getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId(),
 										getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
-
-								log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount);
-								log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount.getMofNo());
 								return navigateToAckUser(smMofAccount.getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 							} else {
 								return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
@@ -359,9 +344,6 @@ public class SupplierUserActivationBackingBean extends
 									SmMofAccount smMofAccount = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 											getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId(),
 											getManagedBean().getSmPersonnel().getSmAppl().getSupplierType());
-
-									log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount);
-									log.info("0000000000000000000000000000000000000000 >>> " + smMofAccount.getMofNo());
 									return navigateToAckUser(smMofAccount.getMofNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
 								} else {
 									return navigateToAckUser(resDTO.getNewEpNo(),getManagedBean().getSmPersonnel().getSmAppl().getSupplierType(),reqDTO.getSmPersonnel().getEmail());
