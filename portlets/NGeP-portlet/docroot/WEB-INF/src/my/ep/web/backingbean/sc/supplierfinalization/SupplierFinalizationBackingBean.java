@@ -8476,6 +8476,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		paramMap.put(ReportConst.PARAM_REMARK,
 				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
+		// #18685 - Start
+		paramMap.put("flowType", "tasklist");
+		// #18685 - End
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 	
