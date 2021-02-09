@@ -498,7 +498,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	public String saveAgreement(String action) throws Exception {
 		IAgreementSO agreementSO = null;
 		try {
-
+			
 			validateAgreement(action);
 
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
@@ -892,7 +892,27 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else {
+		}
+		// 29417 - START
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
+			getManagedBean().setButtonProcess(outcome);
+			Date signDate = getManagedBean().getContractVer().getSignedDate();
+			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+			if(signDate != null && expDate != null && signDate.after(expDate)){
+				
+				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");
+					log.info("---------------Expire DATE--------------" + expDate);
+				
+			}
+			else {
+				log.info("------------------In validate method-----------");
+				return this.saveAgreement(outcome);
+			}
+			return null;
+		}
+		// 29417 - END 
+			
+		else {	
 			return this.saveAgreement(outcome);
 		}
 	}
@@ -1496,7 +1516,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			context.put("currentYear", c.get(Calendar.YEAR) + "");
 			context.put("ministryName", retrieveMinistryByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 			context.put("jabatanName", retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
-
+			
 			if (getManagedBean().getContractVer().getOwnerOrgAddress() != null) {
 				String jabatanAddress = getFullAddress(getManagedBean().getContractVer().getOwnerOrgAddress());
 				context.put("jabatanAddress", jabatanAddress);
@@ -1532,8 +1552,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 		}
 		return content;
-	}
-
+	}	
+	
 	/**
 	 * Download files as a zip.
 	 *
