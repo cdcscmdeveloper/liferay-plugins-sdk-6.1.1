@@ -1487,7 +1487,7 @@ public void selectFinancialAcc(){
 										ctContractVer.getDocType(),
 										roleCode);
 
-								if (ctActor != null && ctActor.getUser().getRecordStatusFlg() == 1) {
+								if (ctActor != null) {
 									getManagedBean().getContractAdminlist().add(ctActor.getUser());
 								} else {
 								  
