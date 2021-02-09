@@ -722,7 +722,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			//SET DATA TO LATEST WAIVER	
 			//13847 - shaqimi start
 			if(!waivedAttach.isDeleted()){
-				if(waivedAttach.getRecordStatusFlg().equals(1)){
+				if(waivedAttach.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 					if(waivedAttach.getCtBondWaiverDetail() == null){
 						waivedAttach.setCtBondWaiverDetail(new CtBondWaiverDetail());
 					}
@@ -736,6 +736,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	//				ctBB.getManagedBean().setCtAttachment(SerializationUtils.clone(waivedAttach));
 					ctBB.getManagedBean().setCtAttachmentLatest(SerializationUtils.clone(waivedAttach));
 				}else{//SET DATA TO TABLE WAIVER
+					waivedAttach.setBrandNew(false);
 					ctBB.getManagedBean().getWaiverDetail().add(SerializationUtils.clone(waivedAttach));
 				}
 			}
