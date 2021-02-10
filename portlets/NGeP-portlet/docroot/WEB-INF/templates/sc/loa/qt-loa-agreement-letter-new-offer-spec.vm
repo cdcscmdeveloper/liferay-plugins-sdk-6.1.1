@@ -255,10 +255,18 @@ u {
 					#if ($tplSpecAnswer.answerNumeric != $null )
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplSpecAnswer.answerNumeric</td>
 					#else
+					#if ($tplSpecAnswer.answerCompliance != $null )
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplSpecAnswer.answerCompliance</td>
+					#else
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"></td>
 					#end
 					#end
+					#end
+					#if ($tplSpecAnswer.answerRemark != $null )
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplSpecAnswer.answerRemark</td>
+					#else
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"></td>
+					#end			
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 				</tr>	
 				#end
@@ -393,10 +401,18 @@ u {
 					#if ($tplSpecAnswer.answerNumeric != $null )
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">$tplSpecAnswer.answerNumeric</td>
 					#else
+					#if ($tplSpecAnswer.answerCompliance != $null )
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">$tplSpecAnswer.answerCompliance</td>
+					#else
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;"></td>
 					#end
 					#end
+					#end
+					#if ($tplSpecAnswer.answerRemark != $null )
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">$tplSpecAnswer.answerRemark</td>
+					#else
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;"></td>
+					#end
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">$serviceScope</td>
 				</tr>	
 				#end
