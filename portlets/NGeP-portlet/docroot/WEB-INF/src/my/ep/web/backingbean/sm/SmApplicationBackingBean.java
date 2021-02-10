@@ -9038,11 +9038,30 @@ public class SmApplicationBackingBean extends
 						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 						getManagedBean().getApplnRejectionRemarks());
 			}
+			
+			//10908
+			String loginId="";
+			String langCode="";
+			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
+				if(personnel.getEpRole() != null && personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString())){
+					loginId = personnel.getPmUser().getLoginId();
+					langCode = personnel.getPmUser().getPreferredLanguage();
+					log.info("loginId109082>>>>>>>>>>" + loginId);
+					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
+					continue;
+				}
+			}
+			log.info("langCode>>>>>>>>>>" + langCode);
+			reqDTO.setLangCode(langCode);
+			reqDTO.setSuppLoginId(loginId);
+			
+			//10908
 			SmApplicationNotificationUtil.setRejectionNotificationParameters(
-					getManagedBean().getSmAppl(), getManagedBean()
-							.getBasicInfo().getMofNo(), getManagedBean()
-							.getApplnRejectionRemarks(), getManagedBean()
-							.getSmSupplier(), reqDTO);
+					getManagedBean().getSmAppl(), getManagedBean().getSmSupplier(), 
+					getManagedBean().getBasicInfo(), getManagedBean()
+					.getSupplierRemarks(), getManagedBean()
+					.getApplnRejectionRemarks(), reqDTO);
 
 		} else if (res
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
@@ -9073,7 +9092,25 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.approveApplCategories(getManagedBean()
 					.isApproverUser(), getManagedBean().isPoUser(),
 					getManagedBean().getSmAppl());
-
+			
+			//10908
+			String loginId="";
+			String langCode="";
+			for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
+				log.info("personnel.getEpRole()>>>"+personnel.getEpRole()+"-------"+RoleCode.MOF_SUPPLIER_ADMIN.toString());
+				if(personnel.getEpRole() != null && personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.toString())){
+					loginId = personnel.getPmUser().getLoginId();
+					langCode = personnel.getPmUser().getPreferredLanguage();
+					log.info("loginId109082>>>>>>>>>>" + loginId);
+					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
+					continue;
+				}
+			}
+			log.info("langCode>>>>>>>>>>" + langCode);
+			reqDTO.setLangCode(langCode);
+			reqDTO.setSuppLoginId(loginId);
+			
+			//10908
 			SmApplicationNotificationUtil.setApprovalNotificationParameters(
 					getManagedBean().getSmAppl(), getManagedBean()
 							.getBasicInfo(), getManagedBean().isPoUser(),
