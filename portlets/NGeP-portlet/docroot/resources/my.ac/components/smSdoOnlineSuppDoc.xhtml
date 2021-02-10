@@ -73,7 +73,7 @@
 			
 			<p:column style="width:15% !important; white-space:normal;overflow: hidden !important;">
 				<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" 
-					autoResize="false" maxlength="100" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					autoResize="false" maxlength="100" style="float: left;white-space: normal;" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
 					<f:validateLength maximum="100" />
 				</p:inputTextarea>
 			</p:column>
