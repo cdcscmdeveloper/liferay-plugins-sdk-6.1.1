@@ -293,14 +293,14 @@ public class SupplierFinalizationBackingBean extends
 			//28834 starts
 			if (getManagedBean().getQtRefinalized() && this.getManagedBean().getOutComes() != null) {
 				
-				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length -1];
-				for (int i=0, k=0; i < this.getManagedBean().getOutComes().length; i++) {
-					if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
-						continue;
-					}
-					tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
-				}
-				this.getManagedBean().setOutComes(tempOutComes);
+//				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length -1];
+//				for (int i=0, k=0; i < this.getManagedBean().getOutComes().length; i++) {
+//					if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
+//						continue;
+//					}
+//					tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+//				}
+//				this.getManagedBean().setOutComes(tempOutComes);
 				
 			}
 	
