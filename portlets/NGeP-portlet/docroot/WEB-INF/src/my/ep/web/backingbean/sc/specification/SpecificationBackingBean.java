@@ -622,6 +622,15 @@ public class SpecificationBackingBean extends
 					count++;
 				}
 			}
+			else if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+					.equalsIgnoreCase(checkList.getDefinationType()
+							.getParameterCode())) {//#11104-start
+				if (QTStatusConst.TS_PENDING_SUBMISSION 
+						.equals(checkList.getPmStatus().getStatusId())) {
+					this.getManagedBean().setActiveIndex(2);
+					throw new EpException(MessageConst.ERROR_760521);
+				}
+			}//#11104-End
 
 		}
 		if (count >= 1) {
@@ -17604,8 +17613,10 @@ this.getManagedBean().setSampleItemName(" ");
  */
 private void validateSampleItems(List<TplSpecQuestion> specQuestions){
 	if(CollectionUtils.isNotEmpty(specQuestions)){
+		int i=0;//#11104
 		for(TplSpecQuestion question:specQuestions){
 			if(question.isSampleReq()){
+				i++;//#11104
 			if(null==question.getSampleQuantity()){
 				String message=	ResourceBundleUtils.getMessage("lbl.tpl.spec.content.quantity",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -17638,7 +17649,9 @@ private void validateSampleItems(List<TplSpecQuestion> specQuestions){
 			
 			}
 		}
-		
+		if(i==0){//#11104-start
+			 throw new EpException(MessageConst.ERROR_760516);	
+		}//#11104-End
 	}
 }
 /***11104-start
