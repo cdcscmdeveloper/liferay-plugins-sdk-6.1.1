@@ -154,8 +154,8 @@ public class GovtSellerRegistrationBackingBean extends
 				if(bank.getAccountNo() != null){
 					sb = new StringBuilder();
 					sb.append("<font color='red'>");
-					bank.setHasActiveTransactionContractManagement(SmApplicationUtil.hasActiveTransactionForContractManagement(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
-					bank.setHasActiveTransactionFulfilment(SmApplicationUtil.hasActiveTransactionForFulfilment(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
+					bank.setHasActiveTransactionContractManagement(true);
+					bank.setHasActiveTransactionFulfilment(true);
 					
 					if(bank.isHasActiveTransactionContractManagement()){
 						sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
