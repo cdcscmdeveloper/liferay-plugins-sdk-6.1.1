@@ -3213,7 +3213,7 @@ return	remarksNotFound;
 					committeeSO = null;
 				}
 				
-				if (!isCurrentCommitteeAuthorisedToSubmit) {
+				if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {
 					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
 															committeeType);
 					
