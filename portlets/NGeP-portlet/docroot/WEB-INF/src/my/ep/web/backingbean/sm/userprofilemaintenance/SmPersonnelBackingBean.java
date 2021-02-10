@@ -1965,7 +1965,7 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void save() {
-		if (getManagedBean().getBasicSmPersonnel() != null) {
+		if (getManagedBean().getBasicSmPersonnel() != null && !(getManagedBean().getAccountStatus() == 1)) {
 			//#26050 - start
 			validatePendingTask(getManagedBean().getBasicSmPersonnel());
 			//#26050 - end
