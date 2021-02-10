@@ -890,31 +890,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.committeModified = committeModified;
 	}
 
-	//28767
-	public List<SmPersonnel> getPersonnelDirectorManager() {
-		return personnelDirectorManager;
-	}
-
-	public void setPersonnelDirectorManager(List<SmPersonnel> personnelDirectorManager) {
-		this.personnelDirectorManager = personnelDirectorManager;
-	}
-
-	public List<SmPersonnel> getPersonnelMembers() {
-		return personnelMembers;
-	}
-
-	public void setPersonnelMembers(List<SmPersonnel> personnelMembers) {
-		this.personnelMembers = personnelMembers;
-	}
-
-	public BigDecimal getTotalShare() {
-		return totalShare;
-	}
-
-	public void setTotalShare(BigDecimal totalShare) {
-		this.totalShare = totalShare;
-	}
-
 	// start #29956
 	public String getTermAndConditionCheckOwner() {
 		return termAndConditionCheckOwner;
