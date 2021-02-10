@@ -3363,6 +3363,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			//28718 - start
 			if(isTriggerNewPRNeeded) {
+				getManagedBean().setTriggerPRErrorMsg(isTriggerNewPRNeeded);
 				return null;
 			}
 			//28718 - end
@@ -3378,7 +3379,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				return null;
 			}
 			//#28718 - Start
-			if(isTriggerNewPRNeeded) {			
+			if(isTriggerNewPRNeeded) {
+				getManagedBean().setTriggerPRErrorMsg(isTriggerNewPRNeeded);
 				return null;
 			}
 			//#28718 - End	
@@ -5102,8 +5104,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					}
 					if((isVotSOrAmanahExist && isVotBOrTExist) || (isVotSOrAmanahExist && isVotPExist) 
 							|| (isVotBOrTExist && isVotPExist)){
-						
-						getManagedBean().setTriggerPRErrorMsg(Boolean.TRUE);
 						return true;
 					}
 				}
