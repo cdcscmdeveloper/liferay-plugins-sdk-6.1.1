@@ -66,7 +66,10 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_CERT_PROVIDER = "PISSUER";
 	public static final String PARAM_CERT_APPL_TYPE = "PAPPTYP";
 	public static final String PARAM_CERT_APPL_STATUS = "PAPPSTS";
-
+	
+	//15174 - start
+	public static final String PARAM_PERSONNEL_NAME = "PPERSONNELNAME";
+	//15174 - end
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
 	public static final String SM_CATEGORY_STATISTIC_RPT_VAL = "SM_002";
 	public static final String SM_CAT_STATIC_BY_YEAR_RPT_VAL = "SM_003";

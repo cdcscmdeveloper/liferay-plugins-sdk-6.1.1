@@ -37,8 +37,19 @@
 					<p:ajax event="blur" process="@form" partialSubmit="true" update="@form" />
 				</p:inputText>
 			</td>
+		
+			<!-- 15174 - Start -->
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.PersonnelName']}" />
+			</td>
 			
-			<td colspan="2"></td>
+			<td class="tdContent">
+				<p:inputText maxlength="200" style="width:289px;" value="#{dirOwnCeoOneCompRptBB.managedBean.personnelName}">
+					<p:ajax event="blur" process="@form" partialSubmit="true"  update="@form" />
+				</p:inputText>
+			</td>
+			<!-- 15174 - End -->
+			
 		</tr>
 		<tr>
 			<td class="tdTitle">
