@@ -2870,7 +2870,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setVotFundDisplay(false);
 			preLoadingGlAccount();
 			//28718 - start
-			if(getManagedBean().isGrouped()) {
+			if(getManagedBean().isGrouped() && !BpmOutcomeConst.BPM_VIEW.equalsIgnoreCase(getManagedBean().getButtonVal())) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_745089, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
