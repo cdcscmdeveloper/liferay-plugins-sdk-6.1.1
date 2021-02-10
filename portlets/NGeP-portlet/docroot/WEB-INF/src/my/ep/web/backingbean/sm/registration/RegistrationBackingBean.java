@@ -2381,7 +2381,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							sb = new StringBuilder();
 							sb.append("<font color='red'>");
 							bank.setHasActiveTransactionContractManagement(SmApplicationUtil.hasActiveTransactionForContractManagement(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
-							bank.setHasActiveTransactionFulfilment(true);
+							bank.setHasActiveTransactionFulfilment(SmApplicationUtil.hasActiveTransactionForFulfilment(this.getManagedBean().getSmSupp(), bank.getAccountNo()));
 							if(bank.isHasActiveTransactionContractManagement()){
 								sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
 								sb.append("<br/>");
