@@ -77,6 +77,45 @@
 			<td class="tdContent">
 				<ac:smReportDateFromTo bBean="#{svoSiteVisitLocRptBB}" />
 			</td>
+			<!-- 12625 add application status and perform site visit drop-down -->
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.rpt.application.status']}" /></td>
+			<td class="tdContent"><p:selectOneMenu
+					label="#{lbl['lbl.rpt.application.status']}"
+					id="smSVOApplicationStatus"
+					value="#{svoSiteVisitLocRptBB.managedBean.svoApplicationStatus}"
+					style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisit']}"
+						itemValue="A">
+					</f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteReVisit']}"
+						itemValue="B">
+					</f:selectItem>
+				</p:selectOneMenu>
+			</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td></td>
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.rpt.perform.site.visit']}" /></td>
+			<td class="tdContent"><p:selectOneMenu
+					label="#{lbl['lbl.rpt.perform.site.visit']}"
+					id="smSVOPerformSiteVisit"
+					value="#{svoSiteVisitLocRptBB.managedBean.svoPerformSiteVisit}"
+					style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.sv.before.approval']}"
+						itemValue="Before">
+					</f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.sv.after.approval']}"
+						itemValue="After ">
+					</f:selectItem>
+				</p:selectOneMenu>
+			</td>
+		<!-- 12625 end  -->
 		</tr>
 	</table>
 	<br />
