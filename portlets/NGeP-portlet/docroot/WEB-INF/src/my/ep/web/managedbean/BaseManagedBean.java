@@ -141,6 +141,13 @@ public abstract class BaseManagedBean implements Serializable {
 	private SmAddress smAddress;
 	
 	
+	// start #29956
+	private String termAndConditionCheckOwner;
+	private String termAndConditionCheckOwnerA;
+	private String termAndConditionCheckOwnerC;
+	private String termAndConditionCheckOwnerChangeRole;
+	// end #29956
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -882,8 +889,66 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCommitteModified(boolean committeModified) {
 		this.committeModified = committeModified;
 	}
-	
-	
+
+	//28767
+	public List<SmPersonnel> getPersonnelDirectorManager() {
+		return personnelDirectorManager;
+	}
+
+	public void setPersonnelDirectorManager(List<SmPersonnel> personnelDirectorManager) {
+		this.personnelDirectorManager = personnelDirectorManager;
+	}
+
+	public List<SmPersonnel> getPersonnelMembers() {
+		return personnelMembers;
+	}
+
+	public void setPersonnelMembers(List<SmPersonnel> personnelMembers) {
+		this.personnelMembers = personnelMembers;
+	}
+
+	public BigDecimal getTotalShare() {
+		return totalShare;
+	}
+
+	public void setTotalShare(BigDecimal totalShare) {
+		this.totalShare = totalShare;
+	}
+
+	// start #29956
+	public String getTermAndConditionCheckOwner() {
+		return termAndConditionCheckOwner;
+	}
+
+	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
+		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
+	}
+
+	public String getTermAndConditionCheckOwnerA() {
+		return termAndConditionCheckOwnerA;
+	}
+
+	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
+		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
+	}
+
+	public String getTermAndConditionCheckOwnerC() {
+		return termAndConditionCheckOwnerC;
+	}
+
+	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
+		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
+	}
+
+	public String getTermAndConditionCheckOwnerChangeRole() {
+		return termAndConditionCheckOwnerChangeRole;
+	}
+
+	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
+		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
+	}
+
+	// end #29956
 }
 
 
