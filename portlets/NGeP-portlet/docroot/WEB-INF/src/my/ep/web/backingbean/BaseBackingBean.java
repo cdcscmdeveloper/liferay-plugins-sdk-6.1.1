@@ -791,16 +791,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
 				
-				// #27601 - Start - 8/2/2021
-				if((!parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
-						!parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR)) && 
-						!parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("P")){
-
+				// #27601 - Start - 8/2/2021 - modified - 12/2/2021
+				if(parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+						parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR) && 
+						parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("P")){
+					// to not include P parametercode for SUPPLIER_BUSINESS_TYPE & UPPLIER_BUSINESS_TYPE_CONTRACTOR
+				} else {
 					items[i++] = new SelectItem(parameterDesc.getPmParameter()
 							.getParameterCode(), parameterDesc.getCodeName());	
-					
 				}
-				// #27601 - End - 8/2/2021
+				
+				// #27601 - End - 8/2/2021 modified - 12/2/2021
 				
 			}
 		} catch (Exception e) {
