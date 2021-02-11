@@ -4677,12 +4677,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportTitleList, String taskType){
 		if(CollectionUtils.isNotEmpty(finalizationReports)){
 			int count=0;
+			List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
+			//List<String> localTitle=new ArrayList<String>();
+			String localTitle="Kertas Taklimat ";
 			while(iterator.hasNext()){
 				ScQtFinalizationReport finalizationReport = iterator.next();
 				if(null!=finalizationReport.getPmDocument()){
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())) {
-						++count;
+						log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
+						if(finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)){
+						log.info("=======mangatitlecodesexecutes========"+finalizationReport.getPmDocument().getDocName());	
+						count++;
+						localListReport.add(finalizationReport);
+						continue;
+					}
 						// #18685 - Start
 						if (null == getManagedBean().getNewBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
@@ -4743,7 +4752,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				getManagedBean().getNewBriefingPaperReportList().addAll(tempList);
 			}
 			// #18685 - End
-			
+			log.info("=========localListReportsizefirst===="+localListReport.size());
+		/*	if(localListReport.size()>1){
+				log.info("=========localListReportsize===="+localListReport.size());
+				log.info("=========finalizationReportssize===="+finalizationReports.size());
+			finalizationReports.addAll(localListReport);
+			log.info("=========finalizationReportssize2222222===="+finalizationReports.size());
+			localListReport=new ArrayList<ScQtFinalizationReport>();
+			List<String> localTitleList=new ArrayList<String>();
+			for(ScQtFinalizationReport localfinalReport:finalizationReports){
+				if(!localTitleList.contains(localfinalReport.getTitle())){
+					localTitleList.add(localfinalReport.getTitle());
+					localListReport.add(localfinalReport)	;
+				}
+			}
+			finalizationReports.clear();
+			finalizationReports.addAll(localListReport);
+			log.info("=========finalizationReportssize111111111===="+finalizationReports.size());
+			}*/
 			log.info("checkKertasTaklimatReports count"+count);
 			if(count==1){
 				log.info("enter count1"+count);
