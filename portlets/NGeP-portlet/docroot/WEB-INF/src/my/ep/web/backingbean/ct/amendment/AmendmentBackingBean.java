@@ -6605,12 +6605,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(!getManagedBean().isHasChanges()) {
 				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
 					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { //#26688
-					ContractReqDTO ctReqDTO = new ContractReqDTO();		
+					ContractReqDTO ctReqDTO = new ContractReqDTO();
 					ContractResDTO ctResDTO = null;
 					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 					ctReqDTO.setAmendmentId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
 					ctResDTO = contractAmendmentSO.retrieveContractCommitteeMemberByAmendmentId(ctReqDTO);
-					getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());			
+					getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());
 				}
 			}
 			if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
@@ -6719,6 +6719,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					curCommitteeMember.getRepresentativeType().setParameterId(null);
 					curCommitteeMember.setRepresentativeType(null);
 				}
+				if (curCommitteeMember.getRepresentativeType()==null){
+					curCommitteeMember.setRepresentativeType(new PmParameter());
+				}
 				curCommitteeMember.setMemberRole(ParameterHelper.getInstance().getPmParameterById(parameterId));
 				curCommitteeMember.setMemberRoleId(parameterId);
 			}
@@ -6744,7 +6747,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-					
+			
 			if (counter > 1) {
 				throw new EpException(MessageConst.ERROR_750008);
 			}
