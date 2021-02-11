@@ -74,6 +74,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	private int nonMandatoryCounter = 1;
 	private boolean mandatoryEmpty = false;
 	private boolean nonMandatoryEmpty = false;
+	private boolean mandatoryAllReceived = false;
+	private boolean nonMandatoryAllReceived = false;
 	//#11641 - End
 	
 	public SdoReviewBackingBean() {
@@ -646,6 +648,50 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			this.nonMandatoryEmpty = true;
 		}
 		return nonMandatoryEmpty;
+	}
+	
+	public boolean isMandatoryAllReceived() {
+		int mandatoryCount = 0;
+		int mandatoryReceived = 0;
+		
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(suppDoc.getPmDocument().isMandatory()){
+				mandatoryCount++;
+			}
+		}
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(suppDoc.getPmDocument().isMandatory() && suppDoc.isReceived()){
+				mandatoryReceived++;
+			}
+		}
+		if(mandatoryReceived == mandatoryCount){
+			this.mandatoryAllReceived = true;
+		}else{
+			this.mandatoryAllReceived = false;
+		}
+		return mandatoryAllReceived;
+	}
+
+	public boolean isNonMandatoryAllReceived() {
+		int nonMandatoryCount = 0;
+		int nonMandatoryReceived = 0;
+		
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(!suppDoc.getPmDocument().isMandatory()){
+				nonMandatoryCount++;
+			}
+		}
+		for(SmApplSupportDoc suppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(!suppDoc.getPmDocument().isMandatory() && suppDoc.isReceived()){
+				nonMandatoryReceived++;
+			}
+		}
+		if(nonMandatoryReceived == nonMandatoryCount){
+			this.nonMandatoryAllReceived = true;
+		}else{
+			this.nonMandatoryAllReceived = false;
+		}
+		return nonMandatoryAllReceived;
 	}
 	
 	public void receivedStatus(SmApplSupportDoc smApplSupportDoc){
