@@ -133,9 +133,11 @@
 						selectionMode="single"
 						value="#{pmGoSearchBackingBean.pmGoDataModel}" rowIndexVar="index" lazy="true">
 						<ac:paginator for="pmGoDt"></ac:paginator>
-						<p:ajax event="rowUnselect" update="@this" process="@this" partialSubmit="true"/>
-						<p:ajax event="rowSelect" update="@this" process="@this" partialSubmit="true"/>
-						<p:ajax event="toggleSelect" update="@this" process="@this" partialSubmit="true"/>
+						<!-- 11022021@azza - Bug #30066 - Start -->
+						<p:ajax event="rowUnselect" update="@([id$=slbtn])"/>
+						<p:ajax event="rowSelect"  update="@([id$=slbtn])"/>
+						<p:ajax event="toggleSelect" update="@([id$=slbtn])"/>
+						<!-- 11022021@azza - Bug #30066 - End -->
 						<p:column headerText="#{lbl['lbl.pm.go.search.acc.code']}"
 							style="width :15%">
 							<h:outputText value="#{pmGo.glAccCode}" />
@@ -184,11 +186,13 @@
 				
 				<table style="width: 100%;">
 				<tr>
+				<!-- 11022021@azza - Bug #30066 - Start -->
 					<TD style="text-align: right;"><p:commandButton id="slbtn"
 							value="#{lbl['lbl.btn.select']}" partialSubmit="true"
-							disabled="#{pmGoSearchBackingBean.managedBean.isDisableSelectbtn()}"
+							disabled="#{pmGoSearchBackingBean.managedBean.isDisableSelectbtn() or (pmGoSearchBackingBean.managedBean.vPmGo == null)}"
 							action="#{pmGoSearchBackingBean.okAction(cc.attrs.okAction)}"
 							process="@this" update="#{pmGoSearchBackingBean.managedBean.update}" styleClass="BtnSpacing" />
+				   <!-- 11022021@azza - Bug #30066 - End -->
 					<!-- 210118@akmal - Enhancement27624 - Start --> 
 						<p:commandButton
 							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
