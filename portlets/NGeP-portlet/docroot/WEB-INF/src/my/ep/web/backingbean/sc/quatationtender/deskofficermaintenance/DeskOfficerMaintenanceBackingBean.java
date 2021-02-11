@@ -451,6 +451,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	 * Reset.
 	 */
 	public void reset() {
+		// #25627 - start.
+		this.getManagedBean().setDisableAssignTo(true);
+		getManagedBean().setDisableSubmit(true);
+		// #25627 - end.
 		this.getManagedBean().getDoMaintenanceSearchBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		this.getManagedBean().getDoMaintenanceSearchBean().setDocNo(null);
 		this.getManagedBean().getDoMaintenanceSearchBean().setQtTitle(null);
@@ -932,8 +936,9 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	 */
 	public void redirectToTaskReassign() {
 		log.info("redirectToTaskReassign - Start");
-		this.getManagedBean().setSearchUserIdNo(null);
-		this.getManagedBean().setSearchUserName(null);
+		// #25627 - start.
+		resetUsers();
+		// #25627 - end.
 		getUserListDataModel();
 		RequestContext.getCurrentInstance()
 				.execute("dlTaskReassignment.show()");
