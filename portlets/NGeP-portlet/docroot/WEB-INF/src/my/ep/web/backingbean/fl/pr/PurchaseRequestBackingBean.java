@@ -2242,7 +2242,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flItemAddress = (FlFulfilmentItemAddr) itemEntry.getValue().get(0).cloneEntity();
 			flItemAddress.setParent(true);
 			if(null != flItemAddress.getPmVotFund() && null != flItemAddress.getPmVotFund().getVotFundId()){
-				flItemAddress.setCoaValue("Y");
+				//28718 - start
+				if(flItemAddress.isGrouped() && !flItemAddress.isGroupedItemValidated()) {
+					flItemAddress.setCoaValue("N");
+				} else {
+					flItemAddress.setCoaValue("Y");
+				}	
+				//28718 - end
 			}else{
 				flItemAddress.setCoaValue("N");
 			}
@@ -2402,6 +2408,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				for(TreeNode node:getManagedBean().getSelectedNodes()){
 					FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
 					if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+						//28718 - start
+						if(itemAddress.isGrouped()) {
+							itemAddress.setGroupedItemValidated(true);
+						}
+						//28718 - end
 						itemAddress.setCoaValue("Y");
 						break;
 					}
