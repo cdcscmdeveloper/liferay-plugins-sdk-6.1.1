@@ -1486,9 +1486,10 @@ public void selectFinancialAcc(){
 										ctContractVer.getContractVerId(),
 										ctContractVer.getDocType(),
 										roleCode);
-
+                                // Start Fixing - #29369
 								if (ctActor != null && ctActor.getUser().getRecordStatusFlg() == 1) {
 									getManagedBean().getContractAdminlist().add(ctActor.getUser());
+							    // End Fixing - #29369
 								} else {
 								  
 									userReqDTO = new UserReqDTO();	      	  		
