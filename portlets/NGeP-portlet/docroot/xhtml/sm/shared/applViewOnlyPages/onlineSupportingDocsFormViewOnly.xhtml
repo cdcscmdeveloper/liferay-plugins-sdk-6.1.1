@@ -327,7 +327,7 @@
 							        		</p:commandLink>
 							        	</ui:remove>
 							        	<h:panelGroup rendered="#{not empty table.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{applDocsFile.fileName}</a>
+							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{viewSmApplBackingBean.getShortFileName(applDocsFile.fileName)}</a>
 							        	</h:panelGroup>
 										<br />
 									</ui:repeat>
@@ -374,7 +374,7 @@
 							        		</p:commandLink>
 							        	</ui:remove>
 							        	<h:panelGroup rendered="#{not empty table.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{applDocsFile.fileName}</a>
+							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{viewSmApplBackingBean.getShortFileName(applDocsFile.fileName)}</a>
 							        	</h:panelGroup>
 										<br />
 									</ui:repeat>
