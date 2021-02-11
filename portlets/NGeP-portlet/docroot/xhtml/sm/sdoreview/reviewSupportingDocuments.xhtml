@@ -97,19 +97,19 @@
 										<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
 					            	</p:row>
 	                				<p:row>
-					                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;text-align: center !important;" />
-										<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 55%;overflow: hidden !important;" />
-										<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" style="width : 55%;overflow: hidden !important;" />
-										<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 55%;overflow: hidden !important;" />
+					                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;text-align: center !important;" />
+										<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;overflow: hidden !important;" />
+										<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" style="width : 12%;overflow: hidden !important;" />
+										<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;overflow: hidden !important;" />
 					                </p:row>
 								</p:columnGroup>	
-								<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{inquirytbl.pmDocument.mandatory}">
+								<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{sdoReviewBackingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 65%;" rendered="#{inquirytbl.pmDocument.mandatory}">
+								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 65%;" rendered="#{inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
@@ -118,13 +118,13 @@
 						        			</p:commandLink>
 						        		</ui:remove>
 						        		<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-						        			<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{applDocsFile.fileName}</a>
+						        			<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
 						        		</h:panelGroup>
 										<br />
 									</ui:repeat>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{inquirytbl.pmDocument.mandatory}">
-									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory}">
+									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmpty" rendered="#{sdoReviewBackingBean.mandatoryEmpty}"
@@ -143,19 +143,19 @@
 										<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
 					                </p:row>
 					                <p:row>
-					                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;text-align: center !important;" />
-										<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 55%;overflow: hidden !important;" />
-										<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" style="width : 55%;overflow: hidden !important;" />
-										<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 55%;overflow: hidden !important;" />
+					                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;text-align: center !important;" />
+										<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;overflow: hidden !important;" />
+										<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" style="width : 12%;overflow: hidden !important;" />
+										<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;overflow: hidden !important;" />
 					                </p:row>
 								</p:columnGroup>	
-								<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 5%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
+								<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{sdoReviewBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 65%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
+								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 65%;" rendered="#{!inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{!inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
@@ -164,20 +164,20 @@
 							        		</p:commandLink>
 							        	</ui:remove>
 							        	<h:panelGroup rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
-							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{applDocsFile.fileName}</a>
+							        		<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{sdoReviewBackingBean.getShortFileName(applDocsFile.fileName)}</a>
 							        	</h:panelGroup>
 										<br />
 									</ui:repeat>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 65%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
-									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float: left;white-space: normal;" disabled="true"/>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
+									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmpty" rendered="#{sdoReviewBackingBean.nonMandatoryEmpty}"
 								rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 								<p:column style="width : 65%;">
-									<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float: left;white-space: normal;" disabled="true"/>
+									<h:outputText value="#{lbl['lbl.datatable.msg.no.records.found']}" style="float:left; white-space:normal;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<!-- #11641 - End -->
@@ -215,7 +215,7 @@
 		<!-- #11641 - START -->
 		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg">
 			
-			<p:scrollPanel mode="native" style="max-height:550px;width:auto;border:none">
+			<p:scrollPanel mode="native" style="max-height:auto;width:auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			
 			<p:blockUI block="abcde" widgetVar="abcdeblockWidget">
@@ -293,7 +293,7 @@
 									style="float: left;white-space: normal;" />
 							</p:column>
 						</p:dataTable>
-						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.mandatoryEmpty}"
+						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyMandatory" value="" id="mandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.mandatoryEmpty or sdoReviewBackingBean.mandatoryAllReceived}"
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 							<p:column style="width : 65%;">
@@ -326,15 +326,15 @@
 										style="width : 14% !important;overflow: hidden !important;" />
 				                </p:row>
 							</p:columnGroup>	
-							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 3% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}}">
+							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 3% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 								<h:outputText value="#{sdoReviewBackingBean.nonMandatoryCounter}"
 									style="float: left;white-space: normal;font-weight:bold;" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}}">
+							<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 65% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 								<h:outputText value="#{table.pmDocument.docName}"
 									style="float: left;white-space: normal;" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 15% !important;" rendered="#{!table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}}">
+							<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 15% !important;" rendered="#{!table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 								<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
 									<ui:remove>
 										<p:commandLink value="#{applDocs.fileName}" rendered="#{not empty table.smApplDocFiles}"  ajax="false"
@@ -348,7 +348,7 @@
 									<br />
 								</ui:repeat>
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" style="width : 3% !important;" rendered="#{!table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}}">
+							<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" style="width : 3% !important;" rendered="#{!table.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 								<div align="center">
 									<p:selectBooleanCheckbox value="#{table.received}" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
 										<p:ajax event="change"
@@ -356,12 +356,12 @@
 									</p:selectBooleanCheckbox>
 								</div>
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 14% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}}">
+							<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 14% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 								<h:inputTextarea value="#{table.inquiryRemark}"
 									style="float: left;white-space: normal;" />
 							</p:column>
 						</p:dataTable>
-						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.nonMandatoryEmpty}"
+						<p:dataTable styleClass="suppDocEmpty-tbl" var="emptyNonMandatory" value="" id="nonMandatoryEmptyForInquiry" rendered="#{sdoReviewBackingBean.nonMandatoryEmpty or sdoReviewBackingBean.nonMandatoryAllReceived}"
 							rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 							<p:column style="width : 65%;">
