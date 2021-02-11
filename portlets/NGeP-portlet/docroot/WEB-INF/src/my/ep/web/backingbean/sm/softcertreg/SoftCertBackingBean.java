@@ -32,6 +32,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -115,7 +116,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 		setPersonnelSoftcertInformation(getManagedBean()
-				.getLoginUserPersonnelInfo());
+				.getLoginUserPersonnelInfo(), false); //29027
 		SmCommonUtil.redirectToPage("mySoftcertPage.xhtml", "", null, null);
 	}
 
@@ -900,7 +901,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					}
 				}
 			}
-			setPersonnelSoftcertInformation(personnel);
+			setPersonnelSoftcertInformation(personnel, true);  //29027
 		}
 		setAlreadyHadFreeSoftcert();
 		setDisableFlUserRowSelection(personnels);
@@ -1055,25 +1056,34 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * 
 	 * @param smPersonnel
 	 */
-	private void setPersonnelSoftcertInformation(SmPersonnel smPersonnel) {
+	private void setPersonnelSoftcertInformation(SmPersonnel smPersonnel, Boolean isSoftcertManagement) {
 		String softcertValidityDate = SmCommonUtil.getMessage(
 				"lbl.sm.no.available", null);
 		String sofcertNo = SmCommonUtil.getMessage("lbl.sm.no.available", null);
 		boolean disableButton = true;
 
 		if (smPersonnel.getPmUser() != null
-				&& (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED || smPersonnel
-						.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL)) {
+				&& SupplierManagementConst.SOFT_CERT_SHOW_INFORMATION.contains(smPersonnel.getSoftcertFlg())) { // 29027
 			getManagedBean().setRenderRevokeButton(true);
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getLoginUserPersonnelInfo()
 					.getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setSmSupplier(getManagedBean().getLoginUserPersonnelInfo().getSmAppl().getSmSupplier()); //29027
 			reqDTO.setUserId(smPersonnel.getPmUser().getUserId());
 			SmSoftcertRequest softcertRequest = SmServiceLookup
 					.getPersonnelSO()
 					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
 							reqDTO).getSoftcertRequest();
-
+			//29027 - start
+			if (softcertRequest != null && softcertRequest.getPmDigiCert() == null
+					&& (smPersonnel.getSoftcertFlg() == 3 && !isSoftcertManagement)) {
+				softcertRequest = SmServiceLookup
+						.getPersonnelSO()
+						.retrieveLatestPersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO,
+								smPersonnel.getSoftcertFlg(), isSoftcertManagement).getSoftcertRequest();
+			}
+			//29027 - end
+			
 			if (softcertRequest != null
 					&& softcertRequest.getPmDigiCert() != null) {
 				if (StringUtils.isNotBlank(softcertRequest.getPmDigiCert()
@@ -1100,6 +1110,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 					if (DateUtils.isDateGreaterOrEqual(new Date(),
 							renewDate.getTime())) {
+						disableButton = false;
 						smPersonnel
 								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
 						smPersonnel.setDisableRowSelection(false);
