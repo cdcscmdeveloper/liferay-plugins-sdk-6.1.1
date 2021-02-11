@@ -39,13 +39,14 @@
 				<p:outputLabel value="#{index + 1}"
 					style="float: center;white-space: normal;" />
 			</p:column>
-			
-			<p:column style="width:65% !important; white-space:normal;overflow: hidden !important;">  
+			<!-- #11641 - START -->
+			<p:column style="width:50% !important; white-space:normal;overflow: hidden !important;">  
 	            <h:outputText value="#{suppDoc.pmDocument.docName}"  /> 
 	        </p:column>
 		
-			<p:column style="width:15%;white-space:normal;overflow: hidden !important;"
+			<p:column style="width:18%;white-space:normal;overflow: hidden !important;"
 				rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+				<!-- #11641 - END -->
 				<!-- #28807 - Start -->
 				<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
 					<ui:remove>
@@ -71,12 +72,14 @@
 				</div>
 			</p:column>
 			
-			<p:column style="width:15% !important; white-space:normal;overflow: hidden !important;">
+			<!-- #11641 - START -->
+			<p:column style="width:27% !important; white-space:normal;overflow: hidden !important;">
 				<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" 
-					autoResize="false" maxlength="100" style="float: left;white-space: normal;" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
+					autoResize="false" maxlength="100" style="width:97% !important" disabled="#{!sdoReviewBackingBean.managedBean.claimTask}">
 					<f:validateLength maximum="100" />
 				</p:inputTextarea>
 			</p:column>
+			<!-- #11641 - END -->
 
 		</p:dataTable>
 		
