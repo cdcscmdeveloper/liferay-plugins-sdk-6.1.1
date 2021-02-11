@@ -3767,7 +3767,20 @@ public class SmApplicationUtil {
 		}
 	});
 	}
-
+	//14150
+	public static void sortbyDate(List<SmSupplierCategory> catList){
+		// sort created date descendent
+				if(!EntityHelper.isCollectionEmpty(catList)){
+					// sort created date asc
+					Collections.sort(catList, new Comparator<SmSupplierCategory>() {
+						public int compare(SmSupplierCategory o1, SmSupplierCategory o2) {
+							if (o2.getApprovedDate() == null || o1.getApprovedDate() == null)
+								return 0;
+							return o1.getApprovedDate().compareTo(o2.getApprovedDate());
+						}
+					});
+				}
+	}
 	/**
 	 * Sort personnels by role in company
 	 * 
