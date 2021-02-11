@@ -89,8 +89,9 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			if(selectionMode != null && selectionMode.equals("multiple")){
 				getManagedBean().setSelectionMode(selectionMode);
 				getManagedBean().setDisableSelectbtn(true);
-			}else{
+			}else{//11022021@azza - Bug #30066 - Start
 				getManagedBean().setSelectionMode("single");
+			}//11022021@azza - Bug #30066 - End
 			String saveObject = facesScopes.getParameter("saveObject");
 			getManagedBean().setSaveObject(saveObject);
 			//210801@akmal - Enhancement27624 - End
@@ -98,7 +99,6 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			getManagedBean().setType(type);
 			getManagedBean().setUpdate(update);
 			getManagedBean().setKptjId(kptjId);
-		   }
 		}catch(Exception e){
 			throw new EpException(e.getMessage());
 		}	
