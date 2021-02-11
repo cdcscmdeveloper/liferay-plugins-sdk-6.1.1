@@ -134,9 +134,9 @@
 						value="#{pmGoSearchBackingBean.pmGoDataModel}" rowIndexVar="index" lazy="true">
 						<ac:paginator for="pmGoDt"></ac:paginator>
 						<!-- 11022021@azza - Bug #30066 - Start -->
-						<p:ajax event="rowUnselect" update="@([id$=slbtn])"/>
-						<p:ajax event="rowSelect"  update="@([id$=slbtn])"/>
-						<p:ajax event="toggleSelect" update="@([id$=slbtn])"/>
+						<p:ajax event="rowUnselect" update="@([id$=slbtn])" process="@this" partialSubmit="true"/>
+						<p:ajax event="rowSelect"  update="@([id$=slbtn])" process="@this" partialSubmit="true"/>
+						<p:ajax event="toggleSelect" update="@([id$=slbtn])" process="@this" partialSubmit="true"/>
 						<!-- 11022021@azza - Bug #30066 - End -->
 						<p:column headerText="#{lbl['lbl.pm.go.search.acc.code']}"
 							style="width :15%">
