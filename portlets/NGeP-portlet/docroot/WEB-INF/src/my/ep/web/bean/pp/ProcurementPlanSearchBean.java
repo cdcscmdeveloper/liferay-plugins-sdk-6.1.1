@@ -36,6 +36,7 @@ public class ProcurementPlanSearchBean implements Serializable{
 	private Date updatedDateFrom; //[#27624]
 	private Date updatedDateTo; //[#27624]
 	private Long planDetstatus;
+	private PmParameter procurementType;
 	//200911@akmal - Enhancement27624 - End
 	
 	public ProcurementPlanSearchBean() {
@@ -242,6 +243,17 @@ public class ProcurementPlanSearchBean implements Serializable{
 
 	public void setTitleOrDesc(String titleOrDesc) {
 		this.titleOrDesc = titleOrDesc;
+	}
+	
+	public PmParameter getProcurementType() {
+		if (procurementType == null)
+			procurementType = new PmParameter();
+		return procurementType;
+	}
+
+	
+	public void setProcurementType(PmParameter procurementType) {
+		this.procurementType = procurementType;
 	}
 
 }

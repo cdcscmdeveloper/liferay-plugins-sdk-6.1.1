@@ -2446,7 +2446,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					this.getManagedBean().setDeletePpItems(new ArrayList<PpProcurementItem>());
 				}
 				log.info("Before save, getDeletePpItems= "+this.getManagedBean().getDeletePpItems().size()); 
-				reqDTO.setDeletedPpItemList(this.getManagedBean().getDeletePpItems());
+//				reqDTO.setDeletedPpItemList(this.getManagedBean().getDeletePpItems());
 
 //				reqSO.
 				
