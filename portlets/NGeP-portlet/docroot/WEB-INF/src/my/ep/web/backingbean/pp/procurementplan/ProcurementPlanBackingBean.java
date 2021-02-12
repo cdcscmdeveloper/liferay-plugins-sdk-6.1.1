@@ -636,7 +636,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				reqDTO.setPlanDetReset(true);
 				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
 			}
-			//200911@akmal - Enhancement27624 - End			resDTO = reqSO.retrievePlanDetById(reqDTO);
+			//200911@akmal - Enhancement27624 - End			
+			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			if (resDTO.isSuccessful()) {
 				ppPlan = resDTO.getPlan();
 				if(ppPlan!=null){
@@ -3741,8 +3742,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void initialSearchPlan(){
 		log.info("initialSearchPlan");
-	
-		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(getFacesScopes().getUserSessionBean().getUserId(), true);
+		
+		//200911@akmal - Enhancement27624 - Start
+		Long userId = getFacesScopes().getUserSessionBean().getUserId() != null ? getFacesScopes().getUserSessionBean().getUserId() : new LogKey().getUserId();
+				
+		PmOrgProfile pmOrgProfile = PpCommonUtil.retrieveUserOrgListByUserId(userId, true);
+		//200911@akmal - Enhancement27624 - End
 		if(pmOrgProfile==null || pmOrgProfile.getOrgProfileId()==null){
 			throw new EpException(MessageConst.ERROR_730000);
 		}
