@@ -987,5 +987,22 @@ public class PpCommonUtil implements Serializable{
 				.retrieveOrgProfileListFromGroupOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
 	}
+	
+	//200911@akmal - Enhancement27624 - Start
+		/**
+		 * Check if user role contains related role in passed list  
+		 * 
+		 */
+		
+	public static boolean isUserHasRole(List<RoleCode> roles){
+		FacesScopes facescope = new FacesScopes();
+			
+		for(RoleCode role : roles){
+			if(facescope.hasRoleUser(role.value()))
+				return true;
+		}
+		return false;
+	}
+	//200911@akmal - Enhancement27624 - End
 
 }
