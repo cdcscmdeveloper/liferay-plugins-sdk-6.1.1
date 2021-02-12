@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.pm.glaccount;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -27,6 +29,15 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private boolean accTypeDisabled;
 	private boolean accClassDisabled;
 	private String selectedGoSoObjCode;
+	//210801@akmal - Enhancement27624 - Start
+	private String selectionMode;
+	private List<VPmGo> vPmGolist;
+	private String saveObject;
+	private boolean disableSelectbtn=false;
+	//210801@akmal - Enhancement27624 - End
+	//11022021@azza - Bug #30066 - Start
+	private boolean disableSelectbtnPmGoDt = false;
+	//11022021@azza - Bug #30066 - End
 	
 	public PmGoSearchManagedBean(){
 		
@@ -213,6 +224,46 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	public void setSelectedGoSoObjCode(String selectedGoSoObjCode) {
 		this.selectedGoSoObjCode = selectedGoSoObjCode;
 	}
-	
-	
+	//210801@akmal - Enhancement27624 - Start
+	public String getSelectionMode() {
+		return selectionMode;
+	}
+
+	public void setSelectionMode(String selectionMode) {
+		this.selectionMode = selectionMode;
+	}
+
+	public List<VPmGo> getvPmGolist() {
+		return vPmGolist;
+	}
+
+	public void setvPmGolist(List<VPmGo> vPmGolist) {
+		this.vPmGolist = vPmGolist;
+	}
+
+	public String getSaveObject() {
+		return saveObject;
+	}
+
+	public void setSaveObject(String saveObject) {
+		this.saveObject = saveObject;
+	}
+
+	public boolean isDisableSelectbtn() {
+		return disableSelectbtn;
+	}
+
+	public void setDisableSelectbtn(boolean disableSelectbtn) {
+		this.disableSelectbtn = disableSelectbtn;
+	}
+	//210801@akmal - Enhancement27624 - End
+	//11022021@azza - Bug #30066 - Start
+	public boolean isDisableSelectbtnPmGoDt() {
+		return disableSelectbtnPmGoDt;
+	}
+
+	public void setDisableSelectbtnPmGoDt(boolean disableSelectbtnPmGoDt) {
+		this.disableSelectbtnPmGoDt= disableSelectbtnPmGoDt;
+	}
+	//11022021@azza - Bug #30066 - End
 }
