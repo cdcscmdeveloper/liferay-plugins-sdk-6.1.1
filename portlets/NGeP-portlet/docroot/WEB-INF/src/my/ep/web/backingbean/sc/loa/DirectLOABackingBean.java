@@ -4785,7 +4785,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			debugLogger("approveBeforeupdateBpmTaskAction");
 			
 			/*#29007 Start Vinod*/
-			if (BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome) && this.getManagedBean().getLoaBpmVerify() == null) {
+			if (BpmOutcomeConst.BPM_VERIFY.equals(outcome) && this.getManagedBean().getLoaBpmVerify() == null) {
 				this.verifyConformationForLampiranA3(outcome);
 			}
 			/*#29007 End Vinod*/
@@ -9625,7 +9625,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setLoaBpmVerify(bpmAction);
 			RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.show()");
 		}else{
-			this.approveBeforeupdateBpmTaskAction(bpmAction);
 			return;
 		}
 	}
