@@ -5143,7 +5143,7 @@ public class SmCommonUtil {
 									sbEng.append(remark);
 								}
 
-								sbEng.append("<br />");
+								sbEng.append("<br/>");
 							} else {
 								sbMs.append(i + ") " + desc.getReasonDesc());
 
@@ -5152,7 +5152,7 @@ public class SmCommonUtil {
 									sbMs.append(remark);
 								}
 
-								sbMs.append("<br />");
+								sbMs.append("<br/>");
 							}
 						}
 						i++;
