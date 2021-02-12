@@ -4784,6 +4784,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		public void approveBeforeupdateBpmTaskAction(String outcome) {
 			debugLogger("approveBeforeupdateBpmTaskAction");
 			
+			/*#29007 Start Vinod*/
+			if (BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome) && this.getManagedBean().getLoaBpmVerify() == null) {
+				this.verifyConformationForLampiranA3(outcome);
+			}
+			/*#29007 End Vinod*/
 			// #26770 - Start.
             validateReportAttachment();
             // #26770 - End.
@@ -9607,22 +9612,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
-	public void submitConformationForLampiranA3(){
-		int recordCount = 0;
-		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					recordCount++;
-				}
-			}
-		}
-		if(recordCount>0 && this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
-			RequestContext.getCurrentInstance().execute("submitConfirmPopUp.show()");
-		}else{
-			this.submitAction();
-			return;
-		}
-	}
 	public void verifyConformationForLampiranA3(String bpmAction){
 		int recordCount = 0;
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
@@ -9632,13 +9621,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 		}
-		if(recordCount>0 && this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+		if(recordCount>0 && this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
 			this.getManagedBean().setLoaBpmVerify(bpmAction);
 			RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.show()");
 		}else{
 			this.approveBeforeupdateBpmTaskAction(bpmAction);
 			return;
 		}
+	}
+	public void resetLoaBpmVerify(){
+		this.getManagedBean().setLoaBpmVerify(null);
+		RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.hide()");
 	}
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
