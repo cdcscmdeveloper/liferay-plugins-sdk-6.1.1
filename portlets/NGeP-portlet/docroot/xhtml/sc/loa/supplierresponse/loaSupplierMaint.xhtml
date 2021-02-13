@@ -16,7 +16,9 @@
 	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType eq ParameterConst.doctypeQuotation}" />
 	    <ui:param name="isDocTypeDirectNego" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType eq ParameterConst.doctypeDirectNego}" />
 	    <ui:param name="isBondReq" value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}" />
-	    <ui:param name="isLoaReviseStatus" value="#{lOADetailBackingBean.isLoaReviseStatus()}" />
+		<ui:remove> #19336#33 - start </ui:remove>
+	    <ui:param name="enablePBForDP" value="#{lOADetailBackingBean.managedBean.enablePBForDP}" />
+		<ui:remove> #19336#33 - end </ui:remove>
 	
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
@@ -50,8 +52,10 @@
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
-					
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" disabled="#{!(isDocTypeQuotation and isBondReq)}" actionListener="#{lOADetailBackingBean.tabChangeAction(5)}">
+					<ui:remove> #19336#33 - start </ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" disabled="#{!((isDocTypeQuotation || enablePBForDP) and isBondReq)}" actionListener="#{lOADetailBackingBean.tabChangeAction(5)}">
+					<ui:remove> #19336#33 - end </ui:remove>
+
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					

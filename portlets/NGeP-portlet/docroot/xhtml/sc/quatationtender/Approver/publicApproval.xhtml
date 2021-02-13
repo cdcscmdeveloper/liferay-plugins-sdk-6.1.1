@@ -29,8 +29,9 @@
 				<td>
 					<c:choose>
 						<c:when test="#{isStatusPendingPublicationApproval}">
+							<ui:remove> #25692 - start </ui:remove>
 							<p:calendar label="#{lbl['lbl.sc.publish.date']}"
-								disabled="#{approvalBackingBean.managedBean.readOnly}"
+								disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 								mindate="#{approvalBackingBean.handlePublishDate()}"
 								value="#{approvalBackingBean.managedBean.qt.newPublishDate}"
 								id="noticePublish" required="true"
@@ -41,6 +42,7 @@
 									listener="#{qTScheduleDetailBackingBean.handlePublishedDate}"
 									update="publicationApprovalScheduleDetailsId" />
 							</p:calendar>
+							<ui:remove> #25692 - end </ui:remove>
 							<p:inputText id="publishTime" value="#{approvalBackingBean.managedBean.qt.publishDate}" disabled="true" size="4"
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
@@ -172,12 +174,13 @@
 	<c:if test="#{approvalBackingBean.managedBean.qt.bsvRequired}">
 		<ui:include src="/xhtml/sc/quatationtender/briefingsitevisit/briefingsitevisitdetails.xhtml" />
 	</c:if>
-	
+	<ui:remove> #25692 - start </ui:remove>
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		showAttachment="false"
-		readonly="#{approvalBackingBean.managedBean.readOnly}"
+		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
 		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
 		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+	<ui:remove> #25692 - end </ui:remove>
 		
 </ui:composition>

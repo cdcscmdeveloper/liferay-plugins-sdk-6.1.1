@@ -119,6 +119,7 @@
 			</table>
 		</div>
 		<p:commandLink id="refreshId" partialSubmit="true" process="@this"
+		disabled="#{biddingBB.isQTMaintenanceScreen()}"
 			action="#{biddingBB.bidManagementAction(biddingBB.managedBean.scheduledBid)}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 			<p:graphicImage value="/css/images/design/ico-refresh.png"

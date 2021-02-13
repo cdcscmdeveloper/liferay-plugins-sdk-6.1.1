@@ -88,7 +88,10 @@
 							label="#{lbl['lbl.sc.document.type']}" required="true">
 							<f:selectItems
 								value="#{qTDetailBB.getDocTypeQtLOADropdownValues()}" />
-								<p:ajax update="@form" process="@this"/>
+								<ui:remove> #19287 - start </ui:remove>
+								<p:ajax event="change" listener="#{qTDetailBB.resetSearchDataResults}" update="@form" process="@this"/>
+								<ui:remove> #19287 - end </ui:remove>
+
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -96,9 +99,13 @@
 						  <h:outputLabel for="docNo" value="#{lbl['lbl.sc.document.no']}" />
 					</td>
 					<td style="width:385px">
+						<ui:remove> #19287 - start </ui:remove>
 						<p:inputText id="docNo"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
-							maxlength="21" style="width:288px;" />
+							maxlength="21" style="width:288px;">
+							<p:ajax update="@form" process="@this"/>
+						</p:inputText>
+						<ui:remove> #19287 - end </ui:remove>
 					</td>
 							
 					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
@@ -168,17 +175,23 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel   value="#{lbl['lbl.sc.status']}" /></td>
-					<td><p:selectOneMenu 
-							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
-							style="width: 297px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, ParameterConst.doctypeQuotation,screenName)}" />
-						</p:selectOneMenu>
-						</td>
+					<td>						
+						<ui:remove>
+							Enhancement #19287 #122
+						</ui:remove>
+							<p:selectOneMenu 
+								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}"
+								style="width: 297px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{qTDetailBB.getQTStatusDropdownValues(ParameterConst.reqNoteMethodCode, qTDetailBB.managedBean.qtnTenderSearchBean.docType,screenName)}" />
+							</p:selectOneMenu>						
+					</td>
 				</tr>
 			</table>
 			
 		
 	
 	</ui:composition>
+	
+<!-- ***19336#40 -->
 	

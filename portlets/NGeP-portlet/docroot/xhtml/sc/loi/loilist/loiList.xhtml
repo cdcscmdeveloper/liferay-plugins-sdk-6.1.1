@@ -11,6 +11,7 @@
 		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
+		<ui:param name="readOnly" value="#{lOIDetailBackingBean.managedBeanIsReadOnly}" />
         <ui:param name="isMultipleLoi" value="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.recommendByMultipleLoi}" />
 		<ui:include src="loiListButtons.xhtml" />
 
@@ -59,7 +60,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" style="width:15%" rendered="#{!isMultipleLoi}">
 					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
-					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa)}"
+					    disabled="#{lOIDetailBackingBean.isLoiRequiredDisabled(loiLoa) or readOnly}"
 					    label="#{loiLoa.smSupplier.companyName} : #{lbl['lbl.sc.loiloa.is.loi.required']}" 
 						id="isLoiReq">
 					    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
@@ -138,12 +139,12 @@
 						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">
 
 							<p:commandButton title="edit" icon="ui-icon-edit"
-								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
+								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION and !lOIDetailBackingBean.managedBean.readOnly }"
 								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, true)}" />
 
 							<p:commandLink
-								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
+								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION or lOIDetailBackingBean.managedBean.readOnly}"
 								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
 								process="@this">
 
