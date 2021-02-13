@@ -15,9 +15,13 @@
 				<tr>
 					<td width="8%"><h:outputLabel
 							value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					
+					<ui:remove> #19287 - start </ui:remove>
 					<td class="header-info-text">
 						<p:commandLink process="@this" partialSubmit="true" 
-						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,supplierProposalDetailBackingBean.managedBean.qt,false)}">
+						action="#{qTDetailBB.editQuationTenderDetails(supplierProposalDetailBackingBean.managedBean.qt, false, true, view.viewId)}">
+					<ui:remove> #19287 - end </ui:remove>
+					
 				<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}" escape="false" />
 					</p:commandLink>
 						
