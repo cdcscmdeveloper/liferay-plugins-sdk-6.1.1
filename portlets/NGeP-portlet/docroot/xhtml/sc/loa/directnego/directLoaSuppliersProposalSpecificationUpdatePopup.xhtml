@@ -120,8 +120,8 @@
 						<p:graphicImage value="/css/images/design/ico-refresh.png" />
 			</p:commandLink>
 		</p:column>
-		<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;" value="#{spec.answerRemark}" />
+			<p:column style="width:30%; text-align: left;">
+			<h:outputText style="width:24%;white-space: normal;" value="#{(spec.answerRemark ne null) ? spec.answerRemark : 'N/A'}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
 			<p:inputTextarea id="newOfferedSpec" label="#{lbl['lbl.sc.loiloa.newoffered.specification']}" style="width:calc(100% - 15px);" value="#{spec.newSupplierOffer}" 
@@ -132,6 +132,7 @@
 			<f:validateLength for="newOfferedSpec" maximum="1000" />
 			</p:inputTextarea>
 			<p:message id="newOfferedSpecMsg" for="newOfferedSpec" display="icon" />
+			<h:outputText style="width:24%;white-space: normal;" rendered="#{!spec.renderNewSpec}" value="N/A" />
 		</p:column>
 				
 		</p:dataTable>
