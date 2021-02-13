@@ -9406,6 +9406,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
 			scLoiLoaItem.setComplete(isComplete);
 			if(this.getManagedBean().getNewSupplierJustification() != null && this.getManagedBean().getNewSupplierJustification() != ""){
+				int newoffered = 0;
+				for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
+					if(isComplete && tplSpecAnswer.getNewSupplierOffer() == null){
+						newoffered++;
+					}
+				}
+				if(newoffered > 0){
+					throw new EpException(MessageConst.ERROR_775162);
+				}
 				scLoiLoaItem.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
 			}
 			reqDTO.setTplSpecAnswerList(this.getManagedBean().getTplSpecAnswerList());
