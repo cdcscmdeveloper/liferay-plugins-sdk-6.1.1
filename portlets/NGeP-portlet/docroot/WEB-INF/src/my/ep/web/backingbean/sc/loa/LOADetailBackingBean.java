@@ -824,6 +824,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		if(getManagedBean().getScLoa().getScLoaReports() != null){
+			List<ScLoaReport> loaReports = getManagedBean().getScLoa().getScLoaReports();
+			for(ScLoaReport scLoaReport : loaReports){
+				if(scLoaReport.getTitle().contains(lampiranA3SubStr)){
+					scLoaReport.setUploadlampiranA3(true);
+				}
+			}
+		}
 		//#29007 End Vinod
 		getManagedBean().setValidatewitness(Boolean.TRUE); //#19336
 		
@@ -3202,6 +3210,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						//#29007 Start Vinod
 						this.getManagedBean().setSupPropSpecUpdate(supPropSpecUpdate);
 						this.getManagedBean().setSpecificationAndSupplierDialogFlagQT(specificationAndSupplierDialogFlagQT);
+						if(getManagedBean().getScLoa().getScLoaReports() != null){
+							List<ScLoaReport> loaReports = getManagedBean().getScLoa().getScLoaReports();
+							for(ScLoaReport scLoaReport : loaReports){
+								if(scLoaReport.getTitle().contains(lampiranA3SubStr)){
+									scLoaReport.setUploadlampiranA3(true);
+								}
+							}
+						}
 						//#29007 End Vinod
 						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 								scLoa.getLoaNo(), Boolean.FALSE);
@@ -3421,7 +3437,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		
-		// #11134 remove empty remark - start
+		// remove empty remark - start
 		List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
 		List<ScLoaRemark> finalScLoaRemarks = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(scLoaRemarks)){
@@ -3432,7 +3448,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		scLoa.setScLoaRemarks(finalScLoaRemarks);
-		// #11134 remove empty remark - end
+		// remove empty remark - end
 
 		validateLOADetails(scLoa, outcome);
 
@@ -4052,7 +4068,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if(statusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT) && 
 						loaReport.getDefinationType().getParameterCode().equals(
 								ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD) &&
-								null == loaReport.getScLoaReportAttachment()){
+								null == loaReport.getScLoaReportAttachment() && !loaReport.getTitle().contains(lampiranA3SubStr)){//#29007 Vinod added lampiranA3SubStr
 					throw new EpException(MessageConst.ERROR_760441,
 							new String[] {loaReport.getTitle()});
 				}
@@ -8337,16 +8353,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if(this.getManagedBean().getNewSupplierJustification() != null && this.getManagedBean().getNewSupplierJustification() != ""){
 				int newoffered = 0;
 				for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
-					if(isComplete && tplSpecAnswer.getNewSupplierOffer() == null){
+					if(tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() !=""){
 						newoffered++;
 					}
 				}
-				if(newoffered > 0){
-					throw new EpException(MessageConst.ERROR_775162);
+				if(isComplete &&  newoffered <1){
+					int index=0;
+					for(ScLoiLoaItem loiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+						if(loiLoaItem.getLoiLoaItemId()== scLoiLoaItem.getLoiLoaItemId()){
+							this.getManagedBean().getScLoa().getScLoiLoaItems().set(index, scLoiLoaItem);
+							break;
+						}
+						index++;
+					}
+					throw new EpException(MessageConst.ERROR_775170);
 				}
 				scLoiLoaItem.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
 			}
-
 			reqDTO.setTplSpecAnswerList(this.getManagedBean().getTplSpecAnswerList());
 			reqDTO.setScLoiLoaItem(scLoiLoaItem);
 						
