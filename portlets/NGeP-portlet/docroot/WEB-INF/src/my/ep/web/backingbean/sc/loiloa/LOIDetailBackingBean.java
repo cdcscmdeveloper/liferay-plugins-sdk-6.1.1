@@ -424,6 +424,33 @@ public class LOIDetailBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
+					ScLoi scLoi = getManagedBean().getScLoi();
+					Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
+						
+					List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
+					if(null == scNegoTerms) {
+						scNegoTerms = new ArrayList<ScLoiTerm>();
+					}
+						
+					int record = 0;
+					if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+						if(scNegoTerms.size() > 0){
+							for(ScLoiTerm scLoiTerm : scNegoTerms){
+								if(scLoiTerm.getTermDesc().equals(message)){
+									record++;
+								}
+							}
+						}
+						if(record > 0){
+							this.getManagedBean().setRenderInstruction(true);
+						}else{
+							this.getManagedBean().setRenderInstruction(false);
+						}
+					}else if(QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)){
+						this.getManagedBean().setRenderInstruction(true);
+					}else{
+						this.getManagedBean().setRenderInstruction(false);
+					}
 		// #29007	Vinod End
 	}
 	
@@ -695,6 +722,8 @@ public class LOIDetailBackingBean extends
 			// #25638 - Start
 			displayReviseInstrn(getManagedBean().getFcActivityList());
 			// #25638 - End
+			
+			
 			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
