@@ -245,8 +245,10 @@
 			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL and 
 			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_ENDORSEMENT and
 			              evaluationBackingBean.managedBean.currentStatusId ne QTStatusConst.TEC_PENDING_SIGN_OFF}">
+				<ui:remove> #25201 - start </ui:remove>
 			  <p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:5%;white-space: normal;text-align: center;">
+				style="width:5%;white-space: normal;text-align: center;" rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}">
+				<ui:remove> #25201 - end </ui:remove>
 			    
 			    <p:commandLink action="#{supplierProposalDetailBackingBean.editRowNonFederalGovtExperience(technongovt)}"
 		         partialSubmit="true" 

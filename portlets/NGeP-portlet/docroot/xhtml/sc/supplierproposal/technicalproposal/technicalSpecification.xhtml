@@ -13,9 +13,8 @@
 	 <ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
-			
 		<ac:templateSpec
-			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" />
+			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"/>
 	</h:panelGroup>
 	<br />
 	<br />
