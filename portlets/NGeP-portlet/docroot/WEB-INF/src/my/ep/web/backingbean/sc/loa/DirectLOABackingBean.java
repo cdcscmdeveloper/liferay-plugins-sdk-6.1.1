@@ -9408,12 +9408,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if(this.getManagedBean().getNewSupplierJustification() != null && this.getManagedBean().getNewSupplierJustification() != ""){
 				int newoffered = 0;
 				for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
-					if(isComplete && tplSpecAnswer.getNewSupplierOffer() == null){
+					if(isComplete && tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() !=""){
 						newoffered++;
 					}
 				}
-				if(newoffered > 0){
-					throw new EpException(MessageConst.ERROR_775162);
+				if(newoffered <1){
+					int index=0;
+					for(ScLoiLoaItem loiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
+						if(loiLoaItem.getLoiLoaItemId()== scLoiLoaItem.getLoiLoaItemId()){
+							this.getManagedBean().getScLoa().getScLoiLoaItems().set(index, scLoiLoaItem);
+							break;
+						}
+						index++;
+					}
+					throw new EpException(MessageConst.ERROR_775170);
 				}
 				scLoiLoaItem.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
 			}
