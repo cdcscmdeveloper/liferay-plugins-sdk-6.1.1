@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -81,6 +82,14 @@ public class QtnTenderSearchBean implements Serializable {
 	private PmOrgProfile ptjProfile;
 	
 	private ScQt scQt;
+
+	// #25201 - start
+	/**
+	 * flag to indicate if the qtStatus is to filter ScQt by status
+	 * default to true 
+	 */
+	private boolean qtStatusForQt = true;	
+	// #25201 - end
 	
 	/**
 	 * Instantiates a new qtn tender search bean.
@@ -312,6 +321,7 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+		this.setQtStatusForQt(ParameterConst.DOCTYPE_QUOTATION.equals(this.docType)); // #25201
 	}
 
 	/**
@@ -425,5 +435,41 @@ public class QtnTenderSearchBean implements Serializable {
 			return date;
 		}
 	}
+	
+	// #25201 - start
+	public QTSearchBean toQTSearchBean(){
+		QTSearchBean t = new QTSearchBean();
+		t.setCommitteeType(committeeType);
+		t.setDocNo(docNo);
+		t.setDocType(docType);
+		t.setFromClosingDate(fromClosingDate);
+		t.setFromCreatedDate(fromCreatedDate);
+		t.setFromPublishDate(fromPublishDate);
+		t.setMinistryProfile(ministryProfile);
+		t.setProcurementMode(procurementMode);
+		t.setPtjGroupProfile(ptjGroupProfile);
+		t.setPtjProfile(ptjProfile);
+		t.setQtNo(qtNo);
+		t.setQtStatus(qtStatus);
+		t.setQtTitle(qtTitle);
+		t.setRecordStatus(recordStatus);
+		t.setResultDocType(resultDocType);
+		t.setScQt(scQt);
+		t.setToClosingDate(toClosingDate);
+		t.setToCreatedDate(toCreatedDate);
+		t.setToPublishDate(toPublishDate);
+		t.setQtStatusForQt(qtStatusForQt);
+		return t;
+	}
+
+	public boolean isQtStatusForQt() {
+		return qtStatusForQt;
+	}
+
+	public void setQtStatusForQt(boolean qtStatusForQt) {
+		this.qtStatusForQt = qtStatusForQt;
+	}
+	
+	// #25201 - end
 	
 }
