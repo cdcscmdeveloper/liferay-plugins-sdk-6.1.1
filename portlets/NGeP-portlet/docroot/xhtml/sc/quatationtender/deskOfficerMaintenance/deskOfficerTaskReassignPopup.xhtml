@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+		.doReassignUserDialog{
+			position: absolute !important; 
+			left: 25% !important; 
+			top: 5% !important; 
+			width: 50% !important; 
+			max-width: 700px !important; 
+		}
+	</style>
+	<p:dialog id="dlTaskReassignment" 
+		header="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.assignment']}" modal="true"
+		widgetVar="dlTaskReassignment" dynamic="true" 
+		styleClass="doReassignUserDialog">
+		<!-- Validation Message -->
+		<p:blockUI block="dlTaskReassignment" widgetVar="taskReassignPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="messagesRole" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<p:panel id="pTaskReassignSearchPnl"
+			header="#{lbl['lbl.pm.ta.search']}" toggleable="true">
+			<h:panelGroup id="searchPanel" style="width:100%;">
+				<h:panelGrid columns="2" id="userSearchCriteria" cellpadding="0"
+					cellspacing="0">
+					<p:outputLabel id="searchPtjLbL" value="#{lbl['lbl.sc.ptj']}" />
+					<ac:lov id="ptj" lovId="PM_ORG_PROFILE_AUTH_TYPE"
+							size="60" readonly="true"
+							headerText="#{lbl['lbl.sc.ptj']}" 
+							value="#{DOMaintenanceBackingBean.managedBean.doMaintenanceSearchBean.ptjProfile.orgName}"
+							postUpdateListener="DOMaintenanceBackingBean.postUpdateOrgProfileListener"
+							update="@form"
+							saveObject="DOMaintenanceBackingBean.managedBean.doMaintenanceSearchBean.ptjProfile"
+							conditionField="recordStatus^1" 
+							disabled="true"/>
+					<ui:remove>
+						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}" />
+						<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"
+						size="60"
+						value="#{DOMaintenanceBackingBean.managedBean.doMaintenanceSearchBean.docType}" />
+					</ui:remove>
+					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}" />
+					<p:inputText label="#{lbl['lbl.pm.ta.username']}" size="60"
+						value="#{DOMaintenanceBackingBean.managedBean.searchUserName}" autocomplete="off"/>
+					<p:outputLabel value="#{lbl['lbl.pm.ic.no']}" />
+					<p:inputText label="#{lbl['lbl.pm.ic.no']}" size="60"
+						value="#{DOMaintenanceBackingBean.managedBean.searchUserIdNo}" autocomplete="off"/>
+				</h:panelGrid>
+				<table style="width: 100%;">
+					<tr>
+						<td style="text-align: right;"><p:commandButton
+								id="taSearchUserBtn" value="#{lbl['lbl.btn.search']}"
+								action="#{DOMaintenanceBackingBean.searchUser}"
+								partialSubmit="true" process="searchPanel" update="userTaskReassigneeResult">
+							</p:commandButton> <p:commandButton id="taResetUserBtn"
+								value="#{lbl['lbl.btn.reset']}"
+								action="#{DOMaintenanceBackingBean.resetUsers}"
+								partialSubmit="true" process="searchPanel"
+								update="searchPanel userTaskReassigneeResult">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:panel>
+		
+		<p:panel id="userTaskReassigneeResult"
+			 widgetVar="userTaskReassigneeResult"
+			 header="#{lbl['lbl.pm.search.result']}"
+			 toggleable="true"
+			 >
+			<h:panelGroup id="resultPanel" style="width:100%;">
+				<p:dataTable id="dtTaskReassign" 
+					value="#{DOMaintenanceBackingBean.userListDataModel}" var="user" 
+					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+					selection="#{DOMaintenanceBackingBean.managedBean.selectedUser}"
+					rowIndexVar="rowIndex" rowKey="#{user.userId}" selectionMode="single" lazy="true" rows="5">
+					<ac:paginator for="dtTaskReassign" />
+					<p:ajax event="rowSelect" listener="#{DOMaintenanceBackingBean.enableDisableAssign()}" update=":#{p:component('assignBtn')}"/>
+					<p:column headerText="#{lbl['lbl.pm.ta.name']}">  
+			    		#{user.userName}
+		        	</p:column>
+		        	<p:column headerText="#{lbl['lbl.pm.ic.no']}">  
+			    		#{user.identificationNo}
+		        	</p:column>
+				</p:dataTable>
+			</h:panelGroup>	 
+		</p:panel>
+		<p:panel  style="text-align: right;">
+			<p:commandButton id="assignBtn"
+				value="#{lbl['lbl.pm.ta.btn.assign']}"
+				action="#{DOMaintenanceBackingBean.assignUser()}"
+				onclick="taskReassignPopupBlockWidget.show()" oncomplete="taskReassignPopupBlockWidget.hide()" 
+				disabled="#{DOMaintenanceBackingBean.managedBean.disableAssign}"
+				update="@form" >
+			</p:commandButton>
+			 <p:commandButton id="cbCancel"
+				value="#{lbl['lbl.btn.cancel']}" process="@this"
+				oncomplete="dlTaskReassignment.hide()" immediate="true" />
+		</p:panel>
+	</p:dialog>
+</ui:composition>
