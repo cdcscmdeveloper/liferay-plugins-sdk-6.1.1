@@ -21,7 +21,7 @@
 			oncomplete="screen2.show();" process="@this"
 			update="@([id$=cloneid])" />
 		<p:commandButton id="committeeapproveradd" styleClass="BtnSpacing"
-			disabled="#{approvalBackingBean.managedBean.readOnly}"
+			disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
 			value="#{lbl['lbl.btn.add']}" process="@this"
 			actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 			oncomplete="newspecificationcommittee.show();"
@@ -42,11 +42,10 @@
 	<ac:confirmationPopup id="#{committeeApprovalDeleteId}"
 		widget="committeeApprovalDeletePopUp"
 		okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
-		width="40%" height="100"
+		width="400" height="100"
 		title="#{lbl['lbl.sc.qt.committee.appointment']}"
 		content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 		update="@form" />
-
 	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/addspecificationcommittee.xhtml" />
 	<ui:include src="/xhtml/sc/quatationtender/committeeappointment/cloneDetails.xhtml" />
 	
