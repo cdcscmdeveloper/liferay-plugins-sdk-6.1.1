@@ -322,6 +322,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	/*#29007 Start Vinod*/
 	private boolean supPropSpecDisable = false;
 	private boolean supPropSpecUpdate = false;
+	private boolean uploadA3Templet = false;
 	private boolean specificationAndSupplierDialogFlagQT = false;
 	private String itemNamePopup;
 	private String specKeyword;
@@ -1842,6 +1843,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	public void setSupPropSpecDisable(boolean supPropSpecDisable) {
 		this.supPropSpecDisable = supPropSpecDisable;
+	}
+	public boolean isUploadA3Templet() {
+		return uploadA3Templet;
+	}
+	public void setUploadA3Templet(boolean uploadA3Templet) {
+		this.uploadA3Templet = uploadA3Templet;
 	}
 	/*#29007 End Vinod*/
 
