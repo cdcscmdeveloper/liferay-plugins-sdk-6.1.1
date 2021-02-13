@@ -14,7 +14,7 @@
 		<!-- #29006 - start -->
 		<!-- #29007 Added rendered for QT Vinod -->
 		<p:outputPanel id="supplierUpdateInstructionPanel"
-			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag || lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
+			rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation || lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction']}" />
 			<p:graphicImage value="/css/images/design/ico-viewnedit.png"
