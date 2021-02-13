@@ -6,12 +6,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:remove>#25692 - start </ui:remove>
 	<ac:scRemarkAndAttachment
 		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 		attachmentList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachments}"
-		readonly="#{approvalBackingBean.managedBean.readOnly}"
+		readonly="#{approvalBackingBean.managedBean.readOnly and !approvalBackingBean.managedBean.approvalEditableSection}"
 		fileUploadListener="approvalBackingBean.handleFileUpload"
 		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
 		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+	<ui:remove>#25692 - end </ui:remove>
+		
 		
 </ui:composition>
