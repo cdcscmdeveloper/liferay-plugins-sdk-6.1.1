@@ -85,9 +85,9 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 			if(selectionMode != null && selectionMode.equals("multiple")){
 				getManagedBean().setSelectionMode(selectionMode);
 				getManagedBean().setDisableSelectbtn(true);
-			}
-			else
+			}else{//11022021@azza - Bug #30066 - Start
 				getManagedBean().setSelectionMode("single");
+			}//11022021@azza - Bug #30066 - End
 			String saveObject = facesScopes.getParameter("saveObject");
 			getManagedBean().setSaveObject(saveObject);
 			//210801@akmal - Enhancement27624 - End
@@ -111,6 +111,11 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		getManagedBean().setSelectedGoSoObjCode(null);
 		retrieveAccountType();
 		retrieveAccountClass();
+		//11022021@azza - Bug #30066 - Start
+		if (this.getManagedBean().isDisableSelectbtnPmGoDt() == true){
+       	this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+		}
+        //11022021@azza - Bug #30066 - End
 		//200911@akmal - Enhancement27624 - Start
 		selectedEntities.clear();
 		persistedEntities.clear();
@@ -242,6 +247,11 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 
 	public void searchGoView(){
 		this.getManagedBean().setLazy(true);
+		//11022021@azza - Bug #30066 - Start
+		if (this.getManagedBean().isDisableSelectbtnPmGoDt() == true) {
+			this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+		}
+	    //11022021@azza - Bug #30066 - End
 		getPmGoDataModel().reloadData();
 	}
 	
@@ -526,7 +536,6 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 				getManagedBean().setDisableSelectbtn(false);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void onToggleSelect(ToggleSelectEvent event){
 		List<VPmGo> templist = (List<VPmGo>) (!selectedEntities.isEmpty() ? selectedEntities : pmGoDataModel.getList());
 		for(VPmGo value : templist){
@@ -575,5 +584,28 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		this.persistedEntities = persistedEntities;
 	}
 	//210801@akmal - Enhancement27624 - End
+	
+	// 11022021@azza - Bug #30066 - Start
+	public void rowSelectPmGoDt() {
+		System.out.println(this.getManagedBean().getvPmGo());
+		if (this.getManagedBean().getvPmGo() != null) {
+			this.getManagedBean().setDisableSelectbtnPmGoDt(true);
+			System.out.println("rowSelect is Enable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+		} else {
+			this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+			System.out.println("rowSelect is Disable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+		}
+	}
 
+	public void onPageChangePmGoDt(PageEvent event) {
+		System.out.println(this.getManagedBean().getvPmGo());
+		if (this.getManagedBean().getvPmGo() != null) {
+			this.getManagedBean().setDisableSelectbtnPmGoDt(true);
+			System.out.println("rowSelect is Enable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+		} else {
+			this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+			System.out.println("rowSelect is Disable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+		}
+	}
+	//11022021@azza - Bug #30066 - End
 }

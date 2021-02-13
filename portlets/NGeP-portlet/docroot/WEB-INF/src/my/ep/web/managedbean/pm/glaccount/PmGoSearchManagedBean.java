@@ -35,6 +35,9 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private String saveObject;
 	private boolean disableSelectbtn=false;
 	//210801@akmal - Enhancement27624 - End
+	//11022021@azza - Bug #30066 - Start
+	private boolean disableSelectbtnPmGoDt = false;
+	//11022021@azza - Bug #30066 - End
 	
 	public PmGoSearchManagedBean(){
 		
@@ -254,5 +257,13 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 		this.disableSelectbtn = disableSelectbtn;
 	}
 	//210801@akmal - Enhancement27624 - End
-	
+	//11022021@azza - Bug #30066 - Start
+	public boolean isDisableSelectbtnPmGoDt() {
+		return disableSelectbtnPmGoDt;
+	}
+
+	public void setDisableSelectbtnPmGoDt(boolean disableSelectbtnPmGoDt) {
+		this.disableSelectbtnPmGoDt= disableSelectbtnPmGoDt;
+	}
+	//11022021@azza - Bug #30066 - End
 }
