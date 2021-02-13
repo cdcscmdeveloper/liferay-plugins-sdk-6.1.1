@@ -459,24 +459,30 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 			</td>
 			<td colspan="3">
+				<ui:remove> #19336 - start </ui:remove>
 				<p:inputText id="contractAgency" disabled="true" size="106"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
 					rendered="#{!isEditableStatus}"/>
+					<ui:remove> #19336 - end </ui:remove>
 
 				<c:if test="#{isEditableStatus}">
+				<ui:remove> #19336 - start </ui:remove>
 					<p:inputText id="contractAgencyEdit" disabled="true" size="106"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
+						value="#{lOADetailBackingBean.managedBeanLoaContractAgencyOrgName}"
 						rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode == null}" />
-
+					<ui:remove> #19336 - end </ui:remove>
+					
 					<p:outputPanel id="opPtjOrgCode" 
 						rendered="#{ParameterConst.orgTypePtj eq lOADetailBackingBean.managedBean.selectedOrgType.parameterCode or 
 						ParameterConst.orgTypePtjGroup eq lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}">
+						<ui:remove> #19336 - start </ui:remove>
 						<p:inputText 
 							size="60"
 							id="itSelectedPtj" 
-							value="#{lOADetailBackingBean.managedBean.selectedPtj.orgName}" 
+							value="#{lOADetailBackingBean.managedBeanSelectedPtjOrgName}" 
 							readonly="true"
 							/>
+							<ui:remove> #19336 - end </ui:remove>
 						&#160;
 						<p:commandLink id="ptjSearchCL" partialSubmit="true"
 							disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"

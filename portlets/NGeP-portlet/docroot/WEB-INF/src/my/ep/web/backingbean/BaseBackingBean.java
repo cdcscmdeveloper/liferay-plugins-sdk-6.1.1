@@ -67,6 +67,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -2043,7 +2044,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
+	// #17376#37 - start
 	/**
+	 * original default
 	 * To get BpmTask Details.
 	 * 
 	 * @param clazz
@@ -2052,13 +2055,39 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
+		return getBpmTaskDetails(clazz, additionalButtons, null, null);
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
+	}
+	
+	/**
+	 * To get BpmTask Details.
+	 * 
+	 * @param clazz, additionalButtons(optional), theTaskId(optional), theLoginId(optional)
+	 * @return Object payLoadInstance
+	 */
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId, String theLoginId) {
+		String taskId = null;
 		FacesScopes facesScopes = new FacesScopes();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(facesScopes.getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
+		if(StringUtils.isBlank(theTaskId)){			
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(facesScopes.getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			taskId = originalServletRequest.getParameter("taskId");
+		}
+		else{
+			taskId = theTaskId;
+		}
 
-		String taskId = originalServletRequest.getParameter("taskId");
+		 
 
 		IBpmSO bpmSO;
 
@@ -2067,7 +2096,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					.getServiceObject(IBpmSO.class);
 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			if(theLoginId!=null&&!StringUtils.isBlank(theLoginId)){
+				reqDTO.setCtxToken(bpmSO.authenticate(theLoginId));
+			}
+			else{
+				reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			}
+			// #17376#37 - end
 			reqDTO.setTaskId(taskId);
 
 			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
@@ -2396,6 +2431,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 	return uomCodeDesc;	
 	}
+
+	// #17376 #25201 - start
+	/**
+	 * Get Parameter Desc By Param Type And Param Code.
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public PmParameterDesc getParameterDescByParamTypeAndParamCode(PmParameter parameter) {
+		if (parameter != null
+				&& StringUtils.isNotBlank(parameter.getParameterType())) {
+			return ParameterHelper.getInstance().getParameterDescByParamTypeAndParamCode(
+					parameter.getParameterType(), parameter.getParameterCode());
+		} else {
+			return null;
+		}
+	}
+	
+	protected FacesScopes getFacesScopesGen() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// #17376 #25201 - end
 	
 	/**
 	 * Determine if user for current session have role
@@ -2727,7 +2785,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return "";
 	}
 	//25792 - end
-	
+
 	//27346 - start 
 	//FIXME : 16052019 - SSM INTEGRATION CR - start
 		public void redirectToViewSSMInfo(String regNo,String businesstype) {
@@ -2885,4 +2943,41 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	//END 27239
+	
+	
+	/**
+	 * Check if Status less than or equals from status.
+	 * 
+	 * @param currentStatusId
+	 * 		the current status id
+	 * @param toStatusId
+	 * 		the to status id
+	 * @param orderedStatusArr
+	 * 		ordered status array
+	 * @return	the indicator qt status less than from status.
+	 */
+	public boolean isStatusLessThanOrEquals(Long currentStatusId, Long toStatusId, Long[] orderedStatusArr) {
+		List<Long> orderedStatuses = Arrays.asList(orderedStatusArr);
+		if(orderedStatuses.indexOf(currentStatusId)<0) return false;
+		if(orderedStatuses.indexOf(toStatusId)<0) return false;
+		return orderedStatuses.indexOf(currentStatusId) <= orderedStatuses.indexOf(toStatusId);
+	}	
+	
+	/*** 25692#95 - start ***/
+	public String getTempManagedBeanName(){
+		return managedBeanName+"_Temp";
+	}
+	
+	/**
+	 * set reference of managedBean to null. Not removing managedBean from session.
+	 */
+	public void nullifyManagedBean(){
+		this.managedBean = null;
+	}
+	
+	protected String getManagedBeanName(){
+		return managedBeanName;
+	}
+	
+	/*** 25692#95 - end ***/
 }

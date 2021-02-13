@@ -286,6 +286,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean flowamt = null;
 
+	private boolean enablePBForDP;
+
+	//#19336
+	private boolean isValidatewitness=false;
+
     /**
      * Gets the spki backing bean.
      *
@@ -1557,6 +1562,26 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.suppConfirmMsgReject = suppConfirmMsgReject;
 	}
 
+	// #25201 - start
+	/**
+	 * @return the enablePBForDP
+	 */
+	public boolean isEnablePBForDP() {
+		return enablePBForDP;
+	}
+
+	/**
+	 * @param enablePBForDP the enablePBForDP to set
+	 */
+	public void setEnablePBForDP(boolean enablePBForDP) {
+		this.enablePBForDP = enablePBForDP;
+	}
+ 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	// #25201 - end
+
 	public PmOrgProfile getMinistryOrgProfile() {
 		return ministryOrgProfile;
 	}
@@ -1605,6 +1630,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.flowamt = flowamt;
 	}
 
+	// #19336 - start
+	/**
+	 * @return the isValidatewitness
+	 */
+	public boolean isValidatewitness() {
+		return isValidatewitness;
+	}
+
+	/**
+	 * @param isValidatewitness the isValidatewitness to set
+	 */
+	public void setValidatewitness(boolean isValidatewitness) {
+		this.isValidatewitness = isValidatewitness;
+	}
+	// #19336 - end
+	
 	public List<PmUser> getLoacancelapproverList() {
 		return loacancelapproverList;
 	}
@@ -1616,7 +1657,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public PmUser getLoacancelapproverUser() {
 		return loacancelapproverUser;
 	}
-
 	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
 		this.loacancelapproverUser = loacancelapproverUser;
 	}

@@ -114,6 +114,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -4161,20 +4162,29 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	/**
 	 * Get supplier proposal details.
 	 * 
-	 * @param qtId
-	 *            the quotation / tender id.
+	 * @param qtOrProposalId
+	 *            the quotation / tender id
+	 *            or proposalId if byProposalId is true
+	 *        
 	 * @param previousPageUrl
 	 *            the previous page url.
 	 * @param isReadonly
 	 *            the read only flag
+	 * @param byProposalId -> accept qtId as proposalId if set to true
 	 * @return the supplier proposal page
 	 */
-	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl,
-			boolean isReadonly) {
+	public String retriveSupplierProposalDtl(Long qtOrProposalId, String previousPageUrl,
+			boolean isReadonly, boolean byProposalId) {
 		super.renewSesionObject();
-        debugLogger("retriveSupplierProposalDtl:::"+qtId+":::previousPageUrl:::"+previousPageUrl);
-		retrieveProposalChecklistDtls(qtId, new FacesScopes()
+		// #25201	
+		if(!byProposalId){
+			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
 				.getUserSessionBean().getUserId(), isReadonly);
+		}
+		else{
+			retrieveProposalChecklistDtls(qtOrProposalId, new FacesScopes()
+			.getUserSessionBean().getUserId(), isReadonly, true);
+		}
 
 		getManagedBean()
 				.setProcCategoryMedicine(

@@ -296,6 +296,10 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+	//#17376
+	private boolean isValidatewitness=false;
+	
 
 	//#24540 - start -
 	private SelectItem[] pk7Reasons;
@@ -1850,6 +1854,23 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
+	
+	  //#17376-start
+		/**
+		 * @return the isValidatewitness
+		 */
+		public boolean isValidatewitness() {
+			return isValidatewitness;
+		}
+
+		/**
+		 * @param isValidatewitness the isValidatewitness to set
+		 */
+		public void setValidatewitness(boolean isValidatewitness) {
+			this.isValidatewitness = isValidatewitness;
+		}
+		//#17376-End
+		
 
 	//#24540 - start -
 	/**
