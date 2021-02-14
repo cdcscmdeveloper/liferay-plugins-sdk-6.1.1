@@ -791,24 +791,38 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 			List<String> itemSpecList = new ArrayList<>();
-			for(int i=0;i<requestItemSO.retrieveNewOfferSpec(requestItemId).size();i++){
-				if(!requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec().isEmpty()){
-					itemSpecList.add(requestItemSO.retrieveNewOfferSpec(requestItemId).get(i).getItemSpec());
-				}
+			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+			for(ScRequestItemSpecOffer i: itemSpecOfferList){				
+				if((i.getItemSpec()) != null && !i.getItemSpec().isEmpty()){
+					itemSpecList.add(i.getItemSpec());				
+				}				
 			}
 			getManagedBean().setItemSpecification(itemSpecList);
 			
-			if(requestItemSO.retrieveNewOfferSpec(requestItemId).isEmpty()){
-				getManagedBean().setSupplierOffer(null);
-				getManagedBean().setNewOfferSpec(null);
-			}else{
-				for(int i=0;i<requestItemSO.retrieveNewOfferSpec(requestItemId).size();i++){
-					getManagedBean().setSupplierOffer(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getSupplierOffer());						
-					getManagedBean().setNewOfferSpec(requestItemSO.retrieveNewOfferSpec(requestItemId).get(0).getNewOfferSpec());
-					break;
+			for(ScRequestItemSpecOffer j: itemSpecOfferList){
+				if((j.getSupplierOffer()) != null && !j.getSupplierOffer().isEmpty()){
+					if((j.getNewOfferSpec()) != null && !j.getNewOfferSpec().isEmpty()){
+						getManagedBean().setSupplierOffer(j.getSupplierOffer());	
+						getManagedBean().setNewOfferSpec(j.getNewOfferSpec());
+					}
+				}else if((j.getSupplierOffer()) != null && !j.getSupplierOffer().isEmpty()){
+					if((j.getNewOfferSpec()) == null || j.getNewOfferSpec().isEmpty()){
+						getManagedBean().setSupplierOffer(j.getSupplierOffer());	
+						getManagedBean().setNewOfferSpec(null);
+					}					
+				}else if((j.getNewOfferSpec()) != null && !j.getNewOfferSpec().isEmpty()){
+					if((j.getSupplierOffer()) == null || j.getSupplierOffer().isEmpty()){
+						getManagedBean().setSupplierOffer(null);	
+						getManagedBean().setNewOfferSpec(j.getNewOfferSpec());
+					}
+				}else{
+					getManagedBean().setSupplierOffer(null);
+					getManagedBean().setNewOfferSpec(null);
+					continue;
+					}						
 				}
 			}
-		}
+		
 		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
 			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
 			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);			
