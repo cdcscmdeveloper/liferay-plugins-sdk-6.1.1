@@ -8621,18 +8621,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 			}
 	}
-
-		/* ***19336#83 - start */
-		public String getReasonDesc(String reasonCode){
-			PmReason reason = getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode);
-			String reasonDesc = getReasonDesc(reason);
-			if(!StringUtils.isEmpty(reasonDesc)){
-				return reasonDesc;
-			}
-			return "";
-		}
-		/* ***19336#83 - end */
-		
 		
 		/**
 		 * @param e
@@ -8943,6 +8931,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
 					ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
 		}
+
+		/* ***19336#83 - start */
+		public String getReasonDesc(String reasonCode){
+			PmReason reason = getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode);
+			String reasonDesc = getReasonDesc(reason);
+			if(!StringUtils.isEmpty(reasonDesc)){
+				return reasonDesc;
+			}
+			return "";
+		}
+		/* ***19336#83 - end */
 		
 		public boolean isPk7Periodic() {
 			PmParameter qtType = null;
