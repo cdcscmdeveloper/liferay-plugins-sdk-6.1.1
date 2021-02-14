@@ -1704,7 +1704,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
     	else if(worklistItemVO.getTaskName().equals(FLProcessNameConst.APPROVE_FRN_HT)){
 	    	worklistItemVO.setTitle(retreiveSupplierDoRefNo(worklistItemVO.getDocId(),true) + " <br/> " + worklistItemVO.getTitle().replaceAll("<", "&#60;"));
 	    	retrievePoCoNoForApproveFRN(worklistItemVO,worklistItemVO.getTaskId());
-	    }		  
+	    }
+    	//# start 25627  - 
+		else if (worklistItemVO.getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_DO_REASSIGNMENT)) {
+			worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.quotation.tender.deskofficermaintenance.approveTaskListTitle", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+		}
+	     //# end 25627
+		  
 	}
  	// end #24968 
 	
