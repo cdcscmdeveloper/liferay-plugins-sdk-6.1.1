@@ -252,6 +252,11 @@
 					<ui:include src="/xhtml/reports/new/sm/SM_095_appl_revised_rpt.xhtml"></ui:include>
 				</c:if>
 				<!-- #12483 - End -->
+				<!-- #29617 start -->
+				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smeSupplierRptVal}">
+					<ui:include src="/xhtml/reports/new/sm/SM_096_sme_supplier_rpt.xhtml"></ui:include>
+				</c:if>
+				<!-- #29617 end -->
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
