@@ -210,6 +210,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean isCheckAllList = Boolean.FALSE;
 	
+	private boolean isCloned= Boolean.FALSE;
+	
 	/** The zone general trees. */
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
 	//20200210@asyrafhaziq_Bug #27381&#26694  - Start
@@ -1588,9 +1590,39 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+	private boolean isApprovalScreen = false;
+	
+    // 26095@hatta - start
+	private Date currentDate = new Date(); 
+	private int attachFileIndex; 
+	private String fileDirectory;
+	// 26095@hatta*** - end
+	
+	//#25692-start
+	private Long subStatusId;
+	private List<String> paramTypes = null;
+	//#25692-End
+	/**
+	 * Sets the panel suppliers.
+	 * 
+	 * @param panelSuppliers
+	 *            the new panel suppliers
+	 */
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
+	}
 
 	private ScQtApprovalRequest scQtApprovalDtls;
 
+	private IPagingDataModel<ScLoi> searchLoiDataModel;
+	
+	private IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel;
+	
+	private IPagingDataModel<ScLoaBasic> searchLoaDataModel;
+	
+	private IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel;
+	
 	// ***25692
 	/*
 	 * approval. some part is readOnly, some part is updatable 
@@ -9885,7 +9917,39 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBsvDBStateId(Long bsvDBStateId) {
 		this.bsvDBStateId = bsvDBStateId;
 	}
-	
+
+	public IPagingDataModel<ScLoi> getSearchLoiDataModel() {
+		return searchLoiDataModel;
+	}
+
+	public void setSearchLoiDataModel(IPagingDataModel<ScLoi> searchLoiDataModel) {
+		this.searchLoiDataModel = searchLoiDataModel;
+	}
+
+	public IPagingDataModel<ScLoiForQt> getSearchLoiForQtDataModel() {
+		return searchLoiForQtDataModel;
+	}
+
+	public void setSearchLoiForQtDataModel(IPagingDataModel<ScLoiForQt> searchLoiForQtDataModel) {
+		this.searchLoiForQtDataModel = searchLoiForQtDataModel;
+	}
+
+	public IPagingDataModel<ScLoaBasic> getSearchLoaDataModel() {
+		return searchLoaDataModel;
+	}
+
+	public void setSearchLoaDataModel(IPagingDataModel<ScLoaBasic> searchLoaDataModel) {
+		this.searchLoaDataModel = searchLoaDataModel;
+	}
+
+	public IPagingDataModel<ScLoaForQt> getSearchLoaForQtDataModel() {
+		return searchLoaForQtDataModel;
+	}
+
+	public void setSearchLoaForQtDataModel(IPagingDataModel<ScLoaForQt> searchLoaForQtDataModel) {
+		this.searchLoaForQtDataModel = searchLoaForQtDataModel; 
+	}
+
 	/*basri 19637*/
 	public boolean isPanelZone() {
 		return isPanelZone;
@@ -9973,10 +10037,68 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return scQtReverse;
 	}
 
-	public void setScQtReverse(ScQtReverse scQtReverse) {
-		this.scQtReverse = scQtReverse;
-	}
+	public void setCloned(boolean isCloned) {
+		this.isCloned = isCloned;
+	}	
+	
+	// 26095@hatta - start
+		public Date getCurrentDate() {
+			return currentDate;
+		}
 
+		public void setCurrentDate(Date currentDate) {
+			this.currentDate = currentDate;
+		}
+
+		public int getAttachFileIndex() {
+			return attachFileIndex;
+		}
+
+		public void setAttachFileIndex(int attachFileIndex) {
+			this.attachFileIndex = attachFileIndex;
+		}
+
+		public String getFileDirectory() {
+			return fileDirectory;
+		}
+
+		public void setFileDirectory(String fileDirectory) {
+			this.fileDirectory = fileDirectory;
+		}
+		// 26095@hatta - end
+		//#25692 start
+
+		/**
+		 * @return the subStatusId
+		 */
+		public Long getSubStatusId() {
+			return subStatusId;
+		}
+
+		/**
+		 * @param subStatusId the subStatusId to set
+		 */
+		public void setSubStatusId(Long subStatusId) {
+			this.subStatusId = subStatusId;
+		}
+
+		/**
+		 * @return the paramTypes
+		 */
+		public List<String> getParamTypes() {
+			return paramTypes;
+		}
+
+		/**
+		 * @param paramTypes the paramTypes to set
+		 */
+		public void setParamTypes(List<String> paramTypes) {
+			this.paramTypes = paramTypes;
+		}
+		
+		
+		//#25692 End
+	
 	public boolean isEditable() {
 		return isEditable;
 	}
@@ -10090,3 +10212,4 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25077 - End
 
 }
+	// ***25201
