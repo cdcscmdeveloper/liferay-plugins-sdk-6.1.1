@@ -3,6 +3,8 @@
  */
 package my.ep.web.util.template;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -49,7 +51,14 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.DocumentException;
 
 import my.ep.factory.EpLogger;
 
@@ -160,32 +169,47 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * 		the html content to generate as PDF.
 	 * @throws Exception
 	 */
+	
 	public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
 		
 		ITextRenderer render = new ITextRenderer();
 		try{
-			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", "");
-		        	html = html.replaceAll("&amp;", "&amp;amp;")
-		        			   .replaceAll("&", "&amp;");
-		        	html = html.replaceAll("&amp;#62", "&#62");
-		          	html = html.replaceAll("&amp;#60", "&#60");
-		          	
-					//20220921@asyrafhaziq - 29076 -  Start
-					html = html.replaceAll("&amp;nbsp;", " ");
-					html = html.replaceAll("&amp;amp;", "&");
-					//20220921@asyrafhaziq - 29076 - End 
-					
-		            render.setDocumentFromString(html);
-		            render.layout();
-		            render.createPDF(os);
-		        }
-		        
-		        os.flush();
+			//#26180
+			if (html != null) {
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;", "&amp;amp;")
+						.replaceAll("&", "&amp;");
+				html = html.replaceAll("&amp;#62", "&#62");
+				html = html.replaceAll("&amp;#60", "&#60"); 
+			//25142 - start
+				/*doc = Jsoup.parse(html);
+				boolean valid = Jsoup.isValid(doc.html(), Whitelist.relaxed());
+				if(!valid){
+					cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
+					doc = cleanDoc;
+				}					
+				doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+				doc.outputSettings().charset("UTF-8");
+			
+				html = doc.html();*/
+				
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;amp;", "&");
+				/*html = html.replaceAll("&amp;lt", "&#60");
+				html = html.replaceAll("&amp;gt", "&#62");*/					
+			//#25142 - end
+				render.setDocumentFromString(html);
+				render.layout();
+				render.createPDF(os);
+			}
+
+			os.flush();
 		}finally{
+			html = null;
 			render = null;
 			os.close();
+			os = null;
 		}
 	}
 	
@@ -348,10 +372,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		run.setRPr(rpr);
 
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+		t1.setValue("Tandatangan & Cop (Kerajaan)  : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 		Text t3 = factory.createText();
 
 		t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
@@ -538,4 +562,64 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
             log.debug(message);
         }
     }
+	
+	public static void main(String[] args) throws FileNotFoundException, DocumentException {
+		String html = "<div> <div> <<CONTRACT_PERIOD>> ini dan apa-apa kontrak yang timbul daripadanya hendaklah diertikan mengikut dan dikawal oleh undang-undang Malaysia, dan pembekal bersetuju tertakluk hanya kepada bidang kuasa Mahkamah Malaysia sahaja dalam apa-apa pertikaian atau perselisihan jua pun yang mungkin timbul mengenai &lt;&gt; ini atau apa-apa kontrak yang timbul daripadanya. </div> <div> <br /> </div> </div>";
+		String tempHtml = null;
+		Elements elements = null;
+		Document doc = null;
+		ITextRenderer render = new ITextRenderer();
+		boolean valid = Jsoup.isValid(html, Whitelist.relaxed().addAttributes("h3", "style"));
+		System.out.println("Is Valid: "+ valid);
+		/*html = html.replaceAll("&amp;nbsp;", " ");
+		html = html.replaceAll("&amp;", "&amp;amp;")
+				.replaceAll("&", "&amp;");
+		html = html.replaceAll("&amp;#62", "&#62");
+		html = html.replaceAll("&amp;#60", "&#60");*/
+		System.out.println(html);
+		html = html.replaceAll("<<", "&lt;&lt;");
+		html = html.replaceAll(">>", "&gt;&gt;");
+		doc = Jsoup.parse(html);
+		System.out.println(doc.body().html());
+		Document cleanDoc = new Cleaner(Whitelist.relaxed()).clean(doc);
+		doc = cleanDoc;
+		//doc.outputSettings().escapeMode(org.jsoup.nodes.Entities.EscapeMode.xhtml);
+		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml); 
+		doc.outputSettings().charset("UTF-8");
+		html = doc.body().html();
+		
+		/*html = html.replaceAll("&amp;nbsp;", " ");
+		html = html.replaceAll("&amp;amp;", "&");
+		html = html.replaceAll("&amp;lt", "&#60");
+		html = html.replaceAll("&amp;gt", "&#62");*/					
+		System.out.println(html);
+		/*render.setDocumentFromString(html);
+		render.layout();
+		OutputStream os = new FileOutputStream("C:\\Users\\asyrafali\\Desktop\\test (2).pdf");
+		render.createPDF(os);*/
+		//elements = doc.getAllElements();
+		//System.out.println(doc.html());
+		/*html = elements.html();elements.
+		for(Element element: elements) {
+			if(!element.nodeName().equalsIgnoreCase("br")&&!element.nodeName().equalsIgnoreCase("h1")
+				&&!element.nodeName().equalsIgnoreCase("h2")&&!element.nodeName().equalsIgnoreCase("h3")
+				&&!element.nodeName().equalsIgnoreCase("h4")&&!element.nodeName().equalsIgnoreCase("h5")
+				&&!element.nodeName().equalsIgnoreCase("h6"))
+			{
+				tempHtml = element.toString();
+				if(!tempHtml.contains("</" + element.nodeName() + ">"))
+				{
+					
+					html = html.replace(tempHtml, tempHtml + "</" + element.nodeName() + ">");
+					System.out.println("Print: " + html);
+				}
+			}
+			
+		}*/
+		
+		
+	}
 }
+
+
+// ***25201

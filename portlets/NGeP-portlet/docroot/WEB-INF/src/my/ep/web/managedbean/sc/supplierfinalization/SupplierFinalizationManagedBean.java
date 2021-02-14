@@ -17,6 +17,7 @@ import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.common.ScRemark;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -30,6 +31,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -159,6 +161,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtEvaluationResultDtl recommendedSupplierByItem;
 	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
+	private String previousPageUrl;	
+	
 //	private List<ScQtEvaluationResultDtl> qualifiedSuppliersByEvalStage;
 	
 	/** Qualified suppliers by evaluation stage */
@@ -236,20 +240,32 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private SelectItem[] justDropdown;
 	private String outcome;
 		
+	private int evaluationReportIndex;
+ 
 	//#25729#142 & #26169 - Start
 	private boolean isSuppOfferPriceExceedCommunityAuthority;
 	private BigDecimal maxAmountCommitteeAuthority;
 	//#25729#142 & #26169 - End 
 	
+	//#26169 #38 - Start
+	private boolean isHasSupplierQualified;
+	//#26169 #38 - End
+	// #18685 - Start
+	private ScRemark pendingRecItemizedRemark;
+	private ScRemark pendingRecPackageRemark;
+	private ScRemark newSfRemark;
+	private List<ScRemark> scRemarks;
+	// #18685 - End
+	
+    // #25638 - Start.
+	private List<ScRemark> newSfRemarks;
+    // #25638 - End.
+
 	// #27668 - Start
 	private boolean showDefalutSupplierListTblSingle=true;
 	private boolean showDefalutSupplierListTblMultiple=true;
 	// #27668 - End
 	
-    // #25638 - Start.
-	private List<ScRemark> newSfRemarks;
-    // #25638 - End.
-		
 	/**
 	 * @return the activeIndex
 	 */
@@ -2128,6 +2144,70 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setOutcome(String outcome) {
 		this.outcome = outcome;
 	}
+
+	public String getPreviousPageUrl() {
+		return previousPageUrl;
+	}
+
+	public void setPreviousPageUrl(String previousPageUrl) {
+		this.previousPageUrl = previousPageUrl;
+	}
+
+	/**
+	 * @return the reverseTabIndex
+	 */
+	public int getReverseTabIndex() {
+		return reverseTabIndex;
+	}
+
+	/**
+	 * @param reverseTabIndex the reverseTabIndex to set
+	 */
+	public void setReverseTabIndex(int reverseTabIndex) {
+		this.reverseTabIndex = reverseTabIndex;
+	}
+
+	/**
+	 * @return the scQtReverse
+	 */
+	public ScQtReverse getScQtReverse() {
+		return scQtReverse;
+	}
+
+	/**
+	 * @param scQtReverse the scQtReverse to set
+	 */
+	public void setScQtReverse(ScQtReverse scQtReverse) {
+		this.scQtReverse = scQtReverse;
+	}
+
+	/**
+	 * @return the isReversed
+	 */
+	public boolean isReversed() {
+		return isReversed;
+	}
+
+	/**
+	 * @param isReversed the isReversed to set
+	 */
+	public void setReversed(boolean isReversed) {
+		this.isReversed = isReversed;
+	}
+
+	/**
+	 * @return the evaluationReportIndex
+	 */
+	public int getEvaluationReportIndex() {
+		return evaluationReportIndex;
+	}
+
+	/**
+	 * @param evaluationReportIndex the evaluationReportIndex to set
+	 */
+	public void setEvaluationReportIndex(int evaluationReportIndex) {
+		this.evaluationReportIndex = evaluationReportIndex;
+	}
 	
 	//#25729#142 & #26169 - Start
 	/** 
@@ -2159,11 +2239,74 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.maxAmountCommitteeAuthority = maxAmountCommitteeAuthority;
 	}	
 	//#25729#142 & #26169 - End 
+
+	// #18685 - Start 
+	/**
+	 * @return the pendingRecItemizedRemark
+	 */
+	public ScRemark getPendingRecItemizedRemark() {
+		return pendingRecItemizedRemark;
+	}
+
+	/**
+	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
+	 */
+	public void setPendingRecItemizedRemark(
+	    ScRemark pendingRecItemizedRemark) {
+		this.pendingRecItemizedRemark = pendingRecItemizedRemark;
+	}
+
+	/**
+	 * @return the pendingRecPackageRemark
+	 */
+	public ScRemark getPendingRecPackageRemark() {
+		return pendingRecPackageRemark;
+	}
+
+	/**
+	 * @param pendingRecPackageRemark the pendingRecPackageRemark to set
+	 */
+	public void setPendingRecPackageRemark(
+	    ScRemark pendingRecPackageRemark) {
+		this.pendingRecPackageRemark = pendingRecPackageRemark;
+	}
 	
+	/**
+     * @return the newSfRemark
+     */
+    public ScRemark getNewSfRemark() {
+      return newSfRemark;
+    }
+  
+    /**
+     * @param newSfRemark the newSfRemark to set
+     */
+    public void setNewSfRemark(ScRemark newSfRemark) {
+      this.newSfRemark = newSfRemark;
+    }
+
+    /**
+     * @return the scRemarks
+     */
+    public List<ScRemark> getScRemarks() {
+      return scRemarks;
+    }
+  
+    /**
+     * @param scRemarks the scRemarks to set
+     */
+    public void setScRemarks(List<ScRemark> scRemarks) {
+      this.scRemarks = scRemarks;
+    }
+
+    //#18685 - End 
+    
 	// #27668 - Start
 	public boolean isShowDefalutSupplierListTblSingle() {
 		return showDefalutSupplierListTblSingle;
 	}
+
+
 
 	public void setShowDefalutSupplierListTblSingle(boolean showDefalutSupplierListTblSingle) {
 		this.showDefalutSupplierListTblSingle = showDefalutSupplierListTblSingle;
@@ -2195,3 +2338,5 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     // #25638 - End.
 
 }
+// ***25201
+
