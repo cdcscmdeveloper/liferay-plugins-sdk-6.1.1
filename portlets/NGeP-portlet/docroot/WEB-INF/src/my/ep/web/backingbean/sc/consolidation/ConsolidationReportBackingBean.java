@@ -21,9 +21,12 @@ import javax.faces.context.FacesContext;
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
@@ -505,7 +508,40 @@ public class ConsolidationReportBackingBean extends
 		}
 		downloadFile(reportAttachment);
 	}
+	
+	// #18685 - Start
+	/**
+	 * @throws Exception
+	 */
+	public void downloadAllBriefingPaperReports() throws Exception {
+		List<ScQtFinalizationReport> finalizationReports = getManagedBean().getFinalizationReports();
+		if (CollectionUtils.isNotEmpty(finalizationReports)) {
+			this.downloadBriefingPaperReport(finalizationReports.get(0));
+		}
+	}
+	
+	/**
+	 * @param scQtFinalizationReport
+	 * @throws Exception
+	 */
+	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue()) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		} else {
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 
+			if (reportAttachment == null) {
+				reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			}
+		}
+		downloadFile(reportAttachment);
+	}
+	// #18685 - End
+	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
 	 * 
@@ -548,10 +584,32 @@ public class ConsolidationReportBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 
 		try {
+			// #18685 - Start.
+			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+			// #18685 - End.
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			// #18685 - Start 
+			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
+				for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
+					if (StringUtils.isNotEmpty(remark.getRemark())) {
+						reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
+						break;
+					}
+				}
+			}
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationUlasanremarks())) {
+              for (ScQtRecommendationUlasanRemarks remark : getManagedBean().getFinalizationUlasanremarks()) {
+                  if (StringUtils.isNotEmpty(remark.getRemark())) {
+                      remark.setSourceName(CommonConstants.BRIEFING_PAPER);
+                  }
+              }
+			}
+			// #18685 - End 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 
@@ -641,7 +699,9 @@ public class ConsolidationReportBackingBean extends
 		retrieveQTDetails();
 		retrieveSupplierFinalizationDtls();
 		retrieveBriefingPaper();
-		initializeFinalizationUlasanRemarks();
+		// #18685 - Start.
+		//initializeFinalizationUlasanRemarks();
+        // #18685 - End.
 	}
 
 	private void setZoneAndTabIndexOnException(boolean isItemized,
@@ -990,17 +1050,53 @@ public class ConsolidationReportBackingBean extends
 	private void initializeRemarks() {
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
+		
+		// #18685 - Start
+		if (null != scQtFinalization && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationRemarks())) {
+			Iterator<ScQtFinalizationRemarks> iterator = scQtFinalization.getScQtFinalizationRemarks().iterator();
+			while (iterator.hasNext()) {
+				ScQtFinalizationRemarks remark = iterator.next();
+				if (CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
+					List<ScQtFinalizationRemarks> itemizedRemarks = new ArrayList<>();
+					itemizedRemarks.add(remark);
+					getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		
 
-		// Retrieve finalization remarks
+
+		// Retrieve finalization remarks for Package Wise
 		List<ScQtFinalizationRemarks> remarks = initializeRemarks(
 				scQtFinalization, getManagedBean().getScQt()
 						.getCurrentWorkFlowStatus(),
 				scQtFinalization.getScQtFinalizationRemarks(),
 				ScQtFinalizationRemarks.class);
+		if (null != remarks && remarks.size() > 0) {
+			for (ScQtFinalizationRemarks remark : remarks) {
+				remark.setSourceName(CommonConstants.PACKAGE_WISE);
+			}
+		}
 		scQtFinalization.setScQtFinalizationRemarks(remarks);
-
 		// Finalization Remarks list
 		getManagedBean().setFinalizationRemars(remarks);
+		
+		// Retrieve finalization remarks for Itemized
+		List<ScQtFinalizationRemarks> itemizedRemarks = initializeRemarks(
+				scQtFinalization, getManagedBean().getScQt()
+						.getCurrentWorkFlowStatus(),
+						getManagedBean().getFinalizationItemizedRemarks(),
+				ScQtFinalizationRemarks.class);
+		if (null != itemizedRemarks && itemizedRemarks.size() > 0) {
+			for (ScQtFinalizationRemarks remark : itemizedRemarks) {
+				remark.setSourceName(CommonConstants.ITEMIZED);
+			}
+		}
+		//scQtFinalization.getScQtFinalizationRemarks().addAll(itemizedRemarks);
+		getManagedBean().setFinalizationItemizedRemarks(itemizedRemarks);
+		// #18685 - End
 	}
 
 	private void finalizeRemarks() {
@@ -1290,8 +1386,9 @@ public class ConsolidationReportBackingBean extends
 				.getScQtFinalization();
 
 		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
+		// Commented this condition for #18685.
+		/*if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {*/
 			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
 					.getDocDefinitionKey();
 			ScQt scQt = getManagedBean().getScQt();
@@ -1319,7 +1416,7 @@ public class ConsolidationReportBackingBean extends
 				reportAttachment = null;
 			}
 
-		}
+		/*}*/
 		return reportAttachment;
 	}
 
