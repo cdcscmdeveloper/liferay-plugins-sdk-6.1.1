@@ -24,7 +24,7 @@
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.print.proposal']}"
-					styleClass="BtnSpacing" ajax="false"
+					styleClass="BtnSpacing" ajax="false" rendered="#{empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}"
 					action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
@@ -32,7 +32,9 @@
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"
-					update="spkiOutputPanel,proposalMenuContent" process="@form" />
+					update="spkiOutputPanel" process="@form"
+					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
+					
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
