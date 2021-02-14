@@ -1603,15 +1603,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long subStatusId;
 	private List<String> paramTypes = null;
 	//#25692-End
-	/**
-	 * Sets the panel suppliers.
-	 * 
-	 * @param panelSuppliers
-	 *            the new panel suppliers
-	 */
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
 
 	private ScQtApprovalRequest scQtApprovalDtls;
 
