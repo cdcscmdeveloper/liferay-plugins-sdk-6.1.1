@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
@@ -51,6 +52,13 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 		renewSesionObject();
 		SmCommonUtil.redirectToPage("smeUpdateInfoTnc.xhtml", "", null, null);
 	}
+
+	public void preRenderAlertSmeInfo() {
+		FacesContext fc = FacesContext.getCurrentInstance();  
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SME_INFO);
+	}
+	
+	public static final String NAV_TO_SME_INFO = "/xhtml/sm/updateSmeInfo/alertSmeInfoWidget.xhtml";
 
 	public void proceedAfterAcceptTnC() {
 		getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
