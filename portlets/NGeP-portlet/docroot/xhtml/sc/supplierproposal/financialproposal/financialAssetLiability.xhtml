@@ -17,8 +17,8 @@
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
 						</ui:fragment>#{lbl['lbl.sc.current.asset']}</LABEL></td>
 				<td colspan="3"><p:inputText id="currentAsset"
-						style="text-align:right;margin-bottom: 5px;"
-						label="#{lbl['lbl.sc.current.asset']}" disabled="#{statusHide}"
+						style="text-align:right;margin-bottom: 5px;" 
+						label="#{lbl['lbl.sc.current.asset']}" disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}"
 						size="30">
@@ -33,8 +33,8 @@
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
 						</ui:fragment>#{lbl['lbl.sc.current.liability']}</LABEL></td>
 				<td colspan="3"><p:inputText id="currentLiabilities"
-						style="text-align:right;margin-bottom: 5px;"
-						disabled="#{statusHide}"
+						style="text-align:right;margin-bottom: 5px;" 
+						disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.current.liability']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}"
 						size="30">
@@ -51,8 +51,8 @@
 				<td><LABEL><ui:fragment rendered="#{!statusHide}">
 						</ui:fragment>#{lbl['lbl.sc.total.cash.hand']}</LABEL></td>
 				<td colspan="3"><p:inputText id="totalCashInHand"
-						style="text-align:right;margin-bottom: 5px;"
-						label="#{lbl['lbl.sc.total.cash.hand']}" disabled="#{statusHide}"
+						style="text-align:right;margin-bottom: 5px;" 
+						label="#{lbl['lbl.sc.total.cash.hand']}" disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalCashInHand}"
 						size="30">
@@ -67,8 +67,8 @@
 				<td><ui:fragment rendered="#{!statusHide}">
 					</ui:fragment> <h:outputLabel value="#{lbl['lbl.sc.total.account.receivable']}" /></td>
 				<td colspan="3"><p:inputText id="totalAccountReceivable"
-						style="text-align:right;margin-bottom: 5px;"
-						disabled="#{statusHide}"
+						style="text-align:right;margin-bottom: 5px;" 
+						disabled="#{statusHide or supplierProposalDetailBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.total.account.receivable']}" maxlength="14"
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPAssetLiability.totalAccountReceivable}"
 						size="30">
