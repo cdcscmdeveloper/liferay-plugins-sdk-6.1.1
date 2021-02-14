@@ -365,6 +365,8 @@
 		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
 		<portlet id="supplierPromotion"></portlet>
+		<!-- #29617 -->
+		<portlet id="updateSmeInfo"></portlet>
 		<portlet id="updateGstInfo"></portlet>
 		<portlet id="basicAccountDeactivation"></portlet>
 		<portlet id="basicDataMaintenance"></portlet>
