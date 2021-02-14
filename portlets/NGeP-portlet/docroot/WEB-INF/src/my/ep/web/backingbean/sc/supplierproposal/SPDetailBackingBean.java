@@ -4159,6 +4159,12 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.handleNavigation(fc, null, NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
 
+	//#25201 -start-
+	public String retriveSupplierProposalDtl(Long qtId, String previousPageUrl, boolean isReadonly) {
+		return retriveSupplierProposalDtl(qtId, previousPageUrl, isReadonly, false);
+	}	
+	//#25201 -end-
+	
 	/**
 	 * Get supplier proposal details.
 	 * 
