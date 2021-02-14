@@ -386,8 +386,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		removeUnwantedLampiranA3Report(1);
 		//#29006 - end
 		//#29007 Start Vinod
-		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,QTStatusConst.LOA_PENDING_VERIFICATION,
-			QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT).contains(scLoa.getPmStatus().getStatusId())) {
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,QTStatusConst.LOA_PENDING_VERIFICATION).contains(scLoa.getPmStatus().getStatusId())) {
 					getManagedBean().setSpecificationAndSupplierDialogFlagQT(true);
 		}
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
@@ -397,7 +396,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoiLoa.getScLois() != null) {
 			for (ScLoi scLoi : scLoiLoa.getScLois()) {
 				for(ScLoiTerm terms : scLoi.getScNegoTerms()){
-					if(terms.getTermDesc().contains(message)){
+					if(terms.getTermDesc().contains(message) && scLoa.getPmStatus().getStatusId() != QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT){
 						getManagedBean().setSupPropSpecUpdate(true);
 						break;
 					}
@@ -806,7 +805,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String redirectUrl = retrieveSupplierLOADtl(sourceId, 
 				loaId, null, getManagedBean().isReadOnly());
 		//#29007 Start Vinod
-		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT, QTStatusConst.LOA_PENDING_REVISION).contains(
+		if (Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION, QTStatusConst.LOA_PENDING_REVISION).contains(
 				this.getManagedBean().getScLoa().getPmStatus().getStatusId())) {
 			getManagedBean().setSpecificationAndSupplierDialogFlagQT(true);
 		}
@@ -817,7 +816,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoiLoa.getScLois() != null) {
 			for (ScLoi scLoi : scLoiLoa.getScLois()) {
 				for(ScLoiTerm terms : scLoi.getScNegoTerms()){
-					if(terms.getTermDesc().contains(message)){
+					if(terms.getTermDesc().contains(message) && this.getManagedBean().getScLoa().getPmStatus().getStatusId() != QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT){
 						getManagedBean().setSupPropSpecUpdate(true);
 						break;
 					}
