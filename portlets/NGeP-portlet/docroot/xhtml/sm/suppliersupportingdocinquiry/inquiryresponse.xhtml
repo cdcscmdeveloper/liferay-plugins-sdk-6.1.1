@@ -23,7 +23,7 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
 		<!-- #11641 - START -->
-			<p:commandButton value="#{lbl['lbl.sm.button.submit.response']}" onclick="submissionConfirmDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.sm.suppdoc.submit.response']}" onclick="submissionConfirmDlg.show();" />
 		<!-- #11641 - END -->
 		</div>
 
@@ -293,7 +293,7 @@
 				fileUploadListener="#{supportingDocInquiryBackingBean.handleSupDocFileAttachment}"
 				update="InquiriesMandatoryList, InquiriesNonMandatoryList"
 				uploadLabel="#{lbl['lbl.btn.upload']}"  
-				label="#{lbl['lbl.btn.addfile']}" 
+				label="#{lbl['lbl.btn.choose']}" 
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				multiple="true"
 				showButtons="false"/>
