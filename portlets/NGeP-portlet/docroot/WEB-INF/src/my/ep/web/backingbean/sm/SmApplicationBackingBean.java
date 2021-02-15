@@ -2667,6 +2667,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.validateCoordinate(getManagedBean());
 			}
 			setSupplierChangeValues(currentPageType);
+			setBranchDisplayTable(); //29727
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
 					false);
 			log.info("******* Current page AFTER in managed bean ********"
@@ -4369,6 +4370,7 @@ public class SmApplicationBackingBean extends
 		}
 		saveOrUpdateAppl();
 		assignValReqdToFalse();
+		setBranchDisplayTable(); //29727
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
 	}
@@ -4473,8 +4475,9 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSelectedBranches().size() > 0) {
 			for (SmSupplierBranch brn : getManagedBean().getSelectedBranches()) {
-				getManagedBean().getSmAppl().getSmSupplierBranches()
-						.remove(brn);
+				brn.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED); //#29727
+//				getManagedBean().getSmAppl().getSmSupplierBranches()
+//						.remove(brn);
 			}
 			getManagedBean().getSelectedBranches().clear();
 		} else {
@@ -9084,7 +9087,7 @@ public class SmApplicationBackingBean extends
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
-		if(!recommendation.equalsIgnoreCase("REJECT")){
+		if(!recommendation.equalsIgnoreCase("REJECT")){			
 			SmApplicationUtil.validateCategoriesDecision(getManagedBean());
 		}
 		
@@ -9129,6 +9132,7 @@ public class SmApplicationBackingBean extends
 		log.info("**** assignFinalApproveOrReject *** ");
 		if (!dialog.equalsIgnoreCase("rejectDialog")
 				&& !dialog.equalsIgnoreCase("approverRejDialog")) {
+			
 			SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 			// validate equity owner
 			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
@@ -14774,5 +14778,241 @@ public class SmApplicationBackingBean extends
 
 		// 14530 - END
 		
+	// START #29727
+	public void validateCompanyBranch(SmApplicationManagedBean managedBean) {
+		validateCompanyBranch(managedBean,"");
+	}
+	
+	public void validateCompanyBranch(SmApplicationManagedBean managedBean,String process) {
+		switch (managedBean.getSmAppl().getApplType()) {
+		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+			if(managedBean.isSupplierUser() || process.equals("")){
+				Boolean pendingQT = false;
+				Boolean closedQTSubmitProposal = false;
+				List<String> branchName = new ArrayList<String>();
+				
+				if (managedBean.getSelectedBranches().size() > 0) {
+					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", IMofRegistrationSO.class);
+					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
+					reqDTO.setSelectedBranch(managedBean.getSelectedBranches());
+					/**
+					 * check The supplier been invited for Briefing/Site Visit/
+					 * Proposal Preparation, supplier been participated in QT and
+					 * the QT still in progress in QT Module. Then supplier try to
+					 * delete the branch related to QT been participated (invited
+					 * for briefing or site visit/ submitted proposal)
+					 */
+					
+					pendingQT = mofRegistrationSO
+							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
+					
+					/**
+					 * check if QT notice been closed and supplier submitted
+					 * proposal.
+					 */
+					closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
+					/**
+					 * TODO: #29727 FL Module had selected the branch
+					 * information, then supplier wanted to delete the selected
+					 * branch information at SM Module.
+					 */
+					branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
+					StringBuilder allBranchName = new StringBuilder();
+					for (String str : branchName) {
+						allBranchName.append(str + ",");
+					}
+					if (allBranchName.length() > 0) {
+						allBranchName.setLength(allBranchName.length() - 1);
+					}
+					
+					if(pendingQT == true){
+						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
+					} else if(closedQTSubmitProposal == true) {
+						RequestContext.getCurrentInstance().execute("closedQTSubmitProposalPopUp.show()");
+					} else if(allBranchName.length() > 0) {
+						throw new EpException(MessageConst.ERROR_721120, new String[] { allBranchName.toString() });
+					} else {
+						RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
+					}
+				}
+			} else if (managedBean.isPoUser()){
+				List<SmSupplierBranch> supplierBranch = new ArrayList<SmSupplierBranch>();
+				if(managedBean.getSmAppl().getSmSupplierBranches().size() > 0){
+					for(SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
+						if(tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED){
+							continue;
+						}
+						supplierBranch.add(tempSupplierBranch);
+					}
+				}
+				
+				Boolean pendingQT = false;
+				Boolean closedQTSubmitProposal = false;
+				List<String> branchName = new ArrayList<String>();
+				
+				if(supplierBranch.size() > 0){
+					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", IMofRegistrationSO.class);
+					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
+					reqDTO.setSelectedBranch(supplierBranch);
+					
+					pendingQT = mofRegistrationSO
+							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
+					
+					closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
+					
+					branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
+					StringBuilder allBranchName = new StringBuilder();
+					for (String str : branchName) {
+						allBranchName.append(str + ",");
+					}
+					if (allBranchName.length() > 0) {
+						allBranchName.setLength(allBranchName.length() - 1);
+					}
+					
+					if(pendingQT == true){
+						if(process.equalsIgnoreCase("approveDialog")){
+							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePo.show()");
+						} else if (process.equalsIgnoreCase("APPROVE")) {
+							RequestContext.getCurrentInstance().execute("pendingQTPopUpRecommendApprovePo.show()");
+						} else {
+							throw new EpException(MessageConst.ERROR_721108);
+						}
+					} else if(closedQTSubmitProposal == true) {
+						if(process.equalsIgnoreCase("approveDialog")){
+							RequestContext.getCurrentInstance().execute("closedQTSubmitProposalPopUpApprovePo.show()");
+						} else if (process.equalsIgnoreCase("APPROVE")) {
+							RequestContext.getCurrentInstance().execute("closedQTSubmitProposalPopUpRecommendApprovePo.show()");
+						} else {
+							throw new EpException(MessageConst.ERROR_721108);
+						}
+					} else if (allBranchName.length() > 0) {
+						throw new EpException(MessageConst.ERROR_721121, new String[] { allBranchName.toString() });
+					} else {
+						if(process.equalsIgnoreCase("approveDialog")) {
+							assignFinalApproveOrReject(process);
+						} else if(process.equalsIgnoreCase("APPROVE")){
+							submitPOEscalationToApprover(process);
+						} else {
+							throw new EpException(MessageConst.ERROR_721108);
+						}
+					}
+				} else {
+					if(process.equalsIgnoreCase("approveDialog")) {
+						assignFinalApproveOrReject(process);
+					} else if(process.equalsIgnoreCase("APPROVE")){
+						submitPOEscalationToApprover(process);
+					} else {
+						throw new EpException(MessageConst.ERROR_721108);
+					}
+				}
+			} else if (managedBean.isApproverUser()) {
+				List<SmSupplierBranch> supplierBranch = new ArrayList<SmSupplierBranch>();
+				if (managedBean.getSmAppl().getSmSupplierBranches().size() > 0) {
+					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
+						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
+							continue;
+						}
+						supplierBranch.add(tempSupplierBranch);
+					}
+				}
 
+				Boolean pendingQT = false;
+				Boolean closedQTSubmitProposal = false;
+				List<String> branchName = new ArrayList<String>();
+
+				if (supplierBranch.size() > 0) {
+					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", IMofRegistrationSO.class);
+					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
+					reqDTO.setSelectedBranch(supplierBranch);
+
+					pendingQT = mofRegistrationSO
+							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
+
+					closedQTSubmitProposal = mofRegistrationSO
+							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
+
+					branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
+					StringBuilder allBranchName = new StringBuilder();
+					for (String str : branchName) {
+						allBranchName.append(str + ",");
+					}
+					if (allBranchName.length() > 0) {
+						allBranchName.setLength(allBranchName.length() - 1);
+					}
+
+					if (pendingQT == true) {
+						if (process.equalsIgnoreCase("approverAppDialog")) {
+							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
+						} else {
+							throw new EpException(MessageConst.ERROR_721108);
+						}
+					} else if (closedQTSubmitProposal == true) {
+						if (process.equalsIgnoreCase("approverAppDialog")) {
+							RequestContext.getCurrentInstance().execute("closedQTSubmitProposalPopUpApprover.show()");
+						} else {
+							throw new EpException(MessageConst.ERROR_721108);
+						}
+					} else if (allBranchName.length() > 0) {
+						throw new EpException(MessageConst.ERROR_721120, new String[] { allBranchName.toString() });
+					} else {
+						if (process.equalsIgnoreCase("approverAppDialog")) {
+							assignFinalApproveOrReject(process);
+						} else {
+							throw new EpException(MessageConst.ERROR_721108);
+						}
+					}
+				} else {
+					if (process.equalsIgnoreCase("approverAppDialog")) {
+						assignFinalApproveOrReject(process);
+					} else {
+						throw new EpException(MessageConst.ERROR_721108);
+					}
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_721108);
+			}
+			break;
+		default:
+			if (managedBean.isPoUser()) {
+				if(process.equalsIgnoreCase("approveDialog")) {
+					assignFinalApproveOrReject(process);
+				} else if(process.equalsIgnoreCase("APPROVE")){
+					submitPOEscalationToApprover(process);
+				} else {
+					throw new EpException(MessageConst.ERROR_721108);
+				}
+			} else if(managedBean.isApproverUser()) {
+				if(process.equalsIgnoreCase("approverAppDialog")) {
+					assignFinalApproveOrReject(process);
+				} else {
+					throw new EpException(MessageConst.ERROR_721108);
+				}
+			} else {
+				RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
+			}
+		}
+	}
+
+	public void setBranchDisplayTable() {
+		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
+		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
+			for (SmSupplierBranch smSupplierBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+				if (smSupplierBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+					continue;
+				}
+				displayBranches.add(smSupplierBranch);
+			}
+		}
+		getManagedBean().setDisplayBranches(displayBranches);
+	}
+	// END #29727
 }

@@ -134,6 +134,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch selectedBranchPrev;
 	private int selectedBranchIndex;
 	private List<SmSupplierBranch> selectedBranches;
+	private List<SmSupplierBranch> displayBranches;
 	private SmAssociateCompany selectedAssocCompany;
 	private List<SmAssociateCompany> selectedAssocCompanies;
 	private List<SmSupplierCert> selectedCertList;
@@ -4413,5 +4414,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+
+	public List<SmSupplierBranch> getDisplayBranches() {
+		return displayBranches;
+	}
+
+	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
+		this.displayBranches = displayBranches;
+	}
 
 }
