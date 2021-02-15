@@ -776,14 +776,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 							parameterType, searchBean);
 
 			// #27601 - Start - 8/2/2021
-			if((parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
-					parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR))){
-				
-				items = new SelectItem[parameterDescs.size()];
-			} else {
-				items = new SelectItem[parameterDescs.size() + 1];	
-			}
+//			if((parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+//					parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR))){
+//				
+//				items = new SelectItem[parameterDescs.size()];
+//			} else {
+//					
+//			}
 			// #27601 - End - 8/2/2021
+			
+			items = new SelectItem[parameterDescs.size() + 1];
 
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -792,14 +794,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			for (PmParameterDesc parameterDesc : parameterDescs) {
 				
 				// #27601 - Start - 8/2/2021 - modified - 12/2/2021
-				if(parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
-						parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR) && 
-						parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("P")){
-					// to not include P parametercode for SUPPLIER_BUSINESS_TYPE & UPPLIER_BUSINESS_TYPE_CONTRACTOR
-				} else {
+//				if(parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE) || 
+//						parameterType.equalsIgnoreCase(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONTRACTOR) && 
+//						parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase("P")){
+//					// to not include P parametercode for SUPPLIER_BUSINESS_TYPE & UPPLIER_BUSINESS_TYPE_CONTRACTOR
+//				} else {
 					items[i++] = new SelectItem(parameterDesc.getPmParameter()
 							.getParameterCode(), parameterDesc.getCodeName());	
-				}
+//				}
 				
 				// #27601 - End - 8/2/2021 modified - 12/2/2021
 				
