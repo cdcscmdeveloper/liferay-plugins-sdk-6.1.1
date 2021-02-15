@@ -1,0 +1,98 @@
+#parse("templates/sm/ssm/shared/header.vm")
+
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>$title</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>$companyInfoSec</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+	<table width="80%" align="center">
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.supplier.name')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!companyInfo.companyName</td>
+		</tr>
+	</table>
+	
+	<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.ownername')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
+		</tr>
+		
+		
+
+			#if($ownerInfo != $null && $ownerInfo.size() > 0)
+				#foreach($worker in $ownerInfo)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="25%">$!worker.name</td>
+					<td width="25%">$!worker.identificationNo</td>
+					<td width="20%">$smVmUtil.getParameterDesc($!worker.identificationType)</td>
+					<td width="25%">$!worker.shareAmt</td>
+				</tr>
+				#end
+			#else
+				<tr>
+		 			<td colspan="5" align="center">No Record Found</td>
+		 		</tr>
+			#end	
+</table>
+
+	<table>
+		<tr>
+			<td>1.</td>
+			<td colspan="2">Adakah ......</td>
+		</tr>
+		 <tr align='left'>
+			<td></td>
+	        <td>
+	            <img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img>Permohonan...
+				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
+	        </td>
+	    </tr>
+		
+		<tr>
+			<td>2.</td>
+			<td colspan="2">Adakah ......</td>
+		</tr>
+		 <tr align='left'>
+			<td></td>
+	        <td>
+				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
+				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
+	            <img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img>Permohonan...
+				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
+	        </td>
+	    </tr>
+		<tr>
+			<td>3.</td>
+			<td colspan="2">Adakah ......</td>
+		</tr>
+		 <tr align='left'>
+			<td></td>
+	        <td>
+				 <img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img>Permohonan...
+				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
+	        </td>
+	    </tr>
+		
+	</table>
+	
+</body>
+</html>

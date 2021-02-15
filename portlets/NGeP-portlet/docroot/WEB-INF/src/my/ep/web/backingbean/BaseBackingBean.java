@@ -122,6 +122,8 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
@@ -137,12 +139,15 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.util.sm.helper.VmUtil;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -3119,4 +3124,63 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	//END 27239
+	
+	//27346 START PRINT REPORT
+	/**
+	 * download site visit template report in PDF
+	 * @param templateType
+	 * @throws Exception
+	 */
+	public void downloadViewSSMInfo() throws Exception{
+		printReportVM("ssm","SM_SSMInfo.pdf","/sm/ssm/ssm_info.vm",setDetail());
+	}
+	
+	public VelocityContext setDetail(){
+		VelocityContext context = new VelocityContext();
+		FacesScopes face = new FacesScopes();		
+		
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("title", ResourceBundleUtils.getMessage("lbl.sm.view.ssm.infomation",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfoSec", ResourceBundleUtils.getMessage("lbl.sm.comp.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
+		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
+		context.put("smVmUtil", VmUtil.getInstance());
+		
+		return context;
+	}
+	
+	public void printReportVM(String tmpFolder,String fileName,String vmFile,VelocityContext context){
+		String filePath = null;
+		filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath = filePath + "/" + tmpFolder;
+       
+		File file = new File(filePath);
+		file.mkdirs();
+		AttachmentFormat attachmentFormat = null;
+		attachmentFormat = new AttachmentDateFormat();
+		String newName = attachmentFormat.format(fileName, null);
+		filePath = filePath + "/"+ newName;
+		OutputStream os1 = null;
+		try{
+			os1 = new FileOutputStream(filePath);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
+			os1.flush();
+			os1.close();
+		//	this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+		}catch(Exception e){
+			log.error("File: BaseBackingBean, printReportVM, Message: "+e.getMessage());
+		}
+	}
+	/**
+	 * get the template logo path 
+	 * @return String
+	 */
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
+	}
+	
+
+	
+	//27346 END PRINT REPORT
 }
