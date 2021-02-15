@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -29,6 +30,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -296,11 +298,35 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean flowamt=null;
 
+	//#29006 - start
+	private boolean specificationAndSupplierDialogFlag = false;
+	private boolean updateSupplierInstructionFlag = false;
+	private List<String> scLoiLoaItemSpecsList;
+	private boolean newSupplierUpdatedFlag = false;
+	private boolean updatedLampiranA3DownloadedFlag = false;
+	private String newSupplierOffered;
+	private String newSupplierJustification;
+	private boolean oldNewSuppOfferSameFlag;
+	private boolean updateSupplierLinkFlag = false;
+	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
+	//#29006 - end
+	
 	//#19336
 		private boolean isValidatewitness=false;
 		
 	//#11134
 	private List<ScLoaRemark> supplierRemarks;
+	/*#29007 Start Vinod*/
+	private boolean supPropSpecDisable = false;
+	private boolean supPropSpecUpdate = false;
+	private boolean uploadA3Templet = false;
+	private boolean specificationAndSupplierDialogFlagQT = false;
+	private String itemNamePopup;
+	private String specKeyword;
+	private String loaBpmVerify;
+	private ScLoiLoaItem scLoiLoaItem;
+	private List<TplSpecAnswer> tplSpecAnswerList;
+	/*#29007 End Vinod*/
     /**
      * Gets the spki backing bean.
      *
@@ -1653,6 +1679,87 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setValidatewitness(boolean isValidatewitness) {
 		this.isValidatewitness = isValidatewitness;
 	}
+	
+	//#29006 - start
+	public boolean isSpecificationAndSupplierDialogFlag() {
+		return specificationAndSupplierDialogFlag;
+	}
+
+	public void setSpecificationAndSupplierDialogFlag(boolean specificationAndSupplierDialogFlag) {
+		this.specificationAndSupplierDialogFlag = specificationAndSupplierDialogFlag;
+	}
+	
+	public boolean isUpdateSupplierInstructionFlag() {
+		return updateSupplierInstructionFlag;
+	}
+
+	public void setUpdateSupplierInstructionFlag(boolean updateSupplierInstructionFlag) {
+		this.updateSupplierInstructionFlag = updateSupplierInstructionFlag;
+	}
+
+	public List<String> getScLoiLoaItemSpecsList() {
+		return scLoiLoaItemSpecsList;
+	}
+
+	public void setScLoiLoaItemSpecsList(List<String> scLoiLoaItemSpecsList) {
+		this.scLoiLoaItemSpecsList = scLoiLoaItemSpecsList;
+	}
+	
+	public boolean isNewSupplierUpdatedFlag() {
+		return newSupplierUpdatedFlag;
+	}
+
+	public void setNewSupplierUpdatedFlag(boolean newSupplierUpdatedFlag) {
+		this.newSupplierUpdatedFlag = newSupplierUpdatedFlag;
+	}
+
+	public boolean isUpdatedLampiranA3DownloadedFlag() {
+		return updatedLampiranA3DownloadedFlag;
+	}
+
+	public void setUpdatedLampiranA3DownloadedFlag(boolean updatedLampiranA3DownloadedFlag) {
+		this.updatedLampiranA3DownloadedFlag = updatedLampiranA3DownloadedFlag;
+	}
+	
+	public String getNewSupplierOffered() {
+		return newSupplierOffered;
+	}
+
+	public void setNewSupplierOffered(String newSupplierOffered) {
+		this.newSupplierOffered = newSupplierOffered;
+	}
+
+	public String getNewSupplierJustification() {
+		return newSupplierJustification;
+	}
+
+	public void setNewSupplierJustification(String newSupplierJustification) {
+		this.newSupplierJustification = newSupplierJustification;
+	}
+	
+	public boolean isOldNewSuppOfferSameFlag() {
+		return oldNewSuppOfferSameFlag;
+	}
+
+	public void setOldNewSuppOfferSameFlag(boolean oldNewSuppOfferSameFlag) {
+		this.oldNewSuppOfferSameFlag = oldNewSuppOfferSameFlag;
+	}
+	public boolean isUpdateSupplierLinkFlag() {
+		return updateSupplierLinkFlag;
+	}
+
+	public void setUpdateSupplierLinkFlag(boolean updateSupplierLinkFlag) {
+		this.updateSupplierLinkFlag = updateSupplierLinkFlag;
+	}
+	
+	public Map<Long, List<TplSpecAnswer>> getScLoiLoaItemAnswerMap() {
+		return scLoiLoaItemAnswerMap;
+	}
+
+	public void setScLoiLoaItemAnswerMap(Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap) {
+		this.scLoiLoaItemAnswerMap = scLoiLoaItemAnswerMap;
+	}
+	//#29006 - end
 
 	public String getSourcePage() {
 		return sourcePage;
@@ -1685,6 +1792,63 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
 		this.supplierRemarks = supplierRemarks;
 	}
+	/*#29007 Start Vinod*/
+	public List<TplSpecAnswer> getTplSpecAnswerList() {
+		return tplSpecAnswerList;
+	}
+	public void setTplSpecAnswerList(List<TplSpecAnswer> tplSpecAnswerList) {
+		this.tplSpecAnswerList = tplSpecAnswerList;
+	}
+	public String getItemNamePopup() {
+		return itemNamePopup;
+	}
+	public void setItemNamePopup(String itemNamePopup) {
+		this.itemNamePopup = itemNamePopup;
+	}
+	public String getSpecKeyword() {
+		return specKeyword;
+	}
+	public void setSpecKeyword(String specKeyword) {
+		this.specKeyword = specKeyword;
+	}
+	public ScLoiLoaItem getScLoiLoaItem() {
+		return scLoiLoaItem;
+	}
+	public void setScLoiLoaItem(ScLoiLoaItem scLoiLoaItem) {
+		this.scLoiLoaItem = scLoiLoaItem;
+	}
+	public boolean isSupPropSpecUpdate() {
+		return supPropSpecUpdate;
+	}
+	public void setSupPropSpecUpdate(boolean supPropSpecUpdate) {
+		this.supPropSpecUpdate = supPropSpecUpdate;
+	}
+	public boolean isSpecificationAndSupplierDialogFlagQT() {
+		return specificationAndSupplierDialogFlagQT;
+	}
+	public void setSpecificationAndSupplierDialogFlagQT(boolean specificationAndSupplierDialogFlagQT) {
+		this.specificationAndSupplierDialogFlagQT = specificationAndSupplierDialogFlagQT;
+	}
+	public String getLoaBpmVerify() {
+		return loaBpmVerify;
+	}
+	public void setLoaBpmVerify(String loaBpmVerify) {
+		this.loaBpmVerify = loaBpmVerify;
+	}
+	public boolean isSupPropSpecDisable() {
+		return supPropSpecDisable;
+	}
+	public void setSupPropSpecDisable(boolean supPropSpecDisable) {
+		this.supPropSpecDisable = supPropSpecDisable;
+	}
+	public boolean isUploadA3Templet() {
+		return uploadA3Templet;
+	}
+	public void setUploadA3Templet(boolean uploadA3Templet) {
+		this.uploadA3Templet = uploadA3Templet;
+	}
+	/*#29007 End Vinod*/
+
 }
 
 
