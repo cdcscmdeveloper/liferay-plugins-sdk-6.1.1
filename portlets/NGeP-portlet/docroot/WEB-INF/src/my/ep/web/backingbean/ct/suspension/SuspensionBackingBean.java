@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -779,7 +781,53 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 * The method used to invoke and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
+		/*#28854 start*/
+		IRequestItemSO requestItemSO = null;
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		
+		Long requestItemId = this.getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();		
+		
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+			List<String> itemSpecList = new ArrayList<>();
+			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+			for(ScRequestItemSpecOffer i: itemSpecOfferList){				
+				if((i.getItemSpec()) != null && !i.getItemSpec().isEmpty()){
+					itemSpecList.add(i.getItemSpec());				
+				}				
+			}
+			getManagedBean().setItemSpecification(itemSpecList);
+			
+			for(ScRequestItemSpecOffer j: itemSpecOfferList){
+				if((j.getSupplierOffer()) != null && !j.getSupplierOffer().isEmpty()){
+					if((j.getNewOfferSpec()) != null && !j.getNewOfferSpec().isEmpty()){
+						getManagedBean().setSupplierOffer(j.getSupplierOffer());	
+						getManagedBean().setNewOfferSpec(j.getNewOfferSpec());
+					}
+				}else if((j.getSupplierOffer()) != null && !j.getSupplierOffer().isEmpty()){
+					if((j.getNewOfferSpec()) == null || j.getNewOfferSpec().isEmpty()){
+						getManagedBean().setSupplierOffer(j.getSupplierOffer());	
+						getManagedBean().setNewOfferSpec(null);
+					}					
+				}else if((j.getNewOfferSpec()) != null && !j.getNewOfferSpec().isEmpty()){
+					if((j.getSupplierOffer()) == null || j.getSupplierOffer().isEmpty()){
+						getManagedBean().setSupplierOffer(null);	
+						getManagedBean().setNewOfferSpec(j.getNewOfferSpec());
+					}
+				}else{
+					getManagedBean().setSupplierOffer(null);
+					getManagedBean().setNewOfferSpec(null);
+					continue;
+					}						
+				}
+			}
+		
+		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
+			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);
+			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);			
+		}
+		/*#28854 end*/
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
 	
