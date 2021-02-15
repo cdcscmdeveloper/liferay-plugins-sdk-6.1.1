@@ -9896,7 +9896,7 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmAppl().setBumi(false);
 						getManagedBean().getSmAppl().setPmRegStatus(null);
 						getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
-						SmApplicationUtil.rejectSmMofCertForSupplier(getManagedBean().getSmAppl().getSmSupplier(), reqDTO.getLastApprovedAppl());
+//						SmApplicationUtil.rejectSmMofCertForSupplier(getManagedBean().getSmAppl().getSmSupplier(), reqDTO.getLastApprovedAppl());
 					}				
 					// #29663 - end
 					
