@@ -61,6 +61,8 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -121,6 +123,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -4093,8 +4097,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flItemAddr the fl item addr
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
+		IRequestItemSO requestItemSO = null;
+		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
+		
+		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		if (!getManagedBean().getSpecificationList().isEmpty()) {
+		getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
+		getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
+		getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());	
+		} else {
+		getManagedBean().setSupplierOffer(null);
+		getManagedBean().setNewOfferedSpec(null);
+		getManagedBean().setItemSpecification(null);
+		}
+		
 		flItemAddr.setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
@@ -4111,6 +4131,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		ContractItemResDTO ciItemResDTO = null;
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
 		reqDTO.setContractVerId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId());
 
 		if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
@@ -4178,6 +4199,31 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}	
+		
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
+		ContractReqDTO cireqDTO = new ContractReqDTO();
+		ContractResDTO ciResDTO = null;
+		cireqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		ciResDTO = contractSO.retrieveContract(cireqDTO);
+		
+		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
+		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
+		AwardSupplierResDTO resLoaDTO = new AwardSupplierResDTO();
+		if (ciResDTO.getContract().getLoa() != null) {
+		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
+		resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
+
+			if (resLoaDTO.getScLoa().getProcurementMode()
+					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO) ||
+					resLoaDTO.getScLoa().getProcurementMode()
+					.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				getManagedBean().setDpFlag(true);
+			} else {
+				getManagedBean().setDpFlag(false);
+			}
+		}
 	}
 
 	/**

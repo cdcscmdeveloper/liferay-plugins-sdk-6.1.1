@@ -20,6 +20,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.DisciplinaryActionVO;
@@ -113,6 +114,15 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
+	//28855 -start
+	private String supplierOffer;
+	private String newOfferedSpec;
+	private String itemSpecification;
+	private String itemName;
+	private boolean dpFlag;
+	private boolean contractFlag;
+	private List<ScRequestItemSpecOffer> specificationList;
+		//28855 -end
 	/**
 	 * Gets the fl remark.
 	 *
@@ -969,4 +979,60 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}
+
+	public String getNewOfferedSpec() {
+		return newOfferedSpec;
+	}
+
+	public void setNewOfferedSpec(String newOfferedSpec) {
+		this.newOfferedSpec = newOfferedSpec;
+	}
+
+	public String getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(String itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public boolean isDpFlag() {
+		return dpFlag;
+	}
+
+	public void setDpFlag(boolean dpFlag) {
+		this.dpFlag = dpFlag;
+	}
+
+	public boolean isContractFlag() {
+		return contractFlag;
+	}
+
+	public void setContractFlag(boolean contractFlag) {
+		this.contractFlag = contractFlag;
+	}
+
+	public List<ScRequestItemSpecOffer> getSpecificationList() {
+		return specificationList;
+	}
+
+	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
+		this.specificationList = specificationList;
+	}
 }

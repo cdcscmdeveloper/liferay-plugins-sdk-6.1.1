@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -34,7 +33,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -63,6 +61,7 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -125,6 +124,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentItemAddr> itemAddrList;
 	private List<FlFulfilmentItemAddr> showItemAddrList;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
+	private List<ScRequestItemSpecOffer> specificationList;
 	private List<FlDeliveryAddress> selectedAddressRows;
 	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
@@ -233,6 +233,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String approver;
 	private String orgProfileIds;
 	private String fulfilmentRequisitioner;
+	private String supplierOffer;
+	private String newOfferedSpec;
+	private String itemSpecification;
 	
 	private Long ministryProfileId;
 	private Long jabatanProfileId;
@@ -304,6 +307,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean espkb;
 	private boolean showCommitmentNo;
 	private boolean oldGstRateFlg = false;
+	private boolean dpFlag;
 	//17087 -- radio button
 	private boolean radioCheckDeliveryDate;
 	/*13984 Current schedule number Information*/
@@ -3193,4 +3197,44 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
 	}
 	//29728 - end
+	
+	public boolean isDpFlag() {
+		return dpFlag;
+	}
+
+	public void setDpFlag(boolean dpFlag) {
+		this.dpFlag = dpFlag;
+	}
+
+	public List<ScRequestItemSpecOffer> getSpecificationList() {
+		return specificationList;
+	}
+
+	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
+		this.specificationList = specificationList;
+	}
+
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}
+
+	public String getNewOfferedSpec() {
+		return newOfferedSpec;
+	}
+
+	public void setNewOfferedSpec(String newOfferedSpec) {
+		this.newOfferedSpec = newOfferedSpec;
+	}
+
+	public String getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(String itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
 }
