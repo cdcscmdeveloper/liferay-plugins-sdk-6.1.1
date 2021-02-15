@@ -144,7 +144,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
 					<td><p:selectBooleanCheckbox
-							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' }"
+							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' or qTDetailBB.managedBean.readOnly}"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 							<f:selectItem
 								itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}" />
@@ -157,7 +157,7 @@
 				<td style="width: 210px"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText maxlength="18"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_MINIMUM_PAID_UP_CAPITAL)}"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_MINIMUM_PAID_UP_CAPITAL) or qTDetailBB.managedBean.readOnly}"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right; width:210px;">
 						<p:ajax event="change" partialSubmit="true" process="@this"
@@ -177,7 +177,8 @@
 								<p:selectOneMenu id="locLevels"
 									label="#{lbl['lbl.sc.location.level']}"
 									value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
-									style="width: 220px;" >
+									style="width: 220px;" 
+									disabled="#{qTDetailBB.managedBean.readOnly}">
 									<f:selectItems
 										value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 									<p:ajax event="change" update="zoneLocationDataTable"
@@ -335,7 +336,7 @@
 					<c:if test="#{!locCoverageReadonly}">
 						<div align="right">
 							<p:selectBooleanCheckbox id="checkAll"
-								style="float:left;margin-top: 13px;margin-right: -4px;">
+								style="float:left;margin-top: 13px;margin-right: -4px;" disabled="#{qTDetailBB.managedBean.readOnly}">
 								<p:ajax event="change" partialSubmit="true" process="@all"
 									update="zoneLocationDataTable"
 									listener="#{qTSupplierQulCriteriaBackingBean.checkAllConditions}" />

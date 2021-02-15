@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<style type="text/css">
 		.commandLink {
@@ -21,6 +22,14 @@
 		<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.sf.finalization.supplier.selection.package.instruction']}"
 				escape="false" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}" />
+
+		<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
+		<h:outputText styleClass="instruction" value="#{suppFinalizationBackingBean.managedBean.scQt.closingDate}">
+		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+		</h:outputText>		
+		<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20"
 			rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
@@ -51,6 +60,12 @@
 		</h:panelGrid>
 		
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
+
+			<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+			<ui:param name="canShowSupplierProposal" 
+					value="#{suppFinalizationBackingBean.canShowSupplierProposal() or isSecretaryUser or !empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
+			<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+
 			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled}" />
 		               			  			 				
@@ -73,7 +88,10 @@
 					
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+						<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+						<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -182,7 +200,17 @@
 				</p:column>
 						
 				<p:column>
-					<h:outputText value="" />
+					<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					
+					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
 				</p:column>
 				
 				<p:column rendered="#{false}">
@@ -225,7 +253,10 @@
 					
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+						<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+		           		<p:column rowspan="2" colspan="#{canShowSupplierProposal?'2':'1'}" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal; text-align:center;"/>
+						<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
@@ -251,7 +282,14 @@
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
+					<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+		              <p:column colspan="1" style="width:7%; white-space:normal;">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+							</f:facet>
+						</p:column>
+						<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" rendered="#{false}" style="width:7%; white-space:normal;"/>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
 		           	</p:row>
@@ -265,7 +303,17 @@
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
 				</p:column>
-	
+				<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+				<c:if test="#{canShowSupplierProposal}">
+					<p:column style="text-align:center;">
+						<p:commandLink  process="@this" partialSubmit="true"
+							action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, shortlistedSupp.qtEvaluationResult.scQtProposal.qtProposalId)}">
+					       <p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png" title="#{lbl['lbl.sc.qt.proposal.url.view']}"/>
+						</p:commandLink>
+					</p:column>
+				</c:if>
+				<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
+				
 				<p:column>
 					<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 											fn:toUpperCase(shortlistedSupp.qtEvaluationResult.scQtProposal.bumi))}" />
@@ -334,7 +382,17 @@
 				</p:column>
 						
 				<p:column>
-					<h:outputText value="" />
+					<ui:remove> Enhancement 19287 19336 25201 - start</ui:remove>
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
+						process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					</p:commandLink><p:spacer width="2"/>
+					
+					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					 <ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
 				</p:column>
 				
 				<p:column  rendered="#{false}">
@@ -359,10 +417,12 @@
 				<p:column style="text-align:left;">
 					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}"/>
 				</p:column>				
-								
+				<ui:remove>
+					Enhancement #19336 START #142
+				</ui:remove>				
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
-						disabled="#{!(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
+						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
 											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
