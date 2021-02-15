@@ -32,8 +32,12 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="@form" update="@form" />
 						<p:commandButton value="#{lbl['lbl.btn.accept']}"
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 							action="#{purchaseInDefaultBackingBean.supplierAction(accept)}"></p:commandButton>
 						<p:commandButton value="#{lbl['lbl.btn.reject']}"
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 							action="#{purchaseInDefaultBackingBean.supplierAction(reject)}"></p:commandButton>
 
 					</h:panelGroup></td>

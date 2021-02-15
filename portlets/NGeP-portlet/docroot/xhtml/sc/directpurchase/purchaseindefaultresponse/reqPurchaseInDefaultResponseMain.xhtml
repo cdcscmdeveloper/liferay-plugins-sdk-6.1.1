@@ -88,8 +88,12 @@
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							process="@form" update="@form" />
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						    onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 							action="#{purchaseInDefaultBackingBean.requisitionerAction(submit)}"></p:commandButton>
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+							onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
 							action="#{purchaseInDefaultBackingBean.requisitionerAction(cancel)}"></p:commandButton>
 					</td>
 				</tr>
