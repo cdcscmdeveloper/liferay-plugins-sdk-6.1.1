@@ -248,6 +248,30 @@ public class SupplierFinalizationBackingBean extends
 						prepareUpdateCommitteeMember();//#25037
 			}
 			// #27502 -- End
+			//28834 starts
+			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes()) 
+					&& this.getManagedBean().getOutComes().length > 0) {
+				boolean reviseExists = false;
+				for (String outcome : this.getManagedBean().getOutComes()) {
+					if (outcome.equals(BpmOutcomeConst.BPM_REVISEBP)) {
+						reviseExists = true;
+					}
+				}
+				
+				if (reviseExists) {
+					String tempOutComes[] = new String[this.getManagedBean().getOutComes().length -1];
+					for (int i=0, k=0; i < this.getManagedBean().getOutComes().length; i++) {
+						if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
+							continue;
+						}
+						tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+					}
+					this.getManagedBean().setOutComes(tempOutComes);
+					
+				}
+				
+			}
+	//28834 ends
 			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
 					.getNavigationHandler()

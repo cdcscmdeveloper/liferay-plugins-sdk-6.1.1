@@ -24,7 +24,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
@@ -938,6 +937,7 @@ public class ConsolidationReportBackingBean extends
 	 * To retrieve the document list in PMDocument for Briefing Paper/Kertas
 	 * Taklimat
 	 */
+	//28834
 	private void retrieveBriefingPaper() {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 
