@@ -4352,12 +4352,8 @@ public class SmCommonUtil {
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
-			//#29582
-			PmParameter invalidType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_INVALID);
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
-			//#29582
-			ssmReqDTO.setInvalidType(invalidType);
 			String regNo = ssmReqDTO.getRegNo();
 			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			regNo = regNo.substring(0, regNo.length() - 2);
@@ -4385,7 +4381,36 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
 			}//END 27329
-
+			//#29582- Start
+			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
+				boolean errMsg = false;
+				int i = 0;
+				for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+					if (per.getIdentificationTypeSsm() != null) {
+						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+						sb.append("<br/>");
+						sb.append(++i + ". ");
+						sb.append(per.getName() + " ");
+						sb.append("("
+								+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+								+ " ");
+						sb.append(per.getIdentificationNo() + ", ");
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+						sb.append(per.getIdentificationTypeSsm() + " = ");
+						sb.append(ssmTypeDesc + ")");
+						sb.append("<br/>");
+						errMsg = true;
+					}
+				}
+				if (errMsg) {
+					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+				}
+			}//#29582- end
+			
+			
 			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
@@ -4395,6 +4420,10 @@ public class SmCommonUtil {
 				//27329
 				if(MessageConst.ERROR_721085.equalsIgnoreCase(ex.getMessage()) && sb != null){
 					throw new EpException(MessageConst.ERROR_721085,new String[] { sb.toString() });
+				}
+				//#29582
+				if(MessageConst.ERROR_721088.equalsIgnoreCase(ex.getMessage()) && sb != null){
+					throw new EpException(MessageConst.ERROR_721088,new String[] { sb.toString() });
 				}else{
 					//27225
 					throw new EpException(message + "("
@@ -4406,7 +4435,6 @@ public class SmCommonUtil {
 			}
 		}
 	}
-
 	/**
 	 * verify verify Owner With My Identity
 	 * 
