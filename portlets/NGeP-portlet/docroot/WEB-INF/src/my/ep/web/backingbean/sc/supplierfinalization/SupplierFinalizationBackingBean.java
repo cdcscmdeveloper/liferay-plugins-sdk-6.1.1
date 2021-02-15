@@ -3109,7 +3109,9 @@ public class SupplierFinalizationBackingBean extends
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
 		//paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
 		//StringUtils.EMPTY : pengesyoran.toString());
-		
+		// #18685 - Start
+		paramMap.put("flowType", "tasklist");
+		// #18685 - End
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
 
