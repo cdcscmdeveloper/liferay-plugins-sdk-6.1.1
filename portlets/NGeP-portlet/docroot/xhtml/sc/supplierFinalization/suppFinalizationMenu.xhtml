@@ -31,12 +31,6 @@
 		<ui:param name="isSecretaryUser" 
 				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />	
 				  
-		<ui:param name="isMofFinalization" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofFinalization}" />	
-				  
-		<ui:param name="isMofSelection" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />	
-				  
 	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
 		     				
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
@@ -76,7 +70,9 @@
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+							
 					</ui:repeat>
+					
 				</ui:define>
 			</ui:decorate>
 		</div>
@@ -151,6 +147,52 @@
 			</div>
 		</p:dialog>
 		
+		
+					
+			
+			<!-- ***28834 starts -->
+			<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.popup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
+					oncomplete="confirmBriefPopup.hide(); "
+					 partialSubmit="true" process="@form" update="@form" 
+					action="#{suppFinalizationBackingBean.submitBrief(bpmAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="confirmBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		<!-- ***28834 ends -->
+		
+		<!-- ***28834 starts -->
+		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="true">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.rempopup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+			
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					onclick="ReamrksBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+			
+		</p:dialog>
+		<!-- ***28834 ends -->
+		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -160,7 +202,7 @@
 				<tr>
 					<td align="center"><h:graphicImage
 							value="/css/images/design/exclamation.png" /> <p:outputLabel
-							value="#{lbl['lbl.sc.popup.finalupdateasattended']}" /></td>
+							value="#{lbl['lbl.btn.dialog.cofirm.submit.msg']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
