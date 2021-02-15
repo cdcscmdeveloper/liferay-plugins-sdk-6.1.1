@@ -141,6 +141,14 @@
 			src="/xhtml/sm/shared/onlinereg/viewSsmInformationNatureBusinessAc.xhtml" />
 		
 		</div>
+		<p:commandButton value="#{lbl['lbl.btn.download']}"
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			partialSubmit="true"
+			process="@this"
+			action="#{backingBean.downloadViewSSMInfo}" >
+			<p:fileDownload value="#{cc.attrs.bBean.managedBean.downloadfile}"/>
+		</p:commandButton>
 		</p:dialog>
+		
 	</cc:implementation>
 </ui:composition>
