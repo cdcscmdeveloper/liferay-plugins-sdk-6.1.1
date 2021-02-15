@@ -10082,6 +10082,7 @@ public class SmApplicationBackingBean extends
 			retMsg = null;
 		}
 		//START 12483
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+res);
 		if(res!= null && res.equalsIgnoreCase("REVISE")){
 			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
 		}else{
