@@ -101,7 +101,7 @@
 	<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
 		toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction']}" escape="false" />
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction1']}" rendered="#{lOIDetailBackingBean.managedBean.renderInstruction}" escape="false" /><!-- #29007 Added Vinod -->
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction1']}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" escape="false" /><!-- #29007 Added Vinod -->
 		
 	   <ui:param name="delBtnClientId" value="delNegoTermBtn" />
        <ui:param name="isTermRequired" value="#{param[p:component(delBtnClientId)]==null}" />
@@ -121,7 +121,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoTerm.selectTerm}"
-					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and !isPendingSubmissionStatus) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and isPendingSubmissionStatus and !lOIDetailBackingBean.managedBean.buttonFlag) or(empty negoTerm.pmTerm and !lOIDetailBackingBean.managedBean.buttonFlag))}"><!-- #29007	Vinod added !isPendingSubmissionStatus -->
+					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and !isPendingNegotiation) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and isPendingNegotiation and !lOIDetailBackingBean.managedBean.buttonFlag) or(empty negoTerm.pmTerm and !lOIDetailBackingBean.managedBean.buttonFlag))}"><!-- #29007	Vinod added !isPendingSubmissionStatus -->
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 						listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />
 				</p:selectBooleanCheckbox>
@@ -193,7 +193,7 @@
 				process="@this" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addSuppliersProposalSpecificationUpdate}"
 				update="negoTermstbl"
-				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingSubmissionStatus}" />
+				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" />
 			<!-- #29007	Vinod End -->
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
