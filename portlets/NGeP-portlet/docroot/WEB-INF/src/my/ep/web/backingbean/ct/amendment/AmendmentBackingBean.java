@@ -7117,7 +7117,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		
 		//#25956 - Start
 		/**
-		 * The method used for validating Remark Cancel Button.
+		 * The method used for validating Remark Cancel/Revise/Reject Button. 
 		 * A warning message will display on screen when Remark is null
 		 * 
 		 * @throws Exception  if an exception occurred
@@ -7130,29 +7130,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
 			
 			//#26688 start
+			String message = null;
 			if (BpmOutcomeConst.BPM_REVISE.equals(action)){
-				if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
-						&& (supplierRemark == null || supplierRemark.length() == 0)) {
-					setTabValue("AD");
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+				message = MessageConst.ERROR_100022;
+			} else if (BpmOutcomeConst.BPM_CANCEL.equals(action) || BpmOutcomeConst.BPM_REJECT.equals(action)) {
+				message = MessageConst.ERROR_100064;
+			}
+
+			if (message != null && ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
+					&& (supplierRemark == null || supplierRemark.length() == 0))) {
+				setTabValue("AD");
+				throw new EpException(message, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 			//#26688 end
-			
-			else if (BpmOutcomeConst.BPM_CANCEL.equals(action) || BpmOutcomeConst.BPM_REJECT.equals(action)){ //#26688 
-				if ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
-						&& (supplierRemark == null || supplierRemark.length() == 0)) {
-					setTabValue("AD");
-					throw new EpException(MessageConst.ERROR_100064, 
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
-			} //#26688
 
 		}
 		//#25956 - End
-		
 
 	}
