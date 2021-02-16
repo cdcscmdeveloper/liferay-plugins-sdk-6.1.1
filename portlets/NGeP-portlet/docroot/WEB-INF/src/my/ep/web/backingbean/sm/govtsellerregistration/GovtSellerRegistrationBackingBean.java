@@ -1044,9 +1044,14 @@ public class GovtSellerRegistrationBackingBean extends
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
 					.updateGovtSellerAcc(reqDTO);
 			if (resDTO.isSuccessful()) {
+				//#15016 Start
+				//SmCommonUtil.redirectToPage(
+				//		"/xhtml/sm/onlinereg/outputMsg.xhtml",
+				//		MessageConst.INFO_721013, null, null);
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
-						MessageConst.INFO_721013, null, null);
+						MessageConst.INFO_721016, null, null);
+				//#15016 End
 			} else {
 				throw new EpException(MessageConst.ERROR_721006);
 			}

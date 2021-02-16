@@ -3780,14 +3780,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return null;
 		}else{
 			//#15016 - Start
-			//FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-			//		FacesMessage.SEVERITY_INFO,
-			//		null,
-			//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					null,
-					MessageUtils.getMessage(MessageConst.INFO_721016, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			//FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+			//		FacesMessage.SEVERITY_INFO,
+			//		null,
+			//		MessageUtils.getMessage(MessageConst.INFO_721016, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			//#15016 - End
 			
 			return acknowledgement;
