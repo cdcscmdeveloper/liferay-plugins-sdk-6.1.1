@@ -3,6 +3,8 @@ package my.ep.web.backingbean.sm.sdoreview;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -512,6 +514,16 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 			getManagedBean().setNonMandatoryDocs(
 					new ArrayList<SmApplSupportDoc>());
+			
+			//#30294 - START
+			Collections.sort(this.getManagedBean().getSmAppl().getSmApplSupportDocs(), new Comparator<SmApplSupportDoc>(){
+				@Override
+				public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+					return Integer.valueOf(doc1.getPmDocument().getDocName().compareTo(doc2.getPmDocument().getDocName()));
+				}
+			});
+			//#30294 - END
+			
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
 				if (doc.getPmDocument() != null) {
