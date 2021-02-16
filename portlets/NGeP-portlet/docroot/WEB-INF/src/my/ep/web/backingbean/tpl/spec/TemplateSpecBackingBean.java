@@ -3002,8 +3002,8 @@ public class TemplateSpecBackingBean extends
 			long specZoneId,
 			BigDecimal questionId) {
 
-			BigDecimal totalIndicativePrice = new BigDecimal(0);
-			BigDecimal zeroChangeTo1 = new BigDecimal(1);
+			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
+			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
 			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, BigDecimal.ROUND_UP);//Bug #29808
 			
 			if (clUomFrequency.intValue() == 0 )
@@ -3017,6 +3017,13 @@ public class TemplateSpecBackingBean extends
 			
 			if (contractDuration.intValue() == 0 )
 			{ contractDuration=contractDuration.add(zeroChangeTo1);}
+			
+			//Bug #29808 - Start
+			 clUomFrequency =BigDecimal.valueOf(clUomFrequency.doubleValue());
+	       	 clUomPerDay =BigDecimal.valueOf(clUomPerDay.doubleValue());
+		     clUomPerMonth = BigDecimal.valueOf(clUomPerMonth.doubleValue());
+		     contractDuration =BigDecimal.valueOf(contractDuration.doubleValue());
+		   //Bug #29808 - End
 			
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
