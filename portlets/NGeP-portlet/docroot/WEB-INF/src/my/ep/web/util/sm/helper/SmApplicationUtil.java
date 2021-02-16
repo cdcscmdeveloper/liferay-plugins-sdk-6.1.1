@@ -11768,6 +11768,11 @@ public class SmApplicationUtil {
 			if (shr.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				countAuthorizedPersonnel++;
 			}
+			//#29616 -start
+			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				throw new EpException(MessageConst.ERROR_722685,
+						new String[] { shr.getName() });
+			}//#29616 -end
 		}
 		return countAuthorizedPersonnel;
 	}
