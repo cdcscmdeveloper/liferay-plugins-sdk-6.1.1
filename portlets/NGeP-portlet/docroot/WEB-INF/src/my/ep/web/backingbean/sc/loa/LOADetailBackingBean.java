@@ -744,6 +744,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			// #29006 - start
 			removeUnwantedLampiranA3Report(1);
+			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			// #29006 - end
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1534,6 +1535,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#29006 - start
 		if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
 			getManagedBean().setUpdatedLampiranA3DownloadedFlag(true);
+		}
+		
+		// Add current report title into
+		// managedBean.downloadedLoaReportsTitleList
+		// only if the title does not exist in the said list
+		if (CollectionUtils.isEmpty(getManagedBean().getDownloadedLoaReportsTitleList())) {
+			getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
+		} else {
+			if (!getManagedBean().getDownloadedLoaReportsTitleList().contains(scLoaReport.getTitle())) {
+				getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
+			}
+		}
+		// if size of managedBean.downloadedLoaReportsTitleList equals current
+		// total loa reports and current LOA task/status is "Verify LOA", enable
+		// Verify button since user has downloaded all reports.
+		if (getManagedBean().getDownloadedLoaReportsTitleList().size() == getManagedBean().getScLoa().getScLoaReports()
+				.size()
+				&& QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
+						.getStatusId().longValue())) {
+			showVerifyButton();
 		}
 		//#29006 - end
 		
@@ -3835,29 +3856,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-		
-		// #29006 - start
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
-				.longValue())
-				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
-			boolean lampiranA3Exists = false;
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					lampiranA3Exists = true;
-					break;
-				}
-			}
-			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
-					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				return;
-			}
-		}
-		// #29006 - end
 		
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
@@ -7221,30 +7219,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
 		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
-		
-		// #29006 - start
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
-				.longValue())
-				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
-			boolean lampiranA3Exists = false;
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					lampiranA3Exists = true;
-					break;
-				}
-			}
-			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
-					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				return;
-			}
-		}
-		// #29006 - end
-
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 				.equals(statusId)) {
 			validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
@@ -7266,7 +7240,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {			
 			this.getManagedBean().setAutoUpdate(false);		
 			
-//			String acceptMsg = getMessage("lbl.sc.loa.supplier.confirm.button.accept", new String[] { loa.trim(), procurementMode.trim() });
 			//#29006 - start
 			String acceptMsg = getMessage("lbl.sc.loa.supplier.confirm.button.accept.question",
 					new String[] { loa.trim(), procurementMode.trim() });
