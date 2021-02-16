@@ -10082,10 +10082,9 @@ public class SmApplicationBackingBean extends
 			retMsg = null;
 		}
 		//START 12483
-		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+res);
 		if(res!= null && res.equalsIgnoreCase("REVISE")){
 			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		}else{
+		}else if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){//10908
 			// #26136
 			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
 		}
