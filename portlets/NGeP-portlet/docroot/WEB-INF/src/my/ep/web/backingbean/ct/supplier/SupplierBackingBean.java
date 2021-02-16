@@ -1498,7 +1498,7 @@ public void selectFinancialAcc(){
 									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());
 									System.out.println("TEST list size ::: "+getManagedBean().getContractAdminlist().size());
 									
-									if(getManagedBean().getContractAdminlist() == null && getManagedBean().getContractAdminlist().isEmpty()){	
+									if(getManagedBean().getContractAdminlist() == null || getManagedBean().getContractAdminlist().isEmpty()){	
 										// in-case of when user is active but not in targeted profileid, reassigned and fetch new contract admins base on same profile id
 										reqDTO = new UserReqDTO();
 										reqDTO.setRoleCode(roleCode);
