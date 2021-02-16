@@ -175,6 +175,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	
 	//#13847 - start
 	private boolean disableDeferment = false;
+	
+	//#24819 start
+	private String businessRegNoNew;
+	//#24819 end
 
 	/**
 	 * @return the fileDirectory
@@ -1447,4 +1451,20 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.waiverDetailDelete = waiverDetailDelete;
 	}
 	//13847 - shaqimi end
+
+	//#24819 start
+	/**
+	 * @return the businessRegNoNew
+	 */
+	public String getBusinessRegNoNew() {
+		return businessRegNoNew;
+	}
+
+	/**
+	 * @param businessRegNoNew the businessRegNoNew to set
+	 */
+	public void setBusinessRegNoNew(String businessRegNoNew) {
+		this.businessRegNoNew = businessRegNoNew;
+	}
+	//#24819 end
 }
