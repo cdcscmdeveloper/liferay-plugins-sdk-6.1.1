@@ -10084,7 +10084,7 @@ public class SmApplicationBackingBean extends
 		//START 12483
 		if(res!= null && res.equalsIgnoreCase("REVISE")){
 			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		}else if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){//10908
+		}else if(!getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){//10908
 			// #26136
 			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
 		}
