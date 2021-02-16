@@ -145,7 +145,7 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			partialSubmit="true"
 			process="@this"
-			action="#{backingBean.downloadViewSSMInfo}" >
+			action="#{cc.attrs.bBean.downloadViewSSMInfo}" >
 			<p:fileDownload value="#{cc.attrs.bBean.managedBean.downloadfile}"/>
 		</p:commandButton>
 		</p:dialog>
