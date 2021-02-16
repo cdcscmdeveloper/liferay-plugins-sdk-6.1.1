@@ -35,6 +35,8 @@ import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.osb.sc.IQTOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -92,6 +94,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -3366,6 +3369,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) });
 		}
+		if (StringUtils.isNotBlank(outcome)) {
+			return null;
+		}
 		// #29006 - end
 
 		ScLoa scLoa = this.getManagedBean().getScLoa();
@@ -3614,27 +3620,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         // #26770 - End.
         
 		this.getManagedBean().setAction(outcome);
-		
-		//#29006 - start
-		if ((CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports()))) {
-			boolean lampiranA3Exists = false;
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					lampiranA3Exists = true;
-					break;
-				}
-			}
-			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
-					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				return;
-			}
-		}
-		//#29006 - end
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
@@ -3842,17 +3827,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
+		
 		// #29006 - start
 		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
 				.longValue())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierJustification())
-				&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			boolean lampiranA3Exists = false;
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					lampiranA3Exists = true;
+					break;
+				}
+			}
+			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
+					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+				return;
+			}
 		}
 		// #29006 - end
+		
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
