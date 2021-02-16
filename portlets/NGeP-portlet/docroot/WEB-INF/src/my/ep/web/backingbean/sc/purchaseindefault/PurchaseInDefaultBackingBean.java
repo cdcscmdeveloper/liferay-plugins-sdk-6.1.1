@@ -2419,6 +2419,16 @@ public class PurchaseInDefaultBackingBean extends
 		StringBuilder criteria = new StringBuilder();
 		StringBuilder ctContractCriteria = new StringBuilder();
 		ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+
+		//start - 28865
+		Long statusId = getManagedBean().getPidStatus().getStatusId();
+		
+		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
+			criteria.append("pmReason.parentReason").append("^").append("null").append("^")
+			.append(SearchOperator.OPERATOR_IS_NULL.value()).append("|");
+		}
+		//end - 28865
+			
 		// contract ver id
 		if(scPurchaseInDefault.getContractedItem() != null && scPurchaseInDefault.getContractedItem().getCtContractVer() != null){
 			ctContractCriteria.append(scPurchaseInDefault.getContractedItem().getCtContractVer().getContractVerId());
@@ -2440,6 +2450,15 @@ public class PurchaseInDefaultBackingBean extends
 		StringBuilder criteria = new StringBuilder();
 		StringBuilder ctCircularCriteria = new StringBuilder();
 		ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+		
+		// start - 28865
+		Long statusId = getManagedBean().getPidStatus().getStatusId();
+
+		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
+			criteria.append("pmReason.parentReason").append("^").append("null").append("^")
+					.append(SearchOperator.OPERATOR_IS_NULL.value()).append("|");
+		}
+		// end - 28865
 		
 		// for panel
 		if(scPurchaseInDefault.getPanelItem() != null){
