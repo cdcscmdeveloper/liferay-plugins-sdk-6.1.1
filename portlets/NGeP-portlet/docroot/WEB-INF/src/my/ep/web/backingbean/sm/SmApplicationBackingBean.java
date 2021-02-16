@@ -9461,12 +9461,7 @@ public class SmApplicationBackingBean extends
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		Long pmStatId = getManagedBean().getApprovedStatusId();
 		retriveCurrentAppl();
-		//START 10908
-		boolean cancelApplication = false;
-		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
-			cancelApplication = true;
-		}
-		//End 10908
+
 		if (res.equalsIgnoreCase("APPROVE") || res.equalsIgnoreCase("ESCALATE")) {
 			if (!getManagedBean().getSmAppl().getApplType()
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -10089,10 +10084,10 @@ public class SmApplicationBackingBean extends
 		//START 12483
 		if(res!= null && res.equalsIgnoreCase("REVISE")){
 			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		}else if(!cancelApplication){//10908
+		}else{
 			// #26136
 			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
-		}//end 10908
+		}
 		//END 12483
 		return retMsg;
 	}
