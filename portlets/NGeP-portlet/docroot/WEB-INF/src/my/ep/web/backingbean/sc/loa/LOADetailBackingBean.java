@@ -3362,15 +3362,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #29006 - start
 		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
 				.longValue())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierJustification())
-				&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
-		}
-		if (StringUtils.isNotBlank(outcome)) {
-			return null;
+				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			boolean lampiranA3Exists = false;
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					lampiranA3Exists = true;
+					break;
+				}
+			}
+			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
+					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+				return resDTO;
+			}
 		}
 		// #29006 - end
 
@@ -7215,12 +7223,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
 		
 		// #29006 - start
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && StringUtils.isNotBlank(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierJustification())
-				&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
+				.longValue())
+				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			boolean lampiranA3Exists = false;
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					lampiranA3Exists = true;
+					break;
+				}
+			}
+			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
+					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+				return;
+			}
 		}
 		// #29006 - end
 
