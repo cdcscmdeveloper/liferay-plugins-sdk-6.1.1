@@ -1496,6 +1496,7 @@ public void selectFinancialAcc(){
 									userReqDTO.getIncludeUserIds().add(ctActor.getUser().getUserId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);									
 									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());
+									System.out.println("TEST list size ::: "+getManagedBean().getContractAdminlist().size());
 									
 									if(getManagedBean().getContractAdminlist() == null && getManagedBean().getContractAdminlist().isEmpty()){	
 										// in-case of when user is active but not in targeted profileid, reassigned and fetch new contract admins base on same profile id
@@ -1503,7 +1504,8 @@ public void selectFinancialAcc(){
 										reqDTO.setRoleCode(roleCode);
 										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
-										getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(reqDTO).getUserList());		
+										getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(reqDTO).getUserList());
+										System.out.println("TEST list size ::: getManagedBean().getContractAdminlist().isEmpty() "+getManagedBean().getContractAdminlist().size());
 									}
 									//getManagedBean().getContractAdminlist().add(userResDTO);
 																	
