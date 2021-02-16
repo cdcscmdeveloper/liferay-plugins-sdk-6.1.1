@@ -90,8 +90,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -1863,8 +1861,6 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_721082,
 					new String[] { sb.toString() });
 		}
-		//#29582
-		validateInvalidIdType(currentTab, managedBean);
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			StringBuilder errMsg = new StringBuilder();
@@ -1994,40 +1990,6 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 	
-	// #29582-START
-	private static void validateInvalidIdType(int currentTab,SmApplicationManagedBean managedBean) {
-		SmAppl appl = managedBean.getSmAppl();
-		boolean errMsg = false;
-		int i = 0;
-		StringBuilder sb = new StringBuilder();
-		for (SmPersonnel per : appl.getSmPersonnels()) {
-			if (per.getIdentificationType().getParameterCode().equals(ParameterConst.IDENTIFICATION_TYPES_INVALID)) {
-				String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-						ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
-				sb.append("<br/>");
-				sb.append(++i + ". ");
-				sb.append(per.getName() + " ");
-				sb.append("("
-						+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-				sb.append(per.getIdentificationNo() + ", ");
-				sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-				sb.append(per.getIdentificationTypeSsm() + " = ");
-				sb.append(ssmTypeDesc + ")");
-				sb.append("<br/>");
-				errMsg = true;
-				// show alert message here
-			}
-		}
-		if (errMsg) {
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-			}
-			throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
-		}
-	}// #29582-END
-
 	/**
 	 * Sets the navigation back to current page.
 	 * 
