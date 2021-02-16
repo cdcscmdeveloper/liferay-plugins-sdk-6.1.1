@@ -1263,6 +1263,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId()) ||
 					ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	 //#26688
 				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+				getManagedBean().getBackupCtCommitteeMembers().clear();
+				getManagedBean().getBackupCtCommitteeMembers().addAll(getManagedBean().getUpdatedCommitteeMembers());
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
 				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
@@ -6601,16 +6603,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#29403 start
 		public void backToDecisionTab() {
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
-			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			if(!getManagedBean().isHasChanges()) {
 				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
 					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { //#26688
-					ContractReqDTO ctReqDTO = new ContractReqDTO();
-					ContractResDTO ctResDTO = null;
-					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-					ctReqDTO.setAmendmentId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
-					ctResDTO = contractAmendmentSO.retrieveContractCommitteeMemberByAmendmentId(ctReqDTO);
-					getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());
+					getManagedBean().getUpdatedCommitteeMembers().clear();
+					getManagedBean().getUpdatedCommitteeMembers().addAll(getManagedBean().getBackupCtCommitteeMembers());
 				}
 			}
 			if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
