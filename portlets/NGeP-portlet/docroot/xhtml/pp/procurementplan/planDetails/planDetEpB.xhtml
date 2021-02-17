@@ -363,12 +363,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<!-- 02022021@#27624 - end --> 
 		</div>
 		
-		<!-- #25549@23122020 - start -->
-		<p:dialog id="cloneExpenditureBPopUp" widgetVar="cloneExpenditureBPopUp" modal="true" closable="true" 
+	<!-- #25549@17022021 - start -->
+	<p:remoteCommand name="resetAllDataCloneB" update="ppExpenditureBCloneid, dtclonepitemsBsearchresults" partialSubmit="true" action="#{pPlanBackingBean.resetExpenditureClone()}" process="@this" />
+		<p:dialog id="cloneExpenditureBPopUp" widgetVar="cloneExpenditureBPopUp" modal="true" closable="true" onHide="resetAllDataCloneB();" 
 			header="#{lbl['lbl.pp.plan.b.clone']}" width="680">
 			<ui:include src="planExpenditurePopup.xhtml"></ui:include>
 		</p:dialog>
-		<!-- end --> 
+	<!-- #25549@17022021 - end -->
 		
 	</p:panel>
 
