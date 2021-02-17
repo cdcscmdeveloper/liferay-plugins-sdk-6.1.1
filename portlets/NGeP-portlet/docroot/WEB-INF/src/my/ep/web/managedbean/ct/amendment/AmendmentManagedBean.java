@@ -178,8 +178,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//25956
 	private boolean viewOnly = false; /*#25956 notification setting*/
 	
-	private List<CtCommitteeMember> backupCtCommitteeMembers; //#29403
-	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1496,7 +1494,12 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	 * @return the updatedCommitteeMembers
 	 */
 	public List<CtCommitteeMember> getUpdatedCommitteeMembers() {
+		//#29403 start
+		if(updatedCommitteeMembers==null) {
+			updatedCommitteeMembers = new ArrayList<CtCommitteeMember>();
+		}	
 		return updatedCommitteeMembers;
+		//#29403 end
 	}
 	/**
 	 * @param updatedCommitteeMembers the updatedCommitteeMembers to set
@@ -1561,24 +1564,5 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
-	
-	//#29403 start
-	/**
-	 * @return the ctCommitteeMembers
-	 */
-	public List<CtCommitteeMember> getBackupCtCommitteeMembers() {
-		if(backupCtCommitteeMembers==null) {
-			backupCtCommitteeMembers = new ArrayList<CtCommitteeMember>();
-		}
-		return backupCtCommitteeMembers;
-	}
-
-	/**
-	 * @param ctCommitteeMembers the ctCommitteeMembers to set
-	 */
-	public void setBackupCtCommitteeMembers(List<CtCommitteeMember> backupCtCommitteeMembers) {
-		this.backupCtCommitteeMembers = backupCtCommitteeMembers;
-	}
-	//#29403 end
 
 }
