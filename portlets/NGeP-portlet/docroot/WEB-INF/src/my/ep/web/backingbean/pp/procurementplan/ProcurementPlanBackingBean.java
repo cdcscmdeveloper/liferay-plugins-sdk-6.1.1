@@ -764,6 +764,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 //		if(ProcurementPlanConst.PPE_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())
 //				|| ProcurementPlanConst.PPP_PENDING_REVISION.equals(ppPlan.getStatus().getStatusId())){
 		
+	    //28760 - start
+		if (ProcurementPlanConst.ACTION_VIEW_BTN.equals(getManagedBean().getBtnValue())) {
+			}else{
+			generateCancelButton(ppPlan);  
+	   	   }
+		//28760 - end	
+		
 		//[SIR#12802] - start
 		if(!ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId())
 				|| !ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId())){
@@ -795,6 +802,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if(ppPlan.getLastApprovedDt() != null) {
 					log.info("[SIR#12802] - Check item for approved status - Start");
 					log.info("[SIR#12802] - plan last approved date: " + ppPlan.getLastApprovedDt());
+					
+					//28760@11122020@azza - Start
+					this.getManagedBean().setFlagCancelButton(false);
+					//28760@11122020@azza - End
+					
 					for(PpExpenditureItem epItem: ppPlan.getPpExpenditureItems()){
 						log.info("[SIR#12802] - item ID: " + epItem.getExpenditureItemId());
 						log.info("[SIR#12802] - item created date: " + epItem.getCreatedDate());
@@ -833,6 +845,11 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if(ppPlan.getLastApprovedDt() != null) {
 					log.info("[SIR#12802] - Check item for approved status - Start");
 					log.info("[SIR#12802] - plan last approved date: " + ppPlan.getLastApprovedDt());
+					
+					//28760@11122020@azza - Start
+					this.getManagedBean().setFlagCancelButton(false);
+					//28760@11122020@azza - End
+					
 					for(PpProcurementItem ppItem: ppPlan.getPpProcurementItems()){
 						log.info("[SIR#12802] - item ID: " + ppItem.getProcurementItemId());
 						log.info("[SIR#12802] - item created date: " + ppItem.getCreatedDate());
@@ -1896,7 +1913,24 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				remarkIsRequired();
 			}
 
-		}
+		}else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)){ //28760 - start
+			log.info("remark cancel button " + this.getManagedBean().getSelectedRemarks().get(0).getRemark());
+
+			if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+					if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
+						throw new EpException(MessageConst.ERROR_775158);
+					}
+				}
+			}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+				if(this.getManagedBean().getSelectedRemarks()!=null && !this.getManagedBean().getSelectedRemarks().isEmpty()){
+					if(StringUtils.isBlank(this.getManagedBean().getSelectedRemarks().get(0).getRemark())){
+						throw new EpException(MessageConst.ERROR_775158);
+					}
+				}
+			}
+		} //28760 - end
+		
 		log.info("validationPlanSubmit - END");
 		return false;
 		
@@ -2094,6 +2128,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				}
 			}
 			
+			//28760 -start
+			if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
+				ppPlan.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+				ppPlan.setCancel(DbValueConst.RECORD_STATUS_ACTIVE );
+			}else{
+				ppPlan.setCancel(DbValueConst.RECORD_STATUS_SUSPENDED );
+			}
+			//28760 -end
+			
 //			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 //            reqDTO.setUserRole(getOneRoleByStatus(ppPlan));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
@@ -2150,7 +2193,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
-				} 
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) { //28760 - Start
+					messageId = MessageConst.INFO_723005;
+				}//28760 - End
 				
 //				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 //					messageId = MessageConst.INFO_700008;
@@ -5003,4 +5048,38 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSelectedPTJ(new PmOrgProfile());		
 		this.getManagedBean().getPlanSearchBean().setPtj(null); //new
 	}
+	
+	//28760 - start
+ 	/** 
+ 	* generate cancel button rendered
+ 	 */
+ 	private void generateCancelButton(PpPlan ppPlan){
+ 		log.info("generateCancelButton - Start");
+ 		this.getManagedBean().setFlagCancelButton(false);
+ 		Long status =  this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
+
+ 		
+ 		if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(ppPlan.getPlanType().getParameterCode())){
+ 			if((ProcurementPlanConst.PPE_PENDING_REVISION.equals(status))
+	 				|| (ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(status))){
+	 			this.getManagedBean().setFlagCancelButton(true);
+	 		} else if((ProcurementPlanConst.PPE_PENDING_APPROVAL.equals(status))
+	 				|| (ProcurementPlanConst.PPE_PENDING_REVISION_APPROVAL.equals(status))){
+	 			this.getManagedBean().setFlagCancelButton(true);
+	 		}
+ 		}else{
+ 			if((ProcurementPlanConst.PPP_PENDING_REVISION.equals(status))
+	 				|| (ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(status))){
+	 			this.getManagedBean().setFlagCancelButton(true);
+	 		} else if((ProcurementPlanConst.PPP_PENDING_VERIFICATION.equals(status))
+	 				|| (ProcurementPlanConst.PPP_PENDING_REVISION_VERIFICATION.equals(status))){
+	 			this.getManagedBean().setFlagCancelButton(true);
+	 		} else if((ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(status))
+	 				|| (ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(status))){
+	 			this.getManagedBean().setFlagCancelButton(true);
+	 		}
+ 		}
+ 		log.info("generateCancelButton - End");
+ 	}
+ 	//28760 - end
 }
