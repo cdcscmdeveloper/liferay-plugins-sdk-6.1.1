@@ -6869,8 +6869,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType()) 
 							&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
 						if(ctUpdatedMember.getRepresentativeType() != null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
-							if(!originalCtMember.getRepresentativeType().getParameterId().equals
-									(ctUpdatedMember.getRepresentativeType().getParameterId())) {
+							if(originalCtMember.getRepresentativeType()!= null && !originalCtMember.getRepresentativeType().getParameterId().equals
+									(ctUpdatedMember.getRepresentativeType().getParameterId())) { //#29403
 								ctUpdatedMember.setNewRepresentativeType(ctUpdatedMember.getRepresentativeType());
 							} else {
 								if(!ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
@@ -6970,7 +6970,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							//#29403 start
 							if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
 									&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-								if(ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
+								if(ctUpdatedMember.getRepresentativeType()!=null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) { //#29403
 									if(!originalCtMember.getRepresentativeType().getParameterId().equals
 											(ctUpdatedMember.getRepresentativeType().getParameterId())) {
 										isUpdateNeeded = true;
