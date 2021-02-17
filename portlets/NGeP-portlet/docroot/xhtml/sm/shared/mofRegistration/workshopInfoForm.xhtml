@@ -114,7 +114,7 @@
 		</p:outputPanel>
 
 	</p:panel>
-	<p:dialog width="700px" height="auto-width"
+	<p:dialog style="width: 100%" height="300px"
 		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="workShopDialog">
@@ -327,7 +327,7 @@
 }
 
 .auto-width{
-	width: 100%;
+	width: auto !important;
 }
 </style>
 	<p:confirmDialog id="empAlertPopUpId" widgetVar="empAlertPopUp"
