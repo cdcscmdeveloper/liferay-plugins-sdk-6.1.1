@@ -442,6 +442,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	}
 	
 	public void searchQTAction() {
+		// #25627 - start.
+		this.getManagedBean().setDisableAssignTo(true);
+		this.getManagedBean().setDisableSubmit(true);
+		// #25627 - end.
 		this.getManagedBean().setSelectedQtIds(new ArrayList<Long>());
 		this.getManagedBean().setQtNoDeskOfficerMap(null);
 		getManagedBean().getSearchQTDataModel().reloadData();
