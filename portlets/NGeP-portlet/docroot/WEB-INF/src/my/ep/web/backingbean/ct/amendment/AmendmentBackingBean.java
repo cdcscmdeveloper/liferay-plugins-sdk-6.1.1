@@ -6603,8 +6603,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 
 			@SuppressWarnings("unchecked")
-			List<CtCommitteeMember> test = (List<CtCommitteeMember>) SerializationUtils.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
-			getManagedBean().setUpdatedCommitteeMembers(test);
+			List<CtCommitteeMember> copyMember = (List<CtCommitteeMember>) SerializationUtils.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+			getManagedBean().setUpdatedCommitteeMembers(copyMember);
 		}
 		
 				
