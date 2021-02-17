@@ -6734,8 +6734,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					String allParameterCode = "";
 					if (allCommitteMember.getMemberRoleId() != null){
 						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRoleId()).getParameterCode();
-					}else{
-						allParameterCode = ParameterHelper.getInstance().getPmParameterById(allCommitteMember.getMemberRole().getParameterId()).getParameterCode();
 					}
 					
 					if (allCommitteMember.getMemberRole() != null && allCommitteMember.getMemberRole().getParameterId() != null
