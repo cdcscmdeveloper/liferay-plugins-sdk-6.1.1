@@ -13583,48 +13583,6 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	/*// #29663 & #24964 - start 
-	public static void rejectSmMofCertForSupplier(SmSupplier supplier, SmAppl lastApprovedAppl) {
-		Long bumiApplId = supplier.getSmAppl().getApplId();
-		Long lastApprovedApplId = lastApprovedAppl.getApplId();
-		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
-		reqDTO.setSupplierId(supplier.getSupplierId());
-		reqDTO.setApplId(supplier.getSmAppl().getApplId());
-		System.out.println("bumiApplId ========== " + bumiApplId);
-		System.out.println("lastApprovedApplId == " + lastApprovedApplId);
-		System.out.println("getSupplierId ======= " + supplier.getSupplierId());
-		System.out.println("getApplId =========== " + supplier.getSmAppl().getApplId());
-				
-		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMofCertsBySupplierIdAndByApplIds(reqDTO, lastApprovedApplId);
-
-		VirtualCertReqDTO mofCert = new VirtualCertReqDTO();
-		if (resDTO != null && resDTO.getSmMofCerts() != null) {
-			System.out.println("getSmMofCerts().size() ==> " + resDTO.getSmMofCerts().size());
-			for (SmMofCert cert : resDTO.getSmMofCerts()) {
-				if (cert.getSmAppl().getApplId() == bumiApplId) {
-					System.out.println("1. cert.getSmAppl().getApplId() ==> " + cert.getSmAppl().getApplId());
-					// update record_status = 4
-					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
-					mofCert.setMofCert(cert);
-					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
-				}
-				if (cert.getSmAppl().getApplId() == lastApprovedApplId) {
-					System.out.println("2. cert.getSmAppl().getApplId() ==> " + cert.getSmAppl().getApplId());
-					// update record_status = 1
-					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					mofCert.setMofCert(cert);
-					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
-				}
-				//28774 - temp stopper
-				if(mofCert.getMofCert() != null){
-					System.out.println("3. mofCert.getMofCert().getMofCertId() ==> " + mofCert.getMofCert().getMofCertId());
-					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
-				}
-			}
-		}
-	}
-	// #29663 & #24964 - end
-*/	
 	//27796: Disciplinary Action - start - 26238
 	public static List<SmDisciplinaryAction> retrieveDisciplinaryActionHistoryBySupplier(SmSupplier supplier) {
 		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
