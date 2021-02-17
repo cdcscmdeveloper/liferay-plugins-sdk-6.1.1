@@ -127,6 +127,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmEmployee;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -5981,30 +5982,58 @@ public class SmApplicationBackingBean extends
 	// Dockyard end
 	// Workshop start
 	/**
-	 * Add or update selected workshop info to SmFacility list of the
-	 * application.
-	 */
+	* Add or update selected workshop info to SmFacility list of the
+	* application.
+	*/
 	public void addOrUpdateWorkshopToSmAppl() {
-		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
-		SmCommonUtil.getInstance().setUserDetails(smFac);
-		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
-		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
-				.getSmAppl().getSmFacilities());
-		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
-				.getApplWorkShopFacilities());
-		//#27853
-		SmApplicationUtil.validateCoordinate(getManagedBean());
-		if (smFac.getFacilityId() == null) {
-			RequestContext.getCurrentInstance().execute(
-					"smWorkShopDtWidVar.paginator.endLink.click()");
+		// 29379 - Site Visit Grouping Enhancement -28775
+		if(getManagedBean().getSelectedWorkShopFacility().getSmEmployees().size() < SupplierManagementConst.MIN_EMPLOYEE){
+			log.info("---------------Insert more than 2 employee-------------------");
+			StringBuilder sb = new StringBuilder();
+			boolean showErrorPopup = true;
+			sb.append("<font color='red'>");
+			this.getManagedBean().setDisplayMessageEmp("");
+			sb.append(SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null));
+			sb.append("<br/>");
+			
+			sb.append("</font>");
+			this.getManagedBean().setDisplayMessageEmp(sb.toString());
+			if(showErrorPopup){
+				RequestContext.getCurrentInstance().execute("empAlertPopUp.show()");
+				return;
+			}
+			//RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 		}
-		assignValReqdToFalse();
-		saveOrUpdateAppl();
-		getManagedBean().setWorkshopFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
-						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
-		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
+		else{
+			SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+			SmCommonUtil.getInstance().setUserDetails(smFac);
+			SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
+			EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean().getSmAppl().getSmFacilities());
+			EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean().getApplWorkShopFacilities());
+			// #27853
+			SmApplicationUtil.validateCoordinate(getManagedBean());
+			if (smFac.getFacilityId() == null) {
+				RequestContext.getCurrentInstance().execute("smWorkShopDtWidVar.paginator.endLink.click()");
+			}
+			assignValReqdToFalse();
+			// 29379 - Site Visit Grouping Enhancement -28775
+			this.getManagedBean().getSelectedWorkShopFacility().getSmEmployees();
+			for (SmEmployee employee : this.getManagedBean().getSelectedWorkShopFacility().getSmEmployees()) {
+				log.info("employee.getIdentificationTypeId()--" + employee.getIdentificationTypeId());
+				log.info("employee.getIdentificationType()--" + employee.getIdentificationType().getParameterId());
+				log.info("employee.getIdentificationType()--" + employee.getIdentificationType().getParameterId());
+				PmParameter parameter = ParameterHelper.getInstance()
+						.getPmParameterById(employee.getIdentificationTypeId());
+				employee.setIdentificationType(parameter);
+			}
+
+			saveOrUpdateAppl();
+			getManagedBean().setWorkshopFacilitiesVOList(
+					SmApplicationUtil.getCategoryFacilityVO(getManagedBean().getSmAppl(),
+							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
+			RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
+		}
+		
 	}
 
 	/**
@@ -6025,18 +6054,23 @@ public class SmApplicationBackingBean extends
 	 *            - SmFacility object
 	 */
 	public void assignSelWorkshop(SmFacility facilityBean) {
-		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
-				facilityBean);
+		// 29379 - Site Visit Grouping Enhancement -28775
+		if (getManagedBean().getSelectedWorkShopFacility().getSmEmployees() == null) {
+			getManagedBean().getSelectedWorkShopFacility().setSmEmployees(new ArrayList<SmEmployee>());
+		}
+		// 29379 - Site Visit Grouping Enhancement -28775
+		if (getManagedBean().getIdentificationTypes() == null) {
+			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		}
+		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(), facilityBean);
 		setFacilityAddressSameAs(facilityBean);
-		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(
-				getManagedBean(), facilityBean.getSmAddress(),
+		SmApplicationUtil.getInstance().assignStateDistAndCityForSelVal(getManagedBean(), facilityBean.getSmAddress(),
 				SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL);
 		setFacilityDefaultPrices(facilityBean);
-		getManagedBean().setSelectedWorkShopFacility(
-				(SmFacility) SerializationUtils.clone(facilityBean));
+		getManagedBean().setSelectedWorkShopFacility((SmFacility) SerializationUtils.clone(facilityBean));
 		getManagedBean().setFacilityType(
-				StringUtils.upperCase(SmCommonUtil.getMessage(
-						"lbl.sm.facility.type.workshop", null)));
+				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
+
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("workShopDialog.show()");
 	}
@@ -6052,19 +6086,18 @@ public class SmApplicationBackingBean extends
 		setFacilityDefaultPrices(getManagedBean().getSelectedWorkShopFacility());
 		getManagedBean().getSelectedWorkShopFacility().setRevNo(1);
 		getManagedBean().getSelectedWorkShopFacility().setSmAddress(
-				(SmApplicationUtil.setDefaultAddr(getManagedBean()
-						.getDefPmCountry())));
-		getManagedBean().getSelectedWorkShopFacility().setSmAppl(
-				getManagedBean().getSmAppl());
+				(SmApplicationUtil.setDefaultAddr(getManagedBean().getDefPmCountry())));
+		getManagedBean().getSelectedWorkShopFacility().setSmAppl(getManagedBean().getSmAppl());
 		getManagedBean().getSelectedWorkShopFacility().setFacilityType(
 				SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP);
 		getManagedBean().setWorkShopFacilityStates(
-				SmCommonUtil.getStateList(getManagedBean()
-						.getSelectedFactoryFacility().getSmAddress()
-						.getPmCountry().getCountryId()));
+				SmCommonUtil.getStateList(getManagedBean().getSelectedFactoryFacility().getSmAddress().getPmCountry()
+						.getCountryId()));
 		getManagedBean().setFacilityType(
-				StringUtils.upperCase(SmCommonUtil.getMessage(
-						"lbl.sm.facility.type.workshop", null)));
+				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
+		// 29379 - Site Visit Grouping Enhancement -28775
+		getManagedBean().getSelectedWorkShopFacility().setSmEmployees(new ArrayList<SmEmployee>());
+
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("workShopDialog.show()");
 	}
@@ -6076,9 +6109,7 @@ public class SmApplicationBackingBean extends
 	 *            -AjaxBehaviorEvent
 	 */
 	public void workShopOwnerTypeSel(AjaxBehaviorEvent e) {
-		log.info("Selected Owner type === "
-				+ getManagedBean().getSelectedWorkShopFacility()
-						.getOwnershipType());
+		log.info("Selected Owner type === " + getManagedBean().getSelectedWorkShopFacility().getOwnershipType());
 	}
 
 	/**
@@ -6088,10 +6119,48 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedWorkShops() {
 		deleteSelectedFacilities(getManagedBean().getWorkshopFacilitiesVOList());
 		getManagedBean().setWorkshopFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
 	}
+
+	// 29379 - Site Visit Grouping Enhancement -28775 START
+	public void addEmployee() {
+
+		if (getManagedBean().getSelectedWorkShopFacility().getSmEmployees() == null) {
+			getManagedBean().getSelectedWorkShopFacility().setSmEmployees(new ArrayList<SmEmployee>());
+		}
+		if (getManagedBean().getIdentificationTypes() == null) {
+			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		}
+		SmEmployee smApplEmployees = new SmEmployee();
+		smApplEmployees.setIdentificationType(new PmParameter());
+		//smApplEmployees.setSmAppl(getManagedBean().getSmAppl());
+		smApplEmployees.setSmFac(getManagedBean().getSelectedWorkShopFacility());
+		getManagedBean().getSelectedWorkShopFacility().getSmEmployees().add(smApplEmployees);
+
+	}
+
+	// 29379 - Site Visit Grouping Enhancement -28775
+	public void removeEmployee() {
+		if (getManagedBean().getSelectedEmployees() != null && getManagedBean().getSelectedEmployees().length > 0) {
+		for (SmEmployee smEmployee : getManagedBean().getSelectedEmployees()) {
+				getManagedBean().getSelectedWorkShopFacility().getSmEmployees().remove(smEmployee);
+			}
+		}
+
+		getManagedBean().setSelectedEmployees(null);
+	}
+
+	// 29379 - Site Visit Grouping Enhancement -28775
+	public void unSelectRow(AjaxBehaviorEvent e) {
+
+		if (getManagedBean().getSelectedEmployees() != null) {
+			SmEmployee[] selectedEmps = getManagedBean().getSelectedEmployees();
+			getManagedBean().setSelectedEmployees(selectedEmps);
+		}
+	}
+
+	// 29379 - Site Visit Grouping Enhancement -28775 END
 
 	// Workshop end
 	// Store start
