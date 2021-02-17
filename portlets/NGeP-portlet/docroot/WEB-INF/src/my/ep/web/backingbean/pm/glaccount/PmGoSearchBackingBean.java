@@ -77,7 +77,9 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 
 	public void initPmGoPopup(){
 		this.renewSesionObject();
-		getPmGoDataModel().resetData();	
+		//17022021 - 30071 & 24975 - start -->
+		resetAction();
+		//17022021 - 30071 & 24975 - end -->	
 		try{
 			FacesScopes facesScopes = new FacesScopes();
 			Integer index = Integer.parseInt(facesScopes.getParameter("index"));
