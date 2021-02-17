@@ -1554,7 +1554,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.size()
 				&& QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
 						.getStatusId().longValue())) {
-			showVerifyButton();
+			getManagedBean().setVerifyBtnFlag(false);
 		}
 		//#29006 - end
 		
