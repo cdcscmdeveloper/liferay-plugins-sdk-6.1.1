@@ -3503,8 +3503,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			if (ctContractItem.getMinimumOrderQty() <= 0) {
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-						item.setMinimumOrderQty(1);
-						ctContractItem.setMinimumOrderQty(1);
+						item.setMinimumOrderQty(0);
+						ctContractItem.setMinimumOrderQty(0);
 						throw new EpException(MessageConst.ERROR_100033,
 								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -3525,7 +3525,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
 		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-		   break;
+			if (!item.getCtItemMaxQties().isEmpty()) {
+				Double maxValue = new Double(0);							
+				for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+					if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+						maxValue = maxQty.getMaxQuantity().doubleValue();				
+				}
+				if (item.getMinimumOrderQty() > maxValue) {
+					throw new EpException(MessageConst.ERROR_100034,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+				}
+				
+			}
+//		   break;
 		   //#28479 - Start remove Code (related to #28292)
 //		if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
 //			Double maxValue = new Double(0);							
