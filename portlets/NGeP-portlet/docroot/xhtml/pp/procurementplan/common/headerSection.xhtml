@@ -32,27 +32,50 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 								<f:param name="disableValidation" value="true" />     
 							</p:commandButton>
 						</ui:repeat>
+						<!--28760 - start -->
+						<p:commandButton id="cancelProcurementBtn"
+							rendered="#{pPlanBackingBean.managedBean.flagCancelButton}"
+							value="#{lbl['lbl.btn.cancel']}"
+							onclick="dlgProcurementCancel.show()">
+						</p:commandButton>
+						<!--28760 - end -->
 					</ui:define>
 				</ui:decorate>
 				<c:if
 					test='#{not empty pPlanBackingBean.managedBean.btnValue and ProcurementPlanConst.actionViewBtn eq pPlanBackingBean.managedBean.btnValue}'>
 						<td colspan="4" style="text-align: right">	
-						<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
-								value="#{lbl['lbl.td.doc.trackingDiary']}"
-								action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planId)}"
-								immediate="true" />
-							<ui:remove>
 							<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
-								value="#{lbl['lbl.td.doc.trackingDiary']}"
-								action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.PROCUREMENT_PLAN,pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planNo,pPlanBackingBean.managedBean.selectedPlan.planId,pPlanBackingBean.managedBean.selectedPlan.status.statusId)}"
-								immediate="true" />
-								</ui:remove>&#160;&#160;
-					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-						<p:fileDownload value="#{pPlanBackingBean.generateReport(pPlanBackingBean.managedBean.selectedPlan)}" />
-					</p:commandLink>
+									value="#{lbl['lbl.td.doc.trackingDiary']}"
+									action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planId)}"
+									immediate="true" />
+							<ui:remove>
+								<p:commandLink rendered="#{pPlanBackingBean.managedBean.trackingDiary}"
+									value="#{lbl['lbl.td.doc.trackingDiary']}"
+									action="#{trackingDiarySearchBackingBean.goToTrackingDiarySearch(ModuleCodeConstant.PROCUREMENT_PLAN,pPlanBackingBean.retrievePlanDocType(pPlanBackingBean.managedBean.selectedPlan),pPlanBackingBean.managedBean.selectedPlan.planNo,pPlanBackingBean.managedBean.selectedPlan.planId,pPlanBackingBean.managedBean.selectedPlan.status.statusId)}"
+									immediate="true" />
+							</ui:remove>&#160;&#160;
+							<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false"
+								rendered="#{(ProcurementPlanConst.ppeApproved eq pPlanBackingBean.managedBean.selectedPlan.status.statusId) or (ProcurementPlanConst.pppApproved eq pPlanBackingBean.managedBean.selectedPlan.status.statusId)}" > <!-- [Bug#27146] -->
+								<p:fileDownload value="#{pPlanBackingBean.generateReport(pPlanBackingBean.managedBean.selectedPlan)}" />
+							</p:commandLink>
 						</td>		
 				</c:if>
 	    	</div>
+	    	<!--28760 - start -->
+	    	<p:confirmDialog id="dlgProcurementCancel"
+				widgetVar="dlgProcurementCancel"
+				message="#{lbl['lbl.msg.confirm.cancel2']}" severity="alert"
+				header="#{lbl['lbl.msg.confirm.cancel2.header']}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+						partialSubmit="true" immediate="true"
+						action="#{pPlanBackingBean.savePlan('CANCEL')}"
+						oncomplete="dlgProcurementCancel.hide();" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						oncomplete="dlgProcurementCancel.hide();" />
+				</div>
+			</p:confirmDialog>
+			<!--28760 - end -->
 	  	</div>
 	</p:outputPanel>
 	<div class="clear"></div>
