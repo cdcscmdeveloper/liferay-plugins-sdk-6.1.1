@@ -35,7 +35,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LOADetailManagedBean.
  *
@@ -309,6 +308,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean oldNewSuppOfferSameFlag;
 	private boolean updateSupplierLinkFlag = false;
 	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
+	private List<String> downloadedLoaReportsTitleList;
 	//#29006 - end
 	
 	//#19336
@@ -1758,6 +1758,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setScLoiLoaItemAnswerMap(Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap) {
 		this.scLoiLoaItemAnswerMap = scLoiLoaItemAnswerMap;
+	}
+
+	public List<String> getDownloadedLoaReportsTitleList() {
+		return downloadedLoaReportsTitleList;
+	}
+
+	public void setDownloadedLoaReportsTitleList(List<String> downloadedLoaReportsTitleList) {
+		this.downloadedLoaReportsTitleList = downloadedLoaReportsTitleList;
 	}
 	//#29006 - end
 
