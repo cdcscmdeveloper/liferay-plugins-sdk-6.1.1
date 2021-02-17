@@ -70,7 +70,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.general.settings.bpm.PmCompositeValidity;
 import my.ep.persistence.entity.sc.common.ScActor;
@@ -99,7 +98,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
-import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -442,6 +440,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	}
 	
 	public void searchQTAction() {
+		// #25627 - start.
+		this.getManagedBean().setDisableAssignTo(true);
+		this.getManagedBean().setDisableSubmit(true);
+		// #25627 - end.
 		this.getManagedBean().setSelectedQtIds(new ArrayList<Long>());
 		this.getManagedBean().setQtNoDeskOfficerMap(null);
 		getManagedBean().getSearchQTDataModel().reloadData();
