@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -22,9 +23,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import javax.faces.application.FacesMessage;
@@ -156,6 +159,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -1262,9 +1266,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId()) ||
 					ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	 //#26688
-				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
-				getManagedBean().getBackupCtCommitteeMembers().clear();
-				getManagedBean().getBackupCtCommitteeMembers().addAll(getManagedBean().getUpdatedCommitteeMembers());
+				copyCommitteeMember();
+//				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+//				getManagedBean().getBackupCtCommitteeMembers().clear();
+//				getManagedBean().getBackupCtCommitteeMembers().addAll(getManagedBean().getUpdatedCommitteeMembers());
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
 				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
@@ -6591,6 +6596,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		//26753 - start
+		//#29403 start
+		public void copyCommitteeMember(){
+			if(getManagedBean().getUpdatedCommitteeMembers()!=null){
+				getManagedBean().getUpdatedCommitteeMembers().clear();
+			}
+
+			@SuppressWarnings("unchecked")
+			List<CtCommitteeMember> test = (List<CtCommitteeMember>) SerializationUtils.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+			getManagedBean().setUpdatedCommitteeMembers(test);
+		}
+		
+				
+		//#29403 end
+		
 		public void updateCommittee() {
 			//#29403 start
 			//getManagedBean().setUpdateCommittee(Boolean.TRUE);
@@ -6605,8 +6624,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(!getManagedBean().isHasChanges()) {
 				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
 					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { //#26688
-					getManagedBean().getUpdatedCommitteeMembers().clear();
-					getManagedBean().getUpdatedCommitteeMembers().addAll(getManagedBean().getBackupCtCommitteeMembers());
+					copyCommitteeMember();
 				}
 			}
 			if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
@@ -7040,7 +7058,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return filteredCommitteeMembers;
 		}
 		//26753 - end
-		
+				
 	//#25956 - Start
 		/**
 		 * The method used to authenticate user during reject for approval the contract amendment.
