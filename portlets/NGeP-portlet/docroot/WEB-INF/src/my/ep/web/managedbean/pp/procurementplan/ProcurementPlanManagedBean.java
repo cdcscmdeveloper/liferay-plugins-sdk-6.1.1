@@ -116,6 +116,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private Date invitationMinDateTo;
 	private Date invitationMaxDate;
 	
+	//28760 - start
+	private boolean flagCancelButton = false;
+	//28760 - end
+	
 	public ProcurementPlanManagedBean(){}
 
 	/**
@@ -1140,5 +1144,15 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setInvitationMaxDate(Date invitationMaxDate) {
 		this.invitationMaxDate = invitationMaxDate;
 	}
+	
+	//12112020@azza - 28760 - Start
+	public boolean isFlagCancelButton() {
+		return flagCancelButton;
+	}
+
+	public void setFlagCancelButton(boolean flagCancelButton) {
+		this.flagCancelButton = flagCancelButton;
+	}
+	//12112020@azza - 28760 - End
 
 }
