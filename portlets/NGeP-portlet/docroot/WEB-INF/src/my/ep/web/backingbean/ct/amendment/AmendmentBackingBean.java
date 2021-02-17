@@ -6679,6 +6679,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					committeeMember.setPnp(users.isPMP());
 					committeeMember.setDesignation(users.getDesignation());
 					committeeMember.setEmail(users.getEmail());
+					committeeMember.setRepresentativeType(new PmParameter()); //#29403
 					duplicatePmUserMap.put(users.getUserId(), committeeMember);
 				}
 			}
