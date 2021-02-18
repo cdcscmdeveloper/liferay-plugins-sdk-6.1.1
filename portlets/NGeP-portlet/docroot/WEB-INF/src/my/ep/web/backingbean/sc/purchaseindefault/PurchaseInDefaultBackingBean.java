@@ -1345,6 +1345,8 @@ public class PurchaseInDefaultBackingBean extends
 					getManagedBean().setContractId(Long.valueOf(directPurchaseDataType.getContractId()));
 				}
 
+				FacesScopes facesScopes = new FacesScopes();
+				
 				if (purchaseInDefault.getReasonType() != null) {
 					if (directPurchaseDataType.isIsSuppResponse()) {
 						if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)) {
@@ -1356,7 +1358,7 @@ public class PurchaseInDefaultBackingBean extends
 													message,
 													null,
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
+													facesScopes.getUserLocale())));
 		
 
 						} else if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_ACCEPT)) {
@@ -1370,7 +1372,7 @@ public class PurchaseInDefaultBackingBean extends
 											null,
 											new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 													message, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
+													facesScopes.getUserLocale())));
 								}
 							}
 						}
@@ -1394,6 +1396,7 @@ public class PurchaseInDefaultBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IPurchaseInDefaultSO.class);
 		FacesScopes facesScopes = new FacesScopes();
+		log.info("Display Language "+ 	facesScopes.getUserLocale().getDisplayLanguage());	
 		PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
 		Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
 		purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
@@ -1599,7 +1602,7 @@ public class PurchaseInDefaultBackingBean extends
 			if (qtyBySupplier.compareTo(qtyByRequisitioner) < 0) {
 				throw new EpException(MessageConst.ERROR_100035, new String[] {
 						ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.supplier.allowed.order.qty",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()),
 						qtyByRequisitioner.toString() });
 			}
 		}
