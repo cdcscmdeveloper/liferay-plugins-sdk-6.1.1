@@ -739,7 +739,7 @@ public class PurchaseInDefaultBackingBean extends
 				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
 				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
 				
-				if (getManagedBean().getPmReason().getReasonId().intValue() != reasonAllowSupplierResponse()
+				if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse()
 						.getReasonId().intValue()) {
 					BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();
 					BigDecimal qtyBySupplier = getManagedBean().getPurchaseInDefault().getSuppQuantity();
