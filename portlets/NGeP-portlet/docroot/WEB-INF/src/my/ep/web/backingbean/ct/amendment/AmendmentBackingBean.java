@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -153,6 +154,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -1259,7 +1261,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(resDTO.getCtContractVer().getStatus().getStatusId()) ||
 					ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(resDTO.getCtContractVer().getStatus().getStatusId())) {	 //#26688
-				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+				copyCommitteeMember();
+//				getManagedBean().setUpdatedCommitteeMembers(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+//				getManagedBean().getBackupCtCommitteeMembers().clear();
+//				getManagedBean().getBackupCtCommitteeMembers().addAll(getManagedBean().getUpdatedCommitteeMembers());
 				getManagedBean().setHasChanges(Boolean.FALSE);
 				getManagedBean().setFilteredUpdatedCommitteeMembers(new ArrayList<CtCommitteeMember>());
 				for(CtCommitteeMember newMember: getManagedBean().getUpdatedCommitteeMembers()) {
@@ -6571,6 +6576,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		//26753 - start
+		//#29403 start
+		public void copyCommitteeMember(){
+			if(getManagedBean().getUpdatedCommitteeMembers()!=null){
+				getManagedBean().getUpdatedCommitteeMembers().clear();
+			}
+
+			@SuppressWarnings("unchecked")
+			List<CtCommitteeMember> copyMember = (List<CtCommitteeMember>) SerializationUtils.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());
+			getManagedBean().setUpdatedCommitteeMembers(copyMember);
+		}
+		
+				
+		//#29403 end
+		
 		public void updateCommittee() {
 			//#29403 start
 			//getManagedBean().setUpdateCommittee(Boolean.TRUE);
@@ -6582,16 +6601,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//#29403 start
 		public void backToDecisionTab() {
 			getManagedBean().setUpdateCommittee(Boolean.FALSE);
-			IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			if(!getManagedBean().isHasChanges()) {
 				if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
 					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { //#26688
-					ContractReqDTO ctReqDTO = new ContractReqDTO();
-					ContractResDTO ctResDTO = null;
-					contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-					ctReqDTO.setAmendmentId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentId());
-					ctResDTO = contractAmendmentSO.retrieveContractCommitteeMemberByAmendmentId(ctReqDTO);
-					getManagedBean().setUpdatedCommitteeMembers(ctResDTO.getCtCommitteeMembers());
+					copyCommitteeMember();
 				}
 			}
 			if(getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
@@ -6646,6 +6659,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					committeeMember.setPnp(users.isPMP());
 					committeeMember.setDesignation(users.getDesignation());
 					committeeMember.setEmail(users.getEmail());
+					committeeMember.setRepresentativeType(new PmParameter()); //#29403
 					duplicatePmUserMap.put(users.getUserId(), committeeMember);
 				}
 			}
@@ -6838,8 +6852,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& !ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType()) 
 							&& !ContractConst.REMOVE_NEW_MEMBER_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
 						if(ctUpdatedMember.getRepresentativeType() != null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
-							if(!originalCtMember.getRepresentativeType().getParameterId().equals
-									(ctUpdatedMember.getRepresentativeType().getParameterId())) {
+							if(originalCtMember.getRepresentativeType()!= null && !originalCtMember.getRepresentativeType().getParameterId().equals
+									(ctUpdatedMember.getRepresentativeType().getParameterId())) { //#29403
 								ctUpdatedMember.setNewRepresentativeType(ctUpdatedMember.getRepresentativeType());
 							} else {
 								if(!ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
@@ -6939,7 +6953,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							//#29403 start
 							if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
 									&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-								if(ctUpdatedMember.getRepresentativeType().getParameterId() != null) {
+								if(ctUpdatedMember.getRepresentativeType()!=null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) { //#29403
 									if(!originalCtMember.getRepresentativeType().getParameterId().equals
 											(ctUpdatedMember.getRepresentativeType().getParameterId())) {
 										isUpdateNeeded = true;
