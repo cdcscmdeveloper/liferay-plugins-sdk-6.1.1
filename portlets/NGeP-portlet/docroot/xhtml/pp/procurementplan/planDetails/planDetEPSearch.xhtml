@@ -148,10 +148,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				process="@form" 
 				id="searchButtonId">
 			</p:commandButton>
+			<!-- 17022021 - 30071 & 24975 - remove oncomplete -->
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				disabled="#{pPlanBackingBean.managedBean.disablePlanSearchDet}"
 				action="#{pPlanBackingBean.resetPlanDetailSearch()}"
-				oncomplete="#{pmGoSearchBackingBean.resetAction()}"
 				update="@form"> 
 			</p:commandButton>
 		<!-- 201111@akmal - Enhancement27624 - End -->
