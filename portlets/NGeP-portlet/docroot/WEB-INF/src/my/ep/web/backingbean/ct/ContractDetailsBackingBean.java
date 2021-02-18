@@ -793,6 +793,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public String saveContract(String action) throws Exception {
 		IContractSO contractSO = null;
 		try {
@@ -1264,19 +1265,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 //					ctBB.getManagedBean().setErr100034(false);
 //					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");
 //				}
-//			}
-									
-			// Bug #28479 - End
-			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-				// Validation for minimum order quantity
-//				if (item.getMinimumOrderQty() <= 0) {
-//				item.setMinimumOrderQty(1);
-//				if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-//					setTabValue("IT");
-//				} else {
-//					setTabCentralValue("IT");
-//				}
-//				throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
 //			}
 									
 			// Bug #28479 - End
