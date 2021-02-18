@@ -41,7 +41,7 @@
                                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
                              </td>
                         </tr>
-                         <!-- #24819 start -->
+                         <!-- #29983 start -->
 	                       <tr>
 	                        	<td>
 	                        		<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}"/>  
@@ -58,12 +58,12 @@
 	                         <tr>
 	                         <td/>
 		                         <td style="width:265px;">
-		                         	<p:outputLabel styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="float:left;margin-bottom: 5px;" />  
+		                         	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="float:left;margin-bottom: 5px;" />  
 		                         </td>
 	                        	
 	                        </tr>
 	                       
-	                         <!-- #24819 end -->
+	                         <!-- #29983 end -->
                         
                          <h:panelGroup  rendered="#{!ctBackingBean.managedBean.viewContract 
                                            and ctBackingBean.managedBean.updateCompanyName}">

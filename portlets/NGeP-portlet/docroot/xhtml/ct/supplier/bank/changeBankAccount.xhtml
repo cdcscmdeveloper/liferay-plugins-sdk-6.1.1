@@ -270,7 +270,7 @@
                     <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
                                      value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : supplierBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
             
-            <!-- #24819 start -->
+            <!-- #29983 start -->
             	<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}" />
 				<h:panelGrid columns="3">
 					<p:inputText disabled="true" style="width:350px;"
@@ -283,10 +283,10 @@
             	
             	<p:outputLabel value=" " />
 				<h:panelGrid columns="3">
-					<p:outputLabel styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="margin-bottom: 5px;"/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="margin-bottom: 5px;"/>
 				</h:panelGrid>
            		<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
-            <!-- #24819 end -->
+            <!-- #29983 end -->
             
             	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 				<p:inputText disabled="true" style="width:350px;"
