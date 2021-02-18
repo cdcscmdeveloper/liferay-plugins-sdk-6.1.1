@@ -3731,6 +3731,8 @@ public class SmApplicationUtil {
 		managedBean.setActiveCategoryList(addtnlList);
 		managedBean.setApprovedCategoryList(existingList);
 	}
+	
+	//14150
 
 	/**
 	 * Sort SmSupplierCategory by category type and category level code
@@ -3751,18 +3753,38 @@ public class SmApplicationUtil {
 						+ s2.getPmCategoryL3().getCategoryL3Code());
 			}
 		});
-
-		// sort by category type
-		Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
-			@Override
-			public int compare(final SmSupplierCategory s1,
-					final SmSupplierCategory s2) {
-				return Boolean.compare(s1.isSpecialCategory(),
-						s2.isSpecialCategory());
-			}
-		});
 	}
-
+	
+	/**
+	 * Sort SmSupplierCategory by category type and category level type
+	 * 
+	 * @param apprvList
+	 */
+	public static void sortSupplierCategoryType(List<SmSupplierCategory> apprvList) {
+	// sort by category type
+	Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
+		@Override
+		public int compare(final SmSupplierCategory s1,
+				final SmSupplierCategory s2) {
+			return Boolean.compare(s1.isSpecialCategory(),
+					s2.isSpecialCategory());
+		}
+	});
+	}
+	//14150
+	public static void sortbyDate(List<SmSupplierCategory> catList){
+		// sort created date descendent
+				if(!EntityHelper.isCollectionEmpty(catList)){
+					// sort created date asc
+					Collections.sort(catList, new Comparator<SmSupplierCategory>() {
+						public int compare(SmSupplierCategory o1, SmSupplierCategory o2) {
+							if (o2.getApprovedDate() == null || o1.getApprovedDate() == null)
+								return 0;
+							return o1.getApprovedDate().compareTo(o2.getApprovedDate());
+						}
+					});
+				}
+	}
 	/**
 	 * Sort personnels by role in company
 	 * 
