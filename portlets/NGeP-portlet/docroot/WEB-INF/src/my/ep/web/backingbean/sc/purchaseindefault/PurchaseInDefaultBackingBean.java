@@ -738,7 +738,20 @@ public class PurchaseInDefaultBackingBean extends
 				scPID.setReasonType(getManagedBean().getPmReason());
 				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
 				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
-				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				
+				if (getManagedBean().getPmReason().getReasonId().intValue() != reasonAllowSupplierResponse()
+						.getReasonId().intValue()) {
+					BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();
+					BigDecimal qtyBySupplier = getManagedBean().getPurchaseInDefault().getSuppQuantity();
+
+					if (qtyByRequisitioner.compareTo(qtyBySupplier) == -1)
+						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getSuppQuantity());
+					else
+						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				} else {
+					scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				}
+				
 				scPID.getContractedItem();
 				scPID.getPanelItem();  
 				//scPID.setScPurchaseInDefaultAttachment(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment());
