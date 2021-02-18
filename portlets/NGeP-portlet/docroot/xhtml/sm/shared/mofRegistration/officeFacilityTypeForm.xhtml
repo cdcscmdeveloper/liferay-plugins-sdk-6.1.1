@@ -71,8 +71,24 @@
 							display="icon" /></td>
 					<td colspan='2'>&#160;</td>
 				</tr>
+				<!-- 29480 - Start -->
+				<tr>	
+					<td colspan='7' >
+					<i><h:outputText style="float:initial" value="#{lbl['lbl.sm.premises.type.note']}" styleClass="splNotesFonts"  escape="false"/>&#160;
+					<p:commandLink update=":#{p:component('showPremisesTypeInfo')}"
+							action="#{backingBean.showDetailsPremisesType()}"
+							value="#{lbl['lbl.sm.premises.type.note1']}"
+							styleClass="splNotesFonts" style="float: inherit" escape="false">
+						</p:commandLink></i>
+					</td>
+					<td>&#160;</td>		
+				</tr>
+				<tr>
+					<td colspan='8'>&#160;</td>		
+				</tr>
+				<!-- 29480 - End -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
-					<tr>
+				<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -499,7 +515,6 @@
 								<f:validateLength maximum="200" />
 							</p:inputTextarea> <p:message id="offFacApprvrRmrkMsg" for="offFacApprvrRmrk"
 								showSummary="true" showDetail="false" display="icon" /></td>
-
 					</tr>
 
 				</p:outputPanel>
@@ -519,6 +534,44 @@
 		    </f:facet>
 		    
 		</p:confirmDialog>
-		
 	</p:panel>
+	<!-- 29480 - Start -->
+	<p:dialog id="showPremisesTypeInfo" widgetVar="showPremisesTypeInfo"
+		height="300px" width="300px" closable="true" modal="true" resizable="false" style="display: static;">
+		<h:form>
+			<table style="width: 400px">
+				<tr>
+					<td colspan='3'><div align="left">
+							<h:outputText value="#{lbl['lbl.sm.premises.type.info1']}" />
+						</div></td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info2']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info3']}" />
+						<b><h:outputText value="#{lbl['lbl.sm.premises.type.info8']}" /></b></td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info4']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info5']}" /></td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info6']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info7']}" /></td>
+				</tr>
+			</table>
+		</h:form>
+	</p:dialog>
+	<!-- 29480 - End -->
 </ui:composition>
