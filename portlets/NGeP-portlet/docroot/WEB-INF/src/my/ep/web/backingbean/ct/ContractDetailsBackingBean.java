@@ -1278,6 +1278,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 //				}
 //				throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
 //			}
+									
+			// Bug #28479 - End
+			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
+				// Validation for minimum order quantity
+				if (item.getMinimumOrderQty() <= 0) {
+					throw new EpException(MessageConst.ERROR_100033,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
 				
 				// Start - 28292
 				if (!item.getCtItemMaxQties().isEmpty()) {
