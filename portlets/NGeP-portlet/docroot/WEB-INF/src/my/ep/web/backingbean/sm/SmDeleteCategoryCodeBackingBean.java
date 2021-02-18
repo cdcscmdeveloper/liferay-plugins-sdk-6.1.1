@@ -94,6 +94,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 			assignActiveCategoryList();
+			//14150
+			SmApplicationUtil.sortSupplierCategory(getManagedBean()
+					.getActiveCategoryList());
 			retView = SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
 		} finally {
 
@@ -304,7 +307,10 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 				//25963 - update deleted codes in rejected appl, if any
 				updateDeletedCodesInRejAppl();
-
+				//START 14150
+				SmApplicationUtil.sortSupplierCategory(getManagedBean().getActiveCategoryList());			
+				SmApplicationUtil.sortbyDate(getManagedBean().getActiveCategoryList());
+				//END 14150
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(

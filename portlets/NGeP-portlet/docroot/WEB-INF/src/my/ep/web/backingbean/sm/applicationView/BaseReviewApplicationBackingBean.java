@@ -1791,8 +1791,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 				});
 
-		SmApplicationUtil.sortSupplierCategory(getManagedBean()
-				.getActiveCategoryList());
+		//14150
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSuppProfileOrHistoryCategoryList());
 	}
 
 	/**
