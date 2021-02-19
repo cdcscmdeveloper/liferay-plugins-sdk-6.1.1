@@ -238,13 +238,19 @@ public class SPDetailBackingBean extends
 					.retrieveProposalDtlBySupplierId(reqDTO);
 
 			ScQt scQt = resDTO.getScQt();
-
+			
+			//#25811 for #25201 -start-
+			ScQtProposal scQtProposal = resDTO.getScQtProposal();
+			//#25811 for #25201 -end-
+			
 			getManagedBean().setQt(resDTO.getScQt());
-
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 
-			getManagedBean().setQtProposal(resDTO.getScQtProposal());
-			getManagedBean().setLastSubmittedDate(resDTO.getScQtProposal().getLastSubmitDate());
+			//#25811 for #25201 -start-			 
+			getManagedBean().setQtProposal(scQtProposal);
+			getManagedBean().setLastSubmittedDate(scQtProposal.getLastSubmitDate());
+			//#25811 for #25201 -end-
+			
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
 			// Technical Check List
@@ -267,6 +273,32 @@ public class SPDetailBackingBean extends
 				debugLogger("Financial Check list: "
 						+ resDTO.getFinancialCheckLists().size());
 			}
+			
+			//#25811 for #25201 -start-
+			if(resDTO.getTechnicalCheckLists().size()==0 || resDTO.getFinancialCheckLists().size()==0){                                                                                       
+                reqDTO = new ProposalReqDTO();                                                                                                                                                  
+				reqDTO.setTechnicalCount(resDTO.getTechnicalCheckLists().size());                                                                                                               
+				reqDTO.setFinancialCount(resDTO.getFinancialCheckLists().size());                                                                                                               
+				reqDTO.setQtId(scQt.getQtId());                                                                                                                                                 
+				reqDTO.setSupplierId(resDTO.getSupplierId());                                                                                                                                   
+				reqDTO.setScQt(scQt);                                                                                                                                                           
+				reqDTO.setScQtProposal(scQtProposal);  
+				
+				ProposalResDTO checklist = proposalSO.retrieveProposalChecklistDcoumentDtls(reqDTO);                                                                                             
+			
+				if (resDTO.getTechnicalCheckLists().size()==0 && checklist.getTechnicalCheckLists()!=null ){                                                                                       
+					getManagedBean().setTecCheckDetailsList(checklist.getTechnicalCheckLists());                                                                                                                                        
+					
+					checklistSorting(getManagedBean().getTecCheckDetailsList());                                                                                                                    
+                }               
+				
+				if(resDTO.getFinancialCheckLists().size()==0 && checklist.getFinancialCheckLists()!=null ){                                                                                       
+					getManagedBean().setFinanceCheckDetailsList(checklist.getFinancialCheckLists());                                                                                                                                        
+					
+					checklistSorting(getManagedBean().getFinanceCheckDetailsList());                                                                                                                
+                }                                                                                                                                                                                 
+			} 
+			//#25811 for #25201 -end-
 
 			if (null != scQt.getClosingDate()) {
 				Date closingDate = scQt.getClosingDate();
@@ -278,7 +310,9 @@ public class SPDetailBackingBean extends
 					getManagedBean().setQtClosed(true);
 					getManagedBean().setClosingTime("0");
 				} else {
-					if (resDTO.getScQtProposal().isSubmitted()) {
+					//#25811 for #25201 -start-
+					if (scQtProposal.isSubmitted()) {
+					//#25811 for #25201 -end-
 						getManagedBean().setReadOnly(true);
 					} else {
 						getManagedBean().setReadOnly(isReadonly);
@@ -294,7 +328,10 @@ public class SPDetailBackingBean extends
 
 			if (!isReadonly) {
 				// checking for proposal validity
-				reqDTO.setScQt(resDTO.getScQt());
+				//#25811 for #25201 -start-
+				reqDTO.setScQt(scQt);
+				//#25811 for #25201 -end-
+				
 				getProposalSO().validateSupplierProposal(reqDTO);
 			}
 
