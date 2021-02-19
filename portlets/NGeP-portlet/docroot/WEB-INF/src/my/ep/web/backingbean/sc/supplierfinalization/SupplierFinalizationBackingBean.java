@@ -1148,10 +1148,26 @@ public class SupplierFinalizationBackingBean extends
 	 * @param scQtMeeting
 	 *            the selected ScQtMeeting entity
 	 */
+	//28834 starts
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 		log.info("changeMeetingStatus");
 		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
+		log.info("changeMeetingStatus"+scQtMeeting.getMeetingStatus());
+		//Boolean IsDisableBfButton = getManagedBean().getIsDisableBfButton();
+		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+		boolean done = true;
+		for (ScQtMeeting meeting : meetingList) {
+			log.info("changeMeetingStatus---->"+meeting.getMeetingStatus().getStatusId());
+			
+			if(!meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID)){
+				done = false;
+				break;
+			}
+			
+		}
+		this.getManagedBean().setDisableBfButton(done);
 	}
+	//28834 ends
 
 	/**
 	 * To retrieve committee details
