@@ -64,12 +64,12 @@
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-
-					<ui:repeat var="bpmAction"
+<!-- ***28834 starts -->
+						<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
+                             <h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button"
 							action="#{suppFinalizationBackingBean.submitAction}"
@@ -77,8 +77,20 @@
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+							</h:panelGroup>
+							 <h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button"
+							action="#{suppFinalizationBackingBean.submitAction}"
+							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+							disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
+							partialSubmit="true" process="@form" update="@form"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+							</h:panelGroup>
 							
 					</ui:repeat>
+		<!-- ***28834 ends -->			
 					
 				</ui:define>
 			</ui:decorate>
