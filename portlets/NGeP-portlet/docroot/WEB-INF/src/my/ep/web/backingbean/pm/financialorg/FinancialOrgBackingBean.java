@@ -134,13 +134,28 @@ public class FinancialOrgBackingBean extends
 		if (pmUser != null && pmUser.getUserId() != null) {
 			//System.out.println("***userId: " + pmUser.getUserId());
 
-			new LogKey(pmUser.getUserId()); 
-		}else{
-			new LogKey(1L); 
+			new LogKey(pmUser.getUserId());
+		}else {
+			new LogKey(1L);  
 		}
 	}
-
-	// #29487 - View bank details by factoring user_endorsed - Start
+	
+	// #29487 - View bank details by factoring user_endorsed - Start				
+	public void preRenderFinOrgView() throws Exception {
+		log.info("preRenderFinOrgView");
+		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		List<Object[]> resultBean  = finanOrgSO.findFactoringOrgId(getFacesScopesGen().getUserSessionBean().getLoginId());
+			
+		for (int i = 0; i < resultBean.size(); i++) {
+			Object[] objects = (Object[]) resultBean.get(i);				
+			this.getManagedBean().setFinancialId(Long.parseLong(String.valueOf(objects[3])));
+		}
+					
+		resetBeans();
+		retrieveServiceTypeMap();
+		maintainFinancialOrg(this.getManagedBean().getFinancialId());
+	}
+	
 	/**
 	 * Login user has factoring user role
 	 * @return boolean
@@ -163,6 +178,7 @@ public class FinancialOrgBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+
 	// #29487 - View bank details by factoring user_endorsed - End
 	
 	/* ------------------ PORLET - START ------------------  */
