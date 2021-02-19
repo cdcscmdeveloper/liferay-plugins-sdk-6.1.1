@@ -74,13 +74,17 @@
 				<!-- 29480 - Start -->
 				<tr>	
 					<td colspan='7' >
-					<i><h:outputText style="float:initial" value="#{lbl['lbl.sm.premises.type.note']}" styleClass="splNotesFonts"  escape="false"/>
+					<i><h:outputText style="float:initial" value="#{lbl['lbl.sm.premises.type.note']}" styleClass="splNotesFonts"  escape="false"/>&#160;
 					<p:commandLink update=":#{p:component('showPremisesTypeInfo')}"
 							action="#{backingBean.showDetailsPremisesType()}"
 							value="#{lbl['lbl.sm.premises.type.note1']}"
-							styleClass="splNotesFonts" style="float: inherit"/></i>
+							styleClass="splNotesFonts" style="float: inherit" escape="false">
+						</p:commandLink></i>
 					</td>
 					<td>&#160;</td>		
+				</tr>
+				<tr>
+					<td colspan='8'>&#160;</td>		
 				</tr>
 				<!-- 29480 - End -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
@@ -533,7 +537,7 @@
 	</p:panel>
 	<!-- 29480 - Start -->
 	<p:dialog id="showPremisesTypeInfo" widgetVar="showPremisesTypeInfo"
-	closable="true" modal="true" resizable="false" style="display: static;">
+		height="300px" width="300px" closable="true" modal="true" resizable="false" style="display: static;">
 		<h:form>
 			<table style="width: 400px">
 				<tr>
@@ -565,9 +569,6 @@
 					<td>&#160;</td>
 					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info6']}" /></td>
 					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info7']}" /></td>
-				</tr>
-				<tr>
-					<td colspan="3">&#160;</td>
 				</tr>
 			</table>
 		</h:form>
