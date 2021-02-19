@@ -14854,12 +14854,6 @@ public class SmApplicationBackingBean extends
 		}
 		// 14530 - END
 
-		//29480 - Start
-		public void showDetailsPremisesType() {
-			RequestContext.getCurrentInstance().execute("showPremisesTypeInfo.show()");
-		}
-		//29480 - End
-
 	// START #29727
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean) {
 		validateCompanyBranch(managedBean,"");
