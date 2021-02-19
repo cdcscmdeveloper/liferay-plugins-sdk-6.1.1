@@ -211,9 +211,11 @@
 					<ui:param name="scQt" value="#{listItem.scLoiLoa.scQt}" />
 					<c:choose>
 						<c:when test="#{listType eq 'loiList'}">
+							<ui:param name="procurementMode" value="#{scQt.procurementMode}" />
 							<ui:param name="loiLoaStatus" value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses):''}" />
 						</c:when>
 						<c:when test="#{listType eq 'loaList'}">
+							<ui:param name="procurementMode" value="#{listItem.procurementMode}" />
 							<ui:param name="loiLoaStatus" value="#{listItem.scLoaWorkflowStatusesSize gt 0?qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses):''}" />
 						</c:when>
 						</c:choose>
@@ -235,7 +237,7 @@
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
 						style="width:100px;">
 						<h:outputText
-							value="#{qTDetailBB.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTDetailBB.getParameterDesc(procurementMode)}" />
 					</p:column>
 			
 					<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:80px;">
