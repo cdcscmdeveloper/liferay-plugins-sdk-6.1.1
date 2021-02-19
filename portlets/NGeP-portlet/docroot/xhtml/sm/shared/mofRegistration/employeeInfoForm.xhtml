@@ -8,8 +8,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<style>
-.splNotesFontEmp {
-	color: rgb(79, 0, 255);
+.splNotesFontInstruction {
+	color: rgb(0, 0, 255);
 	font-weight: italic;
 	float: left
 }
@@ -21,9 +21,10 @@
 
 	<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true"
 		id="pnlEmployeeInfo">
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="splNotesFontInstruction"
 			value="#{lbl['lbl.sm.insertemployee.instruction']}" escape="false">
 		</h:outputText>
+		<br />
 		<p:dataTable var="empInfo"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.getSelectedWorkShopFacility().smEmployees}"
@@ -64,11 +65,12 @@
 				<p:outputPanel>
 
 					<p:selectOneMenu id="empIdTypeId" size="50"
+						label="#{lbl['lbl.sm.employee.idtype']}"
+						required="#{backingBean.managedBean.valueReqd}"
 						value="#{empInfo.identificationTypeId}"
 						style="width: 80% !important;margin-bottom: 5px !important;">
 						<f:selectItems
-							value="#{backingBean.managedBean.identificationTypes}"
-							required="#{backingBean.managedBean.valueReqd}" />
+							value="#{backingBean.managedBean.identificationTypes}" />
 						<p:ajax event="change" process="@form" update="icColumn" />
 					</p:selectOneMenu>
 				</p:outputPanel>
@@ -81,7 +83,6 @@
 				</f:facet>
 				<p:inputText id="empIcId" value="#{empInfo.identificationNo}"
 					label="#{lbl['lbl.sm.employee.icno']}"
-					disable="#{empInfo.identificationTypeId eq null}"
 					rendered="#{empInfo.identificationTypeId eq '115'}"
 					required="#{backingBean.managedBean.valueReqd}" size="30"
 					maxlength="12"
@@ -91,7 +92,6 @@
 				</p:inputText>
 				<p:inputText id="empPassId" value="#{empInfo.identificationNo}"
 					label="#{lbl['lbl.sm.employee.icno']}"
-					disable="#{empInfo.identificationTypeId eq null}"
 					rendered="#{empInfo.identificationTypeId ne '115'}"
 					required="#{backingBean.managedBean.valueReqd}" size="30"
 					maxlength="12">
