@@ -431,7 +431,6 @@ public class ApprovalBackingBean extends
 			currentStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_PCB_APPROVAL,
 					getManagedBean().getQt().getQtId());
 
-			setFCApproveQTChangeValues(approvalRequests);
 			docType = ParameterConst.DOCTYPE_PCB_APPROVAL; //#25692#128
 
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
@@ -754,7 +753,7 @@ public class ApprovalBackingBean extends
 			qtDetailBB.getManagedBean().setSelectedCommitteeTabIndex(this.getManagedBean().getSelectedApprovalTabIndex());
 			qtDetailBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
 			qtDetailBB.getManagedBean().setApprovalEditableSection(true);
-			qtDetailBB.getManagedBean().setApprovalScreen(true);
+			qtDetailBB.getManagedBean().setApprovalScreen(true); // #25692
 			
 			/* ***#25692#111 - start */
 			PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype(qtDetailBB.getManagedBean().getQt().getQtId(), docType==null?ParameterConst.DOCTYPE_QUOTATION:docType);
@@ -801,25 +800,6 @@ public class ApprovalBackingBean extends
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
 	}
 
-	private void setFCApproveQTChangeValues(List<ScQtApprovalRequest> approvalRequests) {
-
-		if (CollectionUtils.isNotEmpty(approvalRequests)) {
-			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-				PmParameter pmParameter = new PmParameter();
-				if (approvalRequest.getDecessionType() == null) {
-					approvalRequest.setDecessionType(pmParameter);
-				}
-
-				ScQt scQt = getManagedBean().getQt();
-				if (scQt.getMofDate() != null) {
-					if (approvalRequest.getDecisionCertPBM() == null) {
-						approvalRequest.setDecisionCertPBM(pmParameter);
-					}
-				}
-			}
-		}
-	}
-	
 	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		IScWorkFlowStatusSO workFlowStatusSO;
 		try {
@@ -2002,6 +1982,19 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	orginalText = sb.toString();
 	return orginalText;
 }
+
+// #25692
+	private boolean CommitteeTypeIsEcOcTecFec(ScCommittee cte){
+		if(cte.getCommitteeType()!=null && cte.getCommitteeType().getParameterCode()!=null){
+			return 
+				"EC".equalsIgnoreCase(cte.getCommitteeType().getParameterCode()) ||
+				"OC".equalsIgnoreCase(cte.getCommitteeType().getParameterCode()) ||
+				"TEC".equalsIgnoreCase(cte.getCommitteeType().getParameterCode()) ||
+				"FEC".equalsIgnoreCase(cte.getCommitteeType().getParameterCode());
+		}
+		return false;
+	}
+
 	//#25077 - Start
 	/**
 	 * Upload attachment for history others approval.

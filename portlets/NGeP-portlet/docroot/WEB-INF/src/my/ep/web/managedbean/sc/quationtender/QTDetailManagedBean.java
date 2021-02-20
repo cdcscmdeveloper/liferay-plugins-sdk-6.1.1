@@ -9981,6 +9981,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
+	// #25692 - start
+	public boolean isApprovalScreen() {
+		return isApprovalScreen;
+	}
+	
+	public void setApprovalScreen(boolean isApprovalScreen) {
+		this.isApprovalScreen = isApprovalScreen;
+	}
+	// #25692 - end
 	
 	public boolean isApprovalEditableSection() {
 		return approvalEditableSection;
