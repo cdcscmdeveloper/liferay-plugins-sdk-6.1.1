@@ -11441,8 +11441,10 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState() != null
 					&& getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)
 					&& getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision() == null) {
+				System.out.println("before| isOfficeFacilityVerfied == " + getManagedBean().getPoSecReview().isOfficeFacilityVerfied());
 				getManagedBean().getPoSecReview().setVerifiedAll(false);
 				getManagedBean().getPoSecReview().setOfficeFacilityVerfied(false);
+				System.out.println("after| isOfficeFacilityVerfied == " + getManagedBean().getPoSecReview().isOfficeFacilityVerfied());
 			}
 			if (getManagedBean().isReviewSiteVisit() && !getManagedBean().getPoSecReview().isSitevisitVerified()) {
 				getManagedBean().getPoSecReview().setVerifiedAll(false);
