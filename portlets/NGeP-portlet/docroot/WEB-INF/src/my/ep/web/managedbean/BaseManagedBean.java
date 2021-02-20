@@ -509,13 +509,6 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param scQtEvaluationReportList the scQtEvaluationReportList to set
-	 */
-	public void setScQtEvaluationReportList(List<ScQtEvaluationReport> scQtEvaluationReportList) {
-		this.scQtEvaluationReportList = scQtEvaluationReportList;
-	}
-
-	/**
 	 * @return the templateSpecBean
 	 */
 	public TemplateSpecBean getTemplateSpecBean() {
@@ -873,7 +866,58 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayReviseInstrn = displayReviseInstrn;
 	}
 	// #25638 - End
-		
+
+	// Enhancement #18685 - start
+
+	public void setScQtEvaluationReportList(
+			List<ScQtEvaluationReport> scQtEvaluationReportList) {
+		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	}
+
+	/**
+	 * @return the newBriefingPaperReportList
+	 */
+	public List<ScQtFinalizationReport> getNewBriefingPaperReportList() {
+		return newBriefingPaperReportList;
+	}
+
+	/**
+	 * @param newBriefingPaperReportList the newBriefingPaperReportList to set
+	 */
+	public void setNewBriefingPaperReportList(
+			List<ScQtFinalizationReport> newBriefingPaperReportList) {
+		this.newBriefingPaperReportList = newBriefingPaperReportList;
+	}
+
+	/**
+	 * @return the selectedBriefingReport
+	 */
+	public ScQtFinalizationReport getSelectedBriefingReport() {
+		return selectedBriefingReport;
+	}
+
+	/**
+	 * @param selectedBriefingReport the selectedBriefingReport to set
+	 */
+	public void setSelectedBriefingReport(ScQtFinalizationReport selectedBriefingReport) {
+		this.selectedBriefingReport = selectedBriefingReport;
+	}
+
+	/**
+	 * @return the removeFinalizationReports
+	 */
+	public List<ScQtFinalizationReport> getRemoveFinalizationReports() {
+		return removeFinalizationReports;
+	}
+
+	/**
+	 * @param removeFinalizationReports the removeFinalizationReports to set
+	 */
+	public void setRemoveFinalizationReports(
+			List<ScQtFinalizationReport> removeFinalizationReports) {
+		this.removeFinalizationReports = removeFinalizationReports;
+	}
+	// Enhancement #18685 - end
 }
 
 
