@@ -1962,6 +1962,7 @@ public class PurchaseInDefaultBackingBean extends
 					ctCircularPidReasons.setCircularVer(getManagedBean().getPurchaseInDefault().getPanelItem()
 							.getCtCircularVer());
 					reqDTO.setCtCircularPidReason(ctCircularPidReasons);
+					purchaseInDefaultSO.insertCircularPidReason(reqDTO);
 				}
 			}
 		} catch (NullPointerException e) {
