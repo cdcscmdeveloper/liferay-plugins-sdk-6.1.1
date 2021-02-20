@@ -98,6 +98,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -1161,8 +1162,6 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setScQt(scQt);
 			//Bug #29707 - start
 			// Moved code from top
-			// #27502- Adding condition only
-			if (!isBpkCentralContract) {
 				// #18685 - Start
 				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
 				if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
@@ -1177,10 +1176,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 				// #18685 - End
-			}
-			//Bug #29707 - end
-			//#27502- Adding condition only			 
-			
+			//Bug #29707 - end		
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 
 			String qtNo = getManagedBean().getScQt().getQtNo().toString();
@@ -1898,22 +1894,7 @@ public class SupplierFinalizationBackingBean extends
 			throw new EpException(MessageConst.ERROR_760341);
 		}
 	}
-	//25638 - Start
-	/**
-	 * 
-	 */
-	private void reviseSignOff() {
-	  log.info("signOff");
-      if (StringUtils.isNotBlank(
-              getManagedBean().getCommitteeType())) {
-          for (ScQtCommitteeActivity scQtCommitteeActivity 
-                      : getManagedBean().getCommitteeList()) {
-                  scQtCommitteeActivity.setSignedOff(false);
-          }
-      }
-    }
-	//25638 - End
-	
+
 	/**
 	 * Validate, save the selected quotation/tender supplier finalization
 	 * details and update to BPM
@@ -7275,6 +7256,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						IQTSuppFinalizationSO.class);
 	}
 	
+	private ICommitteSO getCommitteeSO(){
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+	}
+	
 	/**
 	 * @method returns eval Type Item.
 	 */
@@ -7468,6 +7455,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				
 	}
 	
+	// #17376 - start
+	private IBpmSO getBpmSO() {
+		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
+				IBpmSO.class);
+	}
+	
+	private IQTSuppFinalizationSO getQtSuppFinalizationSO(){
+		return BusinessDelegate.getInstance().getServiceObject(IQTSuppFinalizationSO.class);
+	}
+	// #17376 - end
+	
 	//#25729#142 & #26169 - Start
 	public void checkSupplierOfferPriceByItemIsExceedCommitteeAuthority() {
 		Boolean isItemize = this.getManagedBean().isItemize();
@@ -7616,7 +7614,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return committeeAuthorityAmount;
 	}
 	//#25729 #142 & #26169 - End
-	
+
+	// ***25201
+	public boolean isQTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
+				;
+	}
+
 	/*
 	 * #25426 ruzaimah - Start
 	 * check inactive role for commitee user 

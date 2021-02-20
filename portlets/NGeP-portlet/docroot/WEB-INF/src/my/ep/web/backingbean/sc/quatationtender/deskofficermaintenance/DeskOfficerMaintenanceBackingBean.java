@@ -1148,17 +1148,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(entry.getKey());
 				
-				/*
-				 * TRACE HI-EXEC TIME
-				 * Development #29385
-				 */
-				long startTime = System.currentTimeMillis();
-				resDTO = detailSO.retriveQTDetails(reqDTO);
-				SLAUtils.getInstance().logHiExecInfo("QT","DeskOfficerMaintenanceBackingBean.submitReassignmentForApproval", startTime);
-				/*
-				 * END
-				 */
-				
 				ScQt qt = resDTO.getQtDetail();
 			
 				reqDTO = null;

@@ -354,64 +354,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return QTConstants.LOA_PAGE;
 	}
-	
-	/**
-	 * Enhancement #21694
-	 * to be used in Screen From Tasklist Only
-	 * @param obj
-	 * 		instance of ScQt/ScLoiForQt/ScLoaForQt
-	 * @param previousPageUrl
-	 * @return
-	 */
-	public String reverseAction() {
 		
-		debugLogger("viewReverseStatusDetails");
-		FacesContext fc = FacesContext.getCurrentInstance();
-		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
-		ScLoa scLoa = this.getManagedBean().getScLoa();
-		//String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
-		ScQt scQt = this.getManagedBean().getScQt();
-		ScLoaForQt scLoaForQt = new ScLoaForQt();
-		
-		/**
-		 * FINDING QT WORKFLOW-> CASE REVERSAL QT
-		 */
-		IScWorkFlowStatusSO workFlowStatusSO;
-		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
-		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);	
-		scWreqDTO.setDocId(scQt.getQtId());		
-		scWreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-		ScWorkFlowStatus qtcurrentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
-		if (!qtcurrentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_LOA)) {
-			throw new EpException(MessageConst.ERROR_760497,new String[]{scQt.getQtNo()});
-		}
-		
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		reqDTO.setLoaId(scLoa.getLoaId());
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLoaForQtByLoaId(reqDTO);
-		
-		scLoaForQt = resDTO.getScLoaForQt();
-		
-		qtDtl.getManagedBean().setEditable(Boolean.TRUE);		
-			
-		Map<MapKeyEnum, Object> otherArgs = new HashMap<MapKeyEnum, Object>();
-		otherArgs.put(MapKeyEnum.loiLoaSelected, scLoa);
-		
-		/* FINDING WORKFLOW STATS*/
-		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-		scWreqDTO.setDocId(scLoa.getLoaId());
-		
-		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
-		qtDtl.getManagedBean().setPreviousPage(this.getManagedBean().getBackToPreviousPage());
-		qtDtl.getManagedBean().setQt(scQt);
-		qtDtl.getManagedBean().setScLoaForQt(scLoaForQt);
-		qtDtl.getManagedBean().setStatus(getStatusDescById(currentWorkFlowStatus.getPmStatus().getStatusId()));
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, qtDtl.reverseQtDetails(Boolean.FALSE,Boolean.TRUE,qtDtl));
-		
-		return null;
-	}
-	
 	/**
 	 * Get the supplier loa details.
 	 * 

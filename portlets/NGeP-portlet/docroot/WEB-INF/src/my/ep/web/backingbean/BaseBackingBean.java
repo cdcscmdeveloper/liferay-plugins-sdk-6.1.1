@@ -122,6 +122,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
@@ -137,6 +138,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -2565,6 +2567,47 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return disabledField;
 	}
+	
+	// #21962 - start
+	public Boolean userHasUserTask(UserTasks [] uts){
+		for(int i = 0; i < uts.length; i++){
+			if(userHasUserTask(uts[i])){
+				return true;
+		 
+				 
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * To determine user's UserTasks in getManagedBean()
+	 * 
+	 * @param ut - userTask to be tested
+	 * @return
+	 */
+	public Boolean userHasUserTask(UserTasks ut){
+		if(getManagedBean().getUserTasks()!=null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())){
+			if(getManagedBean().getUserTasks().contains(ut)){
+				return true;
+			}			
+		}
+		return false;
+	}
+	
+	public Boolean userHasUserTask(String ut){
+		if(getManagedBean().getUserTasks()!=null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())){
+			Object[] t = getManagedBean().getUserTasks().toArray();
+			for(int i = 0; i<t.length; i++){
+				if(((UserTasks)t[i]).toString().equals(ut)){
+					return true;
+				}
+			}
+			 
+		}
+		return false;
+	}
+	// #21962 - end
 	
 	public void changeRoleAndProceed() {
 	//start loop list #28454
