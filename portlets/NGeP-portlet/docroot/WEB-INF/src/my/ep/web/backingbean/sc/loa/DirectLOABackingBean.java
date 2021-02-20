@@ -4373,12 +4373,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			contractTypeChanged();
 			viewContractDetails(this.getManagedBean().getScLoa());
 			this.getManagedBean().setPayLoad(awardSupplierDataType);
-			if(getManagedBean().getCurrentStatusId() != null){
-				if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
+			//#29164 CR 26474: Static Code Analysis Start
+			//if(getManagedBean().getCurrentStatusId() != null){
+				if(getManagedBean().getCurrentStatusId() != null && QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
 					getManagedBean().setSelectedTabIndex(1);
 					getManagedBean().setIconForDL(true);
 				}
-			}
+			//}
+			//#29164 CR 26474: Static Code Analysis End
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null, redirectUrl);
@@ -9580,6 +9582,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}else{
 			return;
 		}
+	}
+	public void resetLoaBpmVerify(){
+		this.getManagedBean().setLoaBpmVerify(null);
+		RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.hide()");
 	}
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
