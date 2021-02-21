@@ -9,13 +9,16 @@
 	
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
+	<ui:param name="isClone1" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
+	<ui:param name="isClone2" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />	
 	<ui:remove> 26095@hatta - start </ui:remove>
 	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
+	<ui:param name="isQTStatusPendingScoringEndorsement" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
 	<ui:remove> 26095@hatta - end </ui:remove>
-	<ui:remove> #25077 Start </ui:remove>
-	<ui:param name="popUpBPKApprovalNeeded" value="#{qTDetailBB.checkSettingPopUpBPKApprovalNeeded()}" />
-	<ui:remove> #25077 End </ui:remove>
+																									  
+									
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -47,6 +50,7 @@
 			<c:if test="#{qTDetailBB.approvalScreen and qTDetailBB.managedBean.readOnly}" >
 				
 				<div class="ppRightBtn">
+										
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
 					<ui:remove>
@@ -73,7 +77,7 @@
 					</h:panelGroup>
 				</div>
 			</c:if>
-			<ui:remove> ***25692 - end </ui:remove>						  
+			<ui:remove> ***25692 - end </ui:remove>	
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
@@ -81,9 +85,9 @@
 					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
-					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
+					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-
+					
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
 						<ui:repeat var="bpmAction"
@@ -96,7 +100,7 @@
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone2}" />
-								 
+		 
 							<ui:remove> 25077 Start </ui:remove>
 							<c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
 								<p:commandButton value="#{lbl[buttonLabel]}"
@@ -110,17 +114,10 @@
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!isClone2 and !popUpBPKApprovalNeeded}" 
+								rendered="#{!isClone2 and !qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}" 
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</c:when>
-					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
-							update="@all"
-							onclick="blockWidget.show();"
-											  
-							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
@@ -133,18 +130,21 @@
 							update="@([id$=#{submitConfirmId}])" 
 							rendered="#{isClone1}" 
 							disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+							
+						
 					</c:when>
 					<c:otherwise>
+							
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
-								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
+								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
-				</c:choose>
+				</c:choose> 
 				<ui:remove> 26095@hatta - start </ui:remove>
 				<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
 					<p:commandButton value="#{lbl['lbl.sc.qt.close']}" process="@this" style="float:right;"
@@ -182,29 +182,45 @@
 		</p:dialog>
 
 		<ui:remove> 26095@hatta - start </ui:remove>
-					  
+	   
 		<p:dialog id="closeQTDlg" widgetVar="closeQTDlg"
 			header="#{lbl['lbl.sc.qt.close.confirmation']}" resizable="false"
 			width="auto" height="100" closable="false">
 			<table>
 				<tr><td style="float:left;"><p:outputLabel value="#{lbl['lbl.sc.qt.close.dialog.confirmation.first']}" /></td></tr>
-									  
+		   
 				<tr><td style="float:left;"><p:outputLabel value="#{lbl['lbl.sc.qt.close.dialog.confirmation.second']}" /></td></tr>
-		 
+   
 			</table>
-						  
+		
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					oncomplete="closeQTDlg.hide();" partialSubmit="true" process="@this"
 					action="#{qTDetailBB.closeQtDetails}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-														  
+				
 					onclick="closeQTDlg.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
 		<ui:remove> 26095@hatta - end </ui:remove>
-		
+  
 		<ui:remove> 25077 Start </ui:remove>
+		<p:dialog id="bpkApprovalNeededIds" widgetVar="bpkApprovalNeededDlgs"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
+			height="100" closable="false">
+			<table>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.first']}" /></td></tr>
+				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
+			</table>
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="bpkApprovalNeededDlgs.hide();submitConfirmPopUp2.show();" 
+					partialSubmit="true" process="@form" update="@form" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="bpkApprovalNeededDlgs.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
 		<p:dialog id="bpkApprovalNeededId" widgetVar="bpkApprovalNeededDlg"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="auto"
 			height="100" closable="false">
@@ -213,22 +229,15 @@
 				<tr><td style="float: left;"><p:outputLabel value="#{lbl['lbl.sc.qt.approval.oth.confirmation.second']}" /></td></tr>
 			</table>
 			<div class="ppRightBtn">
-			    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="bpkApprovalNeededDlg.hide();submitConfirmPopUp2.show();" 
-					partialSubmit="true" process="@form" update="@form" />
-				</c:if>
-				 <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					onclick="bpkApprovalNeededDlg.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" 
 					partialSubmit="true" process="@form" update="@form"
 					action="#{qTDetailBB.updateBpmTask(bpAction)}" />
-				</c:if>
+		   
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="bpkApprovalNeededDlg.hide();" type="button"
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
-		<ui:remove> 25077 End </ui:remove>
-	
+		<ui:remove> 25077 End </ui:remove>		
 </ui:composition>
