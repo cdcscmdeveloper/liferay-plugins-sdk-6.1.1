@@ -105,17 +105,10 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<ui:remove>
-						Bug #27412 START
-					</ui:remove>
-					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;" rendered="#{!qTDetailBB.isMofSupplier()}">
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;">
 						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType}"/>
 						<h:outputText value="#{scQt.statusDesc}" rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType}"/>
 					</p:column>
-					<ui:remove>
-						Bug #27412 END
-					</ui:remove>
-
 					<ui:remove> ***17376#55 - start </ui:remove> 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
@@ -170,29 +163,11 @@
 								rendered="#{scQt.actionRender[9]}"
 								action="#{qTDetailBB.closeProposal(scQt)}"
 								partialSubmit="true" process="@this" update="searchQTs"/>
-							<ui:remove>
-								Bug #27412 START
-							</ui:remove>
-							<p:menuitem id="menuItem12" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[12]}"
-								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
-								partialSubmit="true" process="@this"/>
-							<ui:remove>
-								Bug #27412 END
-							</ui:remove>
-						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
-								rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_AWARDED)}" 
-								icon="ui-icon-edit" update=":form:displayk" title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
-								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
-								partialSubmit="true" process="@this"/>
 						</p:menuButton>
 					</p:column>
 					<ui:remove> ***17376#55 - end </ui:remove>
 					
 				</p:dataTable>
-				
-				<ui:include src="/xhtml/sc/quatationtender/createquotationtender/clone/clone-multiple.xhtml" />
 				</div>
 	
 				<ui:remove> Loa/Loi Data Table </ui:remove>
@@ -244,10 +219,7 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<ui:remove>
-						Bug #27412 START
-					</ui:remove>
-					<p:column headerText="#{lbl['lbl.sc.status']}" rendered="#{!qTDetailBB.isMofSupplier()}" style="white-space: normal;word-wrap: break-word; width:100px;">
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="white-space: normal;word-wrap: break-word; width:100px;">
 						<c:choose>
 						<c:when test="#{listType eq 'loiList'}">
 							<h:outputText value="#{listItem.scLoiWorkflowStatusesSize gt 0?qTDetailBB.getStatusDescById(qTDetailBB.getStatusIdToDisplay(listItem.scLoiWorkFlowStatuses)):''}"/>
@@ -257,10 +229,7 @@
 						</c:when>
 						</c:choose>
 					</p:column>
-					<ui:remove>
-						Bug #27412 END
-					</ui:remove>
-					<ui:remove> Enhancement #21694 - LOA Cancellation START </ui:remove>
+
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
@@ -278,11 +247,7 @@
 				</p:dataTable>
 				</div>
 			</h:panelGroup>
-			
-			
 		</p:panel>
-		
-		
 		<h:outputScript target="body">
 			function toggleView(v){
 				//console.log(v);
@@ -298,8 +263,6 @@
 				}
 			}
 		</h:outputScript>
-		
-				
 		<ac:lovPopup />
 	</ui:define>	
 </ui:composition>
