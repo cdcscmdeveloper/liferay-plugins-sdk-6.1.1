@@ -226,7 +226,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			resDTO = circularSO.retrieveCircularVerById(reqDTO);
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
-			
 
 			if(getManagedBean().getCircularVer().getExtendStartDate() != null && getManagedBean().getCircularVer().getExtendEndDate() != null){
 				getManagedBean().setCircularExtension(true);
@@ -910,6 +909,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private void initiateRemark(List<CtRemark> remarks) {
 
 		boolean ctWorkflowStatusMatch = false;
+		
+		//Bug #29447 - start
 		if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
 			if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
 				if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
@@ -919,16 +920,19 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		} else { // both also null
 			ctWorkflowStatusMatch = true;
 		}
-
-		if(remarks.size()==0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
-			remarks.add(0, remark);
+		
+		if(!getManagedBean().isViewContract()){
+			if(remarks.size()==0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+				remarks.add(0, remark);
+			}
 		}
+		//Bug #29447 - end
 	}
 
 	/**
