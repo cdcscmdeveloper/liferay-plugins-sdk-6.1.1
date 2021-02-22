@@ -24,74 +24,386 @@
 			<td width="5%">:</td>
 			<td width="50%">$!companyInfo.companyName</td>
 		</tr>
+		
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.txt.business.reg.no')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!companyInfo.regNo</td>
+		</tr>
+		
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.estdate')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!establishdate</td>
+		</tr>
+		
+		#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.account.rob.expire')</b></td>
+			<td width="5%">:</td>
+			<td width="50%" data-type="date">$!robexpdate</td>
+		</tr>
+		#end
+		
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.status')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$smVmUtil.setStatusMessageSSM($!companyBasic)</td>
+		</tr>
+		
+		#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.annualRev')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!companyBasic.annualRevenueSSM</td>
+		</tr>
+		#end
+		
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.companyaddress')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!smAddress.address1</td>
+		</tr>	
+		<tr align="left">
+			<td width="25%"><b> </b></td>
+			<td width="5%"></td>
+			<td width="50%">$!smAddress.address2</td>
+		</tr>
+		<tr align="left">
+			<td width="25%"><b> </b></td>
+			<td width="5%"></td>
+			<td width="50%">$!smAddress.address3</td>
+		</tr>
+
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.postcode')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!smAddress.postcode</td>
+		</tr>
+		
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.state')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!smAddress.pmState.stateName</td>
+		</tr>
+		#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.country')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!smAddress.pmCountry.countryName</td>
+		</tr>
+		#end
+	<tr><td><br /></td></tr>
+	</table>
+	
+	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>CAPITAL/EQUITY INFORMATION</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+	<table width="80%" align="center">
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.authorized.capital')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$!companyBasic.authorizedCapital</td>
+		</tr>
+		<tr><td><br /></td></tr>
+	</table>
+	#end
+	
+	#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+	<table width='100%'>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>BRANCH INFORMATION</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
 	</table>
 	
 	<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%">No.</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.ownername')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
-			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.branch.address')</th>
 		</tr>
-		
-		
-
-			#if($ownerInfo != $null && $ownerInfo.size() > 0)
-				#foreach($worker in $ownerInfo)
+			#if($branchInfo != $null && $branchInfo.size() > 0)
+				#foreach($branch in $branchInfo)
 				<tr>
 					<td width="5%">$velocityCount</td>
-					<td width="25%">$!worker.name</td>
-					<td width="25%">$!worker.identificationNo</td>
-					<td width="20%">$smVmUtil.getParameterDesc($!worker.identificationType)</td>
-					<td width="25%">$!worker.shareAmt</td>
+					<td width="25%">$!branch.branchName <p></p>$smVmUtil.getCompleteAddress($!branch.smAddress)</td>
 				</tr>
 				#end
 			#else
 				<tr>
-		 			<td colspan="5" align="center">No Record Found</td>
+		 			<td colspan="2" align="center">No Record Found</td>
 		 		</tr>
 			#end	
-</table>
+		
+	</table>
+	#end
+	
+	<table width='100%'>
+	<tr><td><br /></td></tr>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>OWNER INFORMATION</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+		<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.ownername')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
+			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.nationality')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.race')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.address')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.dob')</th>
+			#end
+			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
+			#end
+		</tr>
+			#if($ownerInfo != $null && $ownerInfo.size() > 0)
+				#foreach($worker in $ownerInfo)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="15%">$!worker.name</td>
+					<td width="10%">$!worker.identificationNo</td>
+					<td width="10%">$smVmUtil.getParameterDesc($!worker.identificationType)</td>
+					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+					<td width="10%">$!worker.pmCountry.countryName</td>
+					<td width="10%">$!worker.pmRace.raceName</td>
+					#foreach ($address in $!worker.smPersonnelAddresses)
+					<td width="10%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
+					#end
+					<td width="10%">$smVmUtil.getFomatDate($!worker)</td>
+					#end
+					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+					<td width="10%">$!worker.shareAmt</td>
+					#end
+				</tr>
+				#end
+			#else
+				<tr>
+					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+		 			<td colspan="5" align="center">No Record Found</td>
+					#else
+					<td colspan="8" align="center">No Record Found</td>
+					#end
+		 		</tr>
+			#end	
+		
+			</table>
+	
+	<table width='100%'>
+		<tr><td><br /></td></tr>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>DIRECTOR INFORMATION</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+		<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.directorname')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
+			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.nationality')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.race')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.address')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.dob')</th>
+			#end
+			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
+			#end
+		</tr>
+			#if($directorInfo != $null && $directorInfo.size() > 0)
+				#foreach($director in $directorInfo)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="15%">$!director.name</td>
+					<td width="10%">$!director.identificationNo</td>
+					<td width="10%">$smVmUtil.getParameterDesc($!director.identificationType)</td>
+					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+					<td width="10%">$!director.pmCountry.countryName</td>
+					<td width="10%">$!director.pmRace.raceName</td>
+					#foreach ($address in $!director.smPersonnelAddresses)
+					<td width="10%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
+					#end
+					<td width="10%">$smVmUtil.getFomatDate($!director)</td>
+					#end
+					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+					<td width="10%">$!director.shareAmt</td>
+					#end
+				</tr>
+				#end
+			#else
+				<tr>
+		 			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+		 			<td colspan="5" align="center">No Record Found</td>
+					#else
+					<td colspan="8" align="center">No Record Found</td>
+					#end
+		 		</tr>
+			#end
+				
+		</table>
+		
+	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+		<table width='100%'>
+		<tr><td><br /></td></tr>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>CAPITAL/EQUITY SHAREHOLDING COMPANIES</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+		</table>
+	
+		<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.compName')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.addr')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrPerc')</th>
+		</tr>
+			#if($equityCompanies != $null && $equityCompanies.size() > 0)
+				#foreach($equicomp in $equityCompanies)
+				<tr>
+					<td width="25%">$!equicomp.companyName</td>
+					<td width="25%">$smVmUtil.getCompleteAddress($!equicomp.smAddress)</td>
+					<td width="25%">$smVmUtil.formatToTwoDecimalPoint($!equicomp.shareAmt)</td>
+					<td width="25%">$smVmUtil.formatToTwoDecimalPoint($!equicomp.sharePercentage)</td>
+				</tr>
+				#end
+			#else
+				<tr>
+		 			<td colspan="4" align="center">No Record Found</td>
+		 		</tr>
+			#end	
+		
+		</table>
+			
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<table width='100%'>
+		<tr><td><br /></td></tr>
+		<tr align='center' style="background-color: #3366ff;">
+	        <td>
+	            <font style='color:#ffffff;'>PERSONNEL INFORMATION</font>
+	        </td>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+		<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.worker.name')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.person.composition.idenNum')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.address')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.userprofile.designation')</th>
+		</tr>
+			#if($personnelInfo != $null && $personnelInfo.size() > 0)
+				#foreach($personnel in $personnelInfo)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="25%">$!personnel.name</td>
+					<td width="25%">$smVmUtil.getParameterDesc($!personnel.identificationType)</td>
+					<td width="25%">$!personnel.identificationNo</td>
+					#foreach ($address in $!personnel.smPersonnelAddresses)
+					<td width="10%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
+					#end
+					<td width="25%">$!personnel.designation</td>
+				</tr>
+				#end
+			#else
+				<tr>
+		 			<td colspan="6" align="center">No Record Found</td>
+		 		</tr>
+			#end		
+		</table>
+	#end
 
-	<table>
-		<tr>
-			<td>1.</td>
-			<td colspan="2">Adakah ......</td>
-		</tr>
-		 <tr align='left'>
-			<td></td>
+	<tr><td><br /></td></tr>
+	<table width='100%'>
+		<tr><td><br /></td></tr>
+		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img>Permohonan...
-				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
+	            <font style='color:#ffffff;'>NATURE OF BUSINESS</font>
 	        </td>
-	    </tr>
+    	</tr>
+    	<tr><td><br /></td></tr>
+	</table>
+	
+		<table  class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%">No.</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.businessnature.code')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.natureofbusiness')</th>
+		</tr>
+			#if($businessNature != $null && $businessNature.size() > 0)
+				#foreach($businessnature in $businessNature)
+				<tr>
+					<td width="5%">$velocityCount</td>
+					<td width="25%">$!smVmUtil.getBusinessNature($!businessnature) - $!businessnature.pmBusinessNature.levelCode</td>
+					<td width="25%">$!businessnature.pmBusinessNature.levelName</td>
+				</tr>
+				#end
+			#else
+				<tr>
+		 			<td colspan="3" align="center">No Record Found</td>
+		 		</tr>
+			#end	
 		
-		<tr>
-			<td>2.</td>
-			<td colspan="2">Adakah ......</td>
-		</tr>
-		 <tr align='left'>
-			<td></td>
-	        <td>
-				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
-				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
-	            <img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img>Permohonan...
-				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
-	        </td>
-	    </tr>
-		<tr>
-			<td>3.</td>
-			<td colspan="2">Adakah ......</td>
-		</tr>
-		 <tr align='left'>
-			<td></td>
-	        <td>
-				 <img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img>Permohonan...
-				<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img>Permohonan...
-	        </td>
-	    </tr>
-		
+</table>
+	<tr><td><br /></td></tr>
+
+	<table>	
 	</table>
 	
 </body>
