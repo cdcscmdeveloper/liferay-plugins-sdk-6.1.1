@@ -5107,16 +5107,30 @@ public class QTDetailBackingBean extends
 					 this.getManagedBean().setPublicationApproval(null);	
 				 }
 				//#25692-End
-														  
+					break;
 			case 50: //BPK Approval
+					
+			}
 				
-		  
-						  
 			this.getManagedBean().setActiveIndex(activeIndex);
 		}
+	}	
+
+	/**
+	 * 
+	 * @param activeIndex
+	 * @param otherwiseActiveIndex
+	 * @param conditionForActiveIndex - if true, use activeIndex. else otherwiseActiveIndex will be used.
+	 */
+	public void qtDetailsTabChange(Integer activeIndex, Integer otherwiseActiveIndex, Boolean conditionForActiveIndex){
+		if(conditionForActiveIndex){
+			qtDetailsTabChange(activeIndex);
+		}
+		else{
+			qtDetailsTabChange(otherwiseActiveIndex);
 		}
 	}
-	
+
 	private boolean isQTStatusBtwScheduleDocAndBeforePublished(Long currentStatusId) {
 		return isQTStatusInBetween(currentStatusId,
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
@@ -7343,7 +7357,6 @@ public class QTDetailBackingBean extends
 				resArr[8] = isAllowQTPublishBtn(scQt);
 				resArr[9] = isAllowQTClosedBtn(scQt);
 			}
-		}
 		return resArr;
 		
 	}

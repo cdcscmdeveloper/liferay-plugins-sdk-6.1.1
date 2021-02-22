@@ -2017,6 +2017,19 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		}
 	}
 
+	/**
+	 * only if managedBean.readOnly and managedBean.approvalEditableSection()
+	 * @return
+	 */
+	public boolean isInApprovalEditableSection(){
+		if(this.getManagedBean().isReadOnly()){
+			if(this.getManagedBean().isApprovalEditableSection()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//#25692-start
 	public void retriveCommiteeApprovalTabDetails(){
 		log.debug("===startApprovalbackingBeanretriveCommiteeApprovalTabDetails=====");

@@ -1152,6 +1152,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(entry.getKey());
 				
+				resDTO = detailSO.retriveQTDetails(reqDTO);
 				ScQt qt = resDTO.getQtDetail();
 			
 				reqDTO = null;

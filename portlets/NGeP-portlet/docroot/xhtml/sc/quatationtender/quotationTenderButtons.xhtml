@@ -53,11 +53,8 @@
 										
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
-					<ui:remove>
-						START Bug #28932					
-					</ui:remove>						
 						<ui:decorate
-							template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
+							template="/WEB-INF/facelets/templates/claim_template.xhtml">
 							<ui:define name="outComeSection">
 								<ui:repeat var="bpmAction"
 									value="#{approvalBackingBean.managedBean.outComes}">
@@ -71,9 +68,6 @@
 								</ui:repeat>
 							</ui:define>
 						</ui:decorate>						
-						<ui:remove>
-							END Bug #28932					
-						</ui:remove>
 					</h:panelGroup>
 				</div>
 			</c:if>
@@ -123,6 +117,7 @@
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
 							onclick="blockWidget.show();"
+							rendered="#{isClone1 and isClone2}" 
 							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 							
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
