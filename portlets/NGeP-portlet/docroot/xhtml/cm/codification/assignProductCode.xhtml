@@ -119,12 +119,9 @@
 						<h:outputText style="white-space: normal!important;"
 							value="#{requestItem.uom.uomName}" />
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.item.table.temporary.code']}
-						</f:facet>
-						#{requestItem.tempUnspscCode}
-				</p:column>
+					<!-- # 2020/05/05 - 27626 - start -->
+					<!--  Remove Column Temporary Item Code -->
+					<!-- # 2020/05/05 - 27626 - end -->
 					<p:column>
 						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.code']}
