@@ -1547,15 +1547,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
 			}
 		}
-		// if size of managedBean.downloadedLoaReportsTitleList equals current
-		// total loa reports and current LOA task/status is "Verify LOA", enable
-		// Verify button since user has downloaded all reports.
-		if (getManagedBean().getDownloadedLoaReportsTitleList().size() == getManagedBean().getScLoa().getScLoaReports()
-				.size()
-				&& QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
-						.getStatusId().longValue())) {
-			getManagedBean().setVerifyBtnFlag(false);
-		}
 		//#29006 - end
 		
 		try{
@@ -7883,15 +7874,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void onSaveSupplierOffer(String outcome) {
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
-			throw new EpException(MessageConst.ERROR_775163);
+		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())
+				&& StringUtils.isBlank(getManagedBean().getNewSupplierJustification())) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							"lbl.sc.new.supplier.offer.and.justification.mandatory",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			return;
 		}
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierOffered())) {
-			throw new EpException(MessageConst.ERROR_775162);
+		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							"lbl.sc.new.supplier.offer.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			return;
 		}
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
-			throw new EpException(MessageConst.ERROR_775161);
+		if (StringUtils.isBlank(getManagedBean().getNewSupplierJustification())) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							"lbl.sc.new.supplier.offer.justification.mandatory",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			return;
 		}
 		if (StringUtils.isNotEmpty(getManagedBean().getNewSupplierOffered()) && StringUtils.isNotEmpty(getManagedBean().getNewSupplierJustification())) {
 			this.getManagedBean().setScLoiLoaItemAnswerMap(new HashMap<Long, List<TplSpecAnswer>>());
