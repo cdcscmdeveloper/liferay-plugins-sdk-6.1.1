@@ -3842,6 +3842,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if (getManagedBean().getSelectedItem() != null) {
 			for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				//#30428 - agency not display because isChkStatus is false. To re-check status for isChkStatus if it is false
+				if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				}
+				
 				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
