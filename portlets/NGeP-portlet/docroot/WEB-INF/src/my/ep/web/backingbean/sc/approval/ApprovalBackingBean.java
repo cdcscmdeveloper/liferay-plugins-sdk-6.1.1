@@ -624,7 +624,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
-			if(null!=this.getManagedBean().getCurrentStatusId() && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())){
+			// #14398 - Start.
+			if(null!=this.getManagedBean().getCurrentStatusId() && (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE.equals(this.getManagedBean().getCurrentStatusId()))){
+			// #14398 - End.
 				log.info("======displayCurrentStatusIdCodesInnerLoopExecuted======");
 			if(approvalRequests==null || approvalRequests.isEmpty()){
 				log.info("PublicationApprovalApprovalRequestEmptyCodesExecuted");
