@@ -726,6 +726,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			// #29006 - start
 			removeUnwantedLampiranA3Report(1);
+			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			// #29006 - end
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1516,6 +1517,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#29006 - start
 		if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
 			getManagedBean().setUpdatedLampiranA3DownloadedFlag(true);
+		}
+		
+		// Add current report title into
+		// managedBean.downloadedLoaReportsTitleList
+		// only if the title does not exist in the said list
+		if (CollectionUtils.isEmpty(getManagedBean().getDownloadedLoaReportsTitleList())) {
+			getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
+		} else {
+			if (!getManagedBean().getDownloadedLoaReportsTitleList().contains(scLoaReport.getTitle())) {
+				getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
+			}
 		}
 		//#29006 - end
 		
@@ -3341,12 +3353,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #29006 - start
 		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
 				.longValue())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierJustification())
-				&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
+			boolean lampiranA3Exists = false;
+			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
+				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
+					lampiranA3Exists = true;
+					break;
+				}
+			}
+			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
+					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+				return resDTO;
+			}
 		}
 		// #29006 - end
 
@@ -3596,27 +3619,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         // #26770 - End.
         
 		this.getManagedBean().setAction(outcome);
-		
-		//#29006 - start
-		if ((CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports()))) {
-			boolean lampiranA3Exists = false;
-			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
-					lampiranA3Exists = true;
-					break;
-				}
-			}
-			if (lampiranA3Exists && getManagedBean().isNewSupplierUpdatedFlag()
-					&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				return;
-			}
-		}
-		//#29006 - end
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
@@ -3824,17 +3826,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-		// #29006 - start
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
-				.longValue())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierJustification())
-				&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
-		}
-		// #29006 - end
+		
 		this.getManagedBean().setAction(outcome);
 		validateLOADetails(getManagedBean().getScLoa(), outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
@@ -7194,17 +7186,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void updateBpmTaskActionSupplier(String outcome) {
 		this.getManagedBean().setAction(outcome);
 		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId().longValue();
-		
-		// #29006 - start
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && StringUtils.isNotBlank(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isNotBlank(getManagedBean().getNewSupplierJustification())
-				&& !getManagedBean().isUpdatedLampiranA3DownloadedFlag()) {
-			throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.download.new.lampiran.a3", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
-		}
-		// #29006 - end
-
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 				.equals(statusId)) {
 			validateSupplierWitnessDetails(this.getManagedBean().getScLoa(), this.getManagedBean().getLoaSupplierWitness(), outcome);
@@ -7870,15 +7851,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void onSaveSupplierOffer(String outcome) {
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierOffered())
-				&& StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
-			throw new EpException(MessageConst.ERROR_775163);
+		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())
+				&& StringUtils.isBlank(getManagedBean().getNewSupplierJustification())) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							"lbl.sc.new.supplier.offer.and.justification.mandatory",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			return;
 		}
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierOffered())) {
-			throw new EpException(MessageConst.ERROR_775162);
+		if (StringUtils.isBlank(getManagedBean().getNewSupplierOffered())) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							"lbl.sc.new.supplier.offer.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			return;
 		}
-		if (StringUtils.isEmpty(getManagedBean().getNewSupplierJustification())) {
-			throw new EpException(MessageConst.ERROR_775161);
+		if (StringUtils.isBlank(getManagedBean().getNewSupplierJustification())) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							"lbl.sc.new.supplier.offer.justification.mandatory",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			return;
 		}
 		if (StringUtils.isNotEmpty(getManagedBean().getNewSupplierOffered()) && StringUtils.isNotEmpty(getManagedBean().getNewSupplierJustification())) {
 			for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
@@ -7967,11 +7963,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			generateUpdatedLampiranA3FromVelocity((ScAttachment) lampiranA3.getScLoaReportAttachment(),
 					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage()));
 		}
+		
 		getManagedBean().getScLoa().getScLoaReports().add(lampiranA3);
 	}
 
