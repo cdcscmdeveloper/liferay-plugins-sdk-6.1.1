@@ -276,6 +276,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isMofFinalization;
 	private boolean isBpkCentralContract;
 	// #27502 - Start 
+	//28834 start
+	
+	private boolean disableBfButton;
+	//28834 ends
 	
 	// #11134 - Start
 	private boolean haveSupplierRejection;
@@ -2223,7 +2227,24 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setEvaluationReportIndex(int evaluationReportIndex) {
 		this.evaluationReportIndex = evaluationReportIndex;
 	}
-	
+	//#25037-start
+	public List<ScCommitteeMember> getDeletedMemberList() {
+		return deletedMemberList;
+	}
+
+	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
+		this.deletedMemberList = deletedMemberList;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	//#25037-end
+
 	/** #25729#142 & #26169 - Start
 	 * @return the isSuppOfferPriceExceedCommunityAuthority
 	 */
@@ -2326,26 +2347,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     // #25638 - End.
     //#18685 - End
     
-	//#25037-start
-	
-
-	public List<ScCommitteeMember> getDeletedMemberList() {
-		return deletedMemberList;
-	}
-
-	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
-		this.deletedMemberList = deletedMemberList;
-	}
-
-	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
-		return meetingBB;
-	}
-
-	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
-		this.meetingBB = meetingBB;
-	}
-	//#25037-end
-    
 	public boolean isMofFinalization() {
 		return isMofFinalization;
 	}
@@ -2377,8 +2378,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isBpkCentralContract = isBpkCentralContract;
 	}
 	//27502 - End.
+	//28834 starts
+	public boolean isDisableBfButton() {
+		return disableBfButton;
+	}
+
+	public void setDisableBfButton(boolean disableBfButton) {
+		this.disableBfButton = disableBfButton;
+	}
 	
-	
+	//28834 ends
 }
 
 

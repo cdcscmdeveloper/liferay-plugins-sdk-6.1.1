@@ -1024,10 +1024,26 @@ public class SupplierFinalizationBackingBean extends
 	 * @param scQtMeeting
 	 *            the selected ScQtMeeting entity
 	 */
+	//28834 starts
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 		log.info("changeMeetingStatus");
 		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
+		log.info("changeMeetingStatus"+scQtMeeting.getMeetingStatus());
+		//Boolean IsDisableBfButton = getManagedBean().getIsDisableBfButton();
+		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+		boolean done = true;
+		for (ScQtMeeting meeting : meetingList) {
+			log.info("changeMeetingStatus---->"+meeting.getMeetingStatus().getStatusId());
+			
+			if(!meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID)){
+				done = false;
+				break;
+			}
+			
+		}
+		this.getManagedBean().setDisableBfButton(done);
 	}
+	//28834 ends
 
 	/**
 	 * To retrieve committee details
@@ -3084,19 +3100,18 @@ public class SupplierFinalizationBackingBean extends
 		log.info("generateSupplierFinalizationPdf");
 		populateAttachmentDetails(attachment);
 		
-		FacesScopes facesScopes = new FacesScopes();
+		//FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
 		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 		
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
 		try {
-		qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-		ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
-		estimatedAmountStr = estimatedAmount.toPlainString();
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
+			estimatedAmountStr = estimatedAmount.toPlainString();
 		} finally {
-		qtDetailSO = null;
+			qtDetailSO = null;
 		}		
 		
 		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
@@ -3108,16 +3123,16 @@ public class SupplierFinalizationBackingBean extends
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
 		StringBuilder ulasan=new StringBuilder();
 		try {
-		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
-		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
-		for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
-		if(StringUtils.isNotBlank(remark.getRemark())){
-		ulasan.append(remark.getRemark() + "\n");
-		}
-		}
-		}
+			List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
+			if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+				for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
+					if(StringUtils.isNotBlank(remark.getRemark())){
+						ulasan.append(remark.getRemark() + "\n");
+					}
+				}
+			}
 		} catch (Exception e) {
-		log.info("Error: " + e.getMessage());
+			log.info("Error: " + e.getMessage());
 		}
 		/*StringBuilder pengesyoran=new StringBuilder();
 		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
@@ -3605,7 +3620,6 @@ public class SupplierFinalizationBackingBean extends
 			if (scQtFinalization != null) {
 				this.getManagedBean().setScQtFinalization(scQtFinalization);
 				
-				//TODO - Maintenance Screen
 				List<String> rejectedRecommendDtlIds;
 				if(isQTMaintenanceScreen()){
 					rejectedRecommendDtlIds = null;
@@ -3666,7 +3680,7 @@ public class SupplierFinalizationBackingBean extends
 				if (isQTRefinalized()) {
 					disableAwardedItems(scQtFinalization.getScQtRecommends());
 					
-					// Check if the any of the suppliers has awarded LOA's TODO : To be removed [Not in use]
+					// Check if the any of the suppliers has awarded LOA's 
 					/******Start******/
 					reqDTO = new SuppFinalizationReqDTO();
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
