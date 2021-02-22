@@ -3450,9 +3450,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (getManagedBean().getSelectedItem() != null) {
 			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
+				  //#30428 - agency not display because isChkStatus is false
+				  //to re-check status for isChkStatus if it is false
+				  if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				  }
+				  
+				  if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
-				}
+				  }
 			  }
 			}	  
 		}
