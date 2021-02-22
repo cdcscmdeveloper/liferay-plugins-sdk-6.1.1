@@ -1491,7 +1491,7 @@ public class PurchaseInDefaultBackingBean extends
 	public void updatePID(){
 		debugLogger("updatePurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
-		FacesScopes facesScopes = new FacesScopes();
+		//FacesScopes facesScopes = new FacesScopes();
 		try {
 			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -1919,11 +1919,9 @@ public class PurchaseInDefaultBackingBean extends
 	
 	//to insert child reason
 	public void savePidReason() {
-		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+		//ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IReasonSO.class);
+		//IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
