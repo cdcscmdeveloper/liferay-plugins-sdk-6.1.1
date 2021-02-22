@@ -9,6 +9,10 @@
 		<h:panelGrid columns="2"  columnClasses="columnWidth225">
 			<p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
 			<p:inputText style="width:300px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierMofNo}" />
+			<!-- #29983 start -->
+			<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}" />
+			<p:inputText style="width:300px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo}" />
+			<!-- #29983 end -->
 			<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 			<p:inputText style="width:300px;" disabled="true" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
 			<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
