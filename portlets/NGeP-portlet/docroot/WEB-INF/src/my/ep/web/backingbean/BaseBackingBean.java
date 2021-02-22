@@ -3170,18 +3170,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		filePath = filePath + "/" + tmpFolder;
        
 		File file = new File(filePath);
-		file.mkdirs();
+		if(!file.exists()) file.mkdirs();
 		AttachmentFormat attachmentFormat = null;
 		attachmentFormat = new AttachmentDateFormat();
 		String newName = attachmentFormat.format(fileName, null);
 		filePath = filePath + "/"+ newName;
 		OutputStream os1 = null;
+		File finalOutputFile = new File(filePath);
 		try{
 			os1 = new FileOutputStream(filePath);
 			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
 			os1.flush();
 			os1.close();
 			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+			finalOutputFile.delete();
 		}catch(Exception e){
 			log.error("File: BaseBackingBean, printReportVM, Message: "+e.getMessage());
 		}
