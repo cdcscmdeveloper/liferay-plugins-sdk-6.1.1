@@ -5,6 +5,7 @@ package my.ep.web.managedbean.sc.purchaseindefault;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal; //#28865
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -24,12 +25,12 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark; //#28865
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
 
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class PurchaseInDefaultManagedBean.
@@ -156,6 +157,12 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
 	/** The codify flag for selected contract / panel item */
 	private boolean isCodified = true;
+	
+	private BigDecimal qtyByRequisitioner;//#28865
+	private BigDecimal qtyBySupplier;//#28865
+	private List<ScPIDRemark> suppRemarks = new ArrayList<ScPIDRemark>();//#28865
+	private Long contractId;//#28865
+	private Long suppRemarkId = null;//#28865
 
 	/**
 	 * Instantiates a new purchase in default managed bean.
@@ -805,6 +812,48 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	public void setCodified(boolean isCodified) {
 		this.isCodified = isCodified;
 	}
+
+	//#28865 - start
+	public BigDecimal getQtyByRequisitioner() {
+		return qtyByRequisitioner;
+	}
+
+	public void setQtyByRequisitioner(BigDecimal qtyByRequisitioner) {
+		this.qtyByRequisitioner = qtyByRequisitioner;
+	}
+
+	public BigDecimal getQtyBySupplier() {
+		return qtyBySupplier;
+	}
+
+	public void setQtyBySupplier(BigDecimal qtyBySupplier) {
+		this.qtyBySupplier = qtyBySupplier;
+	}
+
+	public List<ScPIDRemark> getSuppRemarks() {
+		return suppRemarks;
+	}
+
+	public void setSuppRemarks(List<ScPIDRemark> suppRemarks) {
+		this.suppRemarks = suppRemarks;
+	}
+
+	public Long getSuppRemarkId() {
+		return suppRemarkId;
+	}
+
+	public void setSuppRemarkId(Long suppRemarkId) {
+		this.suppRemarkId = suppRemarkId;
+	}
+
+	public Long getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
+	}
+	//#28865 - end
 	
 	
 }
