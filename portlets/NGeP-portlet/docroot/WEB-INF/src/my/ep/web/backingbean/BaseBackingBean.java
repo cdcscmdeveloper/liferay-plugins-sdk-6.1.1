@@ -24,6 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -129,6 +130,7 @@ import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
@@ -3040,7 +3042,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 					}
 				}
-			
+				//Date date1 =DateUtils.convertStringToDate("yyyy-MM-dd",this.getManagedBean().getSmCompanyBasicSsm().getEstablishDate());
+				//Date date2 =DateUtils.convertStringToDate("yyyy-MM-dd",this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate());
+				
 			/*if(showOld){
 				for(SmPersonnel personnel:getManagedBean().getSmAppl().getSmPersonnels()){
 					if(personnel.isSsmData()){
@@ -3134,6 +3138,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public VelocityContext setDetail(){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		VelocityContext context = new VelocityContext();
 		FacesScopes face = new FacesScopes();		
 		
@@ -3141,9 +3146,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("title", ResourceBundleUtils.getMessage("lbl.sm.view.ssm.infomation",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfoSec", ResourceBundleUtils.getMessage("lbl.sm.comp.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
+		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
+		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
+		context.put("businessNature", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("branchInfo",this.getManagedBean().getSmSupplierBranchSsm());
+		context.put("equityCompanies",this.getManagedBean().getSmEquityCompaniesSsm());
+		context.put("personnelInfo",this.getManagedBean().getPersonnelsSsm());
+		context.put("businessNatureCode", this.getManagedBean().getSmSupplierBusinessSsm());
 		context.put("smVmUtil", VmUtil.getInstance());
-		
+		context.put("establishdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getEstablishDate()));
+		if(this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)|| this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
+		context.put("robexpdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate()));
+		}
 		return context;
 	}
 	
