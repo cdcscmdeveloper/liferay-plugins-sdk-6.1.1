@@ -2840,7 +2840,18 @@ return	remarksNotFound;
 						committeeSO = null;
 					}
 					
-					if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {
+					//#30324 - Start
+					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+					qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
+					ScQt scQt = qtBackingBean.getManagedBean().getQt();
+					boolean isBpkCentralContract = false;
+					isBpkCentralContract = isBpkCentralContract(scQt);
+
+					if (isBpkCentralContract) {
+						this.getManagedBean().setBpkCentralContract(true);
+					}
+					
+					if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {//#30324 - End
 						String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
 																committeeType);
 						
@@ -3238,7 +3249,18 @@ return	remarksNotFound;
 					committeeSO = null;
 				}
 				
-				if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {
+				//#30324 - Start
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
+				ScQt scQt = qtBackingBean.getManagedBean().getQt();
+				boolean isBpkCentralContract = false;
+				isBpkCentralContract = isBpkCentralContract(scQt);
+
+				if (isBpkCentralContract) {
+					this.getManagedBean().setBpkCentralContract(true);
+				}
+				
+				if (!isCurrentCommitteeAuthorisedToSubmit && !getManagedBean().isBpkCentralContract()) {//#30324 - End
 					String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, 
 															committeeType);
 					
