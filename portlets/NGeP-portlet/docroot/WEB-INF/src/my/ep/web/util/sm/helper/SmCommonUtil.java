@@ -5990,7 +5990,7 @@ public class SmCommonUtil {
 		case MessageConst.ERROR_721084:
 			throw new EpException(MessageConst.ERROR_721084);			
 		case "70067"://No SSM Data for requested BusinessRegistrationNo
-			//27214
+			//27214 && #29584
 			if(resDTO.isPreRegistration()){
 				throw new EpException(MessageConst.ERROR_721086);
 			}else{
