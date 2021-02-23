@@ -22,13 +22,16 @@
 		<ui:include src="technicalspecbuttons.xhtml"></ui:include>
 
 		<ui:include src="technicalspeccompliancelist.xhtml"></ui:include>
-
-
-
-		<ac:templateSpec
-			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
-
-
+		
+		<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+			<ac:templateSpec
+				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />	
+		</c:if> 
+		
+		<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+			<ui:include src="technicalItemSupplierList.xhtml"></ui:include> 
+		</c:if>
+		 
 		<ui:param name="technicalNoofContractsCheckListScoreType"
 			value="#{evaluationBackingBean.managedBean.userScoreSchemaType}"></ui:param>
 		<ui:param name="technicalNoofYearsCheckListScoreType"
