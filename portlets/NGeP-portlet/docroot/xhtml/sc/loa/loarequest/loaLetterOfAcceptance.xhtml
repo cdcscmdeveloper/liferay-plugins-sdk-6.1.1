@@ -125,12 +125,14 @@
 
 			<p:column style="text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
+				<!-- #29006 - start, added update="@form" -->
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
+					ajax="false" update="@form"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
 					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}" />
+				<!-- #29006 - end -->
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="scDocUploadDlg"
 					rendered="#{(isEditableStatus and !lOADetailBackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
@@ -188,6 +190,5 @@
 			okAction="lOADetailBackingBean.deleteLoaDocument" width="400"
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
-
 	</p:panel>
 </ui:composition>
