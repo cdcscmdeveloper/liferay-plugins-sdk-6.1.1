@@ -1004,7 +1004,48 @@ public class CreateQtBackingBean extends
 				.get("value");
 		this.getManagedBean().getQt().setOpenFor(type);
 	}
+/** #21695 FARID START */	
+	/**
+	 * Partial offer change.change partialy offer(offer/not offer) radion button in 
+	 * owner.
+	 * 
+	 * @param event
+	 *            (String partialChange)
+	 */
+	public void partialChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getQt().setPartial(type);
+		if(type == false){
+		RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.hide()");
+		}else {
+
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.show()");
+		}
+	}
+/** #21695 FARID END */	
+/** #21695 FARID START */		
 	
+	public void partialChangePopUpNo() {
+		if(this.getManagedBean().getQt().isPartial()==false){
+			this.getManagedBean().getQt().setPartial(true);
+		}
+		else if(this.getManagedBean().getQt().isPartial()!=false){
+			this.getManagedBean().getQt().setPartial(false);
+		}
+				 
+	}
+	public void partialChangePopUpYes() {
+		if(this.getManagedBean().getQt().isPartial()!=true){
+			this.getManagedBean().getQt().setPartial(false);
+		}
+		else if(this.getManagedBean().getQt().isPartial()==true){
+			this.getManagedBean().getQt().setPartial(true);
+		}
+		this.getManagedBean().getQt().setSampleReq(Boolean.FALSE);//#11104
+	}
+	
+/** #21695 FARID END */		
 	/**
 	 * Procurement change.change Procurement Category Dropdown in Business
 	 * owner.
@@ -2208,7 +2249,7 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().getQt()
 					.setContractType(resDTO.getPmParameter());
 			if(null!=this.getManagedBean().getQt()
-					.getContractType() &&ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
 					.getContractType().getParameterCode())){
 				ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
 				fulfilMentAsandWhen
@@ -3521,7 +3562,9 @@ public class CreateQtBackingBean extends
 			st2technicalproposalList = new ArrayList<ScQtCheckList>();
 
 		}
-		else{
+		if(type == true){
+			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
+		}else{
 			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
 				getManagedBean().setMarkDeletedTechChecklist(
 						new ArrayList<ScQtCheckList>());

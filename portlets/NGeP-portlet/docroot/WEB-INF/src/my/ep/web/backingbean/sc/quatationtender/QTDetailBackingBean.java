@@ -4879,6 +4879,39 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (null != qtId) {
 			
 			
+// #21695 - Farid Start 30/7/2020			
+			log.info("ReportBackingBean-retriveUserRoleByUserId");
+			IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			List<String> authoriztionList=new ArrayList<String>();
+			if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				// reqDTO.setUserId((long) 240500);
+				reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+				UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+				List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+				if (CollectionUtils.isNotEmpty(roleDesc)) {
+					for (PmRoleDesc pmRoleDesc : roleDesc) {
+						pmRoleDesc.getPmRole().getRoleCode();
+						if (!authoriztionList.contains(pmRoleDesc.getPmRole()
+								.getRoleCode())) {
+							authoriztionList.add(pmRoleDesc.getPmRole()
+									.getRoleCode());
+						}
+						
+						RoleCode[] r = {RoleCode.SC_SECRETARY};
+						if (userHasRole(r)){
+							getManagedBean().setSecretaryValidate(true);
+						};
+//						if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
+//							getManagedBean().setSecretaryValidate(true);
+//						}
+					}
+				}
+			}
+//#21695 - Farid End 30/7/2020
+			
 			// this.getManagedBean().setActiveIndex(0);
 			IQTDetailSO QtDetailsSO;
 			try {
