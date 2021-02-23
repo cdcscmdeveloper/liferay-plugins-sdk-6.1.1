@@ -10816,7 +10816,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setScoreType(BigDecimal scoreType) {
 			this.scoreType = scoreType;
 		}
-
+ 
 		public boolean isSingleItem() {
 			return isSingleItem;
 		}
