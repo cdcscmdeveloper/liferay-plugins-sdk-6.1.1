@@ -1861,7 +1861,7 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
 						//START #27239
 						//POPUP USER NOT SSM OWNER #26734 //ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
-						FacesScopes facesScope = new FacesScopes();
+						//FacesScopes facesScope = new FacesScopes();
 						//START 28454
 						//if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 							
@@ -1982,7 +1982,7 @@ public class SmApplicationBackingBean extends
 						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 							}
 							//delete all old company share #27145
 							Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
@@ -2003,7 +2003,7 @@ public class SmApplicationBackingBean extends
 						//SET SMPERSONNEL
 						if(ssmResDTO.getSmPersonnelAll()!=null){
 							if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
-								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								//#27165
@@ -2054,7 +2054,7 @@ public class SmApplicationBackingBean extends
 						//SET EQUITY BRANCH
 						if(ssmResDTO.getSmSupplierBranches() != null){
 							if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
-								this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
 							}
 							//#28900
 							for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
@@ -4674,7 +4674,6 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmAssociationBodies()
 				.contains(getManagedBean().getSelectedAssocBody())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			getManagedBean().getSmAppl().getSmAssociationBodies()
 					.add(getManagedBean().getSelectedAssocBody());
@@ -9782,7 +9781,6 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmAppl().setBumi(false);
 						getManagedBean().getSmAppl().setPmRegStatus(null);
 						getManagedBean().getSmAppl().getSmSupplier().setBumi(false);
-						SmApplicationUtil.rejectSmMofCertForSupplier(getManagedBean().getSmAppl().getSmSupplier(), reqDTO.getLastApprovedAppl());
 					}				
 					// #29663 - end
 					
@@ -10246,7 +10244,6 @@ public class SmApplicationBackingBean extends
 			}
 		} catch (IllegalAccessException | InvocationTargetException
 				| NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -14131,7 +14128,7 @@ public class SmApplicationBackingBean extends
 			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null){
 				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 				}
 				//delete all old company share #27145
 				Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
@@ -14152,7 +14149,7 @@ public class SmApplicationBackingBean extends
 			//SET SMPERSONNEL
 			if(ssmResDTO.getSmPersonnelAll()!=null){				
 				if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
-					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 				}
 				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 					//#27165
@@ -14200,7 +14197,7 @@ public class SmApplicationBackingBean extends
 			//SET EQUITY BRANCH
 			if(ssmResDTO.getSmSupplierBranches() != null){
 				if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
-					this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
 				}
 				
 				for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
