@@ -125,6 +125,7 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.MenuModel;//#25138 Reendorsed
 import org.primefaces.model.TreeNode;
 
 /**
@@ -1722,6 +1723,28 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean fromSubmit;
 	//#1873 -end
 
+	//#25138-start
+	private List<TplSpecQuestion> specQuestionList;
+	// MenuModel
+	private MenuModel specificationSpecZonalMenuModel;
+	/** Total max score by zones. */
+	private List<TplSpecZoneDtl> totalMaxScoreZones;
+	
+	private Paginator detachedPaginator;
+	
+	private boolean isZonal;
+	
+	private BigDecimal scoreType;
+	/** The fin points for zonal. */
+	private List<Integer> finMaxScorePoints;
+	/** The offer price package list. */
+	private List<ScQtScoreOfferPrice> offerPricePackageList;
+	
+	private int specZoneTabIndex;
+	
+	private boolean isSingleItem;
+	//#25138-end
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10727,7 +10750,81 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFromSubmit(boolean fromSubmit) {
 			this.fromSubmit = fromSubmit;
 		}
+		//#25138 - Reendorsed - start
+		public int getSpecZoneTabIndex() {
+			return specZoneTabIndex;
+		}
 
+		public void setSpecZoneTabIndex(int specZoneTabIndex) {
+			this.specZoneTabIndex = specZoneTabIndex;
+		}
+		public List<TplSpecQuestion> getSpecQuestionList() {
+			return specQuestionList;
+		}
+		public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
+			this.specQuestionList = specQuestionList;
+		}
+
+		public MenuModel getSpecificationSpecZonalMenuModel() {
+			return specificationSpecZonalMenuModel;
+		}
+
+		public void setSpecificationSpecZonalMenuModel(MenuModel specificationSpecZonalMenuModel) {
+			this.specificationSpecZonalMenuModel = specificationSpecZonalMenuModel;
+		}
+
+		public List<TplSpecZoneDtl> getTotalMaxScoreZones() {
+			return totalMaxScoreZones;
+		}
+
+		public void setTotalMaxScoreZones(List<TplSpecZoneDtl> totalMaxScoreZones) {
+			this.totalMaxScoreZones = totalMaxScoreZones;
+		}
+
+		public List<Integer> getFinMaxScorePoints() {
+			return finMaxScorePoints;
+		}
+		public void setFinMaxScorePoints(List<Integer> finMaxScorePoints) {
+			this.finMaxScorePoints = finMaxScorePoints;
+		}
+
+		public List<ScQtScoreOfferPrice> getOfferPricePackageList() {
+			return offerPricePackageList;
+		}
+
+		public void setOfferPricePackageList(List<ScQtScoreOfferPrice> offerPricePackageList) {
+			this.offerPricePackageList = offerPricePackageList;
+		}
+
+		public Paginator getDetachedPaginator() {
+			return detachedPaginator;
+		}
+
+		public void setDetachedPaginator(Paginator detachedPaginator) {
+			this.detachedPaginator = detachedPaginator;
+		}
+
+		public boolean isZonal() {
+			return isZonal;
+		}
+		public void setZonal(boolean isZonal) {
+			this.isZonal = isZonal;
+		}
+		public BigDecimal getScoreType() {
+			return scoreType;
+		}
+		public void setScoreType(BigDecimal scoreType) {
+			this.scoreType = scoreType;
+		}
+
+		public boolean isSingleItem() {
+			return isSingleItem;
+		}
+
+		public void setSingleItem(boolean isSingleItem) {
+			this.isSingleItem = isSingleItem;
+		}
+		//#25138 - Reendorsed - end
 }
 
 
