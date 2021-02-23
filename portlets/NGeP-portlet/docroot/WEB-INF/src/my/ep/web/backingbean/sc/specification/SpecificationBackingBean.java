@@ -17762,6 +17762,7 @@ if(null!=allTechnicalChecklist){
 			List<TplSpecTierQty> quantityTier = question.getTplSpecTierQties();
 			StringBuilder quantityTierCompareSb = new StringBuilder("tierQty");
 			if(CollectionUtils.isNotEmpty(quantityTier)){
+				quantityTier = new ArrayList<TplSpecTierQty>(quantityTier);
 				Collections.sort(quantityTier, new Comparator<TplSpecTierQty>() {
 					public int compare(TplSpecTierQty o1, TplSpecTierQty o2) {
 						return o1.getFromQty().compareTo(o2.getFromQty());
@@ -17778,6 +17779,7 @@ if(null!=allTechnicalChecklist){
 			List<TplSpecZoneQty> zoneQuantityTier = question.getTplSpecZoneQties();
 			StringBuilder zoneQuantityTierCompareSb = new StringBuilder("zoneTierQty");
 			if(CollectionUtils.isNotEmpty(zoneQuantityTier)){
+				zoneQuantityTier = new ArrayList<TplSpecZoneQty>(zoneQuantityTier);
 				Collections.sort(zoneQuantityTier, new Comparator<TplSpecZoneQty>() {
 					public int compare(TplSpecZoneQty o1, TplSpecZoneQty o2) {
 						return o1.getTplSpecZoneDtl().getZoneName().compareTo(o2.getTplSpecZoneDtl().getZoneName());
