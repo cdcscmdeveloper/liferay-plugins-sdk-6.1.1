@@ -109,8 +109,6 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
-import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
-import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -169,7 +167,6 @@ import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
@@ -219,12 +216,8 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.util.StringUtil;
-//import my.ep.biz.service.pm.common.educationlevel.IEducationLevelSO;
-//import my.ep.dto.pm.common.educationlevel.EducationLevelReqDTO;
-//import my.ep.dto.pm.common.educationlevel.EducationLevelResDTO;
-//import my.ep.persistence.entity.pm.common.PmEduLevel;
 
-// TODO: Auto-generated Javadoc
+
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
@@ -245,7 +238,6 @@ public class SmApplicationUtil {
 	 */
 	public static int validatePersonLimit(Long supplierId, String applType,
 			Long applId) {
-		log.info("******* Validate Personnel Count Start ******");
 		int validPerCount = 0;
 		int count = 5;
 		int resultCount = 0;
@@ -273,7 +265,6 @@ public class SmApplicationUtil {
 			validPerCount = 0;
 		}
 
-		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
 	}
 
@@ -532,13 +523,10 @@ public class SmApplicationUtil {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			if (pmUser == null
 					|| (pmUser != null && pmUser.getUserId() == null)) {
-				log.info("**** Invalid user from the session scope ******");
 				throw new EpException(MessageConst.ERROR_721017);
 			}
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(pmUser.getLoginId());
-			log.info("************Supplier PmUser Login Id:"
-					+ pmUser.getLoginId());
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 			supplierSearchReqDTO.setAllStatuses(true);
@@ -553,15 +541,8 @@ public class SmApplicationUtil {
 						.get(0);
 				log.debug("*************Current Supplier: "
 						+ smSupp.getSupplierId());
-			} else {
-//				FIXME: check again this condition because all user without Disciplinary Action view this error message (#26934)
-//				log.debug("**** No valid supplier record found for this user ******");
-//				throw new EpException(MessageConst.ERROR_721018);
-			}
-			if (smSupp.getSupplierId() == null) {
-//				FIXME: check again this condition because all user without Disciplinary Action view this error message (#26934)
-//				throw new EpException(MessageConst.ERROR_721018);
-			}
+			} 
+
 			return smSupp;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1749,7 +1730,6 @@ public class SmApplicationUtil {
 
 	public static boolean validatePersonnelAcademics(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
-		log.info("******* Validate Academics For personnel******** ");
 		boolean validPersonnels = true;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
@@ -2684,10 +2664,8 @@ public class SmApplicationUtil {
 				per.setIdentityResponseCode(resDTO.getStatusCode());
 				per.setIdentityResidentStatus(resDTO.getResidentStatus());
 			}
-			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.info("**********error calling myidentity api[" + e.getMessage()
+			log.error("**********error calling myidentity api[" + e.getMessage()
 					+ "]");
 		}
 
@@ -5218,7 +5196,6 @@ public class SmApplicationUtil {
 			s = SupplierManagementConst.PROCEED_MOF_REG;
 			break;
 		case "A":
-			// TODO changed to satisfy enhancement of adding the bank section
 			s = SupplierManagementConst.PROCEED_ADDTNLCAT_APPLN_SIDEMENU;
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
@@ -10124,7 +10101,7 @@ public class SmApplicationUtil {
 			String fileNameAndPath = tmpPath + fileName;
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
-			FacesScopes fs = new FacesScopes();
+			//FacesScopes fs = new FacesScopes();
 			// context.put("hostUrl", fs.getRequest().getServerName() + ":"
 			// + fs.getRequest().getServerPort());
 			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
@@ -11630,7 +11607,7 @@ public class SmApplicationUtil {
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 	}
-
+	
 	private static void addRoles(List<SelectItem> roles, String epRole,
 			boolean isAdmin) {
 		SelectItem role = new SelectItem();
@@ -12286,7 +12263,6 @@ public class SmApplicationUtil {
 		if (bean.getSelectedShareHolder().getSmRelatedCompanies()
 				.contains(bean.getSelectedRelatedCompany())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmRelatedCompanies()
 					.add(bean.getSelectedRelatedCompany());
@@ -12360,7 +12336,6 @@ public class SmApplicationUtil {
 		if (bean.getSelectedShareHolder().getSmAssociationBodies()
 				.contains(bean.getSelectedStfPrfBdy())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmAssociationBodies()
 					.add(bean.getSelectedStfPrfBdy());
@@ -12425,7 +12400,6 @@ public class SmApplicationUtil {
 		}
 		if (bean.getSelectedShareHolder().getSmStaffAcademics()
 				.contains(bean.getSelectedStaffAcademic())) {
-			// TODO if any validation reqd for edit
 		} else {
 
 			bean.getSelectedShareHolder().getSmStaffAcademics()
@@ -12507,14 +12481,11 @@ public class SmApplicationUtil {
 			RequestContext.getCurrentInstance().execute(
 					addPopupName + ".show()");
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -12544,14 +12515,11 @@ public class SmApplicationUtil {
 
 			}
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -13378,7 +13346,7 @@ public class SmApplicationUtil {
 			startDate = workFlowList.get(0).getCreatedDate();
 			if (workFlowList.size() > 1) {
 				Iterator<SmWorkflowStatus> wfIter = workFlowList.iterator();
-				SmWorkflowStatus wfStart = wfIter.next();
+				//SmWorkflowStatus wfStart = wfIter.next();
 				int i = 0;
 				while (wfIter.hasNext()) {
 					i++;
@@ -13611,38 +13579,6 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	// #29663 & #24964 - start 
-	public static void rejectSmMofCertForSupplier(SmSupplier supplier, SmAppl lastApprovedAppl) {
-		Long bumiApplId = supplier.getSmAppl().getApplId();
-		Long lastApprovedApplId = lastApprovedAppl.getApplId();
-		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
-		reqDTO.setSupplierId(supplier.getSupplierId());
-		reqDTO.setApplId(supplier.getSmAppl().getApplId());
-		
-		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMofCertsBySupplierIdAndByApplIds(reqDTO, lastApprovedApplId);
-
-		VirtualCertReqDTO mofCert = new VirtualCertReqDTO();
-		if (resDTO != null && resDTO.getSmMofCerts() != null) {
-			for (SmMofCert cert : resDTO.getSmMofCerts()) {
-				if (cert.getSmAppl().getApplId() == bumiApplId) {
-					// update record_status = 4
-					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
-					mofCert.setMofCert(cert);
-				}
-				if (cert.getSmAppl().getApplId() == lastApprovedApplId) {
-					// update record_status = 1
-					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					mofCert.setMofCert(cert);
-				}
-				//28774 - temp stopper
-				if(mofCert.getMofCert() != null){
-					SmServiceLookup.getVirtualCertSO().updateMOFCert(mofCert);
-				}
-			}
-		}
-	}
-	// #29663 & #24964 - end
-	
 	//27796: Disciplinary Action - start - 26238
 	public static List<SmDisciplinaryAction> retrieveDisciplinaryActionHistoryBySupplier(SmSupplier supplier) {
 		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
@@ -13691,8 +13627,7 @@ public class SmApplicationUtil {
 					smDisciplinaryAction.setEditNo(Long.valueOf(resultArr[24]==null?"0":resultArr[24].toString()));
 					//28137 : Disciplinary Action - end - 26238
 				} catch(Exception e){
-					log.info("***ERROR at set retrieve DA history*** ");
-					e.printStackTrace();
+					log.error(e.toString());
 				}
 				daHistoryList.add(smDisciplinaryAction);
 			}
@@ -13841,7 +13776,6 @@ public class SmApplicationUtil {
 						bean.setBankCities(null);
 						break;
 					default:
-						log.info("**** This is an unknown panel ***** ");
 						break;
 					}
 					addr.setDivisionId(null);
@@ -13945,7 +13879,6 @@ public class SmApplicationUtil {
 						bean.setBankCities(new ArrayList<SelectItem>());
 						break;
 					default:
-						log.info("**** This is an unknown panel ***** ");
 						break;
 					}
 					addr.setDistrictId(null);
