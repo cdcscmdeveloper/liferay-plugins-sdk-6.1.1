@@ -1687,13 +1687,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
 					// Validation for minimum order quantity
 					//#28479 - Start Putra
-//					if (item.getMinimumOrderQty() <= 0) {
-//						item.setMinimumOrderQty(1);
-//						setTabValue("IT");
-//						throw new EpException(MessageConst.ERROR_100033,
-//								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-//										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//					}
+					if (item.getMinimumOrderQty() <= 0) {
+						setTabValue("IT");
+						throw new EpException(MessageConst.ERROR_100033,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
 					if (!item.getCtItemMaxQties().isEmpty()) {
 						Double maxValue = new Double(0);							
 						for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
