@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -600,8 +599,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}	
 		return false;
 	}
@@ -618,8 +616,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				return true;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return false;
 	}
@@ -638,8 +635,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setServiceTaxAlertFlg(true);				
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -2524,8 +2520,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 			getManagedBean().getCtContractAmount().setBondWaived(false);
 			if(getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
@@ -3022,9 +3017,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectProductItem() {
 		try{
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
-			log.info("Show Item ****"+getManagedBean().getShowItem());
+			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//log.info("Selected Item ***"+getManagedBean().getSelectedItem());
+			//log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 
 				if (getManagedBean().getShowItem() != null
@@ -3049,10 +3044,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
 				}
 			}
-		}
-		catch(Exception ex )
-		{
-			ex.printStackTrace();
+		} catch(Exception ex ) {
+			log.error(ex.toString());
 		}
 	}
 	
@@ -3062,9 +3055,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectServiceItem() {
 		try{
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
-			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
+			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
+			//log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 				//cisbb.getManagedBean().setItemProductExist(false);
 				if (getManagedBean().getShowServiceItem() != null
@@ -3089,10 +3082,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem());
 				}
 			}
-		}
-		catch(Exception ex )
-		{
-			ex.printStackTrace();
+		} catch(Exception ex ) {
+			log.error(ex.toString());
 		}
 	}
 
@@ -3293,9 +3284,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (getManagedBean().getSelectedItem() != null) {
 			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
+				  //#30428 - agency not display because isChkStatus is false
+				  //to re-check status for isChkStatus if it is false
+				  if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				  }
+				  
+				  if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
-				}
+				  }
 			  }
 			}	  
 		}
@@ -3435,7 +3437,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 //		
 //		contractItemSO.updateItemSearchService(reqDTO);
 //Bug #28356 - End		
-		
+			//#28479 - End Putra		
 		
 	}
 
@@ -3847,8 +3849,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_LAUNCH_DATE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}
@@ -3862,8 +3863,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}
@@ -4282,7 +4282,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		Locale locale = null;
+		//Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
 		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
 				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
@@ -4290,12 +4290,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+			//locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");		
 			return NumberWordUtilEn.convert(df.format(
 					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+			//locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");
 			return NumberWordUtil.convert(df.format(
 					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
@@ -4375,34 +4375,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to retreive the factoring attachment from the list.
 	 */
-	@SuppressWarnings("null")
-	public List<CtAttachment> retrieveAttachmentList()
-	{	
+	public List<CtAttachment> retrieveAttachmentList() {	
 		/*#28868 - basri start*/
 		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
-				}
-				else{
+				} else{
 					return null;
 				}
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		}else{
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
-				}
-				else{
+				} else{
 					return null;
 				}
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		}

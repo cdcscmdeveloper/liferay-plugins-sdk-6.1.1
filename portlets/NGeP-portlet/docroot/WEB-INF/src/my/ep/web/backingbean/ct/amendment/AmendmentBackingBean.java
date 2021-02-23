@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -3366,19 +3365,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		Locale locale = null;
+		//Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
 				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
 			return "";
 		}
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
+			//locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");		
 			return NumberWordUtilEn.convert(df.format(
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
+			//locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");
 			return NumberWordUtil.convert(df.format(
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
@@ -3822,6 +3821,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if (getManagedBean().getSelectedItem() != null) {
 			for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				//#30428 - agency not display because isChkStatus is false. To re-check status for isChkStatus if it is false
+				if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				}
+				
 				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
@@ -5449,19 +5458,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} finally {
 			try {
 				if (fileOutputStream != null) {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 	}
@@ -5535,8 +5541,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setAllowAcknowledge(false);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -5680,7 +5685,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				bondDate.add(Calendar.YEAR, 1);
 				context.put("bondExpDate", dateSDF.format(bondDate.getTime())); 
 
-				//TODO #3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
 				String bondResDueDays = "30";
 				context.put("bondResDueDays", bondResDueDays);
 			} else {
@@ -5777,7 +5781,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierUserDesignation = getFacesScopes().getUserSessionBean().getDesignation() != null
 						? getFacesScopes().getUserSessionBean().getDesignation(): "";
 						supplierTelNo = getFacesScopes().getUserSessionBean().getPhoneNo() != null 
-								? getFacesScopes().getUserSessionBean().getPhoneNo() : ""; //TODO: Full Phone No
+								? getFacesScopes().getUserSessionBean().getPhoneNo() : ""; 
 								supplierFaxNo = getFacesScopes().getUserSessionBean().getFaxNo() != null
 										? getFacesScopes().getUserSessionBean().getFaxNo() : "";
 										supplierMobileNo = getFacesScopes().getUserSessionBean().getMobileNo() != null
