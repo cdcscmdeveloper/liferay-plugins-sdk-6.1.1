@@ -62,7 +62,19 @@
 				</h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"
-					readonly="true" />
+					readonly="true"/>
+					
+				<h:outputLabel value="#{lbl['lbl.sc.partial.offer']}" styleClass="outputLabel-view-label">
+				</h:outputLabel>
+				<h:outputText
+					value="#{lbl['lbl.sc.partial.offer.no']}"
+					rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq false or noticeBoardBackingBean.managedBean.scQt.partial eq null}" 
+					readonly="true"></h:outputText>
+					<h:outputText
+					value="#{lbl['lbl.sc.partial.offer.yes']}"
+					rendered="#{noticeBoardBackingBean.managedBean.scQt.partial eq true}"  
+					readonly="true"></h:outputText>	
+<!-- #21695 Farid Start Partial Offer  -->
 
 			</h:panelGrid>
 		</p:panel>
