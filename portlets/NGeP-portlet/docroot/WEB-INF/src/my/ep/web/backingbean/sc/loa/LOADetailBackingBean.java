@@ -150,6 +150,7 @@ import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
@@ -7950,7 +7951,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ScLoaReport lampiranA3 = getQtAwardSO().createLampiranA3(
 				getManagedBean().getScLoa(),
 				populateLabelLampiranA3(
-						new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils.getCurrentDate()),
+						" "
+								+ new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils
+										.getCurrentDate()) + " ",
 						SmCommonUtil.getUserByUserId(getManagedBean().getScLoa().getCreatedBy()).getUserName()));
 		try {
 			StringBuilder filename = new StringBuilder();
@@ -7959,9 +7962,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			lampiranA3.getScLoaReportAttachment().setScLoaReport(lampiranA3);
 			lampiranA3.getScLoaReportAttachment().setDocNo(lampiranA3.getScLoa().getLoaNo());
 			filename.append(".pdf");
-			lampiranA3.getScLoaReportAttachment().setFileName(filename.toString());
-			generateUpdatedLampiranA3FromVelocity((ScAttachment) lampiranA3.getScLoaReportAttachment(),
-					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
+			lampiranA3.getScLoaReportAttachment().setFileName(filename.toString().replaceAll("/",""));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -7974,18 +7975,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private void generateUpdatedLampiranA3FromVelocity(ScAttachment attachment, ScLoa scLoa, ScQt scQt)
 			throws Exception {
 		populateAttachmentDetails(attachment);
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		// MODIFY ATTACHEMENT FILE PATH HERE INSTEAD OF BACKING BEAN
+		AttachmentFormat scFormat = new AttachmentDateFormat();
+		String formatedFileName = scFormat.format(attachment.getFileName(), attachment.getPrefixFileName());
+		attachment.setFilePath(attachment.getFilePath().replace(formatedFileName, attachment.getFileName()));
 		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
-		DecimalFormat integerDF = new DecimalFormat(
-				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		DecimalFormat percentageDF = new DecimalFormat(
-				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		VelocityContext context = new VelocityContext();
+		String defaultValue = "T/B";
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			defaultValue = "N/A";
+		}
+		context.put("defaultValue", defaultValue);
 
 		boolean isZonal = scLoa.getScLoiLoa().isZonal();
 		context.put("isZonal", isZonal);
