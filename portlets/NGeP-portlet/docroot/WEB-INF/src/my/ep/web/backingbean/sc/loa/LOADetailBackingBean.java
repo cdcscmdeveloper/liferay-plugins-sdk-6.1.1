@@ -95,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -7875,6 +7876,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return;
 		}
 		if (StringUtils.isNotEmpty(getManagedBean().getNewSupplierOffered()) && StringUtils.isNotEmpty(getManagedBean().getNewSupplierJustification())) {
+			this.getManagedBean().setScLoiLoaItemAnswerMap(new HashMap<Long, List<TplSpecAnswer>>());
 			for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if ((each.getScRequestItem() != null)
 						&& (StringUtils.isNotBlank(each.getScRequestItem().getItemDesc()))
@@ -7885,6 +7887,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							each.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
 					List<Long> tpaIdList = new ArrayList<Long>();
 					int oldNewSuppOfferSameCount = 0;
+					List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
 					for (TplSpecAnswer tpa : tpaList) {
 						tpa.setNewSupplierOffer(getManagedBean().getNewSupplierOffered());
 						tpaIdList.add(tpa.getSpecAnswerId());
@@ -7893,7 +7896,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 										tpa.getAnswerRemark())) {
 							oldNewSuppOfferSameCount++;
 						}
+						try {
+							// POPULATE tpaClone GOES HERE
+							TplSpecAnswer tpaClone = new TplSpecAnswer();
+							tpaClone = populateTplSpecAnswerClone(tpa, each.getScRequestItem().getTplSpecQuestion(), tpaClone);
+							// END
+							clonedAnswerList.add(tpaClone);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
+					// Put into scLoiLoaItemAnswerMap for use in generating
+					// updated Lampiran A3 later
+					this.getManagedBean().getScLoiLoaItemAnswerMap().put(each.getLoiLoaItemId(), clonedAnswerList);
 					if (oldNewSuppOfferSameCount > 0) {
 						getManagedBean().setOldNewSuppOfferSameFlag(true);
 					} else {
@@ -7901,11 +7916,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					each.setLoaSpecJustification(getManagedBean().getNewSupplierJustification());
 					try {
+						// Save and update new supplier offer into each related TplSpecAnswer in DB
 						getTemplateSpecSO().updateNewSupplierOffer(getManagedBean().getNewSupplierOffered(), tpaIdList);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					try {
+						// Save and update new supplier offer into related ScLoiLoaItem in DB
 						getQtAwardSO().updateAndSaveNewSupplierJustification(getManagedBean().getNewSupplierJustification(),
 								each.getLoiLoaItemId());
 					} catch (Exception e) {
@@ -7917,6 +7934,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								new FacesMessage(FacesMessage.SEVERITY_INFO, null, ResourceBundleUtils.getMessage(
 										"lbl.sc.update.success", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale())));
+						// remove existing updated Lampiran A3
+						removeUnwantedLampiranA3Report(2);
 					}
 					if (outcome.equalsIgnoreCase("COMPLETE")) {
 						each.setComplete(true);
@@ -7931,6 +7950,80 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param tpa
+	 * @param tplSpecQuestion
+	 * @param tpaClone
+	 * @return populate clone of TplSpecAnswer for generating updated Lampiran
+	 * A3 without experiencing persistence exception during saving of
+	 * Supplier Proposal Update screen.
+	 */
+	private TplSpecAnswer populateTplSpecAnswerClone(TplSpecAnswer tpa, TplSpecQuestion tplSpecQuestion,
+			TplSpecAnswer tpaClone) {
+		// populate clUom
+		PmUom clUomClone = new PmUom();
+		clUomClone.setDecimalScale(tplSpecQuestion.getClUom().getDecimalScale());
+		clUomClone.setRecordStatusFlg(tplSpecQuestion.getClUom().getRecordStatusFlg());
+		clUomClone.setUomCode(tplSpecQuestion.getClUom().getUomCode());
+		clUomClone.setUomName(tplSpecQuestion.getClUom().getUomName());
+
+		// populate tpq
+		TplSpecQuestion tpqClone = new TplSpecQuestion();
+		tpqClone.setClAnswerRequired(tplSpecQuestion.isClAnswerRequired());
+		tpqClone.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm());
+		tpqClone.setClDurationMonth(tplSpecQuestion.getClDurationMonth());
+		tpqClone.setClItem(tplSpecQuestion.getClItem());
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterCode(tplSpecQuestion.getClPriceTypeCode().getParameterCode());
+		reqDTO.setParameterType(tplSpecQuestion.getClPriceTypeCode().getParameterType());
+		ParameterResDTO resDTO = getParameterSOGlobal().retrieveParameterByTypeAndCode(reqDTO);
+		if ((resDTO != null) && (resDTO.getPmParameter() != null)) {
+			tpqClone.setClPriceTypeCode(resDTO.getPmParameter());
+		}
+		if (tplSpecQuestion.getClFulfilmentTypeCode() != null) {
+			reqDTO.setParameterCode(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
+			reqDTO.setParameterType(tplSpecQuestion.getClFulfilmentTypeCode().getParameterType());
+			resDTO = getParameterSOGlobal().retrieveParameterByTypeAndCode(reqDTO);
+			if ((resDTO != null) && (resDTO.getPmParameter() != null)) {
+				tpqClone.setClFulfilmentTypeCode(resDTO.getPmParameter());
+			}
+		}
+		tpqClone.setClQuantity(tplSpecQuestion.getClQuantity());
+		tpqClone.setClReviewRemark(tplSpecQuestion.getClReviewRemark());
+		tpqClone.setClSpecDetail(tplSpecQuestion.getClSpecDetail());
+		tpqClone.setClUom(clUomClone);
+		tpqClone.setClUomFrequency(tplSpecQuestion.getClUomFrequency());
+		tpqClone.setClUomPerDay(tplSpecQuestion.getClUomPerDay());
+		tpqClone.setClUomPerMonth(tplSpecQuestion.getClUomPerMonth());
+		tpqClone.setClUomPerYear(tplSpecQuestion.getClUomPerYear());
+		tpqClone.setQuestionOrder(tplSpecQuestion.getQuestionOrder());
+		tpqClone.setQuestionType(tplSpecQuestion.getQuestionType());
+		tpqClone.setRecordStatusFlg(tplSpecQuestion.getRecordStatusFlg());
+
+		// POPULATE tpa clone
+		tpaClone.setAllowAnotherPindaan(tpa.isAllowAnotherPindaan());
+		tpaClone.setAmountPerYear(tpa.getAmountPerYear());
+		tpaClone.setAnswerNumeric(tpa.getAnswerNumeric());
+		tpaClone.setAnswerRemark(tpa.getAnswerRemark());
+		tpaClone.setDisableEditAccount(tpa.isDisableEditAccount());
+		tpaClone.setDisableForPindaan(tpa.isDisableForPindaan());
+		tpaClone.setDisableReviseItem(tpa.isDisableReviseItem());
+		tpaClone.setDisableRow(tpa.isDisableRow());
+		tpaClone.setEnableRevise(tpa.isEnableRevise());
+		tpaClone.setFirstTierAnswer(tpa.isFirstTierAnswer());
+		tpaClone.setJustificationEnabled(tpa.isJustificationEnabled());
+		tpaClone.setNewSupplierOffer(tpa.getNewSupplierOffer());
+		tpaClone.setRatePerUom(tpa.getRatePerUom());
+		//tpaClone.setRating(tpa.getRating());
+		tpaClone.setReasonForUpdateEnabled(tpa.isReasonForUpdateEnabled());
+		tpaClone.setRecordStatus(tpa.isRecordStatus());
+		tpaClone.setRecordStatusFlg(tpa.getRecordStatusFlg());
+		tpaClone.setStatusEnabled(tpa.isStatusEnabled());
+		tpaClone.setTplSpecQuestion(tpqClone);
+
+		return tpaClone;
 	}
 
 	public void onClickSupplierProposalUpdateCompleteButton() {
