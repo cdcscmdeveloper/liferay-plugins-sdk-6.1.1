@@ -232,7 +232,6 @@ import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
-// TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
@@ -5990,7 +5989,7 @@ public class SmCommonUtil {
 		case MessageConst.ERROR_721084:
 			throw new EpException(MessageConst.ERROR_721084);			
 		case "70067"://No SSM Data for requested BusinessRegistrationNo
-			//27214
+			//27214 && #29584
 			if(resDTO.isPreRegistration()){
 				throw new EpException(MessageConst.ERROR_721086);
 			}else{
