@@ -62,6 +62,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	
 	// #29487 - View bank details by factoring user_endorsed - Start
 	public Long FinancialProfId;
+	public boolean FacCompanyInformation = false;
 	// #29487 - View bank details by factoring user_endorsed - End
 
 	public FinancialOrgManagedBean(){}
@@ -321,6 +322,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	 */	
 	public void setFinancialId(Long FinancialProfId) {
 		this.FinancialProfId = FinancialProfId;
+	}
+	
+	/**
+	 * @return the FacCompanyInformation
+	 */	
+	public boolean getFacCompanyInformation() {
+		return FacCompanyInformation;
+	}
+
+	/**
+	 * @param FacCompanyInformation the FacCompanyInformation to set
+	 */	
+	public void setFacCompanyInformation(boolean FacCompanyInformation) {
+		this.FacCompanyInformation = FacCompanyInformation;
 	}
 	// #29487 - View bank details by factoring user_endorsed - End
 	
