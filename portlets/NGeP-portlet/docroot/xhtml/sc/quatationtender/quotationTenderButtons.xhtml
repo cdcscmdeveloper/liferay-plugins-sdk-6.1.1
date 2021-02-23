@@ -117,16 +117,7 @@
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
 							onclick="blockWidget.show();"
-							rendered="#{isClone1 and isClone2}" 
 							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-							
-						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							onclick="submitConfirmPopUp.show();"
-							update="@([id$=#{submitConfirmId}])" 
-							rendered="#{isClone1}" 
-							disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
-							
-						
 					</c:when>
 					<c:otherwise>
 							
