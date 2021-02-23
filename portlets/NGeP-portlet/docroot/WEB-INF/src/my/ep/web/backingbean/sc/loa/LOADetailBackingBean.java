@@ -1130,8 +1130,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.sortFrequentScheduleList(scLoa.getScQtSchedules());
 
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				log.error(e.toString());
 			}
 		} else{
 			this.getManagedBean().setTotalFrequency(0);
@@ -1485,8 +1484,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 						getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.toString());
 			}
 		}
 		// #29006 - end
@@ -1555,7 +1553,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private ScLoaReportAttachment generateDocumentAttachment(
 			ScLoaReport scLoaReport) {
 		ScLoa scLoa = getManagedBean().getScLoa();	
-		ScQt scQt = getManagedBean().getScQt();
+		//ScQt scQt = getManagedBean().getScQt();
 		
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
@@ -1585,7 +1583,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
 					
-					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.trim().equals(docDefinitionKey.trim())) {						//#29007 Start Vinod
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.trim().equals(docDefinitionKey.trim())) {
+						//#29007 Start Vinod
 						if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)
 							&&	scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
 							filename.append(".pdf");
@@ -2222,7 +2221,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		JadualHargaItemBean jadualHargaItemBean = new JadualHargaItemBean();
 		List<ItemBean> productItemBeans = new ArrayList<ItemBean>();
 		List<ItemBean> serviceItemBeans = new ArrayList<ItemBean>();
-		ItemBean itembean= new ItemBean();
 		ItemBean jadualHarga = null;
 		String itemType = null;
 		String dafaltValue = "T/B";
@@ -3119,7 +3117,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 
 	}
-
+	
 	/**
 	 * save the LOA details.
 	 * save - save data into database and initiate task for LOA details.
@@ -3219,8 +3217,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				 }
 
-		} finally {
-			//qtAwardSO = null;
+		} catch (NullPointerException e) {
+			log.info(e.getStackTrace());
 		}
 	}
 
@@ -4677,7 +4675,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
 			for (ScQtSchedule schedule : freqschedule) {
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String fromdate = 01 + "/"
 						+ getMonth(schedule.getStartMonth()) + "/"
@@ -7782,8 +7780,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			selectedScLoiLoaItem = scLoiLoaItem;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 
 		getManagedBean().setScLoiLoaItemSpecsList(new ArrayList<String>());
@@ -8020,15 +8017,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// Specification
 		formSpecification(context, scLoa);
 
-		// Nama Item
-		context.put("namaItem", scLoa.getScLoiLoaItems().get(0).getScRequestItem().getItemName());
-		// Justification
-		context.put("justification", "justification for #29006");
 		// Justificatio date stamp
-		context.put("dateStamp", DateUtils.getLocalizeDate(scLoa.getAckDate(), myLocale));
+		context.put("dateStamp", DateUtils.getLocalizeDate(DateUtils.getCurrentDate(), myLocale));
 		// new supplier name
-		context.put("newSupplierName", "Pembekal ABC 123");
-
+		context.put("newSupplierName", getManagedBean().getNewSupplierOffered());
+		// scloiloa items
+		for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+			for (Map.Entry<Long, List<TplSpecAnswer>> entry : this.getManagedBean().getScLoiLoaItemAnswerMap()
+					.entrySet()) {
+				if (entry.getKey().compareTo(scLoiLoaItem.getLoiLoaItemId()) == 0) {
+					scLoiLoaItem.setTplSpecAnswerList(entry.getValue());
+					// populate Jenis Pemenuhan and Tempoh (Bulan) columns
+					context.put("jenisPemenuhan", scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getClFulfilmentTypeCode() != null ? getParameterDescForVelocityReport(scLoiLoaItem
+							.getScRequestItem().getTplSpecQuestion().getClFulfilmentTypeCode()) : StringUtils.EMPTY);
+					context.put(
+							"durationMonth",
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() != null ? scLoiLoaItem
+									.getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString()
+									: StringUtils.EMPTY);
+				}
+			}
+		}
+		context.put("itemsList", scLoa.getScLoiLoaItems());
+		
 		if (scQt != null
 				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
 						.equals(scLoa.getScLoiLoa().getDocType()))
@@ -8048,13 +8060,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// scLoa
 		context.put("scLoa", scLoa);
+		context.put("bean", this);
+		
+		FileOutputStream fos = null;
 
-		String content = null;
-		content = DocumentGenerator.getInstance().getHtmlFromVelocity(SourcingConstants.LOA_LAMPIRAN_A3_UPDATED,
-				context);
-
-		if (content != null) {
-			DocumentGenerator.convertHtmlToDocFile(content, getActualFilePath(attachment), scLoa.getLoaNo());
+		try {
+		
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					SourcingConstants.LOA_LAMPIRAN_A3_UPDATED, context, 
+					fos);
+		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
