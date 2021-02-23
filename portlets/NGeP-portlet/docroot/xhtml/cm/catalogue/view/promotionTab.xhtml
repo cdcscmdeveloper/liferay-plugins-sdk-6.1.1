@@ -36,7 +36,10 @@
 		</f:facet>
 
 
-		<p:row rendered="#{catalogueBackingBean.showActivePromotion(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+		<!--200921@akmal - Enhancement27627 - Start -->	
+		<p:row rendered="#{catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+		<!--200921@akmal - Enhancement27627 - End -->
+		
 			<p:column>
 				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
 			</p:column>
@@ -62,25 +65,13 @@
 			</p:column>
 		</p:row>
 		
-		<p:row rendered="#{!catalogueBackingBean.showActivePromotion(catalogueBackingBean.managedBean.selectedMaintainItem)}">
-			<p:column>
-				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
-			</p:column>
-			<p:column>
-				<p:inputText readonly="true" style="text-align:right" value="">
-					</p:inputText>
-			</p:column>
-			<p:column>
-				<p:inputText readonly="true" style="text-align:right" value="">
-					</p:inputText>
-
-			</p:column>
-			<p:column>
-				<p:inputText readonly="true" style="text-align:right" value="">
-					</p:inputText>
-
+		<!--200921@akmal - Enhancement27627 - Start -->
+		<p:row rendered="#{!catalogueBackingBean.isPromotionPriceExist(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+			<p:column colspan="4">
+				#{lbl['lbl.datatable.msg.no.records.found']}
 			</p:column>
 		</p:row>
+		<!--200921@akmal - Enhancement27627 - End -->
 
 
 
