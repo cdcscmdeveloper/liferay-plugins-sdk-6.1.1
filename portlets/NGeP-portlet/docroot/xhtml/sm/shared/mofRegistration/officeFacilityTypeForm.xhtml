@@ -71,6 +71,17 @@
 							display="icon" /></td>
 					<td colspan='2'>&#160;</td>
 				</tr>
+				<!-- 29480 - Start -->
+				<tr align="justify">	
+					<td colspan='4'>
+					<i><h:outputText style="float:initial" value="#{lbl['lbl.sm.premises.type.note']} " styleClass="splNotesFonts"  escape="false"/>
+					<p:commandLink 
+							onclick="showPremisesTypeInfo.show()"
+							value="#{lbl['lbl.sm.premises.type.note1']}"
+							styleClass="splNotesFonts" style="float: inherit"/></i>	
+					</td>
+				</tr>
+				<!-- 29480 - End -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td><p:outputLabel
@@ -519,6 +530,47 @@
 		    </f:facet>
 		    
 		</p:confirmDialog>
+		<!-- 29480 - Start -->
+		<p:dialog id="showPremisesTypeInfo" widgetVar="showPremisesTypeInfo" closable="true" modal="true" resizable="false" style="display: static;">
+			<p:outputPanel layout="block" id="showPremisesTypeInfoBlockPanel">
+				<table style="width: 400px" align="left">
+				<tr align="left">
+					<td colspan='3'>
+							<h:outputText value="#{lbl['lbl.sm.premises.type.info1']}" />
+					</td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+				</tr>
+				<tr align="left">
+					<td>&#160;</td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info2']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info3']}" />
+						<b><h:outputText value="#{lbl['lbl.sm.premises.type.info8']}" /></b></td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+				</tr>
+				<tr align="left">
+					<td>&#160;</td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info4']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info5']}" /></td>
+				</tr>
+				<tr>
+					<td>&#160;</td>
+				</tr>
+				<tr align="left">
+					<td>&#160;</td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info6']}" /></td>
+					<td><h:outputText value="#{lbl['lbl.sm.premises.type.info7']}" /></td>
+				</tr>
+				<tr>
+					<td colspan="3">&#160;</td>
+				</tr>
+			</table>
+			</p:outputPanel>
+		</p:dialog>
+	<!-- 29480 - End -->
 		
 	</p:panel>
 </ui:composition>
