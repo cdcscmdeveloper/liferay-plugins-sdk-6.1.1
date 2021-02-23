@@ -1,4 +1,7 @@
 package my.ep.web.backingbean.pm.financialorg;
+//#29487 - View bank details by factoring user_endorsed - Start
+import java.io.IOException;
+//#29487 - View bank details by factoring user_endorsed - End
 //20201210@Jacky - Enhancement#28836 - Start
 import java.math.BigDecimal;
 //20201210@Jacky - Enhancement#28836 - End
@@ -143,17 +146,30 @@ public class FinancialOrgBackingBean extends
 	// #29487 - View bank details by factoring user_endorsed - Start				
 	public void preRenderFinOrgView() throws Exception {
 		log.info("preRenderFinOrgView");
+		this.getManagedBean().setFacCompanyInformation(true);
+		isRoleFactoringUser();	
 		IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
-		List<Object[]> resultBean  = finanOrgSO.findFactoringOrgId(getFacesScopesGen().getUserSessionBean().getLoginId());
-			
+		List<Object[]> resultBean  = finanOrgSO.findFactoringOrgId(getFacesScopesGen().getUserSessionBean().getLoginId());			
 		for (int i = 0; i < resultBean.size(); i++) {
 			Object[] objects = (Object[]) resultBean.get(i);				
 			this.getManagedBean().setFinancialId(Long.parseLong(String.valueOf(objects[3])));
-		}
-					
+		}					
 		resetBeans();
 		retrieveServiceTypeMap();
 		maintainFinancialOrg(this.getManagedBean().getFinancialId());
+	}
+	
+	public void backToProfileInformationPortal(){
+		log.info("...............profile-information................");
+		renewSesionObject();
+		FacesContext context = FacesContext.getCurrentInstance();
+		javax.faces.context.ExternalContext externalContext = context.getExternalContext();
+		try{
+			externalContext.redirect("profile-information");
+		}catch(IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -162,14 +178,12 @@ public class FinancialOrgBackingBean extends
 	 */
 	public boolean isRoleFactoringUser(){
 		boolean isFacUser = false;
-		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+		if(getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value()) && this.getManagedBean().getFacCompanyInformation() == true){
 			isFacUser = true;
-		}
-		
-		return isFacUser;
-		
+		}		
+		return isFacUser;		
 	}
-	
+
 	/**
 	 * get faces scopes
 	 * @return FacesScopes
