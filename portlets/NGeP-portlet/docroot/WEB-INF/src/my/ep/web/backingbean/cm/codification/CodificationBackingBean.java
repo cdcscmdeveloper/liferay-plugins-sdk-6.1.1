@@ -154,6 +154,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			this.getManagedBean().initRefreshPageNoFlag();
 		}
+		//200921@akmal - Enhancement27627 - Start
+		resetAction();
+		//200921@akmal - Enhancement27627 - End
 	}
 
 	/**
