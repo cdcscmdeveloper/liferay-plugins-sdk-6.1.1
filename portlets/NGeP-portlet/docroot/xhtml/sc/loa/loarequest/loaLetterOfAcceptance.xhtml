@@ -128,7 +128,7 @@
 				<!-- #29006 - start, added update="@form" -->
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
-					ajax="false" update="@form"
+					ajax="false" update="@form" partialSubmit="true" process="@form" 
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
 					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}" />
