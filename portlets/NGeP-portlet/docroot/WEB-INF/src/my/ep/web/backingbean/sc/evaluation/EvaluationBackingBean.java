@@ -1135,11 +1135,13 @@ public class EvaluationBackingBean extends
 //			for(ScQtProposalChecklist proCheck : this.getManagedBean().getComplianceTechnicalProposalCheckListDM().getList()) {
 //				log.info("PropChecklist ID =======================>>> " + proCheck.getQtProposalChecklistId());
 //			}
-			
-			
-			
-			return "/xhtml/sc/evaluation/compliance/financialComplianceSupplierList.xhtml";
-			
+			//#25138 - navigate page to CR#28786 - start
+			if(this.getManagedBean().getNonScoringActiveIndex() != 1){
+				return "/xhtml/sc/evaluation/compliance/financialComplianceSupplierList.xhtml";
+			} else {
+				return "/xhtml/sc/evaluation/compliance/financialComplianceNonScoring.xhtml";
+			}
+			//#25138 - navigate page to CR#28786 - end
 			
 		}
 		//#28786 - end
