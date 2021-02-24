@@ -59,15 +59,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.pp.result.plan']}" toggleable="true">
+		<!-- #25549@24022021 - start -->
 		<p:dataTable tableStyleClass = "fixedTable" id="dtclonepitemsBsearchresults" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		    value="#{pPlanBackingBean.ppEpItemsDataModel}"  var="epItem" selection="#{pPlanBackingBean.managedBean.clonePpExpenditureItemLs}" rowKey="#{epItem.expenditureItemId}"
-				     width="50%" rows="10" rowStyleClass="#{pPlanBackingBean.disableDuplicateAccountId(epItem.pmGlAccount.glAccCode) ? 'ui-helper-hidden' : ''}">
+				     width="50%" rows="10" >
 		    
 		      <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExB"/>
           	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}"  update=":form:btnSelectExB"/>
               <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExB" />		   
-	          	
-		
+	          <p:ajax event="rowUnselect" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExB"/>
+			  <p:ajax event="rowSelect"  listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExB"/>
+			  <p:ajax event="page" listener="#{pPlanBackingBean.onPageChangeExpenditureClone}" update=":form:btnSelectExB" />
+			  <!-- #25549@24022021 - end -->
+			  
 				<ac:paginator for="dtclonepitemssearchresults" />
 				
 				<p:column 
@@ -101,7 +105,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		       action="#{pPlanBackingBean.addPpExenditureItemClone()}"
 		       update="dtExpenditurePlanB, ppExpenditureBCloneid, dtclonepitemsBsearchresults"
 		       disabled="#{pPlanBackingBean.managedBean.disableSelectExpBtn}"
-		 	   oncomplete="cloneExpenditureBPopUp.hide();"/>	
+		       oncomplete="cloneExpenditureBPopUp.hide();"/>	
 			<p:commandButton 
 			   id="btnCancelB"
 			   value="#{lbl['lbl.pp.cancel']}" 
