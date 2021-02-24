@@ -39,7 +39,7 @@
 						oncomplete="blockWidget.hide()"
 						update=":form:tt:approverAppDialog"
 						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
-						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
+						action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approverAppDialog')}" />
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
 						process="@this" onstart="blockWidget.show()"
@@ -188,7 +188,7 @@
 	</p:dialog>
 	
 	<!-- #12483 - START -->
-	<p:dialog width="1000px" header="#{lbl['lbl.sm.revise.application']}" height="300px"
+	<p:dialog width="780px" header="#{lbl['lbl.sm.revise.application']}" height="auto"
 		closable="false" id="approverRevDialog" widgetVar="approverRevDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 		<p:outputPanel layout="block" id="approverReviseBlockPanel">
@@ -196,13 +196,14 @@
 			<br/>
 			<table>
 				<tr>
+					<td style="width:30px;"></td>
 					<td valign="top">
 						<p:outputLabel value="#{lbl['lbl.sm.revise.reason']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
 						<p:inputTextarea cols="90"
-							style="width : auto;" rows="10"
+							style="width:450px;" rows="10"
 							value="#{backingBean.managedBean.reviseReason}"
 							id="apprReviseReason"
 							maxlength="2500"
@@ -229,5 +230,21 @@
 		</p:outputPanel>
 	</p:dialog>
 	<!-- #12483 - END -->
-	
+	<!--  #29727 -->
+	<ac:confirmationPopup id="pendingQTPopUpApproverId"
+		widget="pendingQTPopUpApprover"
+		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
+		update=":form:tt:approverAppDialog"/>
+		
+	<ac:confirmationPopup id="closedQTSubmitProposalPopUpApproverId"
+		widget="closedQTSubmitProposalPopUpApprover"
+		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}" 
+		update=":form:tt:approverAppDialog"/>
+	<!-- END #29727 -->
 </ui:composition>
