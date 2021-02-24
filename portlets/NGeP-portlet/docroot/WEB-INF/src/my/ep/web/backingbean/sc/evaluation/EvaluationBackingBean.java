@@ -13541,10 +13541,21 @@ private void retriveCommitteeRemarksList(){
 									.retrieveFinSpecDetailsByCheckListId(specDtls);
 							
 							if(specdetails != null){
-								//#25138 - setofferscoretype - start
-								for(ScQtScoreOfferPrice offerprice : specdetails.getScQtScoreOfferPricesZonal()){
-									this.getManagedBean().setOfferScoreType(offerprice.getScoreType().toString());
-									break;
+								//#25138 - setofferscoretype for zonal and non zonal- start
+								if(this.getManagedBean().getScQt().isZonal()){
+									if(specdetails.getScQtScoreOfferPricesZonal()!= null || !specdetails.getScQtScoreOfferPricesZonal().isEmpty()){
+										for(ScQtScoreOfferPrice offerprice : specdetails.getScQtScoreOfferPricesZonal()){
+											this.getManagedBean().setOfferScoreType(offerprice.getScoreType().toString());
+											break;
+										}
+									}
+									
+								}else{
+									if(specdetails.getScoreOfferPrices()!= null){
+										this.getManagedBean().setOfferScoreType(specdetails.getScoreOfferPrices()
+												.getScoreType().toString());
+									}
+									
 								}
 								//#25138 - setofferscoretype - end
 								if (null != specdetails.getZones()
