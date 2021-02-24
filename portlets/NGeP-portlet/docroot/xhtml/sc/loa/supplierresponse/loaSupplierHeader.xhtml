@@ -34,10 +34,17 @@
 				<td width="10%"><h:outputLabel
 						value="#{isDocTypeQuotation or isDocTypeDirectNego?lbl['lbl.rpt.qtNo']:lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
-						<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
+						<ui:remove>
+							Bug #27412 #70 - added filter by supplier START
+						</ui:remove>
+						<p:commandLink rendered="#{!qTDetailBB.isMofSupplier() and (isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
 						action="#{ViewQtDetailsGeneralInfoBB.navigatetoViewQtDetailsGeneralInfo(view.viewId,lOADetailBackingBean.managedBean.scQt,false)}">
-				<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation || isDocTypeDirectNego}" escape="false" />
-					</p:commandLink>
+							<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{isDocTypeQuotation || isDocTypeDirectNego}" escape="false" />
+						</p:commandLink>
+						<h:outputText value="#{null != lOADetailBackingBean.managedBean.scQt ?lOADetailBackingBean.managedBean.scQt.qtNo : ' '}" rendered="#{qTDetailBB.isMofSupplier() and (isDocTypeQuotation || isDocTypeDirectNego)}" escape="false" />
+						<ui:remove>
+						    Bug #27412 #70 - added filter by supplier END
+						</ui:remove>
 						<h:outputText
 						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
 						rendered="#{!(isDocTypeQuotation || isDocTypeDirectNego)}" />
@@ -47,6 +54,7 @@
 				<td class="header-info-text" colspan="3">
 					#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}</td>				
 			</tr>
+			<ui:remove> #19336 - start </ui:remove>
 			<c:if test="#{((not empty lOADetailBackingBean.managedBean.scQtProposal) or (not empty lOADetailBackingBean.managedBean.scLoa.scQuote)) and lOADetailBackingBean.qtPrefixIsQT()}" >
 			<tr>
 				<td width="10%"><h:outputLabel
@@ -65,10 +73,8 @@
 				<td><p:spacer width="1" /></td>
 			</tr>
 			</c:if>
+			<ui:remove> #19336 - end </ui:remove>
 		</table>
 	</div>
 
 </ui:composition>
-
-<!-- ***25201#35 -->
-<!-- ***19336 -->
