@@ -137,7 +137,7 @@ public class QuestionnaireBackingBean extends
 			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
 			os1.flush();
 			os1.close();
-		//	this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
 		}catch(Exception e){
 			log.error("File: QuestionnaireBaseBackingBean, printReportVM, Message: "+e.getMessage());
 		}
