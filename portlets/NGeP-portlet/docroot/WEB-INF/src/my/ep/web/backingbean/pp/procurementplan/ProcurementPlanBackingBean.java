@@ -3949,7 +3949,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
 		}else{
 		 if(this.getManagedBean().isApprovedPlan()== true){
-			 if(epItem.getRecordStatusFlg()!= 9){
+			 if(epItem.getRecordStatusFlg()!= 9 || epItem.isDisableRow() == true){ //24022021@25549 
 			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
 			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
