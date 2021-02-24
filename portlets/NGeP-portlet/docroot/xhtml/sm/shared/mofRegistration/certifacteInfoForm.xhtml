@@ -109,11 +109,13 @@
 					disabled="true" process="@this"
 					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					<!--  Refs #28766 - add on changes - 24/2/2021 - start -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					partialSubmit="true" process="certInfPan"
-					disabled="#{empty backingBean.managedBean.smAppl.smSupplierCerts}"
+					disabled="#{empty backingBean.managedBean.smAppl.smSupplierCerts or empty backingBean.managedBean.selectedCertList}"
 					update=":form:tt:certDt,@this" 
 					id="delCertBtnId" oncomplete="certDeletePopUp.show();" />
+					<!--  Refs #28766 - add on changes - 24/2/2021 - end -->
 
 			</div>
 			<br />
