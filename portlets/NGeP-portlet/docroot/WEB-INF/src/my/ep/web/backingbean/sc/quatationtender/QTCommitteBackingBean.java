@@ -1987,7 +1987,11 @@ public class QTCommitteBackingBean extends
 			if (QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL.equals(currentStatusId)
 					&& !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				return false;
-			} else if(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)
+			} else if(
+					// #14398 - Start.
+					(SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName) || SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
+					// #14398 - End.	
+					)
 					&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(commType)){
 				return false;
 			}else if (isQTStatusAfterScheduleDoc(currentStatusId)) {
