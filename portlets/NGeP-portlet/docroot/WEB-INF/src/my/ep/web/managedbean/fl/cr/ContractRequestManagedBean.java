@@ -330,6 +330,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static int backFlag;
     private static String catalogueFlag;
     //13984-end
+    
+  //29555 start
+    private String preparedBy;
+    //29555 end
+    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3182,22 +3187,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 	//end-13984 - CrList - Back Button
 
-	//29728 - start
-	/**
-	 * @return the isBranchNeedToChange
-	 */
-	public boolean isBranchNeedToBeChanged() {
-		return isBranchNeedToBeChanged;
-	}
-
-	/**
-	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
-	 */
-	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
-		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
-	}
-	//29728 - end
-	
 	public boolean isDpFlag() {
 		return dpFlag;
 	}
@@ -3237,4 +3226,29 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setItemSpecification(String itemSpecification) {
 		this.itemSpecification = itemSpecification;
 	}
+	//29728 - start
+	/**
+	 * @return the isBranchNeedToChange
+	 */
+	public boolean isBranchNeedToBeChanged() {
+		return isBranchNeedToBeChanged;
+	}
+
+	/**
+	 * @param isBranchNeedToBeChanged the isBranchNeedToChange to set
+	 */
+	public void setBranchNeedToBeChanged(boolean isBranchNeedToBeChanged) {
+		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
+	}
+	//29728 - end
+	
+	//29555 start
+	public String getpreparedBy() {
+		return preparedBy;
+	}
+
+	public void setpreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
+	//29555 end
 }

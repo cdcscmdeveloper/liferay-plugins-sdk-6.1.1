@@ -133,6 +133,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.fl.FlActor;
 import my.ep.persistence.entity.fl.FlAddress;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -435,7 +436,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							scReqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
 						}
 
-						scReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());//TODO
+						scReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 						PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByFlAddress(scReqDTO);
 						itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
 
@@ -516,6 +517,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 			getManagedBean().setEspkb(true);
 		}
+		//29555 start
+	    getLoginUserName();
+	    //29555 end
 	}
 
 	/**
@@ -1541,6 +1545,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//Redmine Enhancement #12177
 	    addButton();
 	    log.info("end - addButton");
+	    //29555 start
+	    getLoginUserName();
+	    //29555 end
 	    MDC.clear();
 	    if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -1691,6 +1698,32 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
 		getManagedBean().setPmUserOrg(userOrg);
 	}
+	//29555 start
+	public void getLoginUserName() {
+		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		FlActor actor = null;
+		try{
+		actor = fulfilmentSO.retrieveFlActors(
+				getManagedBean().getFulfilmentRequest().getDocType(),
+				getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
+				FulfilmentConst.Requistioner_Role_Code);
+		}catch(Exception  e){
+			actor = null;
+		}
+		if(actor != null){
+			getManagedBean().setPreparedBy(actor.getUserName());
+			log.info("29555: actor exist");
+		}else{
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			if(userResDTO.getPmUser().getUserName() != null){
+				getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+			}
+		}
+	}
+	//29555 end
 	
 	/**
 	 * Checks if is check flg.
@@ -4311,7 +4344,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					&& !resDto.getSearchAddressResultBean().getResultList()
 							.isEmpty()) {
 
-				List<PmAddressType> pmAddressResultList = resDto.getSearchAddressResultBean().getResultList();
+				//List<PmAddressType> pmAddressResultList = resDto.getSearchAddressResultBean().getResultList();
 				PmAddressType retrievedPmAddressType = resDto.getSearchAddressResultBean().getResultList().get(0);
 				return retrievedPmAddressType;
 			}
@@ -4424,6 +4457,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prRenderer?faces-redirect=true");
+			//29555 start
+		    getLoginUserName();
+		    //29555 end
 		}
 	}
 	
