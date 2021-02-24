@@ -54,15 +54,20 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.pp.result.plan']}" toggleable="true">
+	    <!-- #25549@24022021 - start -->
 		<p:dataTable tableStyleClass = "fixedTable" id="dtclonepitemsPsearchresults" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		    value="#{pPlanBackingBean.ppEpItemsDataModel}" var="epItem" selection="#{pPlanBackingBean.managedBean.clonePpExpenditurePItemLs}" rowKey="#{epItem.expenditureItemId}"
-		    width="100%" rows="10" rowStyleClass="#{pPlanBackingBean.disableDuplicateAccountId(epItem.pmGlAccount.glAccCode) ? 'ui-helper-hidden' : ''}">
+		    width="100%" rows="10">
 			
               
               <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
           	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
               <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP" />		   
-		   
+		      <p:ajax event="rowUnselect" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
+			  <p:ajax event="rowSelect"  listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
+			  <p:ajax event="page" listener="#{pPlanBackingBean.onPageChangeExpenditureClone}" update=":form:btnSelectExP" />
+			  <!-- #25549@24022021 - end -->
+		
 	
 				<ac:paginator for="dtclonepitemssearchresults" />
 				

@@ -91,11 +91,15 @@
 			<p:dataTable tableStyleClass = "fixedTable" id="dtcloneprosearchresults" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{pPlanBackingBean.ppCloneProcurementDataModel}" var="ppItem" selection="#{pPlanBackingBean.managedBean.clonePpProcurementItemLs}" rowKey="#{ppItem.procurementItemId}"
 				width="100%" rows="10">
-				
+			
+			<!-- #25549@24022021 - start -->	
 			  <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect"/>
           	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect"/>
-              <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect" />		   
-	
+              <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect" />		
+              <p:ajax event="rowUnselect" listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect"/>
+			  <p:ajax event="rowSelect"  listener="#{pPlanBackingBean.rowSelectProcurement}" update=":form:btnSelect"/>
+			  <p:ajax event="page" listener="#{pPlanBackingBean.onPageChangeProcurementClone}" update=":form:btnSelect" />
+			 <!-- #25549@24022021 - end -->	
 			<ac:paginator for="dtcloneprosearchresults"/>
 				
 			<p:column
