@@ -68,6 +68,10 @@ import my.ep.biz.service.sc.scretry.IScRetrySO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.comparator.sc.WorkflowStatusComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -83,6 +87,7 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.ScDisruptionConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -212,6 +217,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
@@ -2719,6 +2725,7 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#25692-End
+			assertSpecificationUpdateInProgress(false); //#25037
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 			
@@ -7846,6 +7853,40 @@ public class QTDetailBackingBean extends
     	return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";	
     } //#17376-End onlineBiddingcodes
 
+    //#25037-start
+	public void assertSpecificationUpdateInProgress(boolean showPopup){
+		boolean inProgress = false;
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
+		String[] taskNames = new String[]{SCProcessNameConst.PREPARE_QT_SCHEDULE, SCProcessNameConst.APPROVE_PUBLICATION};
+		String[] specTaskName = new String[]{SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING};
+
+		if(Arrays.asList(taskNames).contains(taskName)){
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			ScQt qt = this.getManagedBean().getQt();
+			bpmReqDTO.setDocNumber(qt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			 for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
+				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
+					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
+						 this.getManagedBean().setSpecUpdateInProgress(true);
+						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish", null)));
+						 inProgress = true;
+						 break;
+					 }
+				 }
+			 }
+		}
+		if(!inProgress && showPopup){
+			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
+		}
+	}
+    
+    //#25037-end
+    
 	// #25077 - Start
 	public void checkPopUpBPKApprovalNeeded(boolean showPopup) {	
 		ScQt scQt = this.getManagedBean().getQt();

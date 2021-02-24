@@ -1620,6 +1620,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	private boolean approvalEditableSection;
 
+	//#25037-START
+	private boolean specUpdateInProgress;
+	//#25037-end
+	
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded = false;
@@ -10099,6 +10103,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		
 		//#25692 End
 	
+		//#25037-start
+		public boolean isSpecUpdateInProgress() {
+			return specUpdateInProgress;
+		}
+
+		public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
+			this.specUpdateInProgress = specUpdateInProgress;
+		}
+		
+		//#25037-end
+		
 	public boolean isEditable() {
 		return isEditable;
 	}
