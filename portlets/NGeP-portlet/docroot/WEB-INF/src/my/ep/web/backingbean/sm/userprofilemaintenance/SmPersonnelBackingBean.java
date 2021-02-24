@@ -1965,7 +1965,7 @@ public class SmPersonnelBackingBean extends
 	 * @throws Exception
 	 */
 	public void save() {
-		if (getManagedBean().getBasicSmPersonnel() != null && !(getManagedBean().getAccountStatus() == 1)) {
+		if (getManagedBean().getBasicSmPersonnel() != null && !(getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE)) {
 			//#26050 - start
 			validatePendingTask(getManagedBean().getBasicSmPersonnel());
 			//#26050 - end
@@ -2137,6 +2137,10 @@ public class SmPersonnelBackingBean extends
 	 * @return PersonnelResDTO
 	 */
 	private PersonnelResDTO updatePersonnel(SmPersonnel smPersonnel) {
+		SmCommonUtil.setNewPersonnelPermAndMailAddress(smPersonnel,
+				getManagedBean().getBasicSmPersonnelMailingAddress(),
+				getManagedBean().getBasicSmPersonnelPermanentAddress());
+		
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			SmAddress address = SmCommonUtil.cloneAddress(getManagedBean()
 					.getBasicSmPersonnelPermanentAddress().getSmAddress());
