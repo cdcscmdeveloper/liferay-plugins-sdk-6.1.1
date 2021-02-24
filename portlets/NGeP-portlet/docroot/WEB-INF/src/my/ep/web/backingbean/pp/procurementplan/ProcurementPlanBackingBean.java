@@ -3349,12 +3349,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								//03122020@24975 - End
 							}
 						}
-						//24975@23102020azza - start
-						if (epItem.isOriginal()){
-							log.info("isOriginal " + epItem.isOriginal());
-							//24975@23102020azza - end
+						//#25549@24022021 - remove 
 						soIds.add(epItem.getPmGlAccount().getGlAccountId());
-						}
 					}
 				}
 			}
@@ -3899,7 +3895,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
 		}else{
 		 if(this.getManagedBean().isApprovedPlan()== true){
-			 if(epItem.getRecordStatusFlg()!= 9){
+			 if(epItem.getRecordStatusFlg()!= 9 || epItem.isDisableRow() == true){ //24022021@25549 
 			epTotalBudget = PpCommonUtil.addBigDecimalNullable(epTotalBudget, epItem.getBudgetAmt());
 			epTotalNonEpAlloc = PpCommonUtil.addBigDecimalNullable(epTotalNonEpAlloc, epItem.getNonEpAmt());
 			epTotalPlan = PpCommonUtil.addBigDecimalNullable(epTotalPlan, epItem.getPlanAmt());
@@ -7907,7 +7903,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	               System.out.println("size list " + j );
 	               this.getManagedBean().getSelectedPlan().addPpProcurementItems(ppItem);
 	               }
-			       calculatePpGrandTotal();
+			      //#25549@24022021 - calculatePpGrandTotal() remove 
 			       resetProcurementClone();
 				}
 		
@@ -7984,11 +7980,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						this.getManagedBean().getEpItemsH().add(ppExItem);
 					}
 	     		}
-			    calculateEpGrandTotal(ParameterConst.VOT_MENGURUS);
-			    calculateEpGrandTotal(ParameterConst.VOT_TANGGUNGAN);
-			    calculateEpGrandTotal(ParameterConst.VOT_PEMBANGUNAN);
-			    calculateEpGrandTotal(ParameterConst.VOT_SETIA);
-			    calculateEpGrandTotal(ParameterConst.VOT_AMANAH);
+			    //#25549@24022021 - calculateEpGrandTotal() remove
 			    resetExpenditureClone();
 		      }
 		
@@ -8025,7 +8017,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		public void resetProcurementClone() {
 		
 			log.info("resetProcurementClone");
-			
+			 //#25549@24022021 - start
+			calculatePpGrandTotal();
+			 //#25549@24022021 - end
 			this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
 			ppCloneProcurementDataModel.resetData();
 		}
@@ -8035,6 +8029,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	    	 
 		   log.info("resetExpenditureClone");	
 		  
+            //#25549@24022021 - start
+		    calculateEpGrandTotal(ParameterConst.VOT_MENGURUS);
+		    calculateEpGrandTotal(ParameterConst.VOT_TANGGUNGAN);
+		    calculateEpGrandTotal(ParameterConst.VOT_PEMBANGUNAN);
+		    calculateEpGrandTotal(ParameterConst.VOT_SETIA);
+		    calculateEpGrandTotal(ParameterConst.VOT_AMANAH);
+			//#25549@24022021 - end
 		   this.getManagedBean().setPlanSearchBean(new ProcurementPlanSearchBean());
 		   ppEpItemsDataModel.resetData();
 		   
@@ -8064,6 +8065,9 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		
 		public void rowSelectProcurement() {
+			//#25549@24022021 - start	
+			calculatePpGrandTotal();
+			//#25549@24022021 - end
 	        System.out.println(this.getManagedBean().getClonePpProcurementItemLs().size());
 	        if (this.getManagedBean().getClonePpProcurementItemLs().size() > 0) {
 	        	this.getManagedBean().setDisableSelectBtn(false);
@@ -8565,12 +8569,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 
 	//200911@akmal - Enhancement27624 - End
-	//24975@04112020@azza - Start
-	 public boolean disableDuplicateAccountId(String AccountId) {
+	// #25549@24022021 - start 
+	/* public void disableDuplicateAccountId(String AccountId) {
 			
 	    List<PpExpenditureItem> PpExpenditureItemList = null;
-	        
-	     boolean flag = false;
 			
 		   if (ParameterConst.VOT_MENGURUS.equals(this.getManagedBean().getParamExpenditure())) {
 				  log.info("B");			
@@ -8596,8 +8598,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				      }
 			      }
 			  }
-			  return flag;
-	    }
+	    }*/// #25549@24022021 - end
 	 
 	 public void selectedSEptatus(String Param, Integer Status, Integer index) {
 			
@@ -8741,6 +8742,31 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("End checkUpdateForReasonIndicator");
 	    // 24975@19112020 - start
 	}
+	
+	 //#25549@24022021 - start
+	public void onPageChangeProcurementClone(PageEvent event) {
+		System.out.println(this.getManagedBean().getClonePpProcurementItemLs().size());
+		if (this.getManagedBean().getClonePpProcurementItemLs().size() > 0) {
+			this.getManagedBean().setDisableSelectBtn(false);
+			System.out.println("rowSelect is Enable Button !!:" + this.getManagedBean().isDisableSelectBtn());
+		} else if (this.getManagedBean().getClonePpProcurementItemLs().size() == 0
+				|| this.getManagedBean().getClonePpProcurementItemLs().size() < 0) {
+			this.getManagedBean().setDisableSelectBtn(true);
+			System.out.println("unSelectRow is Disable Button !!:" + this.getManagedBean().isDisableSelectBtn());
+		}
+	}
+	
+	public void onPageChangeExpenditureClone(PageEvent event) {
+		System.out.println(this.getManagedBean().getClonePpExpenditureItemLs().size());
+		if (this.getManagedBean().getClonePpExpenditureItemLs().size() > 0) {
+			this.getManagedBean().setDisableSelectBtn(false);
+			System.out.println("rowSelect is Enable Button !!:" + this.getManagedBean().isDisableSelectBtn());
+		} else if (this.getManagedBean().getClonePpExpenditureItemLs().size() == 0
+				|| this.getManagedBean().getClonePpExpenditureItemLs().size() < 0) {
+			this.getManagedBean().setDisableSelectBtn(true);
+			System.out.println("unSelectRow is Disable Button !!:" + this.getManagedBean().isDisableSelectBtn());
+		}
+	}//#25549@24022021 - end
 }
 	   
 
