@@ -52,7 +52,18 @@
 				selection="#{backingBean.managedBean.selectedCertList}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
 				<ac:paginator for="certDt" />
-				
+				<!--  Refs #28766 - add on changes - 24/2/2021 - start -->
+				<p:ajax event="rowSelect"
+						update=":#{p:component('delCertBtnId')}"></p:ajax>
+				<p:ajax event="rowUnselect"
+						update=":#{p:component('delCertBtnId')}"></p:ajax>				
+				<p:ajax event="rowSelectCheckbox"
+						update=":#{p:component('delCertBtnId')}"></p:ajax>
+				<p:ajax event="rowUnselectCheckbox"
+						update=":#{p:component('delCertBtnId')}"></p:ajax>
+				<p:ajax event="toggleSelect"
+						update=":#{p:component('delCertBtnId')}"></p:ajax>
+				<!--  Refs #28766 - add on changes - 24/2/2021 - end -->
 				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smSupplierCerts}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.certName']}" style="width : 35%;white-space : normal">
