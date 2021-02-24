@@ -47,20 +47,14 @@
 	                        		<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}"/>  
 	                        	</td>
 	                        	<td>
-	                        		 <h:panelGrid columns="6">
-						                <p:inputText id="supplierRegNoNew" disabled="true" style="width:265px;" 
+	                        		  <p:inputText id="supplierRegNoNew" disabled="true" style="width:265px;" 
 						                   value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo}" />
-						           	  	<p:spacer width="1"/>
-										<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
-									</h:panelGrid>
+						               <p:spacer width="1"/>
+									   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+						               <br />
+						               <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="float:left;margin-bottom: 5px;" /> 
+						           	  	
 	                        	</td>
-	                        </tr>
-	                         <tr>
-	                         <td/>
-		                         <td style="width:265px;">
-		                         	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="float:left;margin-bottom: 5px;" />  
-		                         </td>
-	                        	
 	                        </tr>
 	                       
 	                         <!-- #29983 end -->
