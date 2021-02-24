@@ -94,30 +94,31 @@
 				
 				</c:if>
 				
-				<p:outputPanel id="rejRemarksPanelTst">
-					<table style="width: 100%">
-						<tr>
-							<td style="vertical-align: top; width: 15%"><p:outputLabel
-									value="#{lbl['lbl.sm.remarks.rejection']}" id="rejReasonLbl"
-									rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
-									value="*" styleClass="mandatory" id="rejReasonLblMndty"
-									rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
-							<td style="padding-top: 5px;"><p:inputTextarea cols="100"
-									style="width : auto;"
-									rendered="#{backingBean.managedBean.rejectReasonReqd}"
-									value="#{backingBean.managedBean.applnRejectionRemarks}"
-									id="rmrksForRejectTxtArea" rows="5"
-									validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
-									label="#{lbl['lbl.sm.remarks.rejection']}"
-									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
-									maxlength="4000">
-									<f:validateLength maximum="4000" />
-								</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
-									for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
-									display="icon" /></td>
-						</tr>
-					</table>
-				</p:outputPanel>
+					<!-- #15629 start 23/2/2021 -->
+<!-- 				<p:outputPanel id="rejRemarksPanelTst"> -->
+<!-- 					<table style="width: 100%"> -->
+<!-- 						<tr> -->
+<!-- 							<td style="vertical-align: top; width: 15%"><p:outputLabel -->
+<!-- 									value="#{lbl['lbl.sm.remarks.rejection']}" id="rejReasonLbl" -->
+<!-- 									rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel -->
+<!-- 									value="*" styleClass="mandatory" id="rejReasonLblMndty" -->
+<!-- 									rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td> -->
+<!-- 							<td style="padding-top: 5px;"><p:inputTextarea cols="100" -->
+<!-- 									style="width : auto;" -->
+<!-- 									rendered="#{backingBean.managedBean.rejectReasonReqd}" -->
+<!-- 									value="#{backingBean.managedBean.applnRejectionRemarks}" -->
+<!-- 									id="rmrksForRejectTxtArea" rows="5" -->
+<!-- 									validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}" -->
+<!-- 									label="#{lbl['lbl.sm.remarks.rejection']}" -->
+<!-- 									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}" -->
+<!-- 									maxlength="4000"> -->
+<!-- 									<f:validateLength maximum="4000" /> -->
+<!-- 								</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg" -->
+<!-- 									for="rmrksForRejectTxtArea" showSummary="true" showDetail="false" -->
+<!-- 									display="icon" /></td> -->
+<!-- 						</tr> -->
+<!-- 					</table> -->
+<!-- 				</p:outputPanel> -->
 				
 				<!-- #15629 start -->
 				<c:if test="#{backingBean.managedBean.approverUser}">
@@ -128,12 +129,16 @@
 						</tr>
 						<tr>
 							<td colspan="2"><p:outputLabel
-									value="#{lbl['lbl.sm.approvremark.new.remarknotes']}" /></td>
+									value="#{lbl['lbl.sm.approvremark.new.remarknotes']}" id="recApprvRejReasonLbl"/>
+									<p:outputLabel
+										value="*" styleClass="mandatory" id="recApprvRejReasonLblMndty"
+										rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
 							<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 									style="width : auto;" rows="10"
 									value="#{backingBean.managedBean.applnRejectionRemarks}"
 									id="rmrksForApprovTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
 									validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
 									maxlength="4000">
 									<f:validateLength maximum="4000" />
 							</p:inputTextarea> <p:message id="rmrksForApprovTxtAreaMsg" for="rmrksForApprovTxtArea"
@@ -142,6 +147,7 @@
 					</table>
 				</c:if>
                 <!-- #15629 end -->
+                <!-- #15629 end 23/2/2021 -->
 							
 				<div align="right">
 					<cc:insertChildren />
