@@ -167,7 +167,6 @@ public class FinancialOrgBackingBean extends
 		try{
 			externalContext.redirect("profile-information");
 		}catch(IOException e){
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
