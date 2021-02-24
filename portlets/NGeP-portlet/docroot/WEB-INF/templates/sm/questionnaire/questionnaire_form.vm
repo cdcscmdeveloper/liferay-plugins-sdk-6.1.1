@@ -14,7 +14,7 @@
 
 	<table>
 		<tr align='left'>
-        	<td> $feedbacknote2 <br/><br/></td>
+        	<td> $feedbacknote2 <br/><br/><br/></td>
 		</tr>
 	</table>
 	
@@ -51,7 +51,7 @@
 		
 		<tr>
 			##Loop Question 
-			<td> <br/><br/><br/>
+			<td> <br/><br/>
 			#foreach($ques in $question)
 				<tr>
 					<td >$velocityCount.</td>
@@ -60,7 +60,7 @@
 				</tr>
 				<tr> 
 					<td>
-					
+
 					</td>
 					<td>
 					#if ($ques.smQuestion.smAnswerCategory.answerCategoryId == 2) 
@@ -70,66 +70,66 @@
 							#if($ques.smQuestion.smAnswerCategory.answerCategoryId == 3) ##soalan no1,no4- no11 
 								#if($!answerid.answerId == 1)
 									#if($ques.smAnswer.answerId == 1)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="9px" height ="9px" ></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="9px" height ="9px"  ></img> 
 									#end
 								#else	
 									#if($ques.smAnswer.answerId == 2)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end								
 								#end
 		
 							#elseif($ques.smQuestion.smAnswerCategory.answerCategoryId == 4) ##soalan no3
 								#if($!answerid.answerId == 3)
 									#if($ques.smAnswer.answerId == 3)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
 								#else
 									#if($ques.smAnswer.answerId == 4)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
 								#end
 						
 							#elseif($ques.smQuestion.smAnswerCategory.answerCategoryId == 5) ##soalan no2	
 								#if($!answerid.answerId == 5)
 									#if($ques.smAnswer.answerId == 5)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
 								#elseif($!answerid.answerId != 5)
 									#if($ques.smAnswer.answerId == 6)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'width="8px" height ="8px" ></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
 								#elseif($!answerid.answerId != 5)
 									#if($ques.smAnswer.answerId == 7)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'width="8px" height ="8px" ></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px" ></img> 
 									#end
 								#else
 									#if($ques.smAnswer.answerId == 8)
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png'width="8px" height ="8px" ></img> 
 									#else
-										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png'></img> 
+										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
 								#end
 							#else
 							#end
 							$!answerid.answerDesc
 						#end 
-						<br/><br/>
+						<br/>
 					#end
-				<br/></td>
+				<br/><br/></td>
 				</tr>
 				#end
 			</td>
