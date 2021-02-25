@@ -2,9 +2,11 @@ package my.ep.web.backingbean.sm.userprofilemaintenance;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 // 9569 start
 import java.util.Collections;
 import java.util.Comparator;
+
 //9569 end
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +53,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -85,6 +88,7 @@ public class SmPersonnelBackingBean extends
 	 */
 	private static final long serialVersionUID = 8285824019929910081L;
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
+	private boolean showInfo = false;  //#30053
 
 	/**
 	 * Instantiate SmPersonnelBackingBean and set MDC user id
@@ -223,6 +227,11 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
 			SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
 					getManagedBean().getSmPersonnelList());
+			//start - #30053
+			if(smSupplier.getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
+				showInfo = true;
+			}
+			//end - #30053
 			if (!isHasSupplierUser) {
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			} else {
@@ -2845,13 +2854,14 @@ public class SmPersonnelBackingBean extends
 		supplierSearchReqDTO.setSupplierId(smSupplier.getSupplierId());
 		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
 		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(supplierSearchReqDTO);
+		
 		smSupplier = searchResDTO.getSmSupplier();
 		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
 			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
-				allowAccess = false;
-				//SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
-				//throw new EpException(MessageConst.ERROR_722684);
-				
+					allowAccess = false;
+					// SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml",
+					// "", null, null);
+					// throw new EpException(MessageConst.ERROR_722684);
 			}else if(searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!= null &&!searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal()){
 				allowAccess = false;
 			//	SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
@@ -3331,7 +3341,16 @@ public class SmPersonnelBackingBean extends
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getAuthVO()));
 	}
-	
+
+	//start - #30053
+	public boolean isShowInfo() {
+		return showInfo;
+	}
+
+	public void setShowInfo(boolean showInfo) {
+		this.showInfo = showInfo;
+	}
+	//end - #30053
 	// 9569 end
 
 }
