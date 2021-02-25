@@ -133,14 +133,16 @@
 									<p:outputLabel
 										value="*" styleClass="mandatory" id="recApprvRejReasonLblMndty"
 										rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+							<!-- #15629 start 25/2/2021 -->
 							<td style="padding-top: 5px;"><p:inputTextarea cols="90"
 									style="width : auto;" rows="10"
 									value="#{backingBean.managedBean.applnRejectionRemarks}"
 									id="rmrksForApprovTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
-									validatorMessage="#{lbl['lbl.sm.remarks.approval']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
+									validatorMessage="#{lbl['lbl.sm.approvremark.new.remarknotes']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit.po']}"
 									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
 									maxlength="4000">
 									<f:validateLength maximum="4000" />
+							<!-- #15629 end 25/2/2021 -->
 							</p:inputTextarea> <p:message id="rmrksForApprovTxtAreaMsg" for="rmrksForApprovTxtArea"
 								showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
