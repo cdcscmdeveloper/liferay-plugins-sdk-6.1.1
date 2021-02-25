@@ -5556,6 +5556,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// #25077 - #91 - Start
 				reqDTO.getQtdetail().setMitiApproval(true);
 				// #25077 - #91 - End
+				reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());//bug #30434
 				detailSO.validateApprovalDetails(reqDTO);
 			} finally {
 				detailSO = null;
