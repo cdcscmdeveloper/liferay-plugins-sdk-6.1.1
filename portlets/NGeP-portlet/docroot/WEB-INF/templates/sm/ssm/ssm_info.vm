@@ -100,7 +100,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>CAPITAL/EQUITY INFORMATION</font>
+	            <font style='color:#ffffff;'>$capitalEquityInfolbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -120,7 +120,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>BRANCH INFORMATION</font>
+	            <font style='color:#ffffff;'>$branchInfolbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -151,7 +151,7 @@
 	<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>OWNER INFORMATION</font>
+	            <font style='color:#ffffff;'>$ownerInfolbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -209,7 +209,7 @@
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>DIRECTOR INFORMATION</font>
+	            <font style='color:#ffffff;'>$directorInfolbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -268,7 +268,7 @@
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>CAPITAL/EQUITY SHAREHOLDING COMPANIES</font>
+	            <font style='color:#ffffff;'>$capitalEquityCompanieslbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -333,7 +333,7 @@
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>PERSONNEL INFORMATION</font>
+	            <font style='color:#ffffff;'>$personnelInfolbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -374,7 +374,7 @@
 		<tr><td><br /></td></tr>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>NATURE OF BUSINESS</font>
+	            <font style='color:#ffffff;'>$businessNaturelbl</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
