@@ -141,6 +141,15 @@
 			src="/xhtml/sm/shared/onlinereg/viewSsmInformationNatureBusinessAc.xhtml" />
 		
 		</div>
+		
+		<div align="right">
+		<p:commandButton  value="#{lbl['lbl.btn.download']}" ajax="false" immediate="true">
+			<p:fileDownload value="#{cc.attrs.bBean.downloadViewSSMInfo()}"/>
+			<f:ajax execute="@this" render="@form"  />
+		</p:commandButton>
+		</div>
+			
 		</p:dialog>
+		
 	</cc:implementation>
 </ui:composition>
