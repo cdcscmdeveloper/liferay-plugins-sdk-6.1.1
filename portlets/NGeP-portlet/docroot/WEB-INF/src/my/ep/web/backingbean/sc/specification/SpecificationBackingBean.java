@@ -2247,8 +2247,12 @@ public class SpecificationBackingBean extends
 					if(this.getManagedBean().getQt().isZonal()){
 						populateFinancialSpecDetailsByZone();
 						saveTotalMaxScoreItemZonal();
-						tmpCheckList.getQtScoreWeightage().setScore(this.getManagedBean()
-								.getTemplateSpecZoneDtls().get(0).getTotalMaxScore());
+						if(this.getManagedBean()
+								.getTemplateSpecZoneDtls().get(0).getTotalMaxScore()!=null){
+							tmpCheckList.getQtScoreWeightage().setScore(this.getManagedBean()
+									.getTemplateSpecZoneDtls().get(0).getTotalMaxScore());
+						}
+						
 					
 					}
 					
@@ -9095,7 +9099,27 @@ public class SpecificationBackingBean extends
 	 *            (ScQtCheckList checkList).
 	 */
 	public void finScoringCheckList(ScQtCheckList checkList) {
-		finScoreSum();
+		//#25138 Reendorsed - settotalpoints - start 
+		if(this.getManagedBean().getQt().isZonal()){
+			BigDecimal totalPoints = null;
+			finScoreSum();
+			int finalScorePoint = this.getManagedBean().getFinPoints();
+			TplSpecZoneDtl specZoneDtl = this.getManagedBean().getSelectedZone();
+			if(specZoneDtl != null){
+				totalPoints = specZoneDtl.getTotalMaxScore();					
+			
+			}else{
+				totalPoints = this.getManagedBean().getTemplateSpecZoneDtls()
+						.get(0).getTotalMaxScore();
+			}
+			finalScorePoint = finalScorePoint + totalPoints.intValue();
+			this.getManagedBean().setFinPoints(finalScorePoint);
+			System.out.println("totalFinalPoint===>"+finalScorePoint);
+		}else{
+			finScoreSum();
+
+		}
+		//#25138 Reendorsed - settotalpoints - end
 		finWeightageSum();
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
@@ -9110,6 +9134,10 @@ public class SpecificationBackingBean extends
 				// toBeRemoveCheckLists.add(technicalCheckList);
 				financialCheckList.remove(localCheckList);
 				financialCheckList.add(checkList);
+				//#25138 - set score weightage for dettype 217 - start
+				financialCheckList.get(i).getQtScoreWeightage().setScore(checkList
+						.getQtScoreWeightage().getScore());
+				//#25138 - set score weightage for dettype 217 - end
 				break;
 			}
 		}
@@ -18646,8 +18674,8 @@ if(null!=allTechnicalChecklist){
 		
 		ITemplateSpecSO templateSpecSo = null;
 		try {
-			this.getManagedBean().getFinancialScoring();
-			retriveFinancialScoring();
+//			this.getManagedBean().getFinancialScoring();
+//			retriveFinancialScoring();
 			this.getManagedBean().setFinPoints(0);
 			Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
 					.getCurrentInstance().getExternalContext()
@@ -18735,16 +18763,22 @@ if(null!=allTechnicalChecklist){
 					reqScoreDto.setSpecZoneId(tplSpecZoneDtl.getSpecZoneId());
 					resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
 					
-					System.out.println("maxscore===>"+resScoreDto.getMaxScore());	
-					totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore());
-					System.out.println("totalmaxscore===>"+totalMaxScore);
+					if(resScoreDto.getMaxScore()!=null){
+						System.out.println("maxscore===>"+resScoreDto.getMaxScore());	
+						totalMaxScore = totalMaxScore.add(resScoreDto.getMaxScore());
+						System.out.println("totalmaxscore===>"+totalMaxScore);
+					}
+					
 					
 				}
-				TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
-				TemplateSpecResDTO specResDto = new TemplateSpecResDTO();
-				specReqDto.setSpecZoneId(tplSpecZoneDtl.getSpecZoneId());
-				specReqDto.setTotalMaxScore(totalMaxScore);
-				specResDto = templateSpecSo.saveTotalMaxScoreByZoneId(specReqDto);
+				if(totalMaxScore!=null){
+					TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+					TemplateSpecResDTO specResDto = new TemplateSpecResDTO();
+					specReqDto.setSpecZoneId(tplSpecZoneDtl.getSpecZoneId());
+					specReqDto.setTotalMaxScore(totalMaxScore);
+					specResDto = templateSpecSo.saveTotalMaxScoreByZoneId(specReqDto);
+				}
+				
 								
 				
 			}
