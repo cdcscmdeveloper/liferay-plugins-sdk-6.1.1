@@ -3179,4 +3179,84 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	
 	//END 27239
+	
+	//27346 START PRINT REPORT
+	/**
+	 * download site visit template report in PDF
+	 * @param templateType
+	 * @throws Exception
+	 */
+	public void downloadViewSSMInfo() throws Exception{
+		printReportVM("ssm","SM_SSMInfo.pdf","/sm/ssm/ssm_info.vm",setDetail());
+	}
+	
+	public VelocityContext setDetail(){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		VelocityContext context = new VelocityContext();
+		FacesScopes face = new FacesScopes();		
+		
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("title", ResourceBundleUtils.getMessage("lbl.sm.view.ssm.infomation",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfoSec", ResourceBundleUtils.getMessage("lbl.sm.comp.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityInfolbl", ResourceBundleUtils.getMessage("lbl.sm.equiInfo.panHdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("branchInfolbl", ResourceBundleUtils.getMessage("lbl.branch.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("ownerInfolbl", ResourceBundleUtils.getMessage("lbl.sm.comp.owneronly.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("directorInfolbl", ResourceBundleUtils.getMessage("lbl.sm.comp.director.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityCompanieslbl", ResourceBundleUtils.getMessage("lbl.sm.equiComp.panHdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("personnelInfolbl", ResourceBundleUtils.getMessage("lbl.sm.person.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
+		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("smAddress", this.getManagedBean().getSmAddress());
+		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
+		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
+		context.put("businessNature", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("branchInfo",this.getManagedBean().getSmSupplierBranchSsm());
+		context.put("equityCompanies",this.getManagedBean().getSmEquityCompaniesSsm());
+		context.put("personnelInfo",this.getManagedBean().getPersonnelsSsm());
+		context.put("businessNatureCode", this.getManagedBean().getSmSupplierBusinessSsm());
+		context.put("smVmUtil", VmUtil.getInstance());
+		context.put("establishdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getEstablishDate()));
+		if(this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)|| this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
+		context.put("robexpdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate()));
+		}
+		return context;
+	}
+	
+	public void printReportVM(String tmpFolder,String fileName,String vmFile,VelocityContext context){
+		String filePath = null;
+		filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		
+		filePath = filePath + "/" + tmpFolder;
+       
+		File file = new File(filePath);
+		if(!file.exists()) file.mkdirs();
+		AttachmentFormat attachmentFormat = null;
+		attachmentFormat = new AttachmentDateFormat();
+		String newName = attachmentFormat.format(fileName, null);
+		filePath = filePath + "/"+ newName;
+		OutputStream os1 = null;
+		File finalOutputFile = new File(filePath);
+		try{
+			os1 = new FileOutputStream(filePath);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(vmFile, context, os1);		
+			os1.flush();
+			os1.close();
+			this.getManagedBean().setDownloadfile(commonDownload(tmpFolder+"/"+newName, fileName));
+			finalOutputFile.delete();
+		}catch(Exception e){
+			log.error("File: BaseBackingBean, printReportVM, Message: "+e.getMessage());
+		}
+	}
+	/**
+	 * get the template logo path 
+	 * @return String
+	 */
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
+	}
+	
+
+	
+	//27346 END PRINT REPORT
 }
