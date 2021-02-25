@@ -104,19 +104,19 @@
 									#else
 										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
-								#elseif($!answerid.answerId != 5)
+								#elseif($!answerid.answerId != 5 && $!answerid.answerId != 7 && $!answerid.answerId != 8)
 									#if($ques.smAnswer.answerId == 6)
 										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
 										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
-								#elseif($!answerid.answerId != 5)
+								#elseif($!answerid.answerId != 5 && $!answerid.answerId != 6 && $!answerid.answerId != 8)
 									#if($ques.smAnswer.answerId == 7)
 										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
 										<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
 									#end
-								#else
+								#elseif($!answerid.answerId != 5 && $!answerid.answerId != 6 && $!answerid.answerId != 7)
 									#if($ques.smAnswer.answerId == 8)
 										<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
 									#else
