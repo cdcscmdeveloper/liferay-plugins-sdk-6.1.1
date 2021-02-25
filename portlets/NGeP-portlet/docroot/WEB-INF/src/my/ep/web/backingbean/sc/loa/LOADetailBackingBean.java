@@ -1541,6 +1541,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// managedBean.downloadedLoaReportsTitleList
 		// only if the title does not exist in the said list
 		if (CollectionUtils.isEmpty(getManagedBean().getDownloadedLoaReportsTitleList())) {
+			getManagedBean().setDownloadedLoaReportsTitleList(new ArrayList<String>());
 			getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
 		} else {
 			if (!getManagedBean().getDownloadedLoaReportsTitleList().contains(scLoaReport.getTitle())) {
