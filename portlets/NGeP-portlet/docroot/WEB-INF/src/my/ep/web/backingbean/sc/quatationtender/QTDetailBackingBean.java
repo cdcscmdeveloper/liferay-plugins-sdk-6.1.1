@@ -2725,7 +2725,7 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#25692-End
-			assertSpecificationUpdateInProgress(false); //#25037
+			//assertSpecificationUpdateInProgress(false); //#25037
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
 			

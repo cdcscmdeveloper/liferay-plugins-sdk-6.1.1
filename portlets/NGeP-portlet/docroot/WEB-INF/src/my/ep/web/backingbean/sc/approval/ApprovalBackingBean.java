@@ -798,7 +798,7 @@ public class ApprovalBackingBean extends
 			logger.info("mbAppr1.getScQtApprovalAttachments() : " + mbAppr1.getScQtApprovalAttachments() + "   ****** mbAppr2.getScQtApprovalAttachments() : "+mbAppr2.getScQtApprovalAttachments());
 			logger.info("mbAppr1.getScQtApprovalRemarks() : " + mbAppr1.getScQtApprovalRemarks() + "   ****** mbAppr2.getScQtApprovalAttachments() : "+mbAppr2.getScQtApprovalRemarks());
 			*/
-			assertSpecificationUpdateInProgress(); // #25037
+			//assertSpecificationUpdateInProgress(); // #25037
 			if(page.equalsIgnoreCase(QTConstants.MAINTANANCE_PAGE)){
 				page = QTConstants.MAINTANANCE_PAGE_FULL;				
 			}
