@@ -73,6 +73,14 @@
 					style="text-align:right">
 					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
+				
+				<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText value="#{empty summaryqualSup.totalRating? 0: summaryqualSup.totalRating}"/>
+				</p:column>
 
 			</p:dataTable>
 			<p:spacer height="10px" />
@@ -129,6 +137,14 @@
 				<p:column headerText="#{lbl['lbl.sc.total.score']}"
 					style="text-align:right">
 					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
+				</p:column>
+				
+				<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}"/>
 				</p:column>
 
 
