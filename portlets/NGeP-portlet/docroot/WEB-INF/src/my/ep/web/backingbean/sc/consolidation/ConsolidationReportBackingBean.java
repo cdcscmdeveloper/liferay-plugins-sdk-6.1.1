@@ -693,7 +693,7 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			// reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			this.downloadAllBriefingPaperReports();
+			//this.downloadAllBriefingPaperReports();
 
 			//#27502 -- Start
 			reqDTO.setScQt(qtBackingBean.getManagedBean().getQt());
