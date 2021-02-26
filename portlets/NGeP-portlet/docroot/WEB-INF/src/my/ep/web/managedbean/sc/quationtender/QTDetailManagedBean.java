@@ -1745,6 +1745,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isSingleItem;
 	//#25138-end
 	
+	//#28784
+	private boolean demoType;
+	private boolean demoAction;
+	private List<ScQtCheckList> demoSpecTemplateList;
+
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10825,6 +10831,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.isSingleItem = isSingleItem;
 		}
 		//#25138 - Reendorsed - end
+
+		public List<ScQtCheckList> getDemoSpecTemplateList() {
+			return demoSpecTemplateList;
+		}
+
+		public void setDemoSpecTemplateList(List<ScQtCheckList> demoSpecTemplateList) {
+			this.demoSpecTemplateList = demoSpecTemplateList;
+		}
+
+		public boolean isDemoAction() {
+			return demoAction;
+		}
+
+		public void setDemoAction(boolean demoAction) {
+			this.demoAction = demoAction;
+		}
+
+		public boolean isDemoType() {
+			return demoType;
+		}
+
+		public void setDemoType(boolean demoType) {
+			this.demoType = demoType;
+		}
 }
 
 
