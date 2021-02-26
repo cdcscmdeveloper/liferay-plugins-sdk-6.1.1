@@ -1000,13 +1000,14 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						getManagedBean().getFinancialAccMap().put(pmFinancialAcc.getAccountNo(), pmFinancialAcc);
 					}
 					// Default the bank account no if only 1 bank account is available
-
+					
 					if (resDTO.getPmFinancialAccList().size() == 1) {
-						getManagedBean().getFactoring().setBankAccountNo(account);
-						
+						//Start Fixing - 29829
+						getManagedBean().getFactoring().setBankAccountNo(pmFinancialAcc.getAccountNo());
+						//End Fixing - 29829
 					}
 				}
-				getManagedBean().setPopulateBankAccountList(items);	
+				getManagedBean().setPopulateBankAccountList(items); 
 //			    getManagedBean().getFactoring().setBankAccountNo("22222");
 //				getManagedBean().getFactoring().setBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName()); 
 //				getManagedBean().setAccBankName(getManagedBean().getFactoring().getBankAccountNo()+ ContractConst.SPACE_SLASH + "bank");	
