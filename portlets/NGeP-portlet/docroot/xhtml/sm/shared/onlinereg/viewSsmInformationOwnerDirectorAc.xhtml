@@ -14,8 +14,8 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			render="#{cc.attrs.bBean.managedBean.personnelsOwnerSsm != null and cc.attrs.bBean.managedBean.personnelsOwnerSsm.size() >0}"
 			value="#{cc.attrs.bBean.managedBean.personnelsOwnerSsm}"
-			rowKey="#{rowKeyObj}"
-			sortBy="#{varOwner11.name}">
+			rowKey="#{varOwner1}"
+			sortBy="#{varOwner1.name}">
 			<ac:paginator for="tableOwner" />
 
 			<p:column style="width:3%" styleClass="column-align-center">
@@ -41,14 +41,7 @@
 
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<c:if
-						test="#{not empty varOwner1.pmCountry and varOwner1.pmCountry.countryCode != 'MY'}">
-						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
-					</c:if>
-					<c:if
-						test="#{empty varOwner1.pmCountry or varOwner1.pmCountry.countryCode eq 'MY'}">
-						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
-					</c:if>
+						<h:outputText value="#{lbl['lbl.sm.person.composition.idenNum']}" />
 				</f:facet>
 				<h:outputText value="#{varOwner1.identificationNo}" />
 			</p:column>
@@ -127,8 +120,7 @@
 	</p:panel>
 	
 	<!-- Director Information -->
-	<c:if test="#{cc.attrs.bBean.managedBean.smSupplier.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplier.businessType == 'J'}">
-		<p:panel header="#{lbl['lbl.sm.directorinfo']}" id="directorBusiness"
+	<p:panel header="#{lbl['lbl.sm.directorinfo']}" id="directorBusiness"
 			toggleable="true">
 
 			<p:dataTable id="tableDirector" var="varDirector" rowIndexVar="index"
@@ -136,7 +128,7 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				render="#{cc.attrs.bBean.managedBean.smPersonnelDirectorSsm != null and cc.attrs.bBean.managedBean.smPersonnelDirectorSsm.size() >0}"
 				value="#{cc.attrs.bBean.managedBean.smPersonnelDirectorSsm}"
-				rowKey="#{rowKeyObj}"
+				rowKey="#{varDirector}"
 				sortBy="#{varDirector.name}">
 				<ac:paginator for="tableDirector" />
 
@@ -156,14 +148,7 @@
 
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
-						<c:if
-							test="#{not empty varDirector.pmCountry and varDirector.pmCountry.countryCode != 'MY'}">
-							<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
-						</c:if>
-						<c:if
-							test="#{empty varDirector.pmCountry or varDirector.pmCountry.countryCode eq 'MY'}">
-							<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
-						</c:if>
+							<h:outputText value="#{lbl['lbl.sm.person.composition.idenNum']}" />
 					</f:facet>
 					<h:outputText value="#{varDirector.identificationNo}" />
 				</p:column>
@@ -226,7 +211,7 @@
 					</h:outputText>
 				</p:column>
 				</c:if>
-
+			<c:if test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">		
 				<p:column styleClass="column-align-center">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
@@ -236,8 +221,7 @@
 							minFractionDigits="2" />
 					</h:outputText>
 				</p:column>
-
+			</c:if>
 			</p:dataTable>
 		</p:panel>
-	</c:if>
 </ui:composition>
