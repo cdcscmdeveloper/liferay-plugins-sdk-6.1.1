@@ -59,7 +59,6 @@ import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -272,7 +271,6 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTDetailBackingBean.
  * 
@@ -1608,10 +1606,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 
 	 * @return the qt award so
 	 */
+	/*
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
+	*/
 	
 	/*
 	 * Enhancement #21694 END
@@ -1778,7 +1778,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (!this.getManagedBean().getQt().isPanel()) {
 			if (this.getManagedBean().getQt().getQtType()
 					.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
-				// TODO need to check why updating the twice.. sagar
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getQtCategoryList();
 				if (CollectionUtils.isNotEmpty(openList)) {
@@ -3124,9 +3123,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return finalizationSecratary;
 	}
 
+	/*
 	private ICommitteSO getCommitteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 	}
+	*/
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -4242,7 +4243,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				backingBean.getDeskOfficerAdminAssistant();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				detailSO = null;
@@ -5350,7 +5350,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getTemplateSpecZoneDtls();
 
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
-				// TODO Code needs to be remove
 				// setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
 
 				for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
@@ -5536,6 +5535,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// #25077 - #91 - Start
 				reqDTO.getQtdetail().setMitiApproval(true);
 				// #25077 - #91 - End
+				reqDTO.setApprovalOTH(this.getManagedBean().getSelectedApprovalTabBean().getTabType());//bug #30434
 				detailSO.validateApprovalDetails(reqDTO);
 			} finally {
 				detailSO = null;
@@ -8415,7 +8415,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
 		log.debug("qtDetailhandleFileUpload - START");
-		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
+		//List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			log.debug("qtDetailhandleFileUpload - START");
 			ScAttachment scAttachment = null;
@@ -8442,7 +8442,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//attachments.add(attachment);
 			//getManagedBean().setAttachments(attachments);
 		}
-		attachments=null;
+		//attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
 	}
 	
