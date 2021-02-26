@@ -3605,4 +3605,28 @@ public class CreateQtBackingBean extends
 		return screen;
 	}
 //#11104-end
+	
+
+	/**
+	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
+	 * #28784
+	 * @param event
+	 *
+	 */
+	public void renderDemoRadioButton(AjaxBehaviorEvent event){
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+			String type = (String) event.getComponent().getAttributes().get("value");
+			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+				this.getManagedBean().setDemoType(true);
+			} else {
+				this.getManagedBean().setDemoType(false);
+				this.getManagedBean().getQt().setDemoRequired(false);
+			}
+		}
+	}
+	
+
+
 }

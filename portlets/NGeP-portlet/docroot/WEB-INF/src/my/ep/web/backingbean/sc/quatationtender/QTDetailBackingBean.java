@@ -4988,6 +4988,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						} else {
 							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
 						}
+						
+						//#28784
+						if (scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+							this.getManagedBean().setDemoType(true);
+						}
 
 					}
 
