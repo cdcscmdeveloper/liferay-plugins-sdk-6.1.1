@@ -9332,7 +9332,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (ParameterConst.PROCUREMENT_MODE_QUOTATION
 				.equalsIgnoreCase(procureMentMode.getParameterCode())) {
 			int valDay = getProposalValidityDays(this.getManagedBean().getQt().getEstimatedAmount());
-			if (null != this.getManagedBean().getQt().getQtValidityPeriod() && valDay < this.getManagedBean().getQt().getQtValidityPeriod()) {
+			log.info("New Yooooooooooooooo = " + valDay + " ======== " + validityDays);
+			if (null != this.getManagedBean().getQt().getQtValidityPeriod() && valDay < validityDays) {
 				throw new EpException(MessageConst.ERROR_760044,
 						new String[] { String.valueOf(valDay)});
 			}
