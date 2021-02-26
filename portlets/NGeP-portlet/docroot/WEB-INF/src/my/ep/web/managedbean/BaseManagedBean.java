@@ -18,6 +18,7 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.collections.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.StreamedContent;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -147,7 +148,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerC;
 	private String termAndConditionCheckOwnerChangeRole;
 	// end #29956
-	
+
+	// 27346
+	private StreamedContent downloadfile;
+
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -924,6 +928,16 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	// end #29956
+	
+	// start 27346
+	public StreamedContent getDownloadfile() {
+		return downloadfile;
+	}
+
+	public void setDownloadfile(StreamedContent downloadfile) {
+		this.downloadfile = downloadfile;
+	}
+	// end 27346
 }
 
 
