@@ -125,14 +125,12 @@
 
 			<p:column style="text-align: center;"
 				headerText="#{lbl['lbl.sc.action']}">
-				<!-- #29006 - start, added update="@form" -->
 				<p:commandButton id="download" icon="ui-icon-download"
 					style="background-color:transparent !important; border:0px none;"
-					ajax="false" update="@form" partialSubmit="true" process="@form" 
+					ajax="false"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true or
 					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload}" />
-				<!-- #29006 - end -->
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="scDocUploadDlg"
 					rendered="#{(isEditableStatus and !lOADetailBackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 

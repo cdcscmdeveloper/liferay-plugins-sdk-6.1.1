@@ -1575,6 +1575,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (getManagedBean().getDownloadedLoaReportsTitleList().size() == getManagedBean().getScLoa()
 					.getScLoaReports().size()) {
 				getManagedBean().setVerifyBtnFlag(false);
+				RequestContext.getCurrentInstance().update("buttonsPG");
 			} else {
 				getManagedBean().setVerifyBtnFlag(true);
 			}
