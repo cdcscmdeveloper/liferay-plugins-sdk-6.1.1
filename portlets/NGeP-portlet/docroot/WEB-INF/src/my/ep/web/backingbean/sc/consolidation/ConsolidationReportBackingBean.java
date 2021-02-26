@@ -693,14 +693,15 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			// reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			
+			this.downloadAllBriefingPaperReports();
+
 			//#27502 -- Start
 			reqDTO.setScQt(qtBackingBean.getManagedBean().getQt());
 			//#27502 -- End
-			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.submitConsolidationReport(reqDTO);
 			if (resDTO.isSuccessful()) {
+
 				String submitMessage = ResourceBundleUtils.getMessage(
 						"lbl.sc.consolidation.report.submit.message",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -714,7 +715,9 @@ public class ConsolidationReportBackingBean extends
 						submitMessage, qtParam);
 			}
 
-		} finally {
+		} catch(Exception e){
+			e.printStackTrace();
+		}finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
