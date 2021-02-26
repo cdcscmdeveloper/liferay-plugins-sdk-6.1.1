@@ -11575,11 +11575,11 @@ public class SmApplicationUtil {
 
 	public static void initPoInquiry(SmApplicationManagedBean bean,
 			boolean isNewInquiry) {
-		//START 12483
+		//START 14530
 		if(bean.getPoToSupplierInquiry() == null){
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
-		//END 12483
+		//END 14530
 
 		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 				.getSmApplInquiries())) {
@@ -11617,7 +11617,7 @@ public class SmApplicationUtil {
 
 			}
 			// if Supplier (Respond to PO inquiry)
-			//START 12483
+			//START 14530
 			else if (bean.isSupplierUser()) {
 				bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
 				for (SmApplInquiry inquiry : bean.getSmAppl()
@@ -11630,7 +11630,7 @@ public class SmApplicationUtil {
 						bean.setPoToSupplierInquiry(inquiry);
 					}
 				}
-				//END 12483
+				//END 14530
 				bean.getPoToSupplierInquiry()
 						.setResponseText(StringUtils.EMPTY);
 			}
