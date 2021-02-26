@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:dialog widgetVar="demoSpecList" modal="true" width="950"
+		height="500" position="top" header="#{lbl['lbl.sc.demo.spec.tech.list']}">
+
+		<p:messages id="demoSpecTemplateList" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+
+		<p:dataTable id="demoSpecTempId" var="demoSpecTempList"
+			value="#{specificationBackingBean.managedBean.demoSpecTemplateList}"
+			rowIndexVar="index" selection="#{specificationBackingBean.managedBean.s2TechSelect}"
+			first="#{specificationBackingBean.managedBean.technicalTableRow}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowKey="#{demoSpecTempList}">			
+
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+				style="width:24%;white-space: normal;">
+				<h:outputText value="#{demoSpecTempList.title}"></h:outputText>
+			</p:column>
+
+			<p:column style="width:20%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.type']}" />
+					<ac:iconTooltip id="technicalChecklistMechasine#{index}Sc"
+						value="#{lbl['lbl.sc.type.technical.tooltip']}" />
+				</f:facet>
+
+				<h:panelGroup id="technicalChecklisttypes">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(demoSpecTempList.definationType)}"></h:outputText>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
+				style="width:7%;white-space: normal;">
+				<h:panelGroup id="technicalSpecificationStatus">
+					<h:outputText
+						value="#{specificationBackingBean.getStatusDescById(demoSpecTempList.pmStatus.statusId)}"></h:outputText>
+				</h:panelGroup>
+			</p:column>
+
+			<p:column style="width:5%;text-align: center;">
+				<f:facet name="header">
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
+				</f:facet>
+				<h:panelGroup id="technicalChecklistEditActionView">
+					<p:commandButton value="#{lbl['lbl.btn.view']}"						
+						process="@this" styleClass="BtnSpacing" 
+						action="#{specificationBackingBean.demoSpectechnicalChecklist(index,stageTwoTechnical,'T')}"
+						update="@([id$=questionTbl])"
+						partialSubmit="true" />	
+						<!-- action="#{specificationBackingBean.demoSpectechnicalChecklist(index,stageTwoTechnical,'T')}" -->	
+						<!-- action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}" -->		
+				</h:panelGroup>			
+			</p:column>
+
+		</p:dataTable>
+
+		<p:ajax event="close" listener="#{specificationBackingBean.closeListener}" />
+	</p:dialog>
+</ui:composition>
