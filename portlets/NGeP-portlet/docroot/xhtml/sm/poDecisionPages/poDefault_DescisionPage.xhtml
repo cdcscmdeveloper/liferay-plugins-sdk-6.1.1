@@ -287,10 +287,11 @@
 		<p:outputPanel layout="block" id="poEnquiryBlockPanel">
 			<ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 			<div align="right">
+				<!-- #12483 - START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
 					update="@([id$=Msg])" process="poEnquiryBlockPanel"
-					oncomplete="sendInqDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+				<!-- #12483 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
 					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
 			</div>
