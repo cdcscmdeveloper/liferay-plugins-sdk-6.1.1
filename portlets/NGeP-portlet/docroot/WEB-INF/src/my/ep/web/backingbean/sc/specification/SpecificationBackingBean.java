@@ -2346,6 +2346,16 @@ public class SpecificationBackingBean extends
 							}
 							
 						}
+						//#25138 - sorting scoreofferprice list - start
+						Collections.sort(newOfferList, new Comparator<ScQtScoreOfferPrice>() {
+							public int compare(ScQtScoreOfferPrice list1,
+									ScQtScoreOfferPrice list2) {
+
+								return list1.getQtScoreOfferPriceId()
+										.compareTo(list2.getQtScoreOfferPriceId());
+							}
+						});
+						//#25138 - sorting scoreofferprice list - end
 						this.getManagedBean().setOfferPricePackageList(newOfferList);
 						
 						tmpCheckList.getQtScoreWeightage().setScQtScoreOfferPrices(this.getManagedBean()
@@ -18619,6 +18629,15 @@ if(null!=allTechnicalChecklist){
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())) {
 			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean()
 					.getTemplateSpecZoneDtls();
+			//#25138 - sorting zonedtls list - start
+			Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
+				public int compare(TplSpecZoneDtl zoneDtl1,
+						TplSpecZoneDtl zoneDtl2) {
+
+					return zoneDtl1.getSpecZoneId().compareTo(zoneDtl2.getSpecZoneId());
+				}
+			});
+			//#25138 - sorting scoreofferprice list - end
 			this.getManagedBean().setSpecZoneTabIndex(0);
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
