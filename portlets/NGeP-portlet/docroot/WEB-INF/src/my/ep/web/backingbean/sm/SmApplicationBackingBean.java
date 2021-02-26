@@ -6002,12 +6002,12 @@ public class SmApplicationBackingBean extends
 			StringBuilder sb = new StringBuilder();
 			boolean showErrorPopup = true;
 			sb.append("<font color='red'>");
-			this.getManagedBean().setDisplayMessageEmp("");
+			//this.getManagedBean().setDisplayMessageEmp("");
 			sb.append(SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null));
 			sb.append("<br/>");
 			
 			sb.append("</font>");
-			this.getManagedBean().setDisplayMessageEmp(sb.toString());
+		//	this.getManagedBean().setDisplayMessageEmp(sb.toString());
 			if(showErrorPopup){
 				RequestContext.getCurrentInstance().execute("empAlertPopUp.show()");
 				return;
@@ -10106,8 +10106,10 @@ public class SmApplicationBackingBean extends
 				SmCommonUtil.getInstance().setUserDetails(
 						this.getManagedBean().getSmAppl());
 				//14530 - START
-				this.getManagedBean().getPoToSupplierInquiry().setSmAppl(this.getManagedBean().getSmAppl());
-				reqDTO.setPoToSupplierInquiry(this.getManagedBean().getPoToSupplierInquiry());
+				if(this.getManagedBean().getPoToSupplierInquiry()!= null){
+					this.getManagedBean().getPoToSupplierInquiry().setSmAppl(this.getManagedBean().getSmAppl());
+					reqDTO.setPoToSupplierInquiry(this.getManagedBean().getPoToSupplierInquiry());
+				}
 				//14530 - END
 				
 				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
