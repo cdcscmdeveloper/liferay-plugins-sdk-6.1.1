@@ -53,6 +53,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -84,6 +85,7 @@ public class SmPersonnelBackingBean extends
 	 */
 	private static final long serialVersionUID = 8285824019929910081L;
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
+	private boolean showInfo = false;  //#30053
 
 	/**
 	 * Instantiate SmPersonnelBackingBean and set MDC user id
@@ -222,6 +224,11 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
 			SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
 					getManagedBean().getSmPersonnelList());
+			//start - #30053
+			if(smSupplier.getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
+				showInfo = true;
+			}
+			//end - #30053
 			if (!isHasSupplierUser) {
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			} else {
@@ -2844,13 +2851,14 @@ public class SmPersonnelBackingBean extends
 		supplierSearchReqDTO.setSupplierId(smSupplier.getSupplierId());
 		supplierSearchReqDTO.setRegNo(smSupplier.getRegNo());
 		SupplierSearchResDTO searchResDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(supplierSearchReqDTO);
+		
 		smSupplier = searchResDTO.getSmSupplier();
 		if(searchResDTO.getSmSupplier() != null && searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic() != null){
 			if(!searchResDTO.getSmSupplier().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
-				allowAccess = false;
-				//SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
-				//throw new EpException(MessageConst.ERROR_722684);
-				
+					allowAccess = false;
+					// SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml",
+					// "", null, null);
+					// throw new EpException(MessageConst.ERROR_722684);
 			}else if(searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!= null &&!searchResDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().isWithFederal()){
 				allowAccess = false;
 			//	SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
@@ -3133,8 +3141,9 @@ public class SmPersonnelBackingBean extends
 		      PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 		      PersonnelResDTO resDTO1 = new PersonnelResDTO();
 		      if (personnel.getPmUser() != null) {
+		    	  int softcert = checkSoftCert();
 		    	  if(getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.FL_USER.value())){
-		    		  personnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+		    		  personnel.setSoftcertFlg(softcert);
 		    	  }else{
 		    		  personnel.setSoftcertFlg( SupplierManagementConst.RECORD_STATUS_SUSPENDED);
 		    		  personnel.setContractSignerFlg(Integer.parseInt(ParameterConst.FLAG_NO));
@@ -3188,6 +3197,25 @@ public class SmPersonnelBackingBean extends
 		      throw new EpException(MessageConst.ERROR_722632);
 		  }
 		}
+	
+	public int checkSoftCert(){
+		int value = 4;
+		PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		reqDTO1.setSmSupplierId(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+		reqDTO1.setSmSupplier(getManagedBean().getBasicSmPersonnel().getSmAppl().getSmSupplier());
+		reqDTO1.setUserId(getManagedBean().getBasicSmPersonnel().getPmUser().getUserId());
+		SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO1).getSoftcertRequest();
+		if(softcertRequest == null){
+			value = SupplierManagementConst.SOFT_CERT_PENDING_REQ; 
+		}else if(softcertRequest != null && softcertRequest.getPmDigiCert() == null){
+			value = SupplierManagementConst.SOFT_CERT_PROCESSING; 
+		}else if(softcertRequest != null && softcertRequest.getPmDigiCert() != null){
+			value = SupplierManagementConst.SOFT_CERT_ISSUED; 
+		}else{
+			value = getManagedBean().getBasicSmPersonnel().getSoftcertFlg(); 
+		}
+		return value;	
+	}
 //9569 - End
 	/**
 	 * Sort personnel list based Ep Role
@@ -3310,7 +3338,16 @@ public class SmPersonnelBackingBean extends
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getAuthVO()));
 	}
-	
+
+	//start - #30053
+	public boolean isShowInfo() {
+		return showInfo;
+	}
+
+	public void setShowInfo(boolean showInfo) {
+		this.showInfo = showInfo;
+	}
+	//end - #30053
 	// 9569 end
 
 }
