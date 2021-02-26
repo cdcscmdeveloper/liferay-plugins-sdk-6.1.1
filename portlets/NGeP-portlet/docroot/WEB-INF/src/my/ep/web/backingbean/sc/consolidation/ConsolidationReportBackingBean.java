@@ -6,9 +6,11 @@ package my.ep.web.backingbean.sc.consolidation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -539,9 +541,20 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		ScQtFinalizationReportAttachment reportAttachment = null;
+		boolean latest = true;
+		for(ScQtFinalizationReport rep: this.getManagedBean().getFinalizationReports()){//with assumption on KT report exist
+			Date date = new Date();  
+            Timestamp tsPlaceholder = new Timestamp(date.getTime());
+			Timestamp ts1 = scQtFinalizationReport.getCreatedDate()== null ? tsPlaceholder: scQtFinalizationReport.getCreatedDate();
+			Timestamp ts2 = rep.getCreatedDate()==null ? tsPlaceholder: rep.getCreatedDate();
+			if((ts1.compareTo(ts2)< 0) && rep.getPmDocument().getDocDefinitionKey().equalsIgnoreCase(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER)){
+				latest = false;
+				break;
+			}
+		}
 		if (null != getManagedBean().getCurrentStatusId() 
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
-						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
+						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()) && latest) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		} else {
