@@ -1149,22 +1149,32 @@ public class SupplierFinalizationBackingBean extends
 	 *            the selected ScQtMeeting entity
 	 */
 	//28834 starts
-	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
+
+public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 		log.info("changeMeetingStatus");
+		
+		int doneList = 0;
+		int pendingList = 0;
 		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
 		log.info("changeMeetingStatus"+scQtMeeting.getMeetingStatus());
 		//Boolean IsDisableBfButton = getManagedBean().getIsDisableBfButton();
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-		boolean done = true;
+		boolean done = false;
 		for (ScQtMeeting meeting : meetingList) {
-			log.info("changeMeetingStatus---->"+meeting.getMeetingStatus().getStatusId());
 			
-			if(!meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID)){
-				done = false;
-				break;
+			if(scQtMeeting.getQtMeetingId().equals(meeting.getQtMeetingId())){
+				log.info("suresh---->"+scQtMeeting.getQtMeetingId());
+				log.info("suresh---->"+meeting.getQtMeetingId());
+				log.info("suresh -----> " + scQtMeeting.getMeetingStatus().getStatusId());
+				log.info("suresh -----> " + QTConstants.SC_MEETING_DONE_STATUS_ID);
+				//log.info("Basith---->"+meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID));
+				log.info("suresh object valid --->" + scQtMeeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID));
+				if(scQtMeeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID)){
+					done = true;
+				}
 			}
-			
 		}
+		log.info("suresh Final value-----> " + done);
 		this.getManagedBean().setDisableBfButton(done);
 	}
 	//28834 ends
@@ -9579,6 +9589,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+			for(ScQtFinalizationReport  report: finalizationReports){
+				if(report.isBrandNew()){//find the correct additional condition
+					finalizationReports.remove(report);
+					break;
+				}
+			}
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			log.info("currentStatusId === "+currentStatusId);
