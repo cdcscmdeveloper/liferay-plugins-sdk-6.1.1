@@ -951,9 +951,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_AC_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_AC_HT_NAME)
 				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_AGREEMENT_HT_NAME)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)
 //				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_DRAFT_AGREEMENT_HT_NAME)
 //				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FINALIST_AGREEMENT_HT_NAME)
-//				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FINALIST_AGREEMENT_HT_NAME)
 //				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)
 //				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)
 				) {
@@ -969,7 +969,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		} else if (getManagedBean().getTaskName() != null
 				//#28715
 				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
-//						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FINALIST_AGREEMENT_HT_NAME)
 						)) {
 			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 					ParameterConst.CONTRACT_TYPE_MINISTRY)
