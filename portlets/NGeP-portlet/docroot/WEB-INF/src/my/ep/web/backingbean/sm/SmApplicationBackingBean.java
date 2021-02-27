@@ -9957,9 +9957,11 @@ public class SmApplicationBackingBean extends
 			retMsg = null;
 		}
 		//START 12483
-		if(res!= null && res.equalsIgnoreCase("REVISE")){
+		if(res != null && res.equalsIgnoreCase("REVISE")) {
 			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
-		}else{
+		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
+			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
+		} else {
 			// #26136
 			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
 		}
