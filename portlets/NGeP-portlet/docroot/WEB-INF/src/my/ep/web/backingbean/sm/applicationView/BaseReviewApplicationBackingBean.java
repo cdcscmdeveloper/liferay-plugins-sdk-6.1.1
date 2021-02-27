@@ -1809,8 +1809,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				// for supp profile load all active category only
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					getManagedBean().getSuppProfileOrHistoryCategoryList().add(
-							cat);
+					//29949:Disciplinary Action - 26238 - start, filter out category code that active and imposed with DA
+					if(getManagedBean().getSmAppl().getSmSupplier() != null){
+						List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(getManagedBean().getSmAppl().getSmSupplier());
+						
+						if (resultList != null && resultList.size() > 0) {
+							for(SmDisciplinaryAction disciplinaryAction: resultList){
+								if((disciplinaryAction.isCancelCategory()|| disciplinaryAction.isManufacturerCancel() || disciplinaryAction.isBumiputeraCancel()) && cat.getDisciplinaryActionId() == null){
+									getManagedBean().getSuppProfileOrHistoryCategoryList().add(
+											cat);
+								}
+								
+							}
+						}
+					}
+					//29949:Disciplinary Action - 26238 - end
 				}
 			}
 		}
