@@ -284,12 +284,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<!--#12492-START-->
 					<td><p:inputText maxlength="18"
 							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
+							<p:ajax event="blur" process="@this" update="@this" listener="#{backingBean.CheckBankAccount()}"/>
 						</p:inputText> 
 						&#160;
 						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
@@ -297,6 +299,7 @@
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.account.no']}"  />
 						</p:tooltip>
 					</td>
+					<!--#12492-END-->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
@@ -641,7 +644,22 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 	</p:dialog>
-	
+	<!--#12492-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="bankDialogDuplicate"
+		id="bankDialogDuplicateId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="bankDialogDuplicatePanel">
+			<p:messages id="bankDialogDuplicateMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.sm.duplicateInfo']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="bankDialogDuplicate.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#12492-END-->
 	<ac:confirmationPopup id="bankDeletePopUpId"
 		widget="bankDeletePopUp"
 		okAction="backingBean.deleteSelectedBanks"
