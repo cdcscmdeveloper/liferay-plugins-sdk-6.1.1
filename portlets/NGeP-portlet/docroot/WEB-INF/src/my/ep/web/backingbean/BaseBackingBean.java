@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -110,6 +111,7 @@ import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -3292,4 +3294,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 	
 	//27346 END PRINT REPORT
+
+	//12492 - START
+	public void CheckBankAccount() {
+
+		HashSet<String> hsetAccountNo = new HashSet<String>();
+		HashSet<Long> hsetAccountName = new HashSet<Long>();
+
+		if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 1) {
+			for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+				if (bankName._persistence_get_pmFinancialOrg().getFinancialOrgId() != null
+						&& hsetAccountName.add(bankName._persistence_get_pmFinancialOrg().getFinancialOrgId()) == false) {
+					for (SmSupplierBank bank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
+						if (hsetAccountNo.add(bank._persistence_get_accountNo()) == false) {
+							RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
+						}
+					}
+				}
+			}
+		}
+	}
+	//12492 - END
 }
