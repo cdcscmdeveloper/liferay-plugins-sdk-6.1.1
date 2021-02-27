@@ -220,8 +220,10 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/paymentSummary.xhtml");
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.RESPOND_PO_INQUIRY)) {
+			//#12483 - START
+		} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY) || 
+				   resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE)) {
+			//#12483 - END
 			log.info("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
 			if (resDTO.getProcessName().equalsIgnoreCase(
@@ -243,8 +245,10 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+				//#12483 - START
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) ||
+					resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
+				//#12483 - END
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
 				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
