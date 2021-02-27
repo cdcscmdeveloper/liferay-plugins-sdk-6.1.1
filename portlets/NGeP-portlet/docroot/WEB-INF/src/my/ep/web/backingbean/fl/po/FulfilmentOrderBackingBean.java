@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1130,12 +1131,15 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				Date d1 = df.parse(df.format(currTime.getTime()));
 				Date d2 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getEffDate()));
 				Date d3 = df.parse(df.format(resFeeDTO.getFeeExemptions().get(2).getExpDate()));
+				d3.setTime(d3.getTime() + TimeUnit.HOURS.toMillis(23));
+				d3.setTime(d3.getTime() + TimeUnit.MINUTES.toMillis(59));
+				d3.setTime(d3.getTime() + TimeUnit.SECONDS.toMillis(59));
 				log.info("d2 is : " +d2);
 				log.info("d3 is : " +d3);
 
 				if (getManagedBean().getCarryForward() != null) {
 				
-					if (d1.compareTo(d3) < 0 && d1.compareTo(d2) > 0)  {
+				  if ((d1.compareTo(d3) < 0||d1.compareTo(d3)==0) && (d1.compareTo(d2) > 0||d1.compareTo(d2)==0))  {
 						reqDTO.setOutcome(FulfilmentConst.IDD_ACTION_CODE_CREATE_YEP);
 					}else{
 						throw new EpException(MessageConst.ERROR_776107);
