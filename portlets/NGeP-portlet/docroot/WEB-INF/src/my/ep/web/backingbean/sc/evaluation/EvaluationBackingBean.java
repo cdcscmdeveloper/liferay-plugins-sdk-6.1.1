@@ -14914,6 +14914,29 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public List<SelectItem> technicalSummaryDropDownValues(){
 		log.debug("technicalSummaryDropDownValues");
+		
+		IQTSpecSO specSo = null;
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		SpecificationResDTO resDTO = null;
+		List<Integer> settinglist = new ArrayList<Integer>();
+		settinglist.add(1);
+		reqDTO.setSettingTypes(settinglist);
+
+		log.debug("before retrieveScoreSettingDtls");
+
+		specSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		resDTO = specSo.retrieveScoreSettingDtlsCheck(reqDTO);
+		List<ScQtScoreSetting> list = resDTO.getScoreSettingResultBean()
+				.getResultList();
+		int maxSet = 6;
+		for(ScQtScoreSetting listmax : list){
+			if(listmax.getSettingType() > maxSet){
+			maxSet = listmax.getSettingType();
+			}
+		}
+		
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		selectItems.add(new SelectItem(null, ResourceBundleUtils
 				.getMessage("lbl.txt.select",
@@ -14922,16 +14945,26 @@ private void retriveCommitteeRemarksList(){
 	//boolean medicineCategoryCode=isMultipleProposalCategory(this.getManagedBean().getScQt(), null);
 	//medicineCategoryCode=false;
 	//log.info("finanialSummaryDropDownValues medicineCategoryCode"+medicineCategoryCode);
-	
-		selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
-				.getMessage("lbl.sc.evaluation.view.by.tech.package.score",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
-	
-		selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_ITEM, ResourceBundleUtils
-				.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
+		
+	//this is to cater wip data only show tech package score for wip.
+		if(maxSet == 7){
+			selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+					.getMessage("lbl.sc.evaluation.view.by.tech.package.score",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+		
+			selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_ITEM, ResourceBundleUtils
+					.getMessage("lbl.sc.evaluation.view.by.item.preference.margin",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+		
+			}else{
+				selectItems.add(new SelectItem(QTConstants.TECHNICAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+						.getMessage("lbl.sc.evaluation.view.by.tech.package.score",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			
+				}
 		return selectItems;
 																			
 																		  
