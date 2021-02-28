@@ -230,21 +230,4 @@
 		</p:outputPanel>
 	</p:dialog>
 	<!-- #12483 - END -->
-	<!--  #29727 -->
-	<ac:confirmationPopup id="pendingQTPopUpApproverId"
-		widget="pendingQTPopUpApprover"
-		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
-		update=":form:tt:approverAppDialog"/>
-		
-	<ac:confirmationPopup id="closedQTSubmitProposalPopUpApproverId"
-		widget="closedQTSubmitProposalPopUpApprover"
-		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}" 
-		update=":form:tt:approverAppDialog"/>
-	<!-- END #29727 -->
 </ui:composition>
