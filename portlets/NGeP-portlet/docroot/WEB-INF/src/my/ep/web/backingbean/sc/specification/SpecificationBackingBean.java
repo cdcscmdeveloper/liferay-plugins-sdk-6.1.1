@@ -18802,6 +18802,9 @@ if(null!=allTechnicalChecklist){
 					specReqDto.setSpecZoneId(tplSpecZoneDtl.getSpecZoneId());
 					specReqDto.setTotalMaxScore(totalMaxScore);
 					specResDto = templateSpecSo.saveTotalMaxScoreByZoneId(specReqDto);
+					//#25138 - set total max score in templatspeczonedtls - start
+					tplSpecZoneDtl.setTotalMaxScore(totalMaxScore);
+					//#25138 - set total max score in templatspeczonedtls - end
 				}
 				
 								
