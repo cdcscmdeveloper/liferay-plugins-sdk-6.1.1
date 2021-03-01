@@ -3330,9 +3330,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						if(epItem.getPlanAmt()==null || epItem.getPlanAmt().intValue()<=0){
 							throw new EpException(MessageConst.ERROR_730005);
 						}
-						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0){
+						//01032021@Bug #30476 - start
+						if(epItem.getNonEpAmt()==null || epItem.getNonEpAmt().intValue()<0
+								|| epItem.getNonEpAmt().doubleValue()<-epItem.getNonEpAmt().doubleValue()){
 							throw new EpException(MessageConst.ERROR_730006, new String[]{epItem.getPmGlAccount().getGlAccCode()});
-						}
+						}	//01032021@Bug #30476 - end
+						
 						if(epItem.getNonEpAmt().intValue()>0){
 							if(epItem.getJustifications()==null 
 									|| (epItem.getJustifications()!=null && epItem.getJustifications().isEmpty())
