@@ -2428,7 +2428,7 @@ public void submitAction() {
 			if(this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")){
 				
 				if (!getManagedBean().isBpkCentralContract()) {
-					changeMeetingStatusBrief();
+					//changeMeetingStatusBrief();
 					Boolean remarksNotFound=validationRemarksBrief();
 					if(!remarksNotFound){
 						RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
