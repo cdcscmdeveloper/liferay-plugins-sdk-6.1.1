@@ -2040,16 +2040,21 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
-			//#25138 - remove if() condition - start		 
-					 
-			specSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-			reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
-			SpecificationResDTO resDTO1 = specSo.retrieveCheckLists(reqDTO);
+			//#25138 - add if() condition - start
+			if (null == this.getManagedBean()
+					.getScQtCheckSt2financeProposalList()
+					|| this.getManagedBean()
+							.getScQtCheckSt2financeProposalList().isEmpty()) {
+				
+				specSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
+				SpecificationResDTO resDTO1 = specSo.retrieveCheckLists(reqDTO);
 
-			this.getManagedBean().setScQtCheckSt2financeProposalList(
-					resDTO1.getFinancialCheckLists());
-			//#25138 - remove if() condition - end
+				this.getManagedBean().setScQtCheckSt2financeProposalList(
+						resDTO1.getFinancialCheckLists());
+			}
+			//#25138 - add if() condition - end		
 			List<Integer> settinglist = new ArrayList<Integer>();
 			settinglist
 					.add(SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE);
@@ -2347,16 +2352,6 @@ public class SpecificationBackingBean extends
 							}
 							
 						}
-						//#25138 - sorting scoreofferprice list - start
-						Collections.sort(newOfferList, new Comparator<ScQtScoreOfferPrice>() {
-							public int compare(ScQtScoreOfferPrice list1,
-									ScQtScoreOfferPrice list2) {
-
-								return list1.getQtScoreOfferPriceId()
-										.compareTo(list2.getQtScoreOfferPriceId());
-							}
-						});
-						//#25138 - sorting scoreofferprice list - end
 						this.getManagedBean().setOfferPricePackageList(newOfferList);
 						
 						tmpCheckList.getQtScoreWeightage().setScQtScoreOfferPrices(this.getManagedBean()
