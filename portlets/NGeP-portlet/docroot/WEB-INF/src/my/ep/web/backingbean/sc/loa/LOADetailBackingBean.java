@@ -7856,7 +7856,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offer.and.justification.mandatory",
+							"lbl.sc.new.supplier.offered.and.justification.mandatory",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			return;
 		}
@@ -7864,7 +7864,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offer.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							"lbl.sc.new.supplier.offered.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 			return;
 		}
@@ -7872,7 +7872,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offer.justification.mandatory",
+							"lbl.sc.new.supplier.offered.justification.mandatory",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			return;
 		}
