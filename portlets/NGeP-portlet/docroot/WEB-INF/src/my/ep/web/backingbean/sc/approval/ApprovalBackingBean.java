@@ -292,6 +292,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			scQtApprovalDtls.setApprovalRequestAttachement(approvalReqAttachement);
+			getManagedBean().setScQtApprovalReqAttachement(approvalReqAttachement);//bug #30435
 		}
 		logger.debug("handleOtherFileUpload - END");
 	}

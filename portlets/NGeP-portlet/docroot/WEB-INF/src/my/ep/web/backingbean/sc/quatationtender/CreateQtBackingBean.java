@@ -138,6 +138,10 @@ import org.primefaces.model.TreeNode;
 public class CreateQtBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(CreateQtBackingBean.class);
@@ -3072,12 +3076,20 @@ public class CreateQtBackingBean extends
 				.getApproverAction().getParameterId() : null;
 		if (parameterId != null) {
 			approvalDetails
-					.setApproverAction(retrieveParameterById(parameterId));
+					.setApproverAction(retrieveParameterById(parameterId));//bug #30435 - start
+			getManagedBean().setPmParam(retrieveParameterById(parameterId));
 		} else {
 			approvalDetails.setApproverAction(new PmParameter());
 		}
 
 	}
+	
+	public void otherAppValueChanged(ValueChangeEvent event) {
+		
+		if (null != event.getNewValue()) {
+			getManagedBean().setScQtAppRequestRemark(event.getNewValue().toString());
+		}
+	}//bug #30435 - end
 	
 	/**
 	 * To remove the non bumi suppliers as open for Bumi for Restricted tender

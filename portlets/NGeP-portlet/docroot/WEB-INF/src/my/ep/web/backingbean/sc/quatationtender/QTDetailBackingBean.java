@@ -3066,7 +3066,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tabBean.setIcon("ui-icon-endorse");
 			}
 		}
-		if (committeTabs.size() > 0) {
+		if (!committeTabs.isEmpty()) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
 					committeTabs.get(this.getManagedBean()
@@ -3749,6 +3749,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										approvalRequest.get(i)
 												.setAppRequestRemark(
 														approvalRemark);
+										//bug #30435 - start
+										if (null != getManagedBean().getPmParam()) {
+											approvalRequest.get(i)
+												.setApproverAction(
+														getManagedBean().getPmParam());
+										}
+										
+										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
+											approvalRequest.get(i)
+												.setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+										}
+										
+										if (null != getManagedBean().getScQtAppRequestRemark()) {
+											approvalRemark
+												.setApprovalRequest(approvalRequest
+														.get(i));
+											approvalRequest.get(i)
+												.getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemark());
+										}
+										//bug #30435 - end
 									} else {
 										if (null == approvalRequest.get(i)
 												.getAppRequestRemark()) {
@@ -4165,13 +4186,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									ParameterConst.APPROVAL_DECISION_TYPE_REJECTED,
 									ParameterConst.APPROVAL_DECISION_TYPE_APPROVED };
 							if (!Arrays.asList(actionArr).contains(state)) {
-								//log.info("---> request is in progress");
 								requestContent.setBrandNew(false);
 								requestContent.setRequireApproval(true);
 								requestContent.setSelectable(false);
 								this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
 							}else{
-								//log.info("---> request is completed");
 								ScQtRequestContent newRequestContent = new ScQtRequestContent();
 								newRequestContent.setBrandNew(true);
 								newRequestContent.setScQt(scQt);
@@ -4184,14 +4203,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										resDTO.getDeskOfficers().getResultList());
 							}
 						}else{
-							//log.info("---> save but no approval request");
 							requestContent.setBrandNew(false);
 							requestContent.setSelectable(true);
 							requestContent.setRequireApproval(false);
 							this.getManagedBean().setPmuserContactpersonList(generateDOAFromRequestContent(requestContent, scQt));
 						}
 					} else {
-						//log.info("---> new all the way");
 						ScQtRequestContent newRequestContent = new ScQtRequestContent();
 						newRequestContent.setBrandNew(true);
 						newRequestContent.setScQt(scQt);
