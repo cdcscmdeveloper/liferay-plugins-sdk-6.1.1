@@ -240,6 +240,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.bankName']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<!--#12492-START-->
 					<td><p:selectOneMenu
 							disabled="#{backingBean.managedBean.pendingTransaction}"
 							required="#{backingBean.managedBean.valueReqd}"
@@ -251,6 +252,7 @@
 								value="#{backingBean.managedBean.finOrgLs}"
 								itemValue="#{finOrg.financialOrgId}"
 								itemLabel="#{finOrg.finOrgName}" />
+								<p:ajax event="change" update="@this"/>
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -259,6 +261,7 @@
 							currValue="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}" 
 							alertValue="#{backingBean.getFinOrgByIdFromList(backingBean.managedBean.latestBank.pmFinancialOrg.financialOrgId)}"/>
 					</td>
+					<!--#12492-END-->
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -291,7 +294,7 @@
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
 							size="35">
-							<p:ajax event="blur" process="@this" update="@this" listener="#{backingBean.CheckBankAccount()}"/>
+							<p:ajax event="blur" process="@this" update="@this" listener="#{backingBean.CheckBankAccountInfoForm()}"/>
 						</p:inputText> 
 						&#160;
 						<p:graphicImage id="banti" value="/css/images/design/tooltips.png" />
