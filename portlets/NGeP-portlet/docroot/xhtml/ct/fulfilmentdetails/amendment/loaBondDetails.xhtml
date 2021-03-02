@@ -77,14 +77,14 @@
 				      style="float:left;text-align:left;"  rendered="#{ctBackingBean.managedBean.viewContract
 				      or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 			</p:column> 
-				
-			<p:column style="width:25%;white-space:normal;"  styleClass="column-align-center">
+			<!-- #30479 start modify padding and dropdown length -->	
+			<p:column style="width:25%;white-space:normal; padding-top: 0px;"  styleClass="column-align-center">
 				<f:facet name="header">
 				        <h:outputText value="#{lbl['lbl.ct.financial.inst']}"  styleClass="required"/>
 				</f:facet>
 				
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:200px;" rendered="#{!ctBackingBean.managedBean.viewContract
+				    style="width:264px;" rendered="#{!ctBackingBean.managedBean.viewContract
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
@@ -94,6 +94,7 @@
 				   style="float:left;text-align:left;" rendered="#{ctBackingBean.managedBean.viewContract
 				   or !ctBackingBean.managedBean.ctContractAmount.bondReq}"/>
 			</p:column>
+			<!-- #30479 end -->
 					
 			<p:column style="width:12%;" headerText="#{lbl['lbl.ct.amount']}" styleClass="column-align-center" >
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="18" 
