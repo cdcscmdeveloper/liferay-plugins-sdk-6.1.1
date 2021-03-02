@@ -524,7 +524,17 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					log.info("*** This is po or approver action after site visit *** ");
-					smApplBB.getManagedBean().setReviewSiteVisit(true);
+					//#12483 - START
+					if(!appl.getSmApplRevises().isEmpty()){
+						if(appl.isSiteVisitReq()){
+							smApplBB.getManagedBean().setReviewSiteVisit(true);
+						} else {
+							smApplBB.getManagedBean().setReviewSiteVisit(false);
+						}
+					} else {
+						smApplBB.getManagedBean().setReviewSiteVisit(true);
+					}
+					//#12483 - END
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
 					log.info("*** This is po or approver for normal review without site visit *** ");
