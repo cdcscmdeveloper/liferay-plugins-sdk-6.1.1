@@ -2647,7 +2647,9 @@ public class RuleCatalogueBackingBean extends
 					newRuleValue.setGroupValueId(1);
 				}
 				// 29669 - start
-				if (!configRuleType.getRuleType().equals(RuleTypeConst.PMM)) {
+				if (configRuleType.getRuleType().equals(RuleTypeConst.PMM)) {
+					newRuleValue.setFromValue(new BigDecimal(0));
+				} else {
 					newRuleValue.setFromValue(new BigDecimal(1));
 				}
 				// 29669 - end
