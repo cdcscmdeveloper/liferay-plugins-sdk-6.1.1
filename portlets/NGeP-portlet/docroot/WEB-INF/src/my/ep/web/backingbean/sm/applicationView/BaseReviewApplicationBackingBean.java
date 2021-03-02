@@ -1892,6 +1892,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								}
 								
 							}
+						} else {
+							getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);//29949:Disciplinary Action - 26238 - bug fix
 						}
 					}
 					//29949:Disciplinary Action - 26238 - end
