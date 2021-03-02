@@ -4381,6 +4381,7 @@ public class SmCommonUtil {
 				}
 			}//END 27329
 			//#29582- Start
+			log.info("ssm status: "+ resDTO.getStatusCode());
 			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
 				boolean errMsg = false;
 				int i = 0;
@@ -4388,6 +4389,10 @@ public class SmCommonUtil {
 					if (per.getIdentificationTypeSsm() != null) {
 						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
 								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+						if (ssmTypeDesc == null){
+							ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
+									ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+						}
 						sb.append("<br/>");
 						sb.append(++i + ". ");
 						sb.append(per.getName() + " ");
