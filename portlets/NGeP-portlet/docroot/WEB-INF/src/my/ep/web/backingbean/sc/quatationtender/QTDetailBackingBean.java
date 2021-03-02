@@ -3772,6 +3772,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										approvalRequest.get(i)
 												.setAppRequestRemark(
 														approvalRemark);
+										//bug #30435 - start
+										if (null != getManagedBean().getPmParam()) {
+											approvalRequest.get(i)
+												.setApproverAction(
+														getManagedBean().getPmParam());
+										}
+										
+										if (null != getManagedBean().getScQtApprovalReqAttachement()) {
+											approvalRequest.get(i)
+												.setApprovalRequestAttachement(
+														getManagedBean().getScQtApprovalReqAttachement());
+										}
+										
+										if (null != getManagedBean().getScQtAppRequestRemark()) {
+											approvalRemark
+												.setApprovalRequest(approvalRequest
+														.get(i));
+											approvalRequest.get(i)
+												.getAppRequestRemark().setRemark(getManagedBean().getScQtAppRequestRemark());
+										}
+										//bug #30435 - end
 									} else {
 										if (null == approvalRequest.get(i)
 												.getAppRequestRemark()) {

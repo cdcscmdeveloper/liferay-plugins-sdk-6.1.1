@@ -48,6 +48,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -68,6 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -1630,6 +1632,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+	private PmParameter pmParam;//bug #30435
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachement;//bug #30435
+	private String scQtAppRequestRemark;//bug #30435
 	
 	private boolean isApprovalScreen = false;
 	
@@ -10855,6 +10861,51 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setDemoType(boolean demoType) {
 			this.demoType = demoType;
 		}
+		
+		//bug #30435 - start
+		/**
+		 * @return the pmParam
+		 */
+		public PmParameter getPmParam() {
+			return pmParam;
+		}
+
+		/**
+		 * @param pmParam the pmParam to set
+		 */
+		public void setPmParam(PmParameter pmParam) {
+			this.pmParam = pmParam;
+		}
+		
+		/**
+		 * @return the scQtApprovalReqAttachement
+		 */
+		public ScQtApprovalReqAttachement getScQtApprovalReqAttachement() {
+			return scQtApprovalReqAttachement;
+		}
+
+		/**
+		 * @param scQtApprovalReqAttachement the scQtApprovalReqAttachement to set
+		 */
+		public void setScQtApprovalReqAttachement(
+				ScQtApprovalReqAttachement scQtApprovalReqAttachement) {
+			this.scQtApprovalReqAttachement = scQtApprovalReqAttachement;
+		}
+		
+		/**
+		 * @return the scQtAppRequestRemark
+		 */
+		public String getScQtAppRequestRemark() {
+			return scQtAppRequestRemark;
+		}
+
+		/**
+		 * @param scQtAppRequestRemark the scQtAppRequestRemark to set
+		 */
+		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
+			this.scQtAppRequestRemark = scQtAppRequestRemark;
+		}
+		//bug #30435 - end
 }
 
 

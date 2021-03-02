@@ -94,9 +94,9 @@
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
 				<p:inputTextarea id="remarkid" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
+				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChanged}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
-					rows="3" />
+					rows="3" ><f:ajax></f:ajax></p:inputTextarea><!-- bug #30435 -->
 				<p:message id="remarkidMsg" for="remarkid" display="icon" />
 			</p:column>
 		</p:dataTable>
