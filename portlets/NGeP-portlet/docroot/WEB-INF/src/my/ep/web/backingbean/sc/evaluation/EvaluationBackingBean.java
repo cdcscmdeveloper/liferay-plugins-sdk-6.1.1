@@ -3575,6 +3575,13 @@ public void saveComplianceSample() {
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSpecZoneDtls())) {
 			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean()
 					.getSpecZoneDtls();
+			Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
+				public int compare(TplSpecZoneDtl zoneDtl1,
+						TplSpecZoneDtl zoneDtl2) {
+
+					return zoneDtl1.getSpecZoneId().compareTo(zoneDtl2.getSpecZoneId());
+				}
+			});
 			this.getManagedBean().setSpecZoneTabIndex(0);
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
@@ -4003,26 +4010,27 @@ public void saveComplianceSample() {
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 				evalReqDTO.setCheckListId(
 						this.getManagedBean().getScQtChecklist().getQtChecklistId());
-				
-				if(scoreDtls != null){
+				this.getManagedBean().setFinPackageScore(true);	
+				if(scoreDtls != null && !scoreDtls.isEmpty()){
 					for(ScQtProposalChecklist list : scoreDtls){
 
 						ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
 						if (null != amountScore) {
-									this.getManagedBean().setFinPackageScore(true);	
+								
 							if(amountScore.getTotalScore() != null && amountScore.getTotalScore().intValue() > this.getManagedBean()
 									.getWithInVarieance().intValue()){
 								this.getManagedBean().setFinPackageScore(false);
 								throw new EpException(MessageConst.ERROR_760201);
 							}
 						}		
-					}	
+					}
+
+					//#25138 - filter save user score package - start
+					if(this.getManagedBean().getFinPackageScore()){
+						evaluationSO.saveUserScorePackageDetails(evalReqDTO);
+					}
+					//#25138 - filter save user score package - end
 				}
-				//#25138 - filter save user score package - start
-				if(this.getManagedBean().getFinPackageScore()){
-					evaluationSO.saveUserScorePackageDetails(evalReqDTO);
-				}
-				//#25138 - filter save user score package - end
 			}
 			
 			//#25138 - Save package score when zone tab change - end
@@ -14004,14 +14012,14 @@ private void retriveCommitteeRemarksList(){
 					ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 			evalReqDTO.setCheckListId(
 					this.getManagedBean().getScQtChecklist().getQtChecklistId());
-			
-			if(scoreDtls != null){
+			this.getManagedBean().setFinPackageScore(true);
+			if(scoreDtls != null && !scoreDtls.isEmpty()){
 				for(ScQtProposalChecklist list : scoreDtls){
 
 					ScQtProposalAmount amountScore = list.getScQtProposal().getProposalAmount();
 					System.out.println(" amountScore "+amountScore);
 					if (null != amountScore) {
-								this.getManagedBean().setFinPackageScore(true);
+								
 						System.out.println(" amountScore.getTotalScore() "+amountScore.getTotalScore());		
 						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
@@ -14019,23 +14027,24 @@ private void retriveCommitteeRemarksList(){
 							throw new EpException(MessageConst.ERROR_760201);
 						}
 					}		
-				}	
-			}
-			evalResDTO = evaluationSO.saveUserScorePackageDetails(evalReqDTO);
-			//#25138 - evaluate/view status - start
-			if(evalResDTO.getComplainceList() != null){
-				for(ScQtProposalChecklist newList : evalResDTO.getComplainceList()){
-					ScQtProposalAmount amountScore = newList.getScQtProposal().getProposalAmount();
-					
-					this.getManagedBean().setEvalStatus(amountScore
-							.getPmEvalStatus().getStatusId());
-					
 				}
+				evalResDTO = evaluationSO.saveUserScorePackageDetails(evalReqDTO);
+				//#25138 - evaluate/view status - start
+				if(evalResDTO.getComplainceList() != null){
+					for(ScQtProposalChecklist newList : evalResDTO.getComplainceList()){
+						ScQtProposalAmount amountScore = newList.getScQtProposal().getProposalAmount();
+						
+						this.getManagedBean().setEvalStatus(amountScore
+								.getPmEvalStatus().getStatusId());
+						
+					}
+				}
+				//#25138 - evaluate/view status - end
+				if (evalResDTO.isSuccessful()){
+				successMessage(MessageConst.INFO_700004,
+						getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);}
 			}
-			//#25138 - evaluate/view status - end
-			if (evalResDTO.isSuccessful()){
-			successMessage(MessageConst.INFO_700004,
-					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);}
+			
 			
 		} finally{
 			evaluationSO = null;
