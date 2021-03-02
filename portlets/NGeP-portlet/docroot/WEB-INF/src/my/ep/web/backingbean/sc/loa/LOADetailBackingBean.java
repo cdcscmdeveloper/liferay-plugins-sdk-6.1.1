@@ -1548,7 +1548,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getManagedBean().getDownloadedLoaReportsTitleList().add(scLoaReport.getTitle());
 			}
 		}
-		disableEnableVerifyButton();
 		//#29006 - end
 		
 		try{
@@ -1564,24 +1563,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			handleException(ex);
 		}
 	}
-	
-	// #29006 - start
-	public void disableEnableVerifyButton() {
-		// if size of managedBean.downloadedLoaReportsTitleList equals current
-		// total loa reports and current LOA task/status is "Verify LOA", enable
-		// Verify button since user has downloaded all reports.
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus().getStatusId()
-				.longValue())) {
-			if (getManagedBean().getDownloadedLoaReportsTitleList().size() == getManagedBean().getScLoa()
-					.getScLoaReports().size()) {
-				getManagedBean().setVerifyBtnFlag(false);
-				RequestContext.getCurrentInstance().update("buttonsPG");
-			} else {
-				getManagedBean().setVerifyBtnFlag(true);
-			}
-		}
-	}
-	// #29006 - end
 
 	/**
 	 * Generate document attachment.
@@ -7899,7 +7880,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offer.and.justification.mandatory",
+							"lbl.sc.new.supplier.offered.and.justification.mandatory",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			return;
 		}
@@ -7907,7 +7888,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offer.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							"lbl.sc.new.supplier.offered.mandatory", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 			return;
 		}
@@ -7915,7 +7896,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.new.supplier.offer.justification.mandatory",
+							"lbl.sc.new.supplier.offered.justification.mandatory",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			return;
 		}
