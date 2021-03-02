@@ -141,6 +141,11 @@ public class PmReportsBackingBean extends
 	}
 
 	public void generatePmReport() {
+		if(PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL.equals(
+				getManagedBean().getReportCode())){
+			pickMonthYear();
+		}
+		
 		IRPTRequestSO rptRequestSO = null;
 		try {
 			LinkedHashMap<String, String> map = constructParamMap();
@@ -495,33 +500,54 @@ public class PmReportsBackingBean extends
 					.toString());
 		}
 		
-		if (getManagedBean().getMonth() != null) {
-			map.put(PmReportConst.PARAM_PM_MONTH, DateUtils.dateToString(
-					CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY, getManagedBean()
-					.getMonth()));
+		if (getManagedBean().getmonthPicked() != null) {
+			map.put(PmReportConst.PARAM_PM_MONTH, getManagedBean().getmonthPicked());
 			
 		}
-		log.info("Month Picked : " + DateUtils.dateToString(
-				CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY, getManagedBean()
-				.getMonth()));
-		log.info("Month: " + getManagedBean().getMonth());
-		log.info("Mapping: " + map.toString());
+		
+		
+		log.info("Month Picked : " + getManagedBean().getmonthPicked());
 		
 	}
 	
-/*	public void UpdateMonth(){
+	public void pickMonthYear(){
+		log.info("________________Masuk pickMonthYear________________");
+        String month= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
+           .get("month");
+        String year= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
+                .get("year");
+        
+        log.info("Month : " + month);
+        log.info("Year : " + year);
+        
+        changeDateToString(month, year);
+   }
+	
+	public void changeDateToString(String month, String year){
 		
-		Map<String,String> requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-	    log.info("before: " + getManagedBean().getMonth());
-	    Calendar c = Calendar.getInstance();
-	    c.setTime(getManagedBean().getMonth());
-	    c.set(Calendar.MONTH, Integer.parseInt(requestParams.get(":opDefinedSearch:monthPicker")) - 1);
-	    c.set(Calendar.YEAR, Integer.parseInt(requestParams.get(":opDefinedSearch:monthPicker")));
-	    getManagedBean().setMonth(c.getTime());
-
-	    log.info("after: " + getManagedBean().getMonth());
-
-	}*/
+		log.info("---------Masuk changeDateToStirng----------");
+		log.info("month dalam method : "  + month);
+		
+		String monthInString = null;
+		if(month.equals("0")){monthInString = "Jan";}
+		else if(month.equals("1")){monthInString = "Feb";}
+		else if(month.equals("2")){monthInString = "Mar";}
+		else if(month.equals("3")){monthInString = "Apr";}
+		else if(month.equals("4")){monthInString = "May";}
+		else if(month.equals("5")){monthInString = "Jun";}
+		else if(month.equals("6")){monthInString = "Jul";}
+		else if(month.equals("7")){monthInString = "Aug";}
+		else if(month.equals("8")){monthInString = "Sep";}
+		else if(month.equals("9")){monthInString = "Oct";}
+		else if(month.equals("10")){monthInString = "Nov";}
+		else if(month.equals("11")){monthInString = "Dec";}
+		
+		String dateInString = monthInString + "/" + year;
+		getManagedBean().setmonthPicked(dateInString);
+		
+		log.info("dateInString : " + dateInString);
+	}
+	
 	//shafie - #29486 - end
 	
 	//No of Company Profile and Market Research Access Application
