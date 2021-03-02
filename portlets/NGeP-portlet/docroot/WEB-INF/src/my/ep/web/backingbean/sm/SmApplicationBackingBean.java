@@ -4490,7 +4490,7 @@ public class SmApplicationBackingBean extends
 //				getManagedBean().getSmAppl().getSmSupplierBranches()
 //						.remove(brn);
 			}
-			getManagedBean().getSelectedBranches().clear();
+//			getManagedBean().getSelectedBranches().clear();
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { SmCommonUtil.getMessage("lbl.sm.branch",
@@ -7080,6 +7080,7 @@ public class SmApplicationBackingBean extends
 				reqDto.setPersonnel(getManagedBean().getSelectedShareHolder());
 			}
 			// #27802 - end
+			
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} catch (Exception e) {
 			log.info("error to save appl no:"
@@ -7091,6 +7092,8 @@ public class SmApplicationBackingBean extends
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
+			
+			setBranchDisplayTable(); //29727
 
 		}
 	}
