@@ -3588,8 +3588,15 @@ public class QTCloneBackingbean extends
 				this.getManagedBean().setZoneTrees(null);
 				}
 				
-				ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
-				qtZoneCriterias.setBrandNew(true);
+				ScQtZoneCriteria qtZoneCriterias =supplierCriteria
+						.getQtZoneCriterias();
+				
+				if (null == qtZoneCriterias) {
+					qtZoneCriterias = new ScQtZoneCriteria();
+					qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
+					supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
+				}
+				//qtZoneCriterias.setBrandNew(true);
 				qtZoneCriterias.setScQtSupplierCriteria(supplierCriteria);
 				setUserDetails(qtZoneCriterias);
 				if(!copyScqt.isPanel()){
@@ -3624,6 +3631,7 @@ public class QTCloneBackingbean extends
 						}
 						qtZoneCriterias.setTplSpecZoneDtls(listTpl);
 					}
+					this.getManagedBean().setZoneGeneralTrees(null);
 				}
 				
 				supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
