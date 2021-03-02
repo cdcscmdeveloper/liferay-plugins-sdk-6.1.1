@@ -505,8 +505,13 @@ public class PmReportsBackingBean extends
 			
 		}
 		
-		
+				
+		log.info("Ministry : " + getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
+		log.info("Kumpulan PTJ : " + getManagedBean().getmonthPicked());
+		log.info("PTJ : " + getManagedBean().getmonthPicked());
 		log.info("Month Picked : " + getManagedBean().getmonthPicked());
+		log.info("Userid: " + getFacesScopes().getUserSessionBean().getUserId().toString());
+		
 		
 	}
 	
