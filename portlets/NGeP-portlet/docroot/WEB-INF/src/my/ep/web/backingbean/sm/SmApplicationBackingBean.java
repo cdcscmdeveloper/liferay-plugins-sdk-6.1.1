@@ -2251,46 +2251,10 @@ public class SmApplicationBackingBean extends
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		
 		// set Personnel List Count
-		calcPersonnelListCount();
-		
-		//#3460 - Start
-		//retrieving sdo remarks if it is resubmit application
-		if(appl.isResubmit() && appl.getOriginalAppl() != null){
-			retrieveSdoRemark(applicationType);
-		}
-		//#3460 - End
-		
+		calcPersonnelListCount();	
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
-	
-	//#3460 - Start
-	/**
-	 * To retrieveSdoRemark from task list
-	 */
-	public void retrieveSdoRemark(String applType){
-		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {			
-			
-			SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
-					currSupp.getSupplierId(), applType);
-			SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-			reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
-			reqDTO.setDocId(appli.getApplId());
-			
-			 SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
-			if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
-				SmRemark remark = resDTO.getRemarksList().get(0);
-				log.info("The SDO Remark for the Application is*******" + remark.getRemark());
-				getManagedBean().setSdoRemark(remark.getRemark());
-			}	
-		}	
-	}
-	//#3460 - End
 	
 	//#28900- start
 	private void copyBranchFromSSM(SmSupplierBranch ssmBranch) {
