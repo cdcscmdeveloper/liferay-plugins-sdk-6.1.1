@@ -3732,3 +3732,6 @@ table.rptTbl {
     background-position:0px 0px;
     background-image: none;
 }
+.columnWidth16 {
+	width: 16%;
+}
