@@ -50,7 +50,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private CmUnspsc selectedUnspscItem;
 	private Date fromDate;
 	private Date toDate;
-	private Date month; //shafie #29486
+	private String monthPicked; //shafie #29486
 	private PmOrgProfile selectedOrgProfile;
 	private String bizRegNo;
 	private String epNo;
@@ -245,17 +245,17 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	//shafie #29486 start
 	
 	/**
-	 * @return the month
+	 * @return the monthPicked
 	 */
-	public Date getMonth() {
-		return month;
+	public String getmonthPicked() {
+		return monthPicked;
 	}
 
 	/**
-	 * @param month the month to set
+	 * @param monthPicked the monthPicked to set
 	 */
-	public void setmonth(Date month) {
-		this.month = month;
+	public void setmonthPicked(String monthPicked) {
+		this.monthPicked = monthPicked;
 	}
 	
 	//shafie #29486 end
@@ -357,7 +357,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	public void setSearchOrgCategory(int searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
 	}
-
+	
 	/**
 	 * @return the isDisabledOrgFields
 	 */
