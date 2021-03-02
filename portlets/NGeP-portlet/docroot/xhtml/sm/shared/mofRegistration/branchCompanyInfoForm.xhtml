@@ -144,11 +144,13 @@
 					action="#{backingBean.assignNewBranchBean}" partialSubmit="true"
 					process="@this" update=":form:tt:banchDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					<!-- #27297 START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.validateCompanyBranch(backingBean.managedBean)}"
 					partialSubmit="true" process="brnInfPan"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
 					update=":form:tt:dt" />
+					<!-- #27297 END -->
 
 			</div>
 			<br />
@@ -240,7 +242,7 @@
 			cancelLabel="#{lbl['lbl.btn.cancel']}" 
 			multiple="false" showButtons="false"/>
 	</p:dialog>
-	
+	<!-- #27297 START -->
 	<ac:confirmationPopup id="branchDeletePopUpId"
 		widget="branchDeletePopUp"
 		okAction="backingBean.deleteSelectedBranches"
@@ -264,4 +266,5 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}" 
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
+	<!-- #27297 END -->
 </ui:composition>
