@@ -3452,11 +3452,22 @@ public void saveComplianceSample() {
 						//#21695 START	&& #25138
 							if(this.getManagedBean().getEvaluationCheckListType().equalsIgnoreCase("FS")
 									&& this.getManagedBean().getScQt().isPartial()){
-								zoneReqDto
-								.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								if(this.getManagedBean().getTabItemPackageIndex() == 1){
+									zoneReqDto
+									.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								}else{
+									zoneReqDto
+									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								}
+								
 							}else{
-								zoneReqDto
-								.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								if(this.getManagedBean().getTabItemPackageIndex() == 1){
+									zoneReqDto
+									.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+								}else{
+									zoneReqDto
+									.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+								}
 							}
 						//END	
 						} else {
@@ -3936,7 +3947,11 @@ public void saveComplianceSample() {
 						}
 						
 					}else{
-						return QTConstants.TECHNICAL_EVALUATION;
+						if(this.getManagedBean().getTabItemPackageIndex() == 1){
+							return QTConstants.TECHNICAL_EVALUATION_BY_ITEM;
+						}else{
+							return QTConstants.TECHNICAL_EVALUATION;
+						}
 					}
 					//END
 				} else {
@@ -3972,8 +3987,7 @@ public void saveComplianceSample() {
 		try {
 			this.getManagedBean().getFinSpecSupplierListDM().reloadData();
 			//#25138 - Save package score when zone tab change - start
-			if((this.getManagedBean().getEvaluatioStageActiveIndex() == 1 
-					|| this.getManagedBean().getTabFinancialIndex() == 2) 
+			if(this.getManagedBean().getTabItemPackageIndex() == 2 
 					&& this.getManagedBean().getOfferScoreType().equalsIgnoreCase(QTConstants.USER_SCORE)){
 				
 				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
