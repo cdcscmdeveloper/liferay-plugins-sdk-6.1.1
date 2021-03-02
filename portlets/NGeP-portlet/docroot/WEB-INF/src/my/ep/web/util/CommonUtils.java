@@ -50,11 +50,6 @@ public class CommonUtils {
 			case CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS : 
 				dateFormat = CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT;
 				break;
-				//shafie #29486 start
-			case CommonConstants.DATE_FORMAT_TYPE_MONTH_YEAR : 
-				dateFormat = CommonConstants.DEFAULT_DATE_FORMAT_MONTH_YEAR_ONLY;				
-				break;
-				//shafie #29486 end
 			default : 
 				throw new IllegalArgumentException("Invalid dateFormatType.");
 		}
