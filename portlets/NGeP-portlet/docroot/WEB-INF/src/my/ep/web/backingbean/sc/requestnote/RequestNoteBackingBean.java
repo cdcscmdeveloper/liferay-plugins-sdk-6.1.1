@@ -5347,6 +5347,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							if(rnDtl.getScRequestSupplierItem() != null){
 								if(rnDtl.getScRequestSupplierItem().getRequestSupplierItemId().equals(reqSuppItem.getRequestSupplierItemId())){
 									itemPriceUnitChange = false;
+									break;
 								}
 							}			
 						}
