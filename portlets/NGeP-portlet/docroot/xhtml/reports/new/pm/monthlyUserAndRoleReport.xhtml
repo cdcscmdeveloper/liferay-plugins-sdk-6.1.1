@@ -14,11 +14,6 @@
 	
 	<script type="text/javascript">
 	function GenerateCal() {
-    	/* year = $(".ui-datepicker-year").val();
-    	month = $(".ui-datepicker-month").val();
-   	
-    	console.log("year : " +year);
-    	console.log("month : " +month); */
     	
     	passToJSFBackingBean ([ {
             
@@ -96,10 +91,7 @@
 				<td>
 					<p:calendar id="monthPicker" navigator="true" showOn="button" mode="inline" yearRange="c-7:c"/>
 				</td>
-				<td width="15%"><p:remoteCommand name="passToJSFBackingBean" actionListener="#{pmReportsBackingBean.pickMonthYear()}"
-				/></td>
-				
-				<!-- oncomplete="GenerateCal()" -->
+				<td width="15%"><p:remoteCommand name="passToJSFBackingBean" actionListener="#{pmReportsBackingBean.pickMonthYear()}"/></td>
 		
 			</tr>
 		</table>
