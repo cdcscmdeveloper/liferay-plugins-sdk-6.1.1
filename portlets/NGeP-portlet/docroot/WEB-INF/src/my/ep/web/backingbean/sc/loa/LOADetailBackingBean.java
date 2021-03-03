@@ -4470,10 +4470,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void addScheduleDetails() {
 		IParameterSO parameterSo = null;
 		try {
+			//#30474 - start
 			if(this.getManagedBean().getScLoa()
 					.getScQtSchedules()==null){
 				this.getManagedBean().getScLoa().setScQtSchedules(new ArrayList<ScQtSchedule>());
 			}
+			//#30474 - end
 			List<ScQtSchedule> freqSchedules = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
 			
