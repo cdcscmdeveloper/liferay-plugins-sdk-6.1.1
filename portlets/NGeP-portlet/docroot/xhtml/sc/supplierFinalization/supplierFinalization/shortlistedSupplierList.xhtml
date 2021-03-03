@@ -77,8 +77,7 @@
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						 selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
-						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single' or
-						 (suppFinalizationBackingBean.managedBean.showDefalutSupplierListTblSingle and suppFinalizationBackingBean.managedBean.finalizationMethod == 'A')}"> <!-- #27668 -->
+						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
 				
 				<ac:paginator for="supplierListTblSingle" />
 				
@@ -246,8 +245,7 @@
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple' or
-						 (suppFinalizationBackingBean.managedBean.showDefalutSupplierListTblMultiple and (suppFinalizationBackingBean.managedBean.finalizationMethod == 'B' or suppFinalizationBackingBean.managedBean.finalizationMethod == 'L'))}"> <!-- #27668 -->
+						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
 				
 				<ac:paginator for="supplierListTblMultiple" />
 					

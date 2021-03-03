@@ -260,11 +260,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     // #25638 - Start.
 	private List<ScRemark> newSfRemarks;
     // #25638 - End.
-
-	// #27668 - Start
-	private boolean showDefalutSupplierListTblSingle=true;
-	private boolean showDefalutSupplierListTblMultiple=true;
-	// #27668 - End
 	
 	/**
 	 * @return the activeIndex
@@ -2256,28 +2251,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     public void setScRemarks(List<ScRemark> scRemarks) {
       this.scRemarks = scRemarks;
     }
-
     //#18685 - End 
-    
-	// #27668 - Start
-	public boolean isShowDefalutSupplierListTblSingle() {
-		return showDefalutSupplierListTblSingle;
-	}
-
-
-
-	public void setShowDefalutSupplierListTblSingle(boolean showDefalutSupplierListTblSingle) {
-		this.showDefalutSupplierListTblSingle = showDefalutSupplierListTblSingle;
-	}
-
-	public boolean isShowDefalutSupplierListTblMultiple() {
-		return showDefalutSupplierListTblMultiple;
-	}
-
-	public void setShowDefalutSupplierListTblMultiple(boolean showDefalutSupplierListTblMultiple) {
-		this.showDefalutSupplierListTblMultiple = showDefalutSupplierListTblMultiple;
-	}
-	// #27668 - End 
     
     // #25638 - Start.
     /**
@@ -2296,5 +2270,3 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
     // #25638 - End.
 
 }
-// ***25201
-
