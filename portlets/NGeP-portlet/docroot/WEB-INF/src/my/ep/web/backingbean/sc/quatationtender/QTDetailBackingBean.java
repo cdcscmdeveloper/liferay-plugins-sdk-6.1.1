@@ -8975,6 +8975,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							if(resDTOLOI.isCloseQT() == true){
 							  isCloseQT = true; 
 							}
+							QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
+							if(resDTOSF.isCloseQT() == true){
+								 isCloseQT = true; 
+							}
 						}
 				}	
 			   return isCloseQT;	
