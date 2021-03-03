@@ -520,12 +520,14 @@ public class PmReportsBackingBean extends
         String month= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
            .get("month");
         String year= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
-                .get("year");
+           .get("year");
         
         log.info("Month : " + month);
         log.info("Year : " + year);
         
-        changeDateToString(month, year);
+        if(month != null || year != null){
+        	changeDateToString(month, year);
+        }
    }
 	
 	public void changeDateToString(String month, String year){
