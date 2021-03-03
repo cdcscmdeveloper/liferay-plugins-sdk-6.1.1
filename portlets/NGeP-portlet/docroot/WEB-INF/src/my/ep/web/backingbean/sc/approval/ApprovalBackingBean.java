@@ -623,7 +623,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			approvalRequests = getApprovalRequests(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes, null);
-			if(null!=this.getManagedBean().getCurrentStatusId() && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())){
+			// #14398 - Start.
+			if(null!=this.getManagedBean().getCurrentStatusId() && (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE.equals(this.getManagedBean().getCurrentStatusId()))){
+			// #14398 - End.
 				log.info("======displayCurrentStatusIdCodesInnerLoopExecuted======");
 			if(approvalRequests==null || approvalRequests.isEmpty()){
 				log.info("PublicationApprovalApprovalRequestEmptyCodesExecuted");
@@ -1198,8 +1201,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ScQt qt = tenderResDTO.getQtDetail();
 			if (ParameterConst.APPROVAL_REQUEST_PUBLICATION_APPROVAL.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
 				log.info("Publication Approval executed");
-				successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
-						qt.getQtNo(), Boolean.TRUE);
+				// #14398 - Start.
+				if (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL_RESCHEDULE.equals(this.getManagedBean().getCurrentStatusId())) {
+					successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.reschedule.approve.message"),
+							qt.getQtNo(), Boolean.TRUE);
+				} else {
+					successMessage(MessageConst.INFO_700069, getMessageCommon("lbl.sc.qt.public.approval.approve.message"),
+							qt.getQtNo(), Boolean.TRUE);
+				}
+				// #14398 - End.
 			}
 			//#25037-START
 			else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
