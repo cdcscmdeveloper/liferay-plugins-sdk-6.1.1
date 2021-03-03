@@ -3188,6 +3188,17 @@ public class QTDetailBackingBean extends
 				}
 				this.getManagedBean().setSelectedApprovalTabBean(
 						tabBeans.get(selectedTabIndex));
+				// #13344 start - bind remark & attachment
+				// #29607 - add null pointer checking for remark & attachment
+				if (this.getManagedBean().getScQtApproval() != null) {
+					if (this.getManagedBean().getScQtApproval().getScQtApprovalAttachments() != null) {
+						this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalAttachments(this.getManagedBean().getScQtApproval().getScQtApprovalAttachments());
+					}
+					if (this.getManagedBean().getScQtApproval().getScQtApprovalRemarks() != null) {
+						this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().setScQtApprovalRemarks(this.getManagedBean().getScQtApproval().getScQtApprovalRemarks());
+					}
+				}
+				// #13344 end
 				this.getManagedBean().setScQtApproval(
 						this.getManagedBean().getSelectedApprovalTabBean()
 								.getScQtApproval());
@@ -7886,7 +7897,46 @@ public class QTDetailBackingBean extends
 	}
     
     //#25037-end
-    
+
+	/**
+	 * #13344 Start : saveQtCAApproval
+	 * 
+	 * @return the string
+	 */
+	public void saveQtCAApproval() {
+		log.debug("saveQtCAApproval");
+		IQTDetailSO detailSO;
+		try {
+			this.getManagedBean().setSaveFlow(true);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+
+			updateApprovalDetails(this.getManagedBean().getQt());
+			retrieveApprovalTabDtl();
+
+			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+			quationTenderReqDTO.setApproval(this.getManagedBean().getScQtApproval());
+			quationTenderReqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList()) ;
+			quationTenderReqDTO.setSaveFlow(true);
+			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
+			QtAmendMentBean amendMentBean = getManagedBean().getAmendMentBean();
+
+			quationTenderReqDTO.setQtdetail(qtDetails);
+			quationTenderReqDTO.setAmendMentBean(amendMentBean);
+			quationTenderReqDTO.setRoleCode(getUserRoleCode());
+
+			QuationTenderResDTO quationTenderResDTO = detailSO
+					.updateQtCAAprovalDetails(quationTenderReqDTO);
+			if (quationTenderResDTO.isSuccessful()) {	
+				successMessage(MessageConst.INFO_700090, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			}
+		} finally {
+			detailSO = null;
+		}
+	}
+	//#13344 - End
+	
 	// #25077 - Start
 	public void checkPopUpBPKApprovalNeeded(boolean showPopup) {	
 		ScQt scQt = this.getManagedBean().getQt();
@@ -8039,6 +8089,14 @@ public class QTDetailBackingBean extends
         return isMandatoryForUpload; 
 	}
 	// #25077 - End
+	
+    // #13344 - Start
+    public boolean isCommitteeApprovalTask(String taskName) {
+     	return (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName));
+    }
+    // #13344 - End
+    
+
 }
 
 // #Enhancement 9 CRs = #17376, #18685, #19287, #19336, #25142 #25201, #25627, #25692 & #26095   
