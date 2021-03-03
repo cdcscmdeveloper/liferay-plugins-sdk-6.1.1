@@ -15460,6 +15460,9 @@ public class SpecificationBackingBean extends
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		//#25138 - start
+		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
+		//#25138 - end
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
