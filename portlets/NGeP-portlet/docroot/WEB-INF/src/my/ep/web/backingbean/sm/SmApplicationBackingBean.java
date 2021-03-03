@@ -2181,10 +2181,37 @@ public class SmApplicationBackingBean extends
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		
 		// set Personnel List Count
-		calcPersonnelListCount();	
+		calcPersonnelListCount();
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
+	
+	//#3460 - Start
+	/**
+	 * To retrieveSdoRemark from task list for supplier
+	 */
+	public void retrieveSdoRemark(String applType){
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {			
+			
+			SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
+					currSupp.getSupplierId(), applType);
+			SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+			reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+			reqDTO.setDocId(appli.getApplId());
+			
+			 SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+			if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+				SmRemark remark = resDTO.getRemarksList().get(0);
+				getManagedBean().setSdoRemark(remark.getRemark());
+			}	
+		}	
+	}
+	//#3460 - End
 	
 	//#28900- start
 	private void copyBranchFromSSM(SmSupplierBranch ssmBranch) {
@@ -12264,11 +12291,16 @@ public class SmApplicationBackingBean extends
 		reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
 		reqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
 		
-		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
-		
-		if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
-			SmRemark remark = resDTO.getRemarksList().get(0);
-			getManagedBean().setSdoRemark(remark.getRemark());
+		//retrieving sdo remarks if it is resubmit application
+		if(getManagedBean().getSmAppl().isResubmit() && getManagedBean().getSmAppl().getOriginalAppl() != null && getManagedBean().isSupplierUser()){
+			retrieveSdoRemark(getManagedBean().getSmAppl().getApplType());
+		}else{
+			SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+			
+			if(resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+				SmRemark remark = resDTO.getRemarksList().get(0);
+				getManagedBean().setSdoRemark(remark.getRemark());
+			}	
 		}
 	}
 	//3460 - End
