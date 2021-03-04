@@ -508,18 +508,6 @@ public class PmReportsBackingBean extends
 			
 		}
 		
-		log.info("---------DATA YANG DIHANTAR REPORT MONTH USER AND ROLE---------------------");		
-		log.info("Ministry : " + getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
-		log.info("Kumpulan PTJ : " + getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
-		log.info("PTJ : " +getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
-		if (getManagedBean().getStatus() != null) {
-			log.info("Status : " + getManagedBean().getStatus().toString());
-		}else{log.info("Status : null"); }
-		log.info("Month Picked : " + getManagedBean().getmonthPicked());
-		log.info("Userid: " + getFacesScopes().getUserSessionBean().getUserId().toString());
-		log.info("Mapping: " + map.toString());
-		
-		
 	}
 	
 	public void pickMonthYear(){
@@ -529,19 +517,12 @@ public class PmReportsBackingBean extends
         String year= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()  
            .get("year");
         
-        log.info("Month : " + month);
-        log.info("Year : " + year);
-        
         if(month != null || year != null){
         	changeStringToDate(month, year);
         }
    }
 	
 	public void changeStringToDate(String month, String year){
-		
-		log.info("---------Masuk changeStringToDate----------");
-		log.info("month dalam method : "  + month);
-	
 		
 		String monthInString = null;
 		if(month.equals("0")){monthInString = "Jan";}
@@ -559,8 +540,7 @@ public class PmReportsBackingBean extends
 		
 		String dateInString = monthInString + year;
 		getManagedBean().setmonthPicked(dateInString);
-		
-		log.info("dateInString : " + dateInString);
+	
 	}
 	
 	//shafie - #29486 - end
