@@ -76,6 +76,9 @@ public class CommonApplBackingBean extends
 	public boolean isPoSdoUser = false;
 
 	public void preRenderView() {
+		try{
+			
+		
 		//LOG : 26549 : SLA Monitoring
 		long startTime = System.currentTimeMillis();
 		log.info("-------ComAppl prerender view-------");
@@ -525,7 +528,7 @@ public class CommonApplBackingBean extends
 					log.info("*** This is po or approver action after site visit *** ");
 					//#12483 - START
 					if(!appl.getSmApplRevises().isEmpty()){
-						if(appl.isSiteVisitReq()){
+						if(!appl.getSmSvTasks().isEmpty()){
 							smApplBB.getManagedBean().setReviewSiteVisit(true);
 						} else {
 							smApplBB.getManagedBean().setReviewSiteVisit(false);
@@ -817,6 +820,9 @@ public class CommonApplBackingBean extends
 				SMProcessNameConst.COMPLETE_SV_REPORT)) {
 			siteVisitTask(resDTO, taskId, isClaim);
 		}
+	}catch(Exception e){
+		e.printStackTrace();
+	}
 
 	}
 
