@@ -526,7 +526,7 @@ public class CommonApplBackingBean extends
 					log.info("*** This is po or approver action after site visit *** ");
 					//#12483 - START
 					if(!appl.getSmApplRevises().isEmpty()){
-						if(appl.isSiteVisitReq()){
+						if(!appl.getSmSvTasks().isEmpty()){
 							smApplBB.getManagedBean().setReviewSiteVisit(true);
 						} else {
 							smApplBB.getManagedBean().setReviewSiteVisit(false);
