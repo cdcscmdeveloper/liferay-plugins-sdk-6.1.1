@@ -151,6 +151,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
@@ -663,7 +664,23 @@ public class EvaluationBackingBean extends
 								.isEmpty()) {
 					this.getManagedBean().setSummaryItemList(
 							evalResDTO.getRequestItemResults().getResultList());
-
+//#21695 Farid Start					
+					for(ScRequestItem listitem : evalResDTO.getRequestItemResults().getResultList() ){
+					
+							if(listitem != null){
+								listitem.setSelectable(true);
+								if(CollectionUtils.isNotEmpty(listitem.getTplSpecQuestion().getTplSpecZoneQties())){
+									for(TplSpecZoneQty listitemqty : listitem.getTplSpecQuestion().getTplSpecZoneQties()){
+										if(listitemqty!=null && listitemqty.getQty().equals(new BigDecimal(0))
+												&& listitemqty.getTplSpecZoneDtl().getSpecZoneId().equals(summaryReqDTO.getSpeZoneId())){
+											listitem.setSelectable(false);
+											break;
+										}
+									}
+							}
+						}	
+					}
+//#21695 Farid End						
 				}
 			}
 		} finally {
@@ -774,6 +791,11 @@ public class EvaluationBackingBean extends
 	 *            (Mandatory)
 	 */
 	public void recommendationSummaryItemSelect(SelectEvent event) {
+//#21695 Farid Start	
+		if(!this.getManagedBean().getSinglesummaryItemList().isSelectable()){
+			return;
+		}
+// #21695 End		
 		this.getManagedBean().getQualifiedSuppliersDM().reloadData();
 		this.getManagedBean().getDisqualifiedSuppliersDM().reloadData();
 		//20200717@asyrafhaziq - Display not offer supplier - Start
