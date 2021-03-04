@@ -513,7 +513,8 @@ public class PmReportsBackingBean extends
 		log.info("PTJ : " +getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
 		if (getManagedBean().getStatus() != null) {
 			log.info("Status : " + getManagedBean().getStatus().toString());
-		}
+		}else{log.info("Status : null"); }
+		
 		log.info("Month Picked : " + getManagedBean().getmonthPicked());
 		log.info("Userid: " + getFacesScopes().getUserSessionBean().getUserId().toString());
 		
