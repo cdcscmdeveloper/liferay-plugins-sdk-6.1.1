@@ -41,14 +41,14 @@
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
 				(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
 				#{lbl['lbl.sm.basic.softcert.request']}
-			</c:if>
+			</c:if></p>
 			
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
 						(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertIsActiveStatus())}">
 				<p><p:commandLink styleClass="current-link" value="#{lbl['lbl.sm.basic.softcert.request']}" 
-				action="#{postSupplierRegBB.pageNavigate}" />
+				action="#{postSupplierRegBB.pageNavigate}" /></p>
 			</c:if>
-			</p>
+
 		</div>
 		<!-- #10729 end -->
 	</c:if>
