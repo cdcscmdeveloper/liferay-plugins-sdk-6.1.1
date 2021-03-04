@@ -507,10 +507,11 @@ public class PmReportsBackingBean extends
 			
 		}
 		
-				
+		log.info("---------DATA YANG DIHANTAR REPORT MONTH USER AND ROLE---------------------");		
 		log.info("Ministry : " + getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
 		log.info("Kumpulan PTJ : " + getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
 		log.info("PTJ : " +getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
+		log.info("Status : " + getManagedBean().getStatus().toString());
 		log.info("Month Picked : " + getManagedBean().getmonthPicked());
 		log.info("Userid: " + getFacesScopes().getUserSessionBean().getUserId().toString());
 		
@@ -536,6 +537,7 @@ public class PmReportsBackingBean extends
 		
 		log.info("---------Masuk changeStringToDate----------");
 		log.info("month dalam method : "  + month);
+	
 		
 		String monthInString = null;
 		if(month.equals("0")){monthInString = "Jan";}
