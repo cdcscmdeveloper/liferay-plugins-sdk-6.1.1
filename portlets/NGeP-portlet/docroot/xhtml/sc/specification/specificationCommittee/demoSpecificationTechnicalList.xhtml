@@ -52,11 +52,11 @@
 				<h:panelGroup id="technicalChecklistEditActionView">
 					<p:commandButton value="#{lbl['lbl.btn.view']}"						
 						process="@this" styleClass="BtnSpacing" 
-						action="#{specificationBackingBean.demoSpectechnicalChecklist(index,stageTwoTechnical,'T')}"
+						action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,'T')}"
 						update="@([id$=questionTbl])"
 						partialSubmit="true" />	
-						<!-- action="#{specificationBackingBean.demoSpectechnicalChecklist(index,stageTwoTechnical,'T')}" -->	
-						<!-- action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}" -->		
+						<!-- action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,'T')}" -->	
+						<!-- action="#{specificationBackingBean.technicalChecklistEditAction(index,demoSpecTempList,'T')}" -->		
 				</h:panelGroup>			
 			</p:column>
 
