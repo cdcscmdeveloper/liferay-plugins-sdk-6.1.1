@@ -17,12 +17,7 @@
 
 <body>
 
-<tbody>
-		<tr>
-			<td width="100%" align="right"><h3>9) Pending Proposal Preparation - Proposed Screen Template for Label Print</h3></td>
-		</tr>
-		<br/>
-</tbody>
+
 
  	#foreach( $sampleItem in $sampleItems )
  	
@@ -51,8 +46,8 @@
 				<td style="width : 50%"><h3>$sampleItem.scRequestItem.itemName</h3></td>
         	</tr>
 			<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>$lableNo</h3></td>
-				<td style="width : 50%"><h3>$sampleItem.subLableNo</h3></td>
+				<td style="width : 50%"><h3>LABEL NO</h3></td>
+				<td style="width : 50%"><h3>$lableNo - $sampleItem.subLableNo</h3></td>
         	</tr>
         </table>
           <br/>
