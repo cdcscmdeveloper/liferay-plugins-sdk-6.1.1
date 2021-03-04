@@ -14000,19 +14000,22 @@ public class SpecificationBackingBean extends
 		try {
 			if (null != financialPackageScore
 					&& financialPackageScore.getSettingType() == 2) {
+				//#25138 - add if condition for one item only - start
+				if(!this.getManagedBean().isSingleItem()){
+					if (null == financialPackageScore.getPassingScore()) {
 
-				if (null == financialPackageScore.getPassingScore()) {
-
-					this.getManagedBean().setActiveIndex(5);
-					throw new EpException(MessageConst.ERROR_760193);
-				} else {
-
-					if (financialPackageScore.getPassingScore().intValue() < 0) {
 						this.getManagedBean().setActiveIndex(5);
-						throw new EpException(MessageConst.ERROR_760174);
-					}
+						throw new EpException(MessageConst.ERROR_760193);
+					} else {
 
+						if (financialPackageScore.getPassingScore().intValue() < 0) {
+							this.getManagedBean().setActiveIndex(5);
+							throw new EpException(MessageConst.ERROR_760174);
+						}
+
+					}
 				}
+				//#25138 - add if condition for one item only - end
 
 				if (null != financialPackageScore.getPassingScore()
 						&& financialPackageScore.getPassingScore().intValue() > 100) {
