@@ -554,7 +554,7 @@ public class PmReportsBackingBean extends
 		else if(month.equals("10")){monthInString = "Nov";}
 		else if(month.equals("11")){monthInString = "Dec";}
 		
-		String dateInString = monthInString + "/" + year;
+		String dateInString = monthInString + year;
 		getManagedBean().setmonthPicked(dateInString);
 		
 		log.info("dateInString : " + dateInString);
