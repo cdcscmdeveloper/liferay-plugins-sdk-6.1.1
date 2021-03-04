@@ -139,7 +139,7 @@
 		</h:panelGroup>
 	</p:panel>
 	<!-- ahmaa-#25138 Reendorsed- start -->
-	<h:panelGroup id="offeredPrice" toggleable="true">
+	<h:panelGroup id="offeredPrice" toggleable="true" rendered="#{!specificationBackingBean.managedBean.isSingleItem()}">
 		<p:panel header="#{lbl['lbl.sc.by.package']}" id="financialScoringPackageOfferedPrice" toggleable="true"> 			
 			<table>
 				<tr>
