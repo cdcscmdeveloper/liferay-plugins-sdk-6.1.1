@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.text.DateFormat; //29486
-import java.text.SimpleDateFormat; //29486
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -514,9 +512,9 @@ public class PmReportsBackingBean extends
 		if (getManagedBean().getStatus() != null) {
 			log.info("Status : " + getManagedBean().getStatus().toString());
 		}else{log.info("Status : null"); }
-		
 		log.info("Month Picked : " + getManagedBean().getmonthPicked());
 		log.info("Userid: " + getFacesScopes().getUserSessionBean().getUserId().toString());
+		log.info("Mapping: " + map.toString());
 		
 		
 	}
