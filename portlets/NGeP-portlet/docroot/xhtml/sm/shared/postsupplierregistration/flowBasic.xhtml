@@ -37,10 +37,10 @@
 		
 		<!-- #10729 start -->
 		<div class="flow-chart-left flowActive">
-			<div class="bg"><div class="no">#{step2}</div></div><p style="top: 1px">
+			<div class="bg"><div class="no">#{step2}</div></div><p>
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertProsseingStatus()) or 
 				(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() == postSupplierRegBB.softCertIsActiveStatus())}">
-				#{lbl['lbl.sm.basic.softcert.request']}&#160;&#160;
+				#{lbl['lbl.sm.basic.softcert.request']}
 			</c:if>
 			
 			<c:if test="#{(postSupplierRegBB.retrieveCurrentUserSoftCertStatus() != postSupplierRegBB.softCertProsseingStatus()) and 
