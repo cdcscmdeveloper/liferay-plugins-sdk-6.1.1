@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.DateFormat; //29486
+import java.text.SimpleDateFormat; //29486
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -507,8 +509,8 @@ public class PmReportsBackingBean extends
 		
 				
 		log.info("Ministry : " + getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
-		log.info("Kumpulan PTJ : " + getManagedBean().getmonthPicked());
-		log.info("PTJ : " + getManagedBean().getmonthPicked());
+		log.info("Kumpulan PTJ : " + getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
+		log.info("PTJ : " +getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
 		log.info("Month Picked : " + getManagedBean().getmonthPicked());
 		log.info("Userid: " + getFacesScopes().getUserSessionBean().getUserId().toString());
 		
@@ -526,13 +528,13 @@ public class PmReportsBackingBean extends
         log.info("Year : " + year);
         
         if(month != null || year != null){
-        	changeDateToString(month, year);
+        	changeStringToDate(month, year);
         }
    }
 	
-	public void changeDateToString(String month, String year){
+	public void changeStringToDate(String month, String year){
 		
-		log.info("---------Masuk changeDateToStirng----------");
+		log.info("---------Masuk changeStringToDate----------");
 		log.info("month dalam method : "  + month);
 		
 		String monthInString = null;
