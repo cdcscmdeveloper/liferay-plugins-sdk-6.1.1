@@ -483,17 +483,20 @@ public class PmReportsBackingBean extends
 		if (getManagedBean().getSelectedMinistry() != null) {
 			map.put(PmReportConst.PARAM_PM_MINISTRY, 
 					getManagedBean().getSelectedMinistry().getPmOrgValidity().getOrgName());
-		}
+		}else if(getManagedBean().getSelectedMinistry() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780059);}
 		
 		if (getManagedBean().getSelectedKumpulanPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_KUMPULAN_PTJ, 
 					getManagedBean().getSelectedKumpulanPTJ().getPmOrgValidity().getOrgName());
-		}
+		}else if(getManagedBean().getSelectedKumpulanPTJ() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780063);}
 		
 		if (getManagedBean().getSelectedPTJ() != null) {
 			map.put(PmReportConst.PARAM_PM_PTJ, 
 					getManagedBean().getSelectedPTJ().getPmOrgValidity().getOrgName());
-		}
+		}else if(getManagedBean().getSelectedPTJ() == null) {
+			throw new EpException(MessageConst.ERROR_REPORT_780064);}
 		
 		if (getManagedBean().getStatus() != null) {
 			map.put(PmReportConst.PARAM_PM_USER_STATUS, getManagedBean().getStatus()
