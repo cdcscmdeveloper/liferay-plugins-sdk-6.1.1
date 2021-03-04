@@ -18989,7 +18989,11 @@ if(null!=allTechnicalChecklist){
 					st2technicalproposalList1.setTitle(cl.getTitle());
 					st2technicalproposalList1.setDefinationType(cl.getDefinationType());
 					st2technicalproposalList1.setPmStatus(cl.getPmStatus());
-					//st2technicalproposalList1.setPmEvalStatus(cl.getPmEvalStatus());
+					st2technicalproposalList1.setScQtDoc(cl.getScQtDoc());
+					st2technicalproposalList1.setDocCategory(cl.getDocCategory());
+					st2technicalproposalList1.setScQt(cl.getScQt());
+					st2technicalproposalList1.setChecklistSeq(cl.getChecklistSeq());
+					st2technicalproposalList1.setQtChecklistId(cl.getQtChecklistId());
 					tempList.add(st2technicalproposalList1);
 				}
 			}
