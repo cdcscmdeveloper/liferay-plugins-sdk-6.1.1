@@ -130,34 +130,36 @@
 	
 		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
-			<th width="5%">No.</th>
-			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.ownername')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.userprofile.name')</th>
+			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.nationality')</th>
+			#end
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
 			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.nationality')</th>
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.race')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.address')</th>
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.dob')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.residentialAdress')</th>
 			#end
 			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.ShareholdingAmt')</th>
 			#end
 		</tr>
 			#if($ownerInfo != $null && $ownerInfo.size() > 0)
 				#foreach($worker in $ownerInfo)
 				<tr>
-					<td width="5%">$velocityCount</td>
 					<td width="15%">$!worker.name</td>
+					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+					<td width="10%">$!worker.pmCountry.countryName</td>
+					#end
 					<td width="10%">$!worker.identificationNo</td>
 					<td width="10%">$smVmUtil.getParameterDesc($!worker.identificationType)</td>
 					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
-					<td width="10%">$!worker.pmCountry.countryName</td>
 					<td width="10%">$!worker.pmRace.raceName</td>
+					<td width="10%">$smVmUtil.getFomatDate($!worker)</td>
 					#foreach ($address in $!worker.smPersonnelAddresses)
 					<td width="10%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
 					#end
-					<td width="10%">$smVmUtil.getFomatDate($!worker)</td>
 					#end
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
 					<td width="10%">$!worker.shareAmt</td>
@@ -167,9 +169,9 @@
 			#else
 				<tr>
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="5" align="center">No Record Found</td>
+		 			<td colspan="4" align="center">No Record Found</td>
 					#else
-					<td colspan="8" align="center">No Record Found</td>
+					<td colspan="7" align="center">No Record Found</td>
 					#end
 		 		</tr>
 			#end	
@@ -191,23 +193,19 @@
 	
 		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.compName')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.addr')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrPerc')</th>
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.companyname')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.ShareholdingAmt')</th>
 		</tr>
 			#if($equityCompanies != $null && $equityCompanies.size() > 0)
 				#foreach($equicomp in $equityCompanies)
 				<tr>
 					<td width="25%">$!equicomp.companyName</td>
-					<td width="25%">$smVmUtil.getCompleteAddress($!equicomp.smAddress)</td>
-					<td width="25%">$smVmUtil.formatToTwoDecimalPoint($!equicomp.shareAmt)</td>
-					<td width="25%">$smVmUtil.formatToTwoDecimalPoint($!equicomp.sharePercentage)</td>
+					<td width="15%">$smVmUtil.formatToTwoDecimalPoint($!equicomp.shareAmt)</td>
 				</tr>
 				#end
 			#else
 				<tr>
-		 			<td colspan="4" align="center">No Record Found</td>
+		 			<td colspan="2" align="center">No Record Found</td>
 		 		</tr>
 			#end	
 		
@@ -267,29 +265,27 @@
 	
 		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
-			<th width="5%">No.</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.worker.name')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.person.composition.idenNum')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.address')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.userprofile.designation')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.name')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.person.composition.idenNum')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.person.residentialAdress')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.person.designation')</th>
 		</tr>
 			#if($personnelInfo != $null && $personnelInfo.size() > 0)
 				#foreach($personnel in $personnelInfo)
 				<tr>
-					<td width="5%">$velocityCount</td>
-					<td width="25%">$!personnel.name</td>
-					<td width="25%">$smVmUtil.getParameterDesc($!personnel.identificationType)</td>
-					<td width="25%">$!personnel.identificationNo</td>
+					<td width="20%">$!personnel.name</td>
+					<td width="20%">$smVmUtil.getParameterDesc($!personnel.identificationType)</td>
+					<td width="20%">$!personnel.identificationNo</td>
 					#foreach ($address in $!personnel.smPersonnelAddresses)
-					<td width="10%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
+					<td width="20%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
 					#end
-					<td width="25%">$!personnel.designation</td>
+					<td width="20%">$!personnel.designation</td>
 				</tr>
 				#end
 			#else
 				<tr>
-		 			<td colspan="6" align="center">No Record Found</td>
+		 			<td colspan="5" align="center">No Record Found</td>
 		 		</tr>
 			#end		
 		</table>
@@ -303,26 +299,38 @@
 	            <font style='color:#ffffff;'>$businessNaturelbl</font>
 	        </td>
     	</tr>
-    	<tr><td><br /></td></tr>
+		
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.business.desc')</b></td>
+		</tr>
+		<tr align="left">
+			<td width="25%">$!companyBasic.businessDesc</td>
+		</tr>
 	</table>
 	
 		<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
-			<th width="5%">No.</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.businessnature.code')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.natureofbusiness')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.businessnature.code')</th>
+			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
+			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.business.type')</th>
+			#end
 		</tr>
 			#if($businessNature != $null && $businessNature.size() > 0)
 				#foreach($businessnature in $businessNature)
 				<tr>
-					<td width="5%">$velocityCount</td>
-					<td width="25%">$!smVmUtil.getBusinessNature($!businessnature) - $!businessnature.pmBusinessNature.levelCode</td>
+					<td width="15%">$!smVmUtil.getBusinessNature($!businessnature) - $!businessnature.pmBusinessNature.levelCode</td>
+					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
 					<td width="25%">$!businessnature.pmBusinessNature.levelName</td>
+					#end
 				</tr>
 				#end
 			#else
 				<tr>
-		 			<td colspan="3" align="center">No Record Found</td>
+					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
+		 			<td colspan="1" align="center">No Record Found</td>
+					#else
+					<td colspan="2" align="center">No Record Found</td>
+					#end
 		 		</tr>
 			#end	
 		
@@ -335,24 +343,23 @@
 	            <font style='color:#ffffff;'>$branchInfolbl</font>
 	        </td>
     	</tr>
+		
     	<tr><td><br /></td></tr>
 	</table>
 	
 	<table  class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
-			<th width="5%">No.</th>
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.branch.address')</th>
 		</tr>
 			#if($branchInfo != $null && $branchInfo.size() > 0)
 				#foreach($branch in $branchInfo)
 				<tr>
-					<td width="5%">$velocityCount</td>
 					<td width="25%">$!branch.branchName <p></p>$smVmUtil.getCompleteAddress($!branch.smAddress)</td>
 				</tr>
 				#end
 			#else
 				<tr>
-		 			<td colspan="2" align="center">No Record Found</td>
+		 			<td colspan="1" align="center">No Record Found</td>
 		 		</tr>
 			#end	
 		
