@@ -9091,6 +9091,11 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY);
 		}
+		//#12483 - START
+		if(dialog.equalsIgnoreCase("approverRevDialog")){
+			this.getManagedBean().setReviseMandatory(true);
+		}
+		//#12483 - END
 		//Bug #26705
 		getlatestPoOverlappingRemarks();
 		
@@ -9272,6 +9277,11 @@ public class SmApplicationBackingBean extends
 		//		#15629 -- end - 27/1/2020
 		
 		getManagedBean().setRejectReasonReqd(false);
+		//#12483 - START
+		if(dialog.equalsIgnoreCase("approverRevDialog")){
+			this.getManagedBean().setReviseMandatory(false);
+		}
+		//#12483 - END
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 	}
 

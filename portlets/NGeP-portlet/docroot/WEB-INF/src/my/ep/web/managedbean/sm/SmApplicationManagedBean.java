@@ -588,9 +588,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#12483 - START
 	private SmApplRevise smApplRevise;
 	private String reviseReason;
-	//#12483 - END
-	
-	//#15629 - START
+	private boolean reviseMandatory;
+	// #12483 - END
+
+	// #15629 - START
 	private List<PmReasonDesc> selectedRecommendReasonDescs;
 	private List<PmReasonDesc> recommendReasonDescList;
 	private List<PmReasonDesc> recommendReasonDescInitList;
@@ -4362,9 +4363,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setReviseReason(String reviseReason) {
 		this.reviseReason = reviseReason;
 	}
-	//#12483 - END
 
-	//#15629 - START
+	public boolean isReviseMandatory() {
+		return reviseMandatory;
+	}
+
+	public void setReviseMandatory(boolean reviseMandatory) {
+		this.reviseMandatory = reviseMandatory;
+	}
+	// #12483 - END
+
+	// #15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
 	}
