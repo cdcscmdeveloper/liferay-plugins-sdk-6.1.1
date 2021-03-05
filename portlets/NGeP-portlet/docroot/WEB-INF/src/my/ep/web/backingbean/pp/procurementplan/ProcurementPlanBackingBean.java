@@ -8436,13 +8436,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								  
 							   }else
 							     if (ppItem.getRecordStatusFlg() == 1){
-								   
+							    	 
+		                               log.info("getFromRes1 " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId 
+		                            		   + "status " + ppItem.getRecordStatusFlg());	
+
 									 ppItem.setDisableForPindaan(false);
 								     ppItem.setReasonForUpdateEnabled(true);
 								     ppItem.setJustificationEnabled(true);
 								     ppItem.setReviseReject(true);
 	                           }else{
-                               log.info("getFromRes " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId);	
+                               log.info("getFromRes2 " + ppItem.getFromPpItem() + "ppIdRes " + commonExpenditureItemId
+                            		   + "status " + ppItem.getRecordStatusFlg());	
                                
                                ppItem.setCloneEnabled(false);
 							   ppItem.setDisableForPindaan(true);
