@@ -588,6 +588,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #12483 - START
 	private SmApplRevise smApplRevise;
 	private String reviseReason;
+	private boolean reviseMandatory;
 	// #12483 - END
 
 	// #15629 - START
@@ -4273,6 +4274,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.reviseReason = reviseReason;
 	}
 
+	public boolean isReviseMandatory() {
+		return reviseMandatory;
+	}
+
+	public void setReviseMandatory(boolean reviseMandatory) {
+		this.reviseMandatory = reviseMandatory;
+	}
 	// #12483 - END
 
 	// #15629 - START
