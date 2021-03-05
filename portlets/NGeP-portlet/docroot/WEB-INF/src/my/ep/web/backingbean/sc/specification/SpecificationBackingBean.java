@@ -4182,7 +4182,15 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(parameterCode)) {
 					list.setScoringReq(false);
 				}
-				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				//#30493 - set status when change supplier action - start
+				if (null == list.getScQtCheckListAttachment()) {
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				
+				}else{
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				
+				}
+				//#30493 - set status when change supplier action - end
 
 				list.setAction(paramDesc.getPmParameter());
 				break;
@@ -4217,8 +4225,15 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(parameterCode)) {
 					list.setScoringReq(false);
 				}
-				list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-
+				//#30493 - set status when change supplier action - start
+				if (null == list.getScQtCheckListAttachment()) {
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				
+				}else{
+					list.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				
+				}
+				//#30493 - set status when change supplier action - end
 				list.setAction(paramDesc.getPmParameter());
 				break;
 			}
