@@ -176,63 +176,7 @@
 		
 			</table>
 	
-	<table width='100%'>
-		<tr><td><br /></td></tr>
-		<tr align='center' style="background-color: #3366ff;">
-	        <td>
-	            <font style='color:#ffffff;'>$directorInfolbl</font>
-	        </td>
-    	</tr>
-    	<tr><td><br /></td></tr>
-	</table>
 	
-		<table  class="descTable" width="100%">
-		<tr style="background-color:#99ccff;" align="center">
-			<th width="5%">No.</th>
-			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.directorname')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
-			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.nationality')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.race')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.address')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.dob')</th>
-			#end
-			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.equiComp.shrAmt')</th>
-			#end
-		</tr>
-			#if($directorInfo != $null && $directorInfo.size() > 0)
-				#foreach($director in $directorInfo)
-				<tr>
-					<td width="5%">$velocityCount</td>
-					<td width="15%">$!director.name</td>
-					<td width="10%">$!director.identificationNo</td>
-					<td width="10%">$smVmUtil.getParameterDesc($!director.identificationType)</td>
-					#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
-					<td width="10%">$!director.pmCountry.countryName</td>
-					<td width="10%">$!director.pmRace.raceName</td>
-					#foreach ($address in $!director.smPersonnelAddresses)
-					<td width="10%">$!address.smAddress.address1 <p></p> $!address.smAddress.address2 <p></p> $!address.smAddress.address3 <p></p> $!address.smAddress.postcode <p></p> $!address.smAddress.pmState.stateName</td>
-					#end
-					<td width="10%">$smVmUtil.getFomatDate($!director)</td>
-					#end
-					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-					<td width="10%">$!director.shareAmt</td>
-					#end
-				</tr>
-				#end
-			#else
-				<tr>
-		 			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="5" align="center">No Record Found</td>
-					#else
-					<td colspan="8" align="center">No Record Found</td>
-					#end
-		 		</tr>
-			#end
-				
-		</table>
 		
 	#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
 		<table width='100%'>
@@ -269,6 +213,17 @@
 		
 		</table>
 			
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
 		<br />
 		<br />
 		<br />
