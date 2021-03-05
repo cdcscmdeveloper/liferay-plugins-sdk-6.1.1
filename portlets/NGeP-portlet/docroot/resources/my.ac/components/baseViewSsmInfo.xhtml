@@ -112,11 +112,7 @@
 			</h:panelGrid>
 		</p:panel>
 
-		<c:if
-			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
-			<ui:include
-				src="/xhtml/sm/shared/onlinereg/viewSsmInformationBranchAc.xhtml" />
-		</c:if>
+		
 		
 		<c:if
 			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'I' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'J'}">
@@ -139,6 +135,12 @@
 		
 		<ui:include
 			src="/xhtml/sm/shared/onlinereg/viewSsmInformationNatureBusinessAc.xhtml" />
+			
+		<c:if
+			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
+			<ui:include
+				src="/xhtml/sm/shared/onlinereg/viewSsmInformationBranchAc.xhtml" />
+		</c:if>
 		
 		</div>
 		
