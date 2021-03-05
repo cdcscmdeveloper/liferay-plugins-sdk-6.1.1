@@ -26,28 +26,28 @@
 
 		<table cellpadding="0" cellspacing="0" width="100%" border="1">
 			<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>PTJ Code</h3></td>
-				<td style="width : 50%"><h3>$PTJCode</h3></td>
+			    <td style="width : 40%"><h3>PTJ NAME</h3></td>
+				<td style="width : 60%"><h3>$PTJName</h3></td>		
        		</tr>
 			<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>PTJ Name</h3></td>
-				<td style="width : 50%"><h3>$PTJName</h3></td>
+			    <td style="width : 40%"><h3>PTJ CODE</h3></td>
+				<td style="width : 60%"><h3>$PTJCode</h3></td>	
         	</tr>
 			<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>QT No</h3></td>
-				<td style="width : 50%"><h3>$QTNo</h3></td>
+			    <td style="width : 40%"><h3>QT TITLE</h3></td>
+				<td style="width : 60%"><h3>$QTTitle</h3></td>		
         	</tr>
 			<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>QT Title</h3></td>
-				<td style="width : 50%"><h3>$QTTitle</h3></td>
+				<td style="width : 40%"><h3>QT NO</h3></td>
+				<td style="width : 60%"><h3>$QTNo</h3></td>
         	</tr>
         	<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>Item Name</h3></td>
-				<td style="width : 50%"><h3>$sampleItem.scRequestItem.itemName</h3></td>
+				<td style="width : 40%"><h3>ITEM NAME</h3></td>
+				<td style="width : 60%"><h3>$sampleItem.scRequestItem.itemName</h3></td>
         	</tr>
 			<tr style="width : 100%" border="1">
-				<td style="width : 50%"><h3>LABEL NO</h3></td>
-				<td style="width : 50%"><h3>$lableNo - $sampleItem.subLableNo</h3></td>
+				<td style="width : 40%"><h3>LABEL NO</h3></td>
+				<td style="width : 60%"><h3>$lableNo - $sampleItem.subLableNo</h3></td>
         	</tr>
         </table>
           <br/>
