@@ -176,6 +176,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+import weblogic.wsee.util.StringUtil;
 /**
  * Implementation for supplier finalization
  * 
@@ -233,7 +234,9 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
-
+		ScQtMeeting scQtMeeting= new ScQtMeeting();
+		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
+	
 		qtSuppFinalizationSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
@@ -314,6 +317,27 @@ public class SupplierFinalizationBackingBean extends
 				
 			}
 	//28834 ends
+			
+	//newly added 28834 starts
+			List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+			int pendingCount = 0;
+			for (ScQtMeeting meeting : meetingListList) {
+				if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+						&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					pendingCount++;
+				}
+			}
+
+			if (pendingCount > 0) {
+
+				this.getManagedBean().setDisableBfButton(false);
+			} else {
+
+				this.getManagedBean().setDisableBfButton(true);
+			}
+			
+			//28834 ends
 			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
 					.getNavigationHandler()
@@ -1150,33 +1174,29 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	//28834 starts
 
-public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
-		log.info("changeMeetingStatus");
-		
-		int doneList = 0;
-		int pendingList = 0;
+	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
+
+		// boolean done = true;
 		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
-		log.info("changeMeetingStatus"+scQtMeeting.getMeetingStatus());
-		//Boolean IsDisableBfButton = getManagedBean().getIsDisableBfButton();
-		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-		boolean done = false;
-		for (ScQtMeeting meeting : meetingList) {
-			
-			if(scQtMeeting.getQtMeetingId().equals(meeting.getQtMeetingId())){
-				log.info("suresh---->"+scQtMeeting.getQtMeetingId());
-				log.info("suresh---->"+meeting.getQtMeetingId());
-				log.info("suresh -----> " + scQtMeeting.getMeetingStatus().getStatusId());
-				log.info("suresh -----> " + QTConstants.SC_MEETING_DONE_STATUS_ID);
-				//log.info("Basith---->"+meeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID));
-				log.info("suresh object valid --->" + scQtMeeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID));
-				if(scQtMeeting.getMeetingStatus().getStatusId().equals(QTConstants.SC_MEETING_DONE_STATUS_ID)){
-					done = true;
-				}
+		List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+		int pendingCount = 0;
+		for (ScQtMeeting meeting : meetingListList) {
+			if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+					&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+					&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+				pendingCount++;
 			}
 		}
-		log.info("suresh Final value-----> " + done);
-		this.getManagedBean().setDisableBfButton(done);
+
+		if (pendingCount > 0) {
+
+			this.getManagedBean().setDisableBfButton(false);
+		} else {
+
+			this.getManagedBean().setDisableBfButton(true);
+		}
 	}
+
 	//28834 ends
 
 	/**
@@ -2421,34 +2441,43 @@ public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
 	 */
-public void submitAction() {
-		
+	public void submitAction() {
+		ScQtMeeting scQtMeeting = new ScQtMeeting();
 		this.checkIfLoggedinUserIsSecretary();
 		if (this.getManagedBean().isSecretaryUser()) {
-			if(this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")){
-				
-				if (!getManagedBean().isBpkCentralContract()) {
-					//changeMeetingStatusBrief();
-					Boolean remarksNotFound=validationRemarksBrief();
-					if(!remarksNotFound){
-						RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
-					}
-					else
-					{
-						RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
+				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+				int pendingCount = 0;
+				for (ScQtMeeting meeting : meetingListList) {
+					if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+							&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+							&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+
+						if (!getManagedBean().isBpkCentralContract()) {
+							// changeMeetingStatusBrief();
+
+							//Boolean remarksNotFound = validationRemarksBrief(meeting.getQtMeetingId());
+							if (StringUtil.isEmpty(meeting.getRemark())) {
+
+								RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
+							} else {
+
+								RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+							}
+
+						} else {
+
+							RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+						}
+
+					} else {
+
 					}
 				}
-				else
-				{
-					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
-				}
-				
-				//changeMeetingStatusBrief();
-				
-				
-				
-				
-			}else{
+
+				// changeMeetingStatusBrief();
+
+			} else {
 				RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 			}
 		} else {
