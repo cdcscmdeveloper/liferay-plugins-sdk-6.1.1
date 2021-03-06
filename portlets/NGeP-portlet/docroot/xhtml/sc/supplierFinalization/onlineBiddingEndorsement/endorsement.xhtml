@@ -55,11 +55,13 @@
 						value="#{suppFinalBiddingBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<!-- 25037 start -->
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"	
 							styleClass="ui-button"
-							action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}"
+							action="#{suppFinalBiddingBackingBean.submitAction(bpmAction)}"
 							rendered="#{validityDaysExpiredQt}" />
+						<!-- 25037 end -->
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
@@ -151,7 +153,32 @@
 			</div>
 		</p:dialog>
 		<!-- 25638 end -->
-		
+		<!-- 25037 start -->
+		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" closable="true"
+			modal="true">
+
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.popup.finalupdateasattended']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement('SUBMIT')}"
+					oncomplete="submissionPopup.hide();" update="@form">
+				</p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					process="@this" onclick="submissionPopup.hide();" type="button" />
+
+			</div>
+		</p:dialog>
+		<!-- 25037 end -->
 	</ui:define>
 
 </ui:composition>

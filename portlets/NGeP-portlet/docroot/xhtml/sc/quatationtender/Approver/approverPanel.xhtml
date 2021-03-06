@@ -15,10 +15,6 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
 		</p:blockUI>
-		<!-- <p:messages id="specApprovalMessages" showDetail="true"
-			autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
-			closable="true" showSummary="false" severity="error, info" /> -->
-
 		
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryBudget}">
@@ -58,11 +54,11 @@
 		</c:if>
 		
 		
-		
+		<!-- 25037 start -->
 		<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
-			resizable="false" width="360" height="90" modal="true">
-
+			resizable="false" width="360" height="90" modal="true" closable="false">
+		<!-- 25037 end -->
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -70,12 +66,14 @@
 				</tr>
 			</table>
 			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="reviceApprovalDlg.hide();"
+			<div class="ppRightBtn"> 
+				<!-- 25037 start -->
+				<p:commandButton widgetVar="reviseOKBtn" onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();" value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviceApprovalDlg.hide(); blockWidget.hide()"
 					action="#{approvalBackingBean.updateReviceBpmTask}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
+				<p:commandButton widgetVar="reviseCANCELBtn" value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlg.hide();" type="button" />
+				<!-- 25037 end -->
 			</div>
 		</p:dialog>
 		
