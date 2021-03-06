@@ -149,6 +149,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
@@ -187,6 +188,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2236,11 +2238,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isQTStatusPublished(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
-
-	public boolean isQTStatusEvaluation(Long currentStatusId) {//#25037
+	
+	//25037-start
+	public boolean isQTStatusEvaluation(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
-
+	//25037-end
+	
 	/**
 	 * Check if QT Status greater than or equals from status.
 	 * 
@@ -2400,8 +2404,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @return the role type dropdown values
 	 */
+	//25037-start
+	public List<PmParameterDesc> getRoleTypeDropdownValuesBasedOnPTJ(boolean isChairPersonReq,ScQt scqt,PmUser user) {//#25037
+		return getRoleTypeDropdownValuesBasedOnPTJ( isChairPersonReq, scqt, user, null);
+	}
+	//25037-end
 	public List<PmParameterDesc> getRoleTypeDropdownValuesBasedOnPTJ(
-			boolean isChairPersonReq,ScQt scqt,PmUser user) {
+			boolean isChairPersonReq,ScQt scqt,PmUser user, String[] filteredRoles) {//#25037
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		boolean isptj=false;
@@ -2428,10 +2437,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								SearchOperator.OPERATOR_IN.value(),
 								recommendList));
 			}
-
-		return retrieveParametersBySearchBean(
+		//#25037 START
+		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+		list = list == null ? new ArrayList<PmParameterDesc>() : list;
 
+		if(filteredRoles!=null){
+			for(PmParameterDesc role: list){
+				if(Arrays.asList(filteredRoles).contains(role.getPmParameter().getParameterCode())){
+					role.setSelectable(false);
+				}
+			}
+		}
+		return list;
+		//#25037 END
 	}
 	
 	private boolean orgProfileCheckExist(ScQt scqt,PmUser user, boolean isptj){
@@ -4756,5 +4775,134 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #28215 for #18685 - End
+	
+	//25037 - Start
+	public boolean validateSupportedTask(String docNo, Long validityId){
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		ICompositeValiditySO compositeSO = (ICompositeValiditySO)  BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+		
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+		cReqDTO.setCompositeValidityId(validityId);
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity().getMinCompositeVersion();
+		
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setDocNumber(docNo);
+		WorklistVO worklist = bpmSO.getTasksByDocNumber(reqDTO).getWorklistVO();
+		worklist = worklist == null ? new WorklistVO(): worklist;
+		String version = null;
+		if(CollectionUtils.isNotEmpty(worklist.getWorklistItem())){
+			for(WorklistItemVO i: worklist.getWorklistItem()){
+				if(StringUtils.isNotEmpty(i.getInstanceVersion())){
+					version = i.getInstanceVersion();
+					break;
+				}
+			}
+		}
+		if(version!=null){
+			return CustomUtils.compositeVersionComparator(version, minVersion)>=0;
+		}
+		return false;
+	}
+	
+	public String[] getRoleFilterListForCommitteeMaintenance(ScQt scQt, String committeeType){	
+		String[] arr = new String[0];
+		List<String> list = new ArrayList<String>();
+		if(scQt == null){
+			return arr;
+		}
+		IScWorkFlowStatusSO wfStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setDocId(scQt.getQtId());
+		
+		ScWorkFlowStatus wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+		if(wfStatus==null){
+			return arr;
+		}
+		Long statusId = wfStatus.getPmStatus().getStatusId();	
+		if(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.contentEquals(committeeType)){
+			if(Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)){
+				if(!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)){
+					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				}
+				if(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)){
+					list.add(ParameterConst.COMMITTEE_ROLE_MEMBER);
+				}
+			}	
+		}else{
+			if(this.isStatusGreaterThanOrEquals(statusId, QTStatusConst.QT_RE_EVALUATION, QTStatusConst.QT_ORDERED_STATUSES)){
+				boolean isCommitteeEvalStage = false;
+				if(StringUtils.isNotEmpty(committeeType)){
+					reqDTO = new ScWorkFlowStatusReqDTO();
+					reqDTO.setDocType(committeeType);
+					reqDTO.setDocId(scQt.getQtId());
+					wfStatus = wfStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
+					Long evalStatusId = wfStatus!=null ? wfStatus.getPmStatus().getStatusId(): 0L;
+					isCommitteeEvalStage = Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(evalStatusId) 
+							|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(evalStatusId);
+				}
+				
+				if(isCommitteeEvalStage){
+					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+				}
+			}
+		}
+		if(CollectionUtils.isNotEmpty(list)){
+			arr = new String[list.size()];
+		    list.toArray(arr);
+		}		
+		return arr;
+	}		
+	
+	public List<ScQtCommitteRemarks> omitLatestRemarkForDisplay(List<ScQtCommitteRemarks> remarks){
+		List<ScQtCommitteRemarks> omittedList = new ArrayList<ScQtCommitteRemarks>();
+		if(CollectionUtils.isNotEmpty(remarks)){
+			for(ScQtCommitteRemarks r: remarks){
+				if(StringUtils.isNotEmpty(r.getRemark())){
+					if(r.isEditable() || r.isBrandNew()){
+						ScQtCommitteRemarks rn = new ScQtCommitteRemarks();
+						rn.setRemark(r.getRemark());
+						rn.setCreatedBy(r.getCreatedBy());
+						rn.setCreatedUser(r.getCreatedUser());
+						rn.setCreatedDate(r.getCreatedDate());
+						rn.setChangedDate(r.getChangedDate());
+						rn.setEditable(false);
+						rn.setBrandNew(false);
+						omittedList.add(rn);
+					}else{
+						omittedList.add(r);
+					}
+				}
+			}
+		}
+		return omittedList;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<QtCommitteeMemberBean> getMemberHistoryList(ScCommittee scCommittee){
+		List<QtCommitteeMemberBean> list = new ArrayList<QtCommitteeMemberBean>();
+		try{
+			if(scCommittee!=null){
+				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
+				
+				if(CollectionUtils.isNotEmpty(histories)){
+					Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
+						public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
+							return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+						}
+					});
+					
+					ScCommitteeMemberHistory h = histories.get(0);
+					list = (List<QtCommitteeMemberBean>)(Object)h.deserializeList(h.getCommitteeMembers());
+					CustomUtils.sortQtCommitteeMemberRole(list);
+				}
+			}
+		}catch(Exception e){
+			log.debug(e);
+		}
+		return list;
+		
+	}
+	//25037 - End
 	
 }

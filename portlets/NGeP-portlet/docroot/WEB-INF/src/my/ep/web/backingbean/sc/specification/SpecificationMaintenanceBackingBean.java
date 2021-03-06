@@ -626,7 +626,11 @@ public boolean renderIcon(Long currentStatusId) {
 }
 
 private boolean checkStatus(Long statusId){
-	
+	//25037-start
+	if(QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)){
+		return false;
+	}
+	//#25037-end
 	return isQTStatusInBetween(statusId,
 			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
 			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
