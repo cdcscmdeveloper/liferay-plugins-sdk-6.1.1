@@ -22,9 +22,11 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtCommitteeMemberBean; // #25037
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator; // #25037
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -62,6 +64,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory; // #25037
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -88,6 +91,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent; // #25037
 import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -103,6 +107,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion; // #25037
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
@@ -1621,8 +1626,29 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean approvalEditableSection;
 
 	//#25037-START
+	private boolean showHistory;
+	private Paginator committeeHistories;
+	private String currentCommitteeDesc;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private Paginator selectedHistoryMember;
+	private boolean committeeReviseFlow;
+	private List<QtCommitteeMemberBean>memberHistoryList;
+	private ScQtApprovalRequest scQtApprovalRequest;
 	private boolean specUpdateInProgress;
-	//#25037-end
+	private ScQtApprovalRequest doaaRequest;
+	private boolean doaRequestEditable;
+	private List<ScQtContactPerson> newDoaList;
+	private List<ScQtContactPerson> prevDoaList;
+	private List<PmUser> deskOfficerAssistantList; 
+	private ScQtRequestContent requestContent;
+	private boolean reapproval;
+	private String prevDOAs;
+	private String[] roleFilterList;
+	private Long currentQTStatus;
+	private Long currentCMTStatus;
+	private boolean committeeUpdateFlow;
+
+	//#25037-END
 	
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
@@ -10103,17 +10129,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		
 		//#25692 End
 	
-		//#25037-start
-		public boolean isSpecUpdateInProgress() {
-			return specUpdateInProgress;
-		}
-
-		public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
-			this.specUpdateInProgress = specUpdateInProgress;
-		}
-		
-		//#25037-end
-		
 	public boolean isEditable() {
 		return isEditable;
 	}
@@ -10193,6 +10208,178 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
 	}
+
+		//#25037-start
+		public boolean isShowHistory() {
+			return showHistory;
+		}
+
+		public void setShowHistory(boolean showHistory) {
+			this.showHistory = showHistory;
+		}
+
+		public Paginator getCommitteeHistories() {
+			return committeeHistories;
+		}
+
+		public void setCommitteeHistories(Paginator committeeHistories) {
+			this.committeeHistories = committeeHistories;
+		}
+
+		public String getCurrentCommitteeDesc() {
+			return currentCommitteeDesc;
+		}
+
+		public void setCurrentCommitteeDesc(String currentCommitteeDesc) {
+			this.currentCommitteeDesc = currentCommitteeDesc;
+		}
+
+		public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+			return selectedCommitteeHistory;
+		}
+
+		public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+			this.selectedCommitteeHistory = selectedCommitteeHistory;
+		}
+
+		public Paginator getSelectedHistoryMember() {
+			return selectedHistoryMember;
+		}
+
+		public void setSelectedHistoryMember(Paginator selectedHistoryMember) {
+			this.selectedHistoryMember = selectedHistoryMember;
+		}
+
+		public boolean isCommitteeReviseFlow() {
+			return committeeReviseFlow;
+		}
+
+		public void setCommitteeReviseFlow(boolean committeeReviseFlow) {
+			this.committeeReviseFlow = committeeReviseFlow;
+		}
+
+		public List<QtCommitteeMemberBean> getMemberHistoryList() {
+			return memberHistoryList;
+		}
+
+		public void setMemberHistoryList(List<QtCommitteeMemberBean> memberHistoryList) {
+			this.memberHistoryList = memberHistoryList;
+		}
+
+		public ScQtApprovalRequest getScQtApprovalRequest() {
+			return scQtApprovalRequest;
+		}
+
+		public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
+			this.scQtApprovalRequest = scQtApprovalRequest;
+		}
+
+		public boolean isSpecUpdateInProgress() {
+			return specUpdateInProgress;
+		}
+
+		public void setSpecUpdateInProgress(boolean specUpdateInProgress) {
+			this.specUpdateInProgress = specUpdateInProgress;
+		}
+
+		public ScQtApprovalRequest getDoaaRequest() {
+			return doaaRequest;
+		}
+
+		public void setDoaaRequest(ScQtApprovalRequest doaaRequest) {
+			this.doaaRequest = doaaRequest;
+		}
+
+		public boolean isDoaRequestEditable() {
+			return doaRequestEditable;
+		}
+
+		public void setDoaRequestEditable(boolean doaRequestEditable) {
+			this.doaRequestEditable = doaRequestEditable;
+		}
+
+		public List<ScQtContactPerson> getNewDoaList() {
+			return newDoaList;
+		}
+
+		public void setNewDoaList(List<ScQtContactPerson> newDoaList) {
+			this.newDoaList = newDoaList;
+		}
+
+		public List<PmUser> getDeskOfficerAssistantList() {
+			return deskOfficerAssistantList;
+		}
+
+		public void setDeskOfficerAssistantList(
+				List<PmUser> deskOfficerAssistantList) {
+			this.deskOfficerAssistantList = deskOfficerAssistantList;
+		}
+
+		public List<ScQtContactPerson> getPrevDoaList() {
+			return prevDoaList;
+		}
+
+		public void setPrevDoaList(List<ScQtContactPerson> prevDoaList) {
+			this.prevDoaList = prevDoaList;
+		}
+
+		public boolean isReapproval() {
+			return reapproval;
+		}
+
+		public void setReapproval(boolean reapproval) {
+			this.reapproval = reapproval;
+		}
+
+		public ScQtRequestContent getRequestContent() {
+			return requestContent;
+		}
+
+		public void setRequestContent(ScQtRequestContent requestContent) {
+			this.requestContent = requestContent;
+		}
+
+		public String getPrevDOAs() {
+			return prevDOAs;
+		}
+
+		public void setPrevDOAs(String prevDOAs) {
+			this.prevDOAs = prevDOAs;
+		}
+
+		public String[] getRoleFilterList() {
+			return roleFilterList;
+		}
+
+		public void setRoleFilterList(String[] roleFilterList) {
+			this.roleFilterList = roleFilterList;
+		}
+		
+		public Long getCurrentQTStatus() {
+			return currentQTStatus;
+ 		}
+
+		public void setCurrentQTStatus(Long currentQTStatus) {
+			this.currentQTStatus = currentQTStatus;
+		}
+		
+		public Long getCurrentCMTStatus() {
+			return currentCMTStatus;
+		}
+
+		public void setCurrentCMTStatus(Long currentCMTStatus) {
+			this.currentCMTStatus = currentCMTStatus;
+		}
+		
+		public boolean isCommitteeUpdateFlow() {
+			return committeeUpdateFlow;
+		}
+
+		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
+			this.committeeUpdateFlow = committeeUpdateFlow;
+		}
+
+		//#25037-end
 	
 	//#25077 - Start
 	public ScQtApprovalRequest getHistoryApprovalRequests() {

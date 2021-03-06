@@ -55,7 +55,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String processName;
 	private Boolean groupTask;
 	private boolean isReadOnly;
-
+	private String currentTaskDocType;//#25037
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -133,6 +133,11 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25638 - Start		
 	private boolean displayReviseInstrn;
 	// #25638 - End	
+	
+	//#25037-start
+	private boolean validFor25037;//FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP DATA. PLEASE REFER 25037 PMCOMPOSITEVALIDITY
+	private boolean committeModified;
+	//#25037-end
 	
 	//27346-start 
 	public boolean isShowDetailSSM() {
@@ -818,6 +823,16 @@ public abstract class BaseManagedBean implements Serializable {
 		this.dontGetSsmData = dontGetSsmData;
 	}
 
+	// #25037 - start
+	public String getCurrentTaskDocType() {
+		return currentTaskDocType;
+	}
+
+	public void setCurrentTaskDocType(String currentTaskDocType) {
+		this.currentTaskDocType = currentTaskDocType;
+	}
+	// #25037 - end
+
 	public boolean isShowPopup() {
 		return showPopup;
 	}
@@ -867,6 +882,24 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25638 - End
 
+	// #25037 - start
+	public boolean isValidFor25037() {
+		return validFor25037;
+	}
+
+	public void setValidFor25037(boolean validFor25037) {
+		this.validFor25037 = validFor25037;
+	}
+
+	public boolean isCommitteModified() {
+		return committeModified;
+	}
+
+	public void setCommitteModified(boolean committeModified) {
+		this.committeModified = committeModified;
+	}
+	// #25037 - end
+	
 	// Enhancement #18685 - start
 
 	public void setScQtEvaluationReportList(
