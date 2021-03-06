@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sm.branch.branchDiaHdr']}" id="branchPanel"
+	<p:panel header="#{lbl['lbl.sm.viewSsm.branch.details']}" id="branchPanel"
 		toggleable="true">
 
 		<p:dataTable var="branchBean" id="dt"
@@ -16,9 +16,6 @@
 			sortBy="#{branchBean.branchName}">
 			<ac:paginator for="dt" />
 
-			<p:column style="width : 25px;text-align:center" headerText="#{lbl['lbl.sm.no']}">
-				<h:outputText value="#{index + 1}" />
-			</p:column>
 
 			<p:column>
 				<f:facet name="header">
