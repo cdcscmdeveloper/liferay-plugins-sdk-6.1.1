@@ -181,6 +181,10 @@
 			<portlet id="deskOfficerMaintenance"/>
 			<portlet id="deskOfficerMaintenanceApproval"/>
 			<!-- Enhancement 25627-end- -->
+			<!-- Enhancement 25037-start- -->
+			<portlet id="maintenanceRequestApproval"/>
+			<portlet id="maintenanceRequestRevision"/>
+			<!-- Enhancement 25037-end- -->		
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->

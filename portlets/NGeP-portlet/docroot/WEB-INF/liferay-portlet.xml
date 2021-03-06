@@ -3369,6 +3369,33 @@
 	</portlet>
 	<!-- Enhancement 25627-end- -->
 	
+	<!-- Enhancement 25037-start- -->
+	<portlet>
+		<portlet-name>maintenanceRequestRevision</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			deskOfficerMaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>maintenanceRequestApproval</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			deskOfficerMaintenance-portlet
+		</css-class-wrapper>
+	</portlet>	
+	<!-- Enhancement 25037-end- -->
+	
 	<portlet>
 		<portlet-name>cancelLoaApproval</portlet-name>
 		<icon>/icon.png</icon>
