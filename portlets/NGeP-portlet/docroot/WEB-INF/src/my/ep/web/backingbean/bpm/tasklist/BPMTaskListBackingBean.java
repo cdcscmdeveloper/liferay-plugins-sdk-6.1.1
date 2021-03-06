@@ -623,6 +623,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
+			//#25037-START
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
+					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
+					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE,
+					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
+			//#25037-END
 			this.getManagedBean().setBpmMap(temp);
 		}
 
