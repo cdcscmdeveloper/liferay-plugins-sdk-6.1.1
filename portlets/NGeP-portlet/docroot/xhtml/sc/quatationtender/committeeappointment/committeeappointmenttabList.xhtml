@@ -12,16 +12,24 @@
  			<ui:include src="finalizationSecretaryDetails.xhtml" />
  		</c:when>
  		<c:otherwise>
- 			<ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+ 			<ui:param name="committe" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />\
+ 			<ui:param name="qtCommitte" value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee}" />			
 			<ui:param name="selectedCommittee" value="#{qTDetailBB.managedBean.committemembers}" />
+			<ui:param name="showHistory" value="#{qTDetailBB.managedBean.showHistory}" />
 	
 			<ui:include src="specificationCommitteeDetails.xhtml" />
-	
-			<div class="ppRightBtn">
+			<h:panelGrid id="buttons" columns="2" style="width: 100% !important;" cellpadding = "0">
+				<h:panelGroup layout="block">
+					<p:commandButton value="#{!showHistory ? lbl['lbl.btn.view.history'] : lbl['lbl.btn.back']}"
+						action="#{qTDetailBB.navigateToViewHistory(qtCommitte, !showHistory)}"
+						update="scmemberInfoDtls, buttons"/>
+				</h:panelGroup>
+				<h:panelGroup layout="block" styleClass="ppRightBtn">
+				<ui:fragment rendered="#{!showHistory}">
 				<c:if test="#{!isQTStatusChecklistAndAfter}">
 					<p:commandButton value="#{lbl['lbl.btn.clone']}"
 						styleClass="BtnSpacing"
-						rendered="#{isCommitteeInfoEditable}"
+						rendered="#{isCommitteeInfoEditable and isCommitteeCloneable}"
 						actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 						oncomplete="screen2.show();" process="@this"
 						update="@([id$=cloneid])" />
@@ -31,7 +39,7 @@
 				<p:commandButton id="specificationcommitteeadd"
 					value="#{lbl['lbl.btn.add']}" process="@this" styleClass="BtnSpacing"
 					rendered="#{isCommitteeInfoEditable}"
-					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
+					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName, qTDetailBB.managedBean.taskName)}"
 					oncomplete="newspecificationcommittee.show();"
 					update="@(.scAddMember)" />
 	
@@ -64,13 +72,15 @@
 							disabled="#{empty qTDetailBB.managedBean.committemembers}"/>
 					</c:if>
 				</c:if>
-			</div>
+				</ui:fragment>
+				</h:panelGroup>
+			</h:panelGrid>
 			<ui:param name="committeeAppointmentDeleteId"
 				value="committeeAppointmentDeleteId" />
 			<ac:confirmationPopup id="#{committeeAppointmentDeleteId}"
 				widget="committeeAppointmentDeletePopUp"
 				okAction="qTCommitteBackingBean.deleteSpecificationCommittee"
-				width="40%" height="100"
+				loadingWidget="blockWidget" 
 				title="#{lbl['lbl.sc.qt.committee.appointment']}"
 				content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
 				update="@form" />
