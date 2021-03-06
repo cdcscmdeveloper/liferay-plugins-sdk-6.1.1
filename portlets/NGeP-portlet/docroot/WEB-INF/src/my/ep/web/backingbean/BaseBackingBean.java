@@ -27,7 +27,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.Collections; //#29253 #25037
+import java.util.Collection; //#29253 #25037
+import java.util.Comparator; //#29253 #25037
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -358,6 +360,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Claim bpm task group
 	 */
 	public void claimBpmTaskGroup(String taskId) {
+
+  
+											
 
 		claimTaskByTaskId(taskId);
 
@@ -690,8 +695,47 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
+						 
+	
+																	   
+														 
+	
+						
+								 
+					 
+									   
+							   
+	
+																				  
+											 
+							
+									   
+	   
+														 
+													 
+								  
 
+													 
+																								   
+																								
+							
+			 
+														 
+																							 
+																				 
+	
+						 
+					   
+												
+		  
+																								
+						
+   
 
+			   
+  
+					   
+ 
 	/**
 	 * Populate values for Reason Drop down base on reason category code
 	 * 
@@ -927,6 +971,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				null);
 	}
 	
+																			 
+									 
+														
+			
+				   
+  
+ 
+ 
+																		   
+																		 
+							
+									   
+
+	   
+																							 
+																					 
+
+																									  
+																								   
+																								
+							
+			 
+												
+																																				 
+																					 
+																			
+	  
+	
+						 
+					   
+												
+		  
+																								
+						
+   
+
+			   
+  
+ 
 	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
@@ -1042,6 +1125,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
+						  
+																							   
+																																						  
+  
+				 
 
 	/**
 	 * Gets the radio button code values by search bean.
@@ -1075,6 +1163,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 
+						   
+				  
+																									  
+																				  
+							
+	   
+														 
+													 
+								  
+
+												 
+			 
+														 
+													  
+							
+																							  
+																								 
+		  
+																							  
+																								   
+	 
+	
+	
+						 
+					   
+												
+		  
+																								
+						
+   
+
+			   
+  
+				  
+ 
+ 
 	/**
 	 * Gets the radio button values.
 	 *
@@ -2161,6 +2285,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+																																					 
 
 			return (BPM_DATA_TYPE) payLoad;
 
@@ -2169,6 +2294,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
+
 	/**
 	 * Sort outcomes.
 	 *
@@ -2176,16 +2302,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the string[]
 	 */
 	private String[] sortOutcomes(String[] outComes) {
+	 // #29253 #25037-start
+		outComes = outComes==null ? new String[]{} : outComes;
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
-
-		// Move 'Cancel' button to the last
-		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
-				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
-						BpmOutcomeConst.BPM_CANCEL)) {
-			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
-			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
-		}
-
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[]{
+					BpmOutcomeConst.BPM_ENDORSE, 
+					BpmOutcomeConst.BPM_CANCEL}; 
+			//last index will appear on the far right, 
+			//if outcome not ranked, order come as is,
+			//existed ordered outcome will take precedent
+			List<String> sortOrder = Arrays.asList(orderedAction);
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		}); 
+		// #29253 #25037-end
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
@@ -2451,6 +2583,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	
+ 
 	protected FacesScopes getFacesScopesGen() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -2608,6 +2741,59 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return false;
 	}
 	// #21962 - end
+							   
+	
+	
+						 
+	
+													  
+						
+				  
+																						  
+								   
+	
+   
+  
+					 
+  
+	
+							   
+	
+	
+						 
+	
+													  
+					
+				  
+																						  
+							   
+	
+   
+  
+				 
+  
+ 
+								
+																						
+						   
+							   
+			   
+   
+				  
+  
+ 
+								
+																					   
+								
+												   
+						
+												  
+						
+		  
+						 
+   
+					   
+  
 	
 	public void changeRoleAndProceed() {
 	//start loop list #28454
@@ -2646,8 +2832,63 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 
 		}
+  
+
+					 
+															 
+										 
+																		   
+							 
+								  
+										   
+									 
+										   
+									   
+										   
+	 
+	
+   
 		
 	}
+ 
+															   
+						   
+										  
+			
+																																								  
+		  
+			
+																																							
+		  
+			
+																																							
+		  
+			
+																																								
+		  
+			
+																																						
+		  
+			
+																																								 
+		  
+			
+																																								 
+		  
+			
+																																							 
+		  
+			
+																																								 
+		  
+		   
+								   
+		  
+	
+					  
+   
+						 
+ 
 	public void listenerRolePopup(SmPersonnel smPersonnelSSm){
 		//27951 & 27239
 		if(smPersonnelSSm.isClerical()){
@@ -2657,6 +2898,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			smPersonnelSSm.setClerical(false);
 		}
 	}
+ 
+ 
 	//SSM #28454
 		public void checkSSMValid(SmSupplier smSupplier,PostSupplierRegistrationManagedBean postRegBean){
 			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
@@ -2812,6 +3055,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().getPersonnelsRole().clear();
 		}
 		
+ 
+	
+													
+	
+						  
+						   
+					 
+					  
+						   
+						  
+														  
+	
+																										  
+																							  
+															  
+														 
+																						 
 	}
 	//END 27239
 	//25792 - start
@@ -2969,6 +3229,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				retVal = true;
 			}
 		}
+																											   
+																							  
+															  
+														   
 		return retVal;
 	}	
 	public static void checkEquityOwnerUpdateAllowance(
@@ -3004,4 +3268,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	/*** 25692#95 - end ***/
+
+						   
+																																				  
+							
+															
+																																																																											   
+					 
+		  
+	
+   
+				   
+  
+						 
+			  
+							   
+														
+													 
+   
+  
+  
+			
 }
