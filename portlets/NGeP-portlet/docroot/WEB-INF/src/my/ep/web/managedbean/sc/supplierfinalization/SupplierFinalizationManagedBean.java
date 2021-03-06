@@ -38,6 +38,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean; // #25037
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -239,9 +240,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtFinalizationReport endorsementReport;
 	private SelectItem[] justDropdown;
 	private String outcome;
-		
 	private int evaluationReportIndex;
- 
+	
+	//#25037-start
+	private List<ScCommitteeMember> deletedMemberList;
+	private SupplierFinalizationMeetingBackingBean meetingBB;
+	//#25037-end
+	
 	//#25729#142 & #26169 - Start
 	private boolean isSuppOfferPriceExceedCommunityAuthority;
 	private BigDecimal maxAmountCommitteeAuthority;
@@ -2268,5 +2273,26 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
       this.newSfRemarks = newSfRemarks;
     }
     // #25638 - End.
+	//#25037-start
+	
+
+	public List<ScCommitteeMember> getDeletedMemberList() {
+		return deletedMemberList;
+	}
+
+	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
+		this.deletedMemberList = deletedMemberList;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	//#25037-end
 
 }
+
+// ***25201
