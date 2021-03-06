@@ -6065,7 +6065,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) { //#29740
 						userRole = RoleCode.FPB_SECRETARY.value();
 					} else if (getFacesScopes().getUserRoleList().size() != 0) {
 						userRole = RoleCode.FPB_SECRETARY.value();
