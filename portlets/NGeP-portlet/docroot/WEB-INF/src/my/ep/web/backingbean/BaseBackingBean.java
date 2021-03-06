@@ -2075,14 +2075,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			g2.drawString(captchaText, 15, 20);
 			os = new ByteArrayOutputStream();
 			ImageIO.write(bufferedImg, "png", os);
-			graphicText = new DefaultStreamedContent(new ByteArrayInputStream(
-					os.toByteArray()), "image/png");
+			graphicText = new DefaultStreamedContent(new ByteArrayInputStream( os.toByteArray()), "image/png");
+			/*
 			if (graphicText == null) {
 				log.info(">>>>>>>>>>>>Graphic is null!!!");
 			} else {
-				log.info(">>>>>>>>>>>>Graphic is not null:"
-						+ graphicText.getStream());
+				log.info(">>>>>>>>>>>>Graphic is not null:" + graphicText.getStream());
 			}
+			*/
 		} catch (Exception e) {
 			log.error(e);
 		} finally {
@@ -2140,14 +2140,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param clazz
 	 * @return Object payLoadInstance
 	 */
-	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
 		return getBpmTaskDetails(clazz, additionalButtons, null, null);
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
 		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
@@ -3063,7 +3061,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//25792 - end
 	
 	//27346 - start 
-	//FIXME : 16052019 - SSM INTEGRATION CR - start
 		public void redirectToViewSSMInfo(String regNo,String businesstype) {
 			log.info("redirectToViewSSMInfo---------------------------------------------------Start");
 			clearPersonnelList();
@@ -3114,7 +3111,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					// set business nature
 					if(ssmResDTO.getSmSupplierBusinessList() != null){
-						this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList());
+						this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList<SmSupplierBusiness>());
 						for(SmSupplierBusiness business:ssmResDTO.getSmSupplierBusinessList()){
 							if(business.isSsmData())
 								this.getManagedBean().getSmSupplierBusinessSsm().add(business);
@@ -3122,7 +3119,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					//Set Branch
 					if(ssmResDTO.getSmSupplierBranches() != null){
-						this.getManagedBean().setSmSupplierBranchSsm(new ArrayList());
+						this.getManagedBean().setSmSupplierBranchSsm(new ArrayList<SmSupplierBranch>());
 						for(SmSupplierBranch branch:ssmResDTO.getSmSupplierBranches()){
 							if(branch.isSsmData())
 								this.getManagedBean().getSmSupplierBranchSsm().add(branch);
@@ -3130,7 +3127,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					//set equity company
 					if(ssmResDTO.getSmEquityCompanys() != null){
-						this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList());
+						this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList<SmEquityCompany>());
 						for(SmEquityCompany company:ssmResDTO.getSmEquityCompanys()){
 							if(company.isSsmData())
 								this.getManagedBean().getSmEquityCompaniesSsm().add(company);
@@ -3239,11 +3236,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("title", ResourceBundleUtils.getMessage("lbl.sm.view.ssm.infomation",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfoSec", ResourceBundleUtils.getMessage("lbl.sm.comp.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("capitalEquityInfolbl", ResourceBundleUtils.getMessage("lbl.sm.equiInfo.panHdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		context.put("branchInfolbl", ResourceBundleUtils.getMessage("lbl.branch.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		context.put("ownerInfolbl", ResourceBundleUtils.getMessage("lbl.sm.comp.owneronly.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("branchInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.branch.details",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("ownerInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.equiOwner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("directorInfolbl", ResourceBundleUtils.getMessage("lbl.sm.comp.director.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		context.put("capitalEquityCompanieslbl", ResourceBundleUtils.getMessage("lbl.sm.equiComp.panHdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		context.put("personnelInfolbl", ResourceBundleUtils.getMessage("lbl.sm.person.info.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("capitalEquityCompanieslbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.equiCompany",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("personnelInfolbl", ResourceBundleUtils.getMessage("lbl.sm.viewSsm.personnel",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
