@@ -253,7 +253,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
 	
-	private static final String UTF = "UTF-8";
+	//private static final String UTF = "UTF-8";
 
 	/**
 	 * To upload the attachment.
@@ -873,7 +873,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				return null;
 			}
 		}finally{
-			//TODO baffled to close tmpOut
 		}
 		
 	}
@@ -4632,7 +4631,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 			//List<String> localTitle=new ArrayList<String>();
-			String localTitle="Kertas Taklimat ";
+			//String localTitle="Kertas Taklimat ";
 			while(iterator.hasNext()){
 				ScQtFinalizationReport finalizationReport = iterator.next();
 				if(null!=finalizationReport.getPmDocument()){

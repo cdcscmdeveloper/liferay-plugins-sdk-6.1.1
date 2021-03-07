@@ -198,6 +198,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
 			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
