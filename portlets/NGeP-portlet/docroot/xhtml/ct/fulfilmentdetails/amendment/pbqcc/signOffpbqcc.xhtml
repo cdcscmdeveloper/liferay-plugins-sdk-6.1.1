@@ -9,10 +9,23 @@
 	<p:panel id="secretryPanel"
 		header="#{lbl['lbl.ct.panel.meeting.decision']}" toggleable="true"
 		toggleSpeed="500"
-		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision
+		rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision or 
+		ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision)
     		or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth150">
+
+			<h:panelGrid columns="2" style="float:right;">
+				<h:outputText value="* " styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.pbm.decision.date']}" />
+			</h:panelGrid>
+			<p:calendar
+				value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcDecisionDate}"
+				size="25" id="calPbqDecision" navigator="true" required="true"
+				label="#{lbl['lbl.ct.pbm.decision.date']}" readonlyInput="true"
+				showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+			</p:calendar>
 
 			<h:panelGrid columns="2" style="float:right;">
 				<h:outputText value="* " styleClass="mandatory" />
@@ -117,8 +130,10 @@
 			columnClasses="columnWidth150" styleClass="top-aligned-columns">
 			<p:outputLabel value="#{lbl['lbl.ct.list.comm.members']}" />
 			<p:dataTable id="secretryTable" var="data" rowIndexVar="index"
-				value="#{CtStatusConst.faPendingMeetingDecision.longValue() == ctBackingBean.managedBean.contractVer.status.statusId.longValue() 
-                ? amendmentBackingBean.managedBean.updatedCommitteeMembers : ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}"><!-- 26753 -->
+				value="#{(CtStatusConst.faPendingMeetingDecision.longValue() == ctBackingBean.managedBean.contractVer.status.statusId.longValue() or 
+				ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision) 
+                ? amendmentBackingBean.managedBean.updatedCommitteeMembers : ctBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}" 
+                filteredValue="#{amendmentBackingBean.getFilteredCommitteeMembers()}"><!-- 26753 -->
 				<ac:paginator for="decisionTable" />
 				<p:column style="width:20%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.name']}" styleClass="column-align-center">
@@ -161,13 +176,14 @@
 				<p:column style="width:6%;" headerText="#{lbl['lbl.ct.role']}"
 					styleClass="column-align-center">
 					<div align="left">
-						<h:outputText
-							value="#{amendmentBackingBean.getParameterDesc(index, data.memberRole)}" />
+						<h:outputText value="#{amendmentBackingBean.getParameterDescCommitteeByMember(data, index)}" />
 					</div>
 				</p:column>
 				<p:column style="width:15%;white-space:normal;"
 					headerText="#{lbl['lbl.ct.represent.type']}"
-					styleClass="column-align-center">
+					styleClass="column-align-center"
+					rendered="#{(amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB) 
+				     	and (amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA)}">
 					<div align="left">
 						<h:outputText
 							value="#{amendmentBackingBean.getParameterDesc(data.representativeType)}" />
@@ -188,11 +204,11 @@
 		<br />
 		<div class="ppRightBtn"> 
 		<p:commandButton value="#{lbl['lbl.ct.update.committee']}"
-			process="@this" partialSubmit="true" onstart="blockWidget.show();"
-			rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision}"
+			process="@this" onstart="blockWidget.show();"
+			rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision or
+			ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision)}"
 			oncomplete="blockWidget.hide();"
-			actionListener="#{amendmentBackingBean.updateCommittee}"
-			update=":form" />
+			actionListener="#{amendmentBackingBean.updateCommittee()}" />
 		</div>
 		<!-- 26753 end -->
 	</p:panel>
@@ -201,6 +217,16 @@
 		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMofMeetingDecision
 			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
+		
+		<h:panelGrid columns="2" style="float:right;">
+			<h:outputText value="* " styleClass="mandatory" />
+			<p:outputLabel value="#{lbl['lbl.ct.mof.decision.date']}"    />
+		</h:panelGrid>
+		<p:calendar value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofDecisionDate}" size="25" id="calMofDecision" navigator="true"
+			required="true" label="#{lbl['lbl.ct.mof.decision.date']}"
+			readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails}">
+		</p:calendar>
 		
 		<h:panelGrid columns="2" style="float:right;">
 			<h:outputText value="* " styleClass="mandatory" />
