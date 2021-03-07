@@ -313,6 +313,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private boolean updateSupplierLinkFlag = false;
 	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
 	private List<String> downloadedLoaReportsTitleList;
+	private Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap;
+	private Long selectedItemId;
 	//#29006 - end
 	
 	//#19336
@@ -1771,6 +1773,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setDownloadedLoaReportsTitleList(List<String> downloadedLoaReportsTitleList) {
 		this.downloadedLoaReportsTitleList = downloadedLoaReportsTitleList;
 	}
+
+	public Map<Long, List<String>> getScRequestItemIdNewSuppOfferAndJustMap() {
+		return scRequestItemIdNewSuppOfferAndJustMap;
+	}
+
+	public void setScRequestItemIdNewSuppOfferAndJustMap(Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap) {
+		this.scRequestItemIdNewSuppOfferAndJustMap = scRequestItemIdNewSuppOfferAndJustMap;
+	}
+
+	public Long getSelectedItemId() {
+		return selectedItemId;
+	}
+
+	public void setSelectedItemId(Long selectedItemId) {
+		this.selectedItemId = selectedItemId;
+	}
 	//#29006 - end
 
 	public String getSourcePage() {
@@ -1860,6 +1878,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.uploadA3Templet = uploadA3Templet;
 	}
 	/*#29007 End Vinod*/
+
 
 
 }
