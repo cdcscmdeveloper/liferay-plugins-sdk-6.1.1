@@ -65,7 +65,7 @@
 													<tr>
 														<td class="TableFieldLeft" width="28%"><p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" /> </td>
 														<td class="TableFieldRight">
-														     <p:commandButton oncomplete="uploadCloseQTAttachDlg.show();return false;" 
+														     <p:commandButton  widgetVar="uploadButton" onclick="uploadButton.disable();" oncomplete="uploadCloseQTAttachDlg.show();return false;uploadButton.enable();" 
 																update="reportAttachment, uploadCloseQTAttachDlg" icon="ui-icon-upload" />
 																<ac:iconTooltip value="#{lbl['lbl.sc.approval.letter.tooltip']}" />
 														</td>
@@ -128,7 +128,7 @@
 							                     <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
 							                         update=":form:reportAttachment" 
 							                         action="#{qTDetailBB.deleteCloseQTAttachmentAction(qTDetailBB.managedBean.attachFileIndex)}"
-							                         oncomplete="deleteCloseQTAttachDlg.hide();"/>
+							                         oncomplete="deleteCloseQTAttachDlg.hide();uploadButton.enable();"/>
 								                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteCloseQTAttachDlg.hide();" type="button" />
 							                 </div>
 					                </p:confirmDialog>
