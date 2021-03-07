@@ -70,11 +70,11 @@
 					<ui:fragment rendered="#{ctUpdCommitteeVar.memberRole.parameterCode != ParameterConst.committeeRoleSecretary}">
 						<p:selectOneMenu id="updRoleSelMenu"
 						    value="#{ctUpdCommitteeVar.memberRole.parameterId}" 
-						     style="width: 110px;margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.role']}" >
+						     style="width: 110px;margin-bottom: 5px;" required="true" requiredMessage="#{lbl['lbl.ct.role.mandatory']}" label="#{lbl['lbl.ct.role']}" >
 							<f:selectItems value="#{amendmentBackingBean.getRoleTypeDropdown(ctUpdCommitteeVar)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"  
-							   update=":form:panelHeaderException, updCommitteeRepresentPnlGrp"
-							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar.memberRoleId)}"></p:ajax>
+							<p:ajax event="valueChange" process="@this" partialSubmit="true"  
+							   update=":form:panelHeaderExceptionUpdateCommittee, updCommitteeTable"
+							   listener="#{amendmentBackingBean.validateUpdatedCommitteeListDuplicateChairperson(ctUpdCommitteeVar, ctUpdCommitteeVar.memberRole.parameterId)}"></p:ajax>
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>
@@ -86,13 +86,13 @@
 					<h:outputText value="#{lbl['lbl.ct.represent.type']}" />
 				</f:facet>
 				<h:panelGroup id="updCommitteeRepresentPnlGrp">
-					<p:selectOneMenu  id="updRepresentativeTypeSelMenu" required="true"
+					<p:selectOneMenu  id="updRepresentativeTypeSelMenu" required="true" requiredMessage="#{lbl['lbl.ct.represent.type.mandatory']}"
 						value="#{ctUpdCommitteeVar.representativeType.parameterId}"
 						rendered="#{amendmentBackingBean.chkBooleanRepresentType(ctUpdCommitteeVar.memberRole.parameterId, ctUpdCommitteeVar.pnp)}"
 						label="#{lbl['lbl.ct.represent.type']}" style="width: 150px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{amendmentBackingBean.getRepresentativeDropdown()}" />
-							<p:ajax event="change" process="@this" update="updCommitteeRepresentPnlGrp" partialSubmit="true"
+							<p:ajax event="valueChange" process="@this" update="updCommitteeRepresentPnlGrp" partialSubmit="true"
 								listener="#{amendmentBackingBean.onChangeRepType(ctUpdCommitteeVar, ctUpdCommitteeVar.representativeType.parameterId)}"></p:ajax>
 					</p:selectOneMenu>
 				</h:panelGroup>
@@ -205,7 +205,7 @@
 		    </p:panel>
     </p:dialog>
 		<p:confirmDialog id="updLatestCommitteeDlg" widgetVar="updLatestCommitteeDlg" message="#{lbl['lbl.sc.update.based.on.attendance']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
+                           severity="alert"  closable="false" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
                   <div class="ppRightBtn">
                   <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form" 
 		              process="@this" partialSubmit="true" 
@@ -215,9 +215,10 @@
 		          </div>
             </p:confirmDialog>
             <p:confirmDialog id="validateLatestCommitteeDlg" widgetVar="validateLatestCommitteeDlg" message="#{lbl['lbl.sc.update.same.committee.member']}" 	
-                           severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
+                           severity="alert"  closable="false" appendToBody="true" header="#{lbl['lbl.sc.dialog.cofirm.header']}">
                   <div class="ppRightBtn">
-                  <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form" oncomplete="validateLatestCommitteeDlg.hide();" />
+                  <p:commandButton value="#{lbl['lbl.btn.ok']}" update=":form" process="@this" partialSubmit="true" 
+		              actionListener="#{amendmentBackingBean.backToAmendmentPage()}" oncomplete="validateLatestCommitteeDlg.hide();"/>
 		          </div>
             </p:confirmDialog>
 </ui:composition>
