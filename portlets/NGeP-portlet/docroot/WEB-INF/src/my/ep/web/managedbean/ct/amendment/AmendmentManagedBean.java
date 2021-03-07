@@ -1341,7 +1341,12 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	 * @return the updatedCommitteeMembers
 	 */
 	public List<CtCommitteeMember> getUpdatedCommitteeMembers() {
+		//#29403 start
+		if(updatedCommitteeMembers==null) {
+			updatedCommitteeMembers = new ArrayList<CtCommitteeMember>();
+		}	
 		return updatedCommitteeMembers;
+		//#29403 end
 	}
 	/**
 	 * @param updatedCommitteeMembers the updatedCommitteeMembers to set
@@ -1376,7 +1381,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.hasChanges = hasChanges;
 	}	
 	//26753 - end
-	
 	public boolean isItemProductNotExist() {
 		return itemProductNotExist;
 	}
@@ -1401,7 +1405,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedSearchItem = selectedSearchItem;
 	}
 	//#20997 - End
-	
 	public boolean isViewOnly() {
 		return viewOnly;
 	}
