@@ -357,14 +357,26 @@ u {
 						$tplSpecAnswer.tplSpecQuestion.clUomPerDay
 					</td>
 					#else
-					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;"></td>
+						#if ($bilUnitUkuranSehari != "")
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
+								$bilUnitUkuranSehari
+							</td>
+						#else
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;"></td>
+						#end
 					#end
 					#if ($tplSpecAnswer.tplSpecQuestion.clUomPerMonth)
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
 						$tplSpecAnswer.tplSpecQuestion.clUomPerMonth
 					</td>
 					#else
-					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;"></td>
+						#if ($bilUnitUkuranSebulan != "")
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
+								$bilUnitUkuranSebulan
+							</td>
+						#else
+							<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;"></td>
+						#end
 					#end
 					#if ($tplSpecAnswer.tplspecQuestion.clDurationMonth)
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
