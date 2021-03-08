@@ -169,9 +169,9 @@
 			#else
 				<tr>
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="4" align="center">No Record Found</td>
+		 			<td colspan="4" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#else
-					<td colspan="7" align="center">No Record Found</td>
+					<td colspan="7" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#end
 		 		</tr>
 			#end	
@@ -205,7 +205,7 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="2" align="center">No Record Found</td>
+		 			<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end	
 		
@@ -285,7 +285,7 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="5" align="center">No Record Found</td>
+		 			<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end		
 		</table>
@@ -327,9 +327,9 @@
 			#else
 				<tr>
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="1" align="center">No Record Found</td>
+		 			<td colspan="1" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#else
-					<td colspan="2" align="center">No Record Found</td>
+					<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#end
 		 		</tr>
 			#end	
@@ -359,7 +359,7 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="1" align="center">No Record Found</td>
+		 			<td colspan="1" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end	
 		
