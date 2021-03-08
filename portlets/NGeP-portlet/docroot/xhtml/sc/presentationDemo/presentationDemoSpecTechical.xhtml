@@ -82,12 +82,12 @@ label.ui-button>span.ui-button-text {
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
-						action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
+						action="#{specificationBackingBean.completeDemoTemplateSpecDetails('SC',1)}"
 						update="@all" /> <p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
-						action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
+						action="#{specificationBackingBean.saveDemoTemplateSpecDetails('SC',1)}" />
 
 				</td>
 			</tr>
