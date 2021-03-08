@@ -822,6 +822,7 @@ public class SimpleQuoteBackingBean extends
 		
 		// #3761 - start
 		if (getManagedBean().getScQuoteSession() != null) {
+			getManagedBean().setSpecificOrGeneral(checkIfSpecificOrGeneral());
 			ScQuote cloneScQuote = getManagedBean().getScQuoteSession();
 			getManagedBean().setScQuoteSession(null);
 			scQuote.setPanel(cloneScQuote.isPanel());
@@ -4849,6 +4850,7 @@ public class SimpleQuoteBackingBean extends
 		QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
 		ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 		getManagedBean().setScQuote(scQuote);
+		getManagedBean().setSpecificOrGeneral(checkIfSpecificOrGeneral()); // #3761
 		
 		//#25095 repatch for scquote pid clone
 		
@@ -8013,4 +8015,15 @@ public class SimpleQuoteBackingBean extends
 			return getManagedBean();
 		}
 		// #29832 end
+		
+	// #3761 - start
+	public boolean checkIfSpecificOrGeneral() {
+		if (CollectionUtils.isNotEmpty(getManagedBean().getPanelItems())
+				&& getManagedBean().getPanelItems().get(0).getItemCategoryId().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
+			return true;
+		}
+		return false;
+	}
+	// #3761 - end
 }
