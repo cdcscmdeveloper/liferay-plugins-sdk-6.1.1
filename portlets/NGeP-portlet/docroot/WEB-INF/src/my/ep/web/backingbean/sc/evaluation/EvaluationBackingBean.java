@@ -2140,6 +2140,18 @@ public void saveComplianceSample() {
 				 * resDTO.getCheckListResultBean().getResultList());
 				 */
 			}
+			
+			for (ScQtCheckList newChecklist : localCheckList) {
+				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60450) {
+					this.getManagedBean().setEvalStatusComp(true);
+					break;
+				}
+				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60451) {
+					this.getManagedBean().setEvalStatusComp(false);
+				}
+			}
+			
+			log.info("Payload ===================>>> " + this.getManagedBean().getPayLoad());
 
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(
 					localCheckList);
@@ -2652,6 +2664,10 @@ public void saveComplianceSample() {
 
 	}
 	
+	public void retrivePresentationOrDemoEvaluationStage() {
+		this.getManagedBean().setEvaluatioStageActiveIndex(5);
+		this.getManagedBean().setTabTechnicalIndex(3);
+	}
 
 	/**
 	 * Retrieve One Tier With Technical Financial Summary.generate summary for
@@ -8920,6 +8936,19 @@ private void retriveCommitteeRemarksList(){
 						qtCheckLists.indexOf(getManagedBean()
 								.getScQtChecklist()), evalResDTO.getCheckList());
 			}
+			
+			for (ScQtCheckList newChecklist : this.getManagedBean().getEvaluationStgTechnicalCheckList()) {
+				log.info("New Checklist ==> " + newChecklist.getQtChecklistId() + " ========== " + newChecklist.getPmEvalStatus().getStatusId());
+				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60450) {
+					this.getManagedBean().setEvalStatusComp(true);
+					log.info("Helloooo");
+					break;
+				}
+				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60451) {
+					this.getManagedBean().setEvalStatusComp(false);
+				}
+				
+			}
 
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
@@ -9160,8 +9189,8 @@ private void retriveCommitteeRemarksList(){
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
 					.getManagedBean().getPayLoad();
 			evaluationDataType.setIsPresentationDemo(true);
+			reqDtO.setPayLoad(evaluationDataType);
 		}
-		//#28784 - end
 		reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
 		ScQt scQt = this.getManagedBean().getScQt();
 		EvaluationReqDTO endorsmentRemarks=committeeRemarksSave();
@@ -9186,7 +9215,10 @@ private void retriveCommitteeRemarksList(){
 		reqDtO.setCommType(this.getManagedBean().getCommitteeType());
 		reqDtO.setDigiSignData(digiSign);
 		reqDtO.setTaskId(this.getManagedBean().getTaskId());
-		reqDtO.setPayLoad(this.getManagedBean().getPayLoad());
+		if (!this.getManagedBean().getScQt().isDemoRequired()) {
+			reqDtO.setPayLoad(this.getManagedBean().getPayLoad());
+		}
+		//#28784 - end
 		FacesScopes facesScopes = new FacesScopes();
 		reqDtO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDtO.setPmUser(facesScopes.getUserSessionBean());
