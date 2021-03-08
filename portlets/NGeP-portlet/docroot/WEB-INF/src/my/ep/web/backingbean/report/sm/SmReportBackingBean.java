@@ -1167,7 +1167,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		        		cellItemsVal.setCellValue(paymentTypeDesc); 
 		        	}
 		        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//BUG:#29454
-		        	sheetList.addMergedRegion(new CellRangeAddress(i,i,2,4)); 
+		        	sheetList.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,4));//BUG:#29454
 		        }
 			    
 			    //Setting Column header list
@@ -1205,13 +1205,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						//START - CR: #14203#131 , BUG:#29454
 						//Add checking for Scenario with same Receipt No but has different Reference No.
 						if(!referenceNo.equalsIgnoreCase((String)objectArr[5])){
-							log.info("Inside Has different reference no !!");
+							//log.info("Inside Has different reference no !!");
 							//Not allowed to merge row , if Current row Reference No is not equal with previous row Reference No
 							cellBil.setCellValue(countRowFpx++);
 							mergeRowFirst = rowid;
 							mergeRowLast = 0;
 						}else{
-							log.info("Inside Has same reference no !!");
+							//log.info("Inside Has same reference no !!");
 							mergeRowLast = rowid;
 							if(key < keyIdList.size()){
 								if(key == (keyIdList.size() - 1)){
@@ -1580,7 +1580,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	if(i==3)cellItemsVal.setCellValue(params.get(SmReportConst.PARAM_CODE));
 	        	if(i==4)cellItemsVal.setCellValue("FPX"); 
 	        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG:#29454
-	        	sheetFPX.addMergedRegion(new CellRangeAddress(i,i,2,3)); 
+	        	sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,3));//BUG:#29454
 	        }
 		    
 		    //Setting Column header list
@@ -1674,7 +1674,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	// 26307 - change wording
 	        	if(i==4)cellItemsVal.setCellValue("Kad Kredit/Kad Debit"); 
 	        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG:#29454
-	        	sheetCC.addMergedRegion(new CellRangeAddress(i,i,2,3)); 
+	        	sheetCC.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,3));//BUG:#29454
 	        }
 			
 			Row headerRowListCredit = sheetCC.createRow(sheetCC.getLastRowNum()+1);
@@ -1860,7 +1860,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
             ((SXSSFWorkbook) wb).dispose();//BUG:#29454
             wb.close();
             long endTime = System.currentTimeMillis();
-            System.out.println("That took Write to File " + (((endTime - startTime) / 1000) / 60) + " Minute(s) / " + ((endTime - startTime) / 1000) + " Second(s) "+(endTime - startTime)+" Miliseconds"); 
+            log.info("That took Write to File " + (((endTime - startTime) / 1000) / 60) + " Minute(s) / " + ((endTime - startTime) / 1000) + " Second(s) "+(endTime - startTime)+" Miliseconds"); 
 
         }catch(Exception e){
         	e.printStackTrace();
@@ -2098,7 +2098,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			Cell cellTitleRow = titleRowSheetFpx.createCell(1);
 		    cellTitleRow.setCellValue(titleReport);
 		    cellTitleRow.setCellStyle(titleHeaderStyle_1);//BUG:#29454
-		    sheetFPX.addMergedRegion(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
+		    sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); //BUG:#29454
 		    
 		    //Setting Row Items - Kod PTJ/Nama PTJ/Kaedah Bayaran/Nama Pembekal/Jenis Bayaran
 		    for(int i = 1; i <= rowHeaderItems.length; i++) {
@@ -2119,7 +2119,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	}
 	        	if(i==5)cellItemsVal.setCellValue(paymentTDesc); 
 	        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//BUG:#29454
-	        	sheetFPX.addMergedRegion(new CellRangeAddress(i,i,2,4)); 
+	        	sheetFPX.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,4)); //BUG:#29454
 	        }
 		    
 		    //Setting Column header list
@@ -2251,7 +2251,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	}
 	        }
 	        long endTimePopulateFPX = System.currentTimeMillis();
-	        System.out.println("That took Populate FPX SHEET " + (((endTimePopulateFPX - startTimePopulateFPX) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateFPX - startTimePopulateFPX) / 1000) + " Second(s) / "+(endTimePopulateFPX - startTimePopulateFPX) +" miliseconds");
+	        log.info("That took Populate FPX SHEET " + (((endTimePopulateFPX - startTimePopulateFPX) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateFPX - startTimePopulateFPX) / 1000) + " Second(s) / "+(endTimePopulateFPX - startTimePopulateFPX) +" miliseconds");
 		}
 		
 		//Only Create Sheet of Senarai_Kad Kredit , only if search result has return records
@@ -2264,7 +2264,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			Cell cellTitleRowCC = titleRowSheetCC.createCell(1);
 			cellTitleRowCC.setCellValue(titleReport);
 			cellTitleRowCC.setCellStyle(titleHeaderStyle_1);//BUG:#29454
-			sheetCC.addMergedRegion(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); 
+			sheetCC.addMergedRegionUnsafe(new CellRangeAddress(0,0,1,columnHeaderList.size()-1)); //BUG:#29454
 			
 			//Setting Row Items - Kod PTJ/Nama PTJ/Kaedah Bayaran/Nama Pembekal/Jenis Bayaran
 		    for(int i = 1; i <= rowHeaderItems.length; i++) {
@@ -2286,7 +2286,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	}
 	        	if(i==5)cellItemsVal.setCellValue(paymentTDesc); 
 	        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//BUG:#29454
-	        	sheetCC.addMergedRegion(new CellRangeAddress(i,i,2,4)); 
+	        	sheetCC.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,4)); //BUG:#29454
 	        }
 		    
 		    //Setting Column header list
@@ -2421,7 +2421,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	}
 	        }
 	        long endTimePopulateCC = System.currentTimeMillis();
-	        System.out.println("That took Populate CREDIT SHEET " + (((endTimePopulateCC - startTimePopulateCC) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateCC - startTimePopulateCC) / 1000) + " Second(s) / "+(endTimePopulateCC - startTimePopulateCC)+" miliseconds");
+	        log.info("That took Populate CREDIT SHEET " + (((endTimePopulateCC - startTimePopulateCC) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateCC - startTimePopulateCC) / 1000) + " Second(s) / "+(endTimePopulateCC - startTimePopulateCC)+" miliseconds");
 		}
 		
 		//SECTION SHEET (Populate) : Ringkasan
@@ -2431,7 +2431,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		Cell cellTitleRowSummary = titleRowSheetSummary.createCell(0);
 		cellTitleRowSummary.setCellValue(titleReport);
 		cellTitleRowSummary.setCellStyle(titleHeaderStyle_1);//BUG:#29454
-		sheetSummary.addMergedRegion(new CellRangeAddress(0,0,0,columnsSummaryList.length)); 
+		sheetSummary.addMergedRegionUnsafe(new CellRangeAddress(0,0,0,columnsSummaryList.length)); 
 		
 		Row subTitleRowSheetSummary = sheetSummary.createRow(1);
 		Cell cellSubTitleRowSummary = subTitleRowSheetSummary.createCell(0);
@@ -2490,7 +2490,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 			long endTimePopulateSummary = System.currentTimeMillis();
-	        System.out.println("That took Populate SUMMARY SHEET " + (((endTimePopulateSummary - startTimePopulateSummary) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateSummary - startTimePopulateSummary) / 1000) + " Second(s / )"+(endTimePopulateSummary - startTimePopulateSummary)+" miliseconds");
+	        log.info("That took Populate SUMMARY SHEET " + (((endTimePopulateSummary - startTimePopulateSummary) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateSummary - startTimePopulateSummary) / 1000) + " Second(s / )"+(endTimePopulateSummary - startTimePopulateSummary)+" miliseconds");
 	        //END - BUG:#29454
         }
         
@@ -2524,7 +2524,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        ((SXSSFWorkbook) wb).dispose();//BUG:#29454
 	        wb.close();
 	        long endTime = System.currentTimeMillis();
-	        System.out.println("That took write in File " + (((endTime - startTime) / 1000) / 60) + " Minute(s) / " + ((endTime - startTime) / 1000) + " Second(s)"); 
+	        log.info("That took write in File " + (((endTime - startTime) / 1000) / 60) + " Minute(s) / " + ((endTime - startTime) / 1000) + " Second(s)"); 
 
 	    }catch(Exception e){
 	    	e.printStackTrace();
@@ -2629,7 +2629,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
 	        	cellItemsVal.setCellStyle(titleHeaderStyle_2);//BUG:#29454 08022021
-	        	sheetReportList.addMergedRegion(new CellRangeAddress(i,i,2,3)); 
+	        	sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,3));//BUG:#29454 
 	        }
 		    
 		    //Setting Column header list
@@ -2664,11 +2664,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					mergeRowLast = rowid;
 					if(key < keyIdList.size()){
 						if(key == (keyIdList.size() - 1)){
-							sheetReportList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+							sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));//BUG: #29454
 						}else{
 							Object[] objectArrMerge = fullList.get(key+1);
 							if(!receiptNo.equalsIgnoreCase((String)objectArrMerge[2])){
-								sheetReportList.addMergedRegion(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));
+								sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(mergeRowFirst-1,mergeRowLast-1,0,0));//BUG: #29454
 							}
 						}						
 					}
@@ -2903,12 +2903,21 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
 		Sheet sheetReportList = wb.createSheet("Senarai"); 
+		//START: #29454
+		CellStyle titleHeaderStyle_1 = titleHeaderStyle(wb,true,false,false,false);
+		CellStyle titleHeaderStyle_2 = titleHeaderStyle(wb,true,false,false,true);
+		CellStyle titleHeaderStyle_3 = titleHeaderStyle(wb,false,false,true,true);
+		CellStyle columnHeaderStyle = columnStyle(wb,createHelper,true,true,true,false,false,false,true);
+		CellStyle columnStyleAmount = columnStyle(wb,createHelper,false,false,false,false,true,false,true);
+		CellStyle columnStyleString_1 = columnStyle(wb,createHelper,false,false,true,false,false,true,true);
+		CellStyle columnStyleString_2 =	columnStyle(wb,createHelper,false,false,false,false,false,true,true);
+		//END: #29454
 		
 		//Setting Report Title
 		Row titleRowSheetList= sheetReportList.createRow(0);
 		Cell cellTitleRow = titleRowSheetList.createCell(0);
 	    cellTitleRow.setCellValue(titleReport);
-	    cellTitleRow.setCellStyle(titleHeaderStyle(wb,true,false,false,false));
+	    cellTitleRow.setCellStyle(titleHeaderStyle_1);//BUG:#29454
 	    sheetReportList.addMergedRegion(new CellRangeAddress(0,0,0,12)); 
 	    
 	    //Setting Row Items - Kod PTJ/Nama PTJ/Jenis Bayaran
@@ -2916,7 +2925,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         	Row itemsDtlRow = sheetReportList.createRow(i);
         	Cell cellItemsDtl = itemsDtlRow.createCell(0);
         	cellItemsDtl.setCellValue(rowHeaderItems[i-1]);
-        	cellItemsDtl.setCellStyle(titleHeaderStyle(wb,true,false,false,true));
+        	cellItemsDtl.setCellStyle(titleHeaderStyle_2);
         	
         	Cell cellItemsVal = itemsDtlRow.createCell(1);
         	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
@@ -2925,16 +2934,17 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         		itemsDtlRow.setHeightInPoints((paymentTypeSize * sheetReportList.getDefaultRowHeightInPoints()));
         		cellItemsVal.setCellValue(paymentTypeDesc);
         	}
-        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,true,true));
-        	sheetReportList.addMergedRegion(new CellRangeAddress(i,i,1,3));
+        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG: #29454
+        	sheetReportList.addMergedRegionUnsafe(new CellRangeAddress(i,i,1,3));//BUG: #29454
         }
 	    
 	    //Setting Column header list
 	    Row headerRowList = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
+	    int headerRowIndex = headerRowList.getRowNum();//BUG:#29454
         for(int i = 0; i < columnHeaderList.size(); i++) {
             Cell cell = headerRowList.createCell(i);
             cell.setCellValue(columnHeaderList.get(i).toString());
-            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,false,true));
+            cell.setCellStyle(columnHeaderStyle);//BUG:#29454
         }
         
         if(!revenueCollectionList.isEmpty()){
@@ -2949,17 +2959,17 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						cell.setCellStyle(columnStyleAmount);//BUG:#29454
 					}else if(objectArr[x] instanceof Double){
 						cell.setCellValue(((Double) objectArr[x]).doubleValue());
-						cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,true,false,true));
+						cell.setCellStyle(columnStyleAmount);//BUG:#29454
 					}else{
 						cell.setCellValue((String) objectArr[x]);
 						if(x == 0){
-							cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,true,true));
+							cell.setCellStyle(columnStyleString_1);//BUG:#29454
 						}else{
-							if("-".equalsIgnoreCase((String) objectArr[x]))cell.setCellStyle(columnStyle(wb,createHelper,false,false,true,false,false,true,true));
-							else cell.setCellStyle(columnStyle(wb,createHelper,false,false,false,false,false,true,true));
+							if("-".equalsIgnoreCase((String) objectArr[x]))cell.setCellStyle(columnStyleString_1);//BUG:#29454
+							else cell.setCellStyle(columnStyleString_2);//BUG:#29454
 						}
 					}
 					cellid++;
@@ -2975,7 +2985,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
         
         
         //Setting Auto filtering in each header column list
-        sheetReportList.setAutoFilter(new CellRangeAddress(headerRowList.getRowNum(),sheetReportList.getLastRowNum(),headerRowList.getFirstCellNum(),columnHeaderList.size()-1));
+        //BUG:#29454
+        sheetReportList.setAutoFilter(new CellRangeAddress(headerRowIndex,headerRowIndex,headerRowList.getFirstCellNum(),columnHeaderList.size()-1));
         
         // Resize all columns to fit the content size
         for(int i = 0; i < columnHeaderList.size(); i++) {   
