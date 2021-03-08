@@ -310,9 +310,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//29728 - start
 	private boolean isBranchNeedToBeChanged;
 	//29728 - end
-	//29555 start
-    private String preparedBy;
-    //29555 end
 
 /**
  * Gets the charge line item root.
@@ -3403,13 +3400,5 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
 	}
 	//29728 - end
-
-	public String getPreparedBy() {
-		return preparedBy;
-	}
-
-	public void setPreparedBy(String preparedBy) {
-		this.preparedBy = preparedBy;
-	}
 
 }

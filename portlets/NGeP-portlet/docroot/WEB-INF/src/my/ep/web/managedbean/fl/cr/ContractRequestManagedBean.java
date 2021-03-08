@@ -330,11 +330,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static int backFlag;
     private static String catalogueFlag;
     //13984-end
-    
-  //29555 start
-    private String preparedBy;
-    //29555 end
-    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3241,14 +3236,4 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
 	}
 	//29728 - end
-	
-	//29555 start
-	public String getpreparedBy() {
-		return preparedBy;
-	}
-
-	public void setpreparedBy(String preparedBy) {
-		this.preparedBy = preparedBy;
-	}
-	//29555 end
 }
