@@ -2219,7 +2219,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		IFeeExemptionSO feeSO = null;
 		try {
-			validateFulfillmentOrder(action);			
+			//validateFulfillmentOrder(action);		//29653	
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
