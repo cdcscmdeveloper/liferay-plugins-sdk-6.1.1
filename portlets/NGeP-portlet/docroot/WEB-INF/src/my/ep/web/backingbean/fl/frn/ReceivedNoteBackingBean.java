@@ -634,6 +634,16 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(item.getReceivedQty()==null) {
 				item.setReceivedQty(BigDecimal.ZERO);
 			}
+			//30468-start
+			if(item.getReceivedAmt().doubleValue()<0) {
+				item.setReceivedAmt(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+			}
+			if(item.getReceivedQty().doubleValue()<0) {		
+				item.setReceivedQty(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+			}
+			//30468-end
 			if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
 				item.setReceivedQty(BigDecimal.ZERO);
 				item.setReceivedAmt(BigDecimal.ZERO);
