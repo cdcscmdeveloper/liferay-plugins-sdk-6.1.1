@@ -2140,18 +2140,6 @@ public void saveComplianceSample() {
 				 * resDTO.getCheckListResultBean().getResultList());
 				 */
 			}
-			
-			for (ScQtCheckList newChecklist : localCheckList) {
-				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60450) {
-					this.getManagedBean().setEvalStatusComp(true);
-					break;
-				}
-				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60451) {
-					this.getManagedBean().setEvalStatusComp(false);
-				}
-			}
-			
-			log.info("Payload ===================>>> " + this.getManagedBean().getPayLoad());
 
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(
 					localCheckList);
@@ -2664,10 +2652,6 @@ public void saveComplianceSample() {
 
 	}
 	
-	public void retrivePresentationOrDemoEvaluationStage() {
-		this.getManagedBean().setEvaluatioStageActiveIndex(5);
-		this.getManagedBean().setTabTechnicalIndex(3);
-	}
 
 	/**
 	 * Retrieve One Tier With Technical Financial Summary.generate summary for
@@ -8935,19 +8919,6 @@ private void retriveCommitteeRemarksList(){
 				updateCheckListIntoQtCheckLists(qtCheckLists,
 						qtCheckLists.indexOf(getManagedBean()
 								.getScQtChecklist()), evalResDTO.getCheckList());
-			}
-			
-			for (ScQtCheckList newChecklist : this.getManagedBean().getEvaluationStgTechnicalCheckList()) {
-				log.info("New Checklist ==> " + newChecklist.getQtChecklistId() + " ========== " + newChecklist.getPmEvalStatus().getStatusId());
-				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60450) {
-					this.getManagedBean().setEvalStatusComp(true);
-					log.info("Helloooo");
-					break;
-				}
-				if (null != newChecklist && newChecklist.getPmEvalStatus().getStatusId() == 60451) {
-					this.getManagedBean().setEvalStatusComp(false);
-				}
-				
 			}
 
 			successMessage(MessageConst.INFO_700004,
