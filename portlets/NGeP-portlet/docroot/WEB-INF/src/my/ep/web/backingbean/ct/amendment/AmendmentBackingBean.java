@@ -4049,7 +4049,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+//			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+			ctCommitteeMembers = getFilteredCommitteeMembers(); //#29403
 		} else {
 			ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 		}
@@ -4236,7 +4237,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//26753 - start
 		List<CtCommitteeMember> ctCommitteeMembers = null;
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) {
-			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+//			ctCommitteeMembers = getManagedBean().getUpdatedCommitteeMembers();
+			ctCommitteeMembers = getFilteredCommitteeMembers(); //#29403
 		} else {
 			ctCommitteeMembers = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
 		}
