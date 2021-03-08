@@ -34,7 +34,7 @@
 			<ac:paginator for="tableAgencyDetails" />
 			<p:ajax event="rowSelect" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
-				update="@([id$=agencyDeliveryAddress],[id$=delBtn])" />
+				update="@([id$=agencyDeliveryAddress],[id$=delBtn])" /> 
 
 			<p:column style="width:5px;"
 				rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
