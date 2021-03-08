@@ -604,6 +604,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmEmployee[] selectedEmployees;
 	private SmEmployee selectedEmployee;
 	// 29379 - Site Visit Grouping Enhancement -28775 END
+	
+	//29727
+	private String deleteBranchMsg;
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4367,6 +4370,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
 		this.displayBranches = displayBranches;
+	}
+
+	public String getDeleteBranchMsg() {
+		return deleteBranchMsg;
+	}
+
+	public void setDeleteBranchMsg(String deleteBranchMsg) {
+		this.deleteBranchMsg = deleteBranchMsg;
 	}
 
 }
