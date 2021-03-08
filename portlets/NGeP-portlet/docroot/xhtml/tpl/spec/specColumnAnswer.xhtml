@@ -198,7 +198,7 @@
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or !isSqSpec and tplSpecAnswer.offer ne null and tplSpecAnswer.offer and !isZonal}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
