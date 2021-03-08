@@ -22,19 +22,19 @@
 			value="#{lbl['lbl.ct.instruction.select.agency']}" escape="false" />
 		<br />
 		<br />		
-		 <p:remoteCommand name="onload" action="#{ctBackingBean.resetAgencyDetails}" autoRun="true" update="tableAgencyDetails"/>
 		<p:dataTable id="tableAgencyDetails" var="agencyData"
-			lazy="true"
+			widgetVar="tableAgencyWidget"
 			editable="true" 
 			editMode="cell"
-			value="#{ctBackingBean.agencyPersistDataModel}"
+			value="#{ctBackingBean.managedBean.contractVer.ctAgencies}"
 			selectionMode="single" rowKey="#{agencyData}"
+			selection="#{ctBackingBean.managedBean.selectedAgency}"
 			rowIndexVar="indexVar"
-			 rows="10">
+			rowStyleClass="#{agencyData.chkStatusPmOrgValidity == false ? 'ui-helper-hidden' : ''}" >
 			<ac:paginator for="tableAgencyDetails" />
 			<p:ajax event="rowSelect" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
-				update="@([id$=agencyDeliveryAddress],[id$=delBtn])" /> 
+				update="@([id$=agencyDeliveryAddress],[id$=delBtn])" />
 
 			<p:column style="width:5px;"
 				rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}">
