@@ -441,6 +441,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private ScQuote scQuoteSession;
 	private Boolean treasuryCircularLinkClickedFlag = null;
 	private Long supplierItemDocId;
+	private boolean isSpecificOrGeneral;
 	// #3761 - end
 	
 	// #29800 - start
@@ -2795,6 +2796,14 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setSupplierItemDocId(Long supplierItemDocId) {
 		this.supplierItemDocId = supplierItemDocId;
 	}
+	
+	public boolean isSpecificOrGeneral() {
+		return isSpecificOrGeneral;
+	}
+
+	public void setSpecificOrGeneral(boolean isSpecificOrGeneral) {
+		this.isSpecificOrGeneral = isSpecificOrGeneral;
+	}
 	// #3761 - end
 
 	// #29800 - start
@@ -2806,5 +2815,4 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
 	}
 	// #29800 - end
-
 }
