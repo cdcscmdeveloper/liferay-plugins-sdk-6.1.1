@@ -9156,9 +9156,9 @@ private void retriveCommitteeRemarksList(){
 			reqDtO.getScQtCommitte().setCommitteeActivities(committeActivities);
 		}
 		//#28784 - start
+		SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
+				.getManagedBean().getPayLoad();
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && this.getManagedBean().getScQt().isDemoRequired()) {
-			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
-					.getManagedBean().getPayLoad();
 			evaluationDataType.setIsPresentationDemo(true);
 			reqDtO.setPayLoad(evaluationDataType);
 		}
@@ -9186,9 +9186,7 @@ private void retriveCommitteeRemarksList(){
 		reqDtO.setCommType(this.getManagedBean().getCommitteeType());
 		reqDtO.setDigiSignData(digiSign);
 		reqDtO.setTaskId(this.getManagedBean().getTaskId());
-		if (!this.getManagedBean().getScQt().isDemoRequired()) {
-			reqDtO.setPayLoad(this.getManagedBean().getPayLoad());
-		}
+		reqDtO.setPayLoad(evaluationDataType);
 		//#28784 - end
 		FacesScopes facesScopes = new FacesScopes();
 		reqDtO.setToken(facesScopes.getBPMAuthenticationCtxToken());
