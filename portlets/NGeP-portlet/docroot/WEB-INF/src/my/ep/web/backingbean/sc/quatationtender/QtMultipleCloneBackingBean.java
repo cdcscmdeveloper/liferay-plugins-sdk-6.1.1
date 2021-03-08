@@ -578,15 +578,16 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	//	scQt.setDecExpectedIntendedPrice(copyScqt.getDecExpectedIntendedPrice());
 		
 		scQt.setZonal(copyScqt.isZonal());
+		ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
+		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+		supplierCriteria.setScQt(scQt);
+		supplierCriteria.setBrandNew(true);
+		supplierCriteria.setLocationLevel(new PmParameter());
+		supplierCriteria.setScQtLocCriteria(null);
+		setUserDetails(supplierCriteria);
 		if(copyScqt.isZonal()){
 			
-			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
-			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
-			supplierCriteria.setScQt(scQt);
-			supplierCriteria.setBrandNew(true);
-			supplierCriteria.setLocationLevel(new PmParameter());
-			supplierCriteria.setScQtLocCriteria(null);
-			setUserDetails(supplierCriteria);
+			
 			
 			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
 			qtZoneCriterias.setBrandNew(true);
@@ -626,9 +627,9 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			}
 			
 			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
-			scQt.setScQtSupplierCriteria(supplierCriteria);
+			
 		}
-		
+		scQt.setScQtSupplierCriteria(supplierCriteria);
 		
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
 		scQt.setQtType(copyScqt.getQtType());
