@@ -26,7 +26,7 @@
 		</tr>
 		
 		<tr align="left">
-			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.txt.business.reg.no')</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.viewSsm.regNo')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$!companyInfo.regNo</td>
 		</tr>
@@ -132,14 +132,14 @@
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.userprofile.name')</th>
 			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.nationality')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.nationality')</th>
 			#end
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.shrHldrInfo.idNo')</th>
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
 			#if($companyInfo.businessType == 'C' || $companyInfo.businessType == 'F' )
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.race')</th>
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.dob')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.person.residentialAdress')</th>
+			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.residentialAddress')</th>
 			#end
 			#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
 			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.ShareholdingAmt')</th>
@@ -169,9 +169,9 @@
 			#else
 				<tr>
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="4" align="center">No Record Found</td>
+		 			<td colspan="4" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#else
-					<td colspan="7" align="center">No Record Found</td>
+					<td colspan="7" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#end
 		 		</tr>
 			#end	
@@ -205,7 +205,7 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="2" align="center">No Record Found</td>
+		 			<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end	
 		
@@ -268,7 +268,7 @@
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.name')</th>
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.identificationtype')</th>
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.person.composition.idenNum')</th>
-			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.person.residentialAdress')</th>
+			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.residentialAddress')</th>
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.viewSsm.person.designation')</th>
 		</tr>
 			#if($personnelInfo != $null && $personnelInfo.size() > 0)
@@ -285,7 +285,7 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="5" align="center">No Record Found</td>
+		 			<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end		
 		</table>
@@ -327,9 +327,9 @@
 			#else
 				<tr>
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-		 			<td colspan="1" align="center">No Record Found</td>
+		 			<td colspan="1" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#else
-					<td colspan="2" align="center">No Record Found</td>
+					<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 					#end
 		 		</tr>
 			#end	
@@ -359,7 +359,7 @@
 				#end
 			#else
 				<tr>
-		 			<td colspan="1" align="center">No Record Found</td>
+		 			<td colspan="1" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 		 		</tr>
 			#end	
 		

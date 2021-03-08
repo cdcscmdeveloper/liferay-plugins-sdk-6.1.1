@@ -28,7 +28,7 @@
 				<h:outputText value="#{person.identificationNo}" />
 			</p:column>
 			
-			<p:column styleClass="column-align-center" headerText="#{lbl['lbl.sm.person.residentialAdress']}">
+			<p:column styleClass="column-align-center" headerText="#{lbl['lbl.sm.viewSsm.residentialAddress']}">
 				<h:outputText
 					rendered="#{not empty person.smPersonnelAddresses[0].smAddress.address1}"
 					value="#{person.smPersonnelAddresses[0].smAddress.address1}"
