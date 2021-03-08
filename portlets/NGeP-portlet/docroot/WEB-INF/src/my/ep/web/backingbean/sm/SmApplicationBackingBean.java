@@ -2252,7 +2252,7 @@ public class SmApplicationBackingBean extends
 		
 		// set Personnel List Count
 		calcPersonnelListCount();
-		updateCategoriesRecordStatus() //#29847
+		updateCategoriesRecordStatus(); //#29847
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
 	}
