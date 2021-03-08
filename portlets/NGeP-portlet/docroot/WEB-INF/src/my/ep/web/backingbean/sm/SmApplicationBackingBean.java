@@ -14956,7 +14956,6 @@ public class SmApplicationBackingBean extends
 					 * delete the branch related to QT been participated (invited
 					 * for briefing or site visit/ submitted proposal)
 					 */
-					
 					pendingQT = mofRegistrationSO
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 					
@@ -14965,8 +14964,9 @@ public class SmApplicationBackingBean extends
 					 * proposal.
 					 */
 					closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
+					
 					/**
-					 * TODO: #29727 FL Module had selected the branch
+					 * #29727 FL Module had selected the branch
 					 * information, then supplier wanted to delete the selected
 					 * branch information at SM Module.
 					 */
@@ -14979,10 +14979,8 @@ public class SmApplicationBackingBean extends
 						allBranchName.setLength(allBranchName.length() - 1);
 					}
 					
-					if(pendingQT == true){
+					if(pendingQT == true || closedQTSubmitProposal == true){
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
-					} else if(closedQTSubmitProposal == true) {
-						RequestContext.getCurrentInstance().execute("closedQTSubmitProposalPopUp.show()");
 					} else if(allBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { allBranchName.toString() });
 					} else {
@@ -15148,6 +15146,7 @@ public class SmApplicationBackingBean extends
 			} else {
 				RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
 			}
+			break;
 		}
 	}
 
@@ -15162,6 +15161,41 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setDisplayBranches(displayBranches);
+		
+		Boolean pendingQT = false;
+		Boolean closedQTSubmitProposal = false;
+		StringBuilder msg = new StringBuilder();
+		
+		switch (getManagedBean().getSmAppl().getApplType()) {
+		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+			if(getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0){
+				IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+						.getServiceObject("sm", IMofRegistrationSO.class);
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+				reqDTO.setSelectedBranch(getManagedBean().getSmAppl().getSmSupplierBranches());
+				pendingQT = mofRegistrationSO
+						.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
+				
+				closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
+				if(pendingQT == true){
+					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
+					msg.append("<br />");
+				}
+				if(closedQTSubmitProposal == true){
+					msg.append("<br />");
+					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal", null));
+				}
+				getManagedBean().setDeleteBranchMsg(msg.toString());
+			}
+				break;
+			default:
+				getManagedBean().setDeleteBranchMsg("");
+				break;
+		}
 	}
 	// END #29727
 	
