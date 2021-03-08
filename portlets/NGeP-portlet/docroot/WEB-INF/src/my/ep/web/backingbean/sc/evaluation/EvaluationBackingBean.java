@@ -2651,6 +2651,7 @@ public void saveComplianceSample() {
 		}
 
 	}
+	
 
 	/**
 	 * Retrieve One Tier With Technical Financial Summary.generate summary for
@@ -9154,6 +9155,13 @@ private void retriveCommitteeRemarksList(){
 			}
 			reqDtO.getScQtCommitte().setCommitteeActivities(committeActivities);
 		}
+		//#28784 - start
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && this.getManagedBean().getScQt().isDemoRequired()) {
+			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) this
+					.getManagedBean().getPayLoad();
+			evaluationDataType.setIsPresentationDemo(true);
+		}
+		//#28784 - end
 		reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
 		ScQt scQt = this.getManagedBean().getScQt();
 		EvaluationReqDTO endorsmentRemarks=committeeRemarksSave();
