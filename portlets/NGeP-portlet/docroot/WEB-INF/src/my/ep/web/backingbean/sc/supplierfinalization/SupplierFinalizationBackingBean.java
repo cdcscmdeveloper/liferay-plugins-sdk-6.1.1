@@ -7108,6 +7108,8 @@ return	remarksNotFound;
 					if (CollectionUtils.isNotEmpty(cachedSuppliersByItem)) {
 						for (QtEvaluationResultDtlBean cachedSupplier 
 														: cachedSuppliersByItem) {
+							//#30492 - start
+							intendedPrice = null;
 							if (cachedSupplier.isAwarded()) {
 								calculateOfferedPrice(cachedSupplier, item);
 								
@@ -7126,6 +7128,7 @@ return	remarksNotFound;
 								
 								break;
 							}
+							//#30492 - end
 						}
 					}
 				}
@@ -7146,9 +7149,12 @@ return	remarksNotFound;
 								= getManagedBean().getQualifiedSuppliersCache().get(mapKey);
 						
 						if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
+							//#30492 - start
+							intendedPrice = null;
 							for (QtEvaluationResultDtlBean evalResultDtlBean 
 														   : cachedSuppliers) {
 								if (evalResultDtlBean.isAwarded()) {
+									intendedPrice = null;
 									if (evalResultDtlBean.getBidRank() != null) {
 										calculateBidPrice(items, evalResultDtlBean);
 										intendedPrice = evalResultDtlBean.getBidPrice();
@@ -7159,9 +7165,14 @@ return	remarksNotFound;
 									break;
 								}
 							}
-							totalIntendedPrice = totalIntendedPrice.add(intendedPrice);
-							totalIntendedPrice = totalIntendedPrice.setScale(2,
-													BigDecimal.ROUND_HALF_EVEN);
+							
+							if (intendedPrice != null) {
+								totalIntendedPrice = totalIntendedPrice.add(intendedPrice);
+								totalIntendedPrice = totalIntendedPrice.setScale(2,
+														BigDecimal.ROUND_HALF_EVEN);
+							}
+							
+							//#30492 - end
 						}
 					}
 				}
