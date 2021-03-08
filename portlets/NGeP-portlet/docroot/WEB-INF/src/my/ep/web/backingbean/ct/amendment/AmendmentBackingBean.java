@@ -2570,26 +2570,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if ((getManagedBean().isSignUpdateDecision() || getManagedBean().isSignOffDecision()) 
 						&& outputValue.equalsIgnoreCase("DCN")) {
 					getManagedBean().setConfirmMeeting(true);
-					//#29403 start
-					if (getManagedBean().isPbConfirmMeeting() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 3);
-					}else if (getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 2);
-					}
-
-					else if (!getManagedBean().isPbConfirmMeeting() && !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
-						getManagedBean().setSelectedTabIndex(index + 1);
-					}
-					else if (!getManagedBean().isPbConfirmMeeting() && (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-							&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq()
-							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()
-							&& !ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-									ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
+					if(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
+						index++;
+					if (getManagedBean().isPbConfirmMeeting()) {
 						getManagedBean().setSelectedTabIndex(index + 2);
 					} else {
 						getManagedBean().setSelectedTabIndex(index + 1);
 					}
-					//#29403	
 				}
 				if (isApproverSetting() && !getManagedBean().isPrepareLOA() && outputValue.equalsIgnoreCase("SE") 
 						&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
