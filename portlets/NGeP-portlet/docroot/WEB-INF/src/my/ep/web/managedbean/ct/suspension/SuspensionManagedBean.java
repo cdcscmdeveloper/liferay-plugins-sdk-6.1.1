@@ -674,7 +674,9 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 				
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-				
+				System.out.println("AgencyPersistDataModel: owner profile id "+contractVer
+										.getCtContract().getOwnerOrgProfile()
+										.getOrgProfileId()+" contractver id : "+contractVerId);
 				/*searchBean.getDataFilterBeans().clear();*/
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("orgProfile.orgProfileId",
