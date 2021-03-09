@@ -102,6 +102,17 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		SdoReviewResDTO resDTO = reqSO.retrieveApplById(reqDTO);
 		this.getManagedBean().setSmAppl(resDTO.getSmAppl());
 		
+		//#28807 - START
+		log.info("#28807 supp doc total onload -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
+		int filesCount = 0;
+		for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			for(int i=0; i<smApplSupportDoc.getSmApplDocFiles().size(); i++){
+				filesCount+=1;
+			}
+		}
+		log.info("#28807 total sup doc files -> " + filesCount);
+		//#28807 - END
+		
 		// show rejection reason for resubmit application
 		if (getManagedBean().getSmAppl().isResubmit()
 				&& getManagedBean().getSmAppl().getOriginalAppl() != null) {
@@ -521,7 +532,16 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				}
 			});
 			//#30294 - END
-			
+			//#28807 - START
+			log.info("#28807 supp doc total after sort -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
+			int filesCount = 0;
+			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				for(int i=0; i<smApplSupportDoc.getSmApplDocFiles().size(); i++){
+					filesCount+=1;
+				}
+			}
+			log.info("#28807 total sup doc files -> " + filesCount);
+			//#28807 - END
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
 				if (doc.getPmDocument() != null) {

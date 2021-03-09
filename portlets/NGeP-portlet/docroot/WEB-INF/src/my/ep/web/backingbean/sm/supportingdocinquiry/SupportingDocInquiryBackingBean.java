@@ -200,6 +200,16 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			SupportingDocInquiryResDTO resDTO = reqSO.updateInquiry(reqDTO);
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
 			//resDTO.setSuccessful(true);
+			//#28807 - START
+			log.info("#28807 supp doc after supplier response -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
+			int filesCount = 0;
+			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				for(int i=0; i<smApplSupportDoc.getSmApplDocFiles().size(); i++){
+					filesCount+=1;
+				}
+			}
+			log.info("#28807 total sup doc files -> " + filesCount);
+			//#28807 - END
 			if(resDTO.isSuccessful()){
 				log.info("*****is Success******");
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
