@@ -479,7 +479,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public void setSuspensionAgencyStatusValue(CtAgency agency){
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
-		for(CtAgency ctAgency  : getManagedBean().getAgencyPersistDataModel().getList()) {//Development #29214
+		for(CtAgency ctAgency  : getManagedBean().getContractVer().getCtAgencies()) {
 			if(ctAgency.equals(agency)) {
 				CtAgency latestAgency = getManagedBean().getAgencyMap().get(agency.getOrgProfile().getOrgProfileId());
 				Date effDate = null;
@@ -946,10 +946,5 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		for (CtContractItem ctContractItem : getManagedBean().getContractVer().getCtContractItems()) {
 			getManagedBean().getContractItemList().add(ctContractItem);
 		}*/
-	}
-	
-	//Development #29214
-	public void resetAgencyDetails(){
-		getManagedBean().getAgencyPersistDataModel().reloadData();
 	}
 }
