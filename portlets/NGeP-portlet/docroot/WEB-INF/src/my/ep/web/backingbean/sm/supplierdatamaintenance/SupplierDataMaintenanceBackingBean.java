@@ -805,7 +805,20 @@ public class SupplierDataMaintenanceBackingBean extends
 					SupplierDataMaintenanceResDTO resDTO2 = new SupplierDataMaintenanceResDTO();
 					resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
 							.updateSelectedCategory(supplierDataMaintenanceReqDTO);
+
+					//26238 -  Disciplonary action - 29399 - 30155 - start
+					// Check if got active application for this supplier
+					 activeAppl = SmCommonUtil
+							.getActiveApplBySupplier(getManagedBean().getSmSupplier());
 					
+					 if(activeAppl != null){
+						 supplierDataMaintenanceReqDTO.setSelectedCategories(resDTO.getCategoryList()); 
+							resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
+									.updateSelectedCategoryWIP(supplierDataMaintenanceReqDTO,activeAppl);
+						 
+					 }
+
+						//26238 -  Disciplonary action - 29399- 30155 - end
 					if(!resDTO2.isSuccessful()){
 						throw new EpException("Failed to update Supplier Category imposed Disciplinary Action");
 					}
