@@ -4493,7 +4493,31 @@ public class SmApplicationBackingBean extends
 	 * Delete or remove selected branches from the SmSupplierBranch list of the
 	 * application.
 	 */
+	@SuppressWarnings("unused")
 	public void deleteSelectedBranches() {
+		//29727 START checking pending fl
+		Boolean closedQTSubmitProposal = false;
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		reqDTO.setSelectedBranch(getManagedBean().getSelectedBranches());
+		closedQTSubmitProposal = mofRegistrationSO
+				.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
+		List<String> branchName = mofRegistrationSO.isProgessFLReturnBranchName(reqDTO);
+		StringBuilder allBranchName = new StringBuilder();
+		for (String str : branchName) {
+			allBranchName.append(str + ",");
+		}
+		if (allBranchName.length() > 0) {
+			allBranchName.setLength(allBranchName.length() - 1);
+		}
+		
+		if(allBranchName.length() > 0) {
+			throw new EpException(MessageConst.ERROR_721120, new String[] { allBranchName.toString() });
+		} 
+		//29727 START END
+		
 		// validate if deleted branch been used in bank section
 		if (!SmCommonUtil.isCollectionEmpty(getManagedBean()
 				.getSelectedBranches())) {
