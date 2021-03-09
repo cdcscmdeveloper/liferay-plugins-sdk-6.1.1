@@ -3125,6 +3125,11 @@ public class SmCommonUtil {
 			if (softcertRequest != null
 					&& softcertRequest.getPmDigiCert() != null
 					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
+				// #29990 - start
+				if (softcertRequest.getPmDigiCert().getValidTo().before(new Date())) {
+					retVal = true;
+				}
+				/*
 				Calendar renewDate = Calendar.getInstance();
 				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
 				renewDate.add(Calendar.MONTH, -SmServiceLookup.getSmRuleSO()
@@ -3134,6 +3139,8 @@ public class SmCommonUtil {
 						renewDate.getTime())) {
 					retVal = true;
 				}
+				*/
+				// #29990 - end
 			}
 
 		}
