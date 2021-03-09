@@ -342,6 +342,8 @@ public class ReportConst implements Serializable{
 	public static final String FL_NGEP_DEBIT_NOTE = "FL_NGEP_DEBIT_NOTE.jsp";
 	public static final String FL_NGEP_COGSTR = "FL_NGEP_COGSTR.jsp";
 	public static final String FL_NGEP_STOP_DELIVERY = "FL_NGEP_SDI.jsp";
+	public static final String FL_NGEP_PURCHASE_REQUEST = "FL_NGEP_PURCHASE_REQUEST.jsp";
+	public static final String FL_NGEP_CONTRACT_REQUEST = "FL_NGEP_CONTRACT_REQUEST.jsp";
 
 	// FL Module reports end
 	// SM Module report start
