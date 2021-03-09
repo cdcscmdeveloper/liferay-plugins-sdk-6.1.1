@@ -4536,7 +4536,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			try {
 				// #30451-Start.
 				boolean isBidding = false;
-				if (isQTMaintenanceScreen() && ParameterConst.DOCTYPE_BIDDING.equals(qtnTenderSearchBean.getDocType())) {
+				if ((isQTMaintenanceScreen() || isQTSearchScreen())&& ParameterConst.DOCTYPE_BIDDING.equals(qtnTenderSearchBean.getDocType())) {
 					isBidding = true;
 					qtnTenderSearchBean.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
 				}
@@ -8308,7 +8308,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			statusList = getStatusDropdownValuesBySearchBean(moduleCode,
 					docType, searchBean);
 		// #30451-Start.
-		} else if (isQTMaintenanceScreen() && docType.equals(ParameterConst.DOCTYPE_BIDDING)) {
+		} else if ((isQTMaintenanceScreen() || isQTSearchScreen()) && docType.equals(ParameterConst.DOCTYPE_BIDDING)) {
 				SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
 				// Filter By - statusId
 				List<Long> statusIds = new ArrayList<Long>();
