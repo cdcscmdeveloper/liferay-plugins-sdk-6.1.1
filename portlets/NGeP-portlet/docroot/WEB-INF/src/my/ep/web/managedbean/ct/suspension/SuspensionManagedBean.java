@@ -629,7 +629,6 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/	
-}
 	
 	/**
 	 * @return the agencyDataModel
