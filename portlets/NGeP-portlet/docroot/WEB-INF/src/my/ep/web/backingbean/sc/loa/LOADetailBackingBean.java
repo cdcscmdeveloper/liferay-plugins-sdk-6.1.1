@@ -166,6 +166,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -7766,15 +7767,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			setNotAvailabilityStr(MALAY_NA);
 		}
 
-		TemplateSpecReqDTO tplReqDTO = new TemplateSpecReqDTO();
+		setSelectedSupplierOffer(null);
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-		tplReqDTO
-				.setMasterId(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecMasterId());
-		tplReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-		TemplateSpecResDTO tplResDTO = templateSpecSO.retrieveSpecAnswersBySpecMaster(tplReqDTO);
-		if (CollectionUtils.isNotEmpty(tplResDTO.getSpecAnswerList())) {
-			for (TplSpecAnswer tplSpecAnswer : tplResDTO.getSpecAnswerList()) {
+		List<TplSpecAnswer> tplSpecAnswerList = templateSpecSO.findSpecAnswersByQuestion(scLoiLoaItem
+				.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+		if (CollectionUtils.isNotEmpty(tplSpecAnswerList)) {
+			for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
 				if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
 					setSelectedSupplierOffer(tplSpecAnswer.getAnswerRemark());
 				}
@@ -7783,14 +7782,45 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		try {
 			selectedScLoiLoaItem = scLoiLoaItem;
+			getManagedBean().setSelectedItemId(scLoiLoaItem.getLoiLoaItemId());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
 		getManagedBean().setScLoiLoaItemSpecsList(new ArrayList<String>());
 		if ((scLoiLoaItem.getScRequestItem() != null)
-				&& (StringUtils.isNotBlank(scLoiLoaItem.getScRequestItem().getItemDesc()))) {
-			getManagedBean().getScLoiLoaItemSpecsList().add(scLoiLoaItem.getScRequestItem().getItemDesc());
+				&& (StringUtils.isNotBlank(scLoiLoaItem.getScRequestItem().getItemName()))) {
+			// Populate rows under Specifications column
+			List<TplSpecQuestion> tpqSpecList = templateSpecSO.findQuestionsBySpecMasterIdAndParentQuestionId(
+					scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecMasterId(), "S",
+					scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+			if (CollectionUtils.isEmpty(tpqSpecList)) {
+				getManagedBean().getScLoiLoaItemSpecsList().add(scLoiLoaItem.getScRequestItem().getItemDesc());
+			} else {
+				for (TplSpecQuestion tpqSpec : tpqSpecList) {
+					if (StringUtils.isNotBlank(tpqSpec.getClSpecDetail())) {
+						getManagedBean().getScLoiLoaItemSpecsList().add(tpqSpec.getClSpecDetail());
+					}
+				}
+			}
+			// Populate New SUpplier Offered and Justification fields for
+			// selcted item
+			if (MapUtils.isEmpty(getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap())) {
+				getManagedBean().setScRequestItemIdNewSuppOfferAndJustMap(new HashMap<Long, List<String>>());
+			}
+			for (Map.Entry<Long, List<String>> entry : getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap()
+					.entrySet()) {
+				if (entry.getKey() != null
+						&& entry.getKey().compareTo(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) == 0) {
+					List<String> nsoJustList = entry.getValue();
+					getManagedBean().setNewSupplierOffered(
+							StringUtils.isNotBlank(nsoJustList.get(0)) ? nsoJustList.get(0).replace("NSO_",
+									StringUtils.EMPTY) : StringUtils.EMPTY);
+					getManagedBean().setNewSupplierJustification(
+							StringUtils.isNotBlank(nsoJustList.get(1)) ? nsoJustList.get(1).replace("NSOJ_",
+									StringUtils.EMPTY) : StringUtils.EMPTY);
+				}
+			}
 		}
 	}
 
@@ -7843,6 +7873,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void onBackToZoneItemDetailsTab() {
+		onResetNewSupplierOffered();
+		getManagedBean().setNewSupplierJustification(null);
+		getManagedBean().setSelectedItemId(null);
 		getManagedBean().setSelectedTabIndex(2);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -7881,13 +7914,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (StringUtils.isNotEmpty(getManagedBean().getNewSupplierOffered()) && StringUtils.isNotEmpty(getManagedBean().getNewSupplierJustification())) {
 			this.getManagedBean().setScLoiLoaItemAnswerMap(new HashMap<Long, List<TplSpecAnswer>>());
 			for (ScLoiLoaItem each : getManagedBean().getScLoa().getScLoiLoaItems()) {
+				List<TplSpecAnswer> tpaList = getTemplateSpecSO().findSpecAnswersByQuestion(
+						each.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
 				if ((each.getScRequestItem() != null)
-						&& (StringUtils.isNotBlank(each.getScRequestItem().getItemDesc()))
-						&& getManagedBean().getScLoiLoaItemSpecsList().contains(each.getScRequestItem().getItemDesc())) {
+						&& (StringUtils.isNotBlank(each.getScRequestItem().getItemName()))
+						&& getManagedBean().getSelectedItemId().compareTo(each.getLoiLoaItemId()) == 0) {
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setTplSpecAnswerList(new ArrayList<TplSpecAnswer>());
-					List<TplSpecAnswer> tpaList = getTemplateSpecSO().findSpecAnswersByQuestion(
-							each.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
 					List<Long> tpaIdList = new ArrayList<Long>();
 					int oldNewSuppOfferSameCount = 0;
 					List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
@@ -7931,6 +7964,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					List<String> nsoJustList = new ArrayList<String>();
+					nsoJustList.add("NSO_" + getManagedBean().getNewSupplierOffered());
+					nsoJustList.add("NSOJ_" + getManagedBean().getNewSupplierJustification());
+					if (MapUtils.isEmpty(getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap())) {
+						getManagedBean().setScRequestItemIdNewSuppOfferAndJustMap(new HashMap<Long, List<String>>());
+						getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap().put(
+								each.getScRequestItem().getRequestNoteItemId(), nsoJustList);
+					} else {
+						boolean itemFound = false;
+						for (Map.Entry<Long, List<String>> entry : getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap()
+								.entrySet()) {
+							if (entry.getKey() != null
+									&& entry.getKey().compareTo(each.getScRequestItem().getRequestNoteItemId()) == 0) {
+								entry.setValue(nsoJustList);
+								itemFound = true;
+							}
+						}
+						if (!itemFound) {
+							getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap().put(
+									each.getScRequestItem().getRequestNoteItemId(), nsoJustList);
+						}
+					}
 					if (outcome.equalsIgnoreCase("SAVE")) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
@@ -7944,13 +7999,45 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						each.setComplete(true);
 						getManagedBean().setNewSupplierUpdatedFlag(true);
 						getManagedBean().setUpdatedLampiranA3DownloadedFlag(false);
-
-						if (!getManagedBean().isOldNewSuppOfferSameFlag()) {
-							createLampiranA3(each);
-						}
-						onBackToZoneItemDetailsTab();
 					}
+				} else {
+					// Need to populate detauls into
+					// getManagedBean().getScLoiLoaItemAnswerMap()
+					// even if the item does not have new supplier offered.
+					// Otherwise, the Updated Lampiran A3 will not display
+					// the data of items without new supplier offered.
+					List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
+					for (TplSpecAnswer tpa : tpaList) {
+						try {
+							// POPULATE tpaClone GOES HERE
+							TplSpecAnswer tpaClone = new TplSpecAnswer();
+							tpaClone = populateTplSpecAnswerClone(tpa, each.getScRequestItem().getTplSpecQuestion(),
+									tpaClone);
+							if (outcome.equalsIgnoreCase("COMPLETE")) {
+								for (Map.Entry<Long, List<String>> entry : this.getManagedBean()
+										.getScRequestItemIdNewSuppOfferAndJustMap().entrySet()) {
+									if (entry.getKey().compareTo(each.getLoiLoaItemId()) == 0) {
+										if (StringUtils.isNotBlank(entry.getValue().get(0))) {
+											tpaClone.setNewSupplierOffer(entry.getValue().get(0)
+													.replace("NSO_", StringUtils.EMPTY));
+										}
+									}
+								}
+							}
+							// END
+							clonedAnswerList.add(tpaClone);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					// Put into scLoiLoaItemAnswerMap for use in generating
+					// updated Lampiran A3 later
+					this.getManagedBean().getScLoiLoaItemAnswerMap().put(each.getLoiLoaItemId(), clonedAnswerList);
 				}
+			}
+			if (outcome.equalsIgnoreCase("COMPLETE")) {
+				createLampiranA3(null);
+				onBackToZoneItemDetailsTab();
 			}
 		}
 	}
@@ -8041,13 +8128,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	public void createLampiranA3(ScLoiLoaItem scLoiLoaItem) {
 		removeUnwantedLampiranA3Report(2);
+		FacesScopes facesScopes = new FacesScopes();
 		ScLoaReport lampiranA3 = getQtAwardSO().createLampiranA3(
 				getManagedBean().getScLoa(),
 				populateLabelLampiranA3(
 						" "
 								+ new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(DateUtils
 										.getCurrentDate()) + " ",
-						SmCommonUtil.getUserByUserId(getManagedBean().getScLoa().getCreatedBy()).getUserName()));
+						SmCommonUtil.getUserByUserId(facesScopes.getUserSessionBean().getUserId()).getUserName()));
 		try {
 			StringBuilder filename = new StringBuilder();
 			filename.append(lampiranA3.getTitle());
@@ -8115,14 +8203,45 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Justificatio date stamp
 		context.put("dateStamp", DateUtils.getLocalizeDate(DateUtils.getCurrentDate(), myLocale));
-		// new supplier name
-		context.put("newSupplierName", getManagedBean().getNewSupplierOffered());
 		// scloiloa items
+		List<ScLoiLoaItem> scLoiLoaItemCloneList = new ArrayList<>();
 		for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+			BigDecimal clUomDay = BigDecimal.valueOf(123);
+			BigDecimal clUomMonth = BigDecimal.valueOf(456);
+			ScLoiLoaItem itemClone = (ScLoiLoaItem) scLoiLoaItem.cloneEntity();
+			List<TplSpecAnswer> tpaCloneList = new ArrayList<>();
+			for (Map.Entry<Long, List<TplSpecAnswer>> entry : getManagedBean().getScLoiLoaItemAnswerMap().entrySet()) {
+				if (entry.getKey().compareTo(scLoiLoaItem.getLoiLoaItemId()) == 0) {
+					List<String> nsoJusList = getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap().get(
+							scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
+					for (TplSpecAnswer tpa : entry.getValue()) {
+						TplSpecAnswer tpac = (TplSpecAnswer) tpa.cloneEntity();
+						if (CollectionUtils.isNotEmpty(nsoJusList)) {
+							tpac.setNewSupplierOffer(nsoJusList.get(0).replace("NSO_", StringUtils.EMPTY));
+						} else {
+							if (StringUtils.isNotBlank(tpa.getNewSupplierOffer())) {
+								tpac.setNewSupplierOffer(tpa.getNewSupplierOffer());
+							}
+						}
+						tpaCloneList.add(tpac);
+					}
+				}
+			}
+			itemClone.setScRequestItem((ScRequestItem) scLoiLoaItem.getScRequestItem().cloneEntity());
+			itemClone.getScRequestItem().setTplSpecQuestion(
+					(TplSpecQuestion) scLoiLoaItem.getScRequestItem().getTplSpecQuestion().cloneEntity());
+			itemClone.setTplSpecAnswerList(tpaCloneList);
+			itemClone.setLoaSpecJustification(scLoiLoaItem.getLoaSpecJustification());
+			itemClone.getScRequestItem().getTplSpecQuestion().setClUomPerDay(clUomDay);
+			itemClone.getScRequestItem().getTplSpecQuestion().setClUomPerMonth(clUomMonth);
+			clUomDay = clUomDay.add(BigDecimal.valueOf(10));
+			clUomMonth = clUomMonth.add(BigDecimal.valueOf(10));
+			scLoiLoaItemCloneList.add(itemClone);
+		}
+		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
 			for (Map.Entry<Long, List<TplSpecAnswer>> entry : this.getManagedBean().getScLoiLoaItemAnswerMap()
 					.entrySet()) {
 				if (entry.getKey().compareTo(scLoiLoaItem.getLoiLoaItemId()) == 0) {
-					scLoiLoaItem.setTplSpecAnswerList(entry.getValue());
 					// populate Jenis Pemenuhan and Tempoh (Bulan) columns
 					context.put("jenisPemenuhan", scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
 							.getClFulfilmentTypeCode() != null ? getParameterDescForVelocityReport(scLoiLoaItem
@@ -8132,10 +8251,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() != null ? scLoiLoaItem
 									.getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString()
 									: StringUtils.EMPTY);
+					context.put("bilUnitUkuranSehari", scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getClUomPerDay() != null ? scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getClUomPerDay().toString() : defaultValue);
+					context.put("bilUnitUkuranSebulan", scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getClUomPerMonth() != null ? scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+							.getClUomPerMonth().toString() : defaultValue);
 				}
 			}
 		}
-		context.put("itemsList", scLoa.getScLoiLoaItems());
+		context.put("itemsList", scLoiLoaItemCloneList);
 		
 		if (scQt != null
 				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
