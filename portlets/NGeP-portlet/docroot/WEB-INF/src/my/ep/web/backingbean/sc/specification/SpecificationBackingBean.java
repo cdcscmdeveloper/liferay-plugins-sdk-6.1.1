@@ -705,7 +705,9 @@ public class SpecificationBackingBean extends
 			retriveFinancialCheckList();
 		}
 		// retriveFinancialScoring();
-
+		//#25138 Reendorsed - set max score for wip data - start 
+		checkSpecZoneQtyMaxScore();
+		//#25138 Reendorsed - set max score for wip data - end
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
 			isFinancialSpec(financialCheckList);
 			for (ScQtCheckList checkList : financialCheckList) {
@@ -19279,4 +19281,66 @@ if(null!=allTechnicalChecklist){
 		}
 		return null;
 	}
+	
+	//#25138 Reendorsed - start
+	/**
+	 * To save total max score after accumulated from TplSpecQuestion 
+	 * max_score based on zonal for wip data
+	 * 
+	 * 
+	 *            
+	 */
+	public void checkSpecZoneQtyMaxScore() {
+
+		ITemplateSpecSO templateSpecSo = null;
+		try {
+			
+			templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+			retriveSpecQuestion();
+			boolean maxscore = false;
+			for(TplSpecZoneDtl zone : this.getManagedBean().getTemplateSpecZoneDtls()){
+				System.out.println("zoneID--------->"+zone.getZoneName());
+				for(TplSpecQuestion specQuestion : this.getManagedBean().getSpecQuestionList()){
+					System.out.println("specquestionID====>"+specQuestion.getSpecQuestionId());
+					
+					TemplateSpecReqDTO reqScoreDto = new TemplateSpecReqDTO();
+					TemplateSpecResDTO resScoreDto = new TemplateSpecResDTO();
+					reqScoreDto.setSpecQuestionId(specQuestion.getSpecQuestionId());
+					reqScoreDto.setSpecZoneId(zone.getSpecZoneId());
+					resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
+					
+					if(resScoreDto.getMaxScore()==null){
+						maxscore = true;
+						
+						if (!resScoreDto.getSpecZoneQty().isEmpty()) {
+							for (TplSpecZoneQty specZoneQty : resScoreDto.getSpecZoneQty()) {
+								System.out.println("specqtyId==="+specZoneQty.getSpecZoneQtyId());
+								if(null != specZoneQty.getQty() && specZoneQty.getQty().equals(new BigDecimal(0))){
+									specZoneQty.setMaxScore(new BigDecimal(0.00));
+									
+								}else{
+									specZoneQty.setMaxScore(specQuestion.getMaxScore());
+								}
+								TemplateSpecReqDTO reqDto = new TemplateSpecReqDTO();
+								TemplateSpecResDTO resDto = new TemplateSpecResDTO();
+								reqDto.setSpecZoneQty(specZoneQty);
+								reqDto.setTotalMaxScore(specZoneQty.getMaxScore());
+								resDto = templateSpecSo.saveMaxScoreBySpecZoneQtyId(reqDto);
+							
+							}
+						}
+ 						
+					}
+					
+				}
+				
+			}
+			
+		} finally {
+			templateSpecSo = null;
+		}
+
+	}
+	//#25138 Reendorsed - end
 }
