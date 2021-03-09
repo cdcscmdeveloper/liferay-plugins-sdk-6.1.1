@@ -2557,6 +2557,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						
 					}
 				}
+			// #30451-Start.
+			} else if (isBidding) {
+				List<Long> statusIds = new ArrayList<Long>();
+				statusIds.add(QTStatusConst.SF_PENDING_SCHEDULE_BIDDING);
+				statusIds.add(QTStatusConst.SF_PENDING_BIDDING);
+				statusIds.add(QTStatusConst.SF_PENDING_BIDDING_ESCALATION);
+				SearchMultiFilterBean statusBean = new SearchMultiFilterBean(
+						new SearchFilterBean(
+								"scQtStatus.pmStatus.statusId",
+								SearchOperator.OPERATOR_IN.value(),
+								statusIds,
+								JoinType.LEFT), 
+						new SearchFilterBean(
+								"scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								true,
+								JoinType.LEFT));
+				qtSearchBean.getDataFilterBeans().add(statusBean);
+			// #30451-End.
 			}
 			
 			

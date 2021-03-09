@@ -443,8 +443,12 @@ public class SupplierFinalizationBackingBean extends
 		//#17376-start
 		if(isQTMaintenanceScreen()){
 			if(null==dataType.getCommitteeType() || StringUtils.isEmpty(dataType.getCommitteeType()) || StringUtils.isBlank(dataType.getCommitteeType())){ //17376-165
-				dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
-				this.getManagedBean().setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+				// #30451-Start.
+				if (null != this.getManagedBean().getScQt().getFinalizationCommitte()) {
+					dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+					this.getManagedBean().setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+				}
+				// #30451-End.
 				loadPreparationTabDetails();
 				
 			} //17376-165
