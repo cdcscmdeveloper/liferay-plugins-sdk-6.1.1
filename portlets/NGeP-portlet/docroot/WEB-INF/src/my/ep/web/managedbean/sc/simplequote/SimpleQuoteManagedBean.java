@@ -2806,5 +2806,4 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
 	}
 	// #29800 - end
-
 }
