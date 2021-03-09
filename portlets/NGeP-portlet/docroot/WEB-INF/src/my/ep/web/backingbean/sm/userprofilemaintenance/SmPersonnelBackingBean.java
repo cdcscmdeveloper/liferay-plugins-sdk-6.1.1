@@ -3349,5 +3349,22 @@ public class SmPersonnelBackingBean extends
 	}
 	//end - #30053
 	// 9569 end
+	
+	//START 30053
+	public boolean disableRadio(SmPersonnel personnel){
+		boolean disableRadio  = false;
+		try{
+			if(personnel.getSmAppl()!= null && SupplierManagementConst.SUPP_TYPE_CONSULTANT.equalsIgnoreCase(personnel.getSmAppl().getSupplierType())){
+				disableRadio = false;
+			}else if(RoleCode.CM_USER.value().equals(personnel.getEpRole()) || (personnel.getSoftcertFlg() != 0 && personnel.getSoftcertFlg()!= 1)){
+				disableRadio = true;
+			}
+		}catch(Exception e){
+			log.info(e.getMessage());
+		}
+		return disableRadio;
+	}
+	//END 30053
+	
 
 }

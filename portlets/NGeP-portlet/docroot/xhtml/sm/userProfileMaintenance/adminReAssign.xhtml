@@ -37,8 +37,8 @@
 				value="#{smPersonnelBackingBean.managedBean.smPersonnelList}" selection="#{smPersonnelBackingBean.managedBean.selectedPersonnelToReassign}"
 				var="personnel" rowKey="#{personnel}" rowIndexVar="index" rows="10">
 				<ac:paginator for="smPersonnelDataModelId" />
-				
-				<p:column selectionMode="single" disabledSelection="#{personnel.epRole eq 'CM_USER' or (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)}" />
+				<!-- 30053 personnel.epRole eq 'CM_USER' or (personnel.softcertFlg ne 0 and personnel.softcertFlg ne 1)-->
+				<p:column selectionMode="single" disabledSelection="#{smPersonnelBackingBean.disableRadio(personnel)}" />
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
 					<p:outputPanel rendered="#{smPersonnelBackingBean.showInfo}">
