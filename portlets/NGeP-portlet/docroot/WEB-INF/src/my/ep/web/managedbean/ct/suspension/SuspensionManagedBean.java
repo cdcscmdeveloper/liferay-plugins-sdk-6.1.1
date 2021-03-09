@@ -5,7 +5,6 @@ package my.ep.web.managedbean.ct.suspension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +20,11 @@ import org.primefaces.model.DualListModel;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.factory.EpLogger;
@@ -39,14 +36,13 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.type.aut.SearchCondition;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -89,10 +85,15 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
+	
+	//#28854 - start
+	private List<String> itemSpecification;
+	private String newOfferSpec;
+	private String supplierOffer;
+	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
+	//#28854 - end	
 
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
-
-private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDataModel();
 
      
 	 private class SuspensionProductListingPagingDataModel extends PagingDataModel<CtContractItem> {
@@ -589,87 +590,36 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 		//return SuspensionProductListingPagingDataModel;
 	}
 	
-	/**
-	 * @return the agencyDataModel
-	 */
-	public IPagingDataModel<CtAgency> getAgencyPersistDataModel() {
-		return agencyPersistDataModel;
+	/* #28854 start*/
+	public String getNewOfferSpec() {
+		return newOfferSpec;
 	}
 
-	/**
-	 * @param agencyDataModel the agencyDataModel to set
-	 */
-	public void setAgencyPersistDataModel(IPagingDataModel<CtAgency> agencyPersistDataModel) {
-		this.agencyPersistDataModel = agencyPersistDataModel;
+	public void setNewOfferSpec(String newOfferSpec) {
+		this.newOfferSpec = newOfferSpec;
 	}
 
-	/**
-	 * Pagination for available agency search list
-	 */
-	private class AgencyPersistDataModel extends PagingDataModel<CtAgency> {
-		private static final long serialVersionUID = 1L;
-
-		public AgencyPersistDataModel() {
-			super("tableAgencyDetails", false);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
-		 * .biz.bean.search.ISearchBean)
-		 */
-		@Override
-		public ISearchResultBean<CtAgency> pageChangeListener(ISearchBean<CtAgency> searchBean) {			
-			try {
-				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				ContractReqDTO reqDTO = new ContractReqDTO();
-				
-				Date currentDate = DateUtils.getCurrentDateWithoutTime();
-				ContractBackingBean contractBb=new ContractBackingBean();
-				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				
-				Long contractVerId=null;
-				contractVerId = contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-				
-				/*searchBean.getDataFilterBeans().clear();*/
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("orgProfile.orgProfileId",
-								SearchOperator.OPERATOR_NOT_EQUALS.value(), contractVer
-										.getCtContract().getOwnerOrgProfile()
-										.getOrgProfileId()));
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("ctContractVer.contractVerId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								contractVerId));
-				
-				
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("orgProfile.pmOrgValidity.effDate",
-								SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
-				searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(new SearchFilterBean(
-										"orgProfile.pmOrgValidity.expDate",
-										SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-										currentDate), new SearchFilterBean(
-												"orgProfile.pmOrgValidity.expDate",
-												SearchOperator.OPERATOR_IS_NULL.value(), null,
-												SearchCondition.CONDITION_OR.value())));
-			
-				reqDTO.setContractVerId(contractVerId);
-				reqDTO.setCtContractVer(contractVer);
-				reqDTO.setCtAgencySearchBean(searchBean);
-				ContractResDTO resDTO = contractSO.searchContractAgencyPagination(reqDTO);
-				if (resDTO.isSuccessful()) {
-					return resDTO.getCtAgencyResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
+	public String getSupplierOffer() {
+		return supplierOffer;
 	}
-	
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}	
+
+	public List<String> getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(List<String> itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
+		return scRequestItemSpecOfferList;
+	}
+	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
+		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
+	}	
+	/* #28854 end*/	
 }
