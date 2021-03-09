@@ -84,7 +84,7 @@
 				</f:facet>
 				
 				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}"
-				    style="width:264px;" rendered="#{!ctBackingBean.managedBean.viewContract
+				    style="width:95%;" rendered="#{!ctBackingBean.managedBean.viewContract
 				    and ctBackingBean.managedBean.ctContractAmount.bondReq}" >
 					   <f:selectItems value="#{ctBackingBean.retrieveFinancialOrgList()}" />
 					   <p:ajax  process="@this"></p:ajax>
