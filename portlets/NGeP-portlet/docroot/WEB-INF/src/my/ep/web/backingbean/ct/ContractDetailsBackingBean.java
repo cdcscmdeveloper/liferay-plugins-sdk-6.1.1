@@ -17,7 +17,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -140,7 +139,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 //	/*#21387-basri start*/
 	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml?faces-redirect=true";/*#21387-basri*/
 //	/*#21387-basri end*/
-
+	//29551 - start
+	private static final String DEDUCTION_CLAUSE_PAGE = "/xhtml/fl/deductionsearch/search.xhtml?faces-redirect=true";
+	//29551 - end
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
 	private CtAgency selectedRecommendedAgency;
@@ -3649,4 +3650,103 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	}
 	//#25406 - End
+	//29551 - start
+	/**
+	 * The method used to retrieve proper deduction clause reference portlet name from property file.
+	 * 
+	 * @return portletTitle  the name of the portlet
+	 */
+	public String getFlDeductionClausePortletTitle() {
+		return ResourceBundleUtils.getMessage("lbl.fl.deduction.clause.ref.title",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+	/**
+	 * The method used for searching the Deduction Clause Reference of contract.
+	 * A warning message will display on screen when searching
+	 * with empty search criteria.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void searchContractDeductionClause() throws Exception {
+		getManagedBean().getContractFlDataModel().reloadData();		
+	}
+
+	/**
+	 * The method used to clear the previous viewed information before
+	 * rendering the Deduction Clause Reference screen.
+	 * @throws Exception 
+	 */
+	public void preRenderDeductionClause() {
+		renewSesionObject();
+		Calendar now = Calendar.getInstance();
+		getManagedBean().setSearchFinancialYear(now.get(Calendar.YEAR));//set current year as default
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, DEDUCTION_CLAUSE_PAGE);
+	}
+	
+	/**
+	 * The method used to reset the search criteria for the Deduction Clause Reference screen.
+	 */
+	public void searchContractDeductionClauseReset() {
+		this.getManagedBean().setSearchContractNo(null);
+		this.getManagedBean().setSearchContractName(null);
+		this.getManagedBean().setSearchCtStartDate(null);	
+		this.getManagedBean().setSearchCtEndDate(null);	
+		this.getManagedBean().setSearchCtPhysicalNo(null);	
+		this.getManagedBean().setSearchLoaNo(null);
+		this.getManagedBean().setSearchPurchaseOrderNo(null);
+		this.getManagedBean().setSearchContractStatus(0);//ALL default
+		Calendar now = Calendar.getInstance();
+		this.getManagedBean().setSearchFinancialYear(now.get(Calendar.YEAR));
+		this.getManagedBean().setSearchMinistryProfile(null);
+		this.getManagedBean().setSearchPtjGroupProfile(null);
+		this.getManagedBean().setSearchPtjProfile(null);
+	}
+	/**
+	 * Reset selected deduction on row toggle.
+	 * 
+	 */
+	public void onRowToggle() {
+		getManagedBean().setSelectedDeduction(null);
+    }
+	/**
+	 * Get the user current language
+	 * @return languageCode
+	 */
+	public String getLanguageCode() {
+		 return new FacesScopes().getUserLocale().getLanguage();
+	}
+	
+	/**
+	 * Get year drop down
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getYearDropDownOpt() {
+		SelectItem[] items = null;
+		try {
+			Calendar now = Calendar.getInstance();
+			int currentYear = now.get(Calendar.YEAR);
+			int yearRange = CommonConstants.YEAR_RANGE;
+			int yearDiff = currentYear - yearRange;
+
+			items = new SelectItem[yearRange + 1];
+			int i = 0;
+
+			for (int y = currentYear; y >= yearDiff; y--) {
+				items[i++] = new SelectItem(y, String.valueOf(y));
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
+
+	}	
+	//29551 - end
 }
