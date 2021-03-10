@@ -33,6 +33,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -115,6 +116,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private boolean trackingDiarySearch;
 	private PmOrgProfile selectedPtj;
 	private PmOrgProfile oldMinistryProfile;
+	//29551 - start
+	private int searchFinancialYear;
+	private String searchPurchaseOrderNo;
+	private IPagingDataModel<VCtContract> contractFlDataModel = new ContractFlPagingDataModel();
+	private CtDeduction selectedDeduction;
+	//29551 - end
 
 	/**
 	 * @return the taskName
@@ -1063,4 +1070,200 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setOldMinistryProfile(PmOrgProfile oldMinistryProfile) {
 		this.oldMinistryProfile = oldMinistryProfile;
 	}
+	//29551 - start
+	
+	/**
+	 * Pagination for available contract search list
+	 */
+	private class ContractFlPagingDataModel extends PagingDataModel<VCtContract> {
+		private static final long serialVersionUID = 1L;
+
+		public ContractFlPagingDataModel() {
+			super("contractFlTbl", true);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
+			IContractSO contractSO = null;
+			try {
+				FacesScopes fc = new FacesScopes();
+				if (fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+						|| fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+					// supplier
+					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+					supplierSearchReqDTO.setUserId(fc.getUserSessionBean().getUserId());
+					ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);	
+					SupplierSearchResDTO supplierSearchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+
+					if (supplierSearchResDTO.getResultBean() != null && supplierSearchResDTO.getResultBean().getResultList() != null 
+							&& !supplierSearchResDTO.getResultBean().getResultList().isEmpty()) {
+						List<Long> supplierIdList = new ArrayList<>();
+						for (SmSupplier supplier : supplierSearchResDTO.getResultBean().getResultList()) {
+							supplierIdList.add(supplier.getSupplierId());
+						}
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("SUPPLIER_ID",SearchOperator.OPERATOR_IN.value(), 
+								supplierIdList));
+					}	
+
+
+					if (StringUtils.isNotBlank(getSearchContractNo())) {
+						SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NO",SearchOperator.OPERATOR_LIKE.value(),
+								getSearchContractNo());
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);				
+					}
+					if (StringUtils.isNotBlank(getSearchContractName())) {
+						SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_NAME",SearchOperator.OPERATOR_LIKE.value(),
+								getSearchContractName());
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);				
+					}
+
+					if (getSearchPtjProfile() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchPtjProfile().getOrgProfileId()));
+
+					} else if (getSearchPtjGroupProfile() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_GROUP_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchPtjGroupProfile().getOrgProfileId()));
+					} else if (getSearchMinistryProfile() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("MINISTRY_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
+								getSearchMinistryProfile().getOrgProfileId()));
+					}
+					
+					if (StringUtils.isNotBlank(getSearchLoaNo())) {
+						SearchFilterBean filterBean = new SearchFilterBean("LOA_NO",SearchOperator.OPERATOR_LIKE.value(),
+								getSearchLoaNo());
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);
+					}
+					
+					if (getSearchCtStartDate() != null && getSearchCtEndDate() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("EFF_DATE",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getSearchCtStartDate()));	
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("EXP_DATE",SearchOperator.OPERATOR_LESS_EQUAL.value(), getSearchCtEndDate()));		
+
+					}
+					if (getSearchCtStartDate() != null && getSearchCtEndDate() == null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("EFF_DATE",SearchOperator.OPERATOR_EQUALS.value(), getSearchCtStartDate()));					
+					}
+					if (getSearchCtStartDate() == null && getSearchCtEndDate() != null) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("EXP_DATE",SearchOperator.OPERATOR_EQUALS.value(), getSearchCtEndDate()));	
+					}
+					if (StringUtils.isNotBlank(getSearchCtPhysicalNo())) {
+						SearchFilterBean filterBean = new SearchFilterBean("CONTRACT_PHYSICAL_NO",SearchOperator.OPERATOR_LIKE.value(),
+								getSearchCtPhysicalNo().trim());
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);					
+					}
+				
+					if (getSearchContractStatus() > 0) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("CONTRACT_STATUS", 
+								SearchOperator.OPERATOR_EQUALS.value(), getSearchContractStatus()));
+					}
+					
+					if(StringUtils.isNotBlank(getSearchPurchaseOrderNo())) {
+						SearchFilterBean filterBean = new SearchFilterBean("PURCHASE_ORDER_NO",SearchOperator.OPERATOR_LIKE.value(),
+								getSearchPurchaseOrderNo().trim());
+						filterBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(filterBean);
+					}
+					
+					if(getSearchFinancialYear() > 0) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("FINANCIAL_YEAR", 
+								SearchOperator.OPERATOR_EQUALS.value(), getSearchFinancialYear()));
+					}
+					List<String> paramCodes = new ArrayList<>();
+					paramCodes.add(ParameterConst.CONTRACT_TYPE_MINISTRY);
+					paramCodes.add(ParameterConst.CONTRACT_TYPE_CENTRAL);
+					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_IN.value(),
+							paramCodes);
+					searchBean.getDataFilterBeans().add(filterBean);
+					
+					searchBean.setUseEntityClass(true);
+
+					contractSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+					ContractReqDTO reqDTO = new ContractReqDTO();
+
+					reqDTO.setFromSupplier(true);
+					reqDTO.setvCtContractSearchBean(searchBean);
+					ContractResDTO resDTO = contractSO.searchContractDeductionClause(reqDTO);
+
+					if (resDTO.isSuccessful()) {
+						return resDTO.getvCtContractResultBean();
+					}
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * @return the searchFinancialYear
+	 */
+	public int getSearchFinancialYear() {
+		return searchFinancialYear;
+	}
+
+	/**
+	 * @param searchFinancialYear the searchFinancialYear to set
+	 */
+	public void setSearchFinancialYear(int searchFinancialYear) {
+		this.searchFinancialYear = searchFinancialYear;
+	}
+	
+	/**
+	 * @return the searchPurchaseOrderNo
+	 */
+	public String getSearchPurchaseOrderNo() {
+		return searchPurchaseOrderNo;
+	}
+
+	/**
+	 * @param searchPurchaseOrderNo the searchPurchaseOrderNo to set
+	 */
+	public void setSearchPurchaseOrderNo(String searchPurchaseOrderNo) {
+		this.searchPurchaseOrderNo = searchPurchaseOrderNo;
+	}
+
+	/**
+	 * @return the contractFlDataModel
+	 */
+	public IPagingDataModel<VCtContract> getContractFlDataModel() {
+		return contractFlDataModel;
+	}
+
+	/**
+	 * @param contractFlDataModel the contractFlDataModel to set
+	 */
+	public void setContractFlDataModel(IPagingDataModel<VCtContract> contractFlDataModel) {
+		this.contractFlDataModel = contractFlDataModel;
+	}
+
+	/**
+	 * @return the selectedDeduction
+	 */
+	public CtDeduction getSelectedDeduction() {
+		return selectedDeduction;
+	}
+
+	/**
+	 * @param selectedDeduction the selectedDeduction to set
+	 */
+	public void setSelectedDeduction(CtDeduction selectedDeduction) {
+		this.selectedDeduction = selectedDeduction;
+	}	
+	//29551 - end
 }
