@@ -169,6 +169,10 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private boolean suppInvoiceActive = true;
 	private Long newSupplierUserId;
 	//28221 - end
+	//29551 - start
+	private boolean showDeductionClause;
+	private Long selectedDeductionClauseParent;
+	//29551 - end
 	/**
 	 * Gets the doc type.
 	 *
@@ -1645,5 +1649,34 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 
 
 	//28221 - end
+	//29551 - start
+	/**
+	 * @return the isShowDeductionClause
+	 */
+	public boolean isShowDeductionClause() {
+		return showDeductionClause;
+	}
+
+	/**
+	 * @param showDeductionClause the isShowDeductionClause to set
+	 */
+	public void setShowDeductionClause(boolean showDeductionClause) {
+		this.showDeductionClause = showDeductionClause;
+	}
+
+	/**
+	 * @return the selectedDeductionClauseParent
+	 */
+	public Long getSelectedDeductionClauseParent() {
+		return selectedDeductionClauseParent;
+	}
+
+	/**
+	 * @param selectedDeductionClauseParent the selectedDeductionClauseParent to set
+	 */
+	public void setSelectedDeductionClauseParent(Long selectedDeductionClauseParent) {
+		this.selectedDeductionClauseParent = selectedDeductionClauseParent;
+	}
+	//29551 - end
 
 }
