@@ -8428,8 +8428,7 @@ public class SmApplicationBackingBean extends
 		validateNoChangesBeenMadeToApplication();
 
 		// try {
-		//#28776 - start
-		/*
+
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
@@ -8443,10 +8442,6 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		*/
-		getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-		validateSupportingDocs();
-		//#28776 - end
 		
 		if (!this.getManagedBean().isPoInquiryRespond()) {
 			//26238 -  Disciplonary action - 27748
