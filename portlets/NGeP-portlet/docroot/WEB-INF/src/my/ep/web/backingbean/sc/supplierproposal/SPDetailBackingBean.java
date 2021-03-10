@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -61,6 +62,8 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
@@ -70,6 +73,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -91,6 +95,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -114,6 +119,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
@@ -4230,6 +4236,14 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			if(this.getManagedBean().isFinancialAttchment()){//#28792-start
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
+			
+			//#29729 - Start
+			if(displaySupplierBranchListDeleted()){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_760522, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			//#29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -5866,5 +5880,59 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
     return specZoneDetail;
 }
 //#28785-End
+
+		//29729 - start	
+		public boolean displaySupplierBranchListDeleted(){
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			IQTDetailSO QtDetailsSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			boolean isSupplierBranchListDeleted = false;
+			Long supplierId = this.getManagedBean().getSupplierId();
+			ScQt scQt = this.getManagedBean().getQt();
+		    ScQtSupplierCriteria qtSupplierCriteria = scQt.getScQtSupplierCriteria();
+		    
+		     if(qtSupplierCriteria.isAllState()){
+		    	    SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		    	    suppSearchReqDTO.setSupplierId(supplierId);
+		    		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
+		    		for (SmSupplierBranch supplierBranch : suppSearchResDTO.getSmSupplierBranchList()) {
+						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+							isSupplierBranchListDeleted = true;
+							this.getManagedBean().setSupplierBranchListDeleted(isSupplierBranchListDeleted);
+						}
+		    		}
+		    	
+		     }else{
+		    	 
+		    	    SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		    		suppSearchReqDTO.setSupplierId(supplierId);
+		    		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchReqDTO);
+		    		for (SmSupplierBranch supplierBranch : suppSearchResDTO.getSmSupplierBranchList()) {
+		    			
+						QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			    		tenderReqDTO.setQtdetail(scQt);
+			    		QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
+			    		if(tenderResDTO != null && tenderResDTO.getLocationDetails()!= null){
+			    			for(TplSpecLoc location : tenderResDTO.getLocationDetails()){
+								if(supplierBranch.getSmAddress().getPmState().getStateId() != null && 
+			    						   location.getPmState().getStateId() != null){
+			    					if(supplierBranch.getSmAddress().getPmState().getStateCode().equals(
+			    							location.getPmState().getStateCode())){
+			    						if(supplierBranch.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+				    						isSupplierBranchListDeleted = true;
+				    						this.getManagedBean().setSupplierBranchListDeleted(isSupplierBranchListDeleted);
+			    						}
+			    					}	
+			    				}
+			    			}
+			    		}	
+		    		}
+		     }	
+		     
+		    return isSupplierBranchListDeleted;
+		}
+		//29729 - end
 
 }

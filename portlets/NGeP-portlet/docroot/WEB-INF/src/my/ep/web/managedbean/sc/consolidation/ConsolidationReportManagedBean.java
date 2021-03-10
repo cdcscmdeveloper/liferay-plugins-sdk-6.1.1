@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
@@ -95,6 +96,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	//#21695 End
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
+	private List<SmSupplierBranch> supplierBranchList; //#29729
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -619,5 +621,15 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.isOfferAll = isOfferAll;
 	}
 	//#21695 End
+
+	//#29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+	//#29729 - End
 
 }
