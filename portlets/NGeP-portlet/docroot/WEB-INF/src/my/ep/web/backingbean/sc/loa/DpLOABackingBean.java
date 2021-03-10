@@ -306,9 +306,14 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		//29749 - End
 		
 		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		//#30513 - Start
+		perReqDTO.setRecordStatus(null);
+		//#30513 - End
 		StringBuilder str1 = new StringBuilder();
 		StringBuilder str2 = new StringBuilder();
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		//#30513 - Start (follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier)))
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
+		//#30513 - End
 					
 		List<SmDisciplinaryAction> resultList = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
 		if (resultList != null
@@ -416,7 +421,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 							}						
 						}
 						
-						if(disciplinaryAction.isBlacklistOwner()){						
+						if(disciplinaryAction.isBlacklistOwner()){	
 							if(personnelResDTO != null 
 									&& personnelResDTO.getSmPersonnelList().size() > 0){
 								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
