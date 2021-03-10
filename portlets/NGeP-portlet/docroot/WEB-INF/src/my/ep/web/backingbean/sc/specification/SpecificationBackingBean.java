@@ -705,8 +705,13 @@ public class SpecificationBackingBean extends
 			retriveFinancialCheckList();
 		}
 		// retriveFinancialScoring();
-		//#25138 Reendorsed - set max score for wip data - start 
-		checkSpecZoneQtyMaxScore();
+		//#25138 Reendorsed - set max score for wip data - start
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+				.equalsIgnoreCase(financialCheckList.get(0).getDefinationType()
+						.getParameterCode())){
+			checkSpecZoneQtyMaxScore(financialCheckList.get(0));
+			
+		}
 		//#25138 Reendorsed - set max score for wip data - end
 		if (null != financialCheckList && !financialCheckList.isEmpty()) {
 			isFinancialSpec(financialCheckList);
@@ -2348,6 +2353,11 @@ public class SpecificationBackingBean extends
 								.getOfferPricePackageList());
 						retriveSpecQuestion();
 						if(this.getManagedBean().getQt().isZonal()){
+							//#25138 Reendorsed - set max score for wip data - start
+							if(tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().get(0).getTplSpecZoneDtl() == null){
+								checkSpecZoneQtyMaxScore(tmpCheckList);
+							}
+							//#25138 Reendorsed - set max score for wip data - end
 							populateFinancialSpecDetailsByZone();
 							saveTotalMaxScoreItemZonal(tmpCheckList);
 							if(tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().get(0)
@@ -11100,6 +11110,17 @@ public class SpecificationBackingBean extends
 						.getManagedBean().getFinacialItemScoreSetting());
 				specSO.validateSCScoreSettings(specReqDTO);
 				specSO.validateSpecOfferPrice(specReqDTO);
+				//#25138 Reendorsed - set max score for wip data - start
+				if(this.getManagedBean().getQt().isZonal()){
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(financialScoring1.get(0).getDefinationType()
+									.getParameterCode())){
+						checkSpecZoneQtyMaxScore(financialScoring1.get(0));	
+
+					}
+						
+				}
+				//#25138 Reendorsed - set max score for wip data - end
 				financialWeightageCalculate();
 				financialItemScoreCalculate(this.getManagedBean()
 						.getFinacialItemScoreSetting());
@@ -19284,21 +19305,24 @@ if(null!=allTechnicalChecklist){
 	
 	//#25138 Reendorsed - start
 	/**
-	 * To save total max score after accumulated from TplSpecQuestion 
-	 * max_score based on zonal for wip data
+	 * To check if tplspeczoneqty max score is null, set max score from tplspecquestion  
+	 * Set scqtscoreofferprice tplspeczonedtl
 	 * 
 	 * 
 	 *            
 	 */
-	public void checkSpecZoneQtyMaxScore() {
-
+	public void checkSpecZoneQtyMaxScore(ScQtCheckList checklist) {
+		IQTSpecSO qtSpecSo = null;
 		ITemplateSpecSO templateSpecSo = null;
 		try {
 			
 			templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+			qtSpecSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			retriveSpecQuestion();
-			boolean maxscore = false;
+			boolean isnullmaxscore = false;
+			int count=0;
 			for(TplSpecZoneDtl zone : this.getManagedBean().getTemplateSpecZoneDtls()){
 				System.out.println("zoneID--------->"+zone.getZoneName());
 				for(TplSpecQuestion specQuestion : this.getManagedBean().getSpecQuestionList()){
@@ -19311,7 +19335,7 @@ if(null!=allTechnicalChecklist){
 					resScoreDto = templateSpecSo.retrieveMaxScoreByQuestionIdNZoneId(reqScoreDto);
 					
 					if(resScoreDto.getMaxScore()==null){
-						maxscore = true;
+						isnullmaxscore = true;
 						
 						if (!resScoreDto.getSpecZoneQty().isEmpty()) {
 							for (TplSpecZoneQty specZoneQty : resScoreDto.getSpecZoneQty()) {
@@ -19334,10 +19358,49 @@ if(null!=allTechnicalChecklist){
 					}
 					
 				}
+				if(isnullmaxscore){
+					SpecificationReqDTO specDto = new SpecificationReqDTO();
+					SpecificationResDTO spesDto = new SpecificationResDTO();
+					specDto.setWeightageId(checklist.getQtScoreWeightage().getQtScoreWeightageId());
+					spesDto = qtSpecSo.retrieveQtOfferPriceByQtWeightageId(specDto);
+					if(spesDto.getScQtScoreOfferPrice()!= null){
+						ScQtScoreOfferPrice scQtScoreOfferPrice = spesDto.getScQtScoreOfferPrice();
+						ScQtScoreOfferPrice newScQtScoreOfferPrice = new ScQtScoreOfferPrice();
+						List<ScQtScoreOfferPrice> newScQtScoreOfferPriceList = checklist.getQtScoreWeightage().getScQtScoreOfferPrices();
+						
+						if(count<1){
+							if(newScQtScoreOfferPriceList.get(0).getTplSpecZoneDtl()==null){
+								newScQtScoreOfferPriceList.get(0).setTplSpecZoneDtl(zone);
+								count++;
+							}
+							
+						}else{
+							newScQtScoreOfferPrice.setScQtScoreWeightage(scQtScoreOfferPrice.getScQtScoreWeightage());
+							newScQtScoreOfferPrice.setScoreType(scQtScoreOfferPrice.getScoreType());
+							newScQtScoreOfferPrice.setBelowScore(scQtScoreOfferPrice.getBelowScore());
+							newScQtScoreOfferPrice.setAboveScore(scQtScoreOfferPrice.getAboveScore());
+							newScQtScoreOfferPrice.setFromVariance(scQtScoreOfferPrice.getFromVariance());
+							newScQtScoreOfferPrice.setToVariance(scQtScoreOfferPrice.getToVariance());
+							newScQtScoreOfferPrice.setOfferPriceType(scQtScoreOfferPrice.getOfferPriceType());
+							newScQtScoreOfferPrice.setTplSpecZoneDtl(zone);
+							setUserDetails(newScQtScoreOfferPrice);
+							if(newScQtScoreOfferPrice.getTplSpecZoneDtl().getSpecZoneId()!= newScQtScoreOfferPriceList.get(0).getTplSpecZoneDtl().getSpecZoneId()){
+								newScQtScoreOfferPriceList.add(newScQtScoreOfferPrice);
+							}
+							
+						}	
+					}
+					
+				}
 				
 			}
+			this.getManagedBean().getFinancialScoring().add(0,checklist);
+			System.out.println("newScQtScoreOfferPriceList====="+ checklist.getQtScoreWeightage().getScQtScoreOfferPrices().size());
 			
-		} finally {
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		finally {
 			templateSpecSo = null;
 		}
 
