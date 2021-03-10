@@ -18,6 +18,9 @@
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
 		</c:if>
+		<!-- #29729 Start -->
+		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
+		<!-- #29729 End -->
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
 			<h:outputText styleClass="instruction" value="#{consolidationReportBackingBean.managedBean.scQt.closingDate}">
@@ -90,6 +93,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
+					<!-- #29729 Start -->
+					<p:spacer width="15" height="15"/>
+						<p:commandLink action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"  
+			         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+							<h:outputText value="!" />
+		         		</p:commandLink> 
+		         	<!-- #29729 End -->
 				</p:column>
 	
 				<p:column>
