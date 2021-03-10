@@ -224,6 +224,7 @@
 			<portlet id="flPendingFlListDashBoard" />
 			<portlet id="flReSubmitAp59" />
 			<portlet id="flYearEndProcess" />
+			<portlet id="flDeductionClause" /><!-- 29551  -->
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
