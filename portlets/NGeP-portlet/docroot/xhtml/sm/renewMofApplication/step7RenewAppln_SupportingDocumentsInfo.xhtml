@@ -30,7 +30,6 @@
 							update=":form" style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <p:outputPanel id="supDocPan">
-					<!-- 	#28776 - start
 					<h:panelGroup
 						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
 
@@ -106,10 +105,8 @@
 							</c:otherwise>
 						</c:choose>
 					</h:panelGroup>
-					-->
-					<h:panelGroup id="onSupGroup">
-						<!-- rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}"> -->
-						<!-- #28776 - end -->
+					<h:panelGroup id="onSupGroup"
+						rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
 						<c:choose>
