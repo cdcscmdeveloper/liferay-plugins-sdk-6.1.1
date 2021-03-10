@@ -148,6 +148,8 @@ import my.ep.web.vo.TaxInvoiceVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -1298,9 +1300,16 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 					FlPaymentDeduction  paymentDeduction = iterator.next();
 					if(getManagedBean().getSelectedDeductions().contains(paymentDeduction)){
 						iterator.remove();
+						//29551 - start
+						if(getManagedBean().getSelectedDeductionClauseParent() != null 
+								&& getManagedBean().getSelectedDeductionClauseParent().equals(paymentDeduction.getCtDeduction().getDeductionId())) {
+							getManagedBean().setShowDeductionClause(false);
+						}
+						//29551 - end
 					}
 				}
 			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2631,5 +2640,38 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			return items;
 	}
+	//29551 - start
+	/**
+	 * set selected deduction and show deduction clause table only for single selection only.
+	 * multiple selection will set the selected deduction as null and hide the deduction clause table.
+	 * @param event
+	 */
+	public void onRowSelect(SelectEvent event) {
+		FlPaymentDeduction flDeduction = (FlPaymentDeduction)event.getObject();
+		CtDeduction ctDeduction = flDeduction.getCtDeduction();
+		List<CtDeduction> ctDeductionList = getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions();
+		if(getManagedBean().getSelectedDeductions().size() == 1) {
+			for(CtDeduction ctDeductionTemp: ctDeductionList) {
+				if(ctDeductionTemp.getDeductionId().equals(ctDeduction.getDeductionId())) {
+					getManagedBean().setCtDeductionClauseList(ctDeductionTemp.getCtDeductionClauses());
+					getManagedBean().setShowDeductionClause(true);
+					getManagedBean().setSelectedDeductionClauseParent(ctDeductionTemp.getDeductionId());
+					break;
+				}
+			}
+		} else {
+			getManagedBean().setShowDeductionClause(false);
+			getManagedBean().setSelectedDeductionClauseParent(null);
+		}
+    }
+	/**
+	 * Reset selected deduction and hide deduction clause table
+	 */
+	public void onRowUnselect() {
+		getManagedBean().setSelectedDeductionClauseParent(null);
+		getManagedBean().setShowDeductionClause(false);
+		
+    }
+	//29551 - end
 	
 }
