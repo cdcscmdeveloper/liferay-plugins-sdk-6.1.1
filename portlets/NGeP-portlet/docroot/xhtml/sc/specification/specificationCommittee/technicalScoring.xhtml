@@ -117,8 +117,8 @@
 
 		<h:panelGroup id="addpoints">
 			<table>
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
+				<tr><!-- #28784 Start -->
+					<td style="width: 260px;"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 
 					<td><p:inputText readonly="true" disabled="true"
@@ -149,8 +149,8 @@
 		<table>
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.qt.demoRequired eq 'true'}">
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
+				<tr><!-- #28784 Start -->
+					<td style="width: 260px;"><p:outputLabel
 							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText style="text-align:right" maxlength="3"
@@ -164,9 +164,19 @@
 			</ui:fragment>
 
 			<tr>
-				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.technical']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td style="width: 260px;">					
+				<c:choose>
+					<c:when	test="#{specificationBackingBean.managedBean.demoType eq 'true'}">
+						<p:outputLabel value="#{lbl['lbl.sc.passing.score']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />					
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel rvalue="#{lbl['lbl.sc.spec.technical']}" /> 
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</c:otherwise>
+				</c:choose>
+				<!-- #28784 End -->
+				</td>
 				<td><p:inputText style="text-align:right" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
