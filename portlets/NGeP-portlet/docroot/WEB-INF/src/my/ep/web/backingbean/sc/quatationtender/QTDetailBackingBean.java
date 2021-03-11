@@ -4904,8 +4904,10 @@ public class QTDetailBackingBean extends
 			navigateToViewHistory(committeTabBean.getScQtCommittee(), true);
 		}
 		if(committeTabBean!=null){
-			List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
-			this.getManagedBean().setMemberHistoryList(historyList);
+			if(null!=committeTabBean.getScQtCommittee()){//Bug #29903-start
+				List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean.getScQtCommittee().getScCommittee());
+				this.getManagedBean().setMemberHistoryList(historyList);
+				}//Bug #29903-End
 		}
 		//25037-end
 	}
