@@ -8,13 +8,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.bean.application.NgepApplicationBean;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -23,9 +21,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
@@ -33,19 +29,14 @@ import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
@@ -62,7 +53,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DpLOABackingBean.
  *
@@ -77,7 +67,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 	public static Logger log = EpLogger.getLogger(DpLOABackingBean.class);
 	
 	/** The Flag */
-	private boolean sqExpiredMessageFlag = false;
+	//private boolean sqExpiredMessageFlag = false;
 
 	/**
 	 * Instantiates a new dp loa backing bean.
@@ -265,7 +255,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 					validDate = false;
-					sqExpiredMessageFlag = true;
+					//sqExpiredMessageFlag = true;
 				}
 			}					
 		}							
@@ -306,9 +296,14 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		//29749 - End
 		
 		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		//#30513 - Start
+		perReqDTO.setRecordStatus(null);
+		//#30513 - End
 		StringBuilder str1 = new StringBuilder();
 		StringBuilder str2 = new StringBuilder();
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		//#30513 - Start (follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier)))
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
+		//#30513 - End
 					
 		List<SmDisciplinaryAction> resultList = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
 		if (resultList != null
@@ -416,7 +411,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 							}						
 						}
 						
-						if(disciplinaryAction.isBlacklistOwner()){						
+						if(disciplinaryAction.isBlacklistOwner()){	
 							if(personnelResDTO != null 
 									&& personnelResDTO.getSmPersonnelList().size() > 0){
 								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){

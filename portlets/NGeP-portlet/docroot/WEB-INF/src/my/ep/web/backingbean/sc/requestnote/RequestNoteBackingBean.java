@@ -680,7 +680,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 			if(requestNoteDtlList != null && requestNoteDtlList.size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteDtlList) {
-					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+					//ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 					
 					
@@ -5168,9 +5168,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//29749 - End
 		
 		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
+		//#30513 - Start
+		perReqDTO.setRecordStatus(null);
+		//#30513 - End
 		StringBuilder str1 = new StringBuilder();
 		StringBuilder str2 = new StringBuilder();
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
+		//#30513 - Start (follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier)))
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
+		//#30513 - End
 			
 		List<SmDisciplinaryAction> resultList = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO).getSmDisciplinaryActions();
 		if (resultList != null
