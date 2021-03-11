@@ -33,11 +33,14 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 	private static final Logger log = EpLogger.getLogger(ApplRevisedRptBackingBean.class);
 
 	public ApplRevisedRptBackingBean() {
-		setDefaultDateFromAndDateTo();
+		//setDefaultDateFromAndDateTo();
 		getUserZone();
 		getUserRole();
 		getUserValidation();
+
 		Date currDate = new Date();
+		getManagedBean().setDateTo(currDate);
+		getManagedBean().setDateFrom(null);
 		getManagedBean().setMaxFromDate(currDate);
 		getManagedBean().setMaxToDate(currDate);
 		getManagedBean().setMinFromDate(null);
@@ -101,16 +104,29 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		if (dateType.equalsIgnoreCase("from")) {
 			addedCal.add(Calendar.MONTH, 12);
 			if (1 == currDate.compareTo(addedCal.getTime())) {
-				getManagedBean().setMaxToDate(addedCal.getTime());
+				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) < 0){
+					if(getManagedBean().getDateFrom().compareTo(getManagedBean().getDateTo()) > 0){
+						getManagedBean().setDateTo(addedCal.getTime());
+					}else{
+						getManagedBean().setDateTo(getManagedBean().getDateTo());
+					}	
+				}else{
+					getManagedBean().setDateTo(addedCal.getTime());
+				}
 			} else {
 				getManagedBean().setMaxToDate(currDate);
+				getManagedBean().setDateTo(currDate);
 			}
 			getManagedBean().setMinToDate(selectedDate);
 		} else if (dateType.equalsIgnoreCase("to")) {
-			addedCal.add(Calendar.MONTH, -12);
-			getManagedBean().setMinFromDate(addedCal.getTime());
-			getManagedBean().setDateFrom(addedCal.getTime());
-			getManagedBean().setMaxFromDate(selectedDate);
+			addedCal.setTime(getManagedBean().getDateFrom());
+			addedCal.add(Calendar.MONTH, 12);
+			if (selectedDate.compareTo(addedCal.getTime()) > 0) {
+				addedCal.setTime(selectedDate);
+				addedCal.add(Calendar.MONTH, -12);
+				getManagedBean().setDateFrom(addedCal.getTime());
+				getManagedBean().setMinToDate(addedCal.getTime());
+			}
 		}
 	}
 
@@ -159,11 +175,14 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setApplNo(null);
 		getManagedBean().setApplType(null);
+		
 		Date currDate = new Date();
+		getManagedBean().setDateTo(currDate);
+		getManagedBean().setDateFrom(null);
 		getManagedBean().setMaxFromDate(currDate);
 		getManagedBean().setMaxToDate(currDate);
 		getManagedBean().setMinFromDate(null);
 		getManagedBean().setMinToDate(null);
-		setDefaultDateFromAndDateTo();
+		//setDefaultDateFromAndDateTo();
 	}
 }
