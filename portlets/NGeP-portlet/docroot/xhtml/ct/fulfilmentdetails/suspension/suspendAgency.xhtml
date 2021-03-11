@@ -9,7 +9,6 @@
 	<p:panel id="agencyDetailsId" toggleable="true" 
 		rendered="#{suspensionBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}"
 	    header="#{lbl['lbl.ct.panel.agency']}"   toggleSpeed="500">
-        <p:remoteCommand name="onload" action="#{suspensionBackingBean.resetAgencyDetails}" autoRun="true" update="tableAgencyDetails"/>
         <p:dataTable id="tableAgencyDetails"
 	        lazy="true"
 	         var="data"

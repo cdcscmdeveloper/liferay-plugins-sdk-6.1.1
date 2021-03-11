@@ -948,9 +948,5 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		}*/
 	}
 	
-	//Development #29214
-	public void resetAgencyDetails(){
-		System.out.println("resetAgencyDetails");
-		getManagedBean().getAgencyPersistDataModel().reloadData();
-	}
+
 }
