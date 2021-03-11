@@ -2307,6 +2307,11 @@ public class SupplierFinalizationBackingBean extends
 		}
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
+		// #18685-Start.
+		for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+			scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
+		}
+		// #18685-End.
 		reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 		// #25638 - Start.
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
