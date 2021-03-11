@@ -7580,11 +7580,6 @@ public class QTDetailBackingBean extends
 		}
 		else;
 		// ***25692#31
-		if(isApprovalScreen() && menuSet != null){
-			for(Object s : menuSet.toArray()){
-				log.info("******** getmenuItemCommitteeApproval() : "+s.toString());
-			}
-		}
 		return menuSet.contains(menuItem);
 		
 	}
