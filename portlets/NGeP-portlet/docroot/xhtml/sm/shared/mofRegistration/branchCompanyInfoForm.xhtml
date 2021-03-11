@@ -242,7 +242,7 @@
 			cancelLabel="#{lbl['lbl.btn.cancel']}" 
 			multiple="false" showButtons="false"/>
 	</p:dialog>
-	<!-- #27297 START -->
+
 	<ac:confirmationPopup id="branchDeletePopUpId"
 		widget="branchDeletePopUp"
 		okAction="backingBean.deleteSelectedBranches"
@@ -251,6 +251,7 @@
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
 		
+	<!-- #29727 -->
 	<ac:confirmationPopup id="pendingQTPopUpId"
 		widget="pendingQTPopUp"
 		okAction="backingBean.deleteSelectedBranches"
@@ -259,5 +260,5 @@
 		content="#{backingBean.managedBean.deleteBranchMsg}" 
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
 		
-	<!-- #27297 END -->
+	<!-- #29727 END -->
 </ui:composition>
