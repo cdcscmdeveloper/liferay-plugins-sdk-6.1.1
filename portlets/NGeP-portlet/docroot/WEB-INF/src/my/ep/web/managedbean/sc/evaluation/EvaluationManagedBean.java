@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -601,6 +601,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25138 - end
 	
 	private boolean scoringReq = false; //#25138
+	
+	private boolean speczonedtlReq = false;//#25138
 	
 	private boolean itemSampleReq; //#11104-start
 	/**tabIndex
@@ -3885,5 +3887,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.offerPricePackageList = offerPricePackageList;
 	}
 	//#25138 - end
-	
+	//#25138 - start
+	public boolean isSpeczonedtlReq() {
+		return speczonedtlReq;
+	}
+
+	public void setSpeczonedtlReq(boolean speczonedtlReq) {
+		this.speczonedtlReq = speczonedtlReq;
+	}
+	//#25138 - end
 }
