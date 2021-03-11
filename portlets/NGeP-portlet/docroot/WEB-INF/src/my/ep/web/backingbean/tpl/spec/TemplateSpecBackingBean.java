@@ -2728,9 +2728,9 @@ public class TemplateSpecBackingBean extends
 			long specZoneId,
 			BigDecimal questionId) {
 
-			BigDecimal totalIndicativePrice = new BigDecimal(0);
-			BigDecimal zeroChangeTo1 = new BigDecimal(1);
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice);
+			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
+			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, BigDecimal.ROUND_UP);//Bug #29808
 		
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
@@ -2743,18 +2743,26 @@ public class TemplateSpecBackingBean extends
 			
 			if (contractDuration.intValue() == 0 )
 			{ contractDuration=contractDuration.add(zeroChangeTo1);}
+			//Bug #29808 - Start
+			 clUomFrequency =BigDecimal.valueOf(clUomFrequency.doubleValue());
+	       	 clUomPerDay =BigDecimal.valueOf(clUomPerDay.doubleValue());
+		     clUomPerMonth = BigDecimal.valueOf(clUomPerMonth.doubleValue());
+		     contractDuration =BigDecimal.valueOf(contractDuration.doubleValue());
+		   //Bug #29808 - End
 			
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice)
+						.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
 			} else {
 				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice)
+						.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
 				} else {
 					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
 					{
@@ -2763,7 +2771,8 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+								.multiply(RoundIndicativePrice)
+								.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
 					}
 				}
 			}
