@@ -1097,7 +1097,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				if (fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 						|| fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+						|| fc.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
+						|| fc.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
 					// supplier
 					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 					supplierSearchReqDTO.setUserId(fc.getUserSessionBean().getUserId());
