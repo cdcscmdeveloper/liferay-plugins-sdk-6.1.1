@@ -15,13 +15,17 @@
       .column-align-center { text-align: center !important;}
      .ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow{  
               width:250px;
-              }
+    }
+         
+      .ui-inputfield.ui-widget.ui-state-default.ui-corner-all.hasDatepicker {
+   		 width: 125px;
+	}
     </style>
  	<p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
      <p:panel id="searchId" header="#{lbl['lbl.fl.search']}" toggleable="true"  toggleSpeed="500">
-     	<h:panelGrid columns="2" style="width:100%; margin-left: 3.55%;"
+     	<h:panelGrid columns="2" style="width:100%;"
      	     columnClasses="columnWidth20">
  			<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
            	<ac:lov id="searchMinistry" lovId="PM_ORG_PROFILE_MINSTRY" size="123" readonly="true"
@@ -62,22 +66,22 @@
            	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="100" style="width:146px;margin-top:3px;" />
            	<p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
-           	<p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
-               	style="width:130px;" value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
-               	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+           	<p:calendar id="popupButtonCal" showOn="button" readonlyInput="true"  navigator="true"
+                value="#{contractDetailsBackingBean.managedBean.searchCtStartDate}" 
+               	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
            	<p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
-           	<p:calendar id="popupButtonCal1"  style="width:130px;"  readonlyInput="true" 
+           	<p:calendar id="popupButtonCal1" readonlyInput="true" 
              	value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
              	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
            	<p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/>
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="4" style="margin-top: 3px; width: 146px;"/>
            	<p:outputLabel for="financialYear" value="#{lbl['lbl.fl.financial.year']}" />
 		   	<p:selectOneMenu id="financialYear" value="#{contractDetailsBackingBean.managedBean.searchFinancialYear}"
-		   	    style="margin-bottom:5px" >
+		   	    style="margin-bottom:5px; width: 31%;" >
 		   		<f:selectItems value="#{contractDetailsBackingBean.getYearDropDownOpt()}" />
 		   	</p:selectOneMenu>
 		  	<p:outputLabel for="contractStatus" value="#{lbl['lbl.ct.contract.status']}" />
-		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}">
+		   	<p:selectOneMenu id="contractStatus" value="#{contractDetailsBackingBean.managedBean.searchContractStatus}" style="width: 81%;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchContractStatusDropdown()}" />
 		   	</p:selectOneMenu>		   
 		</h:panelGrid>
