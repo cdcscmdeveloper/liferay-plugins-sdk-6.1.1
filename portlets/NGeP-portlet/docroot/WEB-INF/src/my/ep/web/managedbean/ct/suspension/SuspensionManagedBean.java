@@ -651,7 +651,7 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 		private static final long serialVersionUID = 1L;
 
 		public AgencyPersistDataModel() {
-			super("tableAgencyDetails", false);
+			super("tableAgencyDetails", isReadOnly());
 		}
 
 		/*
