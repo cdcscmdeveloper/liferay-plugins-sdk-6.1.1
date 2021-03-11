@@ -2668,9 +2668,21 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * Reset selected deduction and hide deduction clause table
 	 */
 	public void onRowUnselect() {
-		getManagedBean().setSelectedDeductionClauseParent(null);
-		getManagedBean().setShowDeductionClause(false);
-		
+		List<CtDeduction> ctDeductionList = getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions();
+		if(getManagedBean().getSelectedDeductions().size() == 1) {
+			CtDeduction ctDeduction = getManagedBean().getSelectedDeductions().get(0).getCtDeduction();
+			for(CtDeduction ctDeductionTemp: ctDeductionList) {
+				if(ctDeductionTemp.getDeductionId().equals(ctDeduction.getDeductionId())) {
+					getManagedBean().setCtDeductionClauseList(ctDeductionTemp.getCtDeductionClauses());
+					getManagedBean().setShowDeductionClause(true);
+					getManagedBean().setSelectedDeductionClauseParent(ctDeductionTemp.getDeductionId());
+					break;
+				}
+			}
+		} else {
+			getManagedBean().setSelectedDeductionClauseParent(null);
+			getManagedBean().setShowDeductionClause(false);
+		}		
     }
 	//29551 - end
 	
