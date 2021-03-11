@@ -14799,7 +14799,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 										.format(prThreshold) });
 					}
 				}
-				qt.setEstimatedAmount(totalSpecEstimatedAmount);
+				//Bug #29808
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
 			}
 		}
 		
