@@ -7154,5 +7154,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		}
 		//#25956 - End
+		
+		//#30428 - Start
+		/**
+		 * The method used to entered new ceiling quantity.
+		 * 
+		 * @param ctItemCeilingQty   object of CeilingQty item
+		 */
+		public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
+
+				if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+					for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+						if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+
+							if (!item.getCtItemCeilingQties().isEmpty()) {						
+								for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
+									if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
+										ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
+										break;
+										}								
+									}
+								}							
+							}
+						}
+					}
+				}
+		//#30428 - End
 
 	}
