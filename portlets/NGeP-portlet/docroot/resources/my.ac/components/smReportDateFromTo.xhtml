@@ -107,7 +107,7 @@
 						required="#{!empty cc.attrs.bBean.managedBean.dateFrom or cc.attrs.required}" 
 						mindate="#{cc.attrs.bBean.managedBean.minToDate}" maxdate="#{cc.attrs.bBean.managedBean.maxToDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						<p:ajax event="dateSelect" update="calDtFrm" process="@this" listener="#{cc.attrs.bBean.findMinMaxDate('to', cc.attrs.bBean.managedBean.dateTo)}" />
+						<p:ajax event="dateSelect" update="calDtFrm, calDtTo " process="@this" listener="#{cc.attrs.bBean.findMinMaxDate('to', cc.attrs.bBean.managedBean.dateTo)}" />
 						</p:calendar> 
 						<p:message id="calDtToMsg" for="calDtTo" display="icon" showDetail="false" /></td>
 					</tr>
