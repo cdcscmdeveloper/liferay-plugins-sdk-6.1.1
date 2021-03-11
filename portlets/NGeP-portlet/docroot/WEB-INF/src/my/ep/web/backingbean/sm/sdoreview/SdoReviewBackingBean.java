@@ -103,14 +103,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setSmAppl(resDTO.getSmAppl());
 		
 		//#28807 - START
-		log.info("#28807 supp doc total onload -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
+		log.info("#28807 supp doc total after sort -> " + this.getManagedBean().getSmAppl().getApplNo() + " -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
 		int filesCount = 0;
 		for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-			for(int i=0; i<smApplSupportDoc.getSmApplDocFiles().size(); i++){
-				filesCount+=1;
+			for(SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()){
+				if(!smApplDocFile.getFileName().isEmpty() || 
+					smApplDocFile.getFileName() != null || 
+					!smApplDocFile.getFileName().equalsIgnoreCase("")){
+					filesCount+=1;
+				}
 			}
 		}
-		log.info("#28807 total sup doc files -> " + filesCount);
+		log.info("#28807 total sup doc files -> " + this.getManagedBean().getSmAppl().getApplNo() + " -> " + filesCount);
 		//#28807 - END
 		
 		// show rejection reason for resubmit application
@@ -533,14 +537,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			});
 			//#30294 - END
 			//#28807 - START
-			log.info("#28807 supp doc total after sort -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
+			log.info("#28807 supp doc total after sort -> " + this.getManagedBean().getSmAppl().getApplNo() + " -> " + this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
 			int filesCount = 0;
 			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-				for(int i=0; i<smApplSupportDoc.getSmApplDocFiles().size(); i++){
-					filesCount+=1;
+				for(SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()){
+					if(!smApplDocFile.getFileName().isEmpty() || 
+						smApplDocFile.getFileName() != null || 
+						!smApplDocFile.getFileName().equalsIgnoreCase("")){
+						filesCount+=1;
+					}
 				}
 			}
-			log.info("#28807 total sup doc files -> " + filesCount);
+			log.info("#28807 total sup doc files -> " + this.getManagedBean().getSmAppl().getApplNo() + " -> " + filesCount);
 			//#28807 - END
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
