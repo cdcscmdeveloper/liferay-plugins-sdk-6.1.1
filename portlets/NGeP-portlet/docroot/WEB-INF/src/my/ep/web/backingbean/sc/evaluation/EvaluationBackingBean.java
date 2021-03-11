@@ -2306,11 +2306,19 @@ public void saveComplianceSample() {
 								ScQt scQt = this.getManagedBean().getScQt();
 								
 								if(scQt.isZonal()){
-									for(ScQtScoreOfferPrice scoreOffer : specdetails.getScQtScoreOfferPricesZonal()){
+									//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
+									if(specdetails.getScoreOfferPrices()!=null){
+										this.getManagedBean().setOfferScoreType(specdetails
+												.getScoreOfferPrices().getScoreType().toString());
+										this.getManagedBean().setSpeczonedtlReq(true);
+									}else{
+										for(ScQtScoreOfferPrice scoreOffer : specdetails.getScQtScoreOfferPricesZonal()){
 
-										this.getManagedBean().setOfferScoreType(scoreOffer.getScoreType().toString());
-										break;
+											this.getManagedBean().setOfferScoreType(scoreOffer.getScoreType().toString());
+											break;
+										}
 									}
+									//#25138 - scoreofferprice.speczonedtlid null for wip data  - end
 								}else{
 									this.getManagedBean().setOfferScoreType(specdetails
 											.getScoreOfferPrices().getScoreType().toString());
@@ -3518,35 +3526,50 @@ public void saveComplianceSample() {
 						.getSpecZoneId());
 				zoneReqDto.setCheckListId(this.getManagedBean()
 						.getScQtChecklist().getQtChecklistId());
-				//#25138 Reendorsed - start
-				if (null != speczone.getScQtScoreOfferPricesZonal() //..
-						&& !speczone.getScQtScoreOfferPricesZonal().isEmpty()//..
-						&& this.getManagedBean()
-								.getSelectedZone()
-								.getZoneName()
-								.equalsIgnoreCase(
-										speczone.getZones().get(i)
-												.getZoneName())) {
-					this.getManagedBean().setOfferPricePackageList(
-							speczone.getScQtScoreOfferPricesZonal());//..
-					this.getManagedBean().setWithInVarieance(speczone.getZones()
-							.get(0).getTotalMaxScore());
+				//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
+				if(speczone.getScoreOfferPrices().getTplSpecZoneDtl()==null){
 					
-					evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-					EvaluationReqDTO offerReqdto = new EvaluationReqDTO();
-					EvaluationResDTO offerResdto = new EvaluationResDTO();
-					offerReqdto.setSpeczoneId(speczone.getZones().get(0)
-							.getSpecZoneId());
-					offerResdto = evaluationSO.retrieveScoreOfferPriceByZone(offerReqdto);
-					this.getManagedBean().setOfferPricePackage(offerResdto.getScoreOfferPrices());
+					this.getManagedBean().setSpeczonedtlReq(true);
+					this.getManagedBean().setOfferPricePackage(
+							speczone.getScoreOfferPrices());
+					this.getManagedBean().setWithInVarieance(
+							speczone.getWithinVarieancePackage());
 					calculateFinSpecPackageVarieance(this.getManagedBean()
-							.getScQt(), offerResdto.getScoreOfferPrices(), this.getManagedBean()
+							.getScQt(), this.getManagedBean()
+							.getOfferPricePackage(), this.getManagedBean()
 							.getSelectedZone());
 					// break;
-					
+
+				}else{
+					if (null != speczone.getScQtScoreOfferPricesZonal() //..
+							&& !speczone.getScQtScoreOfferPricesZonal().isEmpty()//..
+							&& this.getManagedBean()
+									.getSelectedZone()
+									.getZoneName()
+									.equalsIgnoreCase(
+											speczone.getZones().get(i)
+													.getZoneName())) {
+						this.getManagedBean().setOfferPricePackageList(
+								speczone.getScQtScoreOfferPricesZonal());//..
+						this.getManagedBean().setWithInVarieance(speczone.getZones()
+								.get(0).getTotalMaxScore());
+						
+						evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+						EvaluationReqDTO offerReqdto = new EvaluationReqDTO();
+						EvaluationResDTO offerResdto = new EvaluationResDTO();
+						offerReqdto.setSpeczoneId(speczone.getZones().get(0)
+								.getSpecZoneId());
+						offerResdto = evaluationSO.retrieveScoreOfferPriceByZone(offerReqdto);
+						this.getManagedBean().setOfferPricePackage(offerResdto.getScoreOfferPrices());
+						calculateFinSpecPackageVarieance(this.getManagedBean()
+								.getScQt(), offerResdto.getScoreOfferPrices(), this.getManagedBean()
+								.getSelectedZone());
+						// break;
+						
+					}
 				}
-				//#25138 Reendorsed - end
+				//#25138 - scoreofferprice.speczonedtlid null for wip data  - end
 				if(this.getManagedBean().getEvaluatioStageActiveIndex() == 0){
 					this.getManagedBean().setOneTierFinancialActiveIndex(0);	
 				
@@ -3598,6 +3621,7 @@ public void saveComplianceSample() {
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSpecZoneDtls())) {
 			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean()
 					.getSpecZoneDtls();
+			//#25138 - sorting speczonedtl - start
 			Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
 				public int compare(TplSpecZoneDtl zoneDtl1,
 						TplSpecZoneDtl zoneDtl2) {
@@ -3605,6 +3629,7 @@ public void saveComplianceSample() {
 					return zoneDtl1.getSpecZoneId().compareTo(zoneDtl2.getSpecZoneId());
 				}
 			});
+			//#25138 - sorting speczonedtl - end
 			this.getManagedBean().setSpecZoneTabIndex(0);
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
@@ -4121,17 +4146,21 @@ public void saveComplianceSample() {
 					zoneReqDto.setSpeZoneId(specZoneDtl.getSpecZoneId());
 					zoneReqDto.setCheckListId(this.getManagedBean()
 							.getScQtChecklist().getQtChecklistId());
-					//#25138 Reendorsed - start
-					this.getManagedBean().setWithInVarieance(specZoneDtl.getTotalMaxScore());	
-					evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-					System.out.println("speczoneID"+ zoneDtls.getSpecZoneId());
-					EvaluationReqDTO offerReqdto = new EvaluationReqDTO();
-					EvaluationResDTO offerResdto = new EvaluationResDTO();
-					offerReqdto.setSpeczoneId(this.getManagedBean()
-							.getSelectedZone().getSpecZoneId());
-					offerResdto = evaluationSO.retrieveScoreOfferPriceByZone(offerReqdto);
-					this.getManagedBean().setOfferPricePackage(offerResdto.getScoreOfferPrices());
+					//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
+					System.out.println("=======speczonedtlreq======="+this.getManagedBean().isSpeczonedtlReq());
+					if(!this.getManagedBean().isSpeczonedtlReq()){
+						this.getManagedBean().setWithInVarieance(specZoneDtl.getTotalMaxScore());	
+						evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+						System.out.println("speczoneID"+ zoneDtls.getSpecZoneId());
+						EvaluationReqDTO offerReqdto = new EvaluationReqDTO();
+						EvaluationResDTO offerResdto = new EvaluationResDTO();
+						offerReqdto.setSpeczoneId(this.getManagedBean()
+								.getSelectedZone().getSpecZoneId());
+						offerResdto = evaluationSO.retrieveScoreOfferPriceByZone(offerReqdto);
+						this.getManagedBean().setOfferPricePackage(offerResdto.getScoreOfferPrices());
+					}
+					//#25138 - scoreofferprice.speczonedtlid null for wip data  - end
 					calculateFinSpecPackageVarieance(this.getManagedBean()
 							.getScQt(), this.getManagedBean()
 							.getOfferPricePackage(), this.getManagedBean()
@@ -13631,7 +13660,13 @@ private void retriveCommitteeRemarksList(){
 							if(specdetails != null){
 								//#25138 - setofferscoretype for zonal and non zonal- start
 								if(this.getManagedBean().getScQt().isZonal()){
-									if(specdetails.getScQtScoreOfferPricesZonal()!= null || !specdetails.getScQtScoreOfferPricesZonal().isEmpty()){
+									//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
+									if(specdetails.getScoreOfferPrices().getTplSpecZoneDtl() == null){
+										this.getManagedBean().setOfferScoreType(specdetails.getScoreOfferPrices()
+												.getScoreType().toString());
+										
+									}else{
+									//#25138 - scoreofferprice.speczonedtlid null for wip data  - end
 										for(ScQtScoreOfferPrice offerprice : specdetails.getScQtScoreOfferPricesZonal()){
 											this.getManagedBean().setOfferScoreType(offerprice.getScoreType().toString());
 											break;
@@ -13684,8 +13719,13 @@ private void retriveCommitteeRemarksList(){
 				if(this.getManagedBean().getScQt().isPartial()){
 					evalReqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 				}
+				//#25138 - set boolean for wip data - start
+				if(this.getManagedBean().isSpeczonedtlReq()){
+					evalReqDTO.setSpecZonedtlReq(true);
+				}
+				//#25138 - set boolean for wip data - end
 				//#25138, #21695 - end
-				evaluationSO.generateEvaluationSheet(reqDTO);
+				evaluationSO.generateEvaluationSheet(evalReqDTO);
 			
 			}
 			//#25138 - filter auto score condition - End
