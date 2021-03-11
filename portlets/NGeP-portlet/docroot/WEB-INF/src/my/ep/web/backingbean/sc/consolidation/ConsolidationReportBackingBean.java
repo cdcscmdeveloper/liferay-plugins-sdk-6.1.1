@@ -713,6 +713,10 @@ public class ConsolidationReportBackingBean extends
 				getManagedBean().getNewBriefingPaperReportList().addAll(
 						getManagedBean().getSfBriefingPaperReportList());
 			}
+			
+			for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
+			}
 			// #18685 - End
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			//this.downloadAllBriefingPaperReports();
