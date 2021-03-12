@@ -841,26 +841,7 @@ public class ApprovalBackingBean extends
 			ScQt mb2 = qtDetailBB.getManagedBean().getQt();
 			ScQtApproval mbAppr1 = this.getManagedBean().getScQtApproval();
 			ScQtApproval mbAppr2 = qtDetailBB.getManagedBean().getScQtApproval();
-			
-			/*logger.info("mb1.isApprovalPBM() : " + mb1.isApprovalPBM() + "   ****** mb2.isApprovalPBM() : "+mb2.isApprovalPBM());
-			logger.info("mb1.isBsvRequired() : " + mb1.isBsvRequired() + "   ****** mb2.isBsvRequired() : "+mb2.isBsvRequired());
-			logger.info("mb1.getChmnFinalizationDate() : " + mb1.getChmnFinalizationDate() + "   ****** mb2.getChmnFinalizationDate() : "+mb2.getChmnFinalizationDate());
-			logger.info("mb1.getClosingDate() : " + mb1.getClosingDate() + "   ****** mb2.getClosingDate() : "+mb2.getClosingDate());
-			logger.info("mb1.getMofDate() : " + mb1.getMofDate() + "   ****** mb2.getMofDate() : "+mb2.getMofDate());
-			logger.info("mb1.getNewPublishDate() : " + mb1.getNewPublishDate() + "   ****** mb2.getNewPublishDate() : "+mb2.getNewPublishDate());
-			logger.info("mb1.getProposalStartDate() : " + mb1.getProposalStartDate() + "   ****** mb2.getProposalStartDate() : "+mb2.getProposalStartDate());
-			logger.info("mb1.getProposalValidityEndDate() : " + mb1.getProposalValidityEndDate() + "   ****** mb2.getProposalValidityEndDate() : "+mb2.getProposalValidityEndDate());
-			logger.info("mb1.getPublishDate() : " + mb1.getPublishDate() + "   ****** mb2.getPublishDate() : "+mb2.getPublishDate());
-			logger.info("mb1.getPublishPeriod() : " + mb1.getPublishPeriod() + "   ****** mb2.getPublishPeriod() : "+mb2.getPublishPeriod());
-			logger.info("mb1.getQtType() : " + mb1.getQtType() + "   ****** mb2.getQtType() : "+mb2.getQtType());
-			logger.info("mb1.getQtValidityPeriod() : " + mb1.getQtValidityPeriod() + "   ****** mb2.getQtValidityPeriod() : "+mb2.getQtValidityPeriod());
-			logger.info("mb1.getSampleClosingDate() : " + mb1.getSampleClosingDate() + "   ****** mb2.getSampleClosingDate() : "+mb2.getSampleClosingDate());
-			logger.info("mb1.isSampleReq() : " + mb1.isSampleReq() + "   ****** mb2.isSampleReq() : "+mb2.isSampleReq());
-			logger.info("mb1.getScQtGosodoBudgets() : " + mb1.getScQtGosodoBudgets() + "   ****** mb2.getScQtGosodoBudgets() : "+mb2.getScQtGosodoBudgets());
-			logger.info("mbAppr1.getScQtApprovalAttachments() : " + mbAppr1.getScQtApprovalAttachments() + "   ****** mbAppr2.getScQtApprovalAttachments() : "+mbAppr2.getScQtApprovalAttachments());
-			logger.info("mbAppr1.getScQtApprovalRemarks() : " + mbAppr1.getScQtApprovalRemarks() + "   ****** mbAppr2.getScQtApprovalAttachments() : "+mbAppr2.getScQtApprovalRemarks());
-			*/
-			assertSpecificationUpdateInProgress();//25037
+
 			if(page.equalsIgnoreCase(QTConstants.MAINTANANCE_PAGE)){
 				page = QTConstants.MAINTANANCE_PAGE_FULL;				
 			}
@@ -2237,8 +2218,10 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		String taskName = this.getManagedBean().getTaskName();
 		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
 		String[] taskNames = new String[]{SCProcessNameConst.PREPARE_QT_SCHEDULE, SCProcessNameConst.APPROVE_PUBLICATION};
-		String[] specTaskName = new String[]{SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING};
-
+		//15391 -start- 
+		String[] specTaskName = new String[]{SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING};
+		//15391 -end-
+		
 		if(Arrays.asList(taskNames).contains(taskName)){
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
@@ -2251,7 +2234,11 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 				 if(StringUtils.isNotBlank(currentVO.getTaskName())){
 					 if(Arrays.asList(specTaskName).contains(currentVO.getTaskName())){
 						 this.getManagedBean().setSpecUpdateInProgress(true);
-						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish", null)));
+
+						 //#15391 -start-
+						 FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2", null)));
+						//#15391 -end-
+						 
 						 inProgress = true;
 						 break;
 					 }
