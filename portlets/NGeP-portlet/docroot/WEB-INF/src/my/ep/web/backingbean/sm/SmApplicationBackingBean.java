@@ -2271,16 +2271,18 @@ public class SmApplicationBackingBean extends
 			
 			SmAppl appli = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppTypeNoExpired(
 					currSupp.getSupplierId(), applType);
-			SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-			reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
-			reqDTO.setDocId(appli.getApplId());
-			
-			 SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
-			if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
-				SmRemark remark = resDTO.getRemarksList().get(0);
-				log.info("The SDO Remark for the Application is*******" + remark.getRemark());
-				getManagedBean().setSdoRemark(remark.getRemark());
-			}	
+			if(appli != null){
+				SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+				reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
+				reqDTO.setDocId(appli.getApplId());
+				
+				SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(reqDTO);
+				if (resDTO.getRemarksList() != null && resDTO.getRemarksList().size() > 0) {
+					SmRemark remark = resDTO.getRemarksList().get(0);
+					log.info("The SDO Remark for the Application is*******" + remark.getRemark());
+					getManagedBean().setSdoRemark(remark.getRemark());
+				}	
+			}
 		}	
 	}
 	//#3460 - End
