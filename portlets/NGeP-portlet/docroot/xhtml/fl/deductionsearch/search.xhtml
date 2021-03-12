@@ -45,7 +45,7 @@
 				saveObject="contractDetailsBackingBean.managedBean.searchPtjGroupProfile"
 				conditionField="#{contractDetailsBackingBean.getPTJGroupCondition()}">			
 			</ac:lov>
-     		<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
+     		<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}" />
            	<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="123" readonly="true"
 				disabled="#{contractDetailsBackingBean.managedBean.searchMinistryProfile==null
 					or contractDetailsBackingBean.managedBean.searchPtjGroupProfile==null}"
@@ -63,7 +63,7 @@
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractName}" maxlength="1000" style="width:175px;" />
             <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchContractNo}" maxlength="17" style="width:146px;" />
-           	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+           	<p:outputLabel value="#{lbl['lbl.fl.physical.ct.no']}" />
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchCtPhysicalNo}" maxlength="100" style="width:146px;margin-top:3px;" />
            	<p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
            	<p:calendar id="popupButtonCal" showOn="button" readonlyInput="true"  navigator="true"
@@ -73,7 +73,7 @@
            	<p:calendar id="popupButtonCal1" readonlyInput="true" 
              	value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
              	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-           	<p:outputLabel value="#{lbl['lbl.ct.loa.no']}"/>
+           	<p:outputLabel value="#{lbl['lbl.fl.deduction.loa']}"/>
            	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="4" style="margin-top: 3px; width: 146px;"/>
            	<p:outputLabel for="financialYear" value="#{lbl['lbl.fl.financial.year']}" />
 		   	<p:selectOneMenu id="financialYear" value="#{contractDetailsBackingBean.managedBean.searchFinancialYear}"
@@ -165,7 +165,7 @@
 					<p:column styleClass="column-align-center" headerText="#{lbl['lbl.ct.deduction.description']}" style="text-align:center" width="62%">
 						<h:outputText value="#{deductionExpansion.deductionDesc}"  style="text-align:left; float:left;" />		
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right;">
+					<p:column headerText="#{lbl['lbl.fl.amountrm']}" style="text-align:right;">
 						<h:outputText value="#{deductionExpansion.amount}" />
 					</p:column>									
 				</p:dataTable><br/><br/>
