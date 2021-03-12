@@ -33,19 +33,10 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 	private static final Logger log = EpLogger.getLogger(ApplRevisedRptBackingBean.class);
 
 	public ApplRevisedRptBackingBean() {
-		//setDefaultDateFromAndDateTo();
+		setDefaultDateFromAndDateTo();
 		getUserZone();
 		getUserRole();
 		getUserValidation();
-
-		Date currDate = new Date();
-		getManagedBean().setDateTo(currDate);
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setMaxFromDate(currDate);
-		getManagedBean().setMaxToDate(currDate);
-		getManagedBean().setMinFromDate(null);
-		getManagedBean().setMinToDate(null);
-		
 	}
 
 	// To find user zone
@@ -95,43 +86,10 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		}
 		log.info("Flag Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + getManagedBean().isFlag());
 	}
-	
-	public void findMinMaxDate(String dateType, Date selectedDate) {
-		Calendar addedCal = new GregorianCalendar();
-		Date currDate = new Date();
-		addedCal.setTime(selectedDate);
-
-		if (dateType.equalsIgnoreCase("from")) {
-			addedCal.add(Calendar.MONTH, 12);
-			if (1 == currDate.compareTo(addedCal.getTime())) {
-				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) < 0){
-					if(getManagedBean().getDateFrom().compareTo(getManagedBean().getDateTo()) > 0){
-						getManagedBean().setDateTo(addedCal.getTime());
-					}else{
-						getManagedBean().setDateTo(getManagedBean().getDateTo());
-					}	
-				}else{
-					getManagedBean().setDateTo(addedCal.getTime());
-				}
-			} else {
-				getManagedBean().setMaxToDate(currDate);
-				getManagedBean().setDateTo(currDate);
-			}
-			getManagedBean().setMinToDate(selectedDate);
-		} else if (dateType.equalsIgnoreCase("to")) {
-			addedCal.setTime(getManagedBean().getDateFrom());
-			addedCal.add(Calendar.MONTH, 12);
-			if (selectedDate.compareTo(addedCal.getTime()) > 0) {
-				addedCal.setTime(selectedDate);
-				addedCal.add(Calendar.MONTH, -12);
-				getManagedBean().setDateFrom(addedCal.getTime());
-				getManagedBean().setMinToDate(addedCal.getTime());
-			}
-		}
-	}
 
 	// Generate Report
 	public void generateReport() {
+		checkOneYearDifferent(getManagedBean().getDateFrom(), getManagedBean().getDateTo());
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		retrieveReportValueFromDb();
@@ -176,13 +134,6 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		getManagedBean().setApplNo(null);
 		getManagedBean().setApplType(null);
 		
-		Date currDate = new Date();
-		getManagedBean().setDateTo(currDate);
-		getManagedBean().setDateFrom(null);
-		getManagedBean().setMaxFromDate(currDate);
-		getManagedBean().setMaxToDate(currDate);
-		getManagedBean().setMinFromDate(null);
-		getManagedBean().setMinToDate(null);
-		//setDefaultDateFromAndDateTo();
+		setDefaultDateFromAndDateTo();
 	}
 }
