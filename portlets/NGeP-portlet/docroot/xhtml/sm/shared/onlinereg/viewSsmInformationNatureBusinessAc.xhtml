@@ -24,7 +24,17 @@
 			rows="10">
 			<ac:paginator for="suppBizNatureId" />
 
-
+			<c:if test="#{suppBizNature.ssmDataIssue != 'false'}"> 
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppBizNature.pmBusinessNature.levelCode}" />
+			</p:column>
+			</c:if>
+			
+			<c:if test="#{suppBizNature.ssmDataIssue == 'false'}"> 
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
@@ -32,14 +42,17 @@
 				<h:outputText
 					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
 			</p:column>
-
+			</c:if>
+			
+			
+			
 			<c:if
 			test="#{cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'C' or cc.attrs.bBean.managedBean.smSupplierSsm.businessType == 'F'}">
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.viewSsm.business.type']}" />
 				</f:facet>
-				<h:outputText value="#{suppBizNature.pmBusinessNature.levelName}" />
+				<h:outputText value="#{suppBizNature.pmBusinessNature.levelName}" /> 
 			</p:column>
 			</c:if>
 		</p:dataTable>
