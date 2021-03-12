@@ -447,6 +447,11 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession;
 	// #29800 - end
 	
+	// #28134 - start
+	private boolean pidMode;
+	private boolean removeSupplierFlag;
+	// #28134 - end
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2806,4 +2811,22 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
 	}
 	// #29800 - end
+
+	// #28134 - start
+	public boolean isPidMode() {
+		return pidMode;
+	}
+
+	public void setPidMode(boolean pidMode) {
+		this.pidMode = pidMode;
+	}
+
+	public boolean isRemoveSupplierFlag() {
+		return removeSupplierFlag;
+	}
+
+	public void setRemoveSupplierFlag(boolean removeSupplierFlag) {
+		this.removeSupplierFlag = removeSupplierFlag;
+	}
+	// #28134 - end
 }
