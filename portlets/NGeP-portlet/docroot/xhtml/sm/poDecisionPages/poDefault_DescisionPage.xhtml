@@ -255,7 +255,10 @@
 											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
 												styleClass="splNotesFonts" escape="false" />
-
+											<!-- #12483 - START -->
+											<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" rendered="#{backingBean.managedBean.reviewSiteVisit}"
+												styleClass="splNotesFonts" escape="false" />
+											<!-- #12483 - END -->
 										</c:when>
 										<c:when
 											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
