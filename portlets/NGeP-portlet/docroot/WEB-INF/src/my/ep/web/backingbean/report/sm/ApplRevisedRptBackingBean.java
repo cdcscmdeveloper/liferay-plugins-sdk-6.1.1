@@ -37,12 +37,6 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		getUserZone();
 		getUserRole();
 		getUserValidation();
-		Date currDate = new Date();
-		getManagedBean().setMaxFromDate(currDate);
-		getManagedBean().setMaxToDate(currDate);
-		getManagedBean().setMinFromDate(null);
-		getManagedBean().setMinToDate(null);
-		
 	}
 
 	// To find user zone
@@ -92,30 +86,10 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		}
 		log.info("Flag Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + getManagedBean().isFlag());
 	}
-	
-	public void findMinMaxDate(String dateType, Date selectedDate) {
-		Calendar addedCal = new GregorianCalendar();
-		Date currDate = new Date();
-		addedCal.setTime(selectedDate);
-
-		if (dateType.equalsIgnoreCase("from")) {
-			addedCal.add(Calendar.MONTH, 12);
-			if (1 == currDate.compareTo(addedCal.getTime())) {
-				getManagedBean().setMaxToDate(addedCal.getTime());
-			} else {
-				getManagedBean().setMaxToDate(currDate);
-			}
-			getManagedBean().setMinToDate(selectedDate);
-		} else if (dateType.equalsIgnoreCase("to")) {
-			addedCal.add(Calendar.MONTH, -12);
-			getManagedBean().setMinFromDate(addedCal.getTime());
-			getManagedBean().setDateFrom(addedCal.getTime());
-			getManagedBean().setMaxFromDate(selectedDate);
-		}
-	}
 
 	// Generate Report
 	public void generateReport() {
+		checkOneYearDifferent(getManagedBean().getDateFrom(), getManagedBean().getDateTo());
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		retrieveReportValueFromDb();
@@ -159,11 +133,7 @@ public class ApplRevisedRptBackingBean extends SmReportBackingBean<ApplRevisedRp
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setApplNo(null);
 		getManagedBean().setApplType(null);
-		Date currDate = new Date();
-		getManagedBean().setMaxFromDate(currDate);
-		getManagedBean().setMaxToDate(currDate);
-		getManagedBean().setMinFromDate(null);
-		getManagedBean().setMinToDate(null);
+		
 		setDefaultDateFromAndDateTo();
 	}
 }
