@@ -579,7 +579,28 @@ public class QTDetailBackingBean extends
 			try {
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(userId);
-				userSO = BusinessDelegate.getInstance().getServiceObject(
+
+				// #30531[UAT], #28611[SIT] - Start.
+				String parameterCodeType = null;
+				
+		        if (null != userId) {
+		            IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+		            List<Object[]> paramcodeLst = reportSO.retrieveParameterCodeByUserid(userId);
+		            
+		            if (CollectionUtils.isNotEmpty(paramcodeLst)) {
+		                for (Object[] object : paramcodeLst) {
+		                    parameterCodeType = object[0].toString();
+		                }
+		            }
+		        }
+		        
+		        if (StringUtils.isNotEmpty(parameterCodeType)
+                    && (parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))) {
+		          reqDTO.setSupplierUser(true);
+		        }
+		        // #30531[UAT], #28611[SIT] = End.
+
+		        userSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
