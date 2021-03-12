@@ -162,7 +162,7 @@
 					#end
 					#end
 					#if($companyInfo.businessType == 'I' || $companyInfo.businessType == 'J' )
-					<td width="10%">$!worker.shareAmt</td>
+					<td width="10%">$!worker.personnelShareAmtSsmView</td>
 					#end
 				</tr>
 				#end
