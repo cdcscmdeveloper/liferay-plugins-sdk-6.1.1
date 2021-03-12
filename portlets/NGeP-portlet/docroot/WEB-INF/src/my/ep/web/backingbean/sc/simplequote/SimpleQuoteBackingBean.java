@@ -41,6 +41,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -78,6 +79,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -154,11 +157,9 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
-import my.ep.web.backingbean.components.lov.LovBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
-import my.ep.web.bean.LovBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -837,6 +838,10 @@ public class SimpleQuoteBackingBean extends
 			// #29800 - start
 			scQuote.setRemarks(cloneScQuote.getRemarks());
 			// #29800 - end
+		} else {
+			// #28134 - start
+			validateifSQCreatedFromPid();
+			// #28134 - end
 		}
 		if ((docId != null) && docId > 0) {
 			getManagedBean().setSupplierItemDocId(docId);
@@ -2690,6 +2695,13 @@ public class SimpleQuoteBackingBean extends
 					new PmReason());
 		}
 		
+		// #28134 - start
+		if (getManagedBean().isPidMode() && getManagedBean().isRemoveSupplierFlag()) {
+			getManagedBean().setSupplierList(new ArrayList<ScQuoteSupplier>());
+			getManagedBean().getScQuote().setScQuoteSuppliers(new ArrayList<ScQuoteSupplier>());
+		}
+		// #28134 - end
+		
 		debugLogger(getManagedBean().getScQuote().getProcurementType().getParameterCode());
 	}
 
@@ -2762,6 +2774,12 @@ public class SimpleQuoteBackingBean extends
 							"lbl.sc.supplier.list",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		}
+		
+		// #28134 - start
+		if (CollectionUtils.isEmpty(getManagedBean().getSupplierList()) && getManagedBean().isPidMode()) {
+			getManagedBean().setRemoveSupplierFlag(true);
+		}
+		// #28134 - end
 	}
 
 	/**
@@ -4431,6 +4449,10 @@ public class SimpleQuoteBackingBean extends
 				}
 
 			}
+			
+			// #28134 - start
+			getManagedBean().setRemoveSupplierFlag(false);
+			// #28134 - end
 		}
 	}
 
@@ -8018,4 +8040,23 @@ public class SimpleQuoteBackingBean extends
 			return getManagedBean();
 		}
 		// #29832 end
+		
+		// #28134 - start
+		private void validateifSQCreatedFromPid() {
+			// REMOVE SUPPLIER LIST IF THE SQ IS CREATED USING PID AND IS NOT
+			// RETURNING FROM TREASURY CIRCULAR PANEL PAGE
+			IPurchaseInDefaultSO pidSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO pidReqDTO = new PurchaseInDefaultReqDTO();
+			pidReqDTO.setItemCode(getManagedBean().getSupplierItems().get(0).getCmItem().getExtensionCode());
+			pidReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+			PurchaseInDefaultResDTO pidResDTO = pidSO.getPurchaseInDefaultByItemCode(pidReqDTO);
+			// if pidResDTO.getPurchaseInDefaultDtl() is not null, the current SQ is
+			// created from PID
+			if ((pidResDTO != null) && (pidResDTO.getPurchaseInDefaultDtl() != null)) {
+				getManagedBean().setPidMode(true);
+				getManagedBean().setRemoveSupplierFlag(true);
+			}
+		}
+		// #28134 - end
 }
