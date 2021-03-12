@@ -23,26 +23,17 @@
 			rowIndexVar="index" id="suppBizNatureId" rowKey="#{suppBizNature}"
 			rows="10">
 			<ac:paginator for="suppBizNatureId" />
-
-			<c:if test="#{suppBizNature.ssmDataIssue != 'false'}"> 
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
-				</f:facet>
-				<h:outputText
-					value="#{suppBizNature.pmBusinessNature.levelCode}" />
-			</p:column>
-			</c:if>
 			
-			<c:if test="#{suppBizNature.ssmDataIssue == 'false'}"> 
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
 				</f:facet>
 				<h:outputText
-					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
+					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" 
+					rendered="#{!suppBizNature.ssmDataIssue}"/>
+				<h:outputText
+					value="#{suppBizNature.pmBusinessNature.levelCode}" rendered="#{suppBizNature.ssmDataIssue}" /> 
 			</p:column>
-			</c:if>
 			
 			
 			
