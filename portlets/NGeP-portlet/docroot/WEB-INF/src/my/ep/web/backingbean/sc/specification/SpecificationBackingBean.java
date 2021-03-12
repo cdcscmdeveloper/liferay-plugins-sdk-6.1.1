@@ -9330,8 +9330,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
 
+			//danial #8979 17/12/2020 -start-
 			if (member.getMemberRole().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)||
+                member.getMemberRole().getParameterCode()
+                    .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)||
+                member.getMemberRole().getParameterCode()
+                        .equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)
+                    ) {
+			//danial #8979 17/12/2020 -end-
 				this.getManagedBean().setReadOnly(false);
 
 			} else {
