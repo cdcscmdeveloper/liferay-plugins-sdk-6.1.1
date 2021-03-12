@@ -1654,7 +1654,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded = false;
 	private String previousApprovalTabName;
-	//#25077 - End
+	//#25077 - End 
+
+	// #15391 - start
+	private boolean isChecklist;
+	private boolean isGenInfo;
+	// #15391 - end
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10413,5 +10418,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#25077 - End
 
+	// #15391 -start-
+	public boolean isChecklist() {
+		return isChecklist;
+	}
+
+	public void setChecklist(boolean isChecklist) {
+		this.isChecklist = isChecklist;
+	}
+
+	public boolean isGenInfo() {
+		return isGenInfo;
+	}
+
+	public void setGenInfo(boolean isGenInfo) {
+		this.isGenInfo = isGenInfo;
+	}
+	// #15391 -end-
+
 }
-	// ***25201

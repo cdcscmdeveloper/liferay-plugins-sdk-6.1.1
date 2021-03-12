@@ -50,6 +50,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -458,6 +459,10 @@ public void editSpecificationMaintenance(ScQt scQt,
     /* ***25692#95 - start */
     this.getManagedBean().setPreviousPage(StringUtils.isEmpty(previousPageId)?null:previousPageId);
     /* ***25692#95 - end */
+    //#15391 -start-
+    this.getManagedBean().setGenInfo(false);
+    this.getManagedBean().setChecklist(false);
+    //#15391 -end-
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
@@ -512,8 +517,6 @@ public void editSpecificationMaintenance(ScQt scQt,
 			this.getManagedBean().setCurrentStatusId(currentSpecStatusId);
 		}
 		
-		
-		
 		/*** 25692#95 - start ***/
 		if(useTempManagedBean){
 			this.getManagedBean().setReadOnly(!isEditable);
@@ -521,6 +524,36 @@ public void editSpecificationMaintenance(ScQt scQt,
 			
 		}
 		/*** 25692#95 - end ***/
+		
+		//#15391 - start
+//		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
+//		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
+//		log.info("QTID: "+scQt.getQtId());
+		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
+				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
+			this.getManagedBean().setGenInfo(true);
+			
+			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_REVISION.equals(this.getManagedBean().getCurrentStatusId())) {//15391
+				this.getManagedBean().setGenInfo(false);
+			}
+		}
+		
+		if((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())) 
+				|| (QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))
+				|| (QTStatusConst.QT_PENDING_PUBLICATION_REVISION_APPROVAL.equals(scQt.getQtStatus().getStatusId()))){
+			this.getManagedBean().setChecklist(true);
+			
+			if(QTStatusConst.SE_PENDING_ENDORSMENT.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_SIGNOFF.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_REVISION.equals(this.getManagedBean().getCurrentStatusId())) {//15391
+				this.getManagedBean().setChecklist(false);
+			}
+		}
+		//#15391 - end
+		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
