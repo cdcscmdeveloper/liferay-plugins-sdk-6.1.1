@@ -74,7 +74,7 @@
              	value="#{contractDetailsBackingBean.managedBean.searchCtEndDate}"  navigator="true"  showOn="button"
              	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
            	<p:outputLabel value="#{lbl['lbl.fl.deduction.loa']}"/>
-           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="4" style="margin-top: 3px; width: 146px;"/>
+           	<p:inputText value="#{contractDetailsBackingBean.managedBean.searchLoaNo}" maxlength="20" style="margin-top: 3px; width: 146px;"/>
            	<p:outputLabel for="financialYear" value="#{lbl['lbl.fl.financial.year']}" />
 		   	<p:selectOneMenu id="financialYear" value="#{contractDetailsBackingBean.managedBean.searchFinancialYear}"
 		   	    style="margin-bottom:5px; width: 31%;" >
