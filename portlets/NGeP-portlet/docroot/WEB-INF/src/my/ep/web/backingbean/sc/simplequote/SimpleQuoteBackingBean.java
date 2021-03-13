@@ -8043,6 +8043,15 @@ public class SimpleQuoteBackingBean extends
 		
 		// #28134 - start
 		private void validateifSQCreatedFromPid() {
+			// Null check goes here
+			if (CollectionUtils.isEmpty(getManagedBean().getSupplierItems())
+					|| (getManagedBean().getSupplierItems().get(0).getCmItem() == null)
+					|| StringUtils.isBlank(getManagedBean().getSupplierItems().get(0).getCmItem().getExtensionCode())
+					|| (getManagedBean().getRequestNote() == null)
+					|| (getManagedBean().getRequestNote().getPmOrgProfile() == null)) {
+				return;
+			}
+			
 			// REMOVE SUPPLIER LIST IF THE SQ IS CREATED USING PID AND IS NOT
 			// RETURNING FROM TREASURY CIRCULAR PANEL PAGE
 			IPurchaseInDefaultSO pidSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
