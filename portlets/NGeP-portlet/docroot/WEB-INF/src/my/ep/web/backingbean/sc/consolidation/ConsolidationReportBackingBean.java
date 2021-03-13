@@ -615,6 +615,13 @@ public class ConsolidationReportBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getSfBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+						getManagedBean().getSfBriefingPaperReportList());
+			}
+			// #18685 - End
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			// #18685 - Start 
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
@@ -690,6 +697,17 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			// reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getSfBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+						getManagedBean().getSfBriefingPaperReportList());
+			}
+			
+			for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
+			}
+			// #18685 - End
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			//this.downloadAllBriefingPaperReports();
 

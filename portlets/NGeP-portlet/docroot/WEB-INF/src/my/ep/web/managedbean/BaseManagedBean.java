@@ -100,6 +100,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private ScQtFinalizationReport selectedBriefingReport;
 	private List<ScQtFinalizationReport> removeFinalizationReports;
 	private List<ScQtFinalizationReport> consolidationBriefingPaperReportList;
+	private List<ScQtFinalizationReport> sfBriefingPaperReportList;
 	// 18685 - End
 	
 	//17906
@@ -795,8 +796,23 @@ public abstract class BaseManagedBean implements Serializable {
 			List<ScQtFinalizationReport> consolidationBriefingPaperReportList) {
 		this.consolidationBriefingPaperReportList = consolidationBriefingPaperReportList;
 	}
-	// #18685 - End
+
+	/**
+	 * @return the sfBriefingPaperReportList
+	 */
+	public List<ScQtFinalizationReport> getSfBriefingPaperReportList() {
+		return sfBriefingPaperReportList;
+	}
 	
+	/**
+	 * @param sfBriefingPaperReportList the sfBriefingPaperReportList to set
+	 */
+	public void setSfBriefingPaperReportList(
+			List<ScQtFinalizationReport> sfBriefingPaperReportList) {
+		this.sfBriefingPaperReportList = sfBriefingPaperReportList;
+	}
+	// #18685 - End
+
 	public String getDisplayMessageBank() {
 		return displayMessageBank;
 	}
