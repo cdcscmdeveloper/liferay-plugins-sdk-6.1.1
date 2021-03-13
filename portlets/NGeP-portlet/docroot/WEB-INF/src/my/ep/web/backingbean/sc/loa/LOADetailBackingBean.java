@@ -8229,8 +8229,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// scloiloa items
 		List<ScLoiLoaItem> scLoiLoaItemCloneList = new ArrayList<>();
 		for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
-			BigDecimal clUomDay = BigDecimal.valueOf(123);
-			BigDecimal clUomMonth = BigDecimal.valueOf(456);
 			ScLoiLoaItem itemClone = (ScLoiLoaItem) scLoiLoaItem.cloneEntity();
 			List<TplSpecAnswer> tpaCloneList = new ArrayList<>();
 			for (Map.Entry<Long, List<TplSpecAnswer>> entry : getManagedBean().getScLoiLoaItemAnswerMap().entrySet()) {
@@ -8255,10 +8253,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					(TplSpecQuestion) scLoiLoaItem.getScRequestItem().getTplSpecQuestion().cloneEntity());
 			itemClone.setTplSpecAnswerList(tpaCloneList);
 			itemClone.setLoaSpecJustification(scLoiLoaItem.getLoaSpecJustification());
-			itemClone.getScRequestItem().getTplSpecQuestion().setClUomPerDay(clUomDay);
-			itemClone.getScRequestItem().getTplSpecQuestion().setClUomPerMonth(clUomMonth);
-			clUomDay = clUomDay.add(BigDecimal.valueOf(10));
-			clUomMonth = clUomMonth.add(BigDecimal.valueOf(10));
 			scLoiLoaItemCloneList.add(itemClone);
 		}
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
