@@ -2947,6 +2947,19 @@ return	remarksNotFound;
 					}
 				}
 				
+				// #18685 - Start
+				resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+				if (CollectionUtils.isNotEmpty(reqDTO.getScQtFinalization().getScQtFinalizationReports())) {
+					reqDTO.getScQtFinalization().getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+				}
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+						&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+					getManagedBean().getNewBriefingPaperReportList().addAll(
+							getManagedBean().getConsolidationBriefingPaperReportList());
+				}
+				reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+				// #18685 - End
+				
 				resDTO = qtSuppFinalizationSO.submitSupplierFinalizationBrief(reqDTO);
 
 				if (resDTO.isSuccessful()) {
@@ -9662,6 +9675,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			SuppFinalizationReqDTO reqDTO = preSubmitValidationbreif();
 			//SuppFinalizationReqDTO reqDTOBreif = preSubmitValidationbreifButton();
+			// #18685-Start.
+			for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
+			}
+			// #18685-End.
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			// #25638 - Start.
 			if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
