@@ -14634,5 +14634,14 @@ public class SmApplicationBackingBean extends
 		
 		return currReason;
 	}
+	
+	public boolean checkSpecialCat(SmAppl smAppl){
+		if(!smAppl.getSmSupplierCategories().isEmpty()){
+			if(smAppl.getSmSupplierCategories().get(0).isSpecialCategory()){
+				return true;
+			}
+		}
+		return false;
+	}
 	//#12483 - END
 }

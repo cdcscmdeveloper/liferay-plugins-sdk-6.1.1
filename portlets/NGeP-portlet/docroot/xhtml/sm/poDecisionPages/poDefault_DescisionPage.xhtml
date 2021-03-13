@@ -253,11 +253,20 @@
 								<td><c:choose>
 										<c:when
 											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
-											<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
-												styleClass="splNotesFonts" escape="false" />
 											<!-- #12483 - START -->
-											<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" rendered="#{backingBean.managedBean.reviewSiteVisit}"
-												styleClass="splNotesFonts" escape="false" />
+											<table>
+												<tr>
+													<td><h:outputText
+															value="#{lbl['lbl.sm.po.splNotes1']}"
+															styleClass="splNotesFonts" escape="false" /></td>
+												</tr>
+												<tr>
+													<td><h:outputText
+															value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}"
+															rendered="#{backingBean.checkSpecialCat(backingBean.managedBean.smAppl)}"
+															styleClass="splNotesFonts" /></td>
+												</tr>
+											</table>
 											<!-- #12483 - END -->
 										</c:when>
 										<c:when
