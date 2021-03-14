@@ -665,4 +665,43 @@ public class ScheduleBiddingBackingBean extends
 		this.getManagedBean().setRequestItem(requestItem);
 		this.getManagedBean().setAwardedQuantity(awardedQty);
 	}
+	
+	// #30451 - Start.
+	/**
+	 * #30451
+	 * @param taskId
+	 */
+	public void navigateToBiddingPage(String taskId) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		try {
+			this.getManagedBean().setBdSfFlow(true);
+			SCEvaluationDataType dpDataType = getBpmTaskDetails(
+					SCEvaluationDataType.class, null, taskId);
+			this.getManagedBean().setPayLoad(dpDataType);
+			Long qtId = Long.valueOf(141576);
+			List<String> recommandIds = dpDataType.getGroupkeyBa();
+			List<Long> recommendDtls = new ArrayList<Long>();
+
+			for (String str : recommandIds) {
+				recommendDtls.add(Long.parseLong(str));
+			}
+
+			retriveItemsToBid(qtId, recommendDtls,
+					((PmUser) (new FacesScopes().getUserSessionBean()))
+							.getUserId());
+			populateDurationDropDownValues();
+			
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+			fc.getApplication()
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+		}
+	}
+	// #30451 - End.
 }
