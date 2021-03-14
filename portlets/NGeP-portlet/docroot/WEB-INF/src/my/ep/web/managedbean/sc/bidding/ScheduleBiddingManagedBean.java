@@ -70,6 +70,9 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private ScRequestItem requestItem;
 	private String itemTypeService = ParameterConst.ITEM_TYPE_SERVICE;
 	private BigDecimal awardedQuantity;
+	// #30451-Start.
+	private boolean isBdSfFlow;
+	// #30451-End.
 
 	/**
 	 * Default COnstructor
@@ -461,6 +464,22 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	public void setAwardedQuantity(BigDecimal awardedQuantity) {
 		this.awardedQuantity = awardedQuantity;
 	}
+
+	// #30451-Start.
+	/**
+	 * @return the isBdSfFlow
+	 */
+	public boolean isBdSfFlow() {
+		return isBdSfFlow;
+	}
+
+	/**
+	 * @param isBdSfFlow the isBdSfFlow to set
+	 */
+	public void setBdSfFlow(boolean isBdSfFlow) {
+		this.isBdSfFlow = isBdSfFlow;
+	}
+	// #30451-End.
 	
 
 }

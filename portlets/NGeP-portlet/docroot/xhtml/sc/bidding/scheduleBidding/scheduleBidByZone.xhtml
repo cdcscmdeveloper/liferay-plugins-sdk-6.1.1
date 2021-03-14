@@ -40,7 +40,8 @@
 					postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
 					label="#{lbl['lbl.sc.bidding.start']}"
 					value="#{scheduleZoneBid.startDate}" rowIndex="#{index}"
-					update="@([id$=bidScheduleByZonal])">
+					update="@([id$=bidScheduleByZonal])"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 				</ac:dateTime>
 				<p:message id="startDateByZoneMsg" showDetail="false"
 					for="zoneBidStartDate" display="icon" />
@@ -50,7 +51,8 @@
 					<h:outputText value="#{lbl['lbl.sc.bidding.end']}" />
 				</f:facet>
 				<p:inputText id="zoneBidEndDate" readonly="true"
-					value="#{scheduleZoneBid.endDate}">
+					value="#{scheduleZoneBid.endDate}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</p:inputText>
@@ -61,7 +63,8 @@
 					<h:outputText value="#{lbl['lbl.sc.duration.hours']}" />
 				</f:facet>
 				<p:selectOneMenu id="bidDurationByZone"
-					value="#{scheduleZoneBid.duration}">
+					value="#{scheduleZoneBid.duration}"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 					<f:selectItems value="#{scheduleBiddingBB.managedBean.selectItems}"
 						var="selectItem" itemLabel="#{selectItem.label}"
 						itemValue="#{selectItem.value}" />
@@ -132,7 +135,8 @@
 							value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 					</f:facet>
 					<p:inputText style="text-align : right" id="decrementAmtByZone"
-						immediate="true" maxlength="19" value="#{item.decrementAmt}">
+						immediate="true" maxlength="19" value="#{item.decrementAmt}"
+						disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 						<p:ajax event="change" process="@this" partialSubmit="true" />
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"

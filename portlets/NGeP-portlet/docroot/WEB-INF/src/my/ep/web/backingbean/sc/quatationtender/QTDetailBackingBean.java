@@ -233,6 +233,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
+import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
@@ -4571,7 +4572,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 				// set search result doc type for navigate to diff page based on diff doc type selected.
-				qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				// #30451-Start.
+				if (isBidding) {
+					qtnTenderSearchBean.setDocType(ParameterConst.DOCTYPE_BIDDING);
+					qtnTenderSearchBean.setResultDocType(ParameterConst.DOCTYPE_BIDDING);
+					getManagedBean().setBdSfFlow(true);
+				} else {
+					qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				}
+				// #30451-End.
 				
 				
 				// ***17376#66 - start
@@ -4581,11 +4590,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 				// ***17376#66 - end
-				// #30451-Start.
-				if (isBidding) {
-					qtnTenderSearchBean.setDocType(ParameterConst.DOCTYPE_BIDDING);
-				}
-				// #30451-End.
 				
 				
 				
@@ -9304,10 +9308,30 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		qtReqDTo.setQtdetail(scQt);
 		QuationTenderResDTO qtResDTO=detailSO.retriveScheduleDetailStatus(qtReqDTo);
 		BiddingBackingBean biddingBB=new BiddingBackingBean();
-		if(null!=qtResDTO && null!=qtResDTO.getBidSchedule()){
+		// #30451-Start.
+		if (getManagedBean().isBdSfFlow()) {
+			ScheduleBiddingBackingBean sbb = new ScheduleBiddingBackingBean();
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(scQt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+		    if(bpmResDTO != null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
+				 for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
+					 if (StringUtils.isNotEmpty(currentVO.getTaskId())) {
+						 sbb.renewSesionObject();
+						 sbb.navigateToBiddingPage(currentVO.getTaskId());
+						 return "/xhtml/sc/bidding/scheduleBidding/scheduleBiddingMain.xhtml";
+					 }
+					 break;
+				 }
+		    }
+		} else if(null!=qtResDTO && null!=qtResDTO.getBidSchedule()){
 			biddingBB.renewSesionObject();
 			return biddingBB.bidManagementQuotationTenderAction(qtResDTO.getBidSchedule(),previousPageUrl);
 		}
+		// #30451-End.
     	return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";	
     	} //#17376-End onlineBiddingcodes
     

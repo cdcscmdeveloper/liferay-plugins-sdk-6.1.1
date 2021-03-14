@@ -20,7 +20,8 @@
 							postUpdateListener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 							required="true" label="#{lbl['lbl.sc.bidding.start']}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
-							update="@([id$=scheduleBidPackageEndDate],[id$=byPackageStartDateMsg])">
+							update="@([id$=scheduleBidPackageEndDate],[id$=byPackageStartDateMsg])"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 						</ac:dateTime> <p:message id="byPackageStartDateMsg" showDetail="false"
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<td><p:spacer width="10"></p:spacer></td>
@@ -28,7 +29,8 @@
 							value="#{lbl['lbl.sc.bidding.end']}" /></td>
 					<td><p:inputText id="scheduleBidPackageEndDate"
 							readonly="true"
-							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}">
+							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText></td>
@@ -38,7 +40,8 @@
 
 					<td><p:selectOneMenu id="bidSchedulePackageDuration"
 							required="true"
-							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].duration}">
+							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].duration}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 							<f:selectItems
 								value="#{scheduleBiddingBB.managedBean.selectItems}"
 								var="selectItem" itemLabel="#{selectItem.label}"
@@ -103,7 +106,8 @@
 						value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 				</f:facet>
 				<p:inputText id="decrementAmtByPackage" style="text-align : right"
-					maxlength="19" value="#{bidItem.decrementAmt }">
+					maxlength="19" value="#{bidItem.decrementAmt }"
+					disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
