@@ -249,7 +249,12 @@ public interface QTConstants {
 	
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	
-	//25037 QT Bpm Composite Version Validity ID
+	//25037 QT Bpm Composite Version Validity ID -start-
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	//25037 -end-
+	
+	//#15391 -start-
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
+	//#15391 -end-
 	
 }
