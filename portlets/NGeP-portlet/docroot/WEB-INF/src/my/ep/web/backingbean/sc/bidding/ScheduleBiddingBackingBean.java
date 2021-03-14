@@ -47,6 +47,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
@@ -674,21 +675,27 @@ public class ScheduleBiddingBackingBean extends
 	public void navigateToBiddingPage(String taskId) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try {
-			this.getManagedBean().setBdSfFlow(true);
 			SCEvaluationDataType dpDataType = getBpmTaskDetails(
 					SCEvaluationDataType.class, null, taskId);
+			this.getManagedBean().setBdSfFlow(true);
 			this.getManagedBean().setPayLoad(dpDataType);
-			Long qtId = Long.valueOf(141576);
+			Long qtId = Long.valueOf(dpDataType.getQtId());
 			List<String> recommandIds = dpDataType.getGroupkeyBa();
 			List<Long> recommendDtls = new ArrayList<Long>();
-
-			for (String str : recommandIds) {
-				recommendDtls.add(Long.parseLong(str));
+			
+			if (CollectionUtils.isNotEmpty(recommandIds)) {
+				for (String recommandId : recommandIds) {
+					if (StringUtils.isNotEmpty(recommandId)) {
+						recommendDtls.add(Long.parseLong(recommandId));
+					}
+				}
 			}
 
-			retriveItemsToBid(qtId, recommendDtls,
-					((PmUser) (new FacesScopes().getUserSessionBean()))
-							.getUserId());
+			if (CollectionUtils.isNotEmpty(recommendDtls)) {
+				retriveItemsToBid(qtId, recommendDtls,
+						((PmUser) (new FacesScopes().getUserSessionBean()))
+						.getUserId());
+			}
 			populateDurationDropDownValues();
 			
 			fc.getApplication()
