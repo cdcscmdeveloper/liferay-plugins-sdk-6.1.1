@@ -4578,6 +4578,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					qtnTenderSearchBean.setResultDocType(ParameterConst.DOCTYPE_BIDDING);
 					getManagedBean().setBdSfFlow(true);
 				} else {
+					getManagedBean().setBdSfFlow(false);
 					qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
 				}
 				// #30451-End.
