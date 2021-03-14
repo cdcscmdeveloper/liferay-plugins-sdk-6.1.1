@@ -1756,6 +1756,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean demoAction;
 	private List<ScQtCheckList> demoSpecTemplateList;
 
+	// #30451-Start.
+	private boolean isBdSfFlow;
+	// #30451-End.
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10906,6 +10909,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.scQtAppRequestRemark = scQtAppRequestRemark;
 		}
 		//bug #30435 - end
+
+		// #30451-Start.
+		/**
+		 * @return the isBdSfFlow
+		 */
+		public boolean isBdSfFlow() {
+			return isBdSfFlow;
+		}
+
+		/**
+		 * @param isBdSfFlow the isBdSfFlow to set
+		 */
+		public void setBdSfFlow(boolean isBdSfFlow) {
+			this.isBdSfFlow = isBdSfFlow;
+		}
+		// #30451-End.
 }
 
 
