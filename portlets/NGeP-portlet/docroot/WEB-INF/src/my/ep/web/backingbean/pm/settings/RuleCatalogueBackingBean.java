@@ -1088,8 +1088,10 @@ public class RuleCatalogueBackingBean extends
 							&& ruleTypeValue.getCategoryL3Id()
 									.getCategoryL3Id() == null) {
 						// throw required msg
+						// 29669 start
 						throw new EpException(MessageConst.ERROR_770133,
-								new String[] {});
+								new String[] { ruleTypeDesc.getRuleDesc() });
+						// 29669 end
 
 					} else { // fill CategoryDisplayValue for further validation
 						PmCategoryL3 categoryL3 = ruleTypeValue
@@ -1112,6 +1114,19 @@ public class RuleCatalogueBackingBean extends
 
 			}
 			// check validation
+			
+			// 29669 start
+			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().equals("P") 
+					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
+				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
+					if (ruleTypeValue.getRuleNumberValue() == null) {
+						throw new EpException(MessageConst.ERROR_770133,
+								new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+				}
+			}
+			// 29669 end
+			
 			for (int i = 0; i < ruleTypeDesc.getRuleType()
 					.getConfigRuleValues().size(); i++) {
 				// add new values to tracking Diary list
@@ -2577,14 +2592,16 @@ public class RuleCatalogueBackingBean extends
 
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
+		// 29669 start
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+						selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
+		// 29669 end
 	}
 
 	/**
@@ -4003,11 +4020,13 @@ public class RuleCatalogueBackingBean extends
 				.getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
-		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) == 1) {
+		// 29669 start
+		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
+		// 29669 end
 	}
 
 	/**
