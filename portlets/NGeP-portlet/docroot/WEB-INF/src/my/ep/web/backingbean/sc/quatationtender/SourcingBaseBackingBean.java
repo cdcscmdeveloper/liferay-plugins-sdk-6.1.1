@@ -732,11 +732,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
 			msgCode = MessageConst.INFO_700032;
 		}
-		//28834 starts
+		//28834 start
 		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
 			msgCode = MessageConst.INFO_700091;
 		}
-		//28834 starts
+		//28834 ends
 		return msgCode;
 	}
 
