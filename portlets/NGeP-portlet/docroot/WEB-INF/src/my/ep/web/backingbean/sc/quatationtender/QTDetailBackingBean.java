@@ -229,6 +229,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
+import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
 import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
