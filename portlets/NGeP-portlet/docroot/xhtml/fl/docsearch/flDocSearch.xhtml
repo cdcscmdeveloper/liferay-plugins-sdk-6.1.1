@@ -319,9 +319,7 @@
 							        	icon="ui-icon-view"
 							        	onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'isPendingDelivery', value:'fasle'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'#{BpmOutcomeConstant.bpmView}'}, {name:'statusDesc', value:'#{flDocument.statusId}'}])"/>
 									<p:menuitem value="#{lbl['lbl.btn.print']}" ajax="false"
-										rendered="#{!(	flDocument.docType==ParameterConst.doctypePurchaseRequest || 
-														flDocument.docType==ParameterConst.doctypeContractRequest || 
-														(flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) ||
+										rendered="#{!((flDocument.docType==ParameterConst.doctypeFulfilmentNote and flDocument.statusId!=FulfilmentStatusCont.fnAcknowledged) ||
 														(flDocument.docType==ParameterConst.doctypeStopDelivery and flDocument.statusId!=FulfilmentStatusCont.sdApproved) ||
 														(flDocument.docType==ParameterConst.doctypeDebitAdjustmentNote and flDocument.statusId!=FulfilmentStatusCont.dnApproved) || 
 														(flDocument.docType==ParameterConst.doctypePaymentAdvice and flDocument.statusId!=FulfilmentStatusCont.paSubmitted) )}"
