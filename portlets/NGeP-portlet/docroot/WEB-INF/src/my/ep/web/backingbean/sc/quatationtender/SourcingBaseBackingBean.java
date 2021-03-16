@@ -4374,19 +4374,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						// #18685 - End
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
-							// #18685 - Start
-							if (QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue() == getManagedBean().getCurrentStatusId() 
-									&& taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
-								finalizationReport.setPreviousReportContent(finalizationReport.getReportContent());
-								saveScQtFinalizationReport(finalizationReport);
-							}
-							// #18685 - End
 							iterator.remove();
 							continue;
 						} 
 					} 
 					
 					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
+						// #18685 - Start
+						if (null == getManagedBean().getSfBriefingPaperReportList()) {
+							List<ScQtFinalizationReport> sFBriefingPaperReportList = new ArrayList<>();
+							getManagedBean().setSfBriefingPaperReportList(sFBriefingPaperReportList );
+						}
+						getManagedBean().getSfBriefingPaperReportList().add(finalizationReport);
+						// #18685 - End
 						iterator.remove();
 						continue;
 					}
