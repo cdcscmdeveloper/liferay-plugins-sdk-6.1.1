@@ -1633,7 +1633,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.setQtId(qtId);
 			
 			QtnTenderSearchBean qtnTenderSearchBean = getManagedBean().getQtnTenderSearchBean();
-			populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, new SearchBean<ScQt>());
+			// #30451-Start.
+			populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, new SearchBean<ScQt>(), false);
+			// #30451-End.
 			if (StringUtils.isNotEmpty(docType)) {
 				reqDTO.setDocType(docType);
 				reqDTO.setDocNo(null);
@@ -2329,10 +2331,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            the qt search criteria bean
 	 * @param qtSearchBean
 	 *            the qt search filter bean
+	 * @param isBidding 
 	 */
+	// #30451-Start.
 	private void populateQTSearchCriteria(QuationTenderReqDTO reqDTO,
 			QtnTenderSearchBean qtnTenderSearchBean,
-			ISearchBean<ScQt> qtSearchBean) {
+			ISearchBean<ScQt> qtSearchBean, boolean isBidding) {
+	// #30451-End.
 		if (qtnTenderSearchBean != null) {
 			if (CollectionUtils.isNotEmpty(qtSearchBean
 					.getDataFilterBeans())) {
@@ -2486,7 +2491,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)){
-				if(qtnTenderSearchBean.isQtStatusForQt()) {			
+				// #30451-Start.
+				if(qtnTenderSearchBean.isQtStatusForQt() || isBidding) {
+				// #30451-End.
 					SearchMultiFilterBean statusBean = null;
 					SearchMultiFilterBean statusFilterBean = new SearchMultiFilterBean(
 							new SearchFilterBean(
@@ -2520,6 +2527,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						
 					}
 				}
+			// #30451-Start.
+			} else if (isBidding) {
+				List<Long> statusIds = new ArrayList<Long>();
+				statusIds.add(QTStatusConst.SF_PENDING_SCHEDULE_BIDDING);
+				statusIds.add(QTStatusConst.SF_PENDING_BIDDING);
+				statusIds.add(QTStatusConst.SF_PENDING_BIDDING_ESCALATION);
+				SearchMultiFilterBean statusBean = new SearchMultiFilterBean(
+						new SearchFilterBean(
+								"scQtStatus.pmStatus.statusId",
+								SearchOperator.OPERATOR_IN.value(),
+								statusIds,
+								JoinType.LEFT), 
+						new SearchFilterBean(
+								"scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								true,
+								JoinType.LEFT));
+				qtSearchBean.getDataFilterBeans().add(statusBean);
+			// #30451-End.
 			}
 			
 			
@@ -4484,13 +4510,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			IQTDetailSO detailSO;
 			IQTSuppFinalizationSO sfDetailSO;
 			try {
+				// #30451-Start.
+				boolean isBidding = false;
+				if ((isQTMaintenanceScreen() || isQTSearchScreen())&& ParameterConst.DOCTYPE_BIDDING.equals(qtnTenderSearchBean.getDocType())) {
+					isBidding = true;
+					qtnTenderSearchBean.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+				}
+				// #30451-End.
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				sfDetailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtnTenderSearchBean(qtnTenderSearchBean.toQTSearchBean());
-				populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean);
+				// #30451-Start.
+				populateQTSearchCriteria(reqDTO, qtnTenderSearchBean, searchBean, isBidding);
+				// #30451-End.
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				
@@ -4512,7 +4547,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 				// set search result doc type for navigate to diff page based on diff doc type selected.
-				qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				// #30451-Start.
+				if (isBidding) {
+					qtnTenderSearchBean.setDocType(ParameterConst.DOCTYPE_BIDDING);
+					qtnTenderSearchBean.setResultDocType(ParameterConst.DOCTYPE_BIDDING);
+					getManagedBean().setBdSfFlow(true);
+				} else {
+					getManagedBean().setBdSfFlow(false);
+					qtnTenderSearchBean.setResultDocType(qtnTenderSearchBean.getDocType());
+				}
+				// #30451-End.
 				
 				
 				// ***17376#66 - start
@@ -8240,7 +8284,26 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			statusList = getStatusDropdownValuesBySearchBean(moduleCode,
 					docType, searchBean);
-		} else {
+		// #30451-Start.
+		} else if ((isQTMaintenanceScreen() || isQTSearchScreen()) && docType.equals(ParameterConst.DOCTYPE_BIDDING)) {
+				SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+				// Filter By - statusId
+				List<Long> statusIds = new ArrayList<Long>();
+				statusIds.add(QTStatusConst.SF_PENDING_SCHEDULE_BIDDING);
+				statusIds.add(QTStatusConst.SF_PENDING_BIDDING);
+				statusIds.add(QTStatusConst.SF_PENDING_BIDDING_ESCALATION);
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"pmStatus.statusId",
+						SearchOperator.OPERATOR_IN.value(),
+						statusIds));
+				docType = ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION;
+				statusList = super.getStatusDropdownValuesBySearchBean(
+						moduleCode, 
+						docType, 
+						searchBean);
+		}
+		// #30451-End.
+		else {
 			statusList = getStatusDropdownValues(moduleCode, docType);
 		}
 		
@@ -9218,10 +9281,30 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		qtReqDTo.setQtdetail(scQt);
 		QuationTenderResDTO qtResDTO=detailSO.retriveScheduleDetailStatus(qtReqDTo);
 		BiddingBackingBean biddingBB=new BiddingBackingBean();
-		if(null!=qtResDTO && null!=qtResDTO.getBidSchedule()){
+		// #30451-Start.
+		if (getManagedBean().isBdSfFlow()) {
+			ScheduleBiddingBackingBean sbb = new ScheduleBiddingBackingBean();
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(scQt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+		    if(bpmResDTO != null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
+				 for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
+					 if (StringUtils.isNotEmpty(currentVO.getTaskId())) {
+						 sbb.renewSesionObject();
+						 sbb.navigateToBiddingPage(currentVO.getTaskId());
+						 return "/xhtml/sc/bidding/scheduleBidding/scheduleBiddingMain.xhtml";
+					 }
+					 break;
+				 }
+		    }
+		} else if(null!=qtResDTO && null!=qtResDTO.getBidSchedule()){
 			biddingBB.renewSesionObject();
 			return biddingBB.bidManagementQuotationTenderAction(qtResDTO.getBidSchedule(),previousPageUrl);
 		}
+		// #30451-End.
     	return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";	
     	} //#17376-End onlineBiddingcodes
     
