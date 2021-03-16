@@ -1718,6 +1718,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isGenInfo;
 
 	// #15391 - end
+	
+	// #30451-Start.
+	private boolean isBdSfFlow;
+	// #30451-End.
+		
 	public QTDetailManagedBean() {
 		log.info("inside ");
 
@@ -10721,6 +10726,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 		//bug #30435 - end
 
+		// #30451-Start.
+		/**
+		 * @return the isBdSfFlow
+		 */
+		public boolean isBdSfFlow() {
+			return isBdSfFlow;
+		}
+
+		/**
+		 * @param isBdSfFlow the isBdSfFlow to set
+		 */
+		public void setBdSfFlow(boolean isBdSfFlow) {
+			this.isBdSfFlow = isBdSfFlow;
+		}
+		// #30451-End.
 }
 
 
