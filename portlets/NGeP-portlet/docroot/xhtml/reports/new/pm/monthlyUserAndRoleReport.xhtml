@@ -36,7 +36,7 @@
 				</th>
 				<td>
 					<ac:lov id="minstryPtjsearchRpt" lovId="PM_ORG_PROFILE_MINSTRY"
-						headerText="#{lbl['lbl.pm.org.ptj.search.ministry']}" update="@form"
+						headerText="#{lbl['lbl.pm.org.ptj.search.ministry.lov']}" update="@form"
 						saveObject="pmReportsBackingBean.managedBean.selectedMinistry"
 						value="#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
 						size="100" readonly="true"
@@ -50,7 +50,7 @@
 				</td>
 				<td>
 					<ac:lov id="PtjGroupsearchRpt" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
-						headerText="#{lbl['lbl.pm.org.ptj.search.jabatan']}" update="@form"
+						headerText="#{lbl['lbl.pm.org.ptj.search.kptj.lov']}" update="@form"
 						disabled = "#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName == null}"
 						saveObject="pmReportsBackingBean.managedBean.selectedKumpulanPTJ"
 						value="#{pmReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
@@ -65,7 +65,7 @@
 				</td>
 				<td>
 					<ac:lov id="openPtjsearchRpt" lovId="PM_ORG_PROFILE_PTJ"
-						headerText="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}"
+						headerText="#{lbl['lbl.pm.org.ptj.search']}"
 						disabled = "#{pmReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName == null}"
 						saveObject="pmReportsBackingBean.managedBean.selectedPTJ"
 						value="#{pmReportsBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
