@@ -64,7 +64,7 @@
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-<!-- ***28834 starts -->
+<!-- ***28834 start -->
 						<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -90,7 +90,7 @@
 							</h:panelGroup>
 							
 					</ui:repeat>
-		<!-- ***28834 ends -->			
+		<!-- ***28834 end -->			
 					
 				</ui:define>
 			</ui:decorate>
@@ -179,7 +179,7 @@
 		
 					
 			
-			<!-- ***28834 starts -->
+			<!-- ***28834 start -->
 			<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="false">
@@ -200,9 +200,9 @@
 					onclick="confirmBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-		<!-- ***28834 ends -->
+		<!-- ***28834 end -->
 		
-		<!-- ***28834 starts -->
+		<!-- ***28834 start -->
 		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="true">
@@ -220,7 +220,7 @@
 			</div>
 			
 		</p:dialog>
-		<!-- ***28834 ends -->
+		<!-- ***28834 end -->
 		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
