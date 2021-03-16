@@ -1681,7 +1681,7 @@ public void saveComplianceSample() {
 
 	}
 	
-	//#28786 - start
+	//#28786 - commit under #25138 - start
 	public String complianceFinancialBackaction() {
 		this.getManagedBean().setTechindex(-1);
 		if(this.getManagedBean().getNonScoringActiveIndex() != 1){
@@ -1691,7 +1691,7 @@ public void saveComplianceSample() {
 			return "/xhtml/sc/evaluation/compliance/financialComplianceViewSuppliers.xhtml";
 		}
 	}
-	//#28786 - start
+	//#28786 - commit under #25138 - end 
 
 	/**
 	 * Technical spec backaction.
@@ -13661,7 +13661,7 @@ private void retriveCommitteeRemarksList(){
 								//#25138 - setofferscoretype for zonal and non zonal- start
 								if(this.getManagedBean().getScQt().isZonal()){
 									//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
-									if(specdetails.getScoreOfferPrices().getTplSpecZoneDtl() == null){
+									if(specdetails.getScoreOfferPrices()!= null){
 										this.getManagedBean().setOfferScoreType(specdetails.getScoreOfferPrices()
 												.getScoreType().toString());
 										
