@@ -276,13 +276,17 @@ public class SupplierFinalizationBackingBean extends
 	//newly added 28834 starts
 			List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 			int pendingCount = 0;
-			for (ScQtMeeting meeting : meetingListList) {
-				if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
-						&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
-						&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					pendingCount++;
+			//START - BUG:#30546,CR:#28834
+			//Include checking null due to NullPointer exception for scenario forward to Higher Authority to BPK
+			if(meetingListList != null){
+				for (ScQtMeeting meeting : meetingListList) {
+					if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+							&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+							&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+						pendingCount++;
+					}
 				}
-			}
+			}//END - BUG:#30546,CR:#28834
 
 			if (pendingCount > 0) {
 
