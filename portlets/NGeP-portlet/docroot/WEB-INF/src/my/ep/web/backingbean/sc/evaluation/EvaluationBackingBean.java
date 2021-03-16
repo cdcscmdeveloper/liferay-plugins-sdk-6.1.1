@@ -3527,9 +3527,9 @@ public void saveComplianceSample() {
 				zoneReqDto.setCheckListId(this.getManagedBean()
 						.getScQtChecklist().getQtChecklistId());
 				//#25138 - scoreofferprice.speczonedtlid null for wip data  - start
-				if(speczone.getScoreOfferPrices().getTplSpecZoneDtl()==null){
+				if(speczone.isSpecZoneDtlReq()){
 					
-					this.getManagedBean().setSpeczonedtlReq(true);
+					this.getManagedBean().setSpeczonedtlReq(speczone.isSpecZoneDtlReq());
 					this.getManagedBean().setOfferPricePackage(
 							speczone.getScoreOfferPrices());
 					this.getManagedBean().setWithInVarieance(
