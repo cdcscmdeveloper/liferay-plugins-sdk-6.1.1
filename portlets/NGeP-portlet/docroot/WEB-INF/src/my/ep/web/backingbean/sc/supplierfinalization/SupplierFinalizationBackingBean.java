@@ -241,9 +241,10 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+		//28834 starts
 		ScQtMeeting scQtMeeting= new ScQtMeeting();
 		scQtMeeting.setMeetingStatus(getPmStatusByStatusId(scQtMeeting.getMeetingStatusStr()));
-	
+		//28834 ends
 		qtSuppFinalizationSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSuppFinalizationSO.class);
@@ -300,7 +301,7 @@ public class SupplierFinalizationBackingBean extends
 						prepareUpdateCommitteeMember();//#25037
 			}
 			// #27502 -- End
-			//28834 starts
+			//28834 start
 			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes()) 
 					&& this.getManagedBean().getOutComes().length > 0) {
 				boolean reviseExists = false;
@@ -323,9 +324,9 @@ public class SupplierFinalizationBackingBean extends
 				}
 				
 			}
-	//28834 ends
+	//28834 end
 			
-	//newly added 28834 starts
+	//newly added 28834 start
 			List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 			int pendingCount = 0;
 			//START - BUG:#30546,CR:#28834
@@ -348,7 +349,7 @@ public class SupplierFinalizationBackingBean extends
 				this.getManagedBean().setDisableBfButton(true);
 			}
 			
-			//28834 ends
+			//28834 end
 			prepareUpdateCommitteeMember();//#25037
 			fc.getApplication()
 					.getNavigationHandler()
@@ -1187,7 +1188,7 @@ public class SupplierFinalizationBackingBean extends
 	 * @param scQtMeeting
 	 *            the selected ScQtMeeting entity
 	 */
-	//28834 starts
+	//28834 start
 
 	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
 
@@ -1212,7 +1213,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 
-	//28834 ends
+	//28834 end
 
 	/**
 	 * To retrieve committee details
@@ -2461,6 +2462,7 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
 	 */
+	//28834 starts
 	public void submitAction() {
 		ScQtMeeting scQtMeeting = new ScQtMeeting();
 		this.checkIfLoggedinUserIsSecretary();
@@ -2504,7 +2506,8 @@ public class SupplierFinalizationBackingBean extends
 			this.submitSuppFinalization();
 		}
 	}
-//28834
+	//28834 ends
+//28834 starts
 	public boolean changeMeetingStatusBrief() {
 		Boolean Meetingstatus= false;
 		int doneList = 0;
@@ -2548,7 +2551,8 @@ return	Meetingstatus;
 		
 		
 	}
-	
+	//28834 ends
+	//28834 starts
 	public boolean validationRemarksBrief() {
 		Boolean remarksNotFound= true;
 		
@@ -2588,17 +2592,18 @@ return	remarksNotFound;
 		
 		
 	}
+	//28834  ends
 	
 	
 	
-	//28834 starts
+	//28834 start
 		private SuppFinalizationReqDTO validateInfobreif(int index) {
 			return validateInfobreif(index, false);
 		}
-		//28834 ends
+		//28834 end
 		
 		
-		//28834 starts
+		//28834 start
 		private SuppFinalizationReqDTO validateInfobreif(int index, boolean skipValidation) {
 			log.info("..In validateInfo()..");
 
@@ -2774,10 +2779,10 @@ return	remarksNotFound;
 			} finally {
 
 			}
-		}//28834 ends
+		}//28834 end
 		
 		
-		//28834//
+		//28834 starts//
 		private void updateBPMTaskBrief(String outcome, PmDigiSign digiSign, SuppFinalizationReqDTO reqDTO) {
 			log.info("updateBPMTask");
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -2987,7 +2992,7 @@ return	remarksNotFound;
 				qtSuppFinalizationSO = null;
 			}
 		}
-		//#28834 ends
+		//#28834 end
 	
 	
 	
@@ -3040,8 +3045,9 @@ return	remarksNotFound;
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(this.getManagedBean().getCurrentStatusId())) {
-				
+				//28834 starts
 				//validateFinalizationReports(null);
+				//28834 ends
 				
 				if (CollectionUtils.isNotEmpty(meetingList)) {
 					boolean atleastOneMeetingIsDone = false;
@@ -5282,7 +5288,7 @@ return	remarksNotFound;
 			
 		}
 		
-		//28834 STARTS
+		//28834 starts
 		
 		if (getManagedBean().isBpkCentralContract()) {
 			if (excludedDecisionList == null) {
@@ -5299,7 +5305,7 @@ return	remarksNotFound;
 					ParameterConst.DECISION_RBP);
 		}
 		
-		//28834 Ends
+		//28834 end
 		
 		
 		
@@ -9635,7 +9641,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		
 		//#26169 #38- END
-		//#28834 starts
+		//#28834 start
 		public void submitBrief(String revise)
 		{
 		    log.info("testingssssssssssssssssssssssssssssssssssssssssssssssssssssssss"+revise);
@@ -9774,9 +9780,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		    
 		    
 		}
-	}//#28834 ends
+	}//#28834 end
 		
-
+//28834 starts
 		private SuppFinalizationReqDTO preSubmitValidationbreif() {
 			log.info("preSubmitValidation");
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -9941,6 +9947,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			
 			return reqDTO;
 		}
+		//28834 ends
 		
 		//#27927 - Start
 		/**
