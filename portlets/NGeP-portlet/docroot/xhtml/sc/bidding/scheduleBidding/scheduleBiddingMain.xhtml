@@ -35,7 +35,7 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton id="submitBtn" value="#{lbl[buttonLabel]}"
 					update="@form" styleClass="ui-button"
-					rendered="#{qtValidityDaysExpired}" onstart="blockWidget.show()"
+					rendered="#{qtValidityDaysExpired and !scheduleBiddingBB.managedBean.bdSfFlow}" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
 			</ui:repeat>
@@ -101,14 +101,16 @@ scheduleBiddingBB.isQTStatusPublished(scheduleBiddingBB.managedBean.currentStatu
 				<p:column style="width:2% ;">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="multiSelectContactCB"
-							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}">
+							value="#{scheduleBiddingBB.managedBean.selectedAllBidContacts}"
+							disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 							<p:ajax partialSubmit="true" process="@this"
 								update="@([id$=contactDetailsPanelMain])"
 								listener="#{scheduleBiddingBB.selectAll(scheduleBiddingBB.managedBean.selectedAllBidContacts,scheduleBiddingBB.managedBean.scBidContactPersonList)}"/>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox id="selectCOntactCB"
-						value="#{contact.selected}">
+						value="#{contact.selected}" 
+						disabled="#{scheduleBiddingBB.managedBean.bdSfFlow}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=contactDetailsPanelMain])" />
 					</p:selectBooleanCheckbox>
@@ -142,13 +144,15 @@ scheduleBiddingBB.isQTStatusPublished(scheduleBiddingBB.managedBean.currentStatu
 				<p:commandButton value="#{lbl['lbl.btn.add']}" id="addContact"
 					process="@this" partialSubmit="true"
 					action="#{scheduleBiddingBB.addContactAction}" immediate="true"
-					update="@([id$=contactPersonDetails])" />
+					update="@([id$=contactPersonDetails])" 
+					rendered="#{!scheduleBiddingBB.managedBean.bdSfFlow}"/>
 
 				<p:commandButton id="deleteContact" value="#{lbl['lbl.btn.delete']}"
 					immediate="true" process="@this"
 					disabled="#{scheduleBiddingBB.deleteselectedList(scheduleBiddingBB.managedBean.scBidContactPersonList)}"
 					partialSubmit="true" oncomplete="contactPersonDelete.show();"
-					update="@([id$=contactPersonDeleteId])" />
+					update="@([id$=contactPersonDeleteId])" 
+					rendered="#{!scheduleBiddingBB.managedBean.bdSfFlow}"/>
 
 				<ui:param name="contactPersonDeleteId" value="contactPersonDeleteId"></ui:param>
 
