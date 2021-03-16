@@ -6038,9 +6038,10 @@
 		</security-role-ref>
 	</portlet>
 	
+	<!-- #30520 -->
 		<portlet>
 			<portlet-name>ReviewPurchaseInquiry</portlet-name>
-			<display-name>Review / Request Purchase Inquiry</display-name>
+			<display-name>Item Inquiry</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
@@ -6058,7 +6059,7 @@
 			<portlet-info>
 			<!-- #30520 -->
 				<title>Item Inquiry</title>
-				<short-title>Review / Request Purchase Inquiry</short-title>
+				<short-title>Item Inquiry</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
