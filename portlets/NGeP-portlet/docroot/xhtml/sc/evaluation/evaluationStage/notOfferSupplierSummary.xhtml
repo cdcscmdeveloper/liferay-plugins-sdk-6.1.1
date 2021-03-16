@@ -7,14 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 		
-			<p:dataTable var="notOfferSupplier"
+				<p:dataTable var="notOfferSupplierTec"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				id="evaluationCommitteeSummaryNotOfferSupplier" rows="10"
+				id="evaluationCommitteeSummaryNotOfferSupplierTechPackage" rows="10"
 				value="#{evaluationBackingBean.managedBean.notOfferSupplierDM}"
 				lazy="true" editable="true" rowIndexVar="index"
-				rowKey="#{notOfferSupplier}">
+				rowKey="#{notOfferSupplierTec}">
 
-				<ac:paginator for="evaluationCommitteeSummaryNotOfferSupplier"></ac:paginator>
+				<ac:paginator for="evaluationCommitteeSummaryNotOfferSupplierTechPackage"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.not.offer.supplier.number']}"
 					style="width:30%; text-align:center;">
@@ -25,7 +25,7 @@
 				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="text-align:center;">
 					<h:outputText
-						value="#{notOfferSupplier[1]}"></h:outputText>
+						value="#{notOfferSupplierTec[1]}"></h:outputText>
 
 				</p:column>
 				
