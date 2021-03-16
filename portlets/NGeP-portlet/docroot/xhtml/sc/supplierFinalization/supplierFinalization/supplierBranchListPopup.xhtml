@@ -46,7 +46,7 @@
 				
 				<p:column headerText="#{lbl['lbl.sc.branch.status']}" 
 				    style="width:10%; white-space:normal; text-align:center;" >
-					<h:outputText value="#{branchList.recordStatusFlg eq DbValueConst.recordStatusActive ? 'Active' : 'Deleted'}" />						  	 
+					<h:outputText value="#{lbl[branchList.recordStatusFlg eq DbValueConst.recordStatusActive ? 'lbl.txt.active' : 'lbl.sm.deleted']}" />						  	 
 				  
 				</p:column>
 				
