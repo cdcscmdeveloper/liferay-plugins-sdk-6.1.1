@@ -1010,6 +1010,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			reportName = ReportConst.FL_NGEP_COGSTR;
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_STOP_DELIVERY)) {
 			reportName = ReportConst.FL_NGEP_STOP_DELIVERY;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			reportName = ReportConst.FL_NGEP_PURCHASE_REQUEST;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_REQUEST)) {
+			reportName = ReportConst.FL_NGEP_CONTRACT_REQUEST;
 		}
 		
 		if(reportName!=null) {
