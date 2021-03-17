@@ -281,10 +281,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isMofFinalization;
 	private boolean isBpkCentralContract;
 	// #27502 - Start 
-	//28834 start
-	
+	//28834 starts
 	private boolean disableBfButton;
-	//28834 ends
+	//28834 end
 	
 	// #11134 - Start
 	private boolean haveSupplierRejection;
@@ -2383,7 +2382,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.isBpkCentralContract = isBpkCentralContract;
 	}
 	//27502 - End.
-	//28834 starts
+	//28834 start
 	public boolean isDisableBfButton() {
 		return disableBfButton;
 	}
@@ -2392,7 +2391,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableBfButton = disableBfButton;
 	}
 	
-	//28834 ends
+	//28834 end
 }
 
 
