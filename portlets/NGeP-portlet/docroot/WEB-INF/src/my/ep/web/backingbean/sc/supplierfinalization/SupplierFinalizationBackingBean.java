@@ -2479,7 +2479,7 @@ public class SupplierFinalizationBackingBean extends
 							// changeMeetingStatusBrief();
 
 							//Boolean remarksNotFound = validationRemarksBrief(meeting.getQtMeetingId());
-							if (StringUtil.isEmpty(meeting.getRemark())) {
+							if (StringUtils.isEmpty(meeting.getRemark())) {
 
 								RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
 							} else {
