@@ -386,6 +386,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
 		supoendBB.getManagedBean().getSuspensionProductListingPagingDataModel().resetData();
+		//Development #29214 -performance Hafiz start
+		supoendBB.getManagedBean().getAgencyPersistDataModel().resetData();
+		//Development #29214 -performance Hafiz end
 		if (!getManagedBean().isViewOnly()) {
 			return CONTRACT_MAINT_PAGE;
 		} else { // view suspension from notification
