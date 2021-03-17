@@ -93,11 +93,11 @@
 			<p:dataTable id="itemSpecDescTable"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				var="itemSpec" rowIndexVar="index"
-				value="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList}"
-				style="width:45%">
+				value="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList}">
 				<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-					style="white-space:normal">
-					#{itemSpec}
+					style="width:45%; white-space:normal; text-align: center;">
+					<p:inputTextarea value="#{itemSpec}" maxlength="200" rows="3"
+						style="width:98%;" autoResize="false" disabled="true" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
