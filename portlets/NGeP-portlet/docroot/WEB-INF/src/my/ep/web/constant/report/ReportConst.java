@@ -959,6 +959,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_KEY_USER_ID = "puser";
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
 	public static final String PARAM_DOC_NO = "PNO"; 
+	public static final String PARAM_RUNNING_NO = "RNO"; 
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_QUOTE_ID_EQ = "qtid";
 	public static final String PARAM_KEY_REPORT_ID = "preportid";
