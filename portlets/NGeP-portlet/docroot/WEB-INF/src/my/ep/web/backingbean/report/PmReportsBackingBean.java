@@ -689,7 +689,10 @@ public class PmReportsBackingBean extends
 		}else if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) || isInternalAuditorUnderMinistry()){
 			if(PmReportConst.PM_LIST_OF_PTJ_ALLOWED_TO_APPROVE_OTHER_PTJ_PROCUREMENT.equals(getManagedBean().getReportCode())) {
 				setCurrentActiveOrg();
-			}
+			}else {   //#29486 - shafie start
+				getManagedBean().setSelectedMinistry(null);
+			}	
+			//#29486 - shafie end
 		}
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
