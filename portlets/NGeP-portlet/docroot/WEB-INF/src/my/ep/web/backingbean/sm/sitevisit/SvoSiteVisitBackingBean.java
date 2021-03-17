@@ -1948,6 +1948,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		// #29719 - end
+		
+		//#30550 - start
+		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() == null ||
+				getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
+		}
+		//#30550 - end
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
@@ -2039,7 +2047,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					//End 25294  - Site Visit Grouping Enhancement -28775
-					//#9608 - start
+					//#9608, #30550 - start
 					return "/xhtml/common/acknowledge.xhtml";
 				}else if(!action.equals(changeTab)){
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
@@ -2047,13 +2055,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
 				}			
 				//renewSesionObject();
-				int index = getManagedBean().getActiveIndex();
+				getManagedBean().setFromReport(true);
 				retrieveSiteVisitInfo("");
-				getManagedBean().setActiveIndex(index);
+				getManagedBean().setFromReport(false);
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
 				return null;
 				//return "/xhtml/common/acknowledge.xhtml";
-				//#9608 - end
+				//#9608, #30550 - end
 			} else {
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
 			}
