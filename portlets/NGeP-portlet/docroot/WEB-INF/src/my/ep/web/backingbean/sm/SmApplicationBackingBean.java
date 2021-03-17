@@ -15262,8 +15262,8 @@ public class SmApplicationBackingBean extends
 
 		if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
 			for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-				if (bankName._persistence_get_pmFinancialOrg().getFinancialOrgId() != null) {
-					hsetAccountName.add(bankName._persistence_get_pmFinancialOrg().getFinancialOrgId());
+				if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
+					hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId());
 					hsetAccountNo.add(bankName.getAccountNo());
 				}
 			}

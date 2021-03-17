@@ -3338,10 +3338,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 1) {
 			for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-				if (bankName._persistence_get_pmFinancialOrg().getFinancialOrgId() != null
-						&& hsetAccountName.add(bankName._persistence_get_pmFinancialOrg().getFinancialOrgId()) == false) {
+				if (bankName.getPmFinancialOrg().getFinancialOrgId() != null
+						&& hsetAccountName.add(bankName.getPmFinancialOrg().getFinancialOrgId()) == false) {
 					for (SmSupplierBank bank : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
-						if (hsetAccountNo.add(bank._persistence_get_accountNo()) == false) {
+						if (hsetAccountNo.add(bank.getAccountNo()) == false) {
 							RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 						}
 					}
