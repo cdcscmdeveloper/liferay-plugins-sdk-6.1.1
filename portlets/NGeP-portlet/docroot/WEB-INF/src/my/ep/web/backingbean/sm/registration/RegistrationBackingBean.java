@@ -124,6 +124,8 @@ import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#13320 - Rahim
 
+import com.liferay.portal.security.auth.AuthVerifierResult.State;
+
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
 public class RegistrationBackingBean extends BaseBackingBean<RegistrationManagedBean>{
@@ -1988,15 +1990,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 			}
-			//start - #30483
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", ISupplierSearchSO.class);
-			SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean().getSmBusinessAdd().getAddressId());
-			//end - #30483
+			// start - #30483
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
+					.getPmState().getStateId()));
+			if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+						.getServiceObject("sm", ISupplierSearchSO.class);
+				if (this.getManagedBean().getSmBusinessAdd() != null) {
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
+							.getSmBusinessAdd().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
+				}
+			}
+			// end - #30483
 			//29012: Disciplinary Action - 26238 - fix for when district id null
-			if(smAddress.getPmDistrict().getDistrictId() != null){
-				this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(smAddress.getPmDistrict().getDistrictId()));
-				List<SelectItem> cityLs = SmCommonUtil.getCityList(smAddress.getPmDistrict().getDistrictId());
+			if(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId() != null){
+				this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
+				List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
 				this.getManagedBean().setBusinessCityLs(cityLs);
 			}
 			//29012: Disciplinary Action - 26238
@@ -2156,12 +2166,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						this.getManagedBean().setSabahSarawakType(true);
 					}
 					
-					// start - #30483 LETAK NI DEKAT LINE 2124
-					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-							.getServiceObject("sm", ISupplierSearchSO.class);
-					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
-							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
-					this.getManagedBean().setSmBusinessAdd(smAddress);
+					// start - #30483 
+					PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
+							.getPmState().getStateId()));
+					if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+								.getServiceObject("sm", ISupplierSearchSO.class);
+						SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+								.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+						this.getManagedBean().setSmBusinessAdd(smAddress);
+					}
 					// end - #30483
 					
 					this.populateStateByAddType("business", false);		
@@ -2434,11 +2448,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//log.info(">>> " + this.getManagedBean().getSmBusinessAdd().getPmCity().getCityName());
 				
 				// start - #30483
-				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-						.getServiceObject("sm", ISupplierSearchSO.class);
-				SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
-						.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
-				this.getManagedBean().setSmBusinessAdd(smAddress);
+				PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
+						.getPmState().getStateId()));
+				if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", ISupplierSearchSO.class);
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
+				}
 				// end - #30483
 				
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
