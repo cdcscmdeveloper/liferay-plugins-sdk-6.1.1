@@ -36,7 +36,9 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
@@ -335,6 +337,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	// #28278
 	private boolean flagShowButtonSubmit;
+	
+	//14530
+		private SmApplInquiry poToSupplierInquiry;
+		private List<SmApplInquiry> poSupplierInquiryHistory;
+		private List<SmApplSupportDoc> missinDocs;
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2259,6 +2266,30 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setFlagShowButtonSubmit(boolean flagShowButtonSubmit) {
 		this.flagShowButtonSubmit = flagShowButtonSubmit;
+	}
+
+	public List<SmApplInquiry> getPoSupplierInquiryHistory() {
+		return poSupplierInquiryHistory;
+	}
+
+	public void setPoSupplierInquiryHistory(List<SmApplInquiry> poSupplierInquiryHistory) {
+		this.poSupplierInquiryHistory = poSupplierInquiryHistory;
+	}
+
+	public SmApplInquiry getPoToSupplierInquiry() {
+		return poToSupplierInquiry;
+	}
+
+	public void setPoToSupplierInquiry(SmApplInquiry poToSupplierInquiry) {
+		this.poToSupplierInquiry = poToSupplierInquiry;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocs() {
+		return missinDocs;
+	}
+
+	public void setMissinDocs(List<SmApplSupportDoc> missinDocs) {
+		this.missinDocs = missinDocs;
 	}
 
 	// #29617 start
