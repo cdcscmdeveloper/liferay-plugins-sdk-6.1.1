@@ -507,7 +507,21 @@ public class ViewApplHistoryBackingBean extends
 				initSiteVisit();
 			}
 		}
-		
+		//START 14530
+		if(this.getManagedBean().getSmAppl().getSmApplInquiries() != null){
+			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
+					.getSmApplInquiries()) {
+				if (!StringUtils.isBlank(inquiry.getInquirySubject())
+						&& inquiry
+								.getInquirySubject()
+								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+					inquiry.getSmApplSupportDocInquiries().size();
+					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
+				}
+			}
+		}		
+		//END 14530
 		/*
 		 * retrieve status from SM_APPL, not workflow status
 		 String statusDesc = null; 
@@ -1646,4 +1660,16 @@ public class ViewApplHistoryBackingBean extends
 		return result;
 	}
 	//29380  - Site Visit Grouping Enhancement -28775 - End
+	
+	//14530
+	public boolean checkPoinquiry()
+	{
+		for(SmApplInquiry smapplinquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smapplinquiry.getInquirySubject().equalsIgnoreCase(SupplierManagementConst.INQUIRY_PO_SUPPLIER)){
+				return true;
+			}
+		}
+		return false;
+	}
+	//14530
 }
