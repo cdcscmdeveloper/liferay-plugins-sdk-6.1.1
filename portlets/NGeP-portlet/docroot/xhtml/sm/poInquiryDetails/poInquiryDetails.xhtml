@@ -88,7 +88,7 @@
 	
 	<p:panel header="#{lbl['lbl.sm.inquiry.list']}" id="inquiryHistoryDetailsPanelId" 
 		rendered="#{not empty backingBean.managedBean.poSupplierInquiryHistory}">
-			<p:dataTable  id="inqHistDetailsTableId" selectionMode="single" selection="#{backingBean.managedBean.poToSupplierInquiry}" rowKey="#{inqHistVar}" 
+			<p:dataTable  id="inqHistDetailsTableId" selection="#{backingBean.managedBean.poToSupplierInquiry}" rowKey="#{inqHistVar}" 
 			value="#{backingBean.managedBean.poSupplierInquiryHistory}" var="inqHistVar">
 				
 				<ac:paginator for="inqHistDetailsTableId" />
@@ -116,7 +116,8 @@
 				<!-- #14530 - add action column -->
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink 
-					listener="#{backingBean.inquiryRowSelect}"
+					action="#{backingBean.inquiryRowSelect(inqHistVar)}"
+					process="@this"
 					update=":#{p:component('inquiryDetails')}"
 					oncomplete="inquiryDtls.show();">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
