@@ -352,7 +352,7 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
 				</f:facet>
-				<p:selectOneMenu value="#{varOwnerPersonnel.pmCountry.countryId}" disabled="true">
+				<p:selectOneMenu value="#{varOwnerPersonnel.pmCountry.countryId}" disabled="#{varOwnerPersonnel.identificationType.parameterCode eq ParameterConst.identificationTypesIc}">
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
 						<p:ajax event="change" listener="#{registrationBackingBean.ownerNationalityOnChange}" update=":form:tableOwnerPersonnel" />
