@@ -41,7 +41,7 @@
 					
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
-					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed} and !supplierProposalDetailBackingBean.managedBean.supplierBranchListDeleted"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchListDeleted}"
 					update="@this" process="@this" partialSubmit="true"/>
 					</td>
 		</tr>
