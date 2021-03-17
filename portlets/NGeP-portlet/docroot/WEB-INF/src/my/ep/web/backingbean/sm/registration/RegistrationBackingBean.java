@@ -1867,7 +1867,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(this.getManagedBean().getSmBusinessAdd().getPmDivision()==null) {
 						getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 					} else {
-						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId());			
+						//start - #30483
+						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+								.getServiceObject("sm", ISupplierSearchSO.class);
+						SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean().getSmBusinessAdd().getAddressId());
+						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(smAddress.getPmDivision().getDivisionId());			
+						//end - #30483
 						this.getManagedBean().setBusinessDistrictLs(districtLs);
 					}
 															
@@ -1983,10 +1988,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 			}
+			//start - #30483
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISupplierSearchSO.class);
+			SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean().getSmBusinessAdd().getAddressId());
+			//end - #30483
 			//29012: Disciplinary Action - 26238 - fix for when district id null
-			if(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId() != null){
-				this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
-				List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
+			if(smAddress.getPmDistrict().getDistrictId() != null){
+				this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(smAddress.getPmDistrict().getDistrictId()));
+				List<SelectItem> cityLs = SmCommonUtil.getCityList(smAddress.getPmDistrict().getDistrictId());
 				this.getManagedBean().setBusinessCityLs(cityLs);
 			}
 			//29012: Disciplinary Action - 26238
@@ -2146,7 +2156,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						this.getManagedBean().setSabahSarawakType(true);
 					}
 					
-					this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+					// start - #30483 LETAK NI DEKAT LINE 2124
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", ISupplierSearchSO.class);
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
+					// end - #30483
 					
 					this.populateStateByAddType("business", false);		
 					
@@ -2416,6 +2432,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//log.info(">>> " + this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionName());
 				//log.info(">>> " + this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictName());
 				//log.info(">>> " + this.getManagedBean().getSmBusinessAdd().getPmCity().getCityName());
+				
+				// start - #30483
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+						.getServiceObject("sm", ISupplierSearchSO.class);
+				SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+						.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+				this.getManagedBean().setSmBusinessAdd(smAddress);
+				// end - #30483
 				
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
@@ -4146,18 +4170,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						.equalsIgnoreCase(businessType)
 				|| SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK
 						.equalsIgnoreCase(businessType)) {
-			// show “Equity Owner” and the checkbox auto-ticked and
+			// show ï¿½Equity Ownerï¿½ and the checkbox auto-ticked and
 			// non-editable.
 			//For ROB, Professional Body, Business Registration Number in Sabah & Sarawak
-			//- Role in company to display “Equity Owner” and the checkbox auto-ticked and non-editable.
+			//- Role in company to display ï¿½Equity Ownerï¿½ and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(false);
 			this.getManagedBean().setShowOwner(true);
 			this.getManagedBean().setDisableRole(true);
 			this.getManagedBean().setOwnerIsEquity(true);
 		} else {
-			// show “Director” and the checkbox auto-ticked and non-editable.
+			// show ï¿½Directorï¿½ and the checkbox auto-ticked and non-editable.
 			//For Cooperative (Registered with SKM and Others), Society, ROS (Organization registered with JPPM) and Organization (Others)
-			//- Role in company to display “Director” and the checkbox auto-ticked and non-editable.
+			//- Role in company to display ï¿½Directorï¿½ and the checkbox auto-ticked and non-editable.
 			this.getManagedBean().setShowDirector(true);
 			this.getManagedBean().setShowDirectorInOwner(true);
 			this.getManagedBean().setShowOwner(false);
