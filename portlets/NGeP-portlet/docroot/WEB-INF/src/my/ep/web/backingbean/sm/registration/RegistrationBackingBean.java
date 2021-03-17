@@ -2166,16 +2166,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						this.getManagedBean().setSabahSarawakType(true);
 					}
 					
-					// start - #30483 
-					PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
-							.getPmState().getStateId()));
-					if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
-								.getServiceObject("sm", ISupplierSearchSO.class);
-						SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
-								.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
-						this.getManagedBean().setSmBusinessAdd(smAddress);
-					}
+					// start - #30483
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", ISupplierSearchSO.class);
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
 					// end - #30483
 					
 					this.populateStateByAddType("business", false);		
