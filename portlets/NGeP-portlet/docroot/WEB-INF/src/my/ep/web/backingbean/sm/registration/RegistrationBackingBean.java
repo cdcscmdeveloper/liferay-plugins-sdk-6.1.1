@@ -590,8 +590,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							&& !owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT) 
-							&& (owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) 
-									|| owner.getNationality().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))){
+							&& ((owner.getNationality().getCountryCode()
+									.equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) && !owner
+									.getIdentificationNo().startsWith("K", 0)) || owner.getNationality()    //#30064
+									.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))) {
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}
 				}
@@ -602,8 +604,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}else if(director.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
 							&& !director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
-					}else if(director.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
-							&& (director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)|| director.getPmCountry().getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))){
+					}else if (director.getIdentificationType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
+							&& ((director.getPmCountry().getCountryCode()
+									.equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) && !director
+									.getIdentificationNo().startsWith("K", 0)) || director.getPmCountry() //#30064
+									.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE))) {
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}
 				}
