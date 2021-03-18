@@ -8168,6 +8168,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			defaultValue = "N/A";
 		}
 		context.put("defaultValue", defaultValue);
+		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
 		boolean isZonal = scLoa.getScLoiLoa().isZonal();
 		context.put("isZonal", isZonal);
@@ -8230,6 +8232,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					(TplSpecQuestion) scLoiLoaItem.getScRequestItem().getTplSpecQuestion().cloneEntity());
 			itemClone.setTplSpecAnswerList(tpaCloneList);
 			itemClone.setLoaSpecJustification(scLoiLoaItem.getLoaSpecJustification());
+			List<TplSpecQuestion> tpqSpecList = templateSpecSO.findQuestionsBySpecMasterIdAndParentQuestionId(scLoiLoaItem
+					.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecMasterId(), "S", scLoiLoaItem
+					.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+			if (CollectionUtils.isNotEmpty(tpqSpecList)) {
+				itemClone.setItemSpecificationList(new ArrayList<String>());
+				for (TplSpecQuestion tpqSpec : tpqSpecList) {
+					if (StringUtils.isNotBlank(tpqSpec.getClSpecDetail())) {
+						itemClone.getItemSpecificationList().add(tpqSpec.getClSpecDetail());
+					}
+				}
+			}
 			scLoiLoaItemCloneList.add(itemClone);
 		}
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
