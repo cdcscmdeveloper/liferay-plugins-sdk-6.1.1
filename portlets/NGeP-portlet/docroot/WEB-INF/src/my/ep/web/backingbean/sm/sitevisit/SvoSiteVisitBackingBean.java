@@ -1945,6 +1945,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		// #29719 - end
+		
+		//#30550 - start
+		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() == null ||
+				getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
+		}
+		//#30550 - end
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
