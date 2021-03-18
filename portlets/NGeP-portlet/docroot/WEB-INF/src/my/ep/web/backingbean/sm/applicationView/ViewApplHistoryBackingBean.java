@@ -642,9 +642,6 @@ public class ViewApplHistoryBackingBean extends
 
 		if (remaksResDTO.getRemarksList().size() > 0) {
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
-				log.info("remaksResDTO.getRemarksList().size()::" + remaksResDTO.getRemarksList().size());
-				log.info("poRemark.getRoleCode()::::::::::::::::" + poRemark.getRoleCode());
-
 				if (poRemark.getRoleCode() != null && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
 					getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
 					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
@@ -658,17 +655,17 @@ public class ViewApplHistoryBackingBean extends
 					String roleCode = StringUtils.EMPTY;
 					if (!EntityHelper.isCollectionEmpty(userRoles)) {
 						for (PmUserRole pmRole : userRoles) {
-							if (pmRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value())) {
+							if (pmRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value()) && pmRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 								roleCode = pmRole.getPmRole().getRoleCode();
 								break;
 							}
 						}
 					}
-					if ((roleCode != null && roleCode.equals(RoleCode.UPS_PO.value()))
-							&& (poRemark.getRoleCode() != null && !(poRemark.getRoleCode().equals(RoleCode.UPS_APPROVER.value())))) {
+					if ((roleCode != null && roleCode.equals(RoleCode.UPS_PO.value()))) {
+						System.out.println("getCreatedBy: " + poRemark.getCreatedBy() + " || getRoleCode = " + poRemark.getRoleCode() + " || getRemarkId = "
+								+ poRemark.getRemarkId() + " || getRemark = " + poRemark.getRemark());
 						getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
 						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
-
 						if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
 							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
 							getManagedBean().setSecondPoUserName(user.getUserName());
