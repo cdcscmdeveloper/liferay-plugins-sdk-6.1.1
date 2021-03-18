@@ -5929,6 +5929,7 @@ public class SmCommonUtil {
 	}
 	//SSM Integration
 	public static void ssmError(SsmResDTO resDTO){
+		//27382
 		switch (resDTO.getStatusCode()) {
 		case "70001":
 			//27214 -> this changes is remove in this case. replace with  27225
