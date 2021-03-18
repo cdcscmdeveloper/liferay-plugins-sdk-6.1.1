@@ -241,7 +241,9 @@ u {
 						$tplSpecAnswer.newSupplierOffer
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-						$tplSpecAnswer.answerRemark
+							$tplSpecAnswer.answerRemark
+						#else
+							$defaultValue
 						#end
 					#end
 					</td>
@@ -281,7 +283,9 @@ u {
 						$tplSpecAnswer.newSupplierOffer
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-						$tplSpecAnswer.answerRemark
+							$tplSpecAnswer.answerRemark
+						#else
+							$defaultValue
 						#end
 					#end
 					</td>
@@ -406,7 +410,11 @@ u {
 					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
 						$tplSpecAnswer.newSupplierOffer
 					#else
-						$defaultValue
+						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+							$tplSpecAnswer.answerRemark
+						#else
+							$defaultValue
+						#end
 					#end
 					</td>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
@@ -416,11 +424,27 @@ u {
 				<tr>
 					#if ($isZonal)
 						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="6" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
-							$scLoiLoaItem.scRequestItem.itemDesc
+							##$scLoiLoaItem.scRequestItem.itemDesc
+							#if ($scLoiLoaItem.itemSpecificationList != $null)
+								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+									$tpqSpec
+									<br/>
+								#end
+							#else
+							     $scLoiLoaItem.scRequestItem.itemDesc
+							#end
 						</td>
 					#else
 						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="5" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
-							$scLoiLoaItem.scRequestItem.itemDesc
+							##$scLoiLoaItem.scRequestItem.itemDesc
+							#if ($scLoiLoaItem.itemSpecificationList != $null)
+								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+									$tpqSpec
+									<br/>
+								#end
+							#else
+							     $scLoiLoaItem.scRequestItem.itemDesc
+							#end
 						</td>
 					#end
 				</tr>
@@ -454,7 +478,11 @@ u {
 					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
 						$tplSpecAnswer.newSupplierOffer
 					#else
-						$defaultValue
+						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+							$tplSpecAnswer.answerRemark
+						#else
+							$defaultValue
+						#end
 					#end
 					</td>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">$serviceScope</td>
@@ -462,11 +490,27 @@ u {
 				<tr>
 					#if ($isZonal)
 						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="6" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
-							$scLoiLoaItem.scRequestItem.itemDesc
+							##$scLoiLoaItem.scRequestItem.itemDesc
+							#if ($scLoiLoaItem.itemSpecificationList != $null)
+								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+									$tpqSpec
+									<br/>
+								#end
+							#else
+							     $scLoiLoaItem.scRequestItem.itemDesc
+							#end
 						</td>
 					#else
 						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="5" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px;">
-							$scLoiLoaItem.scRequestItem.itemDesc
+							##$scLoiLoaItem.scRequestItem.itemDesc
+							#if ($scLoiLoaItem.itemSpecificationList != $null)
+								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+									$tpqSpec
+									<br/>
+								#end
+							#else
+							     $scLoiLoaItem.scRequestItem.itemDesc
+							#end
 						</td>
 					#end
 				</tr>	
