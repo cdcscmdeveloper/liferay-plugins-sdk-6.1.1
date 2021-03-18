@@ -170,7 +170,6 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
-import weblogic.wsee.util.StringUtil;
 /**
  * Implementation for supplier finalization
  * 
@@ -2326,12 +2325,12 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	//28834 starts
 	public void submitAction() {
-		ScQtMeeting scQtMeeting = new ScQtMeeting();
+		//ScQtMeeting scQtMeeting = new ScQtMeeting();
 		this.checkIfLoggedinUserIsSecretary();
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
-				int pendingCount = 0;
+				//int pendingCount = 0;
 				for (ScQtMeeting meeting : meetingListList) {
 					if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
 							&& !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
@@ -2341,7 +2340,7 @@ public class SupplierFinalizationBackingBean extends
 							// changeMeetingStatusBrief();
 
 							//Boolean remarksNotFound = validationRemarksBrief(meeting.getQtMeetingId());
-							if (StringUtil.isEmpty(meeting.getRemark())) {
+							if (StringUtils.isEmpty(meeting.getRemark())) {
 
 								RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
 							} else {
@@ -2377,7 +2376,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 		
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-            List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+            //List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 				
 //				for (ScQtMeeting meeting : meetingList) {
 //					meeting.getMeetingStatus().getStatusId();
@@ -2417,7 +2416,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 		
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-            List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+            //List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 				
 				for (ScQtMeeting meeting : meetingList) {
 					
@@ -2447,9 +2446,7 @@ public class SupplierFinalizationBackingBean extends
 
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
-				qtSuppFinalizationSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTSuppFinalizationSO.class);
+				qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 //				boolean isZonal = getManagedBean().getScQt().isZonal();
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				ScQtFinalization scQtFinalization = getManagedBean()
