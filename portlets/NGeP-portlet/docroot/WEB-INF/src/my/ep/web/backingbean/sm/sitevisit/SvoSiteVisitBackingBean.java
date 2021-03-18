@@ -147,6 +147,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private static final String templateLangCode = "en";
 	private static final String attachmentType = "SVD";
 	private DecimalFormat formatter = new DecimalFormat("###,##0.00");
+	private static final String changeTab = "tab";//#9608
 	
 	private StreamedContent file;
 	
@@ -196,7 +197,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
-		this.getManagedBean().setActiveIndex(0);
+		//29430
+		if(!getManagedBean().isFromReport())
+			this.getManagedBean().setActiveIndex(0);
 		
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
@@ -345,6 +348,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param catType
 	 */
 	public void changeActiveIndex(int index, SmSvTemplate svTemplate){
+		//#9608
+		//saveSiteVisitReport(changeTab);
 		this.getManagedBean().setActiveIndex(index);
 		if(svTemplate != null){
 			if(svTemplate.getSmSvInterviewees() == null){
@@ -2042,15 +2047,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 					//End 25294  - Site Visit Grouping Enhancement -28775
-				}else{
+					//#9608, #30550 - start
+					return "/xhtml/common/acknowledge.xhtml";
+				}else if(!action.equals(changeTab)){
 					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
 				}			
-				renewSesionObject();
+				//renewSesionObject();
+				getManagedBean().setFromReport(true);
+				retrieveSiteVisitInfo("");
+				getManagedBean().setFromReport(false);
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
-				
-				return "/xhtml/common/acknowledge.xhtml";
+				return null;
+				//return "/xhtml/common/acknowledge.xhtml";
+				//#9608, #30550 - end
 			} else {
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
 			}
@@ -2249,6 +2260,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 
+	/*//9583 - start
 	public void signBoardOnChange(){
 		if(!getManagedBean().getSmSvTask().getSmSvOffice().isSignboardValid()){
 			
@@ -2262,7 +2274,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			getManagedBean().getSmSvTask().getSmSvOffice().setShareWithRemark(null);
 		}
 	}
-	
+	*/ //9583 - end
 	/**
 	 * review site visit report
 	 */
@@ -2386,10 +2398,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @throws Exception
 	 */
 	public void downloadPOApprovalSiteVisitReport(SmSvTask svTask) throws Exception{
-		//#29430
-		refreshPage();
+		//#29430 - start
+		//refreshPage();
+		getManagedBean().setFromReport(true);
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo("V");
+		getManagedBean().setFromReport(false);
+		//#29430 - end
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
 	}
 	
@@ -2715,6 +2730,13 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public boolean checkUserRole() {
 		FacesScopes fs = new FacesScopes();
+		//#24964 - start
+		if(fs.hasRoleUser(RoleCode.UPS_PO.value())){
+			if(getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED 
+				|| getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_SITE_VISIT_REPORT)) 
+					return false;
+		}
+		//#24964 - end
 		if(this.getManagedBean().isViewMode()){
 			if(fs.hasRoleUser(RoleCode.UPS_APPROVER.value()) && 
 					(this.getManagedBean().getSmSvTask().getSmAppl().getPmStatus().getStatusId()==20116 || 
@@ -2731,6 +2753,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					   fs.hasRoleUser(RoleCode.UPS_ADMIN.value()))
 						return true;
 		}
+		
 		return false;
 	}
 	
