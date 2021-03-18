@@ -2094,7 +2094,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("***********saveSiteVisitReport***********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
-
+		
+		//#30550 - start
+		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() == null ||
+				getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
+		}
+		//#30550 - end
+				
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		//for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
 		//for Manufacturing Template. Add additional doc to SmSvManufacturingDOC
