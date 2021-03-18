@@ -57,7 +57,8 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 	public void goToviewBusinessNature(){
 		fromtncProceed = true;
 		SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-		if(businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
+		//27382
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupp.getRegNo(),smSupp.getBusinessType())){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			// maybe here to put method to check with ssm
 			//SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
@@ -69,10 +70,24 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
-					//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
-					//throw new EpException(MessageConst.ERROR_721070);
-					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
-				}
+				//27382 - start
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
+						throw new EpException(MessageConst.ERROR_721097,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}//27382 - Terminated 
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("T")){
+						throw new EpException(MessageConst.ERROR_721098,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});
+					}//27382
+					if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("B")){
+						if(businessTypeIsROC(smSupp.getBusinessType())){
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.b", null)});
+						}
+						if(businessTypeIsROB(smSupp.getBusinessType())){
+							throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.status.dissolved", null)});
+						}
+					}else{ 
+					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null), ""});}
+					}
+				//27382 - end
 				this.getManagedBean().setCompanyValidWithSSM(true);
 				this.getManagedBean().setSsmResDTO(ssmResDTO);
 			}else{
