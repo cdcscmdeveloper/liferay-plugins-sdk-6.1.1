@@ -3086,7 +3086,8 @@ public class CreateQtBackingBean extends
 				.getApproverAction().getParameterId() : null;
 		if (parameterId != null) {
 			approvalDetails
-					.setApproverAction(retrieveParameterById(parameterId));//bug #30435 - starsetPmParam(retrieveParameterById(parameterId));
+					.setApproverAction(retrieveParameterById(parameterId));//bug #30435 - start
+			getManagedBean().setPmParam(retrieveParameterById(parameterId));
 		} else {
 			approvalDetails.setApproverAction(new PmParameter());
 		}
