@@ -88,6 +88,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -370,6 +371,12 @@ public class CreateQtBackingBean extends
 			scQt.setContractType(new PmParameter());
 			
 			setUserDetails(scQt);
+            
+			//9019 initializing QT remark for Quotation/Tender creation
+			scQt.setScQtRemarks(initializeRemarks(scQt, qtStatus,
+					scQt.getScQtRemarks(), ScQtRemark.class));
+			//9019 end
+			
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
@@ -3079,8 +3086,7 @@ public class CreateQtBackingBean extends
 				.getApproverAction().getParameterId() : null;
 		if (parameterId != null) {
 			approvalDetails
-					.setApproverAction(retrieveParameterById(parameterId));//bug #30435 - start
-			getManagedBean().setPmParam(retrieveParameterById(parameterId));
+					.setApproverAction(retrieveParameterById(parameterId));//bug #30435 - starsetPmParam(retrieveParameterById(parameterId));
 		} else {
 			approvalDetails.setApproverAction(new PmParameter());
 		}
