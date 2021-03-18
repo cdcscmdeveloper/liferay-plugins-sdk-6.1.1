@@ -1115,17 +1115,17 @@ public class RuleCatalogueBackingBean extends
 			}
 			// check validation
 			
-			// 29669 start
-			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().equals("P") 
+			// 29669,29641 start 
+			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
-					if (ruleTypeValue.getRuleNumberValue() == null) {
+					if (ruleTypeValue.getRuleValue() == null) {
 						throw new EpException(MessageConst.ERROR_770133,
 								new String[] { ruleTypeDesc.getRuleDesc() });
 					}
 				}
 			}
-			// 29669 end
+			// 29669,29641 end
 			
 			for (int i = 0; i < ruleTypeDesc.getRuleType()
 					.getConfigRuleValues().size(); i++) {
