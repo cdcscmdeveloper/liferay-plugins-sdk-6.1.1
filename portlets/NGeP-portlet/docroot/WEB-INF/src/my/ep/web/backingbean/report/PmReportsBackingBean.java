@@ -141,10 +141,12 @@ public class PmReportsBackingBean extends
 	}
 
 	public void generatePmReport() {
+		//#29486 - shafie -start
 		if(PmReportConst.PM_MONTHLY_USER_AND_ROLE_RPT_VAL.equals(
 				getManagedBean().getReportCode())){
 			pickMonthYear();
 		}
+		//#29486 - shafie -end
 		
 		IRPTRequestSO rptRequestSO = null;
 		try {
