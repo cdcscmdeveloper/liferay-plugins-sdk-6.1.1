@@ -1795,7 +1795,10 @@ public class SpecificationBackingBean extends
 					//set scoring item to default to 50
 					this.getManagedBean().getTechnicalItemScoreSetting().setOverallTechnical(new BigDecimal(50));
 					this.getManagedBean().getTechnicalItemScoreSetting().setPassingScore(new BigDecimal(50));
-
+					//#21695 & #30557 Farid Start
+					calculateTechnicalItemScore(this
+							.getManagedBean()
+							.getFinacialItemScoreSetting());
 				}
 				if (this.getManagedBean().getQt().isPartial() == true){
 					this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
@@ -16856,9 +16859,12 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechnicalItemScore(
 						new BigDecimal(local));
 				if ((null != this.getManagedBean().getTechnicalItemScore())
-						&& this.getManagedBean().getTechnicalItemScore()
-								.intValue() > 100) {
+						&& (this.getManagedBean().getTechnicalItemScore()
+								.intValue() < 100 || this.getManagedBean()
+								.getTechnicalItemScore().intValue() > 100)) {
+//#21695 Farid 30/7/2020 Start					
 					throw new EpException(MessageConst.ERROR_7602571);
+//#21695 Farid 30/7/2020 End
 				}
 // #21695 #28949 farid END 15/10/2020
 			}
@@ -17440,5 +17446,26 @@ if(null!=allTechnicalChecklist){
 		}
 	}
 	//#25037-end
+	
+	// #21695 #30557 #28949 START FARID - 18/03/2020
+	public void retriveItemScore(ScQtScoreSetting technicalItem) {
+		try {
+			if (null != technicalItem) {
+
+				int value1 = technicalItem.getOverallTechnical() != null ? technicalItem
+						.getOverallTechnical().intValue() : 0;
+				int value2 = technicalItem.getOverallOtherTechnical() != null ? technicalItem
+						.getOverallOtherTechnical().intValue() : 0;
+				int local = value1 + value2;
+				this.getManagedBean().setTechnicalItemScore(
+						new BigDecimal(local));
+
+				// #21695 #28949 farid END 18/03/2020
+			}
+
+		} finally {
+
+		}
+	}
 
 }
