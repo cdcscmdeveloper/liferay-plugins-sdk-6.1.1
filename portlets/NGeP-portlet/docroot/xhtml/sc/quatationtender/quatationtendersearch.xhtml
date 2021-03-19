@@ -128,7 +128,7 @@
 							
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1]}"
+								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
