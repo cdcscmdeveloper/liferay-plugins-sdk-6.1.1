@@ -1918,8 +1918,8 @@ public class SpecificationBackingBean extends
 
 			if (null != this.getManagedBean().getTechnicalScoring()
 					&& !this.getManagedBean().getTechnicalScoring().isEmpty()) {
-//#21695 Start retrieve totalscore of sum overalltech + overallothertech 	
-				calculateTechnicalItemScore(this
+//#21695 & #30557 Start retrieve totalscore of sum overalltech + overallothertech 	
+				retriveItemScore(this
 						.getManagedBean()
 						.getTechnicalItemScoreSetting());
 //#21695 End
