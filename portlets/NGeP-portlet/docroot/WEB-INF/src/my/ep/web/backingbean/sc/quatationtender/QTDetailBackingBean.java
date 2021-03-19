@@ -779,10 +779,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& !isPtjAddressTypePresent(qtOrgProfile.getOrgProfileId())) {
 				throw new EpException(MessageConst.ERROR_760450);
 			}
+			
+			ScQt scQt = this.getManagedBean().getQt();
+			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
+			
 			validateQtDetails();
-			successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-
+			if(isFirstSave){
+				successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(),  Boolean.TRUE);
+			}else{
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
+			}
+			
 			debugLogger("end of saveQtDetailsAction");
 		} finally {
 
@@ -5056,10 +5065,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						
 						//#28784
-						if (scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
+						if (StringUtils.isNotEmpty(scQt.getEvaluationType()) && scQt.getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
 							this.getManagedBean().setDemoType(true);
 						}
-
 					}
 
 					this.getManagedBean().setAmendMentBean(
@@ -5682,6 +5690,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = prepareQTInfo();
 		reqDTO.setSaveFlow(true);
 		reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+		FacesScopes facesScopes = new FacesScopes();
+		reqDTO.setToken(facesScopes
+				.getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+		
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
