@@ -114,7 +114,9 @@
 					oncomplete="blockWidget.hide();"
 					update="@form"
 					rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
-					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+					disabled="#{!qTDetailBB.managedBean.ptjPresent}">
+					<f:param name="skipvalidation" value="0" />
+				</p:commandButton>	
 					
 	
 				<c:choose>
