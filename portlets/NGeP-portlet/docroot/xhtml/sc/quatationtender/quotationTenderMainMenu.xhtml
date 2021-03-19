@@ -303,20 +303,6 @@
 					 </c:if>
 					</c:otherwise>
 					</c:choose>
-					
-				 
-				 
-				 <c:if test="#{isMaintancePendingChklistStatus}">
-					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
-							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderPaymentDeduction.xhtml" />
-					</c:if>
-					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
-							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderDocuments.xhtml" />
-					</c:if>
-					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
-							<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderActivitiesTracking.xhtml" />
-					</c:if>
-				 </c:if>
 				</h:panelGroup></td>
 		</tr>
 	</table>
