@@ -41,7 +41,6 @@ public class ProcurementPlanSearchBean implements Serializable{
 	
 	
 	private String paramforexpenditure; //[#25549]
-	private PmParameter procurementType;  //[#25549] 
 	private String yearB; //[#25549]
 	private String yearT; //[#25549]
 	private String yearP; //[#25549]
