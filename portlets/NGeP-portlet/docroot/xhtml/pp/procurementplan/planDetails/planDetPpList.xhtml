@@ -5,8 +5,7 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:ac="http://ac.my/jsf/composite/cc"
->
+xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 	<script type="text/javascript">
 		/*
@@ -37,7 +36,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<ac:paginator for="dtProcurementPlan" />
 			<p:columnGroup type="header">
 				<p:row>
-				 	<p:column style="width:2%" />
+					<!-- #24975 -->
+				 	<!-- <p:column style="width:2%" /> -->
+				 	<p:column width="5%">
+					    <f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.action']}" />
+					     	<ac:iconTooltip value="#{lbl['lbl.pp.action.tooltip']}" />
+					    </f:facet>
+				    </p:column>
 			 	 	<p:column width="12%">
 					    <f:facet name="header">
 					     	<h:outputText value="* " styleClass="mandatory" />
@@ -83,6 +90,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					    <f:facet name="header">
 					     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
 					    </f:facet>
+				    </p:column>
+				     <!-- #24975 -->
+				    <p:column width="5%" 
+				    		rendered="#{pPlanBackingBean.managedBean.modeEditable and 
+				    		(pPlanBackingBean.managedBean.selectedPlan.updatable or 
+				    		pPlanBackingBean.managedBean.approvedPlan)}">
+				    	<f:facet name="header">
+				    		<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pp.reason.for.update']}" />
+					    </f:facet>
 				    </p:column>			      	
 				    <p:column width="5%">
 					    <f:facet name="header">
@@ -96,18 +113,38 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    </p:column>
 			 	</p:row>
 		 	</p:columnGroup>
-
-			<p:column>
-				<!-- [SIR#12802] - start -->				
+		 	
+			  <p:column>
+				<!-- [SIR#12802] - start -->	
+				  <!--25549@18092020 -->
+				<!--24975@azza - start -->
 				<p:selectBooleanCheckbox 
-					disabled="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
-					value="#{ppItem.deleted}"/>
+				    id="checkbox"
+					disabled="#{ppItem.viewMode or !(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable)}" 
+					value="#{ppItem.deleted}" title="#{lbl['lbl.pp.make.amendment']}" />
 				<!-- [SIR#12802] - end -->
+				<!-- #24975 -->
+				<p:commandLink id="addUpdateInfo" 
+						immediate="true" 
+						update="dtProcurementPlan" 
+						partialSubmit="true"
+						rendered="#{!(ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or ppItem.allowAnotherPindaan}"
+						disabled="#{ppItem.viewMode or ppItem.cloneEnabled or ppItem.disableForPindaan or (!ppItem.enableRevise) or (ppItem.disableRow)}">
+				     <h:graphicImage value="/css/images/design/ico-viewnedit.png"  
+				     style="float:left; padding-left: 5px;" process="@this">
+				      <p:ajax event="click"
+				      		listener="#{pPlanBackingBean.addUpdateInfo(pPlanBackingBean.managedBean.selectedPlan, index)}"
+						    disabled="#{ppItem.viewMode or ppItem.cloneEnabled or ppItem.disableForPindaan or (!ppItem.enableRevise) or (ppItem.disableRow)}"
+     			      		update="@form" />
+				      </h:graphicImage>
+				</p:commandLink>
 			</p:column>
-			
+		    <!--24975@azza - end -->
+		    <!--24975@azza - start -->
 	        <p:column>	
+	          <!--25549@18092020 -->
         		<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
-        			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+        			disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
 			 		style="width: 95%;" maxlength="200" required="#{!empty param['disableValidation']}">
 			 		<p:ajax event="change" process="@this" />
@@ -116,42 +153,50 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 
 	         <p:column>	
+	           <!--25549@18092020 -->	
         		<p:inputTextarea id="itaPpDesc" value="#{ppItem.procurementDesc}" 
-        			disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+        			disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.procurement.desc']}" autoResize="false" 
 			 		style="width: 95%;" maxlength="1000" required="#{!empty param['disableValidation']}">
 			 		<p:ajax event="change" process="@this" />
 		 		</p:inputTextarea>
 		 		<p:message id="itaPpDescMsg" for="itaPpDesc" display="icon" />  
 	        </p:column>
-
+	        <!--24975@azza - end -->
 	        <p:column>
+	        <!--25549@18092020 -->	
+	        	<!--24975@09022021 - start -->
        			<p:selectOneMenu id="somCategory" style="width:99%"
-       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+       				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementCategoryOptions()}" var="obj" 
 						itemValue="#{obj.procurementCat.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementCat)}"/>
-					<p:ajax event="change" update="somProcurementMethod" listener="#{pPlanBackingBean.onSelectCategory(ppItem.procurementCat.parameterId, index)}"/>
+					<p:ajax event="change" update="somProcurementMethod" listener="#{pPlanBackingBean.onSelectCategory(ppItem.procurementCat.parameterId, index)}" 						
+					    immediate="true" partialSubmit="true" />
 				</p:selectOneMenu>
 				<p:message id="somCategoryMsg" for="somCategory" display="icon" />
 	        </p:column>
 	        
 	        <p:column>
+	            <!--25549@18092020 -->
        			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
-       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null}"
-					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
+       				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null or (ppItem.disableRow)}"
+					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
-					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}" process="@this" />
+					<p:ajax event="change" listener="#{pPlanBackingBean.onSelectCategoryType(ppItem.procurementType.parameterId, index)}"
+					    immediate="true" partialSubmit="true" />
 				</p:selectOneMenu>
-				<p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
+			 <p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
-
+	         <!--24975@09022021 - end -->
 	        <p:column  style="white-space:nowrap;">
+	             <!--25549@18092020 -->
+	            <!--24975@azza - start -->
        			<p:calendar styleClass="ppDisplayCalXS" id="effDateId" value="#{ppItem.invitationDate}" 
-	  				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}"
+	  				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}"
 	  				mindate="#{pPlanBackingBean.minDate}" 
 	  				maxdate="#{pPlanBackingBean.maxDate}"
 			  		required="#{!empty param['disableValidation']}" navigator="true" 
@@ -164,8 +209,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        </p:column>
 	        
 	        <p:column>
+	        <!--25549@18092020 -->	
        			<p:inputText style="width:90%" value="#{ppItem.estimatedAmt}"
-       				disabled="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable)}" 
+       				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or (ppItem.disableRow)}" 
 		  			id="itEstAmt" styleClass="amountRight" label="#{lbl['lbl.pp.estimated.amount']}"
 		  			required="#{!empty param['disableValidation']}"
 		  			onkeypress="if (event.keyCode == 13) { return false; }">
@@ -178,24 +224,44 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		  		</p:inputText>
 		  		<p:message id="itEstAmtMsg" for="itEstAmt" display="icon" />
 	        </p:column>
-
+	        <!--24975@azza - end -->
+	        <!--24975@azza - start -->
 	       <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeReview}">
-			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!pPlanBackingBean.managedBean.modeReviewEditable}">
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}"  style="float:left;margin-bottom:3px;margin-left:10px;" disabled="#{!ppItem.enableRevise or !pPlanBackingBean.managedBean.modeReviewEditable or (ppItem.disableRow)}">
 			    	<p:ajax event="change" update="clPpReason"/>
-			    </p:selectBooleanCheckbox>			    
+			    </p:selectBooleanCheckbox>
+			     <!--25549@18092020 -->				    
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrievePpRejectReasons(ppItem)}"
-			    	disabled="#{!ppItem.rejected or !ppItem.editable}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
+			    	disabled="#{!ppItem.rejected or (ppItem.disableRow)}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
 					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
-
+			<!-- #24975 -->
+			<!-- #25549 - start --> 
+		    <!--24975@20112020azza - start -->
+			<p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">		
+			    <p:commandLink oncomplete="dlUpdateReasonWv.show();" action="#{pPlanBackingBean.retrievePpUpdateReasons(ppItem)}"
+			    	update="@form" immediate="true" id="UpdateReason" 
+			    	disabled="#{ppItem.viewMode or (ppItem.brandNew ? ppItem.brandNew : ppItem.selectable) or (ppItem.disableRow)}">
+					<p:graphicImage value="#{ppItem.changePencilToNote ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"
+					disabled="#{ppItem.viewMode or (pPlanBackingBean.managedBean.modeEditable) or (pPlanBackingBean.managedBean.modeEditable) or !ppItem.reasonForUpdateEnabled}" update="@form" />
+				</p:commandLink>
+					<p:graphicImage
+				    rendered="#{ppItem.indicator}"
+				    value="#{ppItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
+	        </p:column>
+	        <!--24975@20112020azza - end -->
+	        <!-- #25549 - end --> 
 	        <p:column>
-	        	<p:selectOneMenu value="#{ppItem.recordStatusFlg}" style="width:99%"
-	        		disabled="#{!(pPlanBackingBean.managedBean.modeEditable) or ppItem.brandNew}">  
+	        	<p:selectOneMenu id="recordStatus" value="#{ppItem.recordStatusFlg}" style="width:99%"
+	        		disabled="#{ppItem.viewMode or (ppItem.cloneEnabled or ppItem.statusEnabled or !pPlanBackingBean.managedBean.modeEditable)}">  
 	            	<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+	                <!--25549@18092020 -->
+	  	            <p:ajax event="change"  update="UpdateReason, clPpReason, itEstAmt, effDateId, somProcurementMethod, somCategory, addUpdateInfo, itaPpTitle, itaPpDesc, chkRejected"
+	  	            listener="#{pPlanBackingBean.selectedPpStatus(ppItem.recordStatusFlg, index)}" partialSubmit="true" />           	
 	          	</p:selectOneMenu> 
 	        </p:column>
-
+	        <!--24975@azza - end -->
 	        <p:column  rendered="#{!pPlanBackingBean.managedBean.selectedPlan.brandNew}">
 	        	<h:outputText value="#{ppItem.changedDate}" >
 					<f:convertDateTime
@@ -224,6 +290,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</p:columnGroup>
 		</p:dataTable>
 		<div class="ppRightBtn">
+		<!-- #25549@20200818 - start --> 
+		<!-- 02022021@#27624 - start --> 
+		     <p:commandButton id="btnClone" value="#{lbl['lbl.btn.clone']}"
+		        disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
+			    action="#{pPlanBackingBean.rowSelectProcurement()}"
+			    update="dtProcurementPlan, ppProcurementCloneid, dtcloneprosearchresults"
+			    onclick="cloneAcquirementPopUp.show()"
+			    rendered="#{pPlanBackingBean.isRolePlanner()}"/>
+			    <p:tooltip id="toolTipGrow" for="btnClone" value="#{lbl['lbl.pp.clone.year.tooltip']}"
+                    position="bottom"/>
+		<!-- end --> 
+		
 			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
 		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}"  partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/> 
@@ -232,5 +310,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
 				<!-- 02022021@#27624 - end --> 
 		</div>
+		
+		<!-- #25549@24022021 - start -->
+		<p:remoteCommand name="resetAllData" update="ppProcurementCloneid, dtcloneprosearchresults, dtProcurementPlan" partialSubmit="true" action="#{pPlanBackingBean.resetProcurementClone()}" process="@this" />
+		<p:dialog id="cloneAcquirementPopUp" widgetVar="cloneAcquirementPopUp" closable="true" modal="true" onHide="resetAllData();"
+			header="#{lbl['lbl.pp.procurement.plan.clone']}" width="800" height="500">
+			<ui:include src="planProcurementPopup.xhtml"></ui:include>
+		</p:dialog>
+		<!-- #25549@24022021 - start -->
+		
 	</p:outputPanel>
 </ui:composition>
