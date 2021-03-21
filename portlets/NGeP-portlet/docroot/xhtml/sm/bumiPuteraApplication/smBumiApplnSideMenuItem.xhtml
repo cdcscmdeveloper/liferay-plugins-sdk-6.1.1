@@ -167,13 +167,32 @@
 											</c:choose>
 										</c:if>
 										
-										<c:if test="#{backingBean.managedBean.approverUser}">
+								<c:if test="#{backingBean.managedBean.approverUser}">
+								<!-- 14530 -->
+								<c:choose>
+									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+											<p:menuitem>
+												<ac:smApplMenuItem backingBean="#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+												poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+												appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY}"
+												tabNo="10" label="#{lbl['lbl.sm.inquiry']}" />
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'11')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:when>
+									<c:otherwise>
 											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 												update=":form" />
-										</c:if>
+									</c:otherwise>
+									</c:choose>
+								</c:if>
 									</c:when>
 									<c:otherwise>
 									
@@ -205,13 +224,32 @@
 											</c:choose>
 										</c:if>
 										
-										<c:if test="#{backingBean.managedBean.approverUser}">
+								<c:if test="#{backingBean.managedBean.approverUser}">
+								<!-- 14530 -->
+								<c:choose>
+									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+											<p:menuitem>
+												<ac:smApplMenuItem backingBean="#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+												poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+												appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY}"
+												tabNo="9" label="#{lbl['lbl.sm.inquiry']}" />
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:when>
+									<c:otherwise>
 											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 												update=":form" />
-										</c:if>
+									</c:otherwise>
+								</c:choose>
+								</c:if>
 									</c:otherwise>
 								 </c:choose>
 							</c:when>
@@ -266,13 +304,32 @@
 											</c:choose>
 										</c:if>
 										
-										<c:if test="#{backingBean.managedBean.approverUser}">
+								<c:if test="#{backingBean.managedBean.approverUser}">
+								<!-- 14530 -->
+								<c:choose>
+									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+											<p:menuitem>
+												<ac:smApplMenuItem backingBean="#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+												poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+												appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY}"
+												tabNo="9" label="#{lbl['lbl.sm.inquiry']}" />
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:when>
+									<c:otherwise>
 											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 												update=":form" />
-										</c:if>
+									</c:otherwise>
+									</c:choose>
+								</c:if>
 									</c:when>
 									<c:otherwise>
 										
@@ -304,13 +361,32 @@
 											</c:choose>
 										</c:if>
 										
-										<c:if test="#{backingBean.managedBean.approverUser}">
+								<c:if test="#{backingBean.managedBean.approverUser}">
+								<!-- 14530 -->
+								<c:choose>
+									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+											<p:menuitem>
+												<ac:smApplMenuItem backingBean="#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+												poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+												appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY}"
+												tabNo="8" label="#{lbl['lbl.sm.inquiry']}" />
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:when>
+									<c:otherwise>
 											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 												update=":form" />
-										</c:if>
+									</c:otherwise>
+								</c:choose>
+								</c:if>
 									</c:otherwise>
 								 </c:choose>
 							</c:otherwise>
@@ -370,11 +446,30 @@
 								</c:if>
 								
 								<c:if test="#{backingBean.managedBean.approverUser}">
-									<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-										update=":form" />
+								<!-- 14530 -->
+								<c:choose>
+									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+											<p:menuitem>
+												<ac:smApplMenuItem backingBean="#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+												poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+												appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY}"
+												tabNo="8" label="#{lbl['lbl.sm.inquiry']}" />
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:when>
+									<c:otherwise>
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:otherwise>
+								</c:choose>
 								</c:if>
 							</c:when>
 							<c:otherwise>
@@ -407,11 +502,30 @@
 								</c:if>
 								
 								<c:if test="#{backingBean.managedBean.approverUser}">
-									<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-										update=":form" />
+								<!-- 14530 -->
+								<c:choose>
+									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+											<p:menuitem>
+												<ac:smApplMenuItem backingBean="#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+												poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+												appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY}"
+												tabNo="7" label="#{lbl['lbl.sm.inquiry']}" />
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:when>
+									<c:otherwise>
+											<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+												update=":form" />
+									</c:otherwise>
+								</c:choose>
 								</c:if>
 							</c:otherwise>
 						 </c:choose>
