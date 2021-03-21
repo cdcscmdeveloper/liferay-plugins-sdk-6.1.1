@@ -123,14 +123,34 @@
 
 						</c:when>
 						<c:when test="#{backingBean.managedBean.approverUser}">
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include
-									src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
-							</c:if>
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-								<ui:include
-									src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-							</c:if>
+						<!-- 14530 START-->
+							<c:choose>
+								<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+										<ui:include 
+											src="/xhtml/sm/poInquiryDetails/poInquiryDetails.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+								</c:when>
+							<c:otherwise>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+							</c:otherwise>
+							</c:choose>
+						<!-- 14530 END-->
 						</c:when>
 						<c:otherwise>
 						</c:otherwise>
@@ -171,14 +191,34 @@
 
 						</c:when>
 						<c:when test="#{backingBean.managedBean.approverUser}">
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
-								<ui:include
-									src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
-							</c:if>
-							<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include
-									src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-							</c:if>
+						<!-- 14530 START-->
+							<c:choose>
+								<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+										<ui:include 
+											src="/xhtml/sm/poInquiryDetails/poInquiryDetails.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+								</c:when>
+							<c:otherwise>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+									</c:if>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+										<ui:include
+											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+									</c:if>
+							</c:otherwise>
+							</c:choose>
+						<!-- 14530 END-->
 						</c:when>
 						<c:otherwise>
 						</c:otherwise>

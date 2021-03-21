@@ -89,16 +89,39 @@
 
 					</c:when>
 					<c:when test="#{backingBean.managedBean.approverUser}">
-						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-							update=":form" />
-						<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-							update=":form" />
+					<!-- 14530 START-->
+						<c:choose>
+							<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+							</c:when>
+						<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+						</c:otherwise>
+						</c:choose>
+					<!-- 14530 END-->
 					</c:when>
 					<c:otherwise>
 					</c:otherwise>
@@ -146,16 +169,39 @@
 
 					</c:when>
 					<c:when test="#{backingBean.managedBean.approverUser}">
-						<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-							update=":form" />
-						<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-							update=":form" />
+					<!-- 14530 START-->
+						<c:choose>
+							<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+							</c:when>
+						<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+									action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+									update=":form" />
+						</c:otherwise>
+						</c:choose>
+					<!-- 14530 END-->
 					</c:when>
 					<c:otherwise>
 					</c:otherwise>
