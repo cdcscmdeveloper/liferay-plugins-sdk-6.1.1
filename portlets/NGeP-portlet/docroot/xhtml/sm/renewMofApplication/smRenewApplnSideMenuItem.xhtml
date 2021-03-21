@@ -218,10 +218,8 @@
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.approverUser}">
-								
 								<p:menuitem>
 									<ac:smApplMenuItem
-										
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
@@ -229,10 +227,49 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="9" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
-								
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-										<p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="11" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'12')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'11')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
 											<ac:smApplMenuItem
 												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 												backingBean = "#{backingBean}"
@@ -241,25 +278,27 @@
 												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="10" label="#{lbl['lbl.sm.siteReviewLbl']}" />
-										</p:menuitem>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'11')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:when>
-									<c:otherwise>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:otherwise>
-								</c:choose>
-		
-							</c:when>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+						</c:choose>
+						<!-- 14530 END -->
+	</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
@@ -373,10 +412,8 @@
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.approverUser}">
-								
 								<p:menuitem>
 									<ac:smApplMenuItem
-										
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
@@ -384,10 +421,49 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
-								
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-										<p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="10" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'11')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
 											<ac:smApplMenuItem
 												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 												backingBean = "#{backingBean}"
@@ -396,25 +472,27 @@
 												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
-										</p:menuitem>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:when>
-									<c:otherwise>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:otherwise>
-								</c:choose>
-		
-							</c:when>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+						</c:choose>
+						<!-- 14530 END -->
+	</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
@@ -531,48 +609,87 @@
 
 					</c:when>
 					<c:when test="#{backingBean.managedBean.approverUser}">
-						
-						<p:menuitem>
-							<ac:smApplMenuItem
-							
-								backingBean = "#{backingBean}"
-								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
-								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
-								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
-								tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
-						</p:menuitem>
-						
-						<c:choose>
-							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 								<p:menuitem>
 									<ac:smApplMenuItem
-										disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
 										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
-										tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+										tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+								</p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
 								</p:menuitem>
 								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-									update=":form" >
-								</p:menuitem>
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
 							</c:when>
 							<c:otherwise>
 								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-									update=":form" >
-								</p:menuitem>
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
 							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
 						</c:choose>
-
-					</c:when>
+						<!-- 14530 END -->
+	</c:when>
 					<c:otherwise>
 					</c:otherwise>
 				</c:choose>
@@ -734,10 +851,8 @@
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.approverUser}">
-								
 								<p:menuitem>
 									<ac:smApplMenuItem
-										
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
@@ -745,10 +860,49 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
-								
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-										<p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="10" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'11')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
 											<ac:smApplMenuItem
 												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 												backingBean = "#{backingBean}"
@@ -757,25 +911,27 @@
 												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
-										</p:menuitem>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:when>
-									<c:otherwise>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:otherwise>
-								</c:choose>
-		
-							</c:when>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+						</c:choose>
+						<!-- 14530 END -->
+	</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
@@ -889,10 +1045,8 @@
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.approverUser}">
-								
 								<p:menuitem>
 									<ac:smApplMenuItem
-										
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
@@ -900,10 +1054,49 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
-								
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-										<p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
 											<ac:smApplMenuItem
 												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 												backingBean = "#{backingBean}"
@@ -912,25 +1105,27 @@
 												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
-										</p:menuitem>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:when>
-									<c:otherwise>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:otherwise>
-								</c:choose>
-		
-							</c:when>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+						</c:choose>
+						<!-- 14530 END -->
+	</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
@@ -1047,48 +1242,87 @@
 
 					</c:when>
 					<c:when test="#{backingBean.managedBean.approverUser}">
-						
-						<p:menuitem>
-							<ac:smApplMenuItem
-							
-								backingBean = "#{backingBean}"
-								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
-								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
-								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
-								tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
-						</p:menuitem>
-						
-						<c:choose>
-							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 								<p:menuitem>
 									<ac:smApplMenuItem
-										disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
 										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
-										tabNo="7" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+										tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+								</p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
 								</p:menuitem>
 								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-									update=":form" >
-								</p:menuitem>
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
 							</c:when>
 							<c:otherwise>
 								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-									update=":form" >
-								</p:menuitem>
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
 							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="7" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
 						</c:choose>
-
-					</c:when>
+						<!-- 14530 END -->
+	</c:when>
 					<c:otherwise>
 					</c:otherwise>
 				</c:choose>
@@ -1251,10 +1485,8 @@
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.approverUser}">
-								
 								<p:menuitem>
 									<ac:smApplMenuItem
-										
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
@@ -1262,10 +1494,49 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
-								
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-										<p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="10" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'11')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
 											<ac:smApplMenuItem
 												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 												backingBean = "#{backingBean}"
@@ -1274,25 +1545,27 @@
 												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
-										</p:menuitem>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:when>
-									<c:otherwise>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:otherwise>
-								</c:choose>
-		
-							</c:when>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+						</c:choose>
+						<!-- 14530 END -->
+	</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
@@ -1406,10 +1679,8 @@
 		
 							</c:when>
 							<c:when test="#{backingBean.managedBean.approverUser}">
-								
 								<p:menuitem>
 									<ac:smApplMenuItem
-										
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
@@ -1417,10 +1688,49 @@
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
-								
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
-										<p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'10')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
 											<ac:smApplMenuItem
 												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 												backingBean = "#{backingBean}"
@@ -1429,25 +1739,27 @@
 												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
-										</p:menuitem>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:when>
-									<c:otherwise>
-										<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 											update=":form" >
 										</p:menuitem>
-									</c:otherwise>
-								</c:choose>
-		
-							</c:when>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
+						</c:choose>
+						<!-- 14530 END -->
+	</c:when>
 							<c:otherwise>
 							</c:otherwise>
 						</c:choose>
@@ -1564,48 +1876,87 @@
 
 					</c:when>
 					<c:when test="#{backingBean.managedBean.approverUser}">
-						
-						<p:menuitem>
-							<ac:smApplMenuItem
-							
-								backingBean = "#{backingBean}"
-								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
-								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
-								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
-								tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
-						</p:menuitem>
-						
-						<c:choose>
-							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 								<p:menuitem>
 									<ac:smApplMenuItem
-										disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 										backingBean = "#{backingBean}"
 										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
 										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
 										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
-										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
-										tabNo="7" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
+										tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
+								</p:menuitem>
+						<!-- 14530 START-->
+						<c:choose>
+							<c:when
+								test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
+								<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
+													style="white-space: normal;" onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide()"
+													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+													update=":form" />
+							<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
 								</p:menuitem>
 								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-									update=":form" >
-								</p:menuitem>
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
 							</c:when>
 							<c:otherwise>
 								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-									update=":form" >
-								</p:menuitem>
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
 							</c:otherwise>
+							</c:choose>
+							</c:when>
+						<c:otherwise>
+						<c:choose>
+							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
+								<p:menuitem>
+											<ac:smApplMenuItem
+												disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
+												backingBean = "#{backingBean}"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
+												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
+												tabNo="7" label="#{lbl['lbl.sm.siteReviewLbl']}" />
+								</p:menuitem>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:when>
+							<c:otherwise>
+								<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
+											update=":form" >
+										</p:menuitem>
+							</c:otherwise>
+							</c:choose>
+						</c:otherwise>
 						</c:choose>
-
-					</c:when>
+						<!-- 14530 END -->
+	</c:when>
 					<c:otherwise>
 					</c:otherwise>
 				</c:choose>
