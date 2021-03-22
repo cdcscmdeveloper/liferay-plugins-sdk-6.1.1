@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -75,6 +76,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String skuno;
 	private String UOM;
 	private String typeofgoods;
+	private Long agencyDataModelVerId;//Development #29214 - performance
 
 	private boolean autoUpdate = true;
 	private boolean viewOnly = false;
@@ -90,6 +92,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
+	
 	
 	//#28854 - start
 	private List<String> itemSpecification;
@@ -630,6 +633,8 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 	}	
 	/* #28854 end*/	
 	
+	
+	//Development #29214 - performance
 	/**
 	 * @return the agencyDataModel
 	 */
@@ -642,6 +647,14 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 	 */
 	public void setAgencyPersistDataModel(IPagingDataModel<CtAgency> agencyPersistDataModel) {
 		this.agencyPersistDataModel = agencyPersistDataModel;
+	}
+
+	public Long getAgencyDataModelVerId() {
+		return agencyDataModelVerId;
+	}
+
+	public void setAgencyDataModelVerId(Long agencyDataModelVerId) {
+		this.agencyDataModelVerId = agencyDataModelVerId;
 	}
 
 	/**
@@ -670,19 +683,15 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 				
 				Date currentDate = DateUtils.getCurrentDateWithoutTime();
 				ContractBackingBean contractBb=new ContractBackingBean();
-				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
+				SuspensionBackingBean suspBB = new SuspensionBackingBean();
+				
 				
 				Long contractVerId=null;
-				contractVerId = contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
-				System.out.println("AgencyPersistDataModel: owner profile id "+contractVer
-										.getCtContract().getOwnerOrgProfile()
-										.getOrgProfileId()+" contractver id : "+contractVerId);
+				//contractVerId = contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+				contractVerId = suspBB.getManagedBean().getAgencyDataModelVerId();
+				
 				/*searchBean.getDataFilterBeans().clear();*/
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("orgProfile.orgProfileId",
-								SearchOperator.OPERATOR_NOT_EQUALS.value(), contractVer
-										.getCtContract().getOwnerOrgProfile()
-										.getOrgProfileId()));
+				
 				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("ctContractVer.contractVerId",
@@ -714,5 +723,5 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 			return null;
 		}
 	}
-	
+	//Development #29214 - performance
 }
