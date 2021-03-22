@@ -251,6 +251,7 @@
 							</c:choose>
 							</c:when>
 						<c:otherwise>
+						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 								<p:menuitem>
 									<ac:smApplMenuItem backingBean="#{backingBean}"
@@ -279,6 +280,7 @@
 										tabNo="9" label="#{lbl['lbl.sm.aprvrDecisionLbl']}" />
 								</p:menuitem>
 							</c:otherwise>
+							</c:choose>
 						</c:otherwise>
 						</c:choose>
 						<!-- 14530 END -->
@@ -438,6 +440,7 @@
 							</c:choose>
 							</c:when>
 						<c:otherwise>
+						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 								<p:menuitem>
 									<ac:smApplMenuItem backingBean="#{backingBean}"
@@ -466,6 +469,7 @@
 										tabNo="8" label="#{lbl['lbl.sm.aprvrDecisionLbl']}" />
 								</p:menuitem>
 							</c:otherwise>
+							</c:choose>
 						</c:otherwise>
 						</c:choose>
 						<!-- 14530 END -->
@@ -625,6 +629,7 @@
 							</c:choose>
 							</c:when>
 						<c:otherwise>
+						<c:choose>
 							<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 								<p:menuitem>
 									<ac:smApplMenuItem backingBean="#{backingBean}"
@@ -653,6 +658,7 @@
 										tabNo="7" label="#{lbl['lbl.sm.aprvrDecisionLbl']}" />
 								</p:menuitem>
 							</c:otherwise>
+							</c:choose>
 						</c:otherwise>
 						</c:choose>
 						<!-- 14530 END -->
