@@ -187,6 +187,7 @@
 								</c:choose>
 								</c:when>
 							<c:otherwise>
+							<c:choose>
 								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
 										<ui:include
@@ -203,6 +204,7 @@
 											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
 									</c:if>
 								</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 							</c:choose>
 							<!-- 14530 END -->
@@ -303,6 +305,7 @@
 								</c:choose>
 								</c:when>
 							<c:otherwise>
+							<c:choose>
 								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 										<ui:include
@@ -319,6 +322,7 @@
 											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
 									</c:if>
 								</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 							</c:choose>
 							<!-- 14530 END -->
@@ -420,6 +424,7 @@
 								</c:choose>
 								</c:when>
 							<c:otherwise>
+							<c:choose>
 								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 										<ui:include
@@ -436,6 +441,7 @@
 											src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
 									</c:if>
 								</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 							</c:choose>
 							<!-- 14530 END -->
