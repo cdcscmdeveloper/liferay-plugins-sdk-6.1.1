@@ -208,6 +208,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		try{
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
 			resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
+			getManagedBean().setAgencyDataModelVerId(reqDTO.getContractVerId());//Development #29214 -performance
 			getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
