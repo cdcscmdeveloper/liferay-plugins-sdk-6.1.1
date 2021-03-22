@@ -305,13 +305,19 @@ public class SelfRequestSupplierAdminBackingBean extends
 			getManagedBean().getSelectedAdmin().setEpRole(
 					RoleCode.SUPPLIER_TEMP.value());
 		} else {
-			if (mofStatus == DbValueConst.RECORD_STATUS_ACTIVE) {
-				getManagedBean().getSelectedAdmin().setEpRole(
-						RoleCode.MOF_SUPPLIER_ADMIN.value());
-			} else if (mofStatus == DbValueConst.RECORD_STATUS_EXPIRED) {
-				getManagedBean().getSelectedAdmin().setEpRole(
-						RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			// #30053 - Start
+			if(getManagedBean().getSupplier().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+				getManagedBean().getSelectedAdmin().setEpRole(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			}else{
+				if (mofStatus == DbValueConst.RECORD_STATUS_ACTIVE) {
+					getManagedBean().getSelectedAdmin().setEpRole(
+							RoleCode.MOF_SUPPLIER_ADMIN.value());
+				} else if (mofStatus == DbValueConst.RECORD_STATUS_EXPIRED) {
+					getManagedBean().getSelectedAdmin().setEpRole(
+							RoleCode.BASIC_SUPPLIER_ADMIN.value());
+				}
 			}
+			// #30053 - End
 			getManagedBean().getSelectedAdmin().setSoftcertFlg(0);
 		}
 
