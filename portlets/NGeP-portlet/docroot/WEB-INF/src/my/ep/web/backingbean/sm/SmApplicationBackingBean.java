@@ -1922,25 +1922,37 @@ public class SmApplicationBackingBean extends
 											}
 										}
 									}
-								// start #29956 smOwnerSsmPopup
-								if (personnel.getEpRole() != null && !RoleCode.CM_USER.equals(personnel.getEpRole())
-										&& !RoleCode.FL_USER.equals(personnel.getEpRole())) {
-									String[] params = { "" };
-									params[0] = getEpRoleDescByRoleCode(personnel.getEpRole());
-									this.getManagedBean().setTermAndConditionCheckOwner(
-											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", params));
-									this.getManagedBean().setTermAndConditionCheckOwnerA(
-											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", params));
-									this.getManagedBean().setTermAndConditionCheckOwnerC(
-											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", params));
-									this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-											SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
 								}
-								// end #29956
+							// start #29956 smOwnerSsmPopup
+							String[] params = { "" };
+							int x = 0;
+							if (!personnelsRole.isEmpty()) {
+								for (SmPersonnel smPersonnel : personnelsRole) {
+									if (x != 0) {
+										for (String roles : params) {
+											if (!roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole()))) {
+												params[x] = "/ ";
+												x++;
+												params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+												x++;
+											}
+										}
+									} else {
+										params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+										x++;
+									}
 								}
-								
-								
-								
+							}
+							this.getManagedBean().setTermAndConditionCheckOwner(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", params));
+							this.getManagedBean().setTermAndConditionCheckOwnerA(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", params));
+							this.getManagedBean().setTermAndConditionCheckOwnerC(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", params));
+							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
+							// end #29956
+
 								if(personnelsRole != null && personnelsRole.size() > 0) {
 									this.getManagedBean().setDontGetSsmData(dontGetSsmData);
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
