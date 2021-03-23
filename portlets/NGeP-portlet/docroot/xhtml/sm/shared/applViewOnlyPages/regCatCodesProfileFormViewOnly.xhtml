@@ -33,19 +33,17 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			
-			<!-- #28175 start -->
-			<p:column style="width :350px;white-space : normal"> 
-				<h:outputText 
-					value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
-				<br /> 
-				<h:outputText 
-					value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.categoryL2Name}" />
-				<br /> 
-				<h:outputText 
-					value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.categoryL3Name}" />
-			</p:column> 
-			<!-- #28175 end -->
-			
+			<p:column style="width :350px;white-space : normal">
+				<h:outputText
+					value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+				<br />
+				<h:outputText
+					value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+				<br />
+				<h:outputText
+					value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+			</p:column>
+
 			<p:column>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!aprvdCatBean.specialCategory}" />
