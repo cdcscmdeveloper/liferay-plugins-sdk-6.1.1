@@ -1080,21 +1080,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		
-		//#25406 - Start
-		/*Validation for Contract Owner Management */
-		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) &&
-				ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
-			if(getManagedBean().getSearchPtjProfile() != null){
-				if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
-					getManagedBean().setSelectedTabIndex(0);
-					throw new EpException(MessageConst.ERROR_775156);
-				}
-			}else{
-				getManagedBean().setSelectedTabIndex(0);
-				throw new EpException(MessageConst.ERROR_775156);
-			}
-		}
-		//#25406 - End
+//		//#25406 - Start
+//		/*Validation for Contract Owner Management */
+//		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) &&
+//				ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+//			if(getManagedBean().getSearchPtjProfile() != null){
+//				if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
+//					getManagedBean().setSelectedTabIndex(0);
+//					throw new EpException(MessageConst.ERROR_775156);
+//				}
+//			}else{
+//				getManagedBean().setSelectedTabIndex(0);
+//				throw new EpException(MessageConst.ERROR_775156);
+//			}
+//		}
+//		//#25406 - End
 		
 		// Validation for performance bond exempted
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() 
@@ -3610,6 +3610,34 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		
 
+	}
+	//#25406 - End
+	//#25406 - Start
+	/**
+	 * The method used for validating the Contract Owner Management.
+	 * A warning or error message will display on screen when the validation
+	 * is failed. User required to modify the information accordingly
+	 * to proceed.
+	 *
+	 * @param  outcome  the user action on this process. The validation 
+	 * 					will invoke base on the action
+	 */
+	public void validateContractOwnerManagement(String action) throws EpException {
+		getManagedBean().setAutoUpdate(true);
+		
+		/*Validation for Contract Owner Management */
+		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) &&
+				ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
+			if(getManagedBean().getSearchPtjProfile() != null){
+				if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_775156);
+				}
+			}else{
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_775156);
+			}
+		}
 	}
 	//#25406 - End
 }
