@@ -278,6 +278,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 										new FacesScopes().getUserLocale())));
 				ctBB.getManagedBean().setServiceTaxAlertFlg(false);				
 			}
+			
+			//Start - Fix 29368
+			//from maintenance
+			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+				if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+					ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+				  }
+			   }
+			//End - Fix 29368
 
 			return;
 		}
@@ -311,7 +320,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
 				ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
-
+		
+		//Start - Fix 29368
+		//from tasklist
+		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+			  }
+		   }
+		//End - Fix 29368
+	
 	}
 
 	/**
