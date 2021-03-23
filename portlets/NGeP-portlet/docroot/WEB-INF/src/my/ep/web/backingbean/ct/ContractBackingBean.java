@@ -3034,9 +3034,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (getManagedBean().getSelectedItem() != null) {
 			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
+				  //#30428 - agency not display because isChkStatus is false
+				  //to re-check status for isChkStatus if it is false
+				  if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				  }
+				  
+				  if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
-				}
+				  }
 			  }
 			}
 		}
@@ -3920,4 +3931,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		this.filteredAgencies = filteredAgencies;
 	}
 	
+	//#30428 - Start
+	/**
+	 * The method used to entered new ceiling quantity.
+	 * 
+	 * @param ctItemCeilingQty   object of CeilingQty item
+	 */
+	public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
+
+			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+
+						if (!item.getCtItemCeilingQties().isEmpty()) {						
+							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
+								if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
+									ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
+									break;
+									}								
+								}
+							}							
+						}
+					}
+				}
+			}
+	//#30428 - End
 }  
