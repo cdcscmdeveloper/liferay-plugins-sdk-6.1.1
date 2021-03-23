@@ -249,20 +249,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ctWorkflowStatusMatch = true;
 		}
 
-		if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			PmUser pmUser = facesScopes.getUserSessionBean();
-			remark.setCreatedBy(pmUser.getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(pmUser);
-			getManagedBean().setRemarkList(remarkList);
-			getManagedBean().getRemarkList().add(0, remark);
-		} else {
+		//Bug #29446 - start
+		//log.info(!getManagedBean().isViewContract());
+		if(!getManagedBean().isViewContract()){
+			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				PmUser pmUser = facesScopes.getUserSessionBean();
+				remark.setCreatedBy(pmUser.getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(pmUser);
+				getManagedBean().setRemarkList(remarkList);
+				getManagedBean().getRemarkList().add(0, remark);
+			} else {
+				getManagedBean().setRemarkList(remarkList);
+			}
+		} else if (getManagedBean().isViewContract()){
 			getManagedBean().setRemarkList(remarkList);
 		}
 		getManagedBean().setAttachmentList(attachmentList);
+		//Bug #29446 - end
 	}	
 
 	/**
@@ -563,8 +570,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}	
 		return false;
 	}
@@ -581,8 +587,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				return true;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		return false;
 	}
@@ -601,8 +606,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setServiceTaxAlertFlg(true);				
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
@@ -727,8 +731,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
 			} 
-		} finally { }
-
+		} catch (Exception e) {
+			log.error(e);
+		}
 		return selectItems;
 	}
 
@@ -777,7 +782,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
 			} 
-		} finally { }
+		} catch (Exception e) {
+			log.error(e);
+		}
 		return selectItems;
 	}
 
@@ -877,7 +884,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideSchActive(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -896,7 +903,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			getManagedBean().setSelectAll(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);;
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1053,7 +1060,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
@@ -1130,7 +1137,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
@@ -1191,7 +1198,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideDedActive(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1221,7 +1228,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideDedActive(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1610,7 +1617,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					return resDTO.getOrgProfileResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e);
 			}
 			return null;
 		}
@@ -1772,7 +1779,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			RequestContext.getCurrentInstance().execute(
 					"deliveryAddressTblWidget.paginator.endLink.click()");
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
@@ -1829,7 +1836,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
@@ -1911,7 +1918,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -1923,7 +1930,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			agencyDataModel.reloadData();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
 		}
 	}
@@ -2000,7 +2007,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				orgProfileList =  orgProfileSO.searchOrgProfile(reqDTO).getOrgProfileResultBean().getResultList();				
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 			}
 
@@ -2193,7 +2200,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -2225,7 +2232,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 		return items;
@@ -2678,7 +2685,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName()); 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			financialOrgSO = null;
@@ -2748,7 +2755,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 
@@ -2762,8 +2769,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void onSelectProductItem() {
 		try{
 			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
-			log.info("Show Item ****"+getManagedBean().getShowItem());
+			//log.info("Selected Item ***"+getManagedBean().getSelectedItem());
+			//log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 				//cisbb.getManagedBean().setItemServiceExist(false);
 				if (getManagedBean().getShowItem() != null
@@ -2795,7 +2802,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		catch(Exception ex )
 		{
-			ex.printStackTrace();
+			log.error(ex);
 		}
 	}
 	
@@ -2805,7 +2812,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectServiceItem() {
 		try{
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 				if (getManagedBean().getShowServiceItem() != null
 						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
@@ -2832,7 +2839,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		catch(Exception ex )
 		{
-			ex.printStackTrace();
+			log.error(ex);
 		}
 	}
 	
@@ -2991,7 +2998,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				refreshAgencyCeilingQuantityList();
 			}	
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 	
@@ -3010,7 +3017,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}	
 			}	
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 	
@@ -3061,17 +3068,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param ctContractItem   object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
-		// Start - 28292
-		//#28479 - Start Putra
-//		CommonUtils commonUtils = new CommonUtils();
-//		String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctContractItem
-//				.getScRequestItem().getUom().getUomCode());
-//		DecimalFormat formatter = new DecimalFormat(minValue);
-//		String result = formatter.format(ctContractItem.getMinimumOrderQty());
-//		ctContractItem.setMinimumOrderQty(Double.parseDouble(result));
-		// End - 28292
-		log.info("Putra Check Uom Decimal :"+ctContractItem.getScRequestItem().getUom().getDecimalScale().toString() );
-		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
 		//Bug #28356 - Start
 		//#28479 - Start Putra
 		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
@@ -3085,16 +3081,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
-			}
-					//Bug #28479 - Start
-//					if ((getManagedBean().getContractVer().getContractVerId() == null)
-//							&& (getManagedBean().getContractVer().getDocType()
-//									.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
-//						item.setMinimumOrderQty(1);
-//						ctContractItem.setMinimumOrderQty(1);
-//						getManagedBean().setErr100033(true);
-//						getManagedBean().setMinQtyCheck(true);
-					//Bug #28479 - End				
+			}			
 			//Bug #28479 - End				
 	if (ctContractItem.getMinimumOrderQty() > 0) {
 		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
@@ -3157,7 +3144,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
-		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );
 		
 //		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
 //		reqDTO.setCtContactItem(ctContractItem);
@@ -3252,7 +3238,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							schedule.setFromDate(dateFormat.parse(fromDate));
 							schedule.setToDate(dateFormat.parse(toDate));
 						} catch (ParseException e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 				}
@@ -3269,7 +3255,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							schedule.setFromDate(dateFormat.parse(fromDate));
 							schedule.setToDate(dateFormat.parse(toDate));
 						} catch (ParseException e) {
-							e.printStackTrace();
+							log.error(e);
 						}
 					}
 				}
@@ -3375,7 +3361,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			reqDTO = null;
@@ -3412,7 +3398,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -3443,7 +3429,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				return true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			reqDTO = null;
@@ -3565,8 +3551,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_LAUNCH_DATE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		return null;
 	}
@@ -3580,8 +3565,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		return null;
 	}
@@ -3926,21 +3910,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to retreive the factoring attachment from the list.
 	 */
-	@SuppressWarnings("null")
 	public List<CtAttachment> retrieveAttachmentList()
-	{	//#25703, #28505 start
-		if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
-			if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
-				return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+	{	
+		/*#28868 - basri start*/
+		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
+				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
+					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
+				}
+				else{
+					return null;
+				}
 			}
-			else{
+
+			else {
+				return null;
+			}
+		}else{
+			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
+				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
+					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
+				}
+				else{
+					return null;
+				}
+			}
+
+			else {
 				return null;
 			}
 		}
-		else {
-			return null;
-		}
-		//#25703, #28505 end
+		/*#28868 - basri end*/
 	}
 	
 	/*#21387 - basri start*/
