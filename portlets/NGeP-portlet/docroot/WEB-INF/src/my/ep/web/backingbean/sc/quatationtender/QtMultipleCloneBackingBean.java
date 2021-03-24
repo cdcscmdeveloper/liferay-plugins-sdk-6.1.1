@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -121,8 +122,8 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	public void addToClone(){
 		IQTDetailSO QtDetailsSO;
 		try {
-			TreeNode[] nodes=this.selectedNodes;
-			if(nodes.length==0){
+			TreeNode[] nodes=this.selectedNodes;		
+			if(null==nodes || nodes.length==0){
 				throw new EpException(MessageConst.ERROR_760495);
 			}
 			
@@ -578,15 +579,14 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 	//	scQt.setDecExpectedIntendedPrice(copyScqt.getDecExpectedIntendedPrice());
 		
 		scQt.setZonal(copyScqt.isZonal());
+		ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
+		ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
+		supplierCriteria.setScQt(scQt);
+		supplierCriteria.setBrandNew(true);
+		supplierCriteria.setLocationLevel(new PmParameter());
+		supplierCriteria.setScQtLocCriteria(null);
+		setUserDetails(supplierCriteria);
 		if(copyScqt.isZonal()){
-			
-			ScQtSupplierCriteria cps =copyScqt.getScQtSupplierCriteria();
-			ScQtSupplierCriteria supplierCriteria = new ScQtSupplierCriteria();
-			supplierCriteria.setScQt(scQt);
-			supplierCriteria.setBrandNew(true);
-			supplierCriteria.setLocationLevel(new PmParameter());
-			supplierCriteria.setScQtLocCriteria(null);
-			setUserDetails(supplierCriteria);
 			
 			ScQtZoneCriteria qtZoneCriterias =new ScQtZoneCriteria();
 			qtZoneCriterias.setBrandNew(true);
@@ -626,9 +626,9 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			}
 			
 			supplierCriteria.setQtZoneCriterias(qtZoneCriterias);
-			scQt.setScQtSupplierCriteria(supplierCriteria);
+			
 		}
-		
+		scQt.setScQtSupplierCriteria(supplierCriteria);
 		
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
 		scQt.setQtType(copyScqt.getQtType());
@@ -761,4 +761,17 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		this.selectedScqt = selectedScqt;
 	}
 	
+	/***
+	 * 29942-start
+	 * checking clone count empty or zero
+	 * @param event
+	 */
+	public void validateQuotationTender(AjaxBehaviorEvent event){
+		Integer parametervalue = (Integer) event.getComponent().getAttributes().get("value");
+		if(null==parametervalue || parametervalue.equals(0)){
+			this.totalClone=1;
+		}
+		
+	}
+	//#29942-End
 }
