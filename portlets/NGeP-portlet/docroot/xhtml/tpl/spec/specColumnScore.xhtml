@@ -123,27 +123,21 @@
 <!-- Farid end -->
 <!-- #21695 Farid START -->
 	<p:column style="width:130px;">	
-		<c:when test="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0}">
-				<p:inputTextarea disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
-		  		rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0}"
+		<p:inputTextarea disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
+		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0}"
 		  		style="width:calc(100% - 15px);" 
 				value="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 ? 'Not Offer' : tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
-		</c:when>
-		<c:choose>
-		<c:when test="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0}">
-			  	<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-			  	rendered="#{isZonal and tplSpecAnswer.ratePerUom ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0}"
+		
+		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
+			  	rendered="#{isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0 or !isZonal and isSpecTypeFinancial and tplSpecAnswer.ratePerUom ne 0}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
-		</c:when>
-		<c:otherwise>
-				<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-			  	rendered="#{isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom ne 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S' or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq 'S'
-			  	or tplSpecAnswer.tplSpecQuestion.questionType eq 'I' and tplSpecAnswer.tplSpecZoneQty.qty eq null}"
+				
+		<p:inputTextarea disabled="#{evaluationBackingBean.managedBean.readOnly}" 
+			  	rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}"
 			  	style="width:calc(100% - 15px);" 
 				value="#{tplSpecAnswer.userRemark}" rows="1" maxlength="500" onkeyup="limitTextArea(this,500);" onkeydown="limitTextArea(this,500);" onmouseout="limitTextArea(this,500);"/>
-		</c:otherwise>
-		</c:choose>
+		
 	</p:column>
 <!-- #21695 Farid end -->
 </ui:composition>
