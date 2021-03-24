@@ -43,7 +43,7 @@
 			
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.bankDtls.bankName']}</f:facet>
-				#{bankInfo.smSupplierBank.pmFinancialOrg.finOrgName}
+				#{bankInfo.smSupplierBank.pmFinancialOrg.finOrgName}						
 			</p:column>
 
 			<p:column>
@@ -57,7 +57,23 @@
 					#{status.index +1}. #{cheqSign.smPersonnel.name}<br/>
 				</ui:repeat>
 			</p:column>
-
+			
+			<!-- #14055 start -->
+			<p:column>
+				<f:facet name="header">#{lbl['lbl.sm.status']}</f:facet>
+				
+				<ui:param name="bumi" value="bumiputera" />
+				<ui:param name="nonBumi" value="non.bumiputera" />
+				<ui:param name="nonMalay" value="non.malaysian" />				
+				
+				<ui:repeat var="cheqSign" varStatus="status" value="#{bankInfo.smSupplierBank.smChequeSignatories}">															
+					<h:outputText rendered = "#{(cheqSign.smPersonnel.bumiFlg ne 1) and (cheqSign.smPersonnel.pmCountry.countryCode eq SupplierManagementConst.COUNTRY_MALAYSIA_CODE)}" value = "#{svoSiteVisitBackingBean.getStatusFromLabel(nonBumi)}"/>
+					<h:outputText rendered = "#{(cheqSign.smPersonnel.bumiFlg ne 1) and (cheqSign.smPersonnel.pmCountry.countryCode ne SupplierManagementConst.COUNTRY_MALAYSIA_CODE)}" value = "#{svoSiteVisitBackingBean.getStatusFromLabel(nonMalay)}"/>
+					<h:outputText rendered="#{cheqSign.smPersonnel.bumiFlg eq 1}" value = "#{svoSiteVisitBackingBean.getStatusFromLabel(bumi)}"/> <br/>
+				</ui:repeat>															
+			</p:column>			
+			<!-- #14055 end -->
+			
 			<p:column>
 				<f:facet name="header">#{lbl['lbl.sm.termsConditionsLbl']}</f:facet>
 				<p:inputTextarea rows="5" cols="30" autoResize="false" value="#{bankInfo.smSupplierBank.signatureInstruction}" readonly="true"/>
