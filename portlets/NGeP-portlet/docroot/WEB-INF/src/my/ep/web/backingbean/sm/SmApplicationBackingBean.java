@@ -3676,6 +3676,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private Boolean validateFinal(String applType, String currentPageType) {
 		boolean validSave = validateBeforeSave(applType, currentPageType);
+		currentTab = getManagedBean().getTabActiveIndex();
 
 		if (validSave && !StringUtils.isBlank(currentPageType)) {
 			if (currentPageType
