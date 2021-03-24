@@ -23,14 +23,26 @@
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				update="@form"
 				listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
+	<!-- #21695 Farid Start -->				
+					<p:column 
+						style="pointer-events:none !important"
+						rendered="#{!summaryItem.selectable}">
+						<f:facet name="header" >
+							<h:outputText value="#{lbl['lbl.sc.item']}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}" 
+								styleClass="ui-state-disabled">
+						</h:outputText>
+					</p:column>
+				
+					<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;"
+							rendered="#{summaryItem.selectable}">
+						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
 
-				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
-
-			</p:column>
+					</p:column>
+	<!-- #21695 Farid End -->				
 		</p:dataTable>
 	</p:panel>
-
 
 	<h:panelGroup id="summaryItemQualified">
 
