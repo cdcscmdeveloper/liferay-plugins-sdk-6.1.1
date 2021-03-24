@@ -31,7 +31,18 @@
 				</td>
 			</tr>
 		</table>
-
+		<!-- #25138 Spec Zone menu model if zonal - start-->
+		<table style="width: 100%">
+			<td style="width: 16%;" valign="top"><p:remoteCommand 
+					name="specTabChange" update="@form" partialSubmit="true"
+					process="@form" action="#{specificationBackingBean.specTabChange}" />
+				<p:tabMenu id="zonalMenu" 
+					activeIndex="#{specificationBackingBean.managedBean.specZoneTabIndex}"
+					model="#{specificationBackingBean.managedBean.specificationSpecZonalMenuModel}">
+				</p:tabMenu>
+			</td>
+		</table>
+		<!-- #25138 Spec Zone menu model if zonal - end-->
 		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
 			value="#{specificationBackingBean.managedBean.financialScoring}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -127,8 +138,8 @@
 			</table>
 		</h:panelGroup>
 	</p:panel>
-	<!-- ahmaa-#25138 - start -->
-	<h:panelGroup id="offeredPrice" toggleable="true">
+	<!-- ahmaa-#25138 Reendorsed- start -->
+	<h:panelGroup id="offeredPrice" toggleable="true" rendered="#{!specificationBackingBean.managedBean.isSingleItem()}">
 		<p:panel header="#{lbl['lbl.sc.by.package']}" id="financialScoringPackageOfferedPrice" toggleable="true"> 			
 			<table>
 				<tr>
@@ -168,11 +179,15 @@
 					<ac:iconTooltip
 					value="#{lbl['lbl.sc.spec.scoring.offered.price.tooltip']}" />
 					
-					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
-					
-					<p:panelGrid style="margin-top:5px;width:100%;"
+				<p:spacer height="15"></p:spacer>
+				
+				<p:panelGrid style="margin-top:5px;width:100%;"
 					styleClass="panelGridBorders tr, panelGridBorders td">
-					<f:facet name="header">
+					<c:if test="#{specificationBackingBean.managedBean.qt.isZonal()}">
+						<ui:decorate template="financialScoringAutoscore.xhtml" /> 
+					</c:if>
+					<c:if test="#{!specificationBackingBean.managedBean.qt.isZonal()}">
+						<f:facet name="header">
 						<p:row>
 							<p:column styleClass="panelGridHeaders" style="width:15%;"
 								colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}</p:column>
@@ -225,33 +240,56 @@
 							</p:inputText>
 						</p:column>
 					</p:row>
-					
+					</c:if>
 				</p:panelGrid>
-				
-				<p:spacer height="15"></p:spacer>
-					
 				</h:panelGroup>
 
 				<h:panelGroup rendered="#{specificationBackingBean.managedBean.offerScoreType eq '2'}">
-					<table>
-						<tr>
-							<td width="150px"><ui:fragment
-									rendered="#{!specificationBackingBean.managedBean.readOnly}">
-									<p:outputLabel value="*" styleClass="mandatory"
-										style="float : left"></p:outputLabel>
-								</ui:fragment> <p:outputLabel style="float : left"
-									value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
-							<td><p:inputText id="techprivateContScore" required="true"
-									style="text-align:right;"
-									readonly="true" disabled="true"
-									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="14"
-									value="#{finance.qtScoreWeightage.score}">
-									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-									<p:ajax  event="change" process="@this" partialSubmit="true" update="offeredPrice"></p:ajax>
-								</p:inputText> <p:message id="techContractPrivateScore"
-									for="techprivateContScore" display="icon"></p:message></td>
-						</tr>
-					</table>
+					
+					<c:if test="#{specificationBackingBean.managedBean.qt.isZonal()}">
+						<p:dataTable id="userMaxScore" var="usermaxscore"
+							value="#{specificationBackingBean.managedBean.offerPricePackageList}"
+							rowKey="#{usermaxscore}" style="width:40%"
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+							rowIndexVar="index">
+							
+							<p:column
+								headerText="#{lbl['lbl.sc.zone.name']}"
+								style="width:50%;white-space: normal;">
+								<h:outputText value="#{usermaxscore.tplSpecZoneDtl.zoneName}" size="20" />
+							</p:column>
+							
+							<p:column
+								headerText="#{lbl['lbl.sc.spec.max.score']}"
+								style="width:50%;white-space: normal;">
+								<h:outputText value="#{usermaxscore.tplSpecZoneDtl.totalMaxScore}" size="20" />
+							</p:column>
+						
+						</p:dataTable>
+					
+					</c:if>
+					<c:if test="#{!specificationBackingBean.managedBean.qt.isZonal()}">
+						<table>
+							<tr>
+								<td width="150px"><ui:fragment
+										rendered="#{!specificationBackingBean.managedBean.readOnly}">
+										<p:outputLabel value="*" styleClass="mandatory"
+											style="float : left"></p:outputLabel>
+									</ui:fragment> <p:outputLabel style="float : left"
+										value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
+								<td><p:inputText id="techprivateContScore" required="true"
+										style="text-align:right;"
+										readonly="true" disabled="true"
+										label="#{lbl['lbl.sc.spec.max.score']}" maxlength="14"
+										value="#{finance.qtScoreWeightage.score}">
+										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+										<p:ajax  event="change" process="@this" partialSubmit="true" update="offeredPrice"></p:ajax>
+									</p:inputText> <p:message id="techContractPrivateScore"
+										for="techprivateContScore" display="icon"></p:message></td>
+							</tr>
+						</table>
+					</c:if>
+					
 				</h:panelGroup>
 			</h:panelGroup>
 			<p:spacer height="15"></p:spacer>
@@ -269,10 +307,10 @@
 								</p:inputText> <p:spacer width="5"></p:spacer></td>
 						</tr>
 					</table>
-			</panelGrid><!-- #25138-30/8 end-->	
+			</panelGrid>
 		</p:panel>
 	</h:panelGroup>
-	<!-- ahmaa-#25138 - end -->
+	<!-- ahmaa-#25138 Reendorsed - end -->
 	
 	
 	<p:panel id="financialScoringItemPanle"
