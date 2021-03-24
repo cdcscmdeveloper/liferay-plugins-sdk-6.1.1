@@ -41,7 +41,7 @@
 		<p:outputPanel rendered="#{!registrationBackingBean.managedBean.viewMode}">
 			 
 		<h:outputText rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}" value="#{lbl['lbl.sm.po.disclaimer1']}" styleClass="splNotesFonts" style="float: inherit" escape="false" />
-		<h:commandLink
+		<h:commandLink onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				rendered="#{registrationBackingBean.managedBean.companyValidWithSSM}"
 				action="#{registrationBackingBean.redirectToViewSSMInfo(registrationBackingBean.managedBean.smSupp.regNo,registrationBackingBean.managedBean.smSupp.businessType)}"
 				value="#{lbl['lbl.fl.instruction.here']}" 
