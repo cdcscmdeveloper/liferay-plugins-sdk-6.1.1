@@ -73,7 +73,15 @@
 					style="text-align:right">
 					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
-
+				<ui:remove> #21695 #29021 Start </ui:remove>
+				<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText value="#{empty summaryqualSup.totalRating? 0: summaryqualSup.totalRating}"/>
+				</p:column>
+				<ui:remove> #21695 #29021 end </ui:remove>
 			</p:dataTable>
 			<p:spacer height="10px" />
 			<table>
@@ -131,6 +139,15 @@
 					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 				</p:column>
 
+				<ui:remove> #21695 #29021 Start </ui:remove>
+				<p:column style="width:25%;white-space: normal;text-align:center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.rating']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+					</f:facet>
+					<h:outputText value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}"/>
+				</p:column>
+				<ui:remove> #21695 #29021 end </ui:remove>
 
 			</p:dataTable>
 			<p:spacer height="10px" />
