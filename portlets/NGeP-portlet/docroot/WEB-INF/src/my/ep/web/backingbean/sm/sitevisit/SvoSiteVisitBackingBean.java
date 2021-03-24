@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -363,17 +364,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void rptPreview(SmSvTemplate svTemplate){
 
-		//this.getManagedBean().setSelectedSvTemplate(this.getManagedBean().getSmSvTemplateMap().get(catType));
 		getManagedBean().setSelectedSvTemplate(svTemplate);
-		
-		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || 
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
-				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			if(svTemplate.getSmSvFacility() == null){
+		//#29200 CR 14055: Static Code Analysis Start
+		if((svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) ||  svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)) && svTemplate.getSmSvFacility() == null){
+			//if(svTemplate.getSmSvFacility() == null){
 				setSelectedSmSvFacility(svTemplate);
-			}
+			//}
 		}
-		//log.info("---svTemplate selected ADD----------" + this.getManagedBean().getSelectedSvTemplate().getSmSvTemplateAddresses().size());
+		//#29200 CR 14055: Static Code Analysis End
 	}
 	
 	/**
@@ -562,9 +560,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		
 		// add to smLicenseInsurance
-		if(catType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) 
-				|| catType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
-			if(svTemplate.getSmSvLicenseInsurances().size() < 1){
+		//#29200 CR 14055: Static Code Analysis Start
+		if((catType.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) || catType.equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) || catType.equals(SupplierManagementConst.CAT_TYPE_PRINTING)) && svTemplate.getSmSvLicenseInsurances().size() < 1){
+			//if(svTemplate.getSmSvLicenseInsurances().size() < 1){
 				List<PmParameterDesc> dockyardLicenceInsurance = SmCommonUtil.retrieveParameterDescList(strLicenseIns, new FacesScopes().getUserLocale().getLanguage());
 				for(PmParameterDesc dockWorkLicenseIns : dockyardLicenceInsurance){
 					SmSvLicenseInsurance svLicenseInsurance = new SmSvLicenseInsurance();
@@ -572,8 +570,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					svLicenseInsurance.setSmSvTemplate(svTemplate);
 					svTemplate.getSmSvLicenseInsurances().add(svLicenseInsurance);
 				}
-			}
+			//}
 		}
+		//#29200 CR 14055: Static Code Analysis End
 	}
 	
 	/**
@@ -917,28 +916,42 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * get cheque Signatory Info
 	 */
 	private void chequeSignatoryInfo(){
-		log.info("****cheque signatory**" + this.getManagedBean().getSmSvTask().getSmSvBankInfos().size());
 		int totalChequeSignatory = 0;
-		int cheqBumi = 0,cheqNonBumi = 0, cheqNonMalaysian = 0;
+		int cheqBumi = 0;
+		int cheqNonBumi = 0;
+		int cheqNonMalaysian = 0;
 		
-		if(this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null){
-			for(SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()){
-				if(svBankInfo.getSmSupplierBank().getSmChequeSignatories().size() > 0){
-					for(SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()){
-						totalChequeSignatory++;
-						if(chequeSignatory.getSmPersonnel().isBumi()){
-							cheqBumi++;
-						}else{ 
-							if(chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)){
-								cheqNonBumi++;
-							}else{
-								cheqNonMalaysian++;
+		// #14055 - start
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		
+		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
+			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
+				if (!svBankInfo.getSmSupplierBank().getSmChequeSignatories().isEmpty()) {	
+					for (SmChequeSignatory chequeSignatory : svBankInfo.getSmSupplierBank().getSmChequeSignatories()) {
+						totalCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+						if (chequeSignatory.getSmPersonnel().isBumi()) {
+								bumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+						} else {
+							if (chequeSignatory.getSmPersonnel().getPmCountry().getCountryCode()
+									.equalsIgnoreCase(SupplierManagementConst.MALAYSIA_CODE)) {
+								nonBumiCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
+							} else {
+								nonMyCheckingList.add(chequeSignatory.getSmPersonnel().getIdentificationNo());
 							}
 						}
 					}
 				}
 			}
 		}
+		totalChequeSignatory = totalCheckingList.size();
+		cheqBumi = bumiCheckingList.size();
+		cheqNonBumi = nonBumiCheckingList.size();
+		cheqNonMalaysian = nonMyCheckingList.size();
+				
+		// #14055 - end	
 		
 		this.getManagedBean().setTotalCheqSign(totalChequeSignatory);
 		this.getManagedBean().setCheqBumi(cheqBumi);
@@ -1533,10 +1546,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("templateType",templateDesc);
 		context.put("review", review);
 		
-		String fileName = fileInitName + "sectionB.pdf";
-		String file = generateToPdf(vmEquity, context, fileName);
+		// #14055 - start
+		context.put("malaysiaCode", SupplierManagementConst.COUNTRY_MALAYSIA_CODE);			
+		// #14055 - end
 		
-		return file;
+		String fileName = fileInitName + "sectionB.pdf";
+		//String file = generateToPdf(vmEquity, context, fileName);
+		
+		return generateToPdf(vmEquity, context, fileName);
 	}
 	
 	/**
@@ -2740,4 +2757,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 
 	}
+	// #29200 CR 14055: Static Code Analysis
+	public String getStatusFromLabel(String tempStatus) {		
+		return ResourceBundleUtils.getMessage("lbl.sm.sv.templ." + tempStatus, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+	// #29200 CR 14055: Static Code Analysis
+
 }
