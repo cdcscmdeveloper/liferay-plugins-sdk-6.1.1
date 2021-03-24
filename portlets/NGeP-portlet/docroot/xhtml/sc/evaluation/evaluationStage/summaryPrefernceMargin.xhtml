@@ -7,9 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-
-
-
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{qualifiedSupplierListHeader}" />
@@ -33,16 +30,11 @@
 				<h:outputText value="#{prefQualSupplier.evalRank}"></h:outputText>
 			</p:column>
 
-
-
-
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:10%; text-align:center;">
 
 				<h:outputText
 					value="#{prefQualSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
-
-
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
@@ -130,11 +122,6 @@
 
 	</p:panel>
 
-
-
-
-
-
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{disQualifiedSupplierListHeader}" />
@@ -187,7 +174,7 @@
 		</table>
 
 	</p:panel>
-	
+<ui:remove>	
 <!-- #21695 Start Farid -->
 <c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">			
 		<p:panel toggleable="true">
@@ -200,5 +187,7 @@
 				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
 		</p:panel>
 </c:if>		
-<!-- #21695 End Farid -->			
+<!-- #21695 End Farid -->		
+</ui:remove>	
+
 </ui:composition>
