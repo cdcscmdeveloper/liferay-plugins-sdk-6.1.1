@@ -596,9 +596,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> singleItemCheckList;
 	
 	private int tabItemPackageIndex;
+	
+	private List<ScQtScoreOfferPrice> offerPricePackageList;
 	//#25138 - end
 	
 	private boolean scoringReq = false; //#25138
+	
+	private boolean speczonedtlReq = false;//#25138
 	
 	private boolean itemSampleReq; //#11104-start
 	/**tabIndex
@@ -3717,7 +3721,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setFinPackageScore(Boolean finPackageScore) {
 		this.finPackageScore = finPackageScore;
 	}
-
+	//#25138-Ahmaa-End
 	//#25037
 	public EvaluationMeetingBackingBean getMeetingBB() {
 		return meetingBB;
@@ -3728,7 +3732,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	//#25037-end
 
-	//#25138-Ahmaa-End
 // #21695 farid	start
 	public IPagingDataModel<Object[]> getNotOfferSupplierDM() {
 		return notOfferSupplierDM;
@@ -3866,5 +3869,27 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 	//#29473-End
+	/**25138 - start
+	 * @return the offerPricePackageList
+	 */
+	public List<ScQtScoreOfferPrice> getOfferPricePackageList() {
+		return offerPricePackageList;
+	}
 	
+	/**
+	 * @param offerPricePackageList the offerPricePackageList to set
+	 */
+	public void setOfferPricePackageList(List<ScQtScoreOfferPrice> offerPricePackageList) {
+		this.offerPricePackageList = offerPricePackageList;
+	}
+	//#25138 - end
+	//#25138 - start
+	public boolean isSpeczonedtlReq() {
+		return speczonedtlReq;
+	}
+
+	public void setSpeczonedtlReq(boolean speczonedtlReq) {
+		this.speczonedtlReq = speczonedtlReq;
+	}
+	//#25138 - end
 }
