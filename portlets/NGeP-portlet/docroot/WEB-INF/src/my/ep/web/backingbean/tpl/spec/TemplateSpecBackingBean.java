@@ -1183,9 +1183,11 @@ public class TemplateSpecBackingBean extends
 		}
 
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
+		//#21695 - Start Farid
 		this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+		// #21695 -END Farid		
 	}
-	// #21695 -END Farid	
+
 	/**
 	 * Zone Quantity Popup Action
 	 * 
@@ -3240,94 +3242,6 @@ public class TemplateSpecBackingBean extends
 		
 	}
 /** #21695 FARID END */
-	
-// FARID #21695 START	
-	public Boolean finZoneOfferCheck(TplSpecAnswer tplSpecAnswer) {
-		boolean finZoneOfferCheck = false;
-		ITemplateSpecSO templateSpecSO = null;
-		
-		templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
-				.getServiceObject("cc", ITemplateSpecSO.class);
-		
-		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-
-		TplSpecAnswer answerList = tplSpecAnswer;
-		
-		reqDTO.setTplSpecAnswer(answerList);
-		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-		
-		TemplateSpecResDTO resDTO = templateSpecSO.retriveTechSuppAnswerZonesOfferBySupplierId(reqDTO);
-
-		for(TplSpecZoneOffer specOffers : resDTO.getSpecZoneOffer()){
-			if(specOffers!=null){
-				
-					if (answerList != null) {
-						if(answerList.getTplSpecQuestion().getSpecQuestionId()!=null && 
-								answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specOffers.getTplSpecQuestion().getSpecQuestionId())
-								&& answerList.getTplSpecZoneQty().getTplSpecZoneDtl().getSpecZoneId().equals(specOffers.getTplSpecZoneDtl().getSpecZoneId())
-								&& answerList.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(specOffers.getTplSpecSuppAnswer().getSmSupplier().getSupplierId())
-								&& specOffers.isOffer() == true){
-//							log.info("===================masuk sini==");
-//							log.info("===================PARENT==="+answerList.getTplSpecQuestion());
-//							log.info("===================PARENT==="+answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId());
-//							log.info("===================EQUAL SPEC ID SPECZONEOFFER==="+specOffers.getTplSpecQuestion().getSpecQuestionId());
-//							log.info("===================SPEC ZONE DTL ID FROM SPEC ANS=="+answerList.getTplSpecZoneQty().getTplSpecZoneDtl().getSpecZoneId());
-//							log.info("===================SPEC ZONE DTL ID FROM ZONE OFFER=="+specOffers.getTplSpecZoneDtl().getSpecZoneId());
-//							log.info("===================specoffer==="+specOffers.isOffer());
-//							log.info("===================specanswer qty id==="+answerList.getTplSpecZoneQty().getSpecZoneQtyId());
-//							log.info("===================specoffer qty id==="+specOffers.getTplSpecZoneQty().getSpecZoneQtyId());
-//							
-							finZoneOfferCheck = true;
-							break;
-						}
-						
-					}
-				
-			}
-		}		
-			
-		return finZoneOfferCheck;
-	}
-// FARID #21695 END
-
-// FARID #21695 START	
-	public Boolean finZoneOfferCheckNonZonal(TplSpecAnswer tplSpecAnswer) {
-		boolean finZoneOfferCheckNonZonal = false;
-		ITemplateSpecSO templateSpecSO = null;
-		
-		templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
-				.getServiceObject("cc", ITemplateSpecSO.class);
-		
-		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-
-		TplSpecAnswer answerList = tplSpecAnswer;
-		
-		reqDTO.setTplSpecAnswer(answerList);
-		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-		
-		TemplateSpecResDTO resDTO = templateSpecSO.retriveTechSuppAnswerOfferBySupplierId(reqDTO);
-
-		for(TplSpecAnswer specAnswerOffers : resDTO.getSpecAnswerOffer()){
-			if(specAnswerOffers!=null){
-				
-					if (answerList != null && specAnswerOffers !=null) {
-						if(answerList.getTplSpecQuestion().getSpecQuestionId()!=null && 
-								answerList.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId().equals(specAnswerOffers.getTplSpecQuestion().getSpecQuestionId())
-								&& answerList.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(specAnswerOffers.getTplSpecSuppAnswer().getSmSupplier().getSupplierId())
-								&& specAnswerOffers.getOffer() !=null && specAnswerOffers.getOffer() == false){
-
-							finZoneOfferCheckNonZonal = true;
-							break;
-						}
-						
-					}
-				
-			}
-		}		
-			
-		return finZoneOfferCheckNonZonal;
-	}
-	// FARID #21695 END
 	
 	/**
 	 * Calculate the total amount and amount per year for all spec answer for each item.
