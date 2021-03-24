@@ -2475,7 +2475,17 @@ public class QtSpecCloneBackingBean extends
 				
 			}
 			
-			if (null != this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getFulfilmentType()){
+			if (null != this.getManagedBean().getQt() && null != this.getManagedBean().getQt().getContractType()&& null != this.getManagedBean().getQt().getContractType().getParameterId()){
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("contractType.parameterId");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getQt().getContractType().getParameterId());
+				searchFilterBean.add(bean);
+				
+			}
+			
+			if (null != this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getFulfilmentType() && null!=this.getManagedBean().getQt().getFulfilmentType().getParameterId()){
 				
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField("fulfilmentType.parameterId");
@@ -2595,7 +2605,7 @@ public class QtSpecCloneBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
-				Long[] stats= {60002L,60024L,60003L};
+				Long[] stats= {QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION};
 				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
 				qtSearchBean
 				.getDataFilterBeans()
