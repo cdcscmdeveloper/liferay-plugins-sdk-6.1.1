@@ -893,19 +893,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO = new ProcurementPlanReqDTO();
 			resDTO = new ProcurementPlanResDTO();
 			reqDTO.setPlanId(id);
-			//200911@akmal - Enhancement27624 - Start
-			reqDTO.setPlanDetSearch(false);
-			//200911@akmal - Enhancement27624 - End
 			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);
-			//200911@akmal - Enhancement27624 - Start
-			if(this.getManagedBean().isPlanDetailSearch()){
-				reqDTO.setPlanDetSearch(true);
-				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
-			}
-			else if(this.getManagedBean().isPlanDetailReset()){
-				reqDTO.setPlanDetReset(true);
-				reqDTO = parseSearchBean(this.getManagedBean().getPlanSearchBean(), reqDTO);
-			}
 			resDTO = reqSO.retrievePlanDetById(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -1024,9 +1012,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						//24975@04112020@azza - End
 						loadEpItems(ppPlan);
 						
-						//210108@akmal - Enhancement27624 - Start
-						
-						//210108@akmal - Enhancement27624 - End
 						// set searchbean			    					
 					}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(ppPlan.getPlanType().getParameterCode())){
 						calculatePpGrandTotal();
@@ -1036,12 +1021,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					if (ppPlan.getPpProcurementItems() != null && !ppPlan.getPpProcurementItems().isEmpty()) {
 						this.resetPpProcurementItems(ppPlan.getPpProcurementItems());
 					}
-					
-					//201228@akmal - Enhancement27624 - Start
-					this.getManagedBean().setMinYear(resDTO.getLastUpdatedDate());
-					this.getManagedBean().setMinInvitationYear("01/01/"+ppPlan.getPlanYear().toString());
-					this.getManagedBean().setMaxInvitationYear("31/12/"+ppPlan.getPlanYear().toString());
-					//201228@akmal - Enhancement27624 - End
 				}else{
 					throw new EpException(MessageConst.ERROR_730001);
 				}
@@ -1052,10 +1031,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			throw e;
 		}finally{
 			reqSO = null;
-			//210111@akmal - Enhancement27624 - Start
-			this.getManagedBean().setPlanDetailSearch(false);
-			this.getManagedBean().setPlanDetailReset(false);
-			//210111@akmal - Enhancement27624 - End
 		}
 		
 		log.info("loadPlanDetails - End");
@@ -1863,34 +1838,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				return items;
 			}
 		}else{
-			//210108@akmal - Enhancement27624 - Start
-			SelectItem[] items;
 			Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
 			Integer nextYear = currentYear + 1;
-		
-			if(this.getManagedBean().isAudit()){
-				currentYear = startyear;
-				int diff = nextYear - currentYear + 1;
-				items = new SelectItem[diff+1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				
-				for(int i=1; i <= diff; i++){
-					items[i] = new SelectItem(currentYear.longValue(), currentYear.toString());
-					currentYear = currentYear+1;
-				}
-				
-				return items;
-			} else {
-				currentYear = Calendar.getInstance().get(Calendar.YEAR);
-				nextYear = currentYear + 1;
-				items = new SelectItem[3];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-				items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
-				items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
-				return items;
-			}
-			
-			//210108@akmal - Enhancement27624 - End
+			SelectItem[] items = new SelectItem[3];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
+			items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
+			return items;
 		}
 	}
 	
@@ -6218,7 +6172,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					}
 
 					itemIndex++;
-				}
 			}
 		}// 04122020@24975 - end
 		log.info("updateReasons:" + updateReasons);
@@ -7885,10 +7838,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					log.info("expenditureId clone " + expenditureItems.get(i).isCloned());
 
 					if (expenditureItems.get(i).isCloned() == true) {
-
-						if (this.getManagedBean().isPlanDetailSearch() || this.getManagedBean().isPlanDetailReset()) {
-							expenditureItems.get(i - 1).setSearchReset(true);
-						}
 
 						log.info("Cloned procurementItemId= " + expenditureItems.get(i).getExpenditureItemId()
 								+ ", brandNew= " + expenditureItems.get(i).isBrandNew());
