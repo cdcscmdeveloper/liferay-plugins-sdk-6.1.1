@@ -15,7 +15,7 @@
 				<ui:param name="isPanel"
 					value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"></ui:param>
 					
-				<td colspan="3">
+				<td colspan="6"><!-- colspan="3" -->
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="panel" required="#{param['submitBtnPressed']=='1'}"
@@ -29,6 +29,16 @@
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
 									id="panelMsg" for="panel" display="icon" /> <ac:iconTooltip
 									value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
+							<td style="padding-left: 20px;">
+							<div align="left">
+								<h:commandLink id="treasuryCircularLink"
+									value="#{lbl['lbl.sc.view.panel.details']}"
+									process="@this" partialSubmit="true"
+									action="#{simpleQuoteBackingBean.gotoPanelPage(null, 'PQ')}"
+									style="text-decoration:underline;"
+									rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
+								</h:commandLink>
+							</div></td>
 						</tr>
 					</table>
 				</td>
@@ -37,7 +47,7 @@
 				<td style="vertical-align: top;"><p:outputLabel
 						value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="4">
+				<td colspan="3">
 					<table>
 						<tr>
 							<td>
@@ -212,7 +222,7 @@
 						modVal="15"
 						maxdate="#{simpleQuoteBackingBean.managedBean.maxDate}"
 						update="@([id$=durationId])">
-					</ac:dateTime> </td>
+					</ac:dateTime></td>
 			</tr>
 			<tr>
 		
