@@ -17,9 +17,7 @@
 	<ui:param name="navToFirstPage" value="#{templateSpecId}questionTblWidget.paginator.setPage(0, false);" />
 	<ui:param name="navToNextPage" value="#{templateSpecId}nextBtnWG.getJQ().click();" />
 	<ui:param name="addItemSpecOnComplete" value="#{row mod rowsPerPage == (rowsPerPage - 1) ? navToNextPage : ''}" />
-<!-- 	#25039 Begin - version zonal -->	
 	<ui:param name="zoneEstimationPopup" value="#{templateSpecId}zoneEstimationPopup" />
-<!-- 	#25039 End - version zonal -->		
 	<p:blockUI block="spg" widgetVar="#{templateSpecId}specBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
@@ -207,11 +205,9 @@
 						</div>			
 					</c:if>
 				</p:dialog>
-				
-				<!-- 	#25039 Begin - version zonal -->
-				<!-- 	#25039#67 Begin -->
+
 				<p:dialog id="zoneEstimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{zoneEstimationPopup}" modal="true" width="800" height="auto" closable="false">				
-				<!-- 	#25039#67 End -->
+
 					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 						<div style="height:250px;">
 							<h:panelGroup id="zoneEstimationPnl">
@@ -236,7 +232,6 @@
 						</div>			
 					</c:if>
 				</p:dialog>
-				<!-- 	#25039 End - version zonal -->	
 
 				<ui:include src="zoneQtyPopup.xhtml" />
 			</c:if>

@@ -497,11 +497,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 									resfDTO.getDocNoStatus().add("");
 								}
 								
-								//InfoActiveContractList.get(i).setCrNo(resfDTO.getDocNos().get(i));
-								//InfoActiveContractList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
-								//InfoActiveContractList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
-								//InfoActiveContractList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
-								
+							
 								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
 								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
 								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
@@ -3064,78 +3060,79 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setScheduleNo(String scheduleNo) {
 		this.scheduleNo = scheduleNo;
 	}
-	// start #17087
-	/**
-	 * @return the minContractDate
-	 */
-	public Date getMinContractDate() {
-		return minContractDate;
-	}
 	
 	//24893 - start
-		public PmOrgProfile getChargePTJOrg() {
-			return chargePTJOrg;
-		}
-		
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
 	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
 		this.chargePTJOrg = chargePTJOrg;
 	}
-	/**
-	 * @param minContractDate to set
-	 */
-	public void setMinContractDate(Date minContractDate) {
-		this.minContractDate = minContractDate;
-	}
 	//24893 - end	
-	
-	/**
-	 * @return the maxContractDate
-	 */
-	public Date getMaxContractDate() {
-		return maxContractDate;
-	}
 
-	/**
-	 * @param maxContractDate to set
-	 */
-	public void setMaxContractDate(Date maxContractDate) {
-		this.maxContractDate = maxContractDate;
-	}
-	// End #17087
-	
-	//13984-start
-	public String getOrgCode() {
-		return orgCode;
-	}
+	// start #17087
+		/**
+		 * @return the minContractDate
+		 */
+		public Date getMinContractDate() {
+			return minContractDate;
+		}
 
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
-	}
-	
-	public String getOrgName() {
-		return orgName;
-	}
+		/**
+		 * @param minContractDate to set
+		 */
+		public void setMinContractDate(Date minContractDate) {
+			this.minContractDate = minContractDate;
+		}
+		/**
+		 * @return the maxContractDate
+		 */
+		public Date getMaxContractDate() {
+			return maxContractDate;
+		}
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
-	//13984-end
-	
-	//start-13984 - CrList - Back Button
-	public int getBackFlag() {
-		return backFlag;
-	}
+		/**
+		 * @param maxContractDate to set
+		 */
+		public void setMaxContractDate(Date maxContractDate) {
+			this.maxContractDate = maxContractDate;
+		}
+		// End #17087
+		
+		//13984-start
+		public String getOrgCode() {
+			return orgCode;
+		}
 
-	public void setBackFlag(int backFlag) {
-		this.backFlag = backFlag;
-	}
+		public void setOrgCode(String orgCode) {
+			this.orgCode = orgCode;
+		}
+		
+		public String getOrgName() {
+			return orgName;
+		}
 
-	public String getCatalogueFlag() {
-		return catalogueFlag;
-	}
+		public void setOrgName(String orgName) {
+			this.orgName = orgName;
+		}
+		//13984-end
 
-	public void setCatalogueFlag(String catalogueFlag) {
-		this.catalogueFlag = catalogueFlag;
-	}
-	//end-13984 - CrList - Back Button
+		//start-13984 - CrList - Back Button
+		public int getBackFlag() {
+			return backFlag;
+		}
+
+		public void setBackFlag(int backFlag) {
+			this.backFlag = backFlag;
+		}
+
+		public String getCatalogueFlag() {
+			return catalogueFlag;
+		}
+
+		public void setCatalogueFlag(String catalogueFlag) {
+			this.catalogueFlag = catalogueFlag;
+		}
+		//end-13984 - CrList - Back Button
 }

@@ -525,7 +525,7 @@ public class SmSideMenuIconUtil {
 						|| bean.getSmAppl().getApplType()
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 					retVal = ICON_VIEW;
-				} else {					
+				} else {
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 							.getSmSupplierCategories())) {
@@ -865,7 +865,12 @@ public class SmSideMenuIconUtil {
 								currPersonnel, new String[] { "shareAmt",
 										"sharePercentage", "softcert",
 										"softcertFlg", "epRole" });
-					} //24964					
+					} else {
+						retVal = EntityHelper.isObjectDifference(prevPersonnel,
+								currPersonnel, new String[] { "shareAmt",
+										"sharePercentage", "softcert",
+										"softcertFlg" });
+					}
 					
 					if (retVal) {
 						log.info(">>>>DIFFERENT IN PERSONNEL FOR PERSONNEL:"
