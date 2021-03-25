@@ -192,11 +192,15 @@
 				<td style="width:274px;"><p:inputText size="15" disabled="true" 
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>		
 			</tr>
+			<!-- 29982 start -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+			    <td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstDeclaredDate}">
@@ -205,6 +209,13 @@
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
