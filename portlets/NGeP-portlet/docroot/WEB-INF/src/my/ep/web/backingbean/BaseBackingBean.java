@@ -27,8 +27,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections; //#29253 #25037
 import java.util.Collection; //#29253 #25037
+import java.util.Collections; //#29253 #25037
 import java.util.Comparator; //#29253 #25037
 import java.util.Date;
 import java.util.List;
@@ -69,7 +69,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -125,7 +124,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.UserTasks;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
@@ -240,7 +238,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			@SuppressWarnings("unchecked")
 			T tmpBean = (T) facesScopes.removeFromSession(managedBeanName);
 
-			log.info("remove managedBean from session:" + tmpBean);
+			//log.info("remove managedBean from session:" + tmpBean);
 
 			managedBean = null;
 		} catch (Exception ex) {
@@ -269,7 +267,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					facesContext, "#{" + managedBeanName + "}",
 					managedBeanClazz);
 
-			log.info("managedBean:" + managedBean);
+			//log.info("managedBean:" + managedBean);
 		}
 
 		return managedBean;
@@ -360,12 +358,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Claim bpm task group
 	 */
 	public void claimBpmTaskGroup(String taskId) {
-
-  
-											
-
 		claimTaskByTaskId(taskId);
-
 	}
 
 	/**
@@ -695,47 +688,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-						 
-	
-																	   
-														 
-	
-						
-								 
-					 
-									   
-							   
-	
-																				  
-											 
-							
-									   
-	   
-														 
-													 
-								  
 
-													 
-																								   
-																								
-							
-			 
-														 
-																							 
-																				 
-	
-						 
-					   
-												
-		  
-																								
-						
-   
-
-			   
-  
-					   
- 
 	/**
 	 * Populate values for Reason Drop down base on reason category code
 	 * 
@@ -971,45 +924,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				null);
 	}
 	
-																			 
-									 
-														
-			
-				   
-  
- 
- 
-																		   
-																		 
-							
-									   
-
-	   
-																							 
-																					 
-
-																									  
-																								   
-																								
-							
-			 
-												
-																																				 
-																					 
-																			
-	  
-	
-						 
-					   
-												
-		  
-																								
-						
-   
-
-			   
-  
- 
 	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
@@ -1125,11 +1039,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
-						  
-																							   
-																																						  
-  
-				 
 
 	/**
 	 * Gets the radio button code values by search bean.
@@ -1163,42 +1072,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 
-						   
-				  
-																									  
-																				  
-							
-	   
-														 
-													 
-								  
-
-												 
-			 
-														 
-													  
-							
-																							  
-																								 
-		  
-																							  
-																								   
-	 
-	
-	
-						 
-					   
-												
-		  
-																								
-						
-   
-
-			   
-  
-				  
- 
- 
 	/**
 	 * Gets the radio button values.
 	 *
@@ -1297,7 +1170,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
 			
-			log.info("Error found while downloading file "+filePath+" : "+e);
+			//log.info("Error found while downloading file "+filePath+" : "+e);
 			//log.error(e);
 //			e.printStackTrace();
 			
@@ -1391,6 +1264,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
 	}
+	//25638 - End
 	
 	/**
 	 * Check if Status less than or equals from status.
@@ -1475,17 +1349,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public void genFile(String uploadDir, UploadedFile file) {
 
 		File dir = new File(uploadDir);
-		log.info(" dir.exists()" + dir.exists());
+		//log.info(" dir.exists()" + dir.exists());
 		if (!dir.exists()) {
-			log.info("before make directory");
+			//log.info("before make directory");
 			dir.mkdirs();
-			log.info("after make directory");
+			//log.info("after make directory");
 		}
 
 		try {
 			String finalFileName = StringUtils.replace(file.getFileName(), " ",
 					"-");
-			log.info("finalFileName: " + finalFileName);
+			//log.info("finalFileName: " + finalFileName);
 
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
 					new FileOutputStream(uploadDir + "/" + finalFileName));
@@ -1605,7 +1479,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		reportUrl.append(excNextUrl);
-		log.info("reportUrl: " + reportUrl);
+		//log.info("reportUrl: " + reportUrl);
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
@@ -1851,7 +1725,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if (orgProfile != null) {
 			return orgProfile.getOrgName();
 		} else {
-			log.info("Ministry not found : " + orgProfileId);
+			//log.info("Ministry not found : " + orgProfileId);
 			return "";
 		}
 	}
@@ -1877,7 +1751,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if (orgProfile != null) {
 			return orgProfile.getOrgName();
 		} else {
-			log.info("Ministry not found : " + orgProfileId);
+			//log.info("Ministry not found : " + orgProfileId);
 			return "";
 		}
 	}
@@ -1958,7 +1832,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if (orgProfile != null) {
 			return orgProfile.getOrgName();
 		} else {
-			log.info("PTJ not found : " + orgProfileId);
+			//log.info("PTJ not found : " + orgProfileId);
 			return "";
 		}
 	}
@@ -2046,7 +1920,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public void downloadFile(String filePath) throws IOException {
 		File file = new File(filePath);
-		log.info("download file>>>>");
+		//log.info("download file>>>>");
 		OutputStream out = null;
 		try {
 			PortletResponse portletResponse = (PortletResponse) FacesContext
@@ -2060,13 +1934,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			res.flushBuffer();
 			out = res.getOutputStream();
 			if (file.getPath() != null) {
-				log.info("file path not null>>>>");
+				//log.info("file path not null>>>>");
 				InputStream input = null;
 				try {
 					URLConnection uc = new URL(file.getPath()).openConnection();
 					input = new BufferedInputStream(uc.getInputStream());
 				} catch (Exception e) {
-					log.info("It's Local file>>>>");
+					//log.info("It's Local file>>>>");
 					// Cannot open connection, maybe local file
 					input = new FileInputStream(file.getPath());
 				}
@@ -2114,12 +1988,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			ImageIO.write(bufferedImg, "png", os);
 			graphicText = new DefaultStreamedContent(new ByteArrayInputStream(
 					os.toByteArray()), "image/png");
+			/*
 			if (graphicText == null) {
-				log.info(">>>>>>>>>>>>Graphic is null!!!");
+				//log.info(">>>>>>>>>>>>Graphic is null!!!");
 			} else {
-				log.info(">>>>>>>>>>>>Graphic is not null:"
-						+ graphicText.getStream());
+				//log.info(">>>>>>>>>>>>Graphic is not null:" + graphicText.getStream());
 			}
+			*/
 		} catch (Exception e) {
 			log.error(e);
 		} finally {
@@ -2178,14 +2053,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param clazz
 	 * @return Object payLoadInstance
 	 */
-	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
 		return getBpmTaskDetails(clazz, additionalButtons, null, null);
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
 		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
@@ -2241,9 +2114,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 
 			if (null != resDTO.isGroupTask() && resDTO.isGroupTask() == true) {
-				log.info("====groupTask not null===" + resDTO.isGroupTask());
+				//log.info("====groupTask not null===" + resDTO.isGroupTask());
 				Boolean claim = resDTO.isClaimed();
-				log.info("claim:" + claim);
+				//log.info("claim:" + claim);
 				if (null != claim && claim == false) {
 					this.getManagedBean().setReadOnly(true);
 				} else {
@@ -2253,7 +2126,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				bb.getManagedBean().setTaskId(taskId);
 				bb.getManagedBean().setGroupTask(true);
 			} else {
-				log.info("====groupTask null===" + resDTO.isGroupTask());
+				//log.info("====groupTask null===" + resDTO.isGroupTask());
 				this.getManagedBean().setReadOnly(false);
 				bb.getManagedBean().setClaim(true);
 				bb.getManagedBean().setGroupTask(false);
@@ -2285,7 +2158,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
-																																					 
 
 			return (BPM_DATA_TYPE) payLoad;
 
@@ -2293,7 +2165,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			bpmSO = null;
 		}
 	}
-
 
 	/**
 	 * Sort outcomes.
@@ -2742,60 +2613,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return false;
 	}
 	// #21962 - end
-							   
-	
-	
-						 
-	
-													  
-						
-				  
-																						  
-								   
-	
-   
-  
-					 
-  
-	
-							   
-	
-	
-						 
-	
-													  
-					
-				  
-																						  
-							   
-	
-   
-  
-				 
-  
- 
-								
-																						
-						   
-							   
-			   
-   
-				  
-  
- 
-								
-																					   
-								
-												   
-						
-												  
-						
-		  
-						 
-   
-					   
-  
-	
+
 	public void changeRoleAndProceed() {
 	//start loop list #28454
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -2829,67 +2647,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					//END 28454
 					
 				}
-				
-				
-
 		}
-  
-
-					 
-															 
-										 
-																		   
-							 
-								  
-										   
-									 
-										   
-									   
-										   
-	 
-	
-   
-		
 	}
- 
-															   
-						   
-										  
-			
-																																								  
-		  
-			
-																																							
-		  
-			
-																																							
-		  
-			
-																																								
-		  
-			
-																																						
-		  
-			
-																																								 
-		  
-			
-																																								 
-		  
-			
-																																							 
-		  
-			
-																																								 
-		  
-		   
-								   
-		  
-	
-					  
-   
-						 
- 
+
 	public void listenerRolePopup(SmPersonnel smPersonnelSSm){
 		//27951 & 27239
 		if(smPersonnelSSm.isClerical()){
@@ -2899,7 +2659,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			smPersonnelSSm.setClerical(false);
 		}
 	}
- 
  
 	//SSM #28454
 		public void checkSSMValid(SmSupplier smSupplier,PostSupplierRegistrationManagedBean postRegBean){
@@ -3055,24 +2814,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(this.getManagedBean().getPersonnelsRole() != null){
 			this.getManagedBean().getPersonnelsRole().clear();
 		}
-		
- 
-	
-													
-	
-						  
-						   
-					 
-					  
-						   
-						  
-														  
-	
-																										  
-																							  
-															  
-														 
-																						 
+																			 
 	}
 	//END 27239
 	//25792 - start
@@ -3091,9 +2833,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//25792 - end
 
 	//27346 - start 
-	//FIXME : 16052019 - SSM INTEGRATION CR - start
 		public void redirectToViewSSMInfo(String regNo,String businesstype) {
-			log.info("redirectToViewSSMInfo---------------------------------------------------Start");
+			//log.info("redirectToViewSSMInfo---------------------------------------------------Start");
 			clearPersonnelList();
 			if (this.getManagedBean().getSmAppl() != null && !this.getManagedBean().getSmAppl().getApplType()
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
@@ -3142,7 +2883,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					// set business nature
 					if(ssmResDTO.getSmSupplierBusinessList() != null){
-						this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList());
+						this.getManagedBean().setSmSupplierBusinessSsm(new ArrayList<SmSupplierBusiness>());
 						for(SmSupplierBusiness business:ssmResDTO.getSmSupplierBusinessList()){
 							if(business.isSsmData())
 								this.getManagedBean().getSmSupplierBusinessSsm().add(business);
@@ -3150,7 +2891,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					//Set Branch
 					if(ssmResDTO.getSmSupplierBranches() != null){
-						this.getManagedBean().setSmSupplierBranchSsm(new ArrayList());
+						this.getManagedBean().setSmSupplierBranchSsm(new ArrayList<SmSupplierBranch>());
 						for(SmSupplierBranch branch:ssmResDTO.getSmSupplierBranches()){
 							if(branch.isSsmData())
 								this.getManagedBean().getSmSupplierBranchSsm().add(branch);
@@ -3158,7 +2899,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					//set equity company
 					if(ssmResDTO.getSmEquityCompanys() != null){
-						this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList());
+						this.getManagedBean().setSmEquityCompaniesSsm(new ArrayList<SmEquityCompany>());
 						for(SmEquityCompany company:ssmResDTO.getSmEquityCompanys()){
 							if(company.isSsmData())
 								this.getManagedBean().getSmEquityCompaniesSsm().add(company);
@@ -3269,25 +3010,4 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	/*** 25692#95 - end ***/
-
-						   
-																																				  
-							
-															
-																																																																											   
-					 
-		  
-	
-   
-				   
-  
-						 
-			  
-							   
-														
-													 
-   
-  
-  
-			
 }
