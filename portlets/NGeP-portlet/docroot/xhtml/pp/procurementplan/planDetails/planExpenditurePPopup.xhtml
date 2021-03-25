@@ -1,0 +1,114 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+      <h:panelGroup id="ppExpenditurePCloneid">
+		<p:panel  header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
+					    <p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td><h:selectOneMenu id="yearP" label="#{lbl['lbl.pp.plan.year']}"
+						 value="#{pPlanBackingBean.managedBean.planSearchBean.yearP}" style="width: 240px;height: 25px;margin-bottom: 5px;">
+						 <f:selectItems value="#{pPlanBackingBean.getPlanPreviousYearOptions()}" />
+					</h:selectOneMenu></td>
+				</tr>
+			    <tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.gl.accountCode']}" /></td>
+					<td><p:inputText id="codeP" value="#{pPlanBackingBean.managedBean.planSearchBean.planExCodeP}" size="35" style="width: 230px;" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pp.type.of.expenses']}" /></td>
+					<td><p:inputText id="descP" value="#{pPlanBackingBean.managedBean.planSearchBean.planExDescP}" size="35" style="width: 230px;" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pp.status']}" /></td>
+					<td><p:selectOneMenu id="statusP" value="#{pPlanBackingBean.managedBean.planSearchBean.statusP}" 
+					        style="width: 240px;margin-bottom: 5px;">
+							<f:selectItems value="#{pPlanBackingBean.getStatusOptions()}" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton styleClass="BtnSpacing"
+				    id="btnSearchExP"
+				    value="#{lbl['lbl.btn.search']}"	
+				    action="#{pPlanBackingBean.searchCloneExpenditureBPlan}"
+					update="dtclonepitemsPsearchresults"/>
+				<p:commandButton
+				    id="btnResetExP" 
+				    value="#{lbl['lbl.btn.reset']}"
+					styleClass="BtnSpacing"  
+				    action="#{pPlanBackingBean.resetExpenditureClone}"
+			        update="ppExpenditurePCloneid, dtclonepitemsPsearchresults"/>
+			</div>
+		</p:panel>
+		
+		<p:panel header="#{lbl['lbl.pp.result.plan']}" toggleable="true">
+	    <!-- #25549@24022021 - start -->
+		<p:dataTable tableStyleClass = "fixedTable" id="dtclonepitemsPsearchresults" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+		    value="#{pPlanBackingBean.ppEpItemsDataModel}" var="epItem" selection="#{pPlanBackingBean.managedBean.clonePpExpenditurePItemLs}" rowKey="#{epItem.expenditureItemId}"
+		    width="100%" rows="10">
+			
+              
+              <p:ajax event="rowSelectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
+          	  <p:ajax event="rowUnselectCheckbox" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
+              <p:ajax event="toggleSelect"  listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP" />		   
+		      <p:ajax event="rowUnselect" listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
+			  <p:ajax event="rowSelect"  listener="#{pPlanBackingBean.rowSelectExpenditure}" update=":form:btnSelectExP"/>
+			  <p:ajax event="page" listener="#{pPlanBackingBean.onPageChangeExpenditureClone}" update=":form:btnSelectExP" />
+			  <!-- #25549@24022021 - end -->
+		
+	
+				<ac:paginator for="dtclonepitemssearchresults" />
+				
+				<p:column
+		           selectionMode="multiple" styleClass="selectionCheckBox" style="width:3%;text-align:center;"/>	
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pp.object']}
+				</f:facet>
+				  #{epItem.pmGlAccount.glAccCode}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pp.type.of.expenses']}
+				</f:facet>
+				#{epItem.pmGlAccount.description}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pp.status']}
+				</f:facet>
+				   #{pPlanBackingBean.managedBean.status}
+				</p:column>
+			</p:dataTable>
+			
+			<div class="ppRightBtn">
+			<p:commandButton 
+		       id="btnSelectExP"
+		       value="#{lbl['lbl.pp.select']}"
+		       action="#{pPlanBackingBean.addPpExenditureItemClone()}"
+		       update="dtExpenditurePlanP, ppExpenditurePCloneid, dtclonepitemsPsearchresults"
+		       disabled="#{pPlanBackingBean.managedBean.disableSelectExpBtn}"
+		       oncomplete="cloneExpenditurePPopUp.hide();"/>	
+			<p:commandButton 
+			   id="btnCancelExP"
+			   value="#{lbl['lbl.pp.cancel']}" 
+			   action="#{pPlanBackingBean.resetExpenditureClone}"
+			   update="ppExpenditurePCloneid, dtclonepitemsPsearchresults"
+			   oncomplete="cloneExpenditurePPopUp.hide();"/> 
+		</div>
+		
+	  </p:panel>
+  </h:panelGroup>
+</ui:composition>
