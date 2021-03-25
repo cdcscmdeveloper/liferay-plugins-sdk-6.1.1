@@ -47,7 +47,6 @@ import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
-import my.ep.dto.fl.itemsummary.FlItemSummaryResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -87,7 +86,6 @@ import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
@@ -1084,32 +1082,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		//Validation for contract item details
 		//#28320 - During Notification Setting, no need to validate
-		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
-				) {
-			// Bug #28479 - Start
-
-//			if ((ctBB.getManagedBean().getContractVer().getContractVerId() == null)
-//					&& (ctBB.getManagedBean().getContractVer().getDocType()
-//							.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
-//				
-//				if (!ctBB.getManagedBean().isMinQtyCheck()) {
-//					for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-//						ctBB.onChangeMinimumQty(item);
-//					}
-//				}
-//				ctBB.getManagedBean().setMinQtyCheck(false);
-//
-//				if (ctBB.getManagedBean().isErr100033()) {
-//					ctBB.getManagedBean().setErr100033(false);
-//					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
-//				}
-//				if (ctBB.getManagedBean().isErr100034()) {
-//					ctBB.getManagedBean().setErr100034(false);
-//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");
-//				}
-//			}
-									
-			// Bug #28479 - End
+		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
@@ -1314,11 +1287,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-
+		
+		//basri -  #29441 During Notification Setting, no need to validate 
 		// Validation for performance bond
 		if (ctBB.getManagedBean().getCtContractAmount().isBondReq() && !ctBB.getManagedBean().isDirectPurchase()
 				&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()
-				&& (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))) {
+				&& (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+				&& !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
 			//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
 			if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
@@ -1729,8 +1704,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 			typeSchedule = true;
 		}
+		
 		/*Set value true if contract is factor*/
-		if(ctBB.getManagedBean().getContractVer().getCtContract().isFactored()  && checkFactoringExpiryDate()){
+		if(allowShowFactoring()){/*#28868 - basri*/
 			typeFactoring = true;
 		}
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
@@ -1750,7 +1726,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setItemIndex(3);
 				ContractItemSearchBackingBean cmbb=new ContractItemSearchBackingBean();
-				ContractBackingBean ccBB = new ContractBackingBean();
+				//ContractBackingBean ccBB = new ContractBackingBean();
 				cmbb.getManagedBean().reassignValue(true);
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
@@ -1958,7 +1934,30 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		return false;
 	}
-
+	
+	/*#28868 - basri start*/
+	/**
+	 * The method used to check boolean if allow factoring to show .
+	 * 
+	 * @return true, if factoring tab menu is accessible
+	 *         false, if factoring tab menu is not accessible
+	 */
+	public boolean allowShowFactoring(){
+		
+		boolean allow = false;
+			if(ctBB.getManagedBean().getContractVer().getCtContract().isFactored() && checkFactoringExpiryDate()){
+					allow = true;				
+			}else if(!ctBB.getManagedBean().getContractVer().getCtContract().isFactored()){
+				if(ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null){
+					if(ctBB.getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_EXPIRED){
+						allow = true;				
+					}
+				}				
+			}
+		return allow;
+	}
+	/*#28868 - basri end*/
+	
 	/**
 	 * The method used to navigate to contract termination screen
 	 * for termination purpose.
@@ -2395,9 +2394,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				return url;
 			}
 		} catch (PortalException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (SystemException e) {
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 		return null;
 	}
@@ -2421,7 +2420,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().setSkuno(null);
 		contractBB.getManagedBean().setTypeofgoods(null);
 	
-		ContractBackingBean ccBB = new ContractBackingBean();
+		//ContractBackingBean ccBB = new ContractBackingBean();
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		
@@ -2592,15 +2591,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctWorkflowStatusMatch = true;
 		}
 
-		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
-			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
-			remarks.add(0, remark);
+		//Bug #29446 - start
+		//log.info(ctBB.getManagedBean().isViewContract());
+		if(!ctBB.getManagedBean().isViewContract()){
+			if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
+				CtRemark remark = new CtRemark();
+				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setChangedDate(remark.getCreatedDate());
+				remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+				remarks.add(0, remark);
+			}
 		}
+		//Bug #29446 - end
 	}
 
 	/**
