@@ -20,6 +20,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpProcurementItem;
 import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
+import my.ep.persistence.entity.pp.procurementplan.PpUpdateReason;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -116,6 +117,36 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private Date invitationMinDateTo;
 	private Date invitationMaxDate;
 	
+	private List<PpUpdateReason> selectedUpdateReasons;
+	
+	
+	//[#25549] add .. start
+	private String procurementDesc;
+	private String procurementTitle;
+	private String procurementCatId;
+	private String procurementMethod;
+	private List<PpProcurementItem> clonePpProcurementItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureItemLs;
+	private List<PpExpenditureItem> clonePpExpenditurePItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureSItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureTItemLs;
+	private List<PpExpenditureItem> clonePpExpenditureHItemLs;
+	private String paramExpenditure;
+	private String status;
+	private boolean disableSelectBtn = false;
+	private boolean disableSelectExpBtn = false;
+	private boolean disableSelectRow = false;
+
+	//End
+	
+	//#24975 17/03/20 - start
+	private boolean editable;
+	//#24975 17/03/20 - end
+	
+	//25549@18092020 - start
+	private boolean disable;
+	//25549@18092020 - end
+	
 	//28760 - start
 	private boolean flagCancelButton = false;
 	//28760 - end
@@ -126,9 +157,10 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 * @return the epItemsB
 	 */
 	public List<PpExpenditureItem> getEpItemsB() {
+		if (epItemsB == null)
+			epItemsB = new ArrayList<PpExpenditureItem>();
 		return epItemsB;
 	}
-
 	/**
 	 * @param epItemsB the epItemsB to set
 	 */
@@ -459,7 +491,21 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setSelectedRejectReasons(List<PpRejectReason> selectedRejectReasons) {
 		this.selectedRejectReasons = selectedRejectReasons;
 	}
+	
+	//#24975
+	/**
+	 * @return the selectedRejectReasons
+	 */
+	public List<PpUpdateReason> getSelectedUpdateReasons() {
+		return selectedUpdateReasons;
+	}
 
+	/**
+	 * @param selectedUpdateReasons the selectedRejectReasons to set
+	 */
+	public void setSelectedUpdateReasons(List<PpUpdateReason> selectedUpdateReasons) {
+		this.selectedUpdateReasons = selectedUpdateReasons;
+	}
 
 
 	/**
@@ -1144,6 +1190,167 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	public void setInvitationMaxDate(Date invitationMaxDate) {
 		this.invitationMaxDate = invitationMaxDate;
 	}
+	
+	
+	//[#25549] add .. start
+	
+	
+	public String getProcurementDesc() {
+		return procurementDesc;
+	}
+	
+	
+	public void setProcurementDesc(String procurementTitle) {
+		this.procurementTitle = procurementTitle;
+	}	
+	
+	
+	public String getProcurementTitle() {
+		return procurementTitle;
+	}
+	
+	
+	public void setProcurementTitle(String procurementTitle) {
+		this.procurementTitle = procurementTitle;
+	}	
+
+	public String getProcurementCatId() {
+		return procurementCatId;
+	}
+
+		
+	public void setProcurementCatId(String procurementCatId) {
+		this.procurementCatId = procurementCatId;
+	}
+		
+		
+	public String getProcurementMethod() {
+		return procurementMethod;
+	}
+
+		
+	public void setProcurementMethod(String procurementMethod) {
+		this.procurementMethod = procurementMethod;
+	}
+		
+	public List<PpProcurementItem> getClonePpProcurementItemLs() {
+		return clonePpProcurementItemLs;
+	}
+
+	public void setClonePpProcurementItemLs(List<PpProcurementItem> clonePpProcurementItemLs) {
+		this.clonePpProcurementItemLs = clonePpProcurementItemLs;
+	}
+		
+		
+	public List<PpExpenditureItem> getClonePpExpenditureItemLs() {
+		return clonePpExpenditureItemLs;
+	}
+
+	public void setClonePpExpenditureItemLs(List<PpExpenditureItem> clonePpExpenditureItemLs) {
+		this.clonePpExpenditureItemLs = clonePpExpenditureItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditurePItemLs() {
+		return clonePpExpenditurePItemLs;
+	}
+
+	public void setClonePpExpenditurePItemLs(List<PpExpenditureItem> clonePpExpenditurePItemLs) {
+		this.clonePpExpenditurePItemLs = clonePpExpenditurePItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditureSItemLs() {
+		return clonePpExpenditureSItemLs;
+	}
+
+	public void setClonePpExpenditureSItemLs(List<PpExpenditureItem> clonePpExpenditureSItemLs) {
+		this.clonePpExpenditureSItemLs = clonePpExpenditureSItemLs;
+	}
+		
+	public List<PpExpenditureItem> getClonePpExpenditureTItemLs() {
+		return clonePpExpenditureTItemLs;
+	}
+
+	public void setClonePpExpenditureTItemLs(List<PpExpenditureItem> clonePpExpenditureTItemLs) {
+		this.clonePpExpenditureTItemLs = clonePpExpenditureTItemLs;
+	}
+		
+		
+	public List<PpExpenditureItem> getClonePpExpenditureHItemLs() {
+		return this.clonePpExpenditureHItemLs;
+	}
+
+	public void setClonePpExpenditureHItemLs(List<PpExpenditureItem> clonePpExpenditureHItemLs) {
+		this.clonePpExpenditureHItemLs = clonePpExpenditureHItemLs;
+		
+	}
+	
+	
+	public String getParamExpenditure() {
+		return paramExpenditure;
+	}
+
+		
+	public void setParamExpenditure(String paramExpenditure) {
+		this.paramExpenditure = paramExpenditure;
+	}
+		
+		
+	public String getStatus() {
+		return status;
+	}
+
+		
+	public void setStatus(String string) {
+		this.status = string;
+	}
+		
+	public boolean isDisableSelectBtn() {
+		return disableSelectBtn;
+	}
+	
+	public void setDisableSelectBtn(boolean disableSelectBtn) {
+		this.disableSelectBtn = disableSelectBtn;
+	}
+	
+	public boolean isDisableSelectExpBtn() {
+		return disableSelectExpBtn;
+	}
+	
+	public void setDisableSelectExpBtn(boolean disableSelectExpBtn) {
+		this.disableSelectExpBtn = disableSelectExpBtn;
+	}
+	
+	public boolean isDisableSelectRow() {
+		return disableSelectRow;
+	}
+
+	public void setDisableSelectRow(boolean disableSelectRow) {
+		this.disableSelectRow = disableSelectRow;
+	}
+
+	//[#25549] add .. End
+	
+	//#24975 17/03/20 - start
+	public boolean isEditable() {
+		return editable;
+	}
+
+	
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+	
+	//#24975 17/03/20 - end
+	
+	//25549@18092020 - start
+	public boolean isDisable() {
+		return disable;
+	}
+	
+	public void setDisable(boolean disable) {
+		this.disable = disable;
+	}
+	//25549@18092020 - end
 	
 	//12112020@azza - 28760 - Start
 	public boolean isFlagCancelButton() {
