@@ -162,8 +162,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			return;
 		}/*End if statement to check  login user */
 		// 20997 - start : to reset search list after save
-		if(getManagedBean().getTaskId()!=null) {
-			getManagedBean().getSuspensionProductListingPagingDataModel().reloadData();
+	    //added reloadDatatable() for #28643
+		if(getManagedBean().getTaskId()!= null){
+			getManagedBean().getSuspensionProductListingPagingDataModel().reloadDatatable();
 		}
 		// 20997 - end
 		/*Return when not call from tasklist*/
@@ -329,10 +330,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			throw new EpException(MessageConst.ERROR_100033);
 		
 		} 
-		
-		
-		log.info("******Before Effecive Date******"+ctContractItem.getEffDate());
-		log.info("******Before Expiry Date******"+ctContractItem.getExpDate());
+
 		//getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 		
 		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
@@ -343,16 +341,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		contractItemSO.updateItemSearchService(reqDTO);
 		
 		this.getManagedBean().setSuspensionProductListingPagingDataModel(this.getManagedBean().resetSuspensionProductListingPagingDataModel());
-		log.info("******After Effecive Date******"+ctContractItem.getEffDate());
-		log.info("******After Expiry Date********"+ctContractItem.getExpDate());
-		
-
-		
 	}
-	
-	
-	
-	
 	
 	/**
 	 * This  method used for back button
@@ -439,7 +428,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		//for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
 		for (CtContractItem ctItem : getManagedBean().getSuspensionProductListingPagingDataModel().getList()) {
 			if(ctItem != null && item != null) {
-				if(ctItem.getContractItemId() != null && ctItem.getContractItemId().equals(item.getContractItemId())) {
+				// #28367
+				if(ctItem.equals(item)) {
 					CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
 					Date effDate = null;
 					Date expDate = null;
@@ -546,6 +536,13 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setUpdateAgencyMap(ctBB.getManagedBean().getUpdateAgencyMap());
+			// #28367 - start
+			if(getManagedBean().getTaskId() == null) {
+				for(CtContractItem ctContractItem : ctBB.getManagedBean().getUpdateItemMap().values()) {
+					ctContractItem.setContractItemId(null);
+				}
+			}
+			// #28367 - end
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
 
 			if(this.getManagedBean().getPmDigiSign() !=null){
@@ -794,15 +791,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	public void searchItemAction() {
 
-		
-	/*	log.info("****getItemcode*******"+getManagedBean().getItemcode());
-		log.info("****getSearchItemString*******"+getManagedBean().getSearchItemString());
-		log.info("****getItemstatus*******"+getManagedBean().getItemstatus());
-		log.info("****getItemtype*******"+getManagedBean().getItemtype());
-		log.info("****getUOM*******"+getManagedBean().getUOM());
-		log.info("****getSkuno*******"+getManagedBean().getSkuno());
-		log.info("****getTypeofgoods*******"+getManagedBean().getTypeofgoods());*/
-		
 		if( getManagedBean().getItemcode().equals("") && 
 				getManagedBean().getSearchItemString().equals("") &&
 				getManagedBean().getItemstatus() == null &&
@@ -812,11 +800,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				getManagedBean().getTypeofgoods()== null  )
 	{
 		
-		
 		throw new EpException(MessageConst.ERROR_750049);
 		
 	} 
-	else if(getManagedBean().getItemtype()!=null)	
+	else if(getManagedBean().getItemtype()!=null)
 	{
 		if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT))
 		{
