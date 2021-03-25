@@ -287,7 +287,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
-	
+
 	// 12177 - Start
 	/** The flag of SQ expired */
 	private boolean sqExpiredStatus = Boolean.FALSE;
@@ -3260,24 +3260,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//end added for #24353
 
-	public boolean isRadioCheckDeliveryDate() {
-		return radioCheckDeliveryDate;
-	}
-
-	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
-		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
-	}
-	
-	//24893 - start
-	public PmOrgProfile getChargePTJOrg() {
-		return chargePTJOrg;
-	}
-
-	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
-		this.chargePTJOrg = chargePTJOrg;
-	}
-	//24893 - end
-
 	// 12177 - Start
 	/**
 	 * @return the sqExpiredStatus
@@ -3320,5 +3302,24 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setRequestNoteId(Long requestNoteId) {
 		this.requestNoteId = requestNoteId;
 	}
-	// 12177 - End	
+	// 12177 - End
+
+	public boolean isRadioCheckDeliveryDate() {
+		return radioCheckDeliveryDate;
+	}
+
+	public void setRadioCheckDeliveryDate(boolean radioCheckDeliveryDate) {
+		this.radioCheckDeliveryDate = radioCheckDeliveryDate;
+	}
+	
+	//24893 - start
+	public PmOrgProfile getChargePTJOrg() {
+		return chargePTJOrg;
+	}
+
+	public void setChargePTJOrg(PmOrgProfile chargePTJOrg) {
+		this.chargePTJOrg = chargePTJOrg;
+	}
+	//24893 - end
+	
 }
