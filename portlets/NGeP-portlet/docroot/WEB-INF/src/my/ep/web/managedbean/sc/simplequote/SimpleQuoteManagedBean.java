@@ -23,6 +23,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
+import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -420,6 +421,16 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	
 	/** The Do user Id for requote purpose */
 	private Long doUserId;
+	
+	// #3761 - start
+	private ScQuote scQuoteSession;
+	private Boolean treasuryCircularLinkClickedFlag = null;
+	private Long supplierItemDocId;
+	// #3761 - end
+	
+	// #29800 - start
+	private SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession;
+	// #29800 - end
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2670,4 +2681,41 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setDoUserId(Long doUserId) {
 		this.doUserId = doUserId;
 	}
+
+	// #3761 - start
+	public ScQuote getScQuoteSession() {
+		return scQuoteSession;
+	}
+
+	public void setScQuoteSession(ScQuote scQuoteSession) {
+		this.scQuoteSession = scQuoteSession;
+	}
+
+	public Boolean getTreasuryCircularLinkClickedFlag() {
+		return treasuryCircularLinkClickedFlag;
+	}
+
+	public void setTreasuryCircularLinkClickedFlag(Boolean treasuryCircularLinkClickedFlag) {
+		this.treasuryCircularLinkClickedFlag = treasuryCircularLinkClickedFlag;
+	}
+	
+	public Long getSupplierItemDocId() {
+		return supplierItemDocId;
+	}
+
+	public void setSupplierItemDocId(Long supplierItemDocId) {
+		this.supplierItemDocId = supplierItemDocId;
+	}
+	// #3761 - end
+
+	// #29800 - start
+	public SCDirectPurchaseDataType getPreRenderViewDirectPurchaseDataTypeSession() {
+		return preRenderViewDirectPurchaseDataTypeSession;
+	}
+
+	public void setPreRenderViewDirectPurchaseDataTypeSession(SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession) {
+		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
+	}
+	// #29800 - end
+
 }
