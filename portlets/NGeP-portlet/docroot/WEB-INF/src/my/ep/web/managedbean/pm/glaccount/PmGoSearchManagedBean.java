@@ -1,7 +1,5 @@
 package my.ep.web.managedbean.pm.glaccount;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -29,9 +27,6 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 	private boolean accTypeDisabled;
 	private boolean accClassDisabled;
 	private String selectedGoSoObjCode;
-	//11022021@azza - Bug #30066 - Start
-	private boolean disableSelectbtnPmGoDt = false;
-	//11022021@azza - Bug #30066 - End
 	
 	public PmGoSearchManagedBean(){
 		
@@ -219,13 +214,5 @@ public class PmGoSearchManagedBean extends BaseManagedBean{
 		this.selectedGoSoObjCode = selectedGoSoObjCode;
 	}
 	
-	//11022021@azza - Bug #30066 - Start
-	public boolean isDisableSelectbtnPmGoDt() {
-		return disableSelectbtnPmGoDt;
-	}
-
-	public void setDisableSelectbtnPmGoDt(boolean disableSelectbtnPmGoDt) {
-		this.disableSelectbtnPmGoDt= disableSelectbtnPmGoDt;
-	}
-	//11022021@azza - Bug #30066 - End
+	
 }
