@@ -16,6 +16,7 @@ import org.primefaces.model.TreeNode;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -37,6 +38,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -117,6 +119,15 @@ public class PanelManagedBean extends BaseManagedBean {
 	private List<CtCircularPidReason> ctCircularPidReasons;
 	
 	private int attachFileIndex;
+	
+	// #3761 - start
+	private Long supplierItemDocId;
+	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
+	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
+	// #3761 - end
+	// #29800 - start
+	private SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession;
+	// #29800 - end
 
 	/**
 	 * @return the circular
@@ -954,4 +965,40 @@ public class PanelManagedBean extends BaseManagedBean {
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
 	}
+
+	// #3761 - start
+	public Long getSupplierItemDocId() {
+		return supplierItemDocId;
+	}
+
+	public void setSupplierItemDocId(Long supplierItemDocId) {
+		this.supplierItemDocId = supplierItemDocId;
+	}
+	public TemplateSpecBean getProductTemplateSpecBean() {
+		return productTemplateSpecBean;
+	}
+
+	public void setProductTemplateSpecBean(TemplateSpecBean productTemplateSpecBean) {
+		this.productTemplateSpecBean = productTemplateSpecBean;
+	}
+
+	public TemplateSpecBean getServiceTemplateSpecBean() {
+		return serviceTemplateSpecBean;
+	}
+
+	public void setServiceTemplateSpecBean(TemplateSpecBean serviceTemplateSpecBean) {
+		this.serviceTemplateSpecBean = serviceTemplateSpecBean;
+	}
+	// #3761 - end
+
+	// #29800 - start
+	public SCDirectPurchaseDataType getPreRenderViewDirectPurchaseDataTypeSession() {
+		return preRenderViewDirectPurchaseDataTypeSession;
+	}
+
+	public void setPreRenderViewDirectPurchaseDataTypeSession(SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession) {
+		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
+	}
+	// #29800 - end
+
 }
