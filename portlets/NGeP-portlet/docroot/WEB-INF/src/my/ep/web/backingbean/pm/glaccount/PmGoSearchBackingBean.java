@@ -63,7 +63,9 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 
 	public void initPmGoPopup(){
 		this.renewSesionObject();
-		getPmGoDataModel().resetData();	
+		//17022021 - 30071 & 24975 - start -->
+		resetAction();
+		//17022021 - 30071 & 24975 - end -->	
 		try{
 			FacesScopes facesScopes = new FacesScopes();
 			Integer index = Integer.parseInt(facesScopes.getParameter("index"));
@@ -88,6 +90,11 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		getManagedBean().setSelectedGoSoObjCode(null);
 		retrieveAccountType();
 		retrieveAccountClass();
+		//11022021@azza - Bug #30066 - Start
+		if (this.getManagedBean().isDisableSelectbtnPmGoDt() == true){
+		this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+		}
+		//11022021@azza - Bug #30066 - End
 		getPmGoDataModel().resetData();
 	}
 	
@@ -212,6 +219,11 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 
 	public void searchGoView(){
 		this.getManagedBean().setLazy(true);
+		//11022021@azza - Bug #30066 - Start
+		if (this.getManagedBean().isDisableSelectbtnPmGoDt() == true) {
+			this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+		}
+	    //11022021@azza - Bug #30066 - End
 		getPmGoDataModel().reloadData();
 	}
 	
@@ -440,5 +452,29 @@ public class PmGoSearchBackingBean extends BaseBackingBean<PmGoSearchManagedBean
 		}
 		return items;
 	}
+	
+	// 11022021@azza - Bug #30066 - Start
+		public void rowSelectPmGoDt() {
+			System.out.println(this.getManagedBean().getvPmGo());
+			if (this.getManagedBean().getvPmGo() != null) {
+				this.getManagedBean().setDisableSelectbtnPmGoDt(true);
+				System.out.println("rowSelect is Enable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+			} else {
+				this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+				System.out.println("rowSelect is Disable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+			}
+		}
+
+		public void onPageChangePmGoDt(PageEvent event) {
+			System.out.println(this.getManagedBean().getvPmGo());
+			if (this.getManagedBean().getvPmGo() != null) {
+				this.getManagedBean().setDisableSelectbtnPmGoDt(true);
+				System.out.println("rowSelect is Enable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+			} else {
+				this.getManagedBean().setDisableSelectbtnPmGoDt(false);
+				System.out.println("rowSelect is Disable Button !!:" + this.getManagedBean().isDisableSelectbtnPmGoDt());
+			}
+		}
+		//11022021@azza - Bug #30066 - End
 
 }
