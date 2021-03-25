@@ -243,26 +243,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
 			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
-			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
+			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);	
 			if(requestNote.getCurrentStatus() != null) {
-				if(requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL)
-				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION) 
-				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-				    	   || requestNote.getCurrentStatus().getPmStatus().getStatusId().equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-					//12183 - start
-					if(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault() != null) {
-						Date today  = DateUtils.getCurrentDateWithoutTime();
-						Date ExpDate = DateUtils.addDays(requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getChangedDate(),requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault().getPidValidDays() );
-						
-						if(ExpDate.before(today)){
-							requestNote.getCurrentStatus().getPmStatus().setStatusId(DPStatusConstants.PID_EXPIRED);							
-						}
-					}
-					//12183 - end
-				}
-			
 				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());	
+			}	
+			
+			//12177,12183 - Start
+			if(requestNote != null){
+				getDocStatus(requestNote);
 			}
+			//12177,12183 - End
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
@@ -384,7 +374,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		getManagedBean().setPayLoad(payLoad);
 	    		getManagedBean().setAssignedState(isAssignedState);
 	    		reloadRequestNote(scRequestNote);
-	    		
 	    		successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 	    				ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.FALSE);
 	    	} else{
@@ -1181,6 +1170,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		if(requestNote != null){
+			
+			//28999 - Start
+			requestNote = checkingPriceType(requestNote);
+			//28999 - End
+			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
 			} else {
@@ -1189,6 +1183,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			retrieveRequestNoteDetails(requestNote, getManagedBean().getCurrentStatusId(), zoneFlag);
 			checkIsSupplierResponse(requestNote.getRequestNoteDtls(), getManagedBean().getCurrentStatusId());
+			
+			//12177,12183 - Start
+			getDocStatus(requestNote);
+			//12177,12183 - End
 		}
 		
 		//Redmine Enhancement #12177
@@ -3396,7 +3394,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void cancelRN(Object[] prObj, int prSize) {
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		
-		log.info("cancelPendingItemCodification");
 		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
@@ -3626,14 +3623,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void pidValidity(ScPurchaseInDefault purchaseInDefault, ScRequestNote scRequestNote) {
 		Date today  = DateUtils.getCurrentDateWithoutTime();
 		Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
-		log.info("pID validity begin");
 		if(ExpDate.before(today)){
 
 			throw new EpException(
 					MessageConst.ERROR_760355,
 					new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
 		}  
-		log.info("pID validity end");
 	}
 	
 	/**
@@ -4756,7 +4751,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public boolean isSqStillValid(){		
 		
 		Boolean validDate = true;	
-		Integer sqTimeValidity = null;
 		Long currentStatusId = null;
 		ScQuote scQuote = null;
 		
@@ -4775,18 +4769,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}	
 		}	 
 		
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}		
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));
 		
 		if(scQuote != null && currentStatusId != null){
 			if(getManagedBean().getPurchaseInDefaultId() == null){
@@ -4825,25 +4809,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	// 12177 - End
 	
 	//12183 - Start
-	public String getDocStatus(ScRequestNote requestNote){
-			
+	
+	// Refactor #18 - Start.
+	public void getDocStatus(ScRequestNote requestNote){
+
 		if(checkStatusPidExpired(requestNote)){
-			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
+			getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.PID_EXPIRED)); 
 		}else if(!isSqStillValid()){
-			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
+			getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.SQ_EXPIRED));
 		}else{
-			return getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId());
+			getManagedBean().setDocStatus(getStatusDescById(getManagedBean().getRequestNoteStatus().getStatusId()));
 		}
 	}
+	// Refactor #18 - End.
 	
+	// Refactor #18 - Start.
 	public boolean checkStatusPidExpired(ScRequestNote requestNote){
 		
-		String docNo = null;
 		Long currentStatusId = null;
 		ScPurchaseInDefault scPID = null;
 		
 		if(requestNote != null){
-			docNo = requestNote.getRequestNoteNo();
 			
 			if(requestNote.getCurrentStatus() != null){
 				currentStatusId = requestNote.getCurrentStatus().getPmStatus().getStatusId();		
@@ -4860,26 +4846,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
 		    	  || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
 		    	  || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-		    		
-		    	RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-		    	RequestNoteResDTO resDTO = new RequestNoteResDTO();
-		    	IRequestNoteSO reqSO = null;
-		    	reqSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-		    		
-		    	reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
-		    	reqDTO.setRequestNoteNo(docNo);
 		    	
-		    	resDTO = reqSO.getRequestNote(reqDTO);
-		    		
-		    	if(resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()!=null){
-		    		scPID = resDTO.getRequestNoteDetail().getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
+				if(CollectionUtils.isNotEmpty(requestNote.getRequestNoteDtls())
+		    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem()
+		    			&& null != requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault()){
+					
+		    		scPID = requestNote.getRequestNoteDtls().get(0).getRequestItem().getPurchaseInDefault();
 		    	} 		
 		    }  
 		}
 		
 		return pidValidityBoolean(scPID);
 	}
+	// Refactor #18 - End.
 	
 	private boolean pidValidityBoolean(ScPurchaseInDefault purchaseInDefault){
 		boolean valid = false;
@@ -4899,6 +4878,105 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return valid;
 	}
 	//12183 - End
+	
+	//28999 - Start
+	public ScRequestNote checkingPriceType(ScRequestNote requestNote){
+		log.info("checkingPriceType");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		boolean priceTypeChange = false;
+		boolean priceTypeChangeSpecQuestion = false;
+		
+		if(requestNote.getQuote() != null){
+
+			if(!requestNote.getQuote().isZonal()){
+
+				if(requestNote.getRequestNoteDtls() != null){
+
+					for(ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()){
+						
+						priceTypeChangeSpecQuestion = false;
+						
+						if(requestNoteDtl.getPriceType() != null){
+
+							if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
+								priceTypeChange = true;
+							}else if(requestNoteDtl.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+								requestNoteDtl.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
+								priceTypeChange = true;
+							}	
+						}
+						
+						if(requestNoteDtl.getRequestItem() != null){
+
+							if(requestNoteDtl.getRequestItem().getSupplierItems() != null){
+
+								for(ScRequestSupplierItem supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()){
+									if(supplierItem.getSupplierItemPrices() != null){
+
+										for(ScSupplierItemPrice supplierItemPrice : supplierItem.getSupplierItemPrices()){
+											if(supplierItemPrice.getPriceType() != null){
+
+												if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
+													priceTypeChange = true;
+												}else if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
+													priceTypeChange = true;
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							if(requestNoteDtl.getRequestItem().getTplSpecQuestion() != null){
+
+								if(!requestNoteDtl.getRequestItem().getTplSpecQuestion().getQuestionType()
+										.equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)){
+
+									if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode() != null){
+
+										if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
+												.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+											requestNoteDtl.getRequestItem().getTplSpecQuestion()
+											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD));
+											priceTypeChangeSpecQuestion = true;
+										}else if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
+												.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+											requestNoteDtl.getRequestItem().getTplSpecQuestion()
+											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER));
+											priceTypeChangeSpecQuestion = true;
+										}
+										
+									}
+									
+								}
+							}
+							
+							if(priceTypeChangeSpecQuestion){
+								specReqDTO.setTplSpecQuestion(requestNoteDtl.getRequestItem().getTplSpecQuestion());
+								getTemplateSpecSO().updateSpecQuestionInfo(specReqDTO);
+							}
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		if(priceTypeChange){
+			requestNoteReqDTO.setRequestNote(requestNote);
+			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
+		}
+				
+		return requestNote;
+	}
+	//28999- End
 	
 	// #28789 - start
 	public void onChangePriceType() {
