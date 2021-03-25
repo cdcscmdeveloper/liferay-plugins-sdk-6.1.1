@@ -865,8 +865,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			SmMachineDtl machDtlTmp = null;
 
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl().getSmMachineDtls()) {
+				// #30021 - start
+//				if (cat.getRecordStatusFlg().compareTo(
+//						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				// #30021 - end
+				for (SmMachineDtl machineDtl : getManagedBean().getSmAppl().getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
 								.getEntityBySinglePropertyFromList(machineDtl
 										.getMachineDtlId(), activeMachineDtls, "machineDtlId");
@@ -887,7 +890,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							}	
 						}									
 					}
-				}
+				// #30021 - start
+//				}
+				// #30021 - end
 			}
 			
 			getManagedBean().getSmAppl().setSmMachineDtls(activeMachineDtls);
