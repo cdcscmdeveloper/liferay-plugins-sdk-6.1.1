@@ -1923,29 +1923,40 @@ public class SPDetailBackingBean extends
 					// #28398 BUG - 26339 CR - End
 //					assetProposalChecklist.setScQtProposalChecklistAttachment(null);
 					removeAttachment = true;
-					assetProposalChecklist.setSubmitted(true);
-					//this.getManagedBean().setReadOnly(true);
-					assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-				} else {
-					if (assetProposalChecklist.isSubmitted()) {
-						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
-								|| (scQtPRPAssetLiability.getCurrentAssets() != null)
-								|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
-							    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
-								|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
-								|| (scQtPRPAssetLiability.getAcidRatio() != null )
-							    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
-						{
-							assetProposalChecklist.setSubmitted(false);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						} else {
-							assetProposalChecklist.setSubmitted(false);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						}
-					} else {
-						assetProposalChecklist.setSubmitted(false);
-						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+					
+					//start Bug #28887
+					if (null != assetProposalChecklist) {
+						assetProposalChecklist.setSubmitted(true);
+						//this.getManagedBean().setReadOnly(true);
+						assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 					}
+					
+					//end Bug #28887
+
+				} else {
+						//start Bug #28887
+						if (null != assetProposalChecklist) {
+							if (assetProposalChecklist.isSubmitted()) {
+								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
+										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
+										|| (scQtPRPAssetLiability.getCurrentLiabilities() != null) 
+									    || (scQtPRPAssetLiability.getTotalCashInHand() != null)
+										|| (scQtPRPAssetLiability.getTotalAccountReceivable() != null)
+										|| (scQtPRPAssetLiability.getAcidRatio() != null )
+									    || (scQtPRPAssetLiability.getCurrentRatio() != null)) 
+								{
+									assetProposalChecklist.setSubmitted(false);
+									assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+								} else {
+									assetProposalChecklist.setSubmitted(false);
+									assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+								}
+							} else {
+								assetProposalChecklist.setSubmitted(false);
+								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+							}
+						}
+						//end Bug #28887
 				}
 			}
 			
@@ -3767,8 +3778,10 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 				.getTotalAccountReceivable();
 
 		if (liabilities == null || liabilities.compareTo(BigDecimal.ZERO) <= 0) { //#28473
-			assetLiability.setAcidRatio(null);
-			assetLiability.setCurrentRatio(null);
+			// #26339 - Start
+			assetLiability.setAcidRatio(new BigDecimal(0));
+			assetLiability.setCurrentRatio(new BigDecimal(0));
+			// #26339 - End
 		} else {
 			BigDecimal totalAmount;
 			if (null != totalCashInHand && null != totalAccountReceivable) {
