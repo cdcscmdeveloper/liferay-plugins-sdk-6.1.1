@@ -1160,6 +1160,8 @@ public class QTDetailBackingBean extends
 		
 		return null;
 	}
+	
+	
 
 	// #Enhancement 9 CRs - start	
 	/**

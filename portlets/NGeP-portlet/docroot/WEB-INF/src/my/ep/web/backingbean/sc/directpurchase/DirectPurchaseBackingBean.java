@@ -536,7 +536,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
 		if (null != purchaseRequest) {
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
-			System.out.println("Bug 28878 : purchaseRequestId : " + purchaseRequestId);
 			List<ScRequestNoteDtl> requestNoteDtls = null;
 			ScRequestNote requestNote = null;
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
@@ -569,7 +568,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				SmSupplier smSupplier = new SmSupplier();
 				smSupplier.setCompanyName((String) prObj[3]);
 				rnBackingBean.getManagedBean().setSmSupplier(smSupplier);
-				System.out.println("Bug 28878 : smSupplier.getCompanyName : "  + smSupplier.getCompanyName());
 				
 				PmStatus requestNoteStatus = new PmStatus();
 				requestNoteStatus.setStatusId((Long) prObj[4]);
@@ -1166,18 +1164,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public boolean isSqStillValid(Date sqEndDate){		
 		
 		Boolean validDate = true;	
-		Integer sqTimeValidity = null;
-			
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		}	
+		
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));	
 			
 		if(sqEndDate != null){
 				Date currentDate = new Date();
