@@ -341,11 +341,12 @@ public class PpReportsBackingBean extends
 		List<String> yearList = new ArrayList<String>();
 		if (year != null) {
 			year = year + 1;
-			//[#24976] - start
-			if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			//[#24976],[#24974] - start
+			if(PpReportConst.PP_EXPENDITURE_PERFORMANCE_RPT_VAL.equals(this.getManagedBean().getReportCode()) 
+					|| PpReportConst.PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
 				range = 8;
 			}
-			//[#24976] - end
+			//[#24976],[#24974] - end
 			for (int i = year - range; i <= year; i++) {
 				yearList.add(Integer.toString(i));
 			}
