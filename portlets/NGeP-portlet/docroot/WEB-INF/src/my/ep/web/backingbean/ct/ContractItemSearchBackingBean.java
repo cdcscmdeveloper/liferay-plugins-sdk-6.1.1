@@ -40,18 +40,6 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		
 		ContractBackingBean ccBB = new ContractBackingBean();
 		
-		//getManagedBean().setSearchCircularDocType(null);
-		//getManagedBean().setSearchPhysicalCircularNo(null);
-	    //getManagedBean().setSearchCircularNo(null);
-		//getManagedBean().setSearchCircularName(null);
-		//getManagedBean().setSearchSupplierName(null);g
-		//getManagedBean().setSearchItemName(null);
-		//getManagedBean().setSearchStartDate(null);
-		//getManagedBean().setSearchEndDate(null);
-		//getManagedBean().setSearchStatusId(null);
-		//getManagedBean().setSearchStatus(null);
-		//getManagedBean().setSearchCircularStatus(0);
-		
 		getManagedBean().setItemcode(null);
 		getManagedBean().setItemname(null);
 		getManagedBean().setItemstatus(null);
@@ -59,34 +47,20 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		getManagedBean().setUOM(null);
 		getManagedBean().setSkuno(null);
 		getManagedBean().setTypeofgoods(null);
-		//getManagedBean().setServiceListingPagingDataModel(null);
-		//getManagedBean().setCircularListingPagingDataModel(null);
-		//ccBB.getManagedBean().setShowItem(null);
-		//ccBB.getManagedBean().setShowServiceItem(null);
-		//ccBB.getManagedBean().setServiceselectedItem(null);
 		ccBB.getManagedBean().setSelectedItem(null);
 		ccBB.getManagedBean().setServiceselectedItem(null);
 		
-
 		if(getManagedBean().isReadOnly()) {
 			getManagedBean().getContractListingPagingDataModel().resetData();
 			getManagedBean().getServiceListingPagingDataModel().resetData();
-			//getManagedBean().getCircularListingPagingDataModel().reloadData();
-			//getManagedBean().getServiceListingPagingDataModel().reloadData();
-			//getManagedBean().resetServiceListingPagingDataModel();
-			//getManagedBean().resetCircularListingPagingDataModel();
       		getManagedBean().setResetval(false);
-			    getManagedBean().setReadOnly(true);
-			//getManagedBean().allValue(true);
+			getManagedBean().setReadOnly(true);
 			
 		} else {
 			getManagedBean().getContractListingPagingDataModel().resetData();
 			getManagedBean().getServiceListingPagingDataModel().resetData();
-			//getManagedBean().resetServiceListingPagingDataModel();
-			//getManagedBean().resetCircularListingPagingDataModel();
       		getManagedBean().setResetval(false);
 			getManagedBean().setReadOnly(true);
-			//getManagedBean().allValue(true);
 		}		
 	}
 
@@ -154,21 +128,6 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 				{
 					throw new EpException(MessageConst.ERROR_750051);
 				}
-				
-			   
-			//System.out.println("*****************searchCircular************-->5"+getManagedBean().get);
-			/*if (getManagedBean().getSearchCircularDocType() == null) {
-				
-		
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_100022,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			else {
-				
-				getManagedBean().getCircularListingPagingDataModel().reloadData();
-			}*/
 		} finally{
 			    // Do nothing
 			}
@@ -189,18 +148,11 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 			itemName=ParameterConst.ITEM_NAME;
 		}
 		String result = itemName +","+ itemcode;
-
-		/*result.append(itemcode);
-		result.append(",");
-		result.append(itemName);
-		*/
 		
 		return result;
-	     
 	}
 	
 	public String contactItemProd(CtContractItem ctItem) {
-		//String result=new String();
 		
 		String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
 		String itemName=ctItem.getScRequestItem().getItemName();
@@ -218,14 +170,8 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 			sKuNo=ParameterConst.SKUNO;
 		}
 		String result = itemName +","+ itemcode+","+sKuNo;
-
-		/*result.append(itemcode);
-		result.append(",");
-		result.append(itemName);
-		*/
 	
-		return result;
-	     
+		return result;   
 	}
 	
 	/**
@@ -270,5 +216,4 @@ public class ContractItemSearchBackingBean extends BaseBackingBean<ContractItemS
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
-
 }
