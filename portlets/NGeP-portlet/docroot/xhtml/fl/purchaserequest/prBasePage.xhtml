@@ -68,14 +68,12 @@
 			</c:when>
 			<c:otherwise>
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form"
 								update="@form"
 								action="#{purchaseRequestBackingBean.gpkiSignAction(bpmAction)}"/>	
-						
 					</ui:repeat>
 			</c:otherwise>
 			</c:choose>

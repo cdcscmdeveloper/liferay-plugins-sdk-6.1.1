@@ -41,7 +41,6 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	/** The source id. */
 	private Long sourceId;
 	
-	
 	/**
 	 * Instantiates a new dp loa managed bean.
 	 */

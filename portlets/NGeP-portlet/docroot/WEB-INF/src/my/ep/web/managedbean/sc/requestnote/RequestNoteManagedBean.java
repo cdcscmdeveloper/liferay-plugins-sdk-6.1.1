@@ -341,6 +341,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean pidValidityExpired = false;
 	//12183 - End
 	
+	// Refactor #18 - Start.
+	private String docStatus = "";
+	// Refactor #18 - End.
+	
 	// #28789 - start
 	private String normalAndTierPriceStr = StringUtils.EMPTY;
 	private List<CmPricing> completeCmPricingList;
@@ -1989,6 +1993,22 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.pidValidityExpired = pidValidityExpired;
 	}
 	//12183 - End
+
+	// Refactor #18 - Start.
+	/**
+	 * @return the docStatus
+	 */
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	/**
+	 * @param docStatus the docStatus to set
+	 */
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	// Refactor #18 - End.
 	
 	// #28789 - start
 	public String getNormalAndTierPriceStr() {
