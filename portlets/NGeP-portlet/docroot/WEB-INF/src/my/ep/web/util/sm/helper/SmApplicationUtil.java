@@ -3754,7 +3754,7 @@ public class SmApplicationUtil {
 			}
 		});
 	}
-
+	
 	/**
 	 * Sort SmSupplierCategory by category type and category level type
 	 * 
@@ -11946,11 +11946,12 @@ public class SmApplicationUtil {
 		  //#29666 - END
 						/* #28256 - Start (Missing role at personnel/capital/equity section)*/
 						// BUG #28173 & #28315 -START
-						|| bean.getSelectedShareHolder().isManagement()
+						&& (bean.getSelectedShareHolder().isDirector()
+							|| bean.getSelectedShareHolder().isHigherManagement()
 					    // BUG #28173 & #28315 -END
 							 //#29666 - START
 							|| bean.getSelectedShareHolder().isEquityOwner()
-							|| bean.getSelectedShareHolder().isManagement()) {
+							|| bean.getSelectedShareHolder().isManagement())) {
 				             //#29666 - END
 					  bean.getSelectedShareHolder().setClerical(false);
 					  bean.getSelectedShareHolder().setDisableStaff(true);
