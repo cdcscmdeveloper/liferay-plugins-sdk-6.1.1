@@ -75,6 +75,10 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			String createdTimeParam = originalServletRequest.getParameter("ct");
 			String accessApplIdParam = originalServletRequest
 					.getParameter("ap");
+			System.out.println("encyptActivationKey == " + encyptActivationKey);
+			System.out.println("hashAccessApplId ===== " + hashAccessApplId);
+			System.out.println("createdTimeParam ===== " + createdTimeParam);
+			System.out.println("accessApplIdParam ==== " + accessApplIdParam);
 			PmAccessAppl accessAppl = null;
 			accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -86,7 +90,21 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			
 			if(resDTO.isSuccessful()){
 				accessAppl = resDTO.getAccessAppl();
+				System.out.println("getAccessApplId = " + accessAppl.getAccessApplId() + " | getApplNo = " + accessAppl.getApplNo());
 			}
+			
+			if (accessAppl != null) {
+				System.out.println("getAccessApplId = " + accessAppl.getAccessApplId() + " | getApplNo = " + accessAppl.getApplNo());
+			}
+			
+			if (hashAccessApplId.equals(PmCommonUtil.hashString(String.valueOf(accessAppl.getAccessApplId())))) {
+				System.out.println("hashAccessApplId = " + hashAccessApplId);
+				System.out.println("getAccessApplId == " + String.valueOf(accessAppl.getAccessApplId()));
+			}
+			
+			if (isLatestActivationEmail(createdTimeParam, accessAppl)) {
+				System.out.println("==== isLatestActivationEmail ====");
+			}	
 			
 			if(accessAppl != null  
 					&& hashAccessApplId.equals(
@@ -105,7 +123,8 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 							.equals(accessAppl.getMarketResearchStatus().getPmStatus().getStatusId())){
 						isPendingMr = true;
 					}
-					
+					System.out.println("isPendingCp = " + isPendingCp);
+					System.out.println("isPendingMr = " + isPendingMr);
 					if(isPendingMr && isPendingCp){
 						if(accessAppl.getCompanyProfileStatus().getChangedDate().
 								after(accessAppl.getMarketResearchStatus().getChangedDate())){
@@ -198,6 +217,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 				}
 			} catch (Exception ex) {
 			}
+		System.out.println("retVal :::::: " + retVal);
 			return retVal;
 		}
 	
@@ -317,6 +337,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 		if(user!=null){
 			isValid = false;
 		}
+		System.out.println("AccessApplActivationBackingBean.validateUserActive() | isValid = " + isValid);
 		return isValid;
 	}
 	

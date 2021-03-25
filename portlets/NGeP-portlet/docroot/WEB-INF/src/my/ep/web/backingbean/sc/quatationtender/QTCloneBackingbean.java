@@ -1447,8 +1447,23 @@ public class QTCloneBackingbean extends
 					persons.add(copy);
 				}
 				this.getManagedBean().setPmuserContactpersonList(persons);
-					}
 			}
+			
+	// according to Salleh, no need to generate DOA from request content.		
+//			else{
+//				ScQtRequestContent requestContent=null;
+//				if(!CollectionUtils.isEmpty(copyQt.getRequestContents())){
+//					for(ScQtRequestContent r: copyQt.getRequestContents()){
+//						if(r.getRequestType().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){
+//							requestContent = r;
+//							break;
+//						}
+//					}
+//				}
+//				if(null!=requestContent){
+//					this.getManagedBean().setPmuserContactpersonList(this.generateDOAFromRequestContent(requestContent, qt));
+//				}
+//			}
 			
 			
 			

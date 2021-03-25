@@ -140,7 +140,7 @@
 							<h:outputText value="#{lbl['lbl.sc.schedule.type']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
-						<!-- 25022
+						<ui:remove>
 						<p:selectOneMenu style="width:180px;" required="true"
 							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
 							value="#{frequency.scheduleType.parameterId}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}">
@@ -150,8 +150,8 @@
 							<p:message id="freqScheduledTypeId" for="scheduledTypeId"
 								display="icon"></p:message>
 
-						</p:selectOneMenu> -->
-						<!-- #{lOADetailBackingBean.getParameterDesc(frequency.scheduleType)} -->
+						</p:selectOneMenu>
+						</ui:remove>
 						 <h:outputText value="#{lOADetailBackingBean.getParameterDesc(frequency.scheduleType)}"/>
 					</p:column>
 				</p:dataTable>
@@ -189,8 +189,6 @@
 			</p:panel>
 		</h:panelGroup>
 	</h:panelGroup>
-
-<!-- Enhancement #25659  -->
 
 <ui:remove>  
 <h:panelGroup id="progressive">
