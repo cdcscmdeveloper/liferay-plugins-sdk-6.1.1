@@ -305,10 +305,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			
-			//Bug #20701 Problem to generate DO - to monitor
-			log.info(":::fulfillmentRequestAction() "+ action +". Doc no.: "+ flFulfilmentRequest.getDocNo() +". Deliv adrs size: "+ flFulfilmentRequest.getFlDeliveryAddresses().size());
-			//end Bug #20701
-			
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
 			reqDTO.setContractRequest(false);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -350,7 +346,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully for doc no. "+ flFulfilmentRequest.getDocNo());
 				String messageId = MessageConst.INFO_700005;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
@@ -686,7 +681,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Close listener.
 	 */
 	public void closeListener() {
-		log.info("closeListener");
 		getManagedBean().setEmailValidate(true);
 		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
@@ -1377,6 +1371,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		// temp: to monitor performance
+		MDC.put("taskId", taskId);
 		getLoginUserOrg();
 		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 		if (taskId != null) {
@@ -1418,7 +1414,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getSupplierGst(getManagedBean().getFulfilmentRequest(), getManagedBean().isGstRateChange());
 			
 			// in case of PID
-			log.info("Begin PID validity process");
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault()!=null) {
 				int pidValidDays = getManagedBean().getFulfilmentRequest().getScPurchaseInDefault().getPidValidDays();
 				Date pidExpiredDate = new Date(); 
@@ -1440,7 +1435,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		log.info("End PID validity process");
 		initializePRBeans();
 		updateDeliveryDate();
 		/*#17087 Get Zonal flag*/
@@ -1460,6 +1454,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		//Redmine Enhancement #12177
 	    addButton();
+	    MDC.clear();
 	    if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					MessageUtils.getMessage(MessageConst.ERROR_760481, 
@@ -2585,7 +2580,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setCurrentPtjGroupId(orgId);
 		if(getManagedBean().getCurrentPtjGroupId() != null){
 			reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
-			if(profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId().longValue() != getManagedBean().getCurrentPtjGroupId().longValue()){
+			if(profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPtjGroupId()){
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses() != null && !getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().isEmpty()){
 					for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 						for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
@@ -3801,8 +3796,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				//#27377 - End
 				
-				log.info("SumAmt: " + sumAmt);
-				log.info("ThresholdAmt: " + thresoldAmt);
 				if(sumAmt.doubleValue() > thresoldAmt){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
@@ -4312,7 +4305,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return parameter description by parameter type and search bean
 	 */
 	public List<PmParameterDesc> retrieveAccountType() {
-		log.info("retrieveAccountType");
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
 				ParameterTypeConst.TYPE_OF_ACCOUNT_TYPE, null);
 	}
@@ -4331,7 +4323,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return item
 	 */
 	public SelectItem[] retrieveAccountClass() {
-		log.info("retrieveAccountClass");
 		SelectItem[] items = null;	
 		if (StringUtils.isNotBlank(getManagedBean().getGlAccountSearchBean().getSelectedAccType())) {
 			IObjectSO objectSO = null;
@@ -4391,7 +4382,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return item
 	 */
 	public SelectItem[] retrieveGoCodeList() {
-		log.info("retrieveGoCodeList");
 		SelectItem[] items = null;	
 		if(getManagedBean().isEspkb()){
 			getManagedBean().getGlAccountSearchBean().setSelectedAccClass("00");
@@ -4522,7 +4512,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * preloading Gl Account
 	 */
 	public void preLoadingGlAccount() {
-		log.info("preLoading GlAccount method");
 		this.resetGlAccountSearchBean();
 	}
 	
@@ -4744,22 +4733,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		Boolean validDate = true;		
 		Long currentStatusId = getManagedBean().getFulfilmentRequest().getFlWorkflowStatus().getPmStatus().getStatusId();
-		Integer sqTimeValidity = null;
 		ScQuote scQuote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote().getQuote();
 		ScRequestNote scRequestNote = getManagedBean().getFulfilmentRequest().getScPurchaseRequest().getRequestNote();
 		
-		// by default days
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);	
-		RuleReqDTO ruleReqDTO = new RuleReqDTO();
-		ruleReqDTO.setRuleType(ParameterConst.SIMPLE_QUOTE);
-		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
-			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
-			sqTimeValidity = Integer.valueOf(configRuleValue.getRuleValue());
-		} else {
-			throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
-		}
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));
 				
 		if(scQuote != null){
 			if(getManagedBean().getFulfilmentRequest().getScPurchaseInDefault() == null){
@@ -4844,13 +4822,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					 	Date today  = DateUtils.getCurrentDate();
 						Date ExpDate = DateUtils.addDays(flFulfilmentRequest.getScPurchaseInDefault().getChangedDate(), flFulfilmentRequest.getScPurchaseInDefault().getPidValidDays());
 
-						log.info("pID validity begin");
 						
 							if(ExpDate.before(today)){
 								pidExpired = true;
 							}  
 						
-						log.info("pID validity end");
 				 }	
 			}	
 		}	
