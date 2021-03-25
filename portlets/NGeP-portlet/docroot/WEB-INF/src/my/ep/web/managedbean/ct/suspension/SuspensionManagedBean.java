@@ -99,8 +99,7 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
       
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
-			try {		
-				
+			try {				
 				
 				//private String contractId = null;
 				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -111,45 +110,36 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 				
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
-				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
-				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
-				
+
 				if(contractVerId==null){
 					ctReqDTO.setContractId(contId);
 					 contractVerId = contractSO.getLatestContractVer(ctReqDTO).getCtContractVer().getContractVerId();
-					//log.info("** shams in SuspensionProductListingPagingDataModel******contractVerId==null : contractVerId = "+contractVerId);					
 				}
 				
 			  if(contId!=null ) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemname******"+contId);
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 			  if(contractVerId!=null ) 
-				{
-					
+				{					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				
 				if(getSearchItemString()!=null && getSearchItemString().length()>0) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemname******"+getSearchItemString());
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.itemName", SearchOperator.OPERATOR_LIKE.value(),getSearchItemString().toLowerCase(),true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getItemtype()!=null && getItemtype().length()>0 )
-				{
-					
+				{					
 					if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT) || getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE))
 					{
-						//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemtype*****"+getItemtype());
 						SearchFilterBean filterBean = new SearchFilterBean("itemType.parameterCode", SearchOperator.OPERATOR_LIKE.value(),getItemtype());
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 					if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE))
 					{
-						//log.info("Service Product and Service Search");
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 						filterBean.setSearchField("itemType.parameterCode");
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.ITEM_TYPE_SERVICE,ParameterConst.ITEM_TYPE_PRODUCT)));
@@ -158,16 +148,13 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 					}
 				}
 				if(getItemcode()!=null && getItemcode().length()>0 ) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemcode ****** "+getItemcode());
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.cmItem.extensionCode",	SearchOperator.OPERATOR_EQUALS.value(),getItemcode());
 					filterBean.setCaseInsensitive(true);   
 					searchBean.getDataFilterBeans().add(filterBean);	
 				}
 				if(getItemstatus()!=null && getItemstatus().length()>0) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getItemstatus****** "+getItemstatus());
 					if(getItemstatus().equals(ParameterConst.RECORD_STATUS_INACTIVE) || getItemstatus().equals(ParameterConst.RECORD_STATUS_ACTIVE))
 					{
-						//log.info("****In Side    getItemstatus 0-1 First****** "+getItemstatus());
 						SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.recordStatus", SearchOperator.OPERATOR_LIKE.value(),getItemstatus());
 						filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
@@ -179,16 +166,13 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
-
 					}
 				}
 				if(getUOM()!=null && getUOM().length()>0) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getUOM****** "+getUOM());
 					SearchFilterBean filterBean = new SearchFilterBean("scRequestItem.uom.uomName", SearchOperator.OPERATOR_EQUALS.value(),getUOM());
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSkuno()!=null && getSkuno().length()>0 ) {
-					//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel Skuno : " +getSkuno()+" **length*** :"+getSkuno().length());
 					SearchFilterBean filterBean = new SearchFilterBean("sku", SearchOperator.OPERATOR_EQUALS.value(),getSkuno());
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
@@ -196,7 +180,6 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 					
 					if(getTypeofgoods().equals(ParameterConst.LOCAL_GOODS_ID) || getTypeofgoods().equals(ParameterConst.IMPORTED_GOODS_ID))
 					{
-						//log.info("****In the SuspensionProductListingPagingDataModel IPagingDataModel getTypeofgoods****** "+getTypeofgoods());
 						SearchFilterBean filterBean = new SearchFilterBean("itemOrigin.parameterId", SearchOperator.OPERATOR_EQUALS.value(),getTypeofgoods());
 						searchBean.getDataFilterBeans().add(filterBean);
 					
@@ -208,15 +191,11 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.LOCAL_GOODS_ID, ParameterConst.IMPORTED_GOODS_ID)));
 						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
-
 					}
 				}
-			
-
 				
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
-				reqDTO.setContractItemSearchBean(searchBean);
-			
+				reqDTO.setContractItemSearchBean(searchBean);			
 
 				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 				ContractItemResDTO resDTO = null;
@@ -230,10 +209,7 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 			}
 			return null;
 		}
-
 	}
-
-
 
 	/**
 	 * @return the taskName
@@ -579,6 +555,5 @@ private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel
 	 */
 	public SuspensionProductListingPagingDataModel  resetSuspensionProductListingPagingDataModel() {
 		return new SuspensionProductListingPagingDataModel();
-		//return SuspensionProductListingPagingDataModel;
 	}
 }

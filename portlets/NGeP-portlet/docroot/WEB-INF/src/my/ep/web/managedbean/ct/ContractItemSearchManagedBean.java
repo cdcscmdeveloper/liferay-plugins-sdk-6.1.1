@@ -75,30 +75,24 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	private boolean itemProductNotExist;
 	private boolean itemServiceNotExist;
 	private PmUom selectedSearchItem;
-
-	
 	
 	public void reassignValue(boolean value){
 		readOnly = value;	
 		resetval= value;
 		servicecollapse=value;
 		prodcollapse=value;
-
 	}
 	public void prodValue(boolean value){
 		servicecollapse=false;
 		prodcollapse=value;
-		
 	}
 	public void serviceValue(boolean value){
 		servicecollapse=value;
 		prodcollapse=false;
-		
 	}
 	public void allValue(boolean value){
 		servicecollapse=value;
 		prodcollapse=value;
-		
 	}
 	
 	private class ServiceListingPagingDataModel extends PagingDataModel<CtContractItem> {
@@ -116,10 +110,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 		}
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
-			try {		
-				//log.info("*****ServiceListingPagingDataModel******"+"servicecollapse--->"+servicecollapse+"prodcollapse"+prodcollapse);
-				//log.info("*****ServiceListingPagingDataModel******"+"isServicecollapse--->"+isServicecollapse()+"isProdcollapse"+isProdcollapse());
-				//private String contractId = null;
+			try {
 				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO ctReqDTO  = new ContractReqDTO();	
 				
@@ -128,19 +119,11 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 				Long contractVerId=null;
 				contractVerId = contractBb.getManagedBean().getContractVer().getContractVerId();				
-				log.info("**SuspensionProductListingPagingDataModel******ContractID **--> : "+contId);
-				log.info("**SuspensionProductListingPagingDataModel******ContractVerID **--> : "+contractVerId);
 				
 				if(contractVerId==null){
 					ctReqDTO.setContractId(contId);
 					 contractVerId = contractSO.getLatestContractVer(ctReqDTO).getCtContractVer().getContractVerId();					
 				}
-//				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-//						.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
-//							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
-//						}else {
-//							contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
-//						}
 				
 			  if(contId!=null ){
 					
@@ -180,7 +163,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 						filterBean.setSearchField("scRequestItem.recordStatusFlg");
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
-						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
@@ -209,27 +191,19 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 						filterBean.setSearchField("itemOrigin.parameterId");
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.LOCAL_GOODS_ID, ParameterConst.IMPORTED_GOODS_ID)));
-						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 
 					}
 				}
-			
 				
-				//servicecollapse=true;
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
 				ContractItemResDTO resDTO = null;
-				//CircularBackingBean cbb=new CircularBackingBean();
-				//log.info("*****ServiceListingPagingDataModel Resetval()******"+isResetval());
-				//log.info("*****ServiceListingPagingDataModel Resetval()******"+cbb.getManagedBean().isResetval());
 				if(isResetval()){
-					//log.info("*****ServiceListingPagingDataModel ParameterCode *** "+contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
 					if(contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)){
 						if(getItemtype()!=null && getItemtype().length()>0){
 	                		if(getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 								setServicecollapse(isResetval());
-		                		//log.info("*****ServiceListingPagingDataModel *** isServicecollapse()******"+isServicecollapse());
 	                		}
                 		}else{
                 			setServicecollapse(isResetval());
@@ -239,17 +213,10 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 					if(isServicecollapse()){
 						IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 						
-						
 						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 					    resDTO.getContractItemResultBean();
-					    //contractBb.getManagedBean().setServicecollapse(true);
-					    //log.info("*****ServiceListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
-							//servicecollapse=false;
-					    	//contractBb.getManagedBean().setServicecollapse(false);
 							readOnly=false;
-							//contractBb.getManagedBean().setReadOnly(false);contractBb.getManagedBean().isReadOnly()
-
 					    }
 					  
 						return resDTO.getContractItemResultBean();
@@ -261,7 +228,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 			}
 			return null;
 		}
-
 	}
 
 	
@@ -277,10 +243,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 		}
 		@Override
 		public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
-			try {		
-				//log.info("*****ContractListingPagingDataModel******"+"servicecollapse--->"+servicecollapse+"prodcollapse"+prodcollapse);
-				//log.info("*****ServiceListingPagingDataModel******"+"isServicecollapse--->" +isServicecollapse()+"isProdcollapse" +isProdcollapse());
-				//private String contractId = null;
+			try {
 				IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO ctReqDTO  = new ContractReqDTO();	
 				
@@ -333,7 +296,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 						filterBean.setSearchField("scRequestItem.recordStatusFlg");
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
-						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
@@ -358,36 +320,23 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 						
 						SearchFilterBean filterBean = new SearchFilterBean("itemOrigin.parameterId", SearchOperator.OPERATOR_EQUALS.value(),getTypeofgoods());
 						searchBean.getDataFilterBeans().add(filterBean);
-					
 					}
 					if(getTypeofgoods().equals(ParameterConst.BOTH_GOODS_ID)){
 						SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 						filterBean.setSearchField("itemOrigin.parameterId");
 						filterBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.LOCAL_GOODS_ID, ParameterConst.IMPORTED_GOODS_ID)));
-						//filterBean.setCaseInsensitive(true);
 						searchBean.getDataFilterBeans().add(filterBean);
-
 					}
 				}
-			
-
-				//prodcollapse=true;
 				
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);
 				ContractItemResDTO resDTO = null;
-				//CircularBackingBean cbb=new CircularBackingBean();
-				//setResetval(isProdcollapse());
-				
-				//log.info("*****ContractListingPagingDataModel Resetval()******"+isResetval());
-				//log.info("*****ContractListingPagingDataModel Resetval()******"+cbb.getManagedBean().isResetval());
                 if(isResetval()){
-                	log.info("*****ContractListingPagingDataModel ParameterCode *** "+contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
                 	if(contractBb.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)){
                 		if(getItemtype()!=null && getItemtype().length()>0){
 	                		if(getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
 		                		setProdcollapse(isResetval());
-		                		//log.info("*****ContractListingPagingDataModel ***Prodcollapse()******"+isProdcollapse());
 	                		}	
                 		}else{
                 			setProdcollapse(isResetval());
@@ -399,10 +348,7 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 					
 					resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
-					//contractBb.getManagedBean().setProdcollapse(true);
-					//log.info("*****ContractListingPagingDataModel getContractItemResultBean().getResultList().size()******"+resDTO.getContractItemResultBean().getResultList().size());
 					if(resDTO.getContractItemResultBean().getResultList().size()>0){
-						//contractBb.getManagedBean().setProdcollapse(false);
 				    	 readOnly=false;
 				    }
 					return resDTO.getContractItemResultBean();
@@ -585,8 +531,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 		this.searchStatusId = searchStatusId;
 	}
 
-
-
 	/**
 	 * @return the trackingDiarySearch
 	 */
@@ -615,7 +559,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 		this.searchCircularStatus = searchCircularStatus;
 	}
 
-
 	/**
 	 * @return the Item name from Item details screen
 	 */
@@ -629,7 +572,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	public void setItemname(String itemname) {
 		this.itemname = itemname;
 	}
-	
 
 	/**
 	 * @return the Item type from Item details screen
@@ -725,7 +667,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}
-	
 
 	public String getContractId() {
 		return contractId;
@@ -758,7 +699,6 @@ public class ContractItemSearchManagedBean extends BaseManagedBean {
 	public void setProdcollapse(boolean prodcollapse) {
 		this.prodcollapse = prodcollapse;
 	}
-
 
 	public boolean isResetval() {
 		return resetval;
