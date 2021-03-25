@@ -128,6 +128,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
+import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -394,8 +395,37 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} else if(getManagedBean().isDifferentModule()){
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
+			log.info("----------------------- in backAction - here 1 ");			
+			//#3761 - start
+			if (StringUtils.equals(getManagedBean().getGotoPreviewPage(), "simpleQuoteMain")) {
+				log.info("----------------------- in backAction - here 2 ");				
+				SimpleQuoteBackingBean sqbb = new SimpleQuoteBackingBean();
+				log.info("----------------------- in backAction - here 3 ");				
+				sqbb.getManagedBean().setPanelItemFlag(false);
+				log.info("----------------------- in backAction - here 4 ");				
+				sqbb.getManagedBean().setG2GFlag(false);
+				log.info("----------------------- in backAction - here 5 ");				
+				sqbb.getManagedBean().setActiveIndex(0);
+				// #29800 - start
+				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
+					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+				} else {
+					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
+							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
+					sqbb.preRenderView();
+				}
+				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
+				// #29800 - end
+				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
+				log.info("----------------------- in backAction - here 8 ");				
+				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
+				log.info("----------------------- in backAction - here 9 ");				
+			}
+			// #3761 - end
+			log.info("----------------------- in backAction - here 10 ");			
 			return getManagedBean().getGotoPreviewPage();
 		} else {
+			log.info("----------------------- in backAction - here 11 ");			
 			return "search.xhtml?faces-redirect=true";
 		}
 	}
