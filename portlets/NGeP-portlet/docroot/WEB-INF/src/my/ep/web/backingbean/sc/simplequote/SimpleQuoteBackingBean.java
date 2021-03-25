@@ -371,7 +371,6 @@ public class SimpleQuoteBackingBean extends
 					}
 				
 					getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
-				
 				}
 				// remarks
 				scQuote.setRemarks(initializeRemarks(
@@ -452,7 +451,6 @@ public class SimpleQuoteBackingBean extends
 		} else {
 			addable = true;
 		}
-		log.info("------------in isPanelItemAddable = "+addable);
 		return addable;
 	} 
 
@@ -485,28 +483,21 @@ public class SimpleQuoteBackingBean extends
 		
 		if (scQuote == null) {
 			scQuote = new ScQuote();
-			log.info(" in simpleQuoteAction ------ here 1");
 		} else {
-			log.info(" in simpleQuoteAction ------ here 2");
 			if (docId != null && docId > 0) {
 				boolean isPanel = scQuote.isPanel();
-				log.info(" in simpleQuoteAction ------ isPanel = "+isPanel);
 				if (isPanel) {
-					log.info(" in simpleQuoteAction ------ here 3");
 					isPanelItemAdded = Boolean.TRUE;
 					CtPanelItem panelItem = getTopPanelItem();
 					if(panelItem == null) {
-						log.info(" in simpleQuoteAction ------ here 4");
 						panelItem = scQuote.getPanelItem();
 					}
 					if(panelItem == null) {
-						log.info(" in simpleQuoteAction ------ here 5");
 						isPanelItemAdded = false;
 					}
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
-						log.info(" in simpleQuoteAction ------ here 6");
 						// add only one general panel item(can't add multiple)
 						//ERR-760160 = Simple quote must have only one Panel Item.
 						// #29800 - start
@@ -520,7 +511,6 @@ public class SimpleQuoteBackingBean extends
 					else if(panelItem != null && panelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
-						log.info(" in simpleQuoteAction ------ here 7");
 						// add multiple panel specific items
 						isPanelItemAdded = Boolean.FALSE;
 						isZoneEventRequired = false;
@@ -530,8 +520,6 @@ public class SimpleQuoteBackingBean extends
 						//ERR-760162 = Select panel items only.
 						throw new EpException(MessageConst.ERROR_760162);
 					}
-					log.info(" in simpleQuoteAction ------ panelItemFlag = "+panelItemFlag);
-					log.info(" in simpleQuoteAction ------ isPanelItemAdded = "+isPanelItemAdded);
 				} else if (panelItemFlag) {
 					//ERR-760161 = Select non contract items only.
 					throw new EpException(MessageConst.ERROR_760161);
@@ -542,18 +530,14 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setScQuote(scQuote);
 		
 		if (docId != null && docId > 0) {
-			log.info(" in simpleQuoteAction ------ here 8");
-			log.info(" in simpleQuoteAction ------ docId = "+docId);
 			// panel item
 			if (panelItemFlag) {
-				log.info(" in simpleQuoteAction ------ here 9");
 				// check non contract item list
 				scQuote.setPanel(Boolean.TRUE);
 				boolean isGeneralOrSpecific = Boolean.FALSE;
 				
 				// set procurement type as normal for panel
 				if(null == scQuote.getProcurementType()){
-					log.info(" in simpleQuoteAction ------ here 10");
 					PmParameter pmParameter = new PmParameter();
 					pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 					scQuote.setProcurementType(pmParameter);
@@ -566,7 +550,6 @@ public class SimpleQuoteBackingBean extends
 				CtPanelItem selectedPanelItem = resDTO.getCtPanelItem();
 				
 				if (selectedPanelItem != null && selectedPanelItem.getItemCategoryId() != null) {					
-					log.info(" in simpleQuoteAction ------ here 11");
 					if (!isPanelItemAddable(selectedPanelItem)) {
 						// #29800 - start
 						// Do not show Exception is user returns from Treasury
@@ -580,7 +563,6 @@ public class SimpleQuoteBackingBean extends
 					if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {
-						log.info(" in simpleQuoteAction ------ here 13");
 						// panel item general
 						isGeneralOrSpecific = Boolean.FALSE;
 						
@@ -590,7 +572,6 @@ public class SimpleQuoteBackingBean extends
 					} else if (selectedPanelItem.getItemCategoryId()
 							.getParameterCode()
 							.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
-						log.info(" in simpleQuoteAction ------ here 14");
 						// panel item specific
 						isGeneralOrSpecific = Boolean.TRUE;
 						//#3761 - start
@@ -604,26 +585,19 @@ public class SimpleQuoteBackingBean extends
 						}
 						getManagedBean().setTreasuryCircularLinkClickedFlag(null);
 						//#3761 - end
-						log.info(" in simpleQuoteAction ------ isGeneralOrSpecific = "+isGeneralOrSpecific);
 					}
-					log.info(" in simpleQuoteAction ------ here 15");
 					boolean alreadyExists = checkItemExists(null, selectedPanelItem);
-					log.info(" in simpleQuoteAction ------ alreadyExists = "+alreadyExists);
 					if (alreadyExists) {
-						log.info(" in simpleQuoteAction ------ here 16");
 						String itemName = "";
 						ScRequestItem requestItem = selectedPanelItem.getScRequestItem();
 						if(requestItem != null) {
-							log.info(" in simpleQuoteAction ------ here 17");
 							if (requestItem.getCmItem() != null) {
 								itemName = requestItem.getCmItem().getItemName();
-								log.info(" in simpleQuoteAction ------ here 18");
 							} 
 							
 							if (selectedPanelItem.getItemCategoryId().getParameterCode()
 									.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 								itemName = selectedPanelItem.getItemName();
-								log.info(" in simpleQuoteAction ------ here 19");
 							}
 						}
 						// #3761 - start
@@ -636,7 +610,6 @@ public class SimpleQuoteBackingBean extends
 						// #3761 - end
 						
 					} else {
-						log.info(" in simpleQuoteAction ------ isGeneralOrSpecific  = "+isGeneralOrSpecific);
 						prepareQuestions(selectedPanelItem, null, isGeneralOrSpecific);
 					}
 					
@@ -1632,6 +1605,29 @@ public class SimpleQuoteBackingBean extends
 					} else if (doc.getSpecMaster().getItemTypeCode()
 							.getParameterCode()
 							.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+						
+						//28225 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							if(tplSpecQuestion.getSpecQuestionId() != null){
+								if((tplSpecQuestion.getAnswerTypeCode() != null) 
+										&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
+									if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+											tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+										if(tplSpecQuestion.getClUomFrequency() != null){
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if(tplSpecQuestion.getClDurationMonth() != null){
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}			
+						}				
+						//28225 - End
+						
 						doc.setSpecMaster(getManagedBean()
 								.getServiceTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
@@ -2344,6 +2340,29 @@ public class SimpleQuoteBackingBean extends
 					} else if (doc.getSpecMaster().getItemTypeCode()
 							.getParameterCode()
 							.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+						
+						//28225 - Start
+						for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+								.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){
+							if(tplSpecQuestion.getSpecQuestionId() != null){
+								if((tplSpecQuestion.getAnswerTypeCode() != null) 
+										&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))){
+									if(tplSpecQuestion.getClFulfilmentTypeCode() != null &&
+											tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF) ){
+										if(tplSpecQuestion.getClUomFrequency() != null){
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if(tplSpecQuestion.getClDurationMonth() != null){
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}			
+						}				
+						//28225 - End
+						
 						doc.setSpecMaster(getManagedBean()
 								.getServiceTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
@@ -2577,6 +2596,30 @@ public class SimpleQuoteBackingBean extends
 									new FacesScopes().getUserLocale())));
 
 		}
+		// #28536 - start
+		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			getGovtSellerCriteria();
+		} else {
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				List<ScQuoteSupplier> supplierRemoveList = new ArrayList<>();
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				for (ScQuoteSupplier supplier : getManagedBean().getSupplierList()) {
+					if (supplier.getSmSupplier() != null) {
+						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+						profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+						PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
+						if (pmOrgProfile.isGovtSeller()) {
+							supplierRemoveList.add(supplier);
+						}
+					}
+				}
+				getManagedBean().getSupplierList().removeAll(supplierRemoveList);
+			}
+			getSupplierListCriteria();
+		}
+		// #28536 - end
 	}
 
 	/**
@@ -4897,6 +4940,16 @@ public class SimpleQuoteBackingBean extends
 		.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 		.append("|");
 
+		// #28536 - start
+		if (!getManagedBean().isG2GFlag()) {
+			criteria.append("smAppl.supplierType")
+					.append("^").append(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)
+					.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
+					.append("|");
+			criteria.append("pmOrgProfile.govtSeller^0").append("|");
+		}
+		// #28536 - end
+		
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
@@ -6203,7 +6256,6 @@ public class SimpleQuoteBackingBean extends
 	 * @return the string
 	 */
 	public String cancel() {
-		//log.info("cancel");
 		// clear sq
 		super.renewSesionObject();
 		CatalogueBackingBean catalogueBackingBean = new CatalogueBackingBean();
@@ -6218,7 +6270,6 @@ public class SimpleQuoteBackingBean extends
 	 * Cancel zone pop up.
 	 */
 	public void cancelZonePopUp() {
-		//log.info("cancelZonePopUp");
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 		// zone required validation
 		getManagedBean().setRequired(Boolean.FALSE);
