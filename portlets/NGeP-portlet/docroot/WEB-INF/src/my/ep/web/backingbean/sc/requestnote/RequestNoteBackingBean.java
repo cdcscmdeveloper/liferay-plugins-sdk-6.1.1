@@ -5247,73 +5247,69 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								priceTypeChange = true;
 							}	
 						}
-						
-						if(requestNoteDtl.getRequestItem() != null){
+						// #30448 - start
+						if (requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
 
-							if(requestNoteDtl.getRequestItem().getSupplierItems() != null){
+							for (ScSupplierItemPrice supplierItemPrice : requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices()) {
+								if (supplierItemPrice.getPriceType() != null) {
 
-								for(ScRequestSupplierItem supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()){
-									if(supplierItem.getSupplierItemPrices() != null){
+									if (supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+										supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
+										 priceTypeChange = true;
+									} else if (supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+										supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
+										priceTypeChange = true;
+									}
+								}
+							}
 
-										for(ScSupplierItemPrice supplierItemPrice : supplierItem.getSupplierItemPrices()){
-											if(supplierItemPrice.getPriceType() != null){
+						}
+						// #30448 - end
+						if (requestNoteDtl.getRequestItem() != null) { 
+							if (requestNoteDtl.getRequestItem().getTplSpecQuestion() != null) {
 
-												if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
-													priceTypeChange = true;
-												}else if(supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-													supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
-													priceTypeChange = true;
-												}
-											}
+								if (!requestNoteDtl.getRequestItem().getTplSpecQuestion().getQuestionType().equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
+
+									if (requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode() != null) {
+
+										if (requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+											requestNoteDtl.getRequestItem().getTplSpecQuestion().setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,
+																	ParameterConst.PRICE_TYPE_STANDARD));
+											priceTypeChangeSpecQuestion = true;
+										} else if (requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+											requestNoteDtl.getRequestItem().getTplSpecQuestion().setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,
+																	ParameterConst.PRICE_TYPE_TIER));
+											priceTypeChangeSpecQuestion = true;
 										}
 									}
 								}
 							}
-							
-							if(requestNoteDtl.getRequestItem().getTplSpecQuestion() != null){
 
-								if(!requestNoteDtl.getRequestItem().getTplSpecQuestion().getQuestionType()
-										.equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)){
-
-									if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode() != null){
-
-										if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
-												.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-											requestNoteDtl.getRequestItem().getTplSpecQuestion()
-											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_STANDARD));
-											priceTypeChangeSpecQuestion = true;
-										}else if(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClPriceTypeCode().getParameterCode()
-												.equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
-											requestNoteDtl.getRequestItem().getTplSpecQuestion()
-											.setClPriceTypeCode(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,ParameterConst.PRICE_TYPE_TIER));
-											priceTypeChangeSpecQuestion = true;
-										}
-										
-									}
-									
-								}
-							}
-							
-							if(priceTypeChangeSpecQuestion){
+							if (priceTypeChangeSpecQuestion) {
 								specReqDTO.setTplSpecQuestion(requestNoteDtl.getRequestItem().getTplSpecQuestion());
 								getTemplateSpecSO().updateSpecQuestionInfo(specReqDTO);
 							}
 						}
-						
 					}
-					
 				}
-				
 			}
-			
 		}
 		
 		if(priceTypeChange){
 			requestNoteReqDTO.setRequestNote(requestNote);
 			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
+			
+			// #30448 - start
+			// Retrieve data after save
+			requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+			requestNoteReqDTO.setRequestNoteNo(requestNote.getRequestNoteNo());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+			if(requestNoteResDTO.getRequestNoteDetail() != null){
+				requestNote = requestNoteResDTO.getRequestNoteDetail();
+			}
+			// #30448 - end
 		}
-				
+		
 		return requestNote;
 	}
 	//28999- End
