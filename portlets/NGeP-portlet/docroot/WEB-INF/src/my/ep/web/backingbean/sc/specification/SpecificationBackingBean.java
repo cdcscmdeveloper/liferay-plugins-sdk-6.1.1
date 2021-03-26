@@ -2489,7 +2489,9 @@ public class SpecificationBackingBean extends
 
 							}
 
-						}//#25138 Reendorsed - end
+						}
+						retriveSpecQuestion();
+						//#25138 Reendorsed - end
 					}
 					this.getManagedBean().getFinancialScoring()
 							.add(0, tmpCheckList);
@@ -11860,6 +11862,9 @@ public class SpecificationBackingBean extends
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		//#25138 - set for one item only - start
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
+		//#25138 - set for one item only - end
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
@@ -18920,30 +18925,30 @@ if(null!=allTechnicalChecklist){
 		try {
 			
 			List<TplSpecQuestion> newSpecQuestions = new ArrayList<TplSpecQuestion>();
-			for (ScQtCheckList maxScoreList : this
-					.getManagedBean().getScQtCheckSt2financeProposalList()) {
-				if(maxScoreList.getDefinationType().getParameterCode()
-						.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) &&
-						maxScoreList.getDocCategory().equalsIgnoreCase(QTConstants.FINANCIAL_DOC_TYPE)){
-					System.out.println("specmasterID=="+maxScoreList.getScQtDoc().getTplSpecMaster().getSpecMasterId());
-					System.out.println("checlistttddd-----"+maxScoreList.getQtChecklistId());
-					
-					templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
-					List<TplSpecQuestion> specQuestions = templateSpecSo.getSpecQuestionList(maxScoreList.getScQtDoc()
-							.getTplSpecMaster().getSpecMasterId());
-					newSpecQuestions.addAll(specQuestions);
-					
-					
+			if(!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()){
+				for (ScQtCheckList maxScoreList : this
+						.getManagedBean().getScQtCheckSt2financeProposalList()) {
+					if(maxScoreList.getDefinationType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) &&
+							maxScoreList.getDocCategory().equalsIgnoreCase(QTConstants.FINANCIAL_DOC_TYPE)){
+						System.out.println("specmasterID=="+maxScoreList.getScQtDoc().getTplSpecMaster().getSpecMasterId());
+						System.out.println("checlistttddd-----"+maxScoreList.getQtChecklistId());
+						
+						templateSpecSo = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, ITemplateSpecSO.class);
+						List<TplSpecQuestion> specQuestions = templateSpecSo.getSpecQuestionList(maxScoreList.getScQtDoc()
+								.getTplSpecMaster().getSpecMasterId());
+						newSpecQuestions.addAll(specQuestions);
+						
+					}
+				}
+				this.getManagedBean().setSpecQuestionList(newSpecQuestions);
+				if(newSpecQuestions.size()<=1){
+					this.getManagedBean().setSingleItem(true);
+				}else{
+					this.getManagedBean().setSingleItem(false);
 				}
 			}
-			this.getManagedBean().setSpecQuestionList(newSpecQuestions);
-			if(newSpecQuestions.size()<=1){
-				this.getManagedBean().setSingleItem(true);
-			}else{
-				this.getManagedBean().setSingleItem(false);
-			}
-			
 			
 		} finally {
 			specSo = null;
@@ -19396,13 +19401,11 @@ if(null!=allTechnicalChecklist){
 							
 						}	
 					}
-					
-				}
+					this.getManagedBean().getFinancialScoring().add(0,checklist);
 				
+				}
 			}
-			this.getManagedBean().getFinancialScoring().add(0,checklist);
-			System.out.println("newScQtScoreOfferPriceList====="+ checklist.getQtScoreWeightage().getScQtScoreOfferPrices().size());
-			
+					
 		}catch (Exception e){
 			e.printStackTrace();
 		}
