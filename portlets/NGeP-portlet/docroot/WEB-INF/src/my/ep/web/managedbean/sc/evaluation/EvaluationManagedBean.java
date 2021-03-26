@@ -145,6 +145,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The qt proposal checklist for compliance usage **/
 	private ScQtProposalChecklist complianceQtProposalChecklist;
+
+	private List<ScQtProposalChecklist> complianceFinancialProposalCheckList;//#28786 bug
+	
 	//#28786 - end
 
 	/** The qt proposal checklist. */
@@ -3750,6 +3753,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.checkTecSpecNotOffer = checkTecSpecNotOffer;
 	}
 	// #21695 farid	end		
+	
 	//#25138- total max score -start
 	public Boolean getIsScoringReq() {
 		return isScoringReq;
@@ -3767,6 +3771,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.totalMaxScore = totalMaxScore;
 	}
 	//#25138- total max score - end
+	
 	//#25138 - set eval status - start
 	public Long getEvalStatus() {
 		return evalStatus;
@@ -3838,6 +3843,23 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setComplianceQtProposalChecklist(ScQtProposalChecklist complianceQtProposalChecklist) {
 		this.complianceQtProposalChecklist = complianceQtProposalChecklist;
 	}
+	
+	//#28786 bug - start
+	/**
+	 * @return the complianceFinancialProposalCheckList
+	 */
+	public List<ScQtProposalChecklist> getComplianceFinancialProposalCheckList() {
+		return complianceFinancialProposalCheckList;
+	}
+
+	/**
+	 * @param complianceFinancialProposalCheckList the complianceFinancialProposalCheckList to set
+	 */
+	public void setComplianceFinancialProposalCheckList(
+			List<ScQtProposalChecklist> complianceFinancialProposalCheckList) {
+		this.complianceFinancialProposalCheckList = complianceFinancialProposalCheckList;
+	}
+	//#28786 bug - end
 	//#28786 - end
 	
 	/**11104-start
