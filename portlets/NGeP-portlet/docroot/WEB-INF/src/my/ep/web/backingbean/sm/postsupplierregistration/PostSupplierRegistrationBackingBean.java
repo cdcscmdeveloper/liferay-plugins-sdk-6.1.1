@@ -761,7 +761,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 			}
 		}
-		
+		//#30053 - Start
 		if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			if(pmUser != null){
@@ -778,6 +778,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 			}	
 		}
+		//#30053 - End
 		log.info("mofActionMap>>>>" + mofActionMap.size());
 		getManagedBean().setUserActionMap(mofActionMap);
 	}
