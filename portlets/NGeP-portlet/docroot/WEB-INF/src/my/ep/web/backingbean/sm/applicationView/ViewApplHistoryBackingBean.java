@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -508,6 +510,18 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		//START 14530
+		// sort created date descendent
+		Collections.sort(this.getManagedBean().getSmAppl().getSmApplInquiries(),
+				new Comparator<SmApplInquiry>() {
+						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+							if (o1.getCreatedDate() == null
+									|| o2.getCreatedDate() == null)
+								return 0;
+								return o2.getCreatedDate().compareTo(
+											o1.getCreatedDate());
+								}
+							});
+					
 		if(this.getManagedBean().getSmAppl().getSmApplInquiries() != null){
 			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
 			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
