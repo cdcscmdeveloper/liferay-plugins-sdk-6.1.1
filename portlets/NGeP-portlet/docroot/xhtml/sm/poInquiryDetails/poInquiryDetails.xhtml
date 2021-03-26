@@ -116,7 +116,7 @@
 				<!-- #14530 - add action column -->
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink 
-					action="#{backingBean.inquiryRowSelect(inqHistVar)}"
+					action="#{backingBean.POinquiryRowSelect(inqHistVar)}"
 					process="@this"
 					update=":#{p:component('inquiryDetails')}"
 					oncomplete="inquiryDtls.show();">

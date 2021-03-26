@@ -14974,7 +14974,7 @@ public class SmApplicationBackingBean extends
 		/**
 		 * inquiry row select
 		 */
-		public void inquiryRowSelect(SmApplInquiry applInquiry) {
+		public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 			this.getManagedBean().setPoToSupplierInquiry(applInquiry);
 			RequestContext.getCurrentInstance().update("inquiryDetails");
 		}
