@@ -9799,8 +9799,7 @@ public class SmApplicationBackingBean extends
 						List<SmApplSupportDocInquiry> smApplSupportDocInquiries = new ArrayList<SmApplSupportDocInquiry>();
 						List<SmApplInquiryDocFile> smApplInquiryDocFiles = new ArrayList<SmApplInquiryDocFile>();
 
-						for (SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()) {
-							if(!smApplSupportDoc.isVerified()){
+						for (SmApplSupportDoc smApplSupportDoc : getManagedBean().getMissinDocs()) {
 							SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
 							smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
 							smApplSupportDocInquiry.setPoRemarks(smApplSupportDoc.getPoRemarks());
@@ -9825,10 +9824,11 @@ public class SmApplicationBackingBean extends
 
 							smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
 							smApplSupportDocInquiries.add(smApplSupportDocInquiry);
-							}
 						}
 						this.getManagedBean().getPoToSupplierInquiry().setSmApplSupportDocInquiries(smApplSupportDocInquiries);
 						// #14530 - End
+						log.info("**** Send Inquiry List Size ***** "
+								+ getManagedBean().getPoToSupplierInquiry().getSmApplSupportDocInquiries().size());
 
 			actionDesc = SupplierManagementConst.PO_SEND_INQUIRY_SUPP;
 			// 14530
