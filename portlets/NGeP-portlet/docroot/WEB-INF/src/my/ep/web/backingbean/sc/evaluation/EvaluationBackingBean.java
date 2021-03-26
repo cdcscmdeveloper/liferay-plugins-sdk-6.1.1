@@ -386,6 +386,9 @@ public class EvaluationBackingBean extends
 						&& !evalResDTO.getZones().isEmpty()) {
 					this.getManagedBean().setEvaluationStageZonesSummary(
 							evalResDTO.getZones());
+					// 1) 27/3/2021
+					//#21695 & #25138 Farid sorting at summary view financial
+					zonelistSorting(this.getManagedBean().getEvaluationStageZonesSummary());
 					summaryReqDTO.setSpeZoneId(this.getManagedBean()
 							.getEvaluationStageZonesSummary().get(0)
 							.getSpecZoneId());
@@ -14892,6 +14895,9 @@ private void retriveCommitteeRemarksList(){
 						&& !evalResDTO.getZones().isEmpty()) {
 					this.getManagedBean().setEvaluationStageZonesSummary(
 							evalResDTO.getZones());
+					// 2) 27/3/2021
+					//#21695 & #25138 Farid sorting at summary view technical
+					zonelistSorting(this.getManagedBean().getEvaluationStageZonesSummary());
 					summaryReqDTO.setSpeZoneId(this.getManagedBean()
 							.getEvaluationStageZonesSummary().get(0)
 							.getSpecZoneId());
@@ -15114,4 +15120,21 @@ private void retriveCommitteeRemarksList(){
 																		  
 	}
 	/** #21695 Farid END*/
+	
+	// 3) 27/3/2021
+	//#21695 & #25138 Farid sorting at summary view financial & technical
+	public void zonelistSorting(List<TplSpecZoneDtl> specZoneDtl){
+		if(specZoneDtl!=null){
+		Collections.sort(specZoneDtl, 
+				new Comparator<TplSpecZoneDtl>() {
+					public int compare(TplSpecZoneDtl specZoneDtl1, 
+							TplSpecZoneDtl specZoneDtl2) {
+						
+						//return checklist1.getChecklistSeq()-checklist2.getChecklistSeq();
+						  return new CompareToBuilder()
+			                .append(specZoneDtl1.getSpecZoneId(), specZoneDtl2.getSpecZoneId())
+			               .toComparison();
+					}
+				});
+	}}
 }
