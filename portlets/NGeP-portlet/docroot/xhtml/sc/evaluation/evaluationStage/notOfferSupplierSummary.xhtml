@@ -28,15 +28,6 @@
 						value="#{notOfferSupplierTec[1]}"></h:outputText>
 
 				</p:column>
-				
-				<p:column style="width:25%;white-space: normal;text-align:center;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.rating']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
-					</f:facet>
-					<h:outputText value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}"/>
-				</p:column>
-
 			
 			</p:dataTable>
 			<p:spacer height="10px" />
