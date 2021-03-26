@@ -145,6 +145,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	/** The qt proposal checklist for compliance usage **/
 	private ScQtProposalChecklist complianceQtProposalChecklist;
+
+	private List<ScQtProposalChecklist> complianceFinancialProposalCheckList;//#28786 bug
 	//#28786 - end
 
 	/** The qt proposal checklist. */
@@ -585,6 +587,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//#25138- total max score- start 
 	private Boolean isScoringReq;
 	
+	private boolean evalStatusComp;//#28784
+
 	/** The total technical package max score. */
 	private String totalMaxScore;
 	//#25138- total max score - end
@@ -3842,6 +3846,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setComplianceQtProposalChecklist(ScQtProposalChecklist complianceQtProposalChecklist) {
 		this.complianceQtProposalChecklist = complianceQtProposalChecklist;
 	}
+	//#28786 bug - start
+	/**
+	 * @return the complianceFinancialProposalCheckList
+	 */
+	public List<ScQtProposalChecklist> getComplianceFinancialProposalCheckList() {
+		return complianceFinancialProposalCheckList;
+	}
+
+	/**
+	 * @param complianceFinancialProposalCheckList the complianceFinancialProposalCheckList to set
+	 */
+	public void setComplianceFinancialProposalCheckList(
+			List<ScQtProposalChecklist> complianceFinancialProposalCheckList) {
+		this.complianceFinancialProposalCheckList = complianceFinancialProposalCheckList;
+	}
+	//#28786 bug - end
 	//#28786 - end
 	
 	/**11104-start
@@ -3896,4 +3916,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.speczonedtlReq = speczonedtlReq;
 	}
 	//#25138 - end
+	
+	//#28784 - start
+	/**
+	 * @return the evalStatusComp
+	 */
+	public boolean isEvalStatusComp() {
+		return evalStatusComp;
+	}
+
+	/**
+	 * @param evalStatusComp the evalStatusComp to set
+	 */
+	public void setEvalStatusComp(boolean evalStatusComp) {
+		this.evalStatusComp = evalStatusComp;
+	}
+	//#28784 - end
 }
