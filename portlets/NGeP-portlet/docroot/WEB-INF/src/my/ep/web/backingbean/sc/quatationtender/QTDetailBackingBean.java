@@ -9034,11 +9034,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 		}
 			 	}
 			 	//28780 starts
-			 	if( QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(currStatus)&&(getUserTaskIsBPKApproval() && isApprovalScreen())){ 
-			 		if(userHasRole(new RoleCode[]{RoleCode.BPK_APPROVER})){ 
-			 			return true;
-			 		}
-			 	}
+//			 	if( QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(currStatus)&&(getUserTaskIsBPKApproval() && isApprovalScreen())){ 
+//			 		if(userHasRole(new RoleCode[]{RoleCode.BPK_APPROVER})){ 
+//			 			return true;
+//			 		}
+//			 	}
 			 	//28780 ends
 			
 		}
