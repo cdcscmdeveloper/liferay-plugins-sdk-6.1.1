@@ -2458,7 +2458,9 @@ public class SpecificationBackingBean extends
 
 							}
 
-						}//#25138 Reendorsed - end
+						}
+						retriveSpecQuestion();
+						//#25138 Reendorsed - end
 					}
 					this.getManagedBean().getFinancialScoring()
 							.add(0, tmpCheckList);
@@ -11812,6 +11814,9 @@ public class SpecificationBackingBean extends
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		//#25138 - set for one item only - start
+		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
+		//#25138 - set for one item only - end
 		IQTSpecSO specSO = getSpecSO();
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
@@ -18084,13 +18089,11 @@ if(null!=allTechnicalChecklist){
 							
 						}	
 					}
-					
-				}
+					this.getManagedBean().getFinancialScoring().add(0,checklist);
 				
+				}
 			}
-			this.getManagedBean().getFinancialScoring().add(0,checklist);
-			System.out.println("newScQtScoreOfferPriceList====="+ checklist.getQtScoreWeightage().getScQtScoreOfferPrices().size());
-			
+					
 		}catch (Exception e){
 			e.printStackTrace();
 		}
