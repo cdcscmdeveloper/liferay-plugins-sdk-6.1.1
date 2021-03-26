@@ -7,6 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.equiComp.panHdr']}" toggleable="true">
+		<!-- 28466 - start - add screen instruction -->
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sm.shareholder.valid.value.shareholding']}"
+			escape="false"
+			rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
+					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
+					and backingBean.managedBean.smSupplier.businessType ne 'P' and backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}" />
+		<!-- 28466 - end -->
 		<table style="width: 350px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -71,11 +79,31 @@
 						style="float : left" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.equiComp.shrAmt']}">
-					<h:outputText value="#{equiBean.shareAmt}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+				<!-- 28466 - start - add mandatory sign (*) and allow supplier to key-in the Share Amount (RM) -->
+				<p:column>
+					<c:choose>
+						<c:when
+							test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
+							<f:facet name="header">
+								<p:outputLabel value="*" styleClass="mandatory"
+									style="float:left" />
+								<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+							</f:facet>
+							<p:inputText value="#{equiBean.shareAmt}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax event="blur" update="eqiComDt"
+									listener="#{backingBean.calculateCapital}" />
+							</p:inputText>
+						</c:when>
+						<c:otherwise>
+							<h:outputText value="#{equiBean.shareAmt}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputText>
+						</c:otherwise>
+					</c:choose>
+				<!-- 28466 - end -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.equiComp.shrPerc']}">
 					<h:outputText value="#{equiBean.sharePercentage}" >
@@ -199,13 +227,15 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<!-- #28466 start - remove #27308 showstopper -->
 					<td><p:inputText id="equiCompShrAmt"
-							disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.selectedEquityCompany.ssmData}"
+							disabled="#{!backingBean.managedBean.valueReqd}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.shrAmt']}"
 							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 							value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
 							size="35">
+					<!-- #28466 start - remove #27308 showstopper -->
 							<f:validateDoubleRange for="contractorContractVal"
 								minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
 								maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
