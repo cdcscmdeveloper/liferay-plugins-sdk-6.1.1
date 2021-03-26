@@ -180,7 +180,11 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 					reqDTO.setSaveFlow(true);
 					reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 					reqDTO.setBrandNewQt(true);
-					
+					FacesScopes facesScopes = new FacesScopes();//#9019-start
+					reqDTO.setToken(facesScopes
+							.getBPMAuthenticationCtxToken());
+					reqDTO.setTaskId(this.getManagedBean().getTaskId());
+					reqDTO.setPayLoad(this.getManagedBean().getPayLoad());//#9019-End
 					QtDetailsSO.saveQTDtl(reqDTO);
 					i++;
 				}
