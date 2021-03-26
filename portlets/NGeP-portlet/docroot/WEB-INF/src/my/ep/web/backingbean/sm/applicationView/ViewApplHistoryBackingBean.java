@@ -1668,5 +1668,12 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return false;
 	}
+	/**
+	 * inquiry row select
+	 */
+	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
+		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		RequestContext.getCurrentInstance().update("inquiryDetails");
+	}
 	//14530
 }

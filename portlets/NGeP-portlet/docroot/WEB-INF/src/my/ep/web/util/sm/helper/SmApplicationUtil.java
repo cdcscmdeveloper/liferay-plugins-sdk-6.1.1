@@ -11628,21 +11628,18 @@ public class SmApplicationUtil {
 			// if Supplier (Respond to PO inquiry)
 			//START 14530
 			else if (bean.isSupplierUser()) {
-				bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
-				for (SmApplInquiry inquiry : bean.getSmAppl()
-						.getSmApplInquiries()) {
-					if (!StringUtils.isBlank(inquiry.getInquirySubject())
-							&& inquiry
-									.getInquirySubject()
-									.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
-						bean.getPoSupplierInquiryHistory().add(inquiry);
-						bean.setPoToSupplierInquiry(inquiry);
-					}
-				}
-				//END 14530
+				
+				if (bean.getPoToSupplierInquiry().getResponseDate() == null)	{
+				SmApplInquiry currentInquiry = bean.getSmAppl()
+						.getSmApplInquiries().get(0);
+				bean.setPoToSupplierInquiry(currentInquiry);
+				
+				log.info("*** VALUE POTOSUPPLIERINQUIRY *** " + bean.getPoToSupplierInquiry().getInquiryText());
+				
 				bean.getPoToSupplierInquiry()
-						.setResponseText(StringUtils.EMPTY);
+						.setResponseText(StringUtils.EMPTY);}
 			}
+			
 			//14530
 			else if (bean.isApproverUser()){
 				// set for inquiry histories
