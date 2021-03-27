@@ -5248,7 +5248,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							}	
 						}
 						// #30448 - start
-						if (requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
+						if (requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
 
 							for (ScSupplierItemPrice supplierItemPrice : requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices()) {
 								if (supplierItemPrice.getPriceType() != null) {
