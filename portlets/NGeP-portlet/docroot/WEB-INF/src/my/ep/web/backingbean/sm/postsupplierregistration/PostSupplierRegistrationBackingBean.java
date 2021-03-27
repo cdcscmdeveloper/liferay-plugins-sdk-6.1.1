@@ -769,9 +769,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofReqDTO.setLoginId(pmUser.getLoginId());
 				Integer exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
 				log.info("This is the value of the integer" + exisitingBasicMOFFlg);
-				//start 28564
 				if (exisitingBasicMOFFlg != my.ep.constant.sm.SupplierManagementConst.RECORD_STATUS_DELETED) {
-					//end 28564
 					if (exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
 						mofActionMap.put("RNMOF", RENEW_MOF);
 					}
