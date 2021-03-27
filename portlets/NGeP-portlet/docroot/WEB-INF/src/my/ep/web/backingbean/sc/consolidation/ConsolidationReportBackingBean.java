@@ -747,8 +747,6 @@ public class ConsolidationReportBackingBean extends
 						submitMessage, qtParam);
 			}
 
-		} catch(Exception e){
-			e.printStackTrace();
 		}finally {
 			qtSuppFinalizationSO = null;
 		}
