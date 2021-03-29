@@ -79,11 +79,15 @@
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>
 			</tr>
+			<!-- 29982 start -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+			    <td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{createDOBackingBean.managedBean.flDeliveryOrder.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.flDeliveryOrder.gstRegNo}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{createDOBackingBean.managedBean.flDeliveryOrder.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.flDeliveryOrder.gstDeclaredDate}">
@@ -92,6 +96,13 @@
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{createDOBackingBean.managedBean.flDeliveryOrder.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.flDeliveryOrder.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
@@ -107,7 +118,7 @@
 				<td><p:inputText disabled="true" size="51"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.supplierName}" /></td>
 						<!-- 29234 start -->
-				<td><p:outputLabel value="*" styleClass="mandatory" /><p:outputLabel value="#{lbl['lbl.fl.do.supp.do.no']}" /></td>
+				<td valign="top"><p:outputLabel value="*" styleClass="mandatory" /><p:outputLabel value="#{lbl['lbl.fl.do.supp.do.no']}" /></td>
 						<!-- 29234 end -->
 					<td><p:inputText size="35" maxlength="30"
 							value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}" 
