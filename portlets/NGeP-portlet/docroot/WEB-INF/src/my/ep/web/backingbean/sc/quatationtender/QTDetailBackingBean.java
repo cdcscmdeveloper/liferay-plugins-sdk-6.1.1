@@ -8969,6 +8969,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 			return true;
 			 		}
 			 	}
+			 	//28780 start
+			 	if( QTStatusConst.BPK_PENDING_APPROVAL.equals(currStatus)&&(getUserTaskIsBPKApproval() && isApprovalScreen())){ 
+			 		if(userHasRole(new RoleCode[]{RoleCode.BPK_APPROVER})){ 
+			 			return true;
+			 		}
+			 	}
+			 	//28780 ends
 			
 		}
 		return false;
