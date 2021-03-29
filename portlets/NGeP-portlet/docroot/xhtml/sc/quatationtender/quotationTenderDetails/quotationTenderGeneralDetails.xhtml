@@ -972,7 +972,11 @@
 				</tr>
 		</table>
 	</p:panel>
-
+<!-- #9019  start-->
+	<ac:scRemarkAndAttachment header="#{lbl['lbl.sc.qt.remarks']}" 
+	remarkList="#{scQt.scQtRemarks}" showAttachment="false" />
+<!-- #9019 end -->
+	
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
 		<ui:include
