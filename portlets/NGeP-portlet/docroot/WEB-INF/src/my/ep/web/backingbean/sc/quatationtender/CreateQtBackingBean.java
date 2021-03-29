@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.util.Arrays;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
