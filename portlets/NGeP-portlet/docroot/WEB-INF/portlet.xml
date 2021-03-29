@@ -6092,8 +6092,8 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Review Purchase in Default Authorization Application</title>
-				<short-title>Review Purchase in Default Authorization Application</short-title>
+				<title>Review Purchase In Default</title>
+				<short-title>Review Purchase In Default</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
