@@ -1348,7 +1348,7 @@ public class PurchaseInDefaultBackingBean extends
 
 				if (purchaseInDefault.getReasonType() != null) {
 					if (directPurchaseDataType.isIsSuppResponse()) {
-						
+						log.info("change title");
 						PortletRequest request = (PortletRequest)fc.getExternalContext().getRequest();
 						RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
 						response.setTitle(ResourceBundleUtils
