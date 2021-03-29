@@ -3350,6 +3350,173 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	
+	// [#7465]-START
+	public void removeReassignAllGroupTasks() {
+		
+		log.info("removeAllReassignGroupTasks");
+		
+		if (this.getManagedBean().getSelectedGroupTasks() != null && 
+				this.getManagedBean().getSelectedGroupTasks().size() > 0) {
+			this.getManagedBean().getSelectedGroupTasks().clear();
+		}
+    	for ( WorklistItemVO task : this.getManagedBean().getAllGroupTasks()) {   		
+    			task.setTaskSelect(true);
+    			this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(),task);
+		}
+    	
+    	this.getManagedBean().setEnableDeleteGroupTasksButton(true);
+    	log.info("getSelectedGroupTasks= "+this.getManagedBean().getSelectedGroupTasks().size());
+    	log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
+
+		String claimedBy = null;
+		ITaskAssignmentSO taskAssignmentSO = null;
+		int reassignWorkListType = getManagedBean().getTaskType();
+		List<String> assigneeUsers = new ArrayList<String>();
+		
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		
+		if (this.getManagedBean().getSelectedGroupTasks() != null && 
+				!this.getManagedBean().getSelectedGroupTasks().isEmpty()) {
+			
+			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedGroupTasks().size());
+			
+			
+			
+			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedGroupTasks().entrySet()) {
+				
+				String taskId = selectedTask.getKey();
+				WorklistItemVO task = selectedTask.getValue();
+				log.info("Task(s) to be deleted: "+task.getDocNumber()+" - "+taskId);
+				
+				if (!task.getAssignees().isEmpty()) {
+					assigneeUsers = task.getAssignees();
+				}
+				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
+					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+							  getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() : 
+							  this.getManagedBean().getSelectedReassignee().get(0);
+					
+					if (assigneeUsers.contains(currentUser)) {
+						assigneeUsers.remove(currentUser);
+					}
+					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
+							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+						claimedBy = task.getAcquiredBy();
+					}
+				}
+				
+				try {
+					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+					reqDTO.setTaskId(task.getTaskId());
+					reqDTO.setUserIdList(assigneeUsers);
+					reqDTO.setClaimedBy(claimedBy);
+
+					taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									ITaskAssignmentSO.class);
+					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+
+				} finally {
+					taskAssignmentSO = null;
+				}
+			}
+		}
+		if (resDTO != null && resDTO.isSuccessful()) {
+			resetCheckAllTasks();
+			this.getManagedBean().getAllGroupTasks().clear();
+			this.getManagedBean().getSelectedGroupTasks().clear();
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
+			reloadAllTaskList();
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
+		}
+	}
+	
+	public void removeReassignAllOthersTasks() {
+		
+		log.info("removeReassignAllOthersTasks");
+			
+		if (this.getManagedBean().getSelectedOthersTasks() != null && 
+				this.getManagedBean().getSelectedOthersTasks().size() > 0) {
+			this.getManagedBean().getSelectedOthersTasks().clear();
+		}
+    	for ( WorklistItemVO task : this.getManagedBean().getAllOthersTasks()) {
+    			task.setTaskSelect(true);
+    			this.getManagedBean().getSelectedOthersTasks().put(task.getTaskId(),task);
+		}
+    	
+    	this.getManagedBean().setEnableDeleteOthersTasksButton(true);
+    	log.info("getSelectedOthersTasks= "+this.getManagedBean().getSelectedOthersTasks().size());
+    	log.info("enableDeleteOthersTasksButton= "+this.getManagedBean().isEnableDeleteOthersTasksButton());
+
+		String claimedBy = null;
+		ITaskAssignmentSO taskAssignmentSO = null;
+		int reassignWorkListType = getManagedBean().getTaskType();
+		List<String> assigneeUsers = new ArrayList<String>();
+		
+		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
+		
+		if (this.getManagedBean().getSelectedOthersTasks() != null && 
+				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
+			
+			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedOthersTasks().size());
+			
+			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedOthersTasks().entrySet()) {
+				
+				String taskId = selectedTask.getKey();
+				WorklistItemVO task = selectedTask.getValue();
+				log.info("Task(s) to be deleted: "+taskId);
+				
+				if (!task.getAssignees().isEmpty()) {
+					assigneeUsers = task.getAssignees();
+				}
+				
+				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
+					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+							  getManagedBean().getTaskAssignmentSearchBean().getUser().getLoginId() : 
+							  this.getManagedBean().getSelectedReassignee().get(0);
+					
+					if (assigneeUsers.contains(currentUser)) {
+						assigneeUsers.remove(currentUser);
+					}
+					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
+							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+						claimedBy = task.getAcquiredBy();
+					}
+				}
+				
+				try {
+					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+					reqDTO.setTaskId(task.getTaskId());
+					reqDTO.setUserIdList(assigneeUsers);
+					reqDTO.setClaimedBy(claimedBy);
+
+					taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									ITaskAssignmentSO.class);
+					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+
+				} finally {
+					taskAssignmentSO = null;
+				}
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770098);
+		}
+		if (resDTO != null && resDTO.isSuccessful()) {
+			resetCheckAllTasks();
+			this.getManagedBean().getAllOthersTasks().clear();
+			this.getManagedBean().getSelectedOthersTasks().clear();
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
+			reloadAllTaskList();
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
+			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
+		}
+	}
+	// [#7465]-END
+
 	public void removeReassignOthersTasks() {
 		
 		log.info("removeReassignOthersTasks");
