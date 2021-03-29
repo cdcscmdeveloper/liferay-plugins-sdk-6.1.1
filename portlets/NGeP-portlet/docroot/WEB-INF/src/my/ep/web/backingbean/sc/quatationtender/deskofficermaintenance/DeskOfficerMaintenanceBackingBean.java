@@ -1069,13 +1069,18 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			Map<Long, PmUser> qtNoDeskOfficerMap = new LinkedHashMap<Long, PmUser>();
 			getManagedBean().setQtNoDeskOfficerMap(qtNoDeskOfficerMap );
 		}
+		// #25627 - Start.
 		boolean showError = false;
+		boolean disableSubmit = false;
 		if (null != selectedUser) {
 			if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedQtIds())) {
 				for (Long qtID: getManagedBean().getSelectedQtIds()) {
 					if(isValidReassignment(qtID, selectedUser)){
 						getManagedBean().getQtNoDeskOfficerMap().put(qtID, selectedUser);
 					}else{
+						if ("N/A".equals(getNewDeskOfficer(qtID))) {
+							disableSubmit = true;
+						}
 						showError = true;
 					}
 				}
@@ -1087,12 +1092,13 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 								MessageUtils.getMessage("ERR-760493", null,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				getManagedBean().setDisableSubmit(true);
+				getManagedBean().setDisableSubmit(disableSubmit);
 			}else{
-				getManagedBean().setDisableSubmit(false);
+				getManagedBean().setDisableSubmit(disableSubmit);
 				RequestContext.getCurrentInstance().execute("dlTaskReassignment.hide()");
 			}
 		}
+		// #25627 - End.
 	}
 	
 	public String getNewDeskOfficer(Long qtID) {
