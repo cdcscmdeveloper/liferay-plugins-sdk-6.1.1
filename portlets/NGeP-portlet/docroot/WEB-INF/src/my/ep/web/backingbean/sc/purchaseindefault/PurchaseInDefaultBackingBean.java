@@ -12,12 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils; //#28865
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
+import javax.portlet.RenderResponse; //#28865
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -93,11 +96,13 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils; //#28865
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.User;
 
 /**
  * The Class PurchaseInDefaultBackingBean.
@@ -1328,6 +1333,11 @@ public class PurchaseInDefaultBackingBean extends
 		// start - #28865
 		String PID_PAGE = PURCHASE_IN_DEFAULT_PAGE;
 		
+		PortletRequest request = (PortletRequest) fc.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid.review.default.authorization.title",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		
 		if (directPurchaseDataType.getRecommend() != null && directPurchaseDataType.isIsSuppResponse() != null) {
 			if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)
 					|| directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_ACCEPT)) {
@@ -1342,6 +1352,14 @@ public class PurchaseInDefaultBackingBean extends
 
 				if (purchaseInDefault.getReasonType() != null) {
 					if (directPurchaseDataType.isIsSuppResponse()) {
+						
+						Long statusId = getManagedBean().getPidStatus().getStatusId();
+
+						if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
+							response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						}
+						
 						if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)) {
 							String message = MessageConst.INFO_700098;
 
@@ -1484,6 +1502,13 @@ public class PurchaseInDefaultBackingBean extends
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		PortletRequest request = (PortletRequest)fc.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils
+				.getMessage(
+						"lbl.sc.pid.response.reduce.min.title",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_RESPONSE_PAGE);
 	}
@@ -1491,7 +1516,7 @@ public class PurchaseInDefaultBackingBean extends
 	public void updatePID(){
 		debugLogger("updatePurchaseInDefault");
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
-		//FacesScopes facesScopes = new FacesScopes();
+		FacesScopes facesScopes = new FacesScopes();
 		try {
 			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
 					.getInstance().getServiceObject(
@@ -1919,9 +1944,11 @@ public class PurchaseInDefaultBackingBean extends
 	
 	//to insert child reason
 	public void savePidReason() {
-		//ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
 		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
-		//IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
 		IPurchaseInDefaultSO purchaseInDefaultSO = null;
 		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
