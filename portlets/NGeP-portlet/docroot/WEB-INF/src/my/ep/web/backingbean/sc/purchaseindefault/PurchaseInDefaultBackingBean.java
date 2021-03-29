@@ -1348,14 +1348,16 @@ public class PurchaseInDefaultBackingBean extends
 
 				if (purchaseInDefault.getReasonType() != null) {
 					if (directPurchaseDataType.isIsSuppResponse()) {
-						log.info("change title");
-						PortletRequest request = (PortletRequest)fc.getExternalContext().getRequest();
-						RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
-						response.setTitle(ResourceBundleUtils
-								.getMessage(
-										"lbl.sc.purchase.in.default",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()));
+						
+						Long statusId = getManagedBean().getPidStatus().getStatusId();
+
+						if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
+							log.info("change the title..");
+							PortletRequest request = (PortletRequest) fc.getExternalContext().getRequest();
+							RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+							response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						}
 						
 						if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)) {
 							String message = MessageConst.INFO_700098;
@@ -1499,6 +1501,13 @@ public class PurchaseInDefaultBackingBean extends
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		PortletRequest request = (PortletRequest)fc.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils
+				.getMessage(
+						"Request to Reduce Minimum Order Quantity",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_RESPONSE_PAGE);
 	}
