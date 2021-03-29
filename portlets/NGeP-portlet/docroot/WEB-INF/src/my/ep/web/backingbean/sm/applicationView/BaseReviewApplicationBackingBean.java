@@ -598,36 +598,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		
 		//28767
-		/*SsmReqDTO ssmReqDTO = new SsmReqDTO();
-		SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
-		if(ssmResDTO.getSmApplIndebtedness() != null){
-			ssmResDTO.getSmApplIndebtedness().setSmAppl(this.getManagedBean().getSmAppl());
-			this.getManagedBean().getSmAppl().setSmApplIndebtedness(ssmResDTO.getSmApplIndebtedness());
-		}
-		
-		if(ssmResDTO.getSmPersonnelSecretaries() != null){
-			this.getManagedBean().getSmAppl().setSmPersonnelSecretaries(new ArrayList());
-			for(SmPersonnelSecretaries personnelSecretaries: ssmResDTO.getSmPersonnelSecretaries()){
-				personnelSecretaries.setSmAppl(this.getManagedBean().getSmAppl());
-				this.getManagedBean().getSmAppl().getSmPersonnelSecretaries().add(personnelSecretaries);
-			}
-		}
-		
-		for(SmPersonnelSecretaries personnelSec : this.getManagedBean().getSmAppl().getSmPersonnelSecretaries()){
-			if(personnelSec.getSecDesignation() != null){
-				String designation = populateDesignationSSM(personnelSec.getSecDesignation());
-				personnelSec.setSecDesignation(designation);
-			}
-		}
-		
-		if(ssmResDTO.getSmApplAuditors()!= null){
-			this.getManagedBean().getSmAppl().setSmApplAuditors(new ArrayList());
-			for(SmApplAuditors auditors: ssmResDTO.getSmApplAuditors()){
-				auditors.setSmAppl(this.getManagedBean().getSmAppl());
-				this.getManagedBean().getSmAppl().getSmApplAuditors().add(auditors);
-			}
-		}
-		*/
 		this.getManagedBean().getPersonnelDirectorManager().clear();
 		this.getManagedBean().getPersonnelMembers().clear();
 		BigDecimal sum = new BigDecimal(0);
@@ -641,7 +611,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				if(personnel.isEquityOwner()){
-					if(shareAmt != null && !personnel.getShareAmt().equals(null)){
+					if(shareAmt != null && !(personnel.getShareAmt() == null)){
 						sum =  sum.add(shareAmt);
 						getManagedBean().setTotalShare(sum);
 						
