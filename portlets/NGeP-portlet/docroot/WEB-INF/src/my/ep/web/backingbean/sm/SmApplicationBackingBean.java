@@ -110,7 +110,6 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplAuditors;
 import my.ep.persistence.entity.sm.SmApplDocFile;
-import my.ep.persistence.entity.sm.SmApplIndebtedness;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -1619,12 +1618,11 @@ public class SmApplicationBackingBean extends
 
 		// set supporting document mode if empty
 		//28771 - start
-		if (getManagedBean().isPoUser()|| getManagedBean().isApproverUser()){
-		if (StringUtils.isBlank(getManagedBean().getSmAppl()
-				.getSupportingDocMode())) {
+		if (getManagedBean().isPoUser()|| getManagedBean().isApproverUser() 
+				&& StringUtils.isBlank(getManagedBean().getSmAppl().getSupportingDocMode())){
 			getManagedBean().getSmAppl().setSupportingDocMode(
 					SupplierManagementConst.SUPPORTING_DOC_ONLINE);
-		}}
+		}
 		//28771 - end
 		// set latest mofAccount
 		if (getManagedBean().getSmAppl().getSmSupplier() != null) {
@@ -2229,7 +2227,7 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
 				if(personnel.isEquityOwner()){
-					if(shareAmt != null && !personnel.getShareAmt().equals(null)){
+					if(shareAmt != null && !(personnel.getShareAmt() == null)){
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
 						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmt);
 						sum =  sum.add(shareAmt);
