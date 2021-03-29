@@ -40,7 +40,7 @@
 					disabled="#{mcDdRptBB.disablePtjGroupLov()}"
 					value="#{mcDdRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcDdRptBB.resetPtjProfile()"
-					update=":form:searchPtj"
+					update=":form"
 					saveObject="mcDdRptBB.managedBean.ptjGroup"
 					conditionField="#{mcDdRptBB.constuctConditionFieldsForPTJGroup()}">
 				</ac:lov>
