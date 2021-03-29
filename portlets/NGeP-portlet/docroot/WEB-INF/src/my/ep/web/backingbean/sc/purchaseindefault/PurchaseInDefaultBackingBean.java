@@ -1334,6 +1334,11 @@ public class PurchaseInDefaultBackingBean extends
 		// start - #28865
 		String PID_PAGE = PURCHASE_IN_DEFAULT_PAGE;
 		
+		PortletRequest request = (PortletRequest) fc.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid.review.default.authorization.title",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		
 		if (directPurchaseDataType.getRecommend() != null && directPurchaseDataType.isIsSuppResponse() != null) {
 			if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)
 					|| directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_ACCEPT)) {
@@ -1352,9 +1357,6 @@ public class PurchaseInDefaultBackingBean extends
 						Long statusId = getManagedBean().getPidStatus().getStatusId();
 
 						if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
-							log.info("change the title..");
-							PortletRequest request = (PortletRequest) fc.getExternalContext().getRequest();
-							RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
 							response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 						}
@@ -1505,7 +1507,7 @@ public class PurchaseInDefaultBackingBean extends
 		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
 		response.setTitle(ResourceBundleUtils
 				.getMessage(
-						"Request to Reduce Minimum Order Quantity",
+						"lbl.sc.pid.response.reduce.min.title",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale()));
 		fc.getApplication().getNavigationHandler()
