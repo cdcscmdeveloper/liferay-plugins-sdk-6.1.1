@@ -963,7 +963,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	}
 	
 	private String getPaymentGateUrlByMerchantId(String merchantId){
-		return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";
+//		return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/"; 
+		// #26307 - payment gateway change 
+		return EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + EpPropertiesUtils.getInstance().getProperty("molpay.url.ext");
 	}
 
 	public String getCancelUrl() {
