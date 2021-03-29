@@ -21,6 +21,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
+import javax.portlet.RenderResponse; //#28865
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -1347,6 +1348,15 @@ public class PurchaseInDefaultBackingBean extends
 
 				if (purchaseInDefault.getReasonType() != null) {
 					if (directPurchaseDataType.isIsSuppResponse()) {
+						
+						PortletRequest request = (PortletRequest)fc.getExternalContext().getRequest();
+						RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+						response.setTitle(ResourceBundleUtils
+								.getMessage(
+										"lbl.sc.purchase.in.default",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()));
+						
 						if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)) {
 							String message = MessageConst.INFO_700098;
 
