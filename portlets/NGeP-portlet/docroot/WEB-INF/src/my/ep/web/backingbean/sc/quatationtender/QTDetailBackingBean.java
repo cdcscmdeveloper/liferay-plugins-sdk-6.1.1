@@ -3979,12 +3979,10 @@ public class QTDetailBackingBean extends
 						SuppFinalizationResDTO sfResDTO = sfDetailSO.setQtFinalizationCurrentStatus(qtResultBean.getResultList());
 						if(sfResDTO.isSuccessful()){
 							qtResultBean.setResultList(sfResDTO.getQtList());
+							
 							for(int i = 0 ; !CollectionUtils.isEmpty(qtResultBean.getResultList()) && i< qtResultBean.getResultList().size(); i++){
-								//log.info(qtResultBean.getResultList().get(i).getFinalization().getCurrentStatus().getPmStatus().getStatusId());
-								qtResultBean.getResultList().get(i).setStatusDesc(getStatusDescById(sfResDTO.getQtList().get(i).getFinalization().getCurrentStatus().getPmStatus().getStatusId()));
-								//log.info(qtResultBean.getResultList().get(i).getStatusDesc());
+								qtResultBean.getResultList().get(i).setStatusDesc(getStatusDescById(sfResDTO.getQtList().get(i).getFinalization().getCurrentStatus().getPmStatus().getStatusId()));								
 							}
-							//log.info("update status successful");
 						}
 					}
 				}
@@ -4050,7 +4048,6 @@ public class QTDetailBackingBean extends
 		@Override
 		public ISearchResultBean<ScLoaForQt> pageChangeListener(
 				ISearchBean<ScLoaForQt> searchBean) {
-			log.info("LOAPagingDataModel pageChangeListener");
 			IQTDetailSO qtDetailSO;
 			try{
 				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
@@ -4132,11 +4129,6 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
-	
-	
-	
-	
-	
 	private class LOIPagingDataModel extends PagingDataModel<ScLoiForQt>{
 		
 		/** The Constant serialVersionUID. */
@@ -4171,7 +4163,6 @@ public class QTDetailBackingBean extends
 		@Override
 		public ISearchResultBean<ScLoiForQt> pageChangeListener(
 				ISearchBean<ScLoiForQt> searchBean) {
-			log.info("LOIPagingDataModel pageChangeListener");
 			IQTDetailSO detailSO;
 			try {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
@@ -7077,7 +7068,6 @@ public class QTDetailBackingBean extends
 			//int index = 0;
 			for (PmUser pmUser : approvers) {
 				if (pmUser.getUserId().equals(currentDO.getUserId())) {
-					log.info("loopremoveDeskOfficer");
 					//isDO = true;
 					//index++;
 					approvers.remove(pmUser);
@@ -7349,7 +7339,7 @@ public class QTDetailBackingBean extends
 			}
 			this.getManagedBean().setCommittemembers(deleteMemberList);
 			deleteMemberList=null;
-			//log.info("end deleteCommitteemembersData"+this.getManagedBean().getCommittemembers().size());
+			
 		}
 		
 	}
@@ -7826,6 +7816,12 @@ public class QTDetailBackingBean extends
 							if(resDTOLOI.isCloseQT() == true){
 							  isCloseQT = true; 
 							}
+							
+							QuationTenderResDTO resDTOSF = detailSO.closeQTstatusForSF(quationTenderReqDTO);
+							
+							if (resDTOSF.isCloseQT() == true) {
+								 isCloseQT = true; 
+							}
 						}
 				}	
 			   return isCloseQT;	
@@ -8043,7 +8039,6 @@ public class QTDetailBackingBean extends
             
           //Start 19287      
             public void resetSearchDataResults(){
-            	log.info("==========resetSearchDataResults========");
             	if(isQTSearchScreen()){
             		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
             				.getSearchQTDataModel();
@@ -8081,10 +8076,10 @@ public class QTDetailBackingBean extends
     	
     }
     //#25692-End  
+    
     //#17376-start onlineBiddingcodes
     public String viewOnlineBidding(ScQt scQt, String previousPageUrl){
     	//ScQt qt=resDTO.getQtResultBean().getResultList().get(i);
-    	log.info("============viewOnlineBidding============");
     	IQTDetailSO detailSO;
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
