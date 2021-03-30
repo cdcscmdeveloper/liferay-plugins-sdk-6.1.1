@@ -17,6 +17,26 @@
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
+			<!-- Bug #30600 Start -->
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
+			</td>
+			<td>
+			   <c:forEach var="actionDA" items="#{lOIDetailBackingBean.managedBean.recSupplierList}">
+				  <c:if test="#{actionDA.smSupplier.supplierId eq lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId}">
+				     <p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
+							rendered="#{actionDA.smSupplier.disciplinaryActions}"
+							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(actionDA.smSupplier)}" 
+							process="@this" partialSubmit="true" update=":form">
+								<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
+					 </p:commandLink><p:spacer width="2"/>
+					 <h:outputText rendered="#{!actionDA.smSupplier.disciplinaryActions}"
+						 value="#{lbl['lbl.cm.dialog.cofirm.no']}" /><p:spacer width="2"/>
+					 <ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" /> 
+			      </c:if>
+				</c:forEach>
+			</td> 
+		    <!-- Bug #30600 End -->
 		</tr>
 		<tr>
 			<td>
@@ -286,5 +306,7 @@
 			readonly="true"
 			rendered="#{not empty lOIDetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>
-	
+	<!-- Bug #30600 Start -->
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+	<!-- Bug #30600 End -->
 </ui:composition>
