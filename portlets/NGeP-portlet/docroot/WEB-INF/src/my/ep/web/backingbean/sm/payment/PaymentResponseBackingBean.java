@@ -45,6 +45,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
+//#26307 start
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.web.util.pm.helper.ParameterHelper;
+//#26307 start
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -164,6 +170,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
+		// #26307 start
+		String cardType = httpServletRequest.getParameter("cardType") != null ? httpServletRequest.getParameter("cardType") : null;
+		String extraP = httpServletRequest.getParameter("extraP");
+		// #26307 end
 
 
 		log.info("orderId: " + orderId);
@@ -178,6 +188,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
+		// #26307
+		log.info("extraP:" + extraP);
 
 		Long ordId = Long.valueOf(orderId);
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -256,6 +268,20 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
+				// #26307 start
+				if (cardType != null) {
+					if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) {
+						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode(
+								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT);
+						pyPayment.setCardType(cards);
+					}
+					if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
+						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode(
+								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT);
+						pyPayment.setCardType(cards);
+					}
+				}
+				// #26307 end
 
 				Date txDate;
 				try {
