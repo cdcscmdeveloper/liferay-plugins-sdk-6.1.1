@@ -63,8 +63,10 @@ public class MolPayServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		System.out.println("************Payment PostBack Start********");
-		System.out.println("******Servlet Testing doPost*********");
+		// #26307 start
+		log.info("************Payment PostBack Start********");
+		log.info("******Servlet Testing doPost*********");
+		// #26307 end
 
 		String nbcb = req.getParameter("nbcb") != null ? req.getParameter("nbcb") : null;
 		String amount = req.getParameter("amount");
@@ -80,22 +82,25 @@ public class MolPayServlet extends HttpServlet {
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
 		
-		//#26307
-		String cardType = req.getParameter("cardType") != null ?  req.getParameter("cardType") : null;
-
-		System.out.println("nbcb:" + nbcb);
-		System.out.println("orderId: " + orderId);
-		System.out.println("tranID: " + tranID);
-		System.out.println("status:" + status);
-		System.out.println("domain:" + domain);
-		System.out.println("amount :" + amount);
-		System.out.println("currency:" + currency);
-		System.out.println("appcode: " + appcode);
-		System.out.println("paydate:" + paydate);
-		System.out.println("skey:" + skey);
-		System.out.println("error_code:" + errorCode);
-		System.out.println("error_desc:" + errorDesc);
-		System.out.println("channel:" + channel);
+		// #26307 start
+		String cardType = req.getParameter("cardType") != null ?  req.getParameter("cardType") : null; 
+		String extraP = req.getParameter("extraP");
+ 
+		log.info("nbcb:" + nbcb);
+		log.info("orderId: " + orderId);
+		log.info("tranID: " + tranID);
+		log.info("status:" + status);
+		log.info("domain:" + domain);
+		log.info("amount :" + amount);
+		log.info("currency:" + currency);
+		log.info("appcode: " + appcode);
+		log.info("paydate:" + paydate);
+		log.info("skey:" + skey);
+		log.info("error_code:" + errorCode);
+		log.info("error_desc:" + errorDesc);
+		log.info("channel:" + channel);
+		log.info("extraP:" + extraP);
+		// #26307 end
 
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
