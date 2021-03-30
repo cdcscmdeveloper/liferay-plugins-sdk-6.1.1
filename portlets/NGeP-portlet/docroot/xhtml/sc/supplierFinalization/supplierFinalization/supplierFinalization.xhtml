@@ -62,7 +62,6 @@
 							<ui:param name="disableSelect" value="#{!(isBPKTaskAndClaimed or 
 													isSecretaryUser)
 													or suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
-							<c:if test="#{validityDaysExpiredQt}">
 								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 									disabled="#{disableSelect}"
@@ -79,26 +78,6 @@
 																     [id$=rePublishPanel],[id$=itemSupplierPanel], [id$=remarksPanel])" 
 										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					   			</p:selectOneMenu>
-					   		</c:if>
-							<c:if test="#{!validityDaysExpiredQt}">
-								<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.sf.meeting.decision']}"
-									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
-									disabled="#{disableSelect}"
-									style="width:333px;">
-									<c:choose>
-										<c:when test="#{disableSelect}">
-											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownAll()}" />
-										</c:when>
-										<c:otherwise>
-											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownExpiredProposal()}" />
-										</c:otherwise>
-									</c:choose>
-									
-									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-																     [id$=rePublishPanel],[id$=itemSupplierPanel], [id$=remarksPanel])" 
-										listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
-					   			</p:selectOneMenu>
-							</c:if>
 						</td>
 						<td style="margin-top: -3px;">
 							<ac:iconTooltip value="#{lbl['lbl.sc.sf.meeting.decision.tooltip']}" />
@@ -458,6 +437,3 @@
 	</p:panel>
 
 </ui:composition>
-
-
-<ui:remove> ***25201 </ui:remove>
