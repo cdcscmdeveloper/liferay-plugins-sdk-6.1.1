@@ -1760,6 +1760,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isBdSfFlow;
 	// #30451-End.
 	
+	private List<ScQtCheckList> sampleSpecCheckList;//11104
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10925,6 +10927,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.isBdSfFlow = isBdSfFlow;
 		}
 		// #30451-End.
+
+		/**11104-start
+		 * @return the sampleSpecCheckList
+		 */
+		public List<ScQtCheckList> getSampleSpecCheckList() {
+			return sampleSpecCheckList;
+		}
+
+		/**
+		 * @param sampleSpecCheckList the sampleSpecCheckList to set
+		 */
+		public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
+			this.sampleSpecCheckList = sampleSpecCheckList;
+		}
+		/*
+		 * 11104-End
+		 */
+		
 }
 
 
