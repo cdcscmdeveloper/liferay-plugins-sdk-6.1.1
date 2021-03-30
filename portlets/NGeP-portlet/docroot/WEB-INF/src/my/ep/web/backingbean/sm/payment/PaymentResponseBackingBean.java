@@ -45,12 +45,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
-//#26307 start
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.web.util.pm.helper.ParameterHelper;
-//#26307 start
+//#26307 start 
+import my.ep.constant.pm.ParameterConst; 
+import my.ep.constant.pm.ParameterTypeConst; 
+import my.ep.persistence.entity.pm.common.PmParameter; 
+import my.ep.web.util.pm.helper.ParameterHelper; 
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
+//#26307 start 
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -170,10 +172,17 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
-		// #26307 start
-		String cardType = httpServletRequest.getParameter("cardType") != null ? httpServletRequest.getParameter("cardType") : null;
-		String extraP = httpServletRequest.getParameter("extraP");
-		// #26307 end
+		// #26307 start 
+		String cardType = null;
+		String extraP = httpServletRequest.getParameter("extraP"); 
+		JSONObject obj;
+		try {
+			obj = new JSONObject(extraP);
+			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		// #26307 end 
 
 
 		log.info("orderId: " + orderId);
@@ -268,20 +277,24 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				} else if (status.equals(SupplierManagementConst.MOL_FAIL)) {
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
-				// #26307 start
-				if (cardType != null) {
-					if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) {
-						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode(
-								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT);
-						pyPayment.setCardType(cards);
-					}
-					if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
-						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode(
-								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT);
-						pyPayment.setCardType(cards);
-					}
-				}
-				// #26307 end
+				// #26307 start 
+				if (cardType != null) { 
+					if (cardType.equalsIgnoreCase("Credit")) {
+						cardType = "CC";
+					} else if (cardType.equalsIgnoreCase("Debit")) {
+						cardType = "DC";
+					} 
+					if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) { 
+						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode( 
+								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT); 
+						pyPayment.setCardType(cards); 
+					} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
+						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode( 
+								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT); 
+						pyPayment.setCardType(cards); 
+					} 
+				} 
+				// #26307 end 
 
 				Date txDate;
 				try {

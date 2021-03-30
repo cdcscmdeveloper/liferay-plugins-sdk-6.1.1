@@ -15,9 +15,12 @@ import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
 
-//#26307
-import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.ParameterConst;
+//#26307 start
+import my.ep.constant.pm.ParameterTypeConst; 
+import my.ep.constant.pm.ParameterConst; 
+import org.primefaces.json.JSONException;
+import org.primefaces.json.JSONObject;
+//#26307 start
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -82,25 +85,32 @@ public class MolPayServlet extends HttpServlet {
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
 		
-		// #26307 start
-		String cardType = req.getParameter("cardType") != null ?  req.getParameter("cardType") : null; 
-		String extraP = req.getParameter("extraP");
- 
-		log.info("nbcb:" + nbcb);
-		log.info("orderId: " + orderId);
-		log.info("tranID: " + tranID);
-		log.info("status:" + status);
-		log.info("domain:" + domain);
-		log.info("amount :" + amount);
-		log.info("currency:" + currency);
-		log.info("appcode: " + appcode);
-		log.info("paydate:" + paydate);
-		log.info("skey:" + skey);
-		log.info("error_code:" + errorCode);
-		log.info("error_desc:" + errorDesc);
-		log.info("channel:" + channel);
-		log.info("extraP:" + extraP);
-		// #26307 end
+		// #26307 start 
+		String cardType = null; 
+		String extraP = req.getParameter("extraP"); 
+		JSONObject obj;
+		try {
+			obj = new JSONObject(extraP);
+			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+  
+		log.info("nbcb:" + nbcb); 
+		log.info("orderId: " + orderId); 
+		log.info("tranID: " + tranID); 
+		log.info("status:" + status); 
+		log.info("domain:" + domain); 
+		log.info("amount :" + amount); 
+		log.info("currency:" + currency); 
+		log.info("appcode: " + appcode); 
+		log.info("paydate:" + paydate); 
+		log.info("skey:" + skey); 
+		log.info("error_code:" + errorCode); 
+		log.info("error_desc:" + errorDesc); 
+		log.info("channel:" + channel); 
+		log.info("extraP:" + extraP); 
+		// #26307 end 
 
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);
@@ -183,20 +193,24 @@ public class MolPayServlet extends HttpServlet {
 						smPayment.setPmStatus(pmStat);
 					}
 					
-					//#26307 - Start
-					if(cardType != null){
-						if(cardType.equals(ParameterConst.CARD_TYPES_CREDIT)){
-							PmParameter cards = ParameterHelper.getInstance().
-									getParameterByTypeAndCode(ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT);
-							smPayment.setCardType(cards);
-						}
-						if(cardType.equals(ParameterConst.CARD_TYPES_DEBIT)){
-							PmParameter cards = ParameterHelper.getInstance().
-									getParameterByTypeAndCode(ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT);
-							smPayment.setCardType(cards);
-						}
-					}		
-					//#26307 - End
+					// #26307 start
+					if (cardType != null) {
+						if (cardType.equalsIgnoreCase("Credit")) {
+							cardType = "CC";
+						} else if (cardType.equalsIgnoreCase("Debit")) {
+							cardType = "DC";
+						} 
+						if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) {
+							PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode(
+									ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT);
+							smPayment.setCardType(cards); 
+						} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
+							PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode(
+									ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT);
+							smPayment.setCardType(cards); 
+						} 
+					}
+					// #26307 end
 
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
