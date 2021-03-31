@@ -2079,6 +2079,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 		//20190910@asyrafhaziq - 26404 -End
 		// save.
+       
+       //9019 for prevent null insert for remark
+        if (null != scQt.getScQtRemarks() && CollectionUtils.isNotEmpty(scQt.getScQtRemarks())) {
+		
+					for (int i = 0; i < scQt.getScQtRemarks().size(); i++) {
+						String userRemark = scQt.getScQtRemarks().get(i).getRemark();
+						if (null == userRemark || "".equals(userRemark)) {
+							scQt.getScQtRemarks().remove(i);
+						}
+					}
+		}//9019 end
+
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setQtCommittes(scQt.getScQtCommittees());
@@ -3400,6 +3412,37 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (null == this.getManagedBean().getQt().getProcurementMode()) {
 				this.getManagedBean().getQt().setProcurementMode(new PmParameter());
 			} 
+            //9019 for load existing values
+           if(null==this.getManagedBean().getQt().getProcurementTypeCatId()){
+				this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());	
+			}
+			if(null==this.getManagedBean().getQt().getFulfilmentType()){
+				this.getManagedBean().getQt().setFulfilmentType(new PmParameter());	
+			}
+			if(null==this.getManagedBean().getQt().getPmProcurementCategory()){
+				this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());	
+			}
+			if(null==this.getManagedBean().getQt().getContractType()){
+				this.getManagedBean().getQt().setContractType(new PmParameter());	
+			}
+			
+			//9019 initializing remark for cancel or subsequent save start 
+			if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+				ScQt scQt = this.getManagedBean().getQt();
+				List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+						.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+				for (ScQtRemark qtRemark : qtRemarks) {
+					qtRemark.setEditable(true);
+				}
+				this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+			} else{
+				ScQt scQt = this.getManagedBean().getQt();
+				this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+			}
+			//9019 end
+
 
 			if (SCProcessNameConst.REVISE_PCB.equalsIgnoreCase(this
 					.getManagedBean().getTaskName())) {
@@ -6460,6 +6503,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
 			} else {
+             //9019 null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
+                List<ScQtRemark> remarks = null;
+				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks())
+						&& StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
+					remarks = scQt.getScQtRemarks();
+				}
+
 				scQt.setScQtRemarks(initializeRemarks(scQt, this
 						.getManagedBean().getQt().getCurrentWorkFlowStatus(),
 						scQt.getScQtRemarks(), ScQtRemark.class));
@@ -10015,8 +10065,91 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
   	//#25037 - end
     
+    /**
+	 * CR-9019 will be used to cancel QT
+	 */
+	public void cancelQTDraft() {
+		IQTDetailSO detailSO;
+		try {
+			this.getManagedBean().setSaveFlow(false);
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class); //
+
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			ScQt qt = this.getManagedBean().getQt();
+			String ackMsg = null;
+
+			quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+			List<ScQtRemark> remarks = qt.getScQtRemarks();
+
+			if (CollectionUtils.isEmpty(remarks)) {
+				throwExceptionForInvalidRemark();
+			}
+
+			for (int i = 0; i < remarks.size(); i++) {
+				String userRemark = remarks.get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					throwExceptionForInvalidRemark();
+				}
+			}
+
+			finalizeRemarks(qt.getScQtRemarks());
+			qt.setScQtStatus(null);
+			qt.setScQtCommittees(null);
+			qt.setScQtApprovals(null);
+			qt.setScQtBriefings(null);
+			quationTenderReqDTO.setQtdetail(qt);
+			quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
+			ackMsg = MessageConst.INFO_700031;
+			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQT(quationTenderReqDTO);
+
+			if (quationTenderResDTO.isSuccessful()) {
+				successMessage(ackMsg, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
+						qt.getQtNo(), Boolean.TRUE);
+			}
+		} finally {
+			detailSO = null;
+		}
+	}
+
+	private void throwExceptionForInvalidRemark() {
+		throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+				"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()) });
+	}
+  	
+  	/**
+  	 * CR-9019 will be used to differentiate between cancel and submit 
+  	 * @param outCome
+  	 * @return
+  	 */
+  	public boolean isCancel(String outCome){
+  		return BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outCome);
+  	}
+  	
+  	
+  	/**
+  	 * CR-9019 will be used to enable/disable mandayory checking on UI
+  	 * @param scQt
+  	 * @return
+  	 */
+  	public boolean isProcurementTitleMandatory(ScQt scQt){
+  		if(scQt.isCloned()){
+  			return false;
+  		}	
+  		return scQt.isBrandNew() || (StringUtils.isEmpty(scQt.getQtTitle()));
+  	}
+  	
+  	/**
+  	 * CR-9019 will be used to enable/disable mandayory checking on UI
+  	 * @param scQt
+  	 * @return
+  	 */
+  	public boolean isFileNoMandatory(ScQt scQt){
+  		if(scQt.isCloned()){
+  			return false;
+  		}
+  		return scQt.isBrandNew() || StringUtils.isEmpty(scQt.getFileNo());
+  	}
 }
-
-
-// ***19336#40
-// ***25692
