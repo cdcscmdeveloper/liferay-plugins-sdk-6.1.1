@@ -641,4 +641,7 @@
 			readonly="true"
 			rendered="#{not empty lOADetailBackingBean.managedBean.supplierRemarks}" />
 	</p:outputPanel>
+	<!-- Bug #30600 Start -->
+	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+	<!-- Bug #30600 End -->
 </ui:composition>
