@@ -197,9 +197,9 @@ u {
 			</tr>
 			<tr>
 				#if ($isZonal)
-					<th bgcolor="#6d839b" class="title border left" colspan="4" style="text-align: center; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
+					<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
 				#else
-					<th bgcolor="#6d839b" class="title border left" colspan="3" style="text-align: center; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
+					<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
 				#end
 			</tr>
 		
@@ -318,9 +318,9 @@ u {
 			</tr>
 			<tr>
 				#if ($isZonal)
-					<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
+					<th bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
 				#else
-					<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
+					<th bgcolor="#6d839b" class="title border left" colspan="7" style="text-align: center; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
 				#end
 			</tr>
 		
@@ -423,24 +423,38 @@ u {
 				</tr>
 				<tr>
 					#if ($isZonal)
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="6" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
-							##$scLoiLoaItem.scRequestItem.itemDesc
-							#if ($scLoiLoaItem.itemSpecificationList != $null)
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" >
+							#if ($scLoiLoaItem.itemSpecificationList)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
-									$tpqSpec
-									<br/>
+									<table width="100%">
+										<tbody>
+											<tr>
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													$tpqSpec
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
 								#end
 							#else
 							     $scLoiLoaItem.scRequestItem.itemDesc
 							#end
 						</td>
 					#else
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="5" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
-							##$scLoiLoaItem.scRequestItem.itemDesc
-							#if ($scLoiLoaItem.itemSpecificationList != $null)
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" >
+							#if ($scLoiLoaItem.itemSpecificationList)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
-									$tpqSpec
-									<br/>
+									<table width="100%">
+										<tbody>
+											<tr>
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													$tpqSpec
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
 								#end
 							#else
 							     $scLoiLoaItem.scRequestItem.itemDesc
@@ -489,24 +503,38 @@ u {
 				</tr>
 				<tr>
 					#if ($isZonal)
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="6" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
-							##$scLoiLoaItem.scRequestItem.itemDesc
-							#if ($scLoiLoaItem.itemSpecificationList != $null)
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" >
+							#if ($scLoiLoaItem.itemSpecificationList)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
-									$tpqSpec
-									<br/>
+									<table width="100%">
+										<tbody>
+											<tr>
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													$tpqSpec
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
 								#end
 							#else
 							     $scLoiLoaItem.scRequestItem.itemDesc
 							#end
 						</td>
 					#else
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="5" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
-							##$scLoiLoaItem.scRequestItem.itemDesc
-							#if ($scLoiLoaItem.itemSpecificationList != $null)
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" >
+							#if ($scLoiLoaItem.itemSpecificationList)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
-									$tpqSpec
-									<br/>
+									<table width="100%">
+										<tbody>
+											<tr>
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													$tpqSpec
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									
 								#end
 							#else
 							     $scLoiLoaItem.scRequestItem.itemDesc
