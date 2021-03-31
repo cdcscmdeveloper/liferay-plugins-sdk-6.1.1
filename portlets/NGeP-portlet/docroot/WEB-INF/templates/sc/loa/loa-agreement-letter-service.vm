@@ -365,7 +365,11 @@ u {
 						</p>
 						
 						<p>
-							<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span>
+							#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
+								<span class="text_family">(g)	syarikat tuan gagal <span class="text_family_red"> * menyempurnakan perkhidmatan/ membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span>
+							#else
+								<span class="text_family">(g)	syarikat tuan gagal membekalkan barang/menyempurnakan perkhidmatan dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;  </span> 
+							#end
 						</p>
 						
 						<p>
