@@ -1493,7 +1493,18 @@ public class QTCloneBackingbean extends
 					if (!getManagedBean().isSubmit()) {
 						backingBean.retrievePmStateList();
 					}
+				}else{//25635_start
+					QuationTenderReqDTO reqDTO1 = new QuationTenderReqDTO();
+					// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+					reqDTO1.setQtdetail(getManagedBean().getQt());
+					QuationTenderResDTO res1DTO = detailSO
+							.retriveQTScheduleDetails(reqDTO1);
+					if(CollectionUtils.isEmpty(this
+								.getManagedBean().getScQtSampleSubmissionList())){
+					this.getManagedBean().setScQtSampleSubmissionList(
+							res1DTO.getSampleSubmissionResultBean());
 				}
+				}//25635_End
 			}
 			
 			
