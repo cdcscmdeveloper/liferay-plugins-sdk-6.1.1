@@ -413,8 +413,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	
 	private ScPrInquiry retrivePrInquiryByPrInquiryNo(String prInquiryNo) {
-		ScPrInquiry scPrInquiry = getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
-		return scPrInquiry;
+		//CR 28766: Static Code Analysis Start
+		//ScPrInquiry scPrInquiry = getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
+		//return scPrInquiry;
+		return getPrInquirySO().retrivePrInquiryByPrInquiryNo(prInquiryNo);
+		//CR 28766: Static Code Analysis End
 	}
 
 	private IPrInquirySO getPrInquirySO() {
@@ -422,10 +425,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 
 	private int calculateFinalOffSet(int currentPage) {
-
-		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
-
-		return offSet;
+		//CR 28766: Static Code Analysis Start
+		//int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+		//return offSet;
+		return (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
+		//CR 28766: Static Code Analysis End
 	}
 
 	public Integer getTabActiveIndex() {
@@ -487,27 +491,36 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
 
-						boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - End
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try{
 								processWorklistItemByTitle(worklistItemVO, face);
 								
 								processWorklistItemByTaskName(worklistItemVO, face);
 								
+								//CR 28766: Static Code Analysis Start
+								/*
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
-						    	   if (worklistItemVO.getDocStatus() != null
-											&& (ContractStatusConst.CR_PENDING_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() || 
-												ContractStatusConst.CR_PENDING_REVISION_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() )) {
+						    	   if (worklistItemVO.getDocStatus() != null && (ContractStatusConst.CR_PENDING_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() ||  ContractStatusConst.CR_PENDING_REVISION_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue() )) {
 						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.review.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   }
 						       }
 						       if(worklistItemVO.getTaskName().equals(CTProcessNameConst.REVISE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME)){
-						    	   if (worklistItemVO.getDocStatus() != null
-											&& ContractStatusConst.CR_PENDING_REVISION.intValue() == worklistItemVO.getDocStatus().intValue()) {
+						    	   if (worklistItemVO.getDocStatus() != null && ContractStatusConst.CR_PENDING_REVISION.intValue() == worklistItemVO.getDocStatus().intValue()) {
 						    		   worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   }
 						       }
-						       
+						       */
+								if (worklistItemVO.getTaskName().equals(CTProcessNameConst.REVIEW_CIRCULAR_CANCELLATION_RQUEST_HT_NAME) && (worklistItemVO.getDocStatus() != null && (ContractStatusConst.CR_PENDING_APPROVAL.intValue() == worklistItemVO .getDocStatus().intValue() || ContractStatusConst.CR_PENDING_REVISION_APPROVAL.intValue() == worklistItemVO.getDocStatus().intValue())) ) {
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.review.circular.cancellation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+								}
+								if (worklistItemVO.getTaskName().equals(CTProcessNameConst.REVISE_CIRCULAR_CANCELLATION_RQUEST_HT_NAME) && (worklistItemVO.getDocStatus() != null && ContractStatusConst.CR_PENDING_REVISION.intValue() == worklistItemVO.getDocStatus().intValue())) {
+									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));									
+								}
+								//CR 28766: Static Code Analysis End
+								
 						       processWorklistItemByDocType(worklistItemVO);
 						       
 							}catch(Exception ex){
@@ -604,7 +617,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if (responseDTO.getWorklistVO() != null) {
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-						boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+						//	Enhancement #28766 - End
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							try {
 								if (worklistItemVO.getTitle().matches("<")) {
@@ -641,9 +656,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						    		   	   sb.append(" ( ");
 								    	   sb.append(mofResDto.getCompanyName());
 								    	   sb.append(" ) ");
-								    	   if(viewGlpFlag && mofResDto.isGlp()) {
-								    		   sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-								    	   }
+								    	   //	Enhancement #28766 - Start
+								    	   //	if(viewGlpFlag && mofResDto.isGlp()) {
+								    	   //	sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+								    	   //	}
+								    	//	Enhancement #28766 - End
 						    	   }
 						    	   
 						        worklistItemVO.setTitle(sb.toString());
@@ -767,7 +784,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				if (responseDTO.getWorklistVO() != null) {
 
 					if(responseDTO.getWorklistVO().getWorklistItem()!= null) {
-						boolean viewGlpFlag = viewGlpFlag();
+//						Enhancement #28766 - Start
+						//	boolean viewGlpFlag = viewGlpFlag();
+			    	   //	Enhancement #28766 - End
 						
 						java.util.Collections.sort(responseDTO.getWorklistVO().getWorklistItem(), 
 								new java.util.Comparator<WorklistItemVO>() {
@@ -1020,15 +1039,17 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		return false;
 	}
 
-	private boolean viewGlpFlag() {
-		FacesScopes fs = new FacesScopes();
-		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
-				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
-				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
-			return true;
-		}
-		return false;
-	}
+	//	Enhancement #28766 - Start
+	//	private boolean viewGlpFlag() {
+	//		FacesScopes fs = new FacesScopes();
+	//		if (fs.hasRoleUser(RoleCode.UPS_APPROVER.value())
+	//				|| fs.hasRoleUser(RoleCode.UPS_PO.value())
+	//				|| fs.hasRoleUser(RoleCode.UPS_SDO.value())) {
+	//			return true;
+	//		}
+	//		return false;
+	//	}
+	//	Enhancement #28766 - End
 
 	public boolean isSdoWithMultipleRoles() {
 		return sdoWithMultipleRoles;
@@ -1348,9 +1369,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sb.append(" ( ");
 				sb.append(mofResDto.getCompanyName());
 				sb.append(" ) ");
-				if (viewGlpFlag() && mofResDto.isGlp()) {
-					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-				}
+//				Enhancement #28766 - Remove GLP flag - Start
+//				if (viewGlpFlag() && mofResDto.isGlp()) {
+//					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+//				}
+//				Enhancement #28766 - Remove GLP flag - End
 			}
 
 			worklistItemVO.setTitle(sb.toString());
