@@ -85,32 +85,33 @@ public class MolPayServlet extends HttpServlet {
 		String skey = req.getParameter("skey");
 		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
 		
-		// #26307 start 
-		String cardType = null; 
-		String extraP = req.getParameter("extraP"); 
-		JSONObject obj;
-		try {
-			obj = new JSONObject(extraP);
-			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null;
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-  
-		log.info("nbcb:" + nbcb); 
-		log.info("orderId: " + orderId); 
-		log.info("tranID: " + tranID); 
-		log.info("status:" + status); 
-		log.info("domain:" + domain); 
-		log.info("amount :" + amount); 
-		log.info("currency:" + currency); 
-		log.info("appcode: " + appcode); 
-		log.info("paydate:" + paydate); 
-		log.info("skey:" + skey); 
-		log.info("error_code:" + errorCode); 
-		log.info("error_desc:" + errorDesc); 
-		log.info("channel:" + channel); 
-		log.info("extraP:" + extraP); 
-		// #26307 end 
+		// #26307 start
+		String cardType = null;
+		String extraP = req.getParameter("extraP");
+		
+		log.info("nbcb:" + nbcb);
+		log.info("orderId: " + orderId);
+		log.info("tranID: " + tranID);
+		log.info("status:" + status);
+		log.info("domain:" + domain);
+		log.info("amount :" + amount);
+		log.info("currency:" + currency);
+		log.info("appcode: " + appcode);
+		log.info("paydate:" + paydate);
+		log.info("skey:" + skey);
+		log.info("error_code:" + errorCode);
+		log.info("error_desc:" + errorDesc);
+		log.info("channel:" + channel);
+		log.info("extraP:" + extraP);
+		
+		JSONObject obj; 
+		try { 
+			obj = new JSONObject(extraP); 
+			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
+		} catch (JSONException e) { 
+			e.printStackTrace(); 
+		} 
+		// #26307 end  
 
 		if(nbcb != null){
 			Long ordId = Long.valueOf(orderId);

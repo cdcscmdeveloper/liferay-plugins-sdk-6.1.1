@@ -187,33 +187,32 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		String channel = httpServletRequest.getParameter("channel") != null ? httpServletRequest.getParameter("channel") : null;
 		String errorCode = httpServletRequest.getParameter("error_code") != null ? httpServletRequest.getParameter("error_code") : null;
 		String errorDesc = httpServletRequest.getParameter("error_desc") != null ? httpServletRequest.getParameter("error_desc") : null;
-		// #26307 start 
-		String cardType = null;
-		String extraP = httpServletRequest.getParameter("extraP"); 
-		JSONObject obj;
-		try {
-			obj = new JSONObject(extraP);
-			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null;
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		// #26307 end 
-
-
-		log.info("orderId: " + orderId);
-		log.info("tranID: " + tranID);
-		log.info("status:" + status);
-		log.info("domain:" + domain);
-		log.info("amount :" + amount);
-		log.info("currency:" + currency);
-		log.info("appcode: " + appcode);
-		log.info("paydate:" + paydate);
-		log.info("skey:" + skey);
-		log.info("error_code:" + errorCode);
-		log.info("error_desc:" + errorDesc);
-		log.info("channel:" + channel);
-		// #26307
-		log.info("extraP:" + extraP);
+		// #26307 start
+		String cardType = null; 
+		String extraP = httpServletRequest.getParameter("extraP");
+		
+		log.info("orderId: " + orderId); 
+		log.info("tranID: " + tranID); 
+		log.info("status:" + status); 
+		log.info("domain:" + domain); 
+		log.info("amount :" + amount); 
+		log.info("currency:" + currency); 
+		log.info("appcode: " + appcode); 
+		log.info("paydate:" + paydate); 
+		log.info("skey:" + skey); 
+		log.info("error_code:" + errorCode); 
+		log.info("error_desc:" + errorDesc); 
+		log.info("channel:" + channel); 
+		log.info("extraP:" + extraP); 
+		
+		JSONObject obj; 
+		try { 
+			obj = new JSONObject(extraP); 
+			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
+		} catch (JSONException e) { 
+			e.printStackTrace(); 
+		} 
+		// #26307 end
 
 		Long ordId = Long.valueOf(orderId);
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
