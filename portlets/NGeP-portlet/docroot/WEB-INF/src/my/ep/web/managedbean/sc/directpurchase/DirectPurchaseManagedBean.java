@@ -589,4 +589,22 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setDpmDocumentDataModel(IPagingDataModel<Object[]> dpmDocumentDataModel) {
 		this.dpmDocumentDataModel = dpmDocumentDataModel;
 	}*/
+	
+	//Start - #25396
+	public boolean isDisableMinistryPtjLov() {
+		return disableMinistryPtjLov; 
+	}
+	
+	public void setDisableMinistryPtjLov(boolean disableMinistryPtjLov) {
+		this.disableMinistryPtjLov = disableMinistryPtjLov;
+	}
+	
+	public boolean isShowMinistryPtjField() {
+		return showMinistryPtjField; 
+	}
+	
+	public void setShowMinistryPtjField(boolean showMinistryPtjField) {
+		this.showMinistryPtjField = showMinistryPtjField;
+	}
+	//End - #25396
 }
