@@ -709,7 +709,10 @@ public class SpecificationBackingBean extends
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 				.equalsIgnoreCase(financialCheckList.get(0).getDefinationType()
 						.getParameterCode())){
-			checkSpecZoneQtyMaxScore(financialCheckList.get(0));
+			if(this.getManagedBean().getQt().isZonal()){
+				checkSpecZoneQtyMaxScore(financialCheckList.get(0));
+					
+			}
 			
 		}
 		//#25138 Reendorsed - set max score for wip data - end
