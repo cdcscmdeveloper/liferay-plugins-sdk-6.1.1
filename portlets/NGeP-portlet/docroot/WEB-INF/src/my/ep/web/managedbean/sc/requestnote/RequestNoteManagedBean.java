@@ -341,6 +341,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean pidValidityExpired = false;
 	//12183 - End
 	
+	// Refactor #18 - Start.
+	private String docStatus = "";
+	// Refactor #18 - End.
+	
 	// #28789 - start
 	private String normalAndTierPriceStr = StringUtils.EMPTY;
 	private List<CmPricing> completeCmPricingList;
