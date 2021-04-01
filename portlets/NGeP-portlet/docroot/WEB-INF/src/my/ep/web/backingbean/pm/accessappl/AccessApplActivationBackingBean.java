@@ -25,7 +25,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAccessAppl;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.logging.LogKey; //#30599
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -59,32 +58,13 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	private static final String ACCESS_APPL_ACTIVATION_PAGE = "/xhtml/pm/accessappl/accessApplicationActivation.xhtml";
 	private static final String ACCESS_APPL_OUTPUT_MSG = "/xhtml/pm/accessappl/outputMsg.xhtml";
 	
-	public AccessApplActivationBackingBean(){
-		//start #30599 add log key
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser != null && pmUser.getUserId() != null) {
-			new LogKey(pmUser.getUserId()); 
-		}else{
-			new LogKey(1L); 
-		}
-		//end #30599
-	}
+	public AccessApplActivationBackingBean(){}
 	
 	/**
 	 * Pre Render 
 	 */
 	public void preRenderActivation(){
 		log.info("preRenderActivation");
-
-		//start #30599 add log key
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser != null && pmUser.getUserId() != null) {
-			new LogKey(pmUser.getUserId()); 
-		}else{
-			new LogKey(1L); 
-		}
-		//end #30599
-	
 		renewSesionObject();
 		IAccessApplSO accessApplSO = null;
 		try {
@@ -229,13 +209,6 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	public String activateAccount() {
 		log.info("activateAccount");
 		//validateActivationAccessAppl();
-		
-		//start #30599 add log key
-		Long userId = new LogKey().getUserId();
-		if (userId != null) {
-			new LogKey(1L); 
-		}
-		//end #30599
 		
 		StringBuilder keyStr = new StringBuilder();
 		keyStr.append(getManagedBean().getAccessAppl().getAccessApplId());
