@@ -169,12 +169,12 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>
-<!-- FARID START add condition at disabled START-->		
+<!-- #21695 Farid start 1/4/2021-->	
 		<h:panelGroup id="ansPG">
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
 			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				rendered="#{isAnswerTypeText}" required="false" rows="1" 
-				label="#{lbl[answerlbl]}" disabled="#{!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
+				label="#{lbl[answerlbl]}" disabled="#{(!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
@@ -183,7 +183,7 @@
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
@@ -192,44 +192,36 @@
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}"
-				disabled="#{!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal}"> 
+				label="#{lbl[answerlbl]}" 
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
-<!-- FARID START add condition at disabled END-->				
-<!-- FARID START -->
-			<h:panelGroup layout="div" rendered="#{templateSpecBean.specMaster ne null and 
-												   templateSpecBean.specMaster.scQtDoc ne null and 
-												   templateSpecBean.specMaster.scQtDoc.scQt ne null and 
+<!-- #21695 Farid end 1/4/2021-->				
+<!-- #21695 Farid start 1/4/2021-->
+			<h:panelGroup layout="div" rendered="#{!isSqSpec and 
+														
 												   !isSpecTypeFinancial}">
 				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);" 
 						value="#{tplSpecAnswer.offer}"
-						rendered="#{templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
+						rendered="#{!isSqSpec and templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
 						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and
 						!isSpecTypeFinancial and isQuestionTypeItem}" 
 						label="#{lbl[answerlbl]}">
-						 <f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
-						  <c:choose>
-<!-- FARID START 29/9/2020-->						  
-						  	<c:when test="#{!isSqSpec and !isZonal}">
-						  			 <p:ajax event="change" partialSubmit="true" process="@form" 
-									 update="@form"
-					                 listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
-						  	</c:when>
-<!-- FARID END 29/9/2020-->							  	
-						  	<c:otherwise>
-						  		<p:ajax event="change" partialSubmit="true" process="@this" 
-							 	update="@this,ansPG"
-			                 	listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>
-						  	</c:otherwise>
-						  </c:choose>
-					</h:selectOneMenu>
+					<f:selectItems value="#{templateSpecBackingBean.offerDetails}"></f:selectItems>
+									  
+					<p:ajax event="change" partialSubmit="true" process="@form" update="@form"
+						
+					     		listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}"/>					  							  	
+	   
+				</h:selectOneMenu>
+					
 		<c:if test="#{isZonal}">		
 			<h:panelGroup layout="div" 
 			rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
@@ -239,9 +231,9 @@
 			</h:panelGroup>	
 		</c:if>					
 		</h:panelGroup>	
-
-					
-<!-- END -->	
+<!-- #21695 Farid end 1/4/2021-->				
+	 
+<!-- END -->
 		
 		</h:panelGroup>
 	</p:column>
