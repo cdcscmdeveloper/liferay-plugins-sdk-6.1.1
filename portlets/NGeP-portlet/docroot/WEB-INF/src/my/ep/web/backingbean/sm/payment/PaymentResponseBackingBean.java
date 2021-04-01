@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -299,14 +301,19 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					} else if (cardType.equalsIgnoreCase("Debit")) {
 						cardType = "DC";
 					} 
+					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
 					if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) { 
-						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode( 
-								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_CREDIT); 
-						pyPayment.setCardType(cards); 
+						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
+						reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_CREDIT);
+						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+						PmParameter cards = resPmDTO.getPmParameter();
+						pyPayment.setCardType(cards);	 
 					} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
-						PmParameter cards = ParameterHelper.getInstance().getParameterByTypeAndCode( 
-								ParameterTypeConst.CARD_TYPES, ParameterConst.CARD_TYPES_DEBIT); 
-						pyPayment.setCardType(cards); 
+						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
+						reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_DEBIT);
+						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+						PmParameter cards = resPmDTO.getPmParameter();
+						pyPayment.setCardType(cards);	
 					} 
 				} 
 				// #26307 end 
