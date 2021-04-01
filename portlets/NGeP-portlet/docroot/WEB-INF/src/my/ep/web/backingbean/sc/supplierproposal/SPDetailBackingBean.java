@@ -5195,6 +5195,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO
 					.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
 			validateFinacialProposalAttachments(true);//#28792
+			//#21695 Farid start 1/4/2021
+			validateTechSuppNotOfferAll();
+			//#21695 Farid end 1/4/2021			
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		} finally {
 			proposalSO = null;
@@ -5986,5 +5989,35 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			}
 			
 		}
-		//Bug #30073 End		
+		//Bug #30073 End
+
+//#21695 Farid start 1/4/2021
+public void validateTechSuppNotOfferAll() {
+
+		ScQt scQt = this.getManagedBean().getQt();
+		final Long qtId = scQt.getQtId();
+		
+		if (scQt.isPartial() && scQt.isZonal()) {
+			List<TplSpecAnswer> answerList = this.getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList();
+			ITemplateSpecSO templateSpecSO = null;
+			templateSpecSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setSupplier(smSupplier);
+			reqDTO.setQtId(qtId);
+			reqDTO.setAnswerList(answerList);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.checkTecNotOfferAllSupProposal(reqDTO);							 
+		}
+	}
+//#21695 Farid end 1/4/2021		
 }
