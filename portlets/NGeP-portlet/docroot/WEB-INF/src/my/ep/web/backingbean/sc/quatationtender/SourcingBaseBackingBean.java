@@ -56,7 +56,6 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -67,13 +66,11 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -92,13 +89,10 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sc.directpurchase.QuoteReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
-import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
@@ -257,18 +251,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
-	// Redmine 25396: remove duplication option view by adding new drop down field
-	/** 
-	* get faces scopes
-	* 
-	* @return FacesScopes
-	*/
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	// end of 25396
-		
 	/**
 	 * To populate details into ScAttachment instance.
 	 * 
@@ -3341,53 +3323,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	    }
 	}
 
-	// Redmine 25396: remove duplication option view by adding new drop down field
-	/**
-	 * Checks if is supplier role.
-	 *
-	 * @return true, if is supplier role
-	 */
-	public boolean hasSupplierRole(){
-		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
-			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-	
-	/**
-	 * Check is it login user is Government User
-	 * 
-	 * @return true, if user is Government User
-	 */
-	protected boolean hasGovernmentUserRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())) {
-			return true;
-		} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-			return true;
-		} else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())) {
-			return true;
-		} else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())) {
-			return true;
-		} else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	// end of 25396
-	
 }
