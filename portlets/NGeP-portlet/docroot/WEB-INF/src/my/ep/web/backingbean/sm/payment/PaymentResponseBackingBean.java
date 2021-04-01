@@ -302,16 +302,21 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						cardType = "DC";
 					} 
 					ParameterReqDTO reqPmDTO = new ParameterReqDTO();
+					log.info("cardType===="+cardType);
 					if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) { 
+						log.info("cardType====enter CC"+cardType);
 						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
 						reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_CREDIT);
 						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+						log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
 						PmParameter cards = resPmDTO.getPmParameter();
 						pyPayment.setCardType(cards);	 
 					} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
+						log.info("cardType====enter DC"+cardType);
 						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
 						reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_DEBIT);
 						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+						log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
 						PmParameter cards = resPmDTO.getPmParameter();
 						pyPayment.setCardType(cards);	
 					} 
