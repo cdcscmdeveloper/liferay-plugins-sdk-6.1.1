@@ -229,14 +229,7 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 	public String activateAccount() {
 		log.info("activateAccount");
 		//validateActivationAccessAppl();
-		
-		//start #30599 add log key
-		Long userId = new LogKey().getUserId();
-		if (userId != null) {
-			new LogKey(1L); 
-		}
-		//end #30599
-		
+				
 		StringBuilder keyStr = new StringBuilder();
 		keyStr.append(getManagedBean().getAccessAppl().getAccessApplId());
 		keyStr.append(activationKey);
@@ -247,6 +240,15 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 			log.info("success");
 			IAccessApplSO accessApplSO = null;
 			try{
+				//start #30599 add log key
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				if (pmUser != null && pmUser.getUserId() != null) {
+					new LogKey(pmUser.getUserId()); 
+				}else{
+					new LogKey(1L); 
+				}
+				//end #30599
+
 				PmAccessAppl accessAppl = getManagedBean().getAccessAppl();
 				accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
