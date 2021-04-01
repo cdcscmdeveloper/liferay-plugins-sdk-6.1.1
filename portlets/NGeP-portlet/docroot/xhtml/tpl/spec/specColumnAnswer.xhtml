@@ -174,7 +174,7 @@
 			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
 			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
 				rendered="#{isAnswerTypeText}" required="false" rows="1" 
-				label="#{lbl[answerlbl]}" disabled="#{(!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				label="#{lbl[answerlbl]}" disabled="#{(!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
@@ -183,7 +183,7 @@
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				label="#{lbl[answerlbl]}" disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
@@ -192,14 +192,14 @@
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}"
-				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and  isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="false"
 				label="#{lbl[answerlbl]}" 
-				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer) and !tplSpecAnswer.offer)}"> 
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
@@ -226,7 +226,9 @@
 			<h:panelGroup layout="div" 
 			rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
 						templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and
-						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and isZonal}">	
+						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and isZonal
+						and isQuestionTypeItem}">
+						
 							<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
 			</h:panelGroup>	
 		</c:if>					
