@@ -151,7 +151,8 @@
 							disabled="#{receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmCancel or receivedNoteBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
 							rendered="#{!receivedNoteBackingBean.managedBean.isItemTypeProduct()}"
 							value="#{receivedNoteBackingBean.managedBean.selectedItem.receivedAmt}">
-							<p:ajax event="blur" update="selectedItemSection" process="@this"/>
+							<p:ajax event="blur" update="selectedItemSection" process="@this"
+								listener="#{receivedNoteBackingBean.validateReceivedAmt()}"/>
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> <p:inputText size="15" id="receivedAmt" style="text-align:right;"
