@@ -16,15 +16,20 @@
 	        </p:column>
 	        
 	       	<p:column>
-	       		
+		  
 				<p:selectBooleanCheckbox value="#{specOffer.tplSpecZoneOffer.offer}"
+				rendered ="#{specOffer.qty ne 0}"
 				disabled="#{specOffer.qty eq 0}">
+				<p:ajax event="change" partialSubmit="true" process="@form" 
+							update="@form"
+					 			listener="#{templateSpecBackingBean.offerCheckboxChange(question)}"/>
 				</p:selectBooleanCheckbox>
 	        </p:column>
 
         <f:facet name="footer"/>
     </p:dataTable>   
 </ui:composition>
+
 
 
 					
