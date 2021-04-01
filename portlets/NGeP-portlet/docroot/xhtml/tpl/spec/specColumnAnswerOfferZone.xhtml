@@ -10,26 +10,28 @@
     <p:dataTable var="specOffer" id="specZoneTbl" rowIndexVar="rowIndex" 
     	value="#{question.tplSpecZoneQties}" 
      	rendered="#{isQuestionTypeItem and !isSpecTypeFinancial and isZonal}">
-  
-	        <p:column headerText="#{lbl['lbl.tpl.spec.content.estimation.zone.name']}">
+  			<ui:param name="renderZone" value="#{(supplierProposalDetailBackingBean.evaluateZonelistSupp(specOffer))}"/>
+  			<f:facet name="header">
+  			#{lbl['lbl.tpl.spec.content.estimation.zone.name']}
+  			</f:facet>
+
+	        <p:column rendered="#{renderZone}">
 	        	<h:outputText value="#{specOffer.tplSpecZoneDtl.zoneName}" />
 	        </p:column>
 	        
-	       	<p:column>
-		  
+	       	<p:column 
+	       		rendered="#{renderZone}">
 				<p:selectBooleanCheckbox value="#{specOffer.tplSpecZoneOffer.offer}"
-				rendered ="#{specOffer.qty ne 0}"
+				rendered ="#{(specOffer.qty ne 0)}"
 				disabled="#{specOffer.qty eq 0}">
-				<p:ajax event="change" partialSubmit="true" process="@form" 
+				<p:ajax event="change" partialSubmit="true" process="@this" 
 							update="@form"
 					 			listener="#{templateSpecBackingBean.offerCheckboxChange(question)}"/>
 				</p:selectBooleanCheckbox>
 	        </p:column>
-
-        <f:facet name="footer"/>
+		<f:facet name="footer"/>
     </p:dataTable>   
 </ui:composition>
-
 
 
 					
