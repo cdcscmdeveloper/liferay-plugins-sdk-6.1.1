@@ -200,17 +200,22 @@ public class MolPayServlet extends HttpServlet {
 						} else if (cardType.equalsIgnoreCase("Debit")) {
 							cardType = "DC";
 						} 
+						log.info("cardType===="+cardType);
 						ParameterReqDTO reqPmDTO = new ParameterReqDTO();
-						if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) {							
+						if (cardType.equals(ParameterConst.CARD_TYPES_CREDIT)) {	
+							log.info("cardType====enter CC"+cardType);
 							reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
 							reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_CREDIT);
 							ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+							log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
 							PmParameter cards = resPmDTO.getPmParameter();
 							smPayment.setCardType(cards);											
-						} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {							
+						} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {		
+							log.info("cardType====enter DC"+cardType);
 							reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
 							reqPmDTO.setParameterCode(ParameterConst.CARD_TYPES_DEBIT);
 							ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
+							log.info("cardType====enter DC result "+resPmDTO.getPmParameter());
 							PmParameter cards = resPmDTO.getPmParameter();
 							smPayment.setCardType(cards);														
 						} 
