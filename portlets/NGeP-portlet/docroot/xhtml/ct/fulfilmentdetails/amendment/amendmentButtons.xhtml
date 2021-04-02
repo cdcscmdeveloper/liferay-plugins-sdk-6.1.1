@@ -7,21 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<style>
-		.myProfile-title {
+		.disciplinaryNotifyCss {
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 12px;
 			font-weight: bold;
-			color: #000;
+			color:#0000FF;
+			height:32px;
+			vertical-align: middle;
 			margin: 10px;
+			background-color:#CCE6FF;
 		}
-		
-		.myProfile-text {
-			font-family: Arial, Helvetica, sans-serif;
-			font-size: 12px;
-			color: #000;
+		.disciplinaryNotifyCssAlign {
 			margin: 10px;
-			word-wrap: break-word;
-			padding: 3px;
 		}
 	</style>
 	
@@ -36,9 +33,10 @@
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
 
-		<table style="width: 100%;">
+		<table style="width: 70%;">
 			<tr>
-				<td colspan="2" valign="top" class="myProfile-title" style="color:blue;">
+				<td valign="top" class="disciplinaryNotifyCss">
+					<div class="disciplinaryNotifyCssAlign">
 					<h:outputText rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}" 
 					value="#{amendmentBackingBean.managedBean.disciplinaryActionMsg}"/>
 						
@@ -46,13 +44,16 @@
 						rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
 						action="#{amendmentBackingBean.onViewDisciplinaryAction}" 
 						process="@this" partialSubmit="true" update=":form">
-						<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" styleClass="warning" /></u>
+						<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;"/></u>
 					</p:commandLink><p:spacer width="2"/>
 						
 					<h:outputText rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{lbl['lbl.sm.supplier.to.view.disc.action.details']}"/>
+					</div>
 				</td>
 			</tr>
+		</table>
+		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" onstart="blockWidget.show();"
