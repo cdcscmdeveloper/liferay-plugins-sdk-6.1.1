@@ -382,11 +382,20 @@ public class SelfRequestSupplierAdminBackingBean extends
 								SmCommonUtil.getMessage(mofStatusMsg, null)));
 			} else {
 				// set mof account message status
-				SmMofAccount mofAcc = getManagedBean().getSupplier()
-						.getSmMofAccounts().get(0);
-				
-				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || mofAcc
-						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
+				//#29612-start
+				SmMofAccount mofAcc = null;
+				for (SmMofAccount acc : getManagedBean().getSupplier().getSmMofAccounts()) {
+					if (acc.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+						mofAcc = acc; 
+						break;
+					}
+				}
+				if (mofAcc == null) {
+					mofAcc = getManagedBean().getSupplier().getSmMofAccounts().get(0);
+				}//#29612-end
+			
+				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
+						|| mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
 						&& mofAcc.getExpDate() != null) {
 					Calendar c = Calendar.getInstance();
 					c.setTime(mofAcc.getExpDate());
