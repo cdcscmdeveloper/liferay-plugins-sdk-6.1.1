@@ -40,6 +40,7 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -61,6 +62,8 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
@@ -70,6 +73,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -91,6 +95,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -114,12 +119,16 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+//#21695 farid start 2/4/2021
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
+//#21695 farid end 2/4/2021														
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -1133,11 +1142,11 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
+//#21695 farid IN MONITORING START	
 								
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
 								}	//#28785-End
-//#21695 farid IN MONITORING START	
 								
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
@@ -1915,6 +1924,7 @@ public class SPDetailBackingBean extends
 	 * @param isCompleted
 	 * @return navigation path
 	 */
+	@SuppressWarnings("unused")
 	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		validateProposalCloseTime(this.getManagedBean().getQt());
@@ -2611,11 +2621,29 @@ public class SPDetailBackingBean extends
 		templateSpecBackingBean.getManagedBean().setDocType(
 				ParameterConst.DOCTYPE_QUOTATION);
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
-		//#21695 Farid Start
+//#21695 Farid Start 2/4/2021
 		if (scQT.isZonal()) {
 		populateZoneDetailIntoTreeNode(templateSpecBean);
+		
+		IQTProposalSO proposalSO = null;
+		proposalSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		ScQt scQt = getManagedBean().getQt();
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setScQt(scQt);
+		reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
+		reqDTO.setQtId(scQt.getQtId());
+		// To retrieve financial specification details
+		ProposalResDTO resDTO = proposalSO
+				.retrieveTechnicalSpecZoneDtlsSupplier(reqDTO);
+		
+		List<TplSpecZoneDtl> zones = resDTO.getZones();
+		if (CollectionUtils.isNotEmpty(zones)) {
+			this.getManagedBean().setZones(zones);
+			
+			}
 		}
-		//#21695 Farid END
+//#21695 Farid end 2/4/2021
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
 	}
 
@@ -5168,6 +5196,9 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			proposalSO
 					.validateProposalDetailsBeforeSPkiSign(populateProposalDetailsTosave());
 			validateFinacialProposalAttachments(true);//#28792
+			//#21695 Farid start 1/4/2021
+			validateTechSuppNotOfferAll();
+			//#21695 Farid end 1/4/2021			
 			this.getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		} finally {
 			proposalSO = null;
@@ -5906,4 +5937,61 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			
 		}
 		//Bug #30073 End		
+
+//#21695 Farid start 1/4/2021
+public void validateTechSuppNotOfferAll() {
+
+		ScQt scQt = this.getManagedBean().getQt();
+		final Long qtId = scQt.getQtId();
+		
+		if (scQt.isPartial() && scQt.isZonal()) {
+			List<TplSpecAnswer> answerList = this.getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList();
+			ITemplateSpecSO templateSpecSO = null;
+			templateSpecSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setSupplier(smSupplier);
+			reqDTO.setQtId(qtId);
+			reqDTO.setAnswerList(answerList);
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.checkTecNotOfferAllSupProposal(reqDTO);							 
+		}
+	}
+//#21695 Farid end 1/4/2021		
+
+
+//#21695 Farid start 2/4/2021	
+	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
+		if(specQties!=null){
+			log.info("--->specQties " + specQties.getTplSpecZoneOffer().getSpecZoneOfferId());
+
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null) {
+						if (specZones.getSpecZoneId().equals(
+								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+								for(TplSpecZoneQty specQtyZoneOffer : specQties.getTplSpecZoneOffer().getTplSpecQuestion().getTplSpecZoneQties()){
+									if(specQties.getSpecZoneQtyId().equals(specQtyZoneOffer.getSpecZoneQtyId())){
+										specQtyZoneOffer.setOffer(false);
+									}
+								}
+							return true;
+						}
+					}
+				}
+			}
+			specQties.getTplSpecZoneOffer().setOffer(true);
+		}
+		return false;
+	}
+//#21695 Farid end 2/4/2021	
 }
