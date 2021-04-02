@@ -191,14 +191,16 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("error_desc:" + errorDesc); 
 		log.info("channel:" + channel); 
 		log.info("extraP:" + extraP); 
+		if(extraP!=null){
+			JSONObject obj; 
+			try { 
+				obj = new JSONObject(extraP); 
+				cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
+			} catch (JSONException e) { 
+				e.printStackTrace(); 
+			} 
+		}
 		
-		JSONObject obj; 
-		try { 
-			obj = new JSONObject(extraP); 
-			cardType = obj.getString("cctype") != null ? obj.getString("cctype") : null; 
-		} catch (JSONException e) { 
-			e.printStackTrace(); 
-		} 
 		// #26307 end
 
 
@@ -217,7 +219,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		// #26307
 		log.info("extraP:" + extraP);
 
-		Long ordId = Long.valueOf(orderId);
+		Long ordId = null;
+		if(orderId!= null){
+			ordId = Long.valueOf(orderId);
+		}	
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setPaymentId(ordId);
