@@ -9136,14 +9136,24 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmSupplier(), getManagedBean()
 							.getSupplierRemarks(), getManagedBean()
 							.getApplnApprovalRemarks(), reqDTO);
-
-			if (StringUtils.isNotBlank(getManagedBean()
+			
+			// #29664 - start
+			/*if (StringUtils.isNotBlank(getManagedBean()
 					.getApplnApprovalRemarks())) {
 				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
 						.getSmAppl().getApplId(),
 						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
 						getManagedBean().getApplnApprovalRemarks());
+			}*/
+			if (StringUtils.isNotBlank(getManagedBean()
+					.getApplnApprovalRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
+						.getSmAppl().getApplId(),
+						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
+						getManagedBean().getApplnApprovalRemarks(), getManagedBean().getRoleCode());
 			}
+			// #29664 - end
+			
 			if (getManagedBean().isOverLappedCategoryExists()
 					&& StringUtils.isNotBlank(getManagedBean()
 							.getApplnOverLapRemarks())) {
