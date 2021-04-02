@@ -3543,20 +3543,28 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// qt.setMitiApproval(true);
 			}
 
+			Long currentStatus = qt.getQtStatus().getStatusId();
 			//#30477 Start Vinod
-			for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
-				if((committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION)
-						|| committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
-						|| committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.QT_REVISION_PUBLICATION))
-						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
-					for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
-						for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
-							if(approverSetting.getPmUser().getRecordStatusFlg() == 0
-									&& committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION)){
-								throw new EpException(MessageConst.ERROR_775171);
-							}else if(approverSetting.getPmUser().getRecordStatusFlg() == 0
-									&& (committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
-									|| committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.QT_REVISION_PUBLICATION)))	{
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
+					if(committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION)
+							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
+								if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
+									throw new EpException(MessageConst.ERROR_775171);
+								}
+							}
+						}
+					}
+				}
+			}
+			if(currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))	{
+				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+					for(ScQtApprovalRequest approverReq : approval.getScQtApprovalDtls()){
+						for(ScQtApproverSettings approverSetting : approverReq.getScQtApproval().getApproverSettings()){
+							if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
 								throw new EpException(MessageConst.ERROR_775172);
 							}
 						}
@@ -3564,7 +3572,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			//#30477 End Vinod
-			Long currentStatus = qt.getQtStatus().getStatusId();
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
 					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
