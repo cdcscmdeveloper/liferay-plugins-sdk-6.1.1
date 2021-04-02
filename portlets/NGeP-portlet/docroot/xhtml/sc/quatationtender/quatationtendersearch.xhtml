@@ -125,13 +125,12 @@
 								rendered="#{scQt.actionRender[0]}"
 								icon="ui-icon-view" action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}" 
 								partialSubmit="true" process="@this"/>
-							<!-- 9019- START -->
+							
 							<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
-								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and scQt.qtStatus.statusId ne QTStatusConst.QT_PENDING_QT_SUBMISSION}"
+                               rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and scQt.qtStatus.statusId ne QTStatusConst.QT_PENDING_QT_SUBMISSION}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
-								<!-- 9019- END -->
 							<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" 
 								rendered="#{scQt.actionRender[2]}"
