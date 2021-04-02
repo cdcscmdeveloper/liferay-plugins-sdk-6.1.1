@@ -3559,8 +3559,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 				}
 			}
-			if(currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
-					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))	{
+			if((currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
+					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
 						for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
 							if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
 								throw new EpException(MessageConst.ERROR_775172);
