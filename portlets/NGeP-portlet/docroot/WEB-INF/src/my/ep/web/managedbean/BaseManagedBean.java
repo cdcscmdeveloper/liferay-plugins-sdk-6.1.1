@@ -159,7 +159,11 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerC;
 	private String termAndConditionCheckOwnerChangeRole;
 	// end #29956
-
+	
+	//14685 - START
+	private boolean showMessage;
+	//14685 - END
+	
 	// 27346
 	private StreamedContent downloadfile;
 
@@ -1004,6 +1008,16 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisplayMessageEmp(String displayMessageEmp) {
 		this.displayMessageEmp = displayMessageEmp;
 	}
+	
+	//14685 - START
+	public boolean isShowMessage() {
+		return showMessage;
+	}
+
+	public void setShowMessage(boolean showMessage) {
+		this.showMessage = showMessage;
+	}
+	//14685 - END
 }
 
 // ***25201
