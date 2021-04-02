@@ -571,6 +571,8 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		scQt.setCircularVer(copyScqt.getCircularVer());
 		scQt.setItemGroup(copyScqt.getItemGroup());
 		scQt.setQtTitle(copyScqt.getQtTitle());
+        //9019 added for disable mandatory checking in QT while clone
+		scQt.setCloned(true);
 		scQt.setProcurementMode(copyScqt.getProcurementMode());
 		scQt.setPartial(copyScqt.isPartial());
 		BigDecimal tmpExpectedIntendedPrice = QtDetailsSO
