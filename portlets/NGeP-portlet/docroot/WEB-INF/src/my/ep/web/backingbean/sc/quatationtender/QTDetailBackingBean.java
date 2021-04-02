@@ -3468,6 +3468,31 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			//#30477 Start Vinod
+			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+				for(ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()){
+					if(committee.getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CMT_PENDING_REVISION)
+							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
+							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
+								if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
+									throw new EpException(MessageConst.ERROR_775171);
+								}
+							}
+						}
+					}
+				}
+			}
+			if((currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))
+					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT))	{
+						for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
+							if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
+								throw new EpException(MessageConst.ERROR_775172);
+							}
+						}
+			}
+			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
 					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
