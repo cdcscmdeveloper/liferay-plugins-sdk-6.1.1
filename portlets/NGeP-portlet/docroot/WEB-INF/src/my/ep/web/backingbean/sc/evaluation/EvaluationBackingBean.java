@@ -1496,7 +1496,10 @@ public class EvaluationBackingBean extends
 							"complianceTechnicalSupplier", resDTO
 									.getCheckList().getQtChecklistId(), null,
 							null, null));
-			retrieveComplianceUploadedProposalChecklist(this.getManagedBean().getQtProposalChecklist(), false);
+			if (null != this.getManagedBean().getCheckListType()
+					&& this.getManagedBean().getCheckListType().equalsIgnoreCase("F")) {
+				retrieveComplianceUploadedProposalChecklist(this.getManagedBean().getQtProposalChecklist(), false);
+			}
 			//#28786 bug - end
 
 			getManagedBean().setComplianceSummaryGenerated(false);
