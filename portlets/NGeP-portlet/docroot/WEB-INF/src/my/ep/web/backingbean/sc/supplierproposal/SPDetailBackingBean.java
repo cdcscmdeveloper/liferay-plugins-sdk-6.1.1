@@ -5563,6 +5563,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 						resultList = dataRes.getSmDisciplinaryActions();
 						List<String> catCodeList = null;
 						
+						// #30609 - Start.
+						for(SmDisciplinaryAction disciplinaryAction: resultList){
+							if(disciplinaryAction.isSuspendRegistration()) {
+								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
+								getManagedBean().setDisableUpdateProposal(true);
+								return true;
+							}
+						}
+						// #30609 - End.
+						
 						for(SmDisciplinaryAction disciplinaryAction: resultList){
 							if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
 									|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()

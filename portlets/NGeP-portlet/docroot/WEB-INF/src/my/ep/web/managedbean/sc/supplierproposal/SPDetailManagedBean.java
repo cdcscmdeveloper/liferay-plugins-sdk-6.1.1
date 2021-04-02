@@ -222,6 +222,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private boolean supplierBranchListDeleted = false; //#29729
 	private boolean isFinancialAttchment;//#28792
 	
+	// #30609 - Start.
+	private boolean disableUpdateProposal;
+	// #30609 - End.
+	
 	/**
 	 * Default Consructor
 	 */
@@ -1961,7 +1965,23 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setFinancialAttchment(boolean isFinancialAttchment) {
 		this.isFinancialAttchment = isFinancialAttchment;
 	}
-	
+
 	//#28792-End
+	
+	// #30609 - Start.
+	/**
+	 * @return the disableUpdateProposal
+	 */
+	public boolean isDisableUpdateProposal() {
+		return disableUpdateProposal;
+	}
+
+	/**
+	 * @param disableUpdateProposal the disableUpdateProposal to set
+	 */
+	public void setDisableUpdateProposal(boolean disableUpdateProposal) {
+		this.disableUpdateProposal = disableUpdateProposal;
+	}
+	// #30609 - End.
 	
 }
