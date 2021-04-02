@@ -10106,7 +10106,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			quationTenderReqDTO.setOutcome(BpmOutcomeConst.BPM_CANCEL);
 			ackMsg = MessageConst.INFO_700031;
-			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQT(quationTenderReqDTO);
+			QuationTenderResDTO quationTenderResDTO = detailSO.cancleQTForDraft(quationTenderReqDTO);
 
 			if (quationTenderResDTO.isSuccessful()) {
 				successMessage(ackMsg, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
