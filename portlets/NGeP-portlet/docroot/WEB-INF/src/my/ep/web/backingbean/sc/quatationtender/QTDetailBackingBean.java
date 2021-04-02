@@ -3561,15 +3561,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			if(currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION))	{
-				for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
-					for(ScQtApprovalRequest approverReq : approval.getScQtApprovalDtls()){
-						for(ScQtApproverSettings approverSetting : approverReq.getScQtApproval().getApproverSettings()){
+						for(ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()){
 							if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
 								throw new EpException(MessageConst.ERROR_775172);
 							}
 						}
-					}
-				}
 			}
 			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
