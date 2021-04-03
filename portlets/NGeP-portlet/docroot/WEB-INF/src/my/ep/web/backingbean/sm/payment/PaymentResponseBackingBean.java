@@ -300,6 +300,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 				}
 				// #26307 start 
+				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 				if (cardType != null) { 
 					if (cardType.equalsIgnoreCase("Credit")) {
 						cardType = "CC";
@@ -315,6 +316,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
 						log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
 						PmParameter cards = resPmDTO.getPmParameter();
+						pymtReqDTO.setCardType(cards);
+						pymtReqDTO.setCardTypeS(cardType);
 						pyPayment.setCardType(cards);	 
 					} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
 						log.info("cardType====enter DC"+cardType);
@@ -323,6 +326,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						ParameterResDTO resPmDTO = SmServiceLookup.getParameterSO().retrieveParameterByTypeAndCode(reqPmDTO);
 						log.info("cardType====enter CC result "+resPmDTO.getPmParameter());
 						PmParameter cards = resPmDTO.getPmParameter();
+						pymtReqDTO.setCardType(cards);
+						pymtReqDTO.setCardTypeS(cardType);
 						pyPayment.setCardType(cards);	
 					} 
 				} 
@@ -345,13 +350,13 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
-
+				log.info("Status Code : "+statusCode);
 				PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
 				pyPayment.setPmStatus(paymentStatus);
 
 				// updatePayment(smPayment,validPayment);
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+				
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 
