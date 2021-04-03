@@ -351,8 +351,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				smPaymentRes.setPaidAmt(txAmount);
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
 				log.info("Status Code : "+statusCode);
-				PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
-				pyPayment.setPmStatus(paymentStatus);
+				if(statusCode!= null){
+					PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
+					pyPayment.setPmStatus(paymentStatus);
+				}
+				
 
 				// updatePayment(smPayment,validPayment);
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
