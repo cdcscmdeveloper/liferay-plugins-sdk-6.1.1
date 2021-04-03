@@ -182,8 +182,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		List<PmUser> list1 = new ArrayList<PmUser>();
 		List<PmUser> list2 = new ArrayList<PmUser>();
 		UserGroupReqDTO reqDTO = new UserGroupReqDTO();
-		UserGroupReqDTO reqDTOCheckActive = new UserGroupReqDTO();//28857
-		BigDecimal isRemove = BigDecimal.ONE;//28857
 		
 		List<PmUser> pmUserList = new ArrayList<PmUser>();
 		if(approver != null){
@@ -212,22 +210,12 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 					list1.add(pmUser);
 				}
 			}
-			//28857-start
-			reqDTOCheckActive.setGroupId(groupId);
-			reqDTOCheckActive.setUserId(approver.getUserId());
-			UserGroupResDTO resDTOCheckActive = userGroupSO.checkApproverUserActive(reqDTOCheckActive);
-			isRemove = resDTOCheckActive.getCheckActive();
-			if(isRemove.equals(BigDecimal.ZERO)){
+			reqDTO.setGroupId(groupId);
+			reqDTO.setUserId(approver.getUserId());
+			UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
+			if(resDTO.getUserGroupUser()==null || (resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE)){
 				list2.remove(0);
-			}else{
-				reqDTO.setGroupId(groupId);
-				reqDTO.setUserId(approver.getUserId());
-				UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
-				if(resDTO.getUserGroupUser()==null || (resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE)){
-					list2.remove(0);
-				}
 			}
-			//28857-end
 			list2.addAll(list1);
 		}
 		return list2;

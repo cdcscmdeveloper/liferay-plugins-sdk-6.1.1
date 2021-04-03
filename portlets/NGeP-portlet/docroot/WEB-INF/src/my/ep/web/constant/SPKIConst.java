@@ -8,6 +8,4 @@ public class SPKIConst {
 	public static final int ERROR_PIN_BLOCKED = 51;
 	public static final int ERROR_INVALID_PIN = 50;
 	public static final int OPERATION_FAILED = 0;
-	//28683
-	public static final int CERT_EXPIRED = 99;
 }
