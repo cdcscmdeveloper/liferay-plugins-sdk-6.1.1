@@ -20,12 +20,14 @@
 				styleClass="BtnSpacing"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all"
-				onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				styleClass="BtnSpacing" onclick="blockWidget.show()"
 				oncomplete="blockWidget.hide()" 
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(true)}"
-				process="@all" partialSubmit="true" update="@all" />
+				process="@all" partialSubmit="true" update="@all"
+				disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 		</c:if>
 
 		<c:if test="#{'WF' eq docDefinationKey}">
@@ -34,13 +36,15 @@
 					styleClass="BtnSpacing" process="@all" partialSubmit="true"
 					update="@all" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
-					action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(false)}" />
+					action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(false)}" 
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
 					styleClass="BtnSpacing" process="@all" partialSubmit="true"
 					update="@all" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
-					action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(true)}" />
+					action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(true)}"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 			</c:if>
 			<c:if test="#{'CF' eq chkDefinationKey}">
@@ -48,26 +52,30 @@
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(false)}"
-					process="@all" partialSubmit="true" update="@all" />
+					process="@all" partialSubmit="true" update="@all"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(true)}"
-					process="@all" partialSubmit="true" update="@form" />
+					process="@all" partialSubmit="true" update="@form"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			</c:if>
 			<c:if test="#{'CH' eq chkDefinationKey}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(false)}"
-					process="@all" partialSubmit="true" update="@all" />
+					process="@all" partialSubmit="true" update="@all"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(true)}"
-					process="@all" partialSubmit="true" update="@all" />
+					process="@all" partialSubmit="true" update="@all"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			</c:if>
 
 			<c:if test="#{'AL' eq chkDefinationKey}">
@@ -75,24 +83,28 @@
 				<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					partialSubmit="true" update="@all" styleClass="BtnSpacing"
-					action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(false)}" />
+					action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(false)}"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@all"
 					partialSubmit="true" update="@all" styleClass="BtnSpacing"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(true)}" />
+					action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(true)}"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			</c:if>
 			<c:if test="#{'BS' eq chkDefinationKey}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveBankStatementAction(false)}"
-					partialSubmit="true" process="@all" update="@all" />
+					partialSubmit="true" process="@all" update="@all"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 				<p:commandButton value="#{lbl['lbl.btn.complete']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveBankStatementAction(true)}"
-					partialSubmit="true" process="@all" update="@all" />
+					partialSubmit="true" process="@all" update="@all"
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			</c:if>
 		</c:if>
 
