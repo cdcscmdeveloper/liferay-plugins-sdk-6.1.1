@@ -111,6 +111,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -2474,10 +2475,10 @@ public class SmApplicationUtil {
 				}
 				
 			}*/
-			if (managedBean
-					.getBusinessTypeVal()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
+			// 28466 - compare calculated total with paid up capital
+			if ((managedBean.getBusinessTypeVal().equalsIgnoreCase(
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT) || managedBean.getBusinessTypeVal()
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT))
 					&& appl.getSmCompanyBasic()
 							.getPaidUpCapital()
 							.compareTo(appl.getSmCompanyBasic().getTotalShare()) != 0) {
@@ -7392,6 +7393,34 @@ public class SmApplicationUtil {
 		reqDTO.setSmSupplierId(supplierId);
 		return personnelSO.isPersonnelCreatedDuringBasicAccount(reqDTO);
 	}
+	
+	/**
+	 * Assign the values and save new sm remarks.
+	 * 
+	 * @param docId
+	 *            - Long doc id
+	 * @param docType
+	 *            - the doc type
+	 * @param remarks
+	 *            - the remarks
+	 * @param string
+	 *            - role code
+	 */
+	// #29664 & #29663- start
+	public static void manageAndSaveNewSmRemarksWithRoleCode(Long docId, String docType, String remarks, String roleCode) {
+		System.out.println("manageAndSaveNewSmRemarksWithRoleCode | roleCode = " + roleCode);
+		SmRemark remark = new SmRemark();
+		remark.setDocId(docId);
+		remark.setDocType(docType);
+		remark.setRemark(remarks);
+		if (roleCode != null) {
+			PmRole role = new PmRole();
+			role.setRoleCode(roleCode);
+			remark.setPmRole(role);
+		}
+		saveSmRemarks(remark);
+	}
+	// #29664 & #29663 - end
 
 	/**
 	 * Assign the values and save new sm remarks.

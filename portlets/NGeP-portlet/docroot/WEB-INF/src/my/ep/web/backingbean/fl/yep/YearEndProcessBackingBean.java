@@ -190,7 +190,13 @@ public class YearEndProcessBackingBean extends
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
 					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED)
-					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)){
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_CANCELLED_BY_YEP)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.CO_PENDING_CANCELLATION_SUBMISSION)
+					||statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.PO_PENDING_CANCELLATION_SUBMISSION)){
 					
 					statusDescsYep.add(statusDesc);
 				}
@@ -515,7 +521,19 @@ public class YearEndProcessBackingBean extends
 				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_INVOICE)
 				||statusId.equals(FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL)
-				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)){
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH)
+				||statusId.equals(FulfilmentStatusConst.PENDING_SUPPLIER_ACK)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_FULFILMENT)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_FULFILMENT)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_CANCELLATION_SUBMISSION)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_CANCELLATION_SUBMISSION)
+				||statusId.equals(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY_1GFMAS)
+				||statusId.equals(FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY_1GFMAS)
+				){
 				
 				return true;
 			}

@@ -23,6 +23,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -343,6 +344,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	// Refactor #18 - Start.
 	private String docStatus = "";
 	// Refactor #18 - End.
+	
+	// #28789 - start
+	private String normalAndTierPriceStr = StringUtils.EMPTY;
+	private List<CmPricing> completeCmPricingList;
+	private List<CmPricing> filteredCmPricingList;
+	private boolean priceTypeStringFlag = Boolean.FALSE;
+	private boolean priceTypeTableFlag = Boolean.FALSE;
+	private boolean fromAndToQuantityFlag = Boolean.FALSE;
+	// #28789 - end
+	
+	//28878 - Start
+	private List<String> loginIdAssignees;
+	private Long purchaseRequestId;
+	//28878 - End
 	
     /**
      * Instantiates a new request note managed bean.
@@ -1994,4 +2009,83 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.docStatus = docStatus;
 	}
 	// Refactor #18 - End.
+	
+	
+	// #28789 - start
+	public String getNormalAndTierPriceStr() {
+		return normalAndTierPriceStr;
+	}
+
+	public void setNormalAndTierPriceStr(String normalAndTierPriceStr) {
+		this.normalAndTierPriceStr = normalAndTierPriceStr;
+	}
+
+	public List<CmPricing> getCompleteCmPricingList() {
+		return completeCmPricingList;
+	}
+
+	public void setCompleteCmPricingList(List<CmPricing> completeCmPricingList) {
+		this.completeCmPricingList = completeCmPricingList;
+	}
+
+	public List<CmPricing> getFilteredCmPricingList() {
+		return filteredCmPricingList;
+	}
+
+	public void setFilteredCmPricingList(List<CmPricing> filteredCmPricingList) {
+		this.filteredCmPricingList = filteredCmPricingList;
+	}
+	
+	public boolean isPriceTypeStringFlag() {
+		return priceTypeStringFlag;
+	}
+
+	public void setPriceTypeStringFlag(boolean priceTypeStringFlag) {
+		this.priceTypeStringFlag = priceTypeStringFlag;
+	}
+
+	public boolean isPriceTypeTableFlag() {
+		return priceTypeTableFlag;
+	}
+
+	public void setPriceTypeTableFlag(boolean priceTypeTableFlag) {
+		this.priceTypeTableFlag = priceTypeTableFlag;
+	}
+	
+	public boolean isFromAndToQuantityFlag() {
+		return fromAndToQuantityFlag;
+	}
+
+	public void setFromAndToQuantityFlag(boolean fromAndToQuantityFlag) {
+		this.fromAndToQuantityFlag = fromAndToQuantityFlag;
+	}
+	// #28789 - end
+	
+	//28878 - Start
+	public List<String> getLoginIdAssignees(){
+		return loginIdAssignees;
+	}
+	
+	public void setLoginIdAssignees(List<String> loginIdAssignees){
+		this.loginIdAssignees = loginIdAssignees;
+	}
+	
+	/**
+	* Gets the purchase request id.
+	*
+	* @return the purchase request id
+	*/
+	public Long getPurchaseRequestId() {
+		return purchaseRequestId;
+	}
+
+	/**
+	* Sets the purchase request id.
+	*
+	* @param purchaseRequestId the new purchase request id
+	*/
+	public void setPurchaseRequestId(Long purchaseRequestId) {
+		this.purchaseRequestId = purchaseRequestId;
+	}
+	//28878 - End
 }
