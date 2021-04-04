@@ -152,10 +152,10 @@
 	
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{(amendmentBackingBean.managedBean.ackFA eq null or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa)
-			 and (ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq
-			 or ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq)
+			rendered="#{(amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.ackFA eq CtConst.supplierAckLoa)
+			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
 			 and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
+			 and ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq
 			 and ctBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
 			actionListener="#{amendmentBackingBean.setTabValue('PB')}" update=":form" />
 			
@@ -192,7 +192,7 @@
 				   <p:outputPanel id="ctMenuIdPidId" rendered="#{ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		 	                <ui:include src="/xhtml/ct/common/purchaseInDefault.xhtml" />
 		 	        </p:outputPanel>
-				  <!--   <ui:include src="performanceBond.xhtml" /> --> 
+				    <ui:include src="performanceBond.xhtml" />
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.amendment'] }">
