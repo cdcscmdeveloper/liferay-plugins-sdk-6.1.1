@@ -1684,7 +1684,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
 					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
-			reqDTO.setRoleCode(getUserRoleCode());
+			//29194 - Start
+			reqDTO.setRoleCode(getUserRoleCodeSQ());
+			//29194 - End
 			reqDTO.setTaskExpiredDate(pidExpDate);
 			reqDTO.setPidApprovers(pidApprovers);
 			reqDTO.setDoUserId(doUserId);
@@ -2418,7 +2420,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setRoleCode(getUserRoleCode());
+			//29194 - Start
+			reqDTO.setRoleCode(getUserRoleCodeSQ());
+			//29194 - End
 			reqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			reqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 
@@ -5375,12 +5379,20 @@ public class SimpleQuoteBackingBean extends
 				quoteReqDTO.setUserId(facesScopes.getUserSessionBean()
 						.getUserId());
 				quoteReqDTO.setFetchSubEntity(true);
+				
+				//#25396 - start
+				Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);
+				//#25396 - end
+				
 				QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
 						quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				Long supplierId = getSupplierId();
-				quoteReqDTO.setSupplierId(supplierId);
 				
+				//#25396 - start (comment out)
+			    /*Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);*/
+				//#25396 - end				
 				// clear session data.
 				renewSesionObject();
 
