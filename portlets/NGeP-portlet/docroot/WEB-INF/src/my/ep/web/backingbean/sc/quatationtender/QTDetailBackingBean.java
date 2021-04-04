@@ -7700,6 +7700,20 @@ public class QTDetailBackingBean extends
 			 			return true;
 			 		}
 			 	}
+			 	
+			 	//28780 starts
+			 	if( QTStatusConst.BPK_PENDING_APPROVAL.equals(currStatus)&&(getUserTaskIsBPKApproval() && isApprovalScreen())){ 
+			 		if(userHasRole(new RoleCode[]{RoleCode.BPK_APPROVER})){ 
+			 			return true;
+			 		}
+			 	}
+			 	
+			 	if( QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY.equals(currStatus)){ 
+			 		if(userHasRole(new RoleCode[]{RoleCode.DESK_OFFICER})){ 
+			 			return true;
+			 		}
+			 	}			 	
+			 	//28780 ends
 			
 		}
 		return false;
