@@ -31,6 +31,16 @@
 					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
 					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}"/></td>
 		</tr>
+		<ui:remove>//29464-start</ui:remove>
+		<c:if test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">
+			<tr>
+				<td style="vertical-align: bottom;" align="right"><h:outputText
+						style="float:right;" styleClass="mandatory"
+						value="#{lbl['lbl.sc.qt.republishTo']} #{qTDetailBB.managedBean.qt.childQt.qtNo}" />
+				</td>
+			</tr>
+		</c:if>
+		<ui:remove>//29464-end</ui:remove>
 		<tr>
 		<td align="right">
 			<c:choose>
