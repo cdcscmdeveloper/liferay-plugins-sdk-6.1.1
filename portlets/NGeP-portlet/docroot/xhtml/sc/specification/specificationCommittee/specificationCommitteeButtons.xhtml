@@ -31,7 +31,8 @@
 					action="#{specMaintenanceBB.backToQtScreen()}" rendered="#{(not empty specMaintenanceBB.managedBean.previousPage)}"
 					partialSubmit="true"
 					process="@this"
-					update="@this" />
+					update="@this" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/><ui:remove>//29464</ui:remove>
 				</c:when>
 				</c:choose>
 				<!-- 25692#95 - end -->
