@@ -41,9 +41,8 @@
 										<h:panelGroup rendered="#{backingBean.showDirector(backingBean.managedBean)}">
 											<td style="width: 20px">
 												<p:selectBooleanCheckbox
-													value="#{backingBean.managedBean.selectedShareHolder.director}"
-													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm}" 
-													>
+													value="#{backingBean.managedBean.selectedShareHolder.director}"           
+													disabled="#{backingBean.managedBean.selectedShareHolder.directorSsm || backingBean.managedBean.selectedShareHolder.disableEquityOwner}" > <!--#30444-->
 													<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
 														process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 														listener="#{backingBean.managePersonnelRoles('Y')}" />
@@ -60,7 +59,8 @@
 										</h:panelGroup>
 										
 										<td style="width: 20px"><p:selectBooleanCheckbox
-												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
+												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}"
+												disabled="#{backingBean.managedBean.selectedShareHolder.disableEquityOwner}" ><!--#30444-->
 												<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, @([id$=shareHolderAddrDialog])"
 													process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles('Y')}" />

@@ -12031,6 +12031,16 @@ public class SmApplicationUtil {
 				  bean.getSelectedShareHolder().setClerical(false);
 				  bean.getSelectedShareHolder().setDisableStaff(true);
 		//#29666 - END 
+		//#30444 - START
+			} else if (bean.getBusinessTypeVal()     
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+					&& (bean.getSelectedShareHolder().isDirector()
+						|| bean.getSelectedShareHolder().isHigherManagement()
+						|| bean.getSelectedShareHolder().isEquityOwner()
+						|| bean.getSelectedShareHolder().isManagement())) {
+				  bean.getSelectedShareHolder().setClerical(false);
+				  bean.getSelectedShareHolder().setDisableStaff(true);
+		//#30444 - END
 			} else {
 					bean.getSelectedShareHolder().setDisableStaff(false);
 			}

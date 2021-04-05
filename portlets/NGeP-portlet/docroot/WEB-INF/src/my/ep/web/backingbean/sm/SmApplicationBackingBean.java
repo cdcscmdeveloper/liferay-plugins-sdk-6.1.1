@@ -14442,7 +14442,18 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
 					getManagedBean().getSelectedShareHolder().setManagement(false);
 					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
-			//#29666- END 		
+			//#29666- END 
+			//#30444 - START
+				} else if (getManagedBean().getBusinessTypeVal()     
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
+					log.info("roc--fatintest");
+			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+			//#30444 - END
 			    }else {
 			    getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
 			    log.info("enable equity owner contractor");
