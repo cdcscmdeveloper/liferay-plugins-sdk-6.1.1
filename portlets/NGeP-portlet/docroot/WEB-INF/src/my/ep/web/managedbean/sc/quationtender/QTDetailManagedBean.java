@@ -1762,6 +1762,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtCheckList> sampleSpecCheckList;//25635
 	
+	//29464-start
+	private boolean committeeAppointmentMenuTab = true;
+	//29464-end
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10944,6 +10948,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		/*
 		 * 25635-End
 		 */
+
+		//29464-start
+		public boolean isCommitteeAppointmentMenuTab() {
+			return committeeAppointmentMenuTab;
+		}
+
+		public void setCommitteeAppointmentMenuTab(
+				boolean committeeAppointmentMenuTab) {
+			this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
+		}
+		//29464-end
 		
 }
 
