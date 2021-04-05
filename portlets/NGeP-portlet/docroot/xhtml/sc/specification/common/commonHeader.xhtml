@@ -26,6 +26,28 @@
 					#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.currentStatusId)}
 				</td>
 			</tr>
+			<ui:remove>//29464-start</ui:remove>
+			<ui:param name="statusId" value="#{specificationBackingBean.managedBean.currentStatusId}"/>
+			<ui:fragment rendered="#{(statusId eq QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING
+				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH
+				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT
+				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF
+				or statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) 
+				and not empty qTDetailBB.managedBean.qt.scQt.qtNo}">
+				<tr>
+					<td width="15%"><h:outputLabel
+							value="#{lbl['lbl.sc.qt.republishFrom']}" /></td>
+					<td class="header-info-text"><p:commandLink
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							process="@this" partialSubmit="true" id="republishFromHyperlink"
+							style="margin-right:20px;"
+							action="#{specMaintenanceBB.redirectToSpecificationMaintenance(specificationBackingBean.managedBean.qt.scQt, false,'/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true', true)}">
+							<h:outputText value="#{qTDetailBB.managedBean.qt.scQt.qtNo}"
+								escape="false"/>
+						</p:commandLink></td>
+				</tr>
+			</ui:fragment>
+			<ui:remove>//29464-end</ui:remove>
 		</table>
 	</div>
 
