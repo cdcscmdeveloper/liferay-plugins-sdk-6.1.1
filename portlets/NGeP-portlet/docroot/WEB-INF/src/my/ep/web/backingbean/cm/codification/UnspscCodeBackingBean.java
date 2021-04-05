@@ -2034,6 +2034,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		resDTO = codificationSO.searchColor(reqDTO);
 		this.getManagedBean().setColorList(resDTO.getColorList());
 
+		//20210405@Jacky - Enhancement#28576 - Start
+		log.info("TYPE BRAND MEASUREMENT and COLOR has Been Set By Commodity");
+		
 		this.getManagedBean().setRequestExtCode(new CmRequestCode());
 		this.getManagedBean()
 		.getRequestExtCode()
@@ -2051,6 +2054,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setMeasurementDisable(true);
 		this.getManagedBean().setColorDisable(true);
 
+		log.info("CmType : " + resDTO.getCommodityObj().getCmType().size());
+		log.info("CmType : " + resDTO.getCommodityObj().getCmType());
+		log.info("CmBrand : " + resDTO.getCommodityObj().getCmBrand().size());
+		log.info("CmMeasurement : " + resDTO.getCommodityObj().getCmMeasurement().size());
+		//20210405@Jacky - Enhancement#28576 - End
 	}
 
 	public String submitToBPM() {
