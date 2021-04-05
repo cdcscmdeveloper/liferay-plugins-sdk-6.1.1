@@ -1178,11 +1178,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote = checkingPriceType(requestNote);
 			//28999 - End
 			
-			//#30063 - Start
-			requestNote = checkingItemUnitPrice(requestNote);
-			//#30063 - End
-			
-			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
 			} else {
@@ -3412,12 +3407,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		
 		RequestNoteResDTO requestNoteResDTO = null;
-		//28878 - Start
-		if(prSize > 1){
-			requestNoteReqDTO.setPurchaseRequestId(getManagedBean().getPurchaseRequestId());
-			getManagedBean().setLoginIdAssignees(getRequestNoteSO().getloginIdAssigneeSuppByPrId(requestNoteReqDTO));
-			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodificationMulti(requestNoteReqDTO, getManagedBean().getSelectedPrDtls(), getManagedBean().getLoginIdAssignees());
-		}else if (prSize == 1) { // 28878 - End
+		if (prSize == 1) {
 			requestNoteResDTO = getRequestNoteSO().cancelPendingItemCodification(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
 		} else {
 			requestNoteResDTO = getRequestNoteSO().prepareTrackingDiaryDPM(requestNoteReqDTO, getManagedBean().getSelectedPrDtls());
@@ -5058,53 +5048,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return requestNote;
 	}
 	//28999- End
-	
-	//#30063 - Start
-	public ScRequestNote checkingItemUnitPrice(ScRequestNote requestNote){
-		
-		boolean itemPriceUnitChange;
-		BigDecimal lowestItemPriceUnit;
-		ScRequestSupplierItem reqSuppItemTemp = new ScRequestSupplierItem();
-		
-		if(requestNote.getRequestNoteDtls() != null){
-			for(ScRequestNoteDtl rnDtl : requestNote.getRequestNoteDtls()){
-				itemPriceUnitChange = true;
-				if(rnDtl.getRequestItem() != null){
-					if(rnDtl.getRequestItem().getSupplierItems() != null){
-						for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){
-							if(rnDtl.getScRequestSupplierItem() != null){
-								if(rnDtl.getScRequestSupplierItem().getRequestSupplierItemId().equals(reqSuppItem.getRequestSupplierItemId())){
-									itemPriceUnitChange = false;
-									break;
-								}
-							}			
-						}
-						
-						if(itemPriceUnitChange){
-							lowestItemPriceUnit = null;
-							for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){
-								if(reqSuppItem.getSupplierItemPrices() != null){
-									for(ScSupplierItemPrice suppItemPrice : reqSuppItem.getSupplierItemPrices()){
-										if(lowestItemPriceUnit == null){
-											lowestItemPriceUnit = suppItemPrice.getItemPrice();
-											reqSuppItemTemp = reqSuppItem;
-										}
-										
-										if(suppItemPrice.getItemPrice().compareTo(lowestItemPriceUnit) == -1){
-											lowestItemPriceUnit = suppItemPrice.getItemPrice();
-											reqSuppItemTemp = reqSuppItem;
-										}
-									}
-								}
-							}
-							rnDtl.setScRequestSupplierItem(reqSuppItemTemp);
-						}
-					}				
-				}
-			}
-		}
-		
-		return requestNote;
-	}
-	//#30063 - End
 }
