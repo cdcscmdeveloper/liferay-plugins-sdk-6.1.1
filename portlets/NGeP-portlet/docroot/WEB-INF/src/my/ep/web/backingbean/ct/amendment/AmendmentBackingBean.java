@@ -2362,8 +2362,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			validateRemarkCancel(outcome);
 			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)){
-				RequestContext.getCurrentInstance().execute("reviseConfirmDlg.show()");				
-			}			
+				RequestContext.getCurrentInstance().execute("reviseConfirmDlg.show()");
+			}
+			else{
+				return saveContractAmendment(outcome);
+			}
 			return null;
 		}
 		//#26688 end
