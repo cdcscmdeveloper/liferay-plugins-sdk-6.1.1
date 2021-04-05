@@ -90,6 +90,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplAuditors;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
+import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -1047,6 +1048,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
 				: getManagedBean().getSmAppl().getPmStatus().getStatusId()
 						.toString());
+		//#12483 - START
+		sortApplicationRevises();
+		//#12483 - END
 	}
 
 	/**
@@ -4024,5 +4028,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSmeSupplier(smeSupplier);
 	}
 	// #29617 end
-
+	//#12483 - START
+	public void sortApplicationRevises(){
+		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){
+			@Override
+			public int compare(SmApplRevise revise1, SmApplRevise revise2) {
+				return Integer.valueOf(revise1.getCreatedDate().compareTo(revise2.getCreatedDate()));
+			}
+		});
+	}
+	//#12483 - END
 }
