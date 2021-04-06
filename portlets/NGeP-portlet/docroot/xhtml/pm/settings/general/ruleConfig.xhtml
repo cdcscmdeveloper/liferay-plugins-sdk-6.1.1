@@ -102,8 +102,10 @@
 					<f:attribute name="min" value="0"/>	
 		  			<f:attribute name="max" value="9999"/>		
 					<f:validator validatorId="quantityDoubleRangeValidator" />
-					<p:ajax partialSubmit="true" process="@this"
-						update="@this, numberValueMsg" />
+					<!-- 29650 - START -->
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.valueErrorCheck(index)}"
+						partialSubmit="true" process="@this" update="@this, numberValueMsg" />
+					<!-- 29650 - END -->
 				</p:inputText>
 				<p:message id="numberValueMsg" for="numberValueId" display="icon" />
 			</p:column>
@@ -211,6 +213,50 @@
 				</p:inputText>
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
+
+			<!-- 29650 - START -->
+			<p:column width="15%"
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />			
+				                 	#{lbl['lbl.pm.rule.from.value']}
+				</f:facet>
+				<p:inputText id="numberFromValueId" value="#{typeValueObj.fromValue}"
+					label="#{lbl['lbl.pm.rule.from.value']}"
+					size="17" required="true" maxlength="4" style="text-align:right"
+					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
+					disabled="#{!(typeValueObj.brandNew)}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		  			<f:attribute name="min" value="0"/>
+		  			<f:attribute name="max" value="9999"/>				
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.fromErrorCheck(index)}"
+						partialSubmit="true" process="@this" update="@this, numberFromValueMsg" />
+				</p:inputText>
+				<p:message id="numberFromValueMsg" for="numberFromValueId" display="icon" />
+			</p:column>
+			
+			<p:column width="15%"
+				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.rangeType == 3}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />			
+				                 	#{lbl['lbl.pm.rule.to.value']}
+				</f:facet>
+				<p:inputText id="numberToValueId" value="#{typeValueObj.toValue}"
+					label="#{lbl['lbl.pm.rule.to.value']}"
+					size="15" required="true" maxlength="17" style="text-align:right"
+					requiredMessage="#{lbl['lbl.pm.settings.tovalue.required']}"
+					disabled="#{!(typeValueObj.brandNew)}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		  			<f:attribute name="min" value="0"/>
+		  			<f:attribute name="max" value="9999"/>				
+					<f:validator validatorId="quantityDoubleRangeValidator" />
+					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.toErrorCheck(index)}"
+						partialSubmit="true" process="@this" update="@this, numberToValueMsg" />
+				</p:inputText>
+				<p:message id="numberToValueMsg" for="numberToValueId" display="icon" />
+			</p:column>
+			<!-- 29650 - END -->
 
 			<p:column width="35%" style="white-space:normal"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'C')}">
