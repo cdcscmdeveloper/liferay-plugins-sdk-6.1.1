@@ -40,12 +40,12 @@
 					styleClass="BtnSpacing" process="@all" partialSubmit="true"
 					update="@all"
 					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(false)}" 
-					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />/>
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 				<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@all"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					partialSubmit="true" styleClass="BtnSpacing" update="@all"
 					action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(true)}"
-					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" /> />
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			</c:if>
 			<c:if test="#{'NE' eq chkDefinationKey}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
@@ -54,14 +54,14 @@
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(false)}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
-					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" /> />
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@all"
 					partialSubmit="true" update="@all" styleClass="BtnSpacing"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.technicalQtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
-					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" /> />
+					disabled="#{supplierProposalDetailBackingBean.managedBean.disableUpdateProposal}" />
 			</c:if>
 		</c:if>
 	</c:if>
