@@ -1006,6 +1006,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
 				: getManagedBean().getSmAppl().getPmStatus().getStatusId()
 						.toString());
+		//#12483 - START
+		if(!getManagedBean().getSmAppl().getSmApplRevises().isEmpty()){
+			sortApplicationRevises();
+		}
+		//#12483 - END
 	}
 
 	/**
@@ -3972,4 +3977,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 	//28281 - end
+	
+	//#12483 - START
+	public void sortApplicationRevises(){
+		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){
+			@Override
+			public int compare(SmApplRevise revise1, SmApplRevise revise2) {
+				return Integer.valueOf(revise1.getCreatedDate().compareTo(revise2.getCreatedDate()));
+			}
+		});
+	}
+	//#12483 - END
 }
