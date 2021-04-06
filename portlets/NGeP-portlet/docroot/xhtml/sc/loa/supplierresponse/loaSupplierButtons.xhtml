@@ -47,14 +47,14 @@
 							<p:commandButton value="#{lbl['lbl.btn.view.loa']}" process="@this" ajax="false" immediate="true" 
 									 action="#{lOADetailBackingBean.downloadViewLoa}"/>
 								<!-- Start #22211 -->
-								<c:if test="#{!isLoaReviseStatus}">
+								<!-- <c:if test="#{!isLoaReviseStatus}"> -->
 								<!-- End #22211 -->
 									<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 										partialSubmit="true" update="@form" onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();"
 										action="#{lOADetailBackingBean.saveAction(true)}" />	
 								<!-- Start #22211 -->
-								</c:if>
+								<!-- </c:if> -->
 								<!-- End #22211 -->	
 								<ui:repeat var="bpmAction"
 									value="#{lOADetailBackingBean.managedBean.outComes}">
