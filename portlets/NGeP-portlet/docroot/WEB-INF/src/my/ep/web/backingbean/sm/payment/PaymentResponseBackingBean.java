@@ -318,7 +318,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						PmParameter cards = resPmDTO.getPmParameter();
 						pymtReqDTO.setCardType(cards);
 						pymtReqDTO.setCardTypeS(cardType);
-						pyPayment.setCardType(cards);	 
+						pyPayment.setCardType(cards);	
+						channel = "credit";
 					} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {
 						log.info("cardType====enter DC"+cardType);
 						reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
@@ -329,6 +330,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						pymtReqDTO.setCardType(cards);
 						pymtReqDTO.setCardTypeS(cardType);
 						pyPayment.setCardType(cards);	
+						channel = "debit";
 					} 
 				} 
 				// #26307 end 
@@ -341,6 +343,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 					txDate = new Date();
 					e.printStackTrace();
 				}
+				log.info("channel--------------------26307"+channel);
 				paymentOrder.setChannelName(channel);
 				smPaymentRes.setTransactionId(tranID);
 				smPaymentRes.setErrorCode(errorCode);
@@ -350,6 +353,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				smPaymentRes.setPaymentStatus(status);
 				smPaymentRes.setPaidAmt(txAmount);
 				paymentOrder.getPyPaymentResponses().add(smPaymentRes);
+				//26307
 				log.info("Status Code : "+statusCode);
 				if(statusCode!= null){
 					PmStatus paymentStatus = SmCommonUtil.getInstance().retrievePmStatusById(statusCode);
