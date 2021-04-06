@@ -62,7 +62,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText
 							value="#{lOACancelDetailBackingBean.getStatusDescById(lOACancelDetailBackingBean.managedBean.scLoa.pmStatus.statusId)}"
-							disabled="true" readonly="true" style="width:212px;" /></td>
+							disabled="true" readonly="true" style="width:227px;" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><p:outputLabel
@@ -79,7 +79,8 @@
 		<ui:include src="/xhtml/sc/loa/cancellation/cancelLoaReqDetail.xhtml" />
 		<ac:scRemarkAndAttachment
 			remarkList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaRemarks}"
-			showAttachment="true"
-			readonly="false" />
+			attachmentList="#{lOACancelDetailBackingBean.managedBean.scLoa.scLoaCancelAttachments}"
+			readonly="false" 
+			fileUploadListener="lOACancelDetailBackingBean.handleFileUpload"/>
 	</ui:define>
 </ui:composition>

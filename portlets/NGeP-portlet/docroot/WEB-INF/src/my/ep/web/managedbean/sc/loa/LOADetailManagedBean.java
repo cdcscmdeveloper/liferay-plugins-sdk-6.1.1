@@ -14,6 +14,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -259,6 +260,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private List<PmUser> loacancelapproverList;
 	
 	private PmUser loacancelapproverUser;
+	
+	private String sourcePage;
+	
+	private boolean dpMaintenanceSource = Boolean.FALSE;
+	
+	private List<ScLoaCancelAttachment> scLoaCancelAttachments;
 	//end #22211
 	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
@@ -1595,6 +1602,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setFlowamt(Boolean flowamt) {
 		this.flowamt = flowamt;
 	}
+	
+	public List<PmUser> getLoacancelapproverList() {
+		return loacancelapproverList;
+	}
+
+	public void setLoacancelapproverList(List<PmUser> loacancelapproverList) {
+		this.loacancelapproverList = loacancelapproverList;
+	}
+
+	public PmUser getLoacancelapproverUser() {
+		return loacancelapproverUser;
+	}
+
+	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
+		this.loacancelapproverUser = loacancelapproverUser;
+	}
 
 	// #19336 - start
 	/**
@@ -1612,19 +1635,27 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	// #19336 - end
 	
-	public List<PmUser> getLoacancelapproverList() {
-		return loacancelapproverList;
+	public String getSourcePage() {
+		return sourcePage;
 	}
 
-	public void setLoacancelapproverList(List<PmUser> loacancelapproverList) {
-		this.loacancelapproverList = loacancelapproverList;
+	public void setSourcePage(String sourcePage) {
+		this.sourcePage = sourcePage;
 	}
 
-	public PmUser getLoacancelapproverUser() {
-		return loacancelapproverUser;
-	}
-	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
-		this.loacancelapproverUser = loacancelapproverUser;
+	public boolean isDpMaintenanceSource() {
+		return dpMaintenanceSource;
 	}
 
+	public void setDpMaintenanceSource(boolean dpMaintenanceSource) {
+		this.dpMaintenanceSource = dpMaintenanceSource;
+	}
+
+	public List<ScLoaCancelAttachment> getScLoaCancelAttachments() {
+		return scLoaCancelAttachments;
+	}
+
+	public void setScLoaCancelAttachments(List<ScLoaCancelAttachment> scLoaCancelAttachments) {
+		this.scLoaCancelAttachments = scLoaCancelAttachments;
+	}
 }
