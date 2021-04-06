@@ -174,25 +174,6 @@ public class MolPayServlet extends HttpServlet {
 						txDate = new Date();
 						e.printStackTrace();
 					}
-					paymentOrder.setChannelName(channel);
-					smPaymentRes.setTransactionId(tranID);
-					smPaymentRes.setErrorCode(errorCode);
-					smPaymentRes.setErrorDesc(errorDesc);
-					smPaymentRes.setTransactionDate(txDate);
-					smPaymentRes.setPyPaymentOrder(paymentOrder);
-					smPaymentRes.setPaymentStatus(status);
-					smPaymentRes.setPaidAmt(txAmount);
-					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
-					int requeryCount = paymentOrder.getRequeryCount() + 1;
-					paymentOrder.setRequeryCount(requeryCount);
-
-					if(statusCode != null){
-						StatusReqDTO statusReqDTO = new StatusReqDTO();
-						statusReqDTO.setStatusId(statusCode);
-						PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
-						smPayment.setPmStatus(pmStat);
-					}
-					
 					// #26307 start
 					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 					if (cardType != null) {
@@ -212,7 +193,8 @@ public class MolPayServlet extends HttpServlet {
 							PmParameter cards = resPmDTO.getPmParameter();
 							pymtReqDTO.setCardType(cards);
 							pymtReqDTO.setCardTypeS(cardType);
-							smPayment.setCardType(cards);											
+							smPayment.setCardType(cards);	
+							channel="credit";
 						} else if (cardType.equals(ParameterConst.CARD_TYPES_DEBIT)) {		
 							log.info("cardType====enter DC"+cardType);
 							reqPmDTO.setParameterType(ParameterTypeConst.CARD_TYPES);
@@ -222,10 +204,32 @@ public class MolPayServlet extends HttpServlet {
 							PmParameter cards = resPmDTO.getPmParameter();
 							pymtReqDTO.setCardType(cards);
 							pymtReqDTO.setCardTypeS(cardType);
-							smPayment.setCardType(cards);														
+							smPayment.setCardType(cards);	
+							channel="debit";
 						} 
 					}
 					// #26307 end
+					
+					paymentOrder.setChannelName(channel);
+					smPaymentRes.setTransactionId(tranID);
+					smPaymentRes.setErrorCode(errorCode);
+					smPaymentRes.setErrorDesc(errorDesc);
+					smPaymentRes.setTransactionDate(txDate);
+					smPaymentRes.setPyPaymentOrder(paymentOrder);
+					smPaymentRes.setPaymentStatus(status);
+					smPaymentRes.setPaidAmt(txAmount);
+					paymentOrder.getPyPaymentResponses().add(smPaymentRes);
+					int requeryCount = paymentOrder.getRequeryCount() + 1;
+					paymentOrder.setRequeryCount(requeryCount);
+
+					if(statusCode != null){
+						StatusReqDTO statusReqDTO = new StatusReqDTO();
+						statusReqDTO.setStatusId(statusCode);
+						PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
+						smPayment.setPmStatus(pmStat);
+					}
+					
+					
 
 					
 					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
