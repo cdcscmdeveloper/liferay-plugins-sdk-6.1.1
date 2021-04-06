@@ -840,12 +840,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(!ctBB.getManagedBean().getContractVer().getCtContractValue().isPid()){
 			ctBB.getManagedBean().getContractVer().setCtPidReasons(null);
 		}
+		//#25406 - Start
 		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
 			validateContractOwnerManagement(action);		
 		}else{
 			validateCtContractVer(action);
 		}
-		
+		//#25406 - End
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setOutcome(action);
