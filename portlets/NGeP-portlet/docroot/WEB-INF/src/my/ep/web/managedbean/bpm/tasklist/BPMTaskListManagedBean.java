@@ -101,7 +101,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private static Logger logger = Logger.getLogger(BPMTaskListManagedBean.class);
 	
 	// Refactor: To make sqTimeValidity to read only once - Start.
-	private static final Integer SQ_TIME_VALIDITY = new Integer(0);
+	private static final Integer SQ_TIME_VALIDITY = Integer.valueOf(EpPropertiesUtils.getInstance()
+			.getProperty("sqTimeValidity"));
 	// Refactor: To make sqTimeValidity to read only once - End.
 	
 	private List<WorklistItemVO> taskList;
