@@ -5656,7 +5656,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 
 						if (requestNoteDtl.getScRequestSupplierItem() != null
-								& requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
+								&& requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
 
 							for (ScSupplierItemPrice supplierItemPrice : requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices()) {
 								if (supplierItemPrice.getPriceType() != null) {
