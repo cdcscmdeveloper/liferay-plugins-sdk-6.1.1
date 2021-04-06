@@ -1058,13 +1058,51 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
-					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-							.getInstance().getServiceObject("cc",
-									ITrackingDiarySO.class);
-					
-					resDTO = trackingDiarySO
-							.retrieveTrackingDiaryBySearchBean(reqDTO);
-					
+					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
+							.getServiceObject("cc", ITrackingDiarySO.class);
+
+					// #25790 - Start and #25791
+					if (isReqOrApprover() && ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
+							|| isReqOrApprover() && ParameterConst.DOCTYPE_QUOTATION.equals(getSelectedDocType())) {
+						String docType = getSelectedDocType();
+						Long docId = getSelectedDocId();
+						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
+								searchBean, searchFilterBeanAnd1);
+
+						// #25396 - Start
+						ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
+						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+						if (isUseViewAsOption()) {
+							if (isViewAsSupplier()) {
+								List<String> listOfSupplierRole = getAllSupplierRole();
+								for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
+									if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
+										tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
+									}
+								}
+								tempResultBean.getResultList().clear();
+								tempResultBean.getResultList().addAll(
+										new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
+
+								resDTO.setResultBean(tempResultBean);
+							}
+						}
+						// #25396 - end
+
+					} else {
+						searchBean.getDataFilterBeans().add(
+								new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+						reqDTO.setSearchBean(searchBean);
+
+						setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+						resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+					}
+					// #25790 - End
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
