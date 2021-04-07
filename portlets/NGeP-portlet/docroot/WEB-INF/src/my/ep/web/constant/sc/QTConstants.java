@@ -253,8 +253,12 @@ public interface QTConstants {
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
 	//25037 -end-
 	
-	//#15391 -start-
+	//#15391 & #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
-	//#15391 -end-
+	//#15391 & #11104 -end-
+
+	//#11104
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
 	
 }

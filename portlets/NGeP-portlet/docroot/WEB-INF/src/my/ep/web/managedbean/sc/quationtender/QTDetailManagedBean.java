@@ -1656,6 +1656,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String previousApprovalTabName;
 	//#25077 - End 
 
+	//#11104-start
+	private ScQtCheckList sampleCheckList;
+	private TplSpecQuestion sampleSpecQuestion;
+	private String sampleItemName;
+	private int sampleTotalScore;
+	//#11104-End
+	
 	// #15391 - start
 	private boolean isChecklist;
 	private boolean isGenInfo;
@@ -10367,6 +10374,62 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCurrentQTStatus(Long currentQTStatus) {
 			this.currentQTStatus = currentQTStatus;
 		}
+		/**11104-start
+		 * @return the sampleCheckList
+		 */
+		public ScQtCheckList getSampleCheckList() {
+			return sampleCheckList;
+		}
+
+		/**
+		 * @param sampleCheckList the sampleCheckList to set
+		 */
+		public void setSampleCheckList(ScQtCheckList sampleCheckList) {
+			this.sampleCheckList = sampleCheckList;
+		}
+
+		/**
+		 * @return the sampleSpecQuestion
+		 */
+		public TplSpecQuestion getSampleSpecQuestion() {
+			return sampleSpecQuestion;
+		}
+
+		/**
+		 * @param sampleSpecQuestion the sampleSpecQuestion to set
+		 */
+		public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
+			this.sampleSpecQuestion = sampleSpecQuestion;
+		}
+
+		/**
+		 * @return the sampleItemName
+		 */
+		public String getSampleItemName() {
+			return sampleItemName;
+		}
+
+		/**
+		 * @param sampleItemName the sampleItemName to set
+		 */
+		public void setSampleItemName(String sampleItemName) {
+			this.sampleItemName = sampleItemName;
+		}
+
+		/**
+		 * @return the sampleTotalScore
+		 */
+		public int getSampleTotalScore() {
+			return sampleTotalScore;
+		}
+
+		/**
+		 * @param sampleTotalScore the sampleTotalScore to set
+		 */
+		public void setSampleTotalScore(int sampleTotalScore) {
+			this.sampleTotalScore = sampleTotalScore;
+		}
+		//#11104-End
 		
 		public Long getCurrentCMTStatus() {
 			return currentCMTStatus;
