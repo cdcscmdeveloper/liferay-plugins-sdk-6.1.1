@@ -424,6 +424,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * remove selected Interviewee
 	 */
 	public void removeInterviewee(){
+		//#24964 - start
+		if(getManagedBean().getDuplicateInterviewees() == null)
+			getManagedBean().setDuplicateInterviewees(new ArrayList<>(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()));
+		//#24964 - end
 		if(this.getManagedBean().getSelectedInterviewees() != null && this.getManagedBean().getSelectedInterviewees().length > 0){
 			for (SmSvInterviewee interviewee : this.getManagedBean().getSelectedInterviewees()) {
 				this.getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().remove(interviewee);		
@@ -1956,6 +1960,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
 		}
 		//#30550 - end
+		
+		//#24964 - start
+		if(getManagedBean().getDuplicateInterviewees() != null){
+			for(SmSvInterviewee dupe : getManagedBean().getDuplicateInterviewees()){
+				for(SmSvInterviewee intvw : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
+					if(intvw.getName().equals(dupe.getName())){
+						dupe.setDesignation(intvw.getDesignation());
+						getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().remove(intvw);
+						getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().add(0, dupe);
+						break;
+					}
+				}
+			}
+		}
+		//#24964 - end
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
