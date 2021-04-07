@@ -3851,17 +3851,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmType> suggestions = new ArrayList<CmType>();
 
-		//20210406@Jacky - Enhancement#28576 - Start
-//		log.info("this.getManagedBean().getTypeList() = "
-//				+ this.getManagedBean().getTypeList().size());
-		List<CmType> listType = this.getManagedBean().getTypeList();
-		log.info("List Of Type : " + listType.size());
-		if(listType.size() == 0){
-			log.info("NOTHING INSIDE listType");
-		}
+		//20210407@Jacky - Enhancement#28576 - Start
+		log.info("this.getManagedBean().getTypeList() = "
+				+ this.getManagedBean().getTypeList().size());
 
-		for (CmType type : listType) {
-		//20210406@Jacky - Enhancement#28576 - End
+		for (CmType type : this.getManagedBean().getTypeList()) {
+		//20210407@Jacky - Enhancement#28576 - End
 			//20210201@Jacky - Enhancement#28576 - Start
 			log.info("Current Type is = " + type.getTypeName());
 			//20210201@Jacky - Enhancement#28576 - End
@@ -3888,16 +3883,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmBrand> suggestions = new ArrayList<CmBrand>();
-		
-		//20210406@Jacky - Enhancement#28576 - Start
-		List<CmBrand> listBrand = this.getManagedBean().getBrandList();
-		log.info("List Of Brand : " + listBrand.size());
-		if(listBrand.size() == 0){
-			log.info("NOTHING INSIDE listBrand");
-		}
-
-		for (CmBrand brand : listBrand) {
-		//20210406@Jacky - Enhancement#28576 - Start
+		//20210407@Jacky - Enhancement#28576 - Start
+		for (CmBrand brand : this.getManagedBean().getBrandList()) {
+		//20210407@Jacky - Enhancement#28576 - Start
 			//20210201@Jacky - Enhancement#28576 - Start
 			log.info("Current Brand is = " + brand.getBrandName());
 			//20210201@Jacky - Enhancement#28576 - End
@@ -3923,16 +3911,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();
-		
-		//20210406@Jacky - Enhancement#28576 - Start
-		List<CmMeasurement> listMeasurement = this.getManagedBean().getMeasurementList();
-		log.info("List Of Measurement : " + listMeasurement.size());
-		if(listMeasurement.size() == 0){
-			log.info("NOTHING INSIDE listMeasurement");
-		}
-
-		for (CmMeasurement brand : listMeasurement) {
-		//20210406@Jacky - Enhancement#28576 - Start
+		//20210407@Jacky - Enhancement#28576 - Start
+		for (CmMeasurement brand : this.getManagedBean().getMeasurementList()) {
+		//20210407@Jacky - Enhancement#28576 - Start
 			//20210201@Jacky - Enhancement#28576 - Start
 			log.info("Current Measurement is = " + brand.getMeasurementName());
 			//20210201@Jacky - Enhancement#28576 - End
