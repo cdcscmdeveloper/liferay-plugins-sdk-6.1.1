@@ -628,6 +628,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		BigDecimal delQtyCal= BigDecimal.ZERO;
 		BigDecimal delAmtCal= BigDecimal.ZERO;
 		BigDecimal remainingQty = BigDecimal.ZERO;
+		BigDecimal delAmountKeyIn = BigDecimal.ZERO;//30468
 		
 		unitPriceCal=itemAddress.getDoGstUnitPrice();		
 		if(null != itemAddress.getDeliveredQty()){
@@ -640,6 +641,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		if(delQtyCal == null){
 			delQtyCal = BigDecimal.ZERO;
 		}
+		//30468-start
+		delAmountKeyIn = itemAddress.getDeliveredAmt();//30468
+		if(delAmountKeyIn.doubleValue()<0) {
+			itemAddress.setDeliveredAmt(BigDecimal.ZERO);
+			throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+		}
+		//30468-end
 		if(delQtyCal.doubleValue()<0) {		
 			itemAddress.setDeliveredQty(BigDecimal.ZERO);
 			itemAddress.setDeliveredAmt(BigDecimal.ZERO);

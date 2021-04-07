@@ -69,6 +69,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -329,7 +330,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			  }
 		   }
 		//End - Fix 29368
-	
+		
 	}
 
 	/**
@@ -810,6 +811,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 
 			reqDTO.setCtContractVer(ctContractVer);
+			// Start - #28292/#26475
+			reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
+			// End  - #28292/#26475
 			reqDTO.setAgreementContractVer(ctBB.getManagedBean().getAgreementContractVer());
 			reqDTO.setUserRole(getUserRole());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -1106,8 +1110,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						setTabCentralValue("IT");
 					}
 					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
-				} 
-
+				}
+				
+				// Start - 28292
+				if (!item.getCtItemMaxQties().isEmpty()) {
+					Double maxValue = new Double(0);							
+					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
+					}
+					if (item.getMinimumOrderQty() > maxValue) {
+						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+					}
+					
+				}
+				// End - 28292
+				
 				// Validation for ceiling quantity
 				double totalCeilingQuantity = 0.0;
 				if (item.getCtItemMaxQties().size() != 0) {						
@@ -1404,6 +1422,44 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
+		
+		// Start - 28292
+		
+		/*ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
+		List<CtContractItem> itemlistService = contractBB.getManagedBean().getServiceListingPagingDataModel().getList();
+		List<CtContractItem> itemlistProduct = contractBB.getManagedBean().getContractListingPagingDataModel().getList();
+
+
+		if(itemlistService != null && !itemlistService.isEmpty()){
+			CommonUtils commonUtils = new CommonUtils();
+			for (CtContractItem ctItem : itemlistService) {
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
+						.getScRequestItem().getUom().getUomCode());
+				DecimalFormat formatter = new DecimalFormat(minValue);
+				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
+				ctItem.setMinimumOrderQty(Double.parseDouble(result));
+
+				ctBB.onChangeMinimumQty(ctItem);
+
+			}
+		}
+		
+		if(itemlistProduct != null && !itemlistProduct.isEmpty()){
+			CommonUtils commonUtils = new CommonUtils();
+			for (CtContractItem ctItem : itemlistProduct) {
+				String minValue = commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItem
+						.getScRequestItem().getUom().getUomCode());
+				DecimalFormat formatter = new DecimalFormat(minValue);
+				String result = formatter.format(ctItem.getMinimumOrderQty());
+				ctItem.setContractItemId(ctItem.getContractItemId());
+				ctItem.setMinimumOrderQty(Double.parseDouble(result)); 
+
+				ctBB.onChangeMinimumQty(ctItem);
+
+			}
+		}*/
+		// End - 28292
 	}
 
 	/**

@@ -503,7 +503,7 @@
 					           	maxlength="#{ctBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar1.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
 						      	<f:converter converterId="dynamicNumberConverter" />
 								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" /> 
-								<p:ajax event="blur" update="@this"/>
+								<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeCeilingQty(itemCeilingQtiesVar1)}"/>
 					       </p:inputText>
 				     </p:column>            
 			  
@@ -1026,7 +1026,7 @@
 					           	maxlength="#{ctBackingBean.managedBean.serviceselectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.ceiling.qty']}">
 						      	<f:converter converterId="dynamicNumberConverter" />
 								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctBackingBean.managedBean.serviceselectedItem.scRequestItem.uom.uomCode)}" /> 
-								<p:ajax event="blur" update="@this"/>
+								<p:ajax event="change" update="@this" listener="#{ctBackingBean.onChangeCeilingQty(itemCeilingQtiesVar)}"/>
 					       </p:inputText>
 				     </p:column>            
 			  

@@ -974,7 +974,11 @@ public class SPDetailBackingBean extends
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
 		ProposalResDTO proposalResDTO = saveTechTemplateSpecDtls(isCompleted);
-
+		//Bug #30073 Start
+		if (isCompleted){
+			checkDuplicateSupplierAnswerItemSpec(scQtProposalChecklist, proposalResDTO.getProposalChecklist());
+		}
+		//Bug #30073 End
 		if (proposalResDTO.isSuccessful()) {
 			return navigatePrepareTecProposalCheckList(scQtProposalChecklist,
 					proposalResDTO.getProposalChecklist(), isCompleted);
@@ -1008,7 +1012,11 @@ public class SPDetailBackingBean extends
 		scQtProposalChecklist.setSubmitted(isCompleted);
 
 		ProposalResDTO proposalResDTO = saveTemplateSpecDtls(completedFinSpec, isCompleted);
-
+		//Bug #30073 Start 
+		if (isCompleted){
+			checkDuplicateSupplierAnswerItemSpec(scQtProposalChecklist, proposalResDTO.getProposalChecklist());
+		}
+		//Bug #30073 End		
 		if (proposalResDTO.isSuccessful()) {
 			return navigatePrepareFinProposalCheckList(scQtProposalChecklist,
 					proposalResDTO.getProposalChecklist(), isCompleted);
@@ -5515,4 +5523,49 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	    return specZoneDetail;
 	}
 	//#28785-End	
+	
+		//Bug #30073 Start
+		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
+			IQTProposalSO proposalSO = null;
+	
+			try {
+				ProposalReqDTO reqDTO = new ProposalReqDTO();
+				ProposalResDTO resDTO = new ProposalResDTO();
+				
+				proposalSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+				
+				Long supplierId = getManagedBean().getSupplierId();
+				Long qtChecklistId = newProposalChecklist.getScQtCheckList().getQtChecklistId();
+				
+				reqDTO.setSupplierId(supplierId);
+				reqDTO.setQtCheckListId(qtChecklistId);	
+				reqDTO.setScQtProposalChecklist(newProposalChecklist);
+				
+				resDTO = proposalSO.checkDuplicateItemSpec(reqDTO);
+				
+				//Duplicate exist
+				if (resDTO.isSuccessful()){
+					newProposalChecklist = resDTO.getProposalChecklist();
+					
+					if (newProposalChecklist.getScQtCheckList().getDocCategory().
+							equals(QTConstants.TECHNICAL_DOC_TYPE)){
+						updateQtTechProposalCheckList(currProposalChecklist,	newProposalChecklist);
+						prepareTechnicalAction(newProposalChecklist);
+					}else{
+						updateQtFinNdTechProposalCheckList(
+								currProposalChecklist,
+								newProposalChecklist,
+								SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
+						prepareFinancialAction(newProposalChecklist);
+					}
+					throw new EpException(MessageConst.ERROR_760524); 
+				}
+				
+			}finally {
+				proposalSO = null;
+			}
+			
+		}
+		//Bug #30073 End		
 }

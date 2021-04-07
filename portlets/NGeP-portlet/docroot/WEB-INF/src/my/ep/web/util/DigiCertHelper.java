@@ -156,6 +156,17 @@ public class DigiCertHelper {
 					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
 				} else {
 					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					//#29630 - start
+					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
+					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+						log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
+					} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+						log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+					} else {
+						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
+					}
+					//#29630 - end
 					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
 				}
 			}

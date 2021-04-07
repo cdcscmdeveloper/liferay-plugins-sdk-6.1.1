@@ -250,12 +250,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setSameSupplierLoiLoaList(supplierLoiLoas);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
-			
 			if(!scLoa.isBrandNew())
 			{
 				getManagedBean().setFlowamt(scLoa.isFollowLoaAmt());
 			}
-			
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
 			if (awardDataType != null){
@@ -508,11 +506,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		debugLogger("preRenderView");
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
-            
-			log.info("SCAwardSupplierDataType     "+dpDataType);
+            log.info("SCAwardSupplierDataType     "+dpDataType);
             log.info(" Source Id   "+dpDataType.getSourceId());
             log.info(" Award Id    "+dpDataType.getAwardId());
-            
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			
 			Long loaId = Long.valueOf(dpDataType.getAwardId()!=null?dpDataType.getAwardId():0);
@@ -535,14 +531,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}
 				}
-
+				
 				editLOAAction(scLoa);
 			}
 			getManagedBean().setEditFlag(Boolean.FALSE);
 
 			// QT Proposal validity expired
-			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
-
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());		
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -604,7 +600,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		String redirectUrl = retrieveSupplierLOADtl(sourceId, 
 				loaId, null, getManagedBean().isReadOnly());
-
+		
+		if(null!=this.getManagedBean().getScLoa()){//#29826-start
+			this.getManagedBean().setFlowamt(this.getManagedBean().getScLoa().isFollowLoaAmt());
+		}//#29826-End
+		
 		if (StringUtils.isNotBlank(redirectUrl)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -2746,9 +2746,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		debugLogger("saveAction");
 
 		try {
-			Long contractType = getManagedBean().getScLoa().getContractType().getParameterId();
-			
-			if(this.getManagedBean().getFlowamt()==null && contractType == ParameterConst.CONTRACT_TYPE_CENTRAL_CODE)
+			PmParameter contractType = getManagedBean().getScLoa().getContractType();
+			if(this.getManagedBean().getFlowamt()==null && null != contractType 
+					&& ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
+					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType.getParameterCode()) &&
+					!this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT))//29826,//27502, adding condition caz error when save at supplier loa acceptance
 			{
 				throw new EpException(MessageConst.ERROR_760485);
 				
@@ -4226,7 +4228,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty()? "" 
 					: item.getTplSpecTierQty().getToQty().toString());
 		}
-
+        //26226 Start
+		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+		//#28609
+		//itemBean.setItem(item.getScRequestItem().getItemName());
+		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "");
+		
+		if (null != tplSpecQuestion.getClDeliveryTerm()) {
+			itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
+		}
+		if (null != tplSpecQuestion.getClDurationMonth()) {
+			itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
+		}
+		//End
+		
+		/*log.info("Item Name --->"+item.getScRequestItem().getItemName() );
+		log.info("Zone Name --->"+item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "" );
+		log.info("Delivery Term --->"+tplSpecQuestion.getClDeliveryTerm().toString() );
+		log.info("Duration month --->"+tplSpecQuestion.getClDurationMonth().toString());*/
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()

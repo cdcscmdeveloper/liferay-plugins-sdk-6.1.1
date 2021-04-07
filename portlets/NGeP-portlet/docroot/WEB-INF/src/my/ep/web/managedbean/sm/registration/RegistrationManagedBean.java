@@ -156,6 +156,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean divisionBox=true;//13320
 	private Long divisionId;//13320
 	private String regIcCheckSSM;
+	// 27691 - Add/Delete Supplier Owner
+	private SmSupplierOwner[] selectedSuppOwners;
 	
 	private boolean showOwnerPersonnel = false;
 	
@@ -716,6 +718,16 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smSuppOwners = smSuppOwners;
 	}
 
+	// 27691 - start -  Add/Delete Supplier Owner
+	public SmSupplierOwner[] getSelectedSuppOwners() {
+		return selectedSuppOwners;
+	}
+
+	public void setSelectedSuppOwners(SmSupplierOwner[] selectedSuppOwners) {
+		this.selectedSuppOwners = selectedSuppOwners;
+	}
+	// 27691 - end -  Add/Delete Supplier Owner
+	
 	public List getDummy() {
 		return dummy;
 	}

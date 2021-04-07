@@ -16,14 +16,20 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
+
+import com.liferay.compat.portal.util.PortalUtil;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -199,14 +205,29 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 				
 				ContractBackingBean contractBb=new ContractBackingBean();
 				Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
-				
-				Long contractVerId=null;
+				// Start - #29507 Fixing
+				Long contractVerId=null;				
+				log.info("ServiceListingPagingDataModel");
+				log.info("getTaskId : "+getTaskId());
+								
 				if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
-				}else {
-					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+				.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId()) && getTaskId()== null){
+					
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 				}
+				//if contract from tasklist taskid != null
+				if(getTaskId()!= null){
+					
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+					log.info("tasklist screen  :: contractVer :: >>> "+contractVerId);
+				}else {
+					
+					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
+				}
+				// End - #29507 Fixing
+				
 				  if(contractVerId!=null ){						
 						SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 						searchBean.getDataFilterBeans().add(filterBean);
@@ -330,16 +351,32 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 			Long contId=contractBb.getManagedBean().getContractVer().getCtContract().getContractId();
 			
 			Long contractVerId=null;
+			// Start - #29507 Fixing
+			log.info("ContractListingPagingDataModel");
+			log.info("getTaskId : "+getTaskId());
+			
 			if(contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId()
-			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId())){
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();	
-			}else {
-				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();	
+			.equals(contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId()) && getTaskId()== null){
+				
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 			}
+			//if contract from tasklist taskid != null
+			if(getTaskId()!= null){
+				
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getContractVerId();
+				log.info("tasklist screen  :: contractVer :: >>> "+contractVerId);
+			}else {
+				
+				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
+				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
+			}
+			// End - #29507 Fixing
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+			  
 			
 		  if(contId!=null ) {
 				SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.ctContract.contractId", SearchOperator.OPERATOR_EQUALS.value(),contId);

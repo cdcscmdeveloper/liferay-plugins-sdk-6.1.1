@@ -1,9 +1,11 @@
 package my.ep.web.backingbean.sm.forcereplaceadmin;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -11,6 +13,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
@@ -483,6 +487,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
+			//#29616 -start
+			//check old admin have active softcert
+			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				throw new EpException(MessageConst.ERROR_722685,
+						new String[] { getManagedBean().getOldAdmin().getName() });
+			}//#29616 -end
 		}
 		
 		listenerChangeRole();

@@ -14802,6 +14802,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				//Bug #29808
 				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
 			}
+			//}
 		}
 		
 	}

@@ -1541,6 +1541,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(null==scQt.getScheduleType()){
 			scQt.setScheduleType(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 		}
+		
+		//Bug_29025 - Start
+		if(scQt.getProcurementMode() == null){
+			scQt.setProcurementMode(this.getManagedBean().getScQt().getProcurementMode());
+		}
+		//Bug_29025 - End
+		
 		scLoa.setScQt(scQt);
 
 	}

@@ -27,7 +27,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.Collection; //#29253 #25037
+import java.util.Collections; //#29253 #25037
+import java.util.Comparator; //#29253 #25037
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -118,6 +120,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
@@ -132,6 +135,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -2085,16 +2089,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the string[]
 	 */
 	private String[] sortOutcomes(String[] outComes) {
+		outComes = outComes==null ? new String[]{} : outComes;//29253-start
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
-
-		// Move 'Cancel' button to the last
-		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
-				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
-						BpmOutcomeConst.BPM_CANCEL)) {
-			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
-			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
-		}
-
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[]{
+					BpmOutcomeConst.BPM_ENDORSE, 
+					BpmOutcomeConst.BPM_CANCEL}; 
+			//last index will appear on the far right, 
+			//if outcome not ranked, order come as is,
+			//existed ordered outcome will take precedent
+			List<String> sortOrder = Arrays.asList(orderedAction);
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});//29253-end
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
@@ -2406,6 +2414,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}else if("Y".equalsIgnoreCase(statusCode)){
 					return SmCommonUtil.getMessage("lbl.sm.status.y", null);
 				}
+				//start #29935
+				else if("F".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.winding.up.under.cva", null);
+				}
+				else if("G".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing.under.jm.under.cva", null);
+				}
+				else if("J".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing.under.jm", null);
+				}
+				else if("V".equalsIgnoreCase(statusCode)){
+					return SmCommonUtil.getMessage("lbl.sm.status.existing.under.cva", null);
+				}
+				//end #29935
 				return "";
 			}
 	
@@ -2431,6 +2453,47 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return disabledField;
 	}
 	
+	// #21962 - start
+	public Boolean userHasUserTask(UserTasks [] uts){
+		for(int i = 0; i < uts.length; i++){
+			if(userHasUserTask(uts[i])){
+				return true;
+		 
+				 
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * To determine user's UserTasks in getManagedBean()
+	 * 
+	 * @param ut - userTask to be tested
+	 * @return
+	 */
+	public Boolean userHasUserTask(UserTasks ut){
+		if(getManagedBean().getUserTasks()!=null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())){
+			if(getManagedBean().getUserTasks().contains(ut)){
+				return true;
+			}			
+		}
+		return false;
+	}
+	
+	public Boolean userHasUserTask(String ut){
+		if(getManagedBean().getUserTasks()!=null && !CollectionUtils.isEmpty(getManagedBean().getUserTasks())){
+			Object[] t = getManagedBean().getUserTasks().toArray();
+			for(int i = 0; i<t.length; i++){
+				if(((UserTasks)t[i]).toString().equals(ut)){
+					return true;
+				}
+			}
+			 
+		}
+		return false;
+	}
+	// #21962 - end
+
 	public void changeRoleAndProceed() {
 	//start loop list #28454
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();

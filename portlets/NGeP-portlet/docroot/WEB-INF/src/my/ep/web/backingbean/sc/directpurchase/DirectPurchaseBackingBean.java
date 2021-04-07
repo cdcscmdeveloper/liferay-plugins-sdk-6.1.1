@@ -438,6 +438,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
 		if (null != purchaseRequest) {
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
+			System.out.println("Bug 28878 : purchaseRequestId : " + purchaseRequestId);
 			List<ScRequestNoteDtl> requestNoteDtls = null;
 			ScRequestNote requestNote = null;
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
@@ -470,6 +471,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				SmSupplier smSupplier = new SmSupplier();
 				smSupplier.setCompanyName((String) prObj[3]);
 				rnBackingBean.getManagedBean().setSmSupplier(smSupplier);
+				System.out.println("Bug 28878 : smSupplier.getCompanyName : "  + smSupplier.getCompanyName());
 				
 				PmStatus requestNoteStatus = new PmStatus();
 				requestNoteStatus.setStatusId((Long) prObj[4]);

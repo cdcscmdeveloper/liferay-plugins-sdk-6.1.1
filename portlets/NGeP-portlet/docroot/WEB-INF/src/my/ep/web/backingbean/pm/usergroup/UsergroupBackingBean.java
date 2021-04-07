@@ -1366,6 +1366,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					groupUser.setApprovalLimit(groupUserSearch.getApprovalLimit());
 					groupUser.setBrandNew(groupUserSearch.isBrandNew());
 					groupUser.setUserGroupUserId(groupUserSearch.getUserGroupUserId()); //#29225
+					groupUser.setUserGroupUserId(groupUserSearch.getUserGroupUserId()); //#29225
 					logger.info("insert : " + groupUser.getPmUser().getUserName() + ", " + groupUser.getPmUser().getIdentificationNo()
 							+ ", " + groupUser.getApprovalLimit() + "," + groupUser.getRecordStatusFlg()
 							+ ", " + groupUser.isBrandNew());

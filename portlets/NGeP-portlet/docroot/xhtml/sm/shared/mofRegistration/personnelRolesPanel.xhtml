@@ -196,9 +196,11 @@
 								<tr>
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.prof}">
-											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, :#{p:component('equiPerDtlPan')}"
+											<!-- #30517 Start -->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
+											<!-- #30517 End -->
 										</p:selectBooleanCheckbox></td>
 									<td>
 										<ac:smCheckBoxChangeAlert 
@@ -212,9 +214,11 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableSemiProf}"
 											value="#{backingBean.managedBean.selectedShareHolder.semiProf}">
-											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}, :#{p:component('equiPerDtlPan')}"
+											<!-- #30517 Start -->
+											<p:ajax event="change" update=":#{p:component('shrRolesPanel')}"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('N')}" />
+											<!-- #30517 End -->
 										</p:selectBooleanCheckbox></td>
 									<td>
 										<ac:smCheckBoxChangeAlert 
@@ -229,8 +233,10 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff || backingBean.managedBean.selectedShareHolder.equityOwner}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
-										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog]), :#{p:component('equiPerDtlPan')}"
+										<!-- #30517 Start -->
+										<p:ajax event="change" update=":#{p:component('shrRolesPanel')},@([id$=shareHolderAddrDialog])"
 												process=":#{p:component('shrRolesPanel')}" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+										<!-- #30517 End -->
 										</p:selectBooleanCheckbox>
 									</td>
 									<td>

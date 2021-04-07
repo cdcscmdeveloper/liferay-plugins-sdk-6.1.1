@@ -1684,5 +1684,4 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	//30468-end
-		
 }

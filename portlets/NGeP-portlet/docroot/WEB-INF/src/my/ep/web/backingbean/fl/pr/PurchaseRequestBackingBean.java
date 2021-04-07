@@ -3343,12 +3343,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				IRuleSO ruleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
 				RuleResDTO roleResDTO = null;
-				ruleReqDTO.setRuleType(RuleTypeConst.LO_PO_ACKNOWLEDGMENT_PERIOD); //#25147
+				ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
 				roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 				if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 					getManagedBean().setTaskDeadLine(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
-					getManagedBean().setTaskDeadLine("0"); //temporary #25147
+					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 				}
 				
 				for(FlDeliveryAddress deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){

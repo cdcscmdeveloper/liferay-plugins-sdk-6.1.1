@@ -68,11 +68,17 @@
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '1'}" />
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '0'}" />
 				</td>
+			<!-- #29856 - Start -->		
+			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryCode == SupplierManagementConst.COUNTRY_MALAYSIA_CODE}">
 				<td><p:outputLabel styleClass="outputLabel-view-label" value=" #{lbl['lbl.sm.person.religion']}" /></td>
 				<td>
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.non.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.muslim']}" 
+					rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.non.muslim']}"
+					 rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
 				</td>
+			</c:if>
+			<!-- #29856 - End -->
 			</tr>
 		</table>
 	</p:panel>

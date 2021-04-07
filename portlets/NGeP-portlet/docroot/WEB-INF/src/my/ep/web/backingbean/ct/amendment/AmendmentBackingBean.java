@@ -2825,6 +2825,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @return new overall contract amount
 	 */
+	// Start - #29589
 	public BigDecimal newOverallContractAmt() {
 		BigDecimal contractAmt = newContractAmt();
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null )  {
@@ -2834,15 +2835,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return contractAmt;
 	}
 	
+	
 	public BigDecimal newOverallContractAmount() {
 		BigDecimal contractAmount = newOverallContractAmt();
+	
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() != null )  {
 			contractAmount = newOverallContractAmt().add(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount());
 		
 		}
 		return contractAmount;
 	}
-
+	// End - #29589
+	
+  
 	/**
 	 * The method used to retrieve the new contract period
 	 * with addition of old contract period and extended period.
@@ -2969,7 +2974,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	//Bug #29323 - End
 			//Bug #28339 for Fixing #20997--End
 	//#20997 -- End
-	
 	/**
 	 * The method used to edit the product item price.
 	 * This method will creating a new records in the item price list
@@ -3015,6 +3019,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		this.getManagedBean().getSelectedItem().getCtItemPrices().clear();
 		this.getManagedBean().getSelectedItem().getCtItemPrices().addAll(ctItemPriceList);
+		//Bug #29323 - Remove Code
+//		for(CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()){
+//			log.info("totalsize itemprices "+itemPrice.getItemPriceId());
+//		}
+		
+
 		newItemPrice(getManagedBean().getSelectedItem());
 		ctItemPriceList.clear();
 
@@ -3293,7 +3303,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//Bug #29323 - End
 	//#20997--End
-	
 	/**
 	 * The method used to retrieve the item ceiling quantity which in active status
 	 * to be displayed on screen.
@@ -5349,6 +5358,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) { //#29740
 						userRole = RoleCode.FPB_SECRETARY.value();
+					} else if (getFacesScopes().getUserRoleList().size() != 0) {
+						userRole = RoleCode.FPB_SECRETARY.value();
 					}
 				} else {
 					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
@@ -5620,7 +5631,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
-	
 	//#25890 - End
 	
 	//#30428 - Start

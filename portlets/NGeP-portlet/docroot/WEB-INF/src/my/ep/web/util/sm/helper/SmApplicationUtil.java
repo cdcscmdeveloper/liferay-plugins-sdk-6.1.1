@@ -237,7 +237,6 @@ public class SmApplicationUtil {
 	 */
 	public static int validatePersonLimit(Long supplierId, String applType,
 			Long applId) {
-		log.info("******* Validate Personnel Count Start ******");
 		int validPerCount = 0;
 		int count = 5;
 		int resultCount = 0;
@@ -265,7 +264,6 @@ public class SmApplicationUtil {
 			validPerCount = 0;
 		}
 
-		log.info("******* Validate Personnel Count Start ******");
 		return validPerCount;
 	}
 
@@ -540,13 +538,10 @@ public class SmApplicationUtil {
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			if (pmUser == null
 					|| (pmUser != null && pmUser.getUserId() == null)) {
-				log.info("**** Invalid user from the session scope ******");
 				throw new EpException(MessageConst.ERROR_721017);
 			}
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(pmUser.getLoginId());
-			log.info("************Supplier PmUser Login Id:"
-					+ pmUser.getLoginId());
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 			supplierSearchReqDTO.setAllStatuses(true);
@@ -561,15 +556,8 @@ public class SmApplicationUtil {
 						.get(0);
 				log.debug("*************Current Supplier: "
 						+ smSupp.getSupplierId());
-			} else {
-//				FIXME: check again this condition because all user without Disciplinary Action view this error message (#26934)
-//				log.debug("**** No valid supplier record found for this user ******");
-//				throw new EpException(MessageConst.ERROR_721018);
-			}
-			if (smSupp.getSupplierId() == null) {
-//				FIXME: check again this condition because all user without Disciplinary Action view this error message (#26934)
-//				throw new EpException(MessageConst.ERROR_721018);
-			}
+			} 
+
 			return smSupp;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1775,7 +1763,6 @@ public class SmApplicationUtil {
 
 	public static boolean validatePersonnelAcademics(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
-		log.info("******* Validate Academics For personnel******** ");
 		boolean validPersonnels = true;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
@@ -1879,6 +1866,40 @@ public class SmApplicationUtil {
 			}
 
 		}
+		
+		// start #30076
+		boolean validateSmBranch = true;
+		StringBuilder sbSuppBranch = new StringBuilder();
+		sbSuppBranch.append("<br/>");
+		int x = 0;
+		for (SmSupplierBranch suppBranch : appl.getSmSupplierBranches()) {
+			if (suppBranch.getBranchName().isEmpty()
+					|| suppBranch.getSmAddress() == null
+					|| (suppBranch.getSmAddress() != null && suppBranch.getSmAddress().getAddress1().isEmpty()
+							|| suppBranch.getSmAddress().getPostcode() == null
+							|| suppBranch.getSmAddress().getCountryId() == null
+							|| suppBranch.getSmAddress().getStateId() == null
+							|| suppBranch.getSmAddress().getDistrictId() == null || suppBranch.getSmAddress()
+							.getCityId() == null) || suppBranch.getSmPersonnel() == null) {
+				validateSmBranch = false;
+				sbSuppBranch.append(++x + ". ");
+				sbSuppBranch.append(suppBranch.getBranchName());
+				sbSuppBranch.append("<br/>");
+			}
+		}
+
+		if (!validateSmBranch) {
+			validSave = false;
+			StringBuilder errMsg = new StringBuilder();
+			errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
+			errMsg.append(sbSuppBranch);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
+			throw new EpException(errMsg.toString());
+		}
+		// end #30076
+
 		//16052019 - SSM INTEGRATION CR #27219
 		if (showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser() && appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			if (currentTab != -1) {
@@ -2015,7 +2036,7 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 	}
-
+	
 	/**
 	 * Sets the navigation back to current page.
 	 * 
@@ -2680,10 +2701,8 @@ public class SmApplicationUtil {
 				per.setIdentityResidentStatus(resDTO.getResidentStatus());
 				// end #21946
 			}
-			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.info("**********error calling myidentity api[" + e.getMessage()
+			log.error("**********error calling myidentity api[" + e.getMessage()
 					+ "]");
 		}
 
@@ -3030,7 +3049,7 @@ public class SmApplicationUtil {
 			SmStaffTotal stf3 = new SmStaffTotal();
 			staffList.add(setDefaultStaffValues(stf3, app,
 					SupplierManagementConst.STAFF_TYPE_CLERICAL));
-		}else{
+		} else {
 			SmStaffTotal stf = new SmStaffTotal();
 			staffList.add(setDefaultStaffValues(stf, app,
 					SupplierManagementConst.STAFF_TYPE_CONTRACTOR));
@@ -5171,7 +5190,6 @@ public class SmApplicationUtil {
 			s = SupplierManagementConst.PROCEED_MOF_REG;
 			break;
 		case "A":
-			// TODO changed to satisfy enhancement of adding the bank section
 			s = SupplierManagementConst.PROCEED_ADDTNLCAT_APPLN_SIDEMENU;
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
@@ -6555,8 +6573,8 @@ public class SmApplicationUtil {
 					if (facType
 							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 						managedBean.setShowFactoryPanel(true);
-					} else if (facType
-							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+					} else if (facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+							|| facType.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) { //#30043
 						managedBean.setShowStorePanel(true);
 					} else if (facType
 							.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
@@ -10076,7 +10094,7 @@ public class SmApplicationUtil {
 			String fileNameAndPath = tmpPath + fileName;
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
-			FacesScopes fs = new FacesScopes();
+			//FacesScopes fs = new FacesScopes();
 			// context.put("hostUrl", fs.getRequest().getServerName() + ":"
 			// + fs.getRequest().getServerPort());
 			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
@@ -11754,6 +11772,11 @@ public class SmApplicationUtil {
 			if (shr.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				countAuthorizedPersonnel++;
 			}
+			//#29616 -start
+			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				throw new EpException(MessageConst.ERROR_722685,
+						new String[] { shr.getName() });
+			}//#29616 -end
 		}
 		return countAuthorizedPersonnel;
 	}
@@ -11965,7 +11988,7 @@ public class SmApplicationUtil {
 							|| bean.getSelectedShareHolder().isDirector()
 							|| bean.getSelectedShareHolder()
 									.isHigherManagement() || bean
-							.getSelectedShareHolder().isManagement())) {				
+							.getSelectedShareHolder().isManagement())) {
 				bean.getSelectedShareHolder().setClerical(false);
 				bean.getSelectedShareHolder().setDisableStaff(true);
 		  //#29666 - START		
@@ -12051,9 +12074,11 @@ public class SmApplicationUtil {
 		boolean retVal = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			if (!per.getPersonnelId().equals(personelId)){  //#29666 - add condition
-			if (per.isEquityOwner() && per.isClerical()) {
-				retVal = true;
-				break;
+			if (!per.getPersonnelId().equals(personelId)) { // #29666 - add condition
+				if (per.isEquityOwner() && per.isClerical()) {
+					retVal = true;
+					break;
+				}
 			}
 		}
 	 }
@@ -12240,7 +12265,6 @@ public class SmApplicationUtil {
 		if (bean.getSelectedShareHolder().getSmRelatedCompanies()
 				.contains(bean.getSelectedRelatedCompany())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmRelatedCompanies()
 					.add(bean.getSelectedRelatedCompany());
@@ -12314,7 +12338,6 @@ public class SmApplicationUtil {
 		if (bean.getSelectedShareHolder().getSmAssociationBodies()
 				.contains(bean.getSelectedStfPrfBdy())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmAssociationBodies()
 					.add(bean.getSelectedStfPrfBdy());
@@ -12379,7 +12402,6 @@ public class SmApplicationUtil {
 		}
 		if (bean.getSelectedShareHolder().getSmStaffAcademics()
 				.contains(bean.getSelectedStaffAcademic())) {
-			// TODO if any validation reqd for edit
 		} else {
 
 			bean.getSelectedShareHolder().getSmStaffAcademics()
@@ -12461,14 +12483,11 @@ public class SmApplicationUtil {
 			RequestContext.getCurrentInstance().execute(
 					addPopupName + ".show()");
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -12498,14 +12517,11 @@ public class SmApplicationUtil {
 
 			}
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.toString());
 		}
 	}
 
@@ -13327,7 +13343,7 @@ public class SmApplicationUtil {
 			startDate = workFlowList.get(0).getCreatedDate();
 			if (workFlowList.size() > 1) {
 				Iterator<SmWorkflowStatus> wfIter = workFlowList.iterator();
-				SmWorkflowStatus wfStart = wfIter.next();
+				//SmWorkflowStatus wfStart = wfIter.next();
 				int i = 0;
 				while (wfIter.hasNext()) {
 					i++;
@@ -13446,35 +13462,6 @@ public class SmApplicationUtil {
 			}
 		}
 	}
-	
-	//24964 - start 
-	public static void rejectSmMofCertForSupplier(SmSupplier supplier){
-		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
-		reqDTO.setSupplierId(supplier.getSupplierId());
-				
-		VirtualCertResDTO resDTO = SmServiceLookup.getVirtualCertSO().retrieveMOFCertBySupplierId(reqDTO);
-		
-		if(resDTO != null && resDTO.getSmMofCerts() != null){
-			for(SmMofCert cert : resDTO.getSmMofCerts()){
-				if(cert.isBumiCert() 
-						&& cert.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					VirtualCertReqDTO rejectedMofCert = new VirtualCertReqDTO();
-					MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
-					
-					//update sm_supplier: is_bumi to 0
-					supplier.setBumi(false);
-					mofRegistrationReqDTO.setSmSupplier(supplier);
-					SmServiceLookup.getMofRegistrationSO().updateSupplierProfile(mofRegistrationReqDTO);					
-					
-					//update record_status = 4
-					cert.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);					
-					rejectedMofCert.setMofCert(cert);
-					SmServiceLookup.getVirtualCertSO().updateMOFCert(rejectedMofCert);
-				}
-			}
-		}
-	}
-	//24964 - end
 	
 	//#29315 - start
 		public static void populateMandatoryEpfNo(SmApplicationManagedBean bean){

@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -217,7 +216,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -234,7 +232,6 @@ import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
-// TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
@@ -3127,6 +3124,11 @@ public class SmCommonUtil {
 			if (softcertRequest != null
 					&& softcertRequest.getPmDigiCert() != null
 					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
+				// #29990 - start
+				if (softcertRequest.getPmDigiCert().getValidTo().before(new Date())) {
+					retVal = true;
+				}
+				/*
 				Calendar renewDate = Calendar.getInstance();
 				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
 				renewDate.add(Calendar.MONTH, -SmServiceLookup.getSmRuleSO()
@@ -3136,6 +3138,8 @@ public class SmCommonUtil {
 						renewDate.getTime())) {
 					retVal = true;
 				}
+				*/
+				// #29990 - end
 			}
 
 		}
@@ -4379,8 +4383,8 @@ public class SmCommonUtil {
 					}
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
-			}//END 27329
-
+			}//END 27329			
+			
 			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
@@ -5140,7 +5144,7 @@ public class SmCommonUtil {
 									sbEng.append(remark);
 								}
 
-								sbEng.append("<br />");
+								sbEng.append("<br/>");
 							} else {
 								sbMs.append(i + ") " + desc.getReasonDesc());
 
@@ -5149,7 +5153,7 @@ public class SmCommonUtil {
 									sbMs.append(remark);
 								}
 
-								sbMs.append("<br />");
+								sbMs.append("<br/>");
 							}
 						}
 						i++;

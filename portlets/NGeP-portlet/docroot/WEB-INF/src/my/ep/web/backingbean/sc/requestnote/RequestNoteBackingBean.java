@@ -1182,6 +1182,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote = checkingItemUnitPrice(requestNote);
 			//#30063 - End
 			
+			// #30448 - start
+			requestNote = checkingPriceType2(requestNote);
+			// #30448 - end
 			
 			if (requestNote.getScRNZone() != null) {
 				getManagedBean().setScRNZone(requestNote.getScRNZone());	
@@ -5053,6 +5056,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(priceTypeChange){
 			requestNoteReqDTO.setRequestNote(requestNote);
 			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
+			
+			// #30448 - start
+			// Retrieve data after save
+			requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+			requestNoteReqDTO.setRequestNoteNo(requestNote.getRequestNoteNo());
+			RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+			if(requestNoteResDTO.getRequestNoteDetail() != null){
+				requestNote = requestNoteResDTO.getRequestNoteDetail();
+			}
+			// #30448 - end
 		}
 				
 		return requestNote;
@@ -5107,4 +5120,53 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return requestNote;
 	}
 	//#30063 - End
+	
+	// #30448 - start
+	public ScRequestNote checkingPriceType2(ScRequestNote requestNote) {
+		log.info("checkingPriceType2");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		boolean priceTypeChange = false;
+
+		if (requestNote.getQuote() != null) {
+
+			if (!requestNote.getQuote().isZonal()) {
+
+				if (requestNote.getRequestNoteDtls() != null) {
+
+					for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
+
+						if (requestNoteDtl.getScRequestSupplierItem() != null
+								& requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null) {
+
+							for (ScSupplierItemPrice supplierItemPrice : requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices()) {
+								if (supplierItemPrice.getPriceType() != null) {
+									if (supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+										supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD));
+										priceTypeChange = true;
+									} else if (supplierItemPrice.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+										supplierItemPrice.setPriceType(getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_TIER));
+										priceTypeChange = true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if (priceTypeChange) {
+			requestNoteReqDTO.setRequestNote(requestNote);
+			getRequestNoteSO().updateRequestNoteInfo(requestNoteReqDTO);
+			
+			// Retrieve data after save
+			 requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+			 requestNoteReqDTO.setRequestNoteNo(requestNote.getRequestNoteNo());
+			 RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+			if (requestNoteResDTO.getRequestNoteDetail() != null) {
+				requestNote = requestNoteResDTO.getRequestNoteDetail();
+			}
+		}
+		return requestNote;
+	}
+	// #30448 - end
 }

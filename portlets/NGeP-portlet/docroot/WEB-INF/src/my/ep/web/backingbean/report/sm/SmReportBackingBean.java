@@ -121,7 +121,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 			RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
