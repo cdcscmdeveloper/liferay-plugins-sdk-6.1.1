@@ -22,6 +22,7 @@ import javax.naming.NamingException;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -60,6 +61,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -82,6 +84,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
+import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean; //#25396
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.ReportConst;
@@ -89,8 +92,10 @@ import my.ep.web.managedbean.sc.directpurchase.DirectPurchaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;//#25396
 import my.ep.web.util.pm.helper.StatusHelper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 // TODO: Auto-generated Javadoc
 
@@ -150,6 +155,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
+			//#25396 - Start
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
+			}
+			//#25396 - End
+			
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
 
@@ -162,6 +173,47 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		.handleNavigation(fc, null, DIRECT_PURCHASE_SEARCH_PAGE_NAV);
 	}
 	
+	//Enhancement #25396
+	/**
+	 *  Get document types based on View As selected.
+	 */
+	public void getDocTypesByViewAs() {
+		getManagedBean().setSearchDocumentType(null);		
+		Long paramViewAsId = 0L;
+		
+		if (getManagedBean().getSearchFunctionType() != null && getManagedBean().getSearchFunctionType() != "") {
+			paramViewAsId = Long.parseLong(getManagedBean().getSearchFunctionType());
+			PmParameter viewAsTypeCode = ParameterHelper.getInstance().getPmParameterById(paramViewAsId);
+			
+			if(viewAsTypeCode.getParameterCode().equals(ParameterConst.ORG_TYPE_PTJ)){
+				getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
+				getManagedBean().setGovernment(Boolean.TRUE);
+				getManagedBean().setViewAsPTJ(Boolean.TRUE);
+				getManagedBean().setViewAsSupplier(Boolean.FALSE);
+				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
+				getManagedBean().setShowMinistryPtjField(Boolean.TRUE);
+				
+				PmTrackingDiaryBackingBean  pmTrackingDiaryBackingBean= new PmTrackingDiaryBackingBean();
+				pmTrackingDiaryBackingBean.getManagedBean().setUseViewAsOption(Boolean.TRUE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsPTJ(Boolean.TRUE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsSupplier(Boolean.FALSE);
+				
+			}else if(viewAsTypeCode.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
+				getDocumentTypes(Boolean.FALSE, Boolean.FALSE);
+				getManagedBean().setGovernment(Boolean.FALSE);
+				getManagedBean().setViewAsPTJ(Boolean.FALSE);
+				getManagedBean().setViewAsSupplier(Boolean.TRUE);	
+				getManagedBean().setShowMinistryPtjField(Boolean.FALSE);
+				
+				PmTrackingDiaryBackingBean  pmTrackingDiaryBackingBean= new PmTrackingDiaryBackingBean();
+				pmTrackingDiaryBackingBean.getManagedBean().setUseViewAsOption(Boolean.TRUE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsPTJ(Boolean.FALSE);
+				pmTrackingDiaryBackingBean.getManagedBean().setViewAsSupplier(Boolean.TRUE);
+			}	
+		}
+		
+	}
+	// end - 25396
 	
 	/**
 	 * Checks if is government.
@@ -201,9 +253,31 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
 
+			// #25396 - start
+			PmParameter pmParameter = null;
+			if (StringUtils.isNotEmpty(getManagedBean().getSearchFunctionType())) {
+				try {
+					pmParameter = retrieveParameterById(Long.valueOf(getManagedBean().getSearchFunctionType()));
+					getManagedBean().setG2G(false);
+					//pmParameter = retrieveParameterByTypeAndCode(parameterType, parameterCode)
+				 } catch (NumberFormatException  e) {
+					 log.info("-->getSearchFunctionType() is null ");
+				}
+			}
+			// #25396 - end
+			
 			if (isMaintenance) {
 				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			} else {
+			}
+			// #25396 - start
+			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
+				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+				getManagedBean().setG2G(Boolean.TRUE);
+				getManagedBean().setGovernment(Boolean.FALSE);
+			}
+			// #25396 - end
+			else {
 				docTypeList.add(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
 				docTypeList.add(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
 				if (isGovernament) {
@@ -292,6 +366,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	public void search() {
 		debugLogger("DpTrackingDiaryBackingBean search");
+		//start - #25396 
+		if(showFunctionType()){
+			if (getManagedBean().getSearchFunctionType() == null || getManagedBean().getSearchFunctionType() == "") {
+				throw new EpException(MessageConst.ERROR_775160);
+			} 
+		}
+		//end - #25396
 		if ((null == getManagedBean().getSearchDocumentType())) {
 			throw new EpException(MessageConst.ERROR_776101);
 		} else{
@@ -500,7 +581,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-
+			reset(false); //#25396
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.viewPurchaseInDefault(docId);
@@ -547,7 +628,25 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		sqBackingBean.supplierViewSearch(docIdStr);
 		sqBackingBean.getManagedBean().setDpObj(dpObj);
 		sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		sqBackingBean.getManagedBean().setSaveButtonFlg(Boolean.FALSE); //#25396
+		sqBackingBean.getManagedBean().setSubmitButtonFlg(Boolean.FALSE); //#25396
 	}
+	
+	// Enhancement #25396 - start
+	/**
+	 * @param dpObj
+	 */
+	public void performViewDoc(Object[] dpObj) {
+		if (getManagedBean().isG2G() && getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
+			this.viewDoc(dpObj);
+		}
+		else if (getManagedBean().isG2G() || (isSupplier() && !isGovernment() && getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE))) { 
+			this.viewDocSupplierSQ(dpObj);
+		} else {
+			this.viewDoc(dpObj);
+		}
+	}
+	// Enhancement #25396 - end
 	
 	/**
 	 * Generate report.
@@ -607,17 +706,18 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * Reset direct purchase search.
 	 */
 	public void reset(boolean isMaintenance){
+		this.getManagedBean().setSearchFunctionType(null); // #25396
 		this.getManagedBean().setSearchDocumentNo(null);
 		this.getManagedBean().setSearchDocumentType(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setSearchDocumentTitle(null);
 		this.getManagedBean().setSearchDocumentToDuration(null);
 		this.getManagedBean().setSearchDocumentFromDuration(null);
-		if (!isMaintenance) {
+		/*if (!isMaintenance) { // #25396
 			getManagedBean().setSearchMinistryProfile(null);
 			getManagedBean().setSearchPtjGroupProfile(null);
 			getManagedBean().setSearchPtjProfile(null);
-		}
+		}*/
 		this.getManagedBean().resetDocumentDataModel();
 	}
 
@@ -807,7 +907,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				orgTypeCode.setParameterCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
 				ministryOrgProfile.setOrgTypeCode(orgTypeCode);
 				getManagedBean().setSearchPtjGroupProfile(ministryOrgProfile);
-				
 				postUpdateOrgProfileListener(ministryOrgProfile);
 				
 			} else { 
@@ -1233,5 +1332,49 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		
 		//12183 - end
+		
+	//  Redmine 25396: remove duplication option view by adding new drop down field
+		
+			public SelectItem[] getFunctionType() {
+				
+				List<String> typeList = new ArrayList<String>();
+				typeList.add(ParameterConst.ORG_TYPE_PTJ);
+				typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
+				
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_IN.value(),typeList));
+
+				return super.getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+				
+				
+			}
+			
+			/**
+			 * Return boolean TRUE for dual role only, else FALSE
+			 * @return boolean
+			 */
+			public boolean showFunctionType() {
+				if (hasSupplierRole() && hasGovernmentUserRole()) {
+					return true;
+				} 
+				return false;
+			}
+			
+						
+			/**
+			 * Return boolean TRUE for dual role and PTJ, else FALSE
+			 * @return boolean
+			 */
+			public boolean showRoleType() {
+				if(hasGovernmentUserRole()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			
+			// end 25396
 }
 

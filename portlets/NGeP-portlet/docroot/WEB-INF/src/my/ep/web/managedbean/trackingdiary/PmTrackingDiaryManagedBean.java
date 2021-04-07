@@ -2,7 +2,9 @@ package my.ep.web.managedbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -58,6 +60,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -113,6 +116,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private List<PmZone> zoneList;
 	private String backURL;
 	private boolean isFilterBySupplier;
+	
+	//start - #25396
+	private Boolean useViewAsOption;
+	private Boolean viewAsPTJ;
+	private Boolean viewAsSupplier;
+	private String supplierRole;
+	//end - #25396	
 
 	public String getBackURL() {
 		return backURL;
@@ -1060,6 +1070,26 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					resDTO = trackingDiarySO
 							.retrieveTrackingDiaryBySearchBean(reqDTO);
 					
+					// #25396 - Start
+					ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
+					HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+					if (isUseViewAsOption()) {
+						if (isViewAsSupplier()) {
+							List<String> listOfSupplierRole = getAllSupplierRole();
+							for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
+								if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
+									tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
+								}
+							}
+							tempResultBean.getResultList().clear();
+							tempResultBean.getResultList().addAll(
+									new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
+
+							resDTO.setResultBean(tempResultBean);
+						}
+					}
+					// #25790 - End
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1103,6 +1133,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		return pmOrgProfile;
 	}
 	
+	// to get list of all supplier role
+	// Start - #25396
+	private List<String> getAllSupplierRole() {
+		List<String> supplierRoles = new ArrayList<String>();
+
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.FL_USER.value());
+		supplierRoles.add(RoleCode.GOVT_SELLER.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+		return supplierRoles;
+	}
+
+	// End - #25396
+	
 	/**
 	 * set search bean description for tracking purpose
 	 *
@@ -1113,4 +1162,39 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
+
+	//start - #25396
+	public Boolean isUseViewAsOption() {
+		return useViewAsOption;
+	}
+
+	public void setUseViewAsOption(Boolean useViewAsOption) {
+		this.useViewAsOption = useViewAsOption;
+	}
+
+	public Boolean isViewAsPTJ() {
+		return viewAsPTJ;
+	}
+
+	public void setViewAsPTJ(Boolean viewAsPTJ) {
+		this.viewAsPTJ = viewAsPTJ;
+	}
+
+	public Boolean isViewAsSupplier() {
+		return viewAsSupplier;
+	}
+
+	public void setViewAsSupplier(Boolean viewAsSupplier) {
+		this.viewAsSupplier = viewAsSupplier;
+	}
+
+	public String getSupplierRole() {
+		return supplierRole;
+	}
+
+	public void setSupplierRole(String supplierRole) {
+		this.supplierRole = supplierRole;
+	}
+	
+	//end - #25396
 }
