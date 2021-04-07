@@ -485,7 +485,6 @@ public class SimpleQuoteBackingBean extends
 			scQuote = new ScQuote();
 			
 		} else {
-			
 			if (docId != null && docId > 0) {
 				boolean isPanel = scQuote.isPanel();
 				if (isPanel) {
@@ -522,7 +521,6 @@ public class SimpleQuoteBackingBean extends
 						//ERR-760162 = Select panel items only.
 						throw new EpException(MessageConst.ERROR_760162);
 					}
-					
 				} else if (panelItemFlag) {
 					//ERR-760161 = Select non contract items only.
 					throw new EpException(MessageConst.ERROR_760161);
@@ -1685,7 +1683,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
 					.getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
-			reqDTO.setRoleCode(getUserRoleCode());
+			//29194 - Start
+			reqDTO.setRoleCode(getUserRoleCodeSQ());
+			//29194 - End
 			reqDTO.setTaskExpiredDate(pidExpDate);
 			reqDTO.setPidApprovers(pidApprovers);
 			reqDTO.setDoUserId(doUserId);
@@ -2419,7 +2419,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setRoleCode(getUserRoleCode());
+			//29194 - Start
+			reqDTO.setRoleCode(getUserRoleCodeSQ());
+			//29194 - End
 			reqDTO.setTaskExpiredDate(getManagedBean().getTaskExpiryDate());
 			reqDTO.setPidApprovers(getManagedBean().getPidApprovers());
 
@@ -3889,6 +3891,16 @@ public class SimpleQuoteBackingBean extends
 	/**
 	 * Page navigation to catalogue search page from simpleQuote.
 	 */
+	
+	/**
+	 * Page navigation to Direct Purchase Search.
+	 */
+	// additional back menu
+	public String backMenuToPrevious() {
+		log.info("backMenuToPrevious");
+		return "directPurchaseSearch";
+	}
+	
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -5153,6 +5165,10 @@ public class SimpleQuoteBackingBean extends
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5326,6 +5342,10 @@ public class SimpleQuoteBackingBean extends
 				// quoteSO = null;
 			}
 
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.FALSE);
+			// #28199 - End
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -5345,7 +5365,11 @@ public class SimpleQuoteBackingBean extends
 				.getServiceTemplateSpecBean();
 
 		if (StringUtils.isNotBlank(quoteIdStr)) {
-
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
+			
 			try {
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
@@ -5354,12 +5378,20 @@ public class SimpleQuoteBackingBean extends
 				quoteReqDTO.setUserId(facesScopes.getUserSessionBean()
 						.getUserId());
 				quoteReqDTO.setFetchSubEntity(true);
+				
+				//#25396 - start
+				Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);
+				//#25396 - end
+				
 				QuoteResDTO quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(
 						quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				Long supplierId = getSupplierId();
-				quoteReqDTO.setSupplierId(supplierId);
 				
+				//#25396 - start (comment out)
+			    /*Long supplierId = getSupplierId();
+				quoteReqDTO.setSupplierId(supplierId);*/
+				//#25396 - end				
 				// clear session data.
 				renewSesionObject();
 
@@ -5518,6 +5550,10 @@ public class SimpleQuoteBackingBean extends
 			} finally {
 				// quoteSO = null;
 			}
+			
+			// #28199 - Start : Remove back button from SQ Response Screen
+			getManagedBean().setSqAuditFlg(Boolean.TRUE);
+			// #28199 - End
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
