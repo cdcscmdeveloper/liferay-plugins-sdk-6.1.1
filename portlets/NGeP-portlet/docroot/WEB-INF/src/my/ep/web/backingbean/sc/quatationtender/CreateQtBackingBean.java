@@ -112,6 +112,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.EpPortletUtil; // #11104
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -3500,4 +3501,58 @@ public class CreateQtBackingBean extends
 	}
 	/*:::Enhancement #25638 #29 - end:::*/
 	
+	/** #11104  START */	
+	/**
+	 * sample change.change sample(yes/no) radion button in 
+	 * owner.
+	 * 
+	 * @param event
+	 *            (String Samplechange)
+	 */
+	public void sampleChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getQt().setSampleReq(type);
+		List<ScQtCheckList> st2technicalproposalList = getManagedBean()
+				.getScQtCheckSt2techProposal();
+
+		if (null == st2technicalproposalList) {
+			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+
+		}
+		if(type == true){
+			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
+		}else{
+			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
+				getManagedBean().setMarkDeletedTechChecklist(
+						new ArrayList<ScQtCheckList>());
+			}
+			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
+				for(ScQtCheckList checklist:st2technicalproposalList){
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
+							.getDefinationType().getParameterCode())) {
+						getManagedBean().getMarkDeletedTechChecklist().add(checklist);
+						st2technicalproposalList.remove(checklist);
+						break;
+					}
+				}
+			}
+		}
+	}
+	/***11104
+	 * check portlet is specpreparation or not
+	 */
+	public boolean isSpecScreen() {
+		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		return screen;
+	}
+	/***
+	 * 11104
+	 * check portlet is specmaintennace or not
+	 */
+	public boolean isSpecEndorsmentScreen() {
+		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		return screen;
+	}
+	//#11104-end
 }
