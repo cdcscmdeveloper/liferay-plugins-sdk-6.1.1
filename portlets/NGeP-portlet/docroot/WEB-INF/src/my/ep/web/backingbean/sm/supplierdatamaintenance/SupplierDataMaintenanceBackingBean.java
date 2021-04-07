@@ -753,9 +753,9 @@ public class SupplierDataMaintenanceBackingBean extends
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
 			//set tracking diary for Disciplinary Action
-			if (getManagedBean().isEditDisciplinaryAction()) {				
+			if (getManagedBean().isEditDisciplinaryAction()) {
 				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
-						getManagedBean().getSmAppl(),
+						activeAppl,//26238 - Disciplinary Action - bug fix
 						getTrackingActionDesc(reqDTO,"DA"));
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
