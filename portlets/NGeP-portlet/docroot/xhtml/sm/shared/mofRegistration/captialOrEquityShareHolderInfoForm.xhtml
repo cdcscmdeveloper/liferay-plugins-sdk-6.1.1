@@ -15,7 +15,15 @@
 				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
 					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
 					and backingBean.managedBean.smSupplier.businessType ne 'P'}"/>
-			
+			<!-- 28466 - start - add screen instruction -->
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.shareholder.valid.value.shareholder']}"
+				escape="false"
+				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
+					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
+					and backingBean.managedBean.smSupplier.businessType ne 'P' and backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}" />
+			<!-- 28466 - end -->
+
 			<table style="width: 100%">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<tr>
@@ -90,10 +98,30 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
-						<h:outputText value="#{shareBean.shareAmt}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText>
+						<!-- 28466 - start - add mandatory sign (*) and allow supplier to key-in the Value (RM)-->
+						<c:choose>
+							<c:when
+								test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
+								<f:facet name="header">
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float:left" />
+									<h:outputText value="#{lbl['lbl.sm.shrHldrInfo.shrVal']}" />
+								</f:facet>
+								<p:inputText value="#{shareBean.shareAmt}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									<p:ajax event="blur" update="shrPerDt"
+										listener="#{backingBean.calculateCapital}" />
+								</p:inputText>
+							</c:when>
+							<c:otherwise>
+								<h:outputText value="#{shareBean.shareAmt}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</c:otherwise>
+						</c:choose>
+						<!-- 28466 - end -->
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.bumi']}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">

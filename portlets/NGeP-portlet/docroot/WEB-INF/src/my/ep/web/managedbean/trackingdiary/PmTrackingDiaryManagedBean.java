@@ -2,6 +2,7 @@ package my.ep.web.managedbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -58,6 +59,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1037,19 +1039,28 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
-			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
- 
-			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-			
-			if (isSearchBeanEmpty) {
-				reqDTO.setSearchBean(searchBean);
-				
-				if (isFilterBySupplier()) {
-					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
+
+			if (isSearchBeanEmpty) {  
+                 //#Bug 28870 -START  --Disabling isFilterBySupplier()--
+//				if (isFilterBySupplier() ) { 
+			     //#Bug 28870 -END
+					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true); 
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
-						reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
-					}	
-				}
+						//START- Bug #29861 
+						if(ParameterConst.DOCTYPE_SUPPLIER_APPLICATION.equalsIgnoreCase(getSelectedDocType())){
+							//(Valid Only for docType = SR (From SM Module)
+							log.info("DOC_TYPE === >>> SR ");
+							searchBean.getDataFilterBeans().add(new SearchFilterBean(
+									"roleCode",
+									SearchOperator.OPERATOR_IN.value(), 
+									getAllSupplierRoleForSM()));	
+						}else{
+							reqDTO.setSupplierId(pmOrgProfile.getOrgProfileId());
+						}
+						//END - Bug #29861
+					}
+//				}
+
 				
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
@@ -1113,4 +1124,20 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
+	
+	//START- Bug #29861
+	private List<String> getAllSupplierRoleForSM(){
+		List<String> supplierRoles = new ArrayList<String>();
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.FL_USER.value());
+		supplierRoles.add(RoleCode.SUPPLIER_TEMP.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+		return supplierRoles;
+	}
+	//END - Bug #29861
 }

@@ -4153,14 +4153,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.smEquityCompaniesSsm = smEquityCompaniesSsm;
 	}
 	
-	public boolean isFlagMandatoryEpfNo() {
-		return flagMandatoryEpfNo;
-	}
-
-	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
-		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
-	}
-	
 	// #29664 - start
 	public String getRoleCode() {
 		return roleCode;
@@ -4193,6 +4185,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setItemDeleteButtonShow(boolean itemDeleteButtonShow) {
 		this.itemDeleteButtonShow = itemDeleteButtonShow;
+	}
+	
+	public boolean isFlagMandatoryEpfNo() {
+		return flagMandatoryEpfNo;
+	}
+
+	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
+		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
 	}
 
 	public int getIndex() {
@@ -4370,5 +4370,4 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
 	}
-
 }

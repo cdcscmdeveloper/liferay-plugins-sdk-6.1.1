@@ -349,7 +349,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		    <!-- 02022021@#27624 - start --> 
 			<p:commandButton id="btnCloneT" value="#{lbl['lbl.btn.clone']}" 
 			   action="#{pPlanBackingBean.parameterExpenditure(ParameterConst.votTanggungan)}"
-	           disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}"
+	           disabled="#{!pPlanBackingBean.managedBean.modeEditable}"
 			   update="dtExpenditurePlanT, ppExpenditureTCloneid, dtclonepitemsTsearchresults"
 	           onclick="cloneExpenditureTPopUp.show()"
 	           rendered="#{pPlanBackingBean.isRolePlanner()}"/>
@@ -358,11 +358,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		    <!-- end -->
 		    &#160;
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlanT" 
-		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
 		 		partialSubmit="true" process="@this" action="#{pPlanBackingBean.addEpItemDet(ParameterConst.votTanggungan)}"/>
 			&#160;
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlanT" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
 				action="#{pPlanBackingBean.deleteEpItemDet(ParameterConst.votTanggungan)}"/>
 				<!-- 02022021@#27624 - end --> 				
 			</div>

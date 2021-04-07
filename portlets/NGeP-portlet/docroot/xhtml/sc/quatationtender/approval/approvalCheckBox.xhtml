@@ -29,7 +29,8 @@
 			rendered="#{!empty qTDetailBB.managedBean.tabList}">
 			<c:forEach var="tabBean" varStatus="status"
 				items="#{qTDetailBB.managedBean.tabList}">
-				<p:menuitem value="#{tabBean.titleName}"
+				<p:menuitem 
+				    value="#{tabBean.titleName}"
 					action="#{qTDetailBB.approvalTabChangeAction(status.index)}" 
 					partialSubmit="true"
 					update="@form"

@@ -27,10 +27,13 @@
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
+			<!--#29908 -start -->
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
-				label="#{lbl['lbl.tpl.spec.content.user.score']}">
+				label="#{lbl['lbl.tpl.spec.content.user.score']}"
+				disabled="#{evaluationBackingBean.managedBean.readOnly}">
+			 <!--#29908-end -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />

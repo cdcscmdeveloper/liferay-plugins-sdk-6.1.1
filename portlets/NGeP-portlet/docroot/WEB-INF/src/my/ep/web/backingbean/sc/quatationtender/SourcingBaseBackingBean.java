@@ -3323,4 +3323,58 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	    }
 	}
 
+	//29194 - Start
+			/**
+			 * To get userRole Code
+			 * 
+			 * @return String roleCode
+			 */
+			public String getUserRoleCodeSQ() {
+				IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+				UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+				List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+				List<String> roleCodes = new ArrayList<String>();
+				roleCodes.add(RoleCode.GOVT_SELLER.value());
+				roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
+				roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+				roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+				roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
+				roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+				roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
+				roleCodes.add(RoleCode.REQUISITIONER.value());
+				roleCodes.add(RoleCode.RN_APPROVER.value());
+				roleCodes.add(RoleCode.CT_APPROVER.value());
+				roleCodes.add(RoleCode.BPK_APPROVER.value());
+				roleCodes.add(RoleCode.DESK_OFFICER.value());
+				roleCodes.add(RoleCode.SC_SECRETARY.value());
+				roleCodes.add(RoleCode.SC_MEMBER.value());
+				roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
+
+				String roleCode = null;
+
+				List<String> pmRoleCodes = new ArrayList<String>();
+
+				if (null != roleDesc) {
+					for (PmRoleDesc pmRoleDesc : roleDesc) {
+						pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
+					}
+					
+					if (pmRoleCodes.contains(RoleCode.REQUISITIONER.value())) {
+						roleCode = RoleCode.REQUISITIONER.value();
+					}else{
+						for (String role : roleCodes) {
+							if (pmRoleCodes.contains(role)) {
+								roleCode = role;
+								break;
+							}
+						}
+					}		
+				}
+				return roleCode;
+			}
+			//29194 - End
 }

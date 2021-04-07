@@ -474,6 +474,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 */
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		validatePOCOCurrentStatus(); //29870
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
@@ -895,4 +896,22 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		return fulfilmentSO.checkTaxInvoice(reqId);
 	}
+	
+	//29870-start
+	private void validatePOCOCurrentStatus() {
+		Boolean allowToProceed = true;
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = null;
+		
+		reqDTO.setFlOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocType());
+		resDTO= orderSO.validatePOCOCurrentStatus(reqDTO);
+		
+		allowToProceed = resDTO.isFlag();		
+		if(!allowToProceed){
+			throw new EpException(MessageConst.ERROR_740069);
+		}	
+	}		
+	//29870-end
 }
