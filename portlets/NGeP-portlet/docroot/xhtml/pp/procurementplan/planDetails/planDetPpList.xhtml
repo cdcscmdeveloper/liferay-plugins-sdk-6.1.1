@@ -179,10 +179,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>
 	        
 	        <p:column>
-	            <!--25549@18092020 -->
+	            <!--Bug #30643@30032021 - start -->
        			<p:selectOneMenu id="somProcurementMethod" style="width:99%"
        				disabled="#{ppItem.viewMode or !(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) or ppItem.procurementCat.parameterId==null or (ppItem.disableRow)}"
-					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}">
+					label="#{lbl['lbl.pp.procurement.method']}" value="#{ppItem.procurementType.parameterId}" required="#{!empty param['disableValidation']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions(ppItem.procurementCat.parameterId)}"
 						var="obj" itemValue="#{obj.procurementType.parameterId}" itemLabel="#{pPlanBackingBean.getProcurementCategoryLabels(obj.procurementType)}"/>
@@ -191,7 +191,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				</p:selectOneMenu>
 			 <p:message id="somProcurementMethodMsg" for="somProcurementMethod" display="icon" />
 	        </p:column>
-	         <!--24975@09022021 - end -->
+	         <!--Bug #30643@30032021 - end -->
 	        <p:column  style="white-space:nowrap;">
 	             <!--25549@18092020 -->
 	            <!--24975@azza - start -->
