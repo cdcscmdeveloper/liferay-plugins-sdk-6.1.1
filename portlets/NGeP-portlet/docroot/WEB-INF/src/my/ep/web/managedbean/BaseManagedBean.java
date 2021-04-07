@@ -78,6 +78,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private String statusDescFromSSM;
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
+	
+	//27382
+	private boolean errorInvalidSelfRequest;
 
 	private List<SmPersonnel> personnelsRole = new ArrayList();
 
@@ -1007,6 +1010,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setDisplayMessageEmp(String displayMessageEmp) {
 		this.displayMessageEmp = displayMessageEmp;
+	}
+	//27382
+	public boolean isErrorInvalidSelfRequest() {
+		return errorInvalidSelfRequest;
+	}
+
+	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
+		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
 	
 	//14685 - START
