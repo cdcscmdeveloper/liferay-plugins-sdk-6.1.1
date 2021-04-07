@@ -3840,10 +3840,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmType> suggestions = new ArrayList<CmType>();
 
+		//20210407@Jacky - Enhancement#28576 - Start
 		log.info("this.getManagedBean().getTypeList() = "
 				+ this.getManagedBean().getTypeList().size());
 
 		for (CmType type : this.getManagedBean().getTypeList()) {
+		//20210407@Jacky - Enhancement#28576 - End
 			//20210201@Jacky - Enhancement#28576 - Start
 			log.info("Current Type is = " + type.getTypeName());
 			//20210201@Jacky - Enhancement#28576 - End
@@ -3870,8 +3872,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmBrand> suggestions = new ArrayList<CmBrand>();
-
+		//20210407@Jacky - Enhancement#28576 - Start
 		for (CmBrand brand : this.getManagedBean().getBrandList()) {
+		//20210407@Jacky - Enhancement#28576 - Start
 			//20210201@Jacky - Enhancement#28576 - Start
 			log.info("Current Brand is = " + brand.getBrandName());
 			//20210201@Jacky - Enhancement#28576 - End
@@ -3897,8 +3900,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();
-
+		//20210407@Jacky - Enhancement#28576 - Start
 		for (CmMeasurement brand : this.getManagedBean().getMeasurementList()) {
+		//20210407@Jacky - Enhancement#28576 - Start
 			//20210201@Jacky - Enhancement#28576 - Start
 			log.info("Current Measurement is = " + brand.getMeasurementName());
 			//20210201@Jacky - Enhancement#28576 - End
