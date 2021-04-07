@@ -1513,8 +1513,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The search supplier data model. */
 	private IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel;
 
-	
-
 	private Long ptjGroupId;
 	private int checkListYesIndex;
 	private boolean technicalOtherChecklistSubmit;
@@ -1568,6 +1566,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean ButtonHideActive = true;
 	private boolean buttonHideDedActive = true;
 	private boolean buttonHideSchActive = true;
+	
+    // 26095@hatta - start
+	private Date currentDate = new Date(); 
+	private int attachFileIndex; 
+	private String fileDirectory;
+	// 26095@hatta*** - end
 
 	/**
 	 * Sets the panel suppliers.
@@ -9904,5 +9908,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneGeneralTreesPanel = zoneGeneralTreesPanel;
 	}
 	//20200210@asyrafhaziq_Bug #27381&#26694  - End
+	
+	// 26095@hatta - start
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
+
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+	// 26095@hatta - end
 
 }
