@@ -46,6 +46,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Map<String,SmFacility> smSvFacilityMap;
 	private SmSvTemplate selectedSvTemplate;
 	private SmSvInterviewee[] selectedInterviewees;
+	private List<SmSvInterviewee> duplicateInterviewees;	//29464
 	private SmSvWorker[] selectedWorkers;
 	private SmSvManufacturingDoc[] selectedAddFinancialDoc;
 	
@@ -775,4 +776,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setFromReport(boolean fromReport) {
 		this.fromReport = fromReport;
 	}
+
+	//#24964 - start
+	public List<SmSvInterviewee> getDuplicateInterviewees() {
+		return duplicateInterviewees;
+	}
+
+	public void setDuplicateInterviewees(List<SmSvInterviewee> duplicateInterviewees) {
+		this.duplicateInterviewees = duplicateInterviewees;
+	}
+	//#24964 - end
 }
