@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -66,11 +67,13 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -89,10 +92,13 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
@@ -251,6 +257,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	/** 
+	* get faces scopes
+	* 
+	* @return FacesScopes
+	*/
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	// end of 25396
+		
 	/**
 	 * To populate details into ScAttachment instance.
 	 * 
@@ -3323,4 +3341,108 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	    }
 	}
 
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	/**
+	 * Checks if is supplier role.
+	 *
+	 * @return true, if is supplier role
+	 */
+	public boolean hasSupplierRole(){
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			return Boolean.TRUE;
+		} else if(getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	//29194 - Start
+	/**
+	 * To get userRole Code
+	 * 
+	 * @return String roleCode
+	 */
+	public String getUserRoleCodeSQ() {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		List<String> roleCodes = new ArrayList<String>();
+		roleCodes.add(RoleCode.GOVT_SELLER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.MOF_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		roleCodes.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		roleCodes.add(RoleCode.REQUISITIONER.value());
+		roleCodes.add(RoleCode.RN_APPROVER.value());
+		roleCodes.add(RoleCode.CT_APPROVER.value());
+		roleCodes.add(RoleCode.BPK_APPROVER.value());
+		roleCodes.add(RoleCode.DESK_OFFICER.value());
+		roleCodes.add(RoleCode.SC_SECRETARY.value());
+		roleCodes.add(RoleCode.SC_MEMBER.value());
+		roleCodes.add(RoleCode.SC_CHAIRPERSON.value());
+
+		String roleCode = null;
+
+		List<String> pmRoleCodes = new ArrayList<String>();
+
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				pmRoleCodes.add(pmRoleDesc.getPmRole().getRoleCode());
+			}
+			
+			if (pmRoleCodes.contains(RoleCode.REQUISITIONER.value())) {
+				roleCode = RoleCode.REQUISITIONER.value();
+			}else{
+				for (String role : roleCodes) {
+					if (pmRoleCodes.contains(role)) {
+						roleCode = role;
+						break;
+					}
+				}
+			}		
+		}
+		return roleCode;
+	}
+	//29194 - End
+	
+	/**
+	 * Check is it login user is Government User
+	 * 
+	 * @return true, if user is Government User
+	 */
+	protected boolean hasGovernmentUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())) {
+			return true;
+		} else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// end of 25396
+	
 }
