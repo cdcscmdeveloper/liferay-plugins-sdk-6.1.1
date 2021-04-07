@@ -5604,8 +5604,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				itemPriceUnitChange = true;
 				if(rnDtl.getRequestItem() != null){
 					if(rnDtl.getRequestItem().getSupplierItems() != null){
-						for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){
-							if(rnDtl.getScRequestSupplierItem() != null){
+						for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){						
+							if(rnDtl.getScRequestSupplierItem() != null){								
 								if(rnDtl.getScRequestSupplierItem().getRequestSupplierItemId().equals(reqSuppItem.getRequestSupplierItemId())){
 									itemPriceUnitChange = false;
 									break;
@@ -5615,22 +5615,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						
 						if(itemPriceUnitChange){
 							lowestItemPriceUnit = null;
-							for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){
+							for(ScRequestSupplierItem reqSuppItem : rnDtl.getRequestItem().getSupplierItems()){								
 								if(reqSuppItem.getSupplierItemPrices() != null){
 									for(ScSupplierItemPrice suppItemPrice : reqSuppItem.getSupplierItemPrices()){
 										if(lowestItemPriceUnit == null){
 											lowestItemPriceUnit = suppItemPrice.getItemPrice();
-											reqSuppItemTemp = reqSuppItem;
+											reqSuppItemTemp = reqSuppItem;							
 										}
 										
 										if(suppItemPrice.getItemPrice().compareTo(lowestItemPriceUnit) == -1){
 											lowestItemPriceUnit = suppItemPrice.getItemPrice();
-											reqSuppItemTemp = reqSuppItem;
+											reqSuppItemTemp = reqSuppItem;						
 										}
 									}
 								}
 							}
-							rnDtl.setScRequestSupplierItem(reqSuppItemTemp);
+							if(reqSuppItemTemp != null &&
+									reqSuppItemTemp.getRequestSupplierItemId() != null){
+								rnDtl.setScRequestSupplierItem(reqSuppItemTemp);
+							}						
 						}
 					}				
 				}
