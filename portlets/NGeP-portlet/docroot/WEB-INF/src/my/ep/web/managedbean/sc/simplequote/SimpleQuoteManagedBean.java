@@ -325,6 +325,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 
 	/** The save button flg. */
 	private boolean saveButtonFlg = Boolean.TRUE;
+	
+	/** The SQ Audit flg. */
+	private boolean sqAuditFlg = Boolean.TRUE;
 
 	/** The required. */
 	private boolean required;
@@ -2445,6 +2448,25 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setSaveButtonFlg(boolean saveButtonFlg) {
 		this.saveButtonFlg = saveButtonFlg;
 	}
+	
+	/**
+	 * Checks if is sqAuditFlg flg.
+	 * 
+	 * @return true, if SQAuditFlag
+	 */
+	public boolean isSqAuditFlg() {
+		return sqAuditFlg;
+	}
+
+	/**
+	 * Sets the sqAuditFlg.
+	 * 
+	 * @param sqAuditFlg
+	 *            
+	 */
+	public void setSqAuditFlg(boolean sqAuditFlg) {
+		this.sqAuditFlg = sqAuditFlg;
+	}
 
 	/**
 	 * @return the smGstSupplier
@@ -2685,6 +2707,27 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	public void setDoUserId(Long doUserId) {
 		this.doUserId = doUserId;
 	}
+	
+	//27632 - Start
+	/**
+	 * Checks if is pid btn flag.
+	 * 
+	 * @return the pidBtnFlag
+	 */
+	public boolean isPidBtnFlag() {
+		return pidBtnFlag;
+	}
+
+	/**
+	 * Sets the pid btn flag.
+	 * 
+	 * @param pidBtnFlag
+	 *            the pidBtnFlag to set
+	 */
+	public void setPidBtnFlag(boolean pidBtnFlag) {
+		this.pidBtnFlag = pidBtnFlag;
+	}
+	// 27632 - End
 
 	// #3761 - start
 	public ScQuote getScQuoteSession() {
@@ -2722,24 +2765,4 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	}
 	// #29800 - end
 
-	//27632 - Start
-	/**
-	 * Checks if is pid btn flag.
-	 * 
-	 * @return the pidBtnFlag
-	 */
-	public boolean isPidBtnFlag() {
-		return pidBtnFlag;
-	}
-
-	/**
-	 * Sets the pid btn flag.
-	 * 
-	 * @param pidBtnFlag
-	 *            the pidBtnFlag to set
-	 */
-	public void setPidBtnFlag(boolean pidBtnFlag) {
-		this.pidBtnFlag = pidBtnFlag;
-	}
-	// 27632 - End
 }
