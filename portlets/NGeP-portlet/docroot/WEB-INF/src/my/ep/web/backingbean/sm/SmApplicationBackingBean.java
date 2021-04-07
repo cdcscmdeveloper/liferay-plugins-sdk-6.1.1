@@ -9874,28 +9874,6 @@ public class SmApplicationBackingBean extends
 					langCode = personnel.getPmUser().getPreferredLanguage();
 					log.info("loginId109082>>>>>>>>>>" + loginId);
 					log.info("Language>>>>>>>>>>" + personnel.getPmUser().getPreferredLanguage());
-					
-					//#29823 - Start
-					//To change role from MOF to BASIC if PO reject site visit after approved  
-					if(personnel.getPmUser() != null){
-						if(this.getManagedBean().getBpmTaskName().equalsIgnoreCase(SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)  && this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-							SmAppl lastApplAppr = SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean());
-
-							if(lastApplAppr != null && lastApplAppr.getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT) && lastApplAppr.getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
-								PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
-								PersonnelResDTO resDTO1 = new PersonnelResDTO();
-								
-							    reqDTO1.setSmPersonnel(personnel);
-						        reqDTO1.setNewEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.toString());
-						        resDTO1 = SmServiceLookup.getPersonnelSO().updateMofPersonnelAndPmRole(reqDTO1);	
-						        
-						        if (!resDTO1.isSuccessful()) {
-							          throw new EpException(MessageConst.ERROR_722632);
-							        }
-							}
-						}
-					}
-					//#29823 - End	
 					continue;
 				}
 			}
