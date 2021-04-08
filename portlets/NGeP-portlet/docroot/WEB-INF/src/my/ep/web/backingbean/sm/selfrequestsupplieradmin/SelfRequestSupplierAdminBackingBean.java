@@ -80,6 +80,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 	}
 
 	public void navigateToSuppAdmin() {
+		this.getManagedBean().setErrorInvalidSelfRequest(false);
 		if (StringUtils.isBlank(getManagedBean().getMofNo())) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.addMessage(
@@ -111,6 +112,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 					this.getManagedBean().setStatusFromSSM(ssmResDTO.getStatusFromSSM());
 					if(!ssmResDTO.getStatusFromSSM().equalsIgnoreCase("A") && !ssmResDTO.getStatusFromSSM().equalsIgnoreCase("E")){
 						this.getManagedBean().setAutoUpdate(false);
+						this.getManagedBean().setCompanyValidWithSSM(true);
 						//27382 - start
 						if(ssmResDTO.getStatusFromSSM().equalsIgnoreCase("L")){
 							/*fc.addMessage("ssmInvalid",
@@ -160,6 +162,10 @@ public class SelfRequestSupplierAdminBackingBean extends
 									new FacesMessage(FacesMessage.SEVERITY_ERROR, SmCommonUtil.getMessage(message,null),
 											""));*/
 
+						if (e.getMessage().toString() == "ERR-721078"){
+								this.getManagedBean().setErrorInvalidSelfRequest(true);
+								throw new EpException(MessageConst.ERROR_721078);
+							}
 							if (message != null) {
 								throw new EpException(message + "(ERR-"
 										+ e.getMessage().toString() + ")");
@@ -375,8 +381,10 @@ public class SelfRequestSupplierAdminBackingBean extends
 		StringBuilder fullMsg = new StringBuilder();
 		getManagedBean().setDisabledNextBtn(false);
 		//27382
+		this.getManagedBean().setErrorInvalidSelfRequest(false);
 		this.getManagedBean().setStatusFromSSM("");
 		if (StringUtils.isBlank(mofNo)) {
+			this.getManagedBean().setErrorInvalidSelfRequest(false);
 			getManagedBean().setDisabledNextBtn(true);
 			fullMsg.append(SmCommonUtil.getMessage("lbl.sm.required.msg",
 					new String[] { SmCommonUtil.getMessage(

@@ -63,6 +63,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
+	
+	//27382
+	private boolean errorInvalidSelfRequest;
 	// 18685 - Start
 	private String reportDownloadFileName;
 	private ScAttachment scAttachment;
@@ -967,6 +970,15 @@ public abstract class BaseManagedBean implements Serializable {
 		this.removeFinalizationReports = removeFinalizationReports;
 	}
 	// Enhancement #18685 - end
+	
+	//27382
+	public boolean isErrorInvalidSelfRequest() {
+		return errorInvalidSelfRequest;
+	}
+
+	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
+		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
+	}
 }
 
 
