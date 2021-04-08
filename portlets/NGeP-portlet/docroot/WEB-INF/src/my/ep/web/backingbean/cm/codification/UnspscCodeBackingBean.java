@@ -3228,7 +3228,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
 		CodificationResDTO resCodeDTO = codificationSO
 				.searchCommodityObj(reqCodeDTO);
-	
+		
+		//20210201@Jacky - Enhancement#28576 - Start
+		log.info("Start #28576 In here: ");
+		
 		this.getManagedBean().setTypeList(
 				resCodeDTO.getCommodityObj().getCmType());
 		this.getManagedBean().setBrandList(
@@ -3237,6 +3240,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				resCodeDTO.getCommodityObj().getCmMeasurement());
 		resCodeDTO = codificationSO.searchColor(reqCodeDTO);
 		this.getManagedBean().setColorList(resCodeDTO.getColorList());
+
+		log.info("Type Unspsc: " + this.getManagedBean().getTypeList().size());
+		log.info("Brand Unspsc: " + this.getManagedBean().getBrandList().size());
+		log.info("Measurement Unspsc: " + this.getManagedBean().getMeasurementList().size());
+		log.info("Color Unspsc: " + this.getManagedBean().getColorList().size());
+		//20210201@Jacky - Enhancement#28576 - End
 
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
 			
@@ -3301,6 +3310,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		Collections.sort(this.getManagedBean().getTypeList(), new Comparator<CmType>() {
 		    @Override
 		    public int compare(CmType t1, CmType t2) {
+		    	//20210201@Jacky - Enhancement#28576 - Start
+				log.info("Start #28576 In here Compare Part: ");
+				log.info("CmType one Here: " + t1.getTypeName());
+				log.info("CmType Two Here: " + t2.getTypeName());
+				//20210201@Jacky - Enhancement#28576 - End
 		        return compareFirstChoice(t1.getTypeCode(), t2.getTypeCode(), t1.getTypeName().trim().compareToIgnoreCase(t2.getTypeName().trim()));
 		    }
 
@@ -3837,10 +3851,15 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmType> suggestions = new ArrayList<CmType>();
 
+		//20210407@Jacky - Enhancement#28576 - Start
 		log.info("this.getManagedBean().getTypeList() = "
 				+ this.getManagedBean().getTypeList().size());
 
 		for (CmType type : this.getManagedBean().getTypeList()) {
+		//20210407@Jacky - Enhancement#28576 - End
+			//20210201@Jacky - Enhancement#28576 - Start
+			log.info("Current Type is = " + type.getTypeName());
+			//20210201@Jacky - Enhancement#28576 - End
 			if (type.getTypeName() != null) {
 
 				if (type.getTypeName().toLowerCase()
@@ -3864,8 +3883,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmBrand> suggestions = new ArrayList<CmBrand>();
-
+		//20210407@Jacky - Enhancement#28576 - Start
 		for (CmBrand brand : this.getManagedBean().getBrandList()) {
+		//20210407@Jacky - Enhancement#28576 - Start
+			//20210201@Jacky - Enhancement#28576 - Start
+			log.info("Current Brand is = " + brand.getBrandName());
+			//20210201@Jacky - Enhancement#28576 - End
 			if (brand.getBrandName() != null) {
 				if (brand.getBrandName().toLowerCase()
 						.startsWith(query.toLowerCase())) {
@@ -3888,8 +3911,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 		List<CmMeasurement> suggestions = new ArrayList<CmMeasurement>();
-
+		//20210407@Jacky - Enhancement#28576 - Start
 		for (CmMeasurement brand : this.getManagedBean().getMeasurementList()) {
+		//20210407@Jacky - Enhancement#28576 - Start
+			//20210201@Jacky - Enhancement#28576 - Start
+			log.info("Current Measurement is = " + brand.getMeasurementName());
+			//20210201@Jacky - Enhancement#28576 - End
 			if (brand.getMeasurementName() != null) {
 				if (brand.getMeasurementName().toLowerCase()
 						.startsWith(query.toLowerCase())) {
