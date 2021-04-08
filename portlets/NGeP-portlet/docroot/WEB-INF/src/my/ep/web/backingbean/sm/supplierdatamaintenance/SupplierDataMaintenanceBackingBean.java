@@ -744,12 +744,23 @@ public class SupplierDataMaintenanceBackingBean extends
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
 			//set tracking diary for Disciplinary Action
+			//Fix 26238 -08/04/2021- start - checking if active appl  != null
 			if (getManagedBean().isEditDisciplinaryAction()) {
-				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
-						activeAppl,//26238 - Disciplinary Action - bug fix
-						getTrackingActionDesc(reqDTO,"DA"));
-				listSmTrackingDiary.add(smTrackingDairyVO);
+				
+				if(activeAppl != null){
+					SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+							activeAppl,//26238 - Disciplinary Action - bug fix
+							getTrackingActionDesc(reqDTO,"DA"));
+					listSmTrackingDiary.add(smTrackingDairyVO);					
+				}else {
+					SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+							getManagedBean().getSmAppl(),
+							getTrackingActionDesc(reqDTO,"DA"));
+					listSmTrackingDiary.add(smTrackingDairyVO);
+				}
+				
 			}
+			//Fix 26238 -08/04/2021- end 
 			
 			//set overlap remark category remark
 			if (isOverlapCategoryRemarkChanged) {		
