@@ -271,14 +271,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.replaceAdminWithNewPersonnel(getReqDTO());
-		/*//#28765 - Start
-		if((getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) || 
-				(getManagedBean().getBypassFlag2()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_MOF))) {
+		//START 12981
+		//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin		
+		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
 		}
 		//#28765 - End
-*/		redirectToSuccessPage(resDto);
+		redirectToSuccessPage(resDto);
+		//END 12981
 	}
 
 	/**
@@ -293,12 +294,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 		validateMyIdentity();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
 				.reassignSupplierAdmin(getReqDTO());
-		//#28765 - Start
-		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
+		//START 12981
+		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
+//		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
-		}
+//		}
 		//#28765 - End
+		//END 12981
 		redirectToSuccessPage(resDto);
 	}
 	
