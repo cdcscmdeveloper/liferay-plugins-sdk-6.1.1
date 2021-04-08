@@ -518,7 +518,8 @@
 				<td class="TableFieldRight"><ac:scSingleFileUploadButton
 						id="pidUploadBtn" popupWidgetVar="pidUploadDlg"
 						attachment="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.scPurchaseInDefaultAttachment}"
-						readonly="#{!isPendingSubmissionStatus}" /> 
+						readonly="#{!isPendingSubmissionStatus}" 
+						deleteFileUploadListener="purchaseInDefaultBackingBean.deleteUploadFile"/> 
 					 <ac:scSingleFileUploadPopup
 						widgetVar="pidUploadDlg"
 						fileUploadListener="purchaseInDefaultBackingBean.handleFileUpload"
