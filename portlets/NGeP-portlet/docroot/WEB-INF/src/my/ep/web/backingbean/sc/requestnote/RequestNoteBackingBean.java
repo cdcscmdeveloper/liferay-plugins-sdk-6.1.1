@@ -5363,10 +5363,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									}
 								}
 							}
+							//#30688 - Start
 							if(reqSuppItemTemp != null &&
 									reqSuppItemTemp.getRequestSupplierItemId() != null){
 								rnDtl.setScRequestSupplierItem(reqSuppItemTemp);
-							}						
+							}	
+							//#30688 - End
 						}
 					}				
 				}
