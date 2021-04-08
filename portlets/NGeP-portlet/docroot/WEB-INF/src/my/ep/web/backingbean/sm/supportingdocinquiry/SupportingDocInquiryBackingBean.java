@@ -191,9 +191,10 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			
 			//#11641 - START
 			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());
+			reqDTO.setUpdatedSupportDocs(this.getManagedBean().getUpdatedSupportDocs());
 			//#11641 - END
 
-			//#28807 - START managedBean.smApplInquiry.smAppl.smApplSupportDocs
+			//#28807 - START
 			log.info("#28807 supp doc after supplier response -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo() + " -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().size());
 			int filesCount = 0;
 			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
@@ -507,8 +508,6 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				smApplDocFile.setSmApplSupportDoc(doc);
 				smApplDocFile.setFilePath(filePath);
 				
-				doc.getSmApplDocFiles().add(smApplDocFile);
-				
 				for(int i=0; i<doc.getSmApplDocFiles().size(); i++){
 					if(doc.getSmApplDocFiles().get(i).getFileName()==null || 
 							doc.getSmApplDocFiles().get(i).getFileName().equalsIgnoreCase(" ")){
@@ -545,6 +544,12 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 						}
 						smApplSupportDoc.setNewAddedFiles(smApplDocFiles);
 					}
+				}
+				if(this.getManagedBean().getUpdatedSupportDocs() != null){
+					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
+				}else{
+					this.getManagedBean().setUpdatedSupportDocs(new ArrayList<SmApplSupportDoc>());
+					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
 				}
 			}
 		}
