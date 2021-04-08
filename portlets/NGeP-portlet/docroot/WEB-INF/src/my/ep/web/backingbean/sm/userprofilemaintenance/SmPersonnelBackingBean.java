@@ -84,6 +84,7 @@ public class SmPersonnelBackingBean extends
 	 */
 	private static final long serialVersionUID = 8285824019929910081L;
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
+	private boolean showInfo = false;  //#30053
 
 	/**
 	 * Instantiate SmPersonnelBackingBean and set MDC user id
@@ -189,6 +190,11 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setUpdateSmPersonnel(adminPersonnel);
 			SmCommonUtil.setRoleName(smSupplier.getSmAppl().getSupplierType(),
 					getManagedBean().getSmPersonnelList());
+			//start - #30053
+			if(smSupplier.getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
+				showInfo = true;
+			}
+			//end - #30053
 			if (!isHasSupplierUser) {
 				constructNoSupplierUserToDeactivateMsg(smSupplier);
 			} else {
@@ -3255,7 +3261,33 @@ public class SmPersonnelBackingBean extends
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getAuthVO()));
 	}
-	
+
+	//start - #30053
+	public boolean isShowInfo() {
+		return showInfo;
+	}
+
+	public void setShowInfo(boolean showInfo) {
+		this.showInfo = showInfo;
+	}
+	//end - #30053
 	// 9569 end
+	
+	//START 30053
+	public boolean disableRadio(SmPersonnel personnel){
+		boolean disableRadio  = false;
+		try{
+			if(personnel.getSmAppl()!= null && SupplierManagementConst.SUPP_TYPE_CONSULTANT.equalsIgnoreCase(personnel.getSmAppl().getSupplierType())){
+				disableRadio = false;
+			}else if(RoleCode.CM_USER.value().equals(personnel.getEpRole()) || (personnel.getSoftcertFlg() != 0 && personnel.getSoftcertFlg()!= 1)){
+				disableRadio = true;
+			}
+		}catch(Exception e){
+			log.info(e.getMessage());
+		}
+		return disableRadio;
+	}
+	//END 30053
+	
 
 }

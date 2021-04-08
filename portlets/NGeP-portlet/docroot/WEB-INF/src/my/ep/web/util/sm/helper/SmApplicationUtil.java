@@ -11016,34 +11016,38 @@ public class SmApplicationUtil {
 		} else {
 			// only add supplier user if not reach limit and authorized selected
 			// or the personnel is already authorized in db
-			if ((!authVO.isReachAuthorizedPersonnelLimit() && personnel
-					.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
-					|| inDbAlreadyAuth) {
+			if ((!authVO.isReachAuthorizedPersonnelLimit() && personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE)
+					|| inDbAlreadyAuth
+					|| (authVO.isReachAuthorizedPersonnelLimit()
+							&& smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && personnel
+							.getAuthorizedFlg() == 1)) { // #30053 - if reach authorize personnel limit and supplier type consultant
 				addRoles(roles, RoleCode.MOF_SUPPLIER_USER.value(), false);
 			}
 		}
 
 		// add FL_USER role
-		if (!StringUtils.isBlank(personnel.getEpRole())
-				&& personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
-			addRoles(roles, RoleCode.FL_USER.value(), false);
-		} else {
-			if (authVO.isReachAuthorizedPersonnelLimit()
-					&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				// add if already reach limit and personnel role is empty
-				if (StringUtils.isBlank(personnel.getEpRole())) {
-					addRoles(roles, RoleCode.FL_USER.value(), false);
-				}
-				// add if already reach limit and personnel role is not already
-				// activated as MOF_SUPPLIER_USER
-				else if (!StringUtils.isBlank(personnel.getEpRole())
-						&& personnel.getEpRole().equals(
-								RoleCode.MOF_SUPPLIER_USER.value())
-						&& personnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
-					addRoles(roles, RoleCode.FL_USER.value(), false);
-				}
+		if (!smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT))// #30053
+		{	if (!StringUtils.isBlank(personnel.getEpRole()) && personnel.getEpRole().equals(RoleCode.FL_USER.value())) {
+				addRoles(roles, RoleCode.FL_USER.value(), false);
+			} else {
+				if (authVO.isReachAuthorizedPersonnelLimit()
+						&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					// add if already reach limit and personnel role is empty
+					if (StringUtils.isBlank(personnel.getEpRole())) {
+						addRoles(roles, RoleCode.FL_USER.value(), false);
+					}
+					// add if already reach limit and personnel role is not
+					// already
+					// activated as MOF_SUPPLIER_USER
+					else if (!StringUtils.isBlank(personnel.getEpRole())
+							&& personnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_USER.value())
+							&& personnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
+						addRoles(roles, RoleCode.FL_USER.value(), false);
+					}
 
+				}
 			}
+
 		}
 
 		// only add CM_USER if authorized and for contractor that transact with
@@ -11103,7 +11107,8 @@ public class SmApplicationUtil {
 			}
 		} else {
 			// if no epRole and already reach limit
-			if (isValidSmUserLimit) {
+			if (isValidSmUserLimit
+					&& !personnel.getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)) { //#30053
 				retVal = true;
 			}
 		}
