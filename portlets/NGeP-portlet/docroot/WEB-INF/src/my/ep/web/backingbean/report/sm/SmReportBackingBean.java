@@ -1035,9 +1035,22 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		params.put("PAYMENTTYPE",paymentType);
 		int paymentTypeSize = payTypeDescParam.size();
-		// 26307 - change wording
-		if("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD)))paymentMethod = "Kad Kredit/Kad Debit";
-		else paymentMethod = "FPX";
+		// #26307 start - change payment method wording and column header
+		ArrayList<String> columnHeaderList;
+		if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
+			paymentMethod = "Kad Kredit/Kad Debit";
+			columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi", "Tarikh Resit",
+					"No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		} else {
+			paymentMethod = "FPX";
+			columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi", "Tarikh Resit",
+					"No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		}
+		// #26307 end
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
 		else reportType = "Tarikh Transaksi";
@@ -1051,12 +1064,12 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
-		// 26307 start - add new column
-		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
-				"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
-				"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
-				"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
-		// 26307 end
+		// #26307 start - change column header
+		// ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+		// 		"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+		// 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+		// 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		// #26307 end
 		String[] columnsRingkasan = {reportType,"Bil","Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)"};
 		
 		try{
@@ -1067,25 +1080,47 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) rsltReportList.get(m);
 					BigDecimal amount = row[7] != null ? (BigDecimal)row[7] : BigDecimal.ZERO;
 					BigDecimal gstAmount = row[8] != null ? (BigDecimal)row[8] : BigDecimal.ZERO;
-					BigDecimal serviceCharge = row[9] != null ? (BigDecimal)row[9] : BigDecimal.ZERO;
+					// #26307 start - change service charge
+					BigDecimal serviceCharge;
+					if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
+					} else {
+						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					}
+					// #26307 end
 					BigDecimal gstRate = row[10] != null ? (BigDecimal)row[10] : BigDecimal.ZERO;
 					BigDecimal gstServiceChargeAmt = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
-					// 26307 start - get card type
-					String cardType = "-";
-					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal)row[17] : BigDecimal.ZERO;
-					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0){
-						cardType = "Kad Kredit";
-					}else if(cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0){
-						cardType = "Kad Debit";
+					// #26307 start - get and add card type
+					String cardType = "-"; 
+					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
+					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+						cardType = "Kad Kredit"; 
+					} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+						cardType = "Kad Debit"; 
+					} 
+					if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
+						reportListMap.put(
+								m,
+								new Object[] { (Date) row[16], (Date) row[1],
+										row[2].toString(),
+										row[3].toString(),
+										row[4] != null ? String.valueOf(row[4]) : "",
+										row[14] != null ? row[14].toString() : "",// BUG:#29454
+										row[5].toString(), row[6].toString().toUpperCase(), cardType, amount,
+										gstAmount, serviceCharge, gstServiceChargeAmt, netPrice, netPrice,
+										row[13].toString() });
+					} else {
+						reportListMap.put(
+								m,
+								new Object[] { (Date) row[16], (Date) row[1], row[2].toString(),
+										row[3].toString(),
+										row[4] != null ? String.valueOf(row[4]) : "",
+										row[14] != null ? row[14].toString() : "",// BUG:#29454
+										row[5].toString(), row[6].toString().toUpperCase(), amount, gstAmount,
+										serviceCharge, gstServiceChargeAmt, netPrice, netPrice, row[13].toString() });
 					}
-					// 26307 end
-					reportListMap.put(m, new Object[]{
-						(Date)row[16],(Date)row[1],row[2].toString(),row[3].toString(),row[4] != null ? String.valueOf(row[4]) : "",
-						row[14] != null ? row[14].toString(): "",//BUG:#29454
-						//26307 - add card type & #14203 - uppercase perihal
-						row[5].toString(),row[6].toString().toUpperCase(),cardType,amount,gstAmount,serviceCharge,gstServiceChargeAmt,netPrice,netPrice,row[13].toString()
-					});
+					// #26307 end
 				}
 			}
 			
@@ -1254,46 +1289,81 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		        sheetList.setAutoFilter(new CellRangeAddress(headerRowIndex,headerRowIndex,1,columnHeaderList.size()-1));//BUG:#29454
 		        // Resize all columns to fit the content size
 		        for(int i = 0; i < columnHeaderList.size(); i++) {
-		        	if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
-		        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
-		            	else if(i==1)sheetList.setColumnWidth(i, 17*256); //Col : Tarikh Resit
-		            	else if(i==2)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
-		            	else if(i==3)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
-		            	else if(i==4)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
-		            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
-		            	else if(i==6)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
-		            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-		        		// 26307 start - add column width
-		            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Jenis Kad
-		            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
-		            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
-		            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-		            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-		            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-		            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
-		            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status     
-		        		// 26307 end
-		        	}else{
-		        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
-		            	else if(i==1)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Tarikh Transaksi
-		            	else if(i==2)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Resit
-		            	else if(i==3)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
-		            	else if(i==4)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
-		            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
-		            	else if(i==6)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
-		            	else if(i==7)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
-		            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-		        		// 26307 start - add column width
-		            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Jenis Kad
-		            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
-		            	else if(i==11)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
-		            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-		            	else if(i==13)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-		            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-		            	else if(i==15)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
-		            	else if(i==16)sheetList.setColumnWidth(i, 22*256); //Col : Status  
-		        		// 26307 end
-		        	}
+					// #26307 start - set card type column width
+					if ("Credit".equalsIgnoreCase(params.get(SmReportConst.PARAM_PAYMENT_METHOD))) {
+						if ("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 17*256); //Col : Tarikh Resit
+			            	else if(i==2)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==4)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==6)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Jenis Kad
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status    
+			        	}else{
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Tarikh Transaksi
+			            	else if(i==2)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==4)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==6)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==7)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Jenis Kad
+			            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==11)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==13)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==15)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==16)sheetList.setColumnWidth(i, 22*256); //Col : Status  
+			        	}
+	        		} else {
+	        			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE))){
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 17*256); //Col : Tarikh Resit
+			            	else if(i==2)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==4)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==6)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==7)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==8)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==10)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==12)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==14)sheetList.setColumnWidth(i, 22*256); //Col : Status    
+			        	}else{
+			        		if(i==0)sheetList.setColumnWidth(i, 8*256);//Col : Bil
+			            	else if(i==1)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Tarikh Transaksi
+			            	else if(i==2)sheetList.setColumnWidth(i, 20*256); //Col : Tarikh Resit
+			            	else if(i==3)sheetList.setColumnWidth(i, 19*256); //Col : No. Resit
+			            	else if(i==4)sheetList.setColumnWidth(i, 50*256); //Col : Nama Pembekal
+			            	else if(i==5)sheetList.setColumnWidth(i, 20*256); //Col : No. Permohonan
+			            	else if(i==6)sheetList.setColumnWidth(i, 20*256); //Col : No. Rujukan
+			            	else if(i==7)sheetList.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
+			            	else if(i==8)sheetList.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
+			            	else if(i==9)sheetList.setColumnWidth(i, 15*256); //Col : Harga(RM)
+			            	else if(i==10)sheetList.setColumnWidth(i, 15*256); //Col : GST (RM)
+			            	else if(i==11)sheetList.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
+			            	else if(i==12)sheetList.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
+			            	else if(i==13)sheetList.setColumnWidth(i, 28*256); //Col : Amaun Bersih
+			            	else if(i==14)sheetList.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan       
+			            	else if(i==15)sheetList.setColumnWidth(i, 22*256); //Col : Status  
+			        	}
+	        		}
+					// #26307 end
 		        }
 				log.info("DONE GENERATE SENARAI!!!");
 			}catch(Exception e){
@@ -1434,15 +1504,15 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 								+ " SEPERTI PADA "+ DateUtils.dateToString("dd/MM/yyyy",new Date())
 								+ " BAGI TAHUN KEWANGAN "+ DateUtils.dateToString("yyyy",new Date());
 		
-		// 26307 - change sheet name
-		String[] sheetName = {"Senarai_FPX", "Senarai_Kad Kredit_Kad Debit","Ringkasan"};
+		// #26307 - change sheet name
+		String[] sheetName = { "Senarai_FPX", "Senarai_Kad Kredit_Kad Debit", "Ringkasan" };
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kod Penjenisan","Kaedah Bayaran"};
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
-		// 26307 start - add new column
-		String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
-				"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
-				"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
-		// 26307 end
+		// #26307 start - change column header
+		// String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
+		// 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+		// 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
+		// #26307 end
 		
 		String[] columnsSummaryList = {
 				"Kod Penjenisan","Bil","Harga (RM)","GST (RM)","Caj Perkhidmatan (RM)","GST Caj Perkhidmatan (RM)","Amaun Bersih (RM)"
@@ -1455,39 +1525,46 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[13] != null ? (BigDecimal)row[13] : BigDecimal.ZERO;
 					BigDecimal gstAmt = row[15] != null ? (BigDecimal)row[15] : BigDecimal.ZERO;
-					BigDecimal serviceCharge = row[9] != null ? (BigDecimal)row[9] : BigDecimal.ZERO;
+					// #26307 start - change service charge
+					BigDecimal serviceCharge;
+					if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
+					} else {
+						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					} 
+					// #26307 end
 					BigDecimal gstRate = row[16] != null ? (BigDecimal)row[16] : BigDecimal.ZERO;
 					BigDecimal gstServiceCharge = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = (priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge)).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
-					// 26307 start - get card type
-					String cardType = "-";
-					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal)row[17] : BigDecimal.ZERO;
-					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0){
-						cardType = "Kad Kredit";
-					}else if(cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0){
-						cardType = "Kad Debit";
-					}
-					// 26307 end
-					if("FPX".equalsIgnoreCase(row[1].toString())){
-						fpxList.put(fpxCount, new Object[] {
-								//#14203 - uppercase perihal
-								(Date) row[3],row[2].toString(),
-								row[5] != null ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
-								row[11].toString(),row[12].toString().toUpperCase(),
-								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
-						});
-						fpxCount++;
-					}else{
-						creditList.put(creditCount, new Object[] {
-								// 26307 - add card type & #14203 - uppercase perihal
-								(Date) row[3],
-								row[2].toString(),
-								(row[5] != null) ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454
-								row[11].toString(),row[12].toString().toUpperCase(),cardType,
-								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString()
-						});
-						creditCount++;
-					}
+					// #26307 start - get and add card type
+					String cardType = "-"; 
+					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
+					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+						cardType = "Kad Kredit"; 
+					} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+						cardType = "Kad Debit"; 
+					} 
+					if("FPX".equalsIgnoreCase(row[1].toString())){ 
+						fpxList.put(fpxCount, new Object[] { 
+								// #14203 - uppercase perihal 
+								(Date) row[3],row[2].toString(), 
+								row[5] != null ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454 
+								row[11].toString(),row[12].toString().toUpperCase(), 
+								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString() 
+						}); 
+						fpxCount++; 
+					}else{ 
+						creditList.put(creditCount, new Object[] { 
+								// #14203 - uppercase perihal 
+								(Date) row[3], 
+								row[2].toString(), 
+								(row[5] != null) ? row[5].toString() : "",//CR:#14203#145 , BUG:#29454 
+								row[11].toString(),row[12].toString().toUpperCase(),cardType, 
+								priceAmt,gstAmt,serviceCharge,gstServiceCharge,netPrice,netPrice,row[14].toString() 
+						}); 
+						creditCount++; 
+					} 
+					// #26307 end
 					//START - CR:#14203#159, BUG:#29454
 					totalPrice = totalPrice.add(priceAmt);
 					totalGst = totalGst.add(gstAmt);
@@ -1559,6 +1636,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//END - CR:#14203#145 , BUG:#29454
 		//Only Create Sheet Senarai_FPX only if search result has return records
 		if(!fpxList.isEmpty()){
+			// #26307 start - change column header
+			String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
+			 		"Jenis Terimaan-Perihal", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+			 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
+			// #26307 end
 			long startTimePopulateFPX = System.currentTimeMillis();
 			SXSSFSheet sheetFPX = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
@@ -1651,6 +1733,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		
 		//Only Create Sheet Senarai_Kad Kredit only if search result has return records
 		if(!creditList.isEmpty()){
+			// #26307 start - change column header
+			String[] columnsList = { "Bil", "Tarikh", "No Resit", "No Permohonan", "Jenis Terimaan-Kod",
+			 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+			 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status" };
+			// #26307 end
 			//log.info("CREDIT LIST IS NOT NULL !!!");
 			long startTimePopulateCC = System.currentTimeMillis();
 			SXSSFSheet sheetCC = (SXSSFSheet) wb.createSheet(sheetName[1]); //BUG:#29454
@@ -1671,8 +1758,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
 	        	if(i==3)cellItemsVal.setCellValue(params.get(SmReportConst.PARAM_CODE));
-	        	// 26307 - change wording
-	        	if(i==4)cellItemsVal.setCellValue("Kad Kredit/Kad Debit"); 
+	        	// #26307 - change wording
+	        	if(i==4)cellItemsVal.setCellValue("Kad Kredit/Kad Debit");
 	        	cellItemsVal.setCellStyle(titleHeaderStyle_3);//BUG:#29454
 	        	sheetCC.addMergedRegionUnsafe(new CellRangeAddress(i,i,2,3));//BUG:#29454
 	        }
@@ -1729,16 +1816,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	else if(i==3)sheetCC.setColumnWidth(i, 20*256);//Column : No. Permohonan	
 	        	else if(i==4)sheetCC.setColumnWidth(i, 24*256);//Column : Jenis Terimaan - Kod
 	        	else if(i==5)sheetCC.setColumnWidth(i, 29*256);//Column : Jenis Terimaan - Perihal
-	        	// 26307 start - add column width
-	        	else if(i==6)sheetCC.setColumnWidth(i, 15*256);//Column : Jenis Kad
-	        	else if(i==7)sheetCC.setColumnWidth(i, 15*256);//Column : Harga (RM)
-	        	else if(i==8)sheetCC.setColumnWidth(i, 15*256);//Column : GST (RM)
-	        	else if(i==9)sheetCC.setColumnWidth(i, 25*256);//Column : Caj Perkhidmatan 
-	        	else if(i==10)sheetCC.setColumnWidth(i, 30*256);//Column : GST Caj Perkhidmatan
-	        	else if(i==11)sheetCC.setColumnWidth(i, 23*256);//Column : Amaun Bersih
-	        	else if(i==12)sheetCC.setColumnWidth(i, 29*256);//Column : Jumlah Keseluruhan
-	        	else if(i==13)sheetCC.setColumnWidth(i, 22*256);//Column : Status
-	        	// 26307 end
+				// #26307 start - add column width
+	        	else if(i==6)sheetCC.setColumnWidth(i, 15*256);//Column : Jenis Kad 
+	        	else if(i==7)sheetCC.setColumnWidth(i, 15*256);//Column : Harga (RM) 
+	        	else if(i==8)sheetCC.setColumnWidth(i, 15*256);//Column : GST (RM) 
+	        	else if(i==9)sheetCC.setColumnWidth(i, 25*256);//Column : Caj Perkhidmatan  
+	        	else if(i==10)sheetCC.setColumnWidth(i, 30*256);//Column : GST Caj Perkhidmatan 
+	        	else if(i==11)sheetCC.setColumnWidth(i, 23*256);//Column : Amaun Bersih 
+	        	else if(i==12)sheetCC.setColumnWidth(i, 29*256);//Column : Jumlah Keseluruhan 
+	        	else if(i==13)sheetCC.setColumnWidth(i, 22*256);//Column : Status 
+				// #26307 end
 	        }
 	        long endTimePopulateCC = System.currentTimeMillis();
 	        log.info("That took Populate CREDIT SHEET " + (((endTimePopulateCC - startTimePopulateCC) / 1000) / 60) + " Minute(s) / " + ((endTimePopulateCC - startTimePopulateCC) / 1000) + " Second(s) /"+(endTimePopulateCC - startTimePopulateCC)+" Miliseconds");
@@ -1883,16 +1970,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		String reportType = "";
 		String paymentTDesc = "";
 		
-		// 26307 - change sheet name
-		String[] sheetName = {"Senarai_FPX", "Senarai_Kad Kredit_Kad Debit","Ringkasan"};
+		// #26307 - change sheet name
+		String[] sheetName = { "Senarai_FPX", "Senarai_Kad Kredit_Kad Debit", "Ringkasan" };
 		String[] rowHeaderItems = {"Kod PTJ","Nama PTJ","Kaedah Bayaran","Nama Pembekal","Jenis Bayaran"};	
 		//Update Func By Include label RM inside column Caj Perkhidmatan & GST Caj Perkhidmatan
-		// 26307 start - add new column
-		ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
-				"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
-				"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
-				"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
-		// 26307 end
+		// #26307 start - change column header
+		// ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+		// 		"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+		// 		"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+		// 		"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+		// #26307 end
 		
 		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))reportType = "Tarikh Resit";
 		else reportType = "Tarikh Transaksi";
@@ -1953,19 +2040,26 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					Object[] row = (Object[]) reportList.get(m);
 					BigDecimal priceAmt = row[14] != null ? (BigDecimal)row[14] : BigDecimal.ZERO;
 					BigDecimal gstAmt = row[15] != null ? (BigDecimal)row[15] : BigDecimal.ZERO;
-					BigDecimal serviceCharge = row[10] != null ? (BigDecimal)row[10] : BigDecimal.ZERO;
+					// #26307 start - change service charge
+					BigDecimal serviceCharge;
+					if (row[19] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+						serviceCharge = row[20] != null ? (BigDecimal) row[20] : BigDecimal.ZERO;
+					} else {
+						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					}
+					// #26307 end
 					BigDecimal gstRate = row[18] != null ? (BigDecimal)row[18] : BigDecimal.ZERO;
 					BigDecimal gstServiceCharge = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
-					// 26307 start - get card type
-					String cardType = "-";
-					BigDecimal cardTypeCode = row[19] != null ? (BigDecimal)row[19] : BigDecimal.ZERO;
-					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0){
-						cardType = "Kad Kredit";
-					}else if(cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0){
-						cardType = "Kad Debit";
-					}
-					// 26307 end
+					// #26307 start - get card type
+					String cardType = "-"; 
+					BigDecimal cardTypeCode = row[19] != null ? (BigDecimal) row[19] : BigDecimal.ZERO;
+					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
+						cardType = "Kad Kredit"; 
+					} else if (cardTypeCode.compareTo(BigDecimal.valueOf(5126L)) == 0) {
+						cardType = "Kad Debit"; 
+					} 
+					// #26307 end
 					if("FPX".equalsIgnoreCase(row[1].toString())){
 						fpxList.put(fpxCount, new Object[] {
 							(Date) row[4],//Tarikh Transaksi
@@ -2027,8 +2121,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									row[12].toString(),//Jenis Terimaan-Kod
 									//#14203 - uppercase perihal
 									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
-									// 26307 - add card type
-									cardType,//Jenis Kad
+									// #26307 start - add card type
+									cardType,// Jenis Kad
 									priceAmt ,//Harga
 									gstAmt,//GST
 									serviceCharge, // Caj Perkhidmatan 
@@ -2073,7 +2167,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			e.printStackTrace();
 		}
 		
-		if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
+		// #26307 - change column header
+		// if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
 		//START - BUG:#29454
 		Workbook wb = new SXSSFWorkbook();// Change package from XSSFWorkbook to SXSSFWorkbook due to populate large data.
 		CreationHelper createHelper = wb.getCreationHelper();
@@ -2091,6 +2186,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create  Sheet of Senarai_FPX , only if search result has return records
 		if(!fpxList.isEmpty()){
 			
+			// #26307 start - change column header
+			ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+					"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
+			// #26307 end
 			long startTimePopulateFPX = System.currentTimeMillis();
 			SXSSFSheet sheetFPX = (SXSSFSheet) wb.createSheet(sheetName[0]); //BUG:#29454
 			//Setting Report Title
@@ -2257,6 +2359,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		//Only Create Sheet of Senarai_Kad Kredit , only if search result has return records
 		if(!creditList.isEmpty()){
 			
+			// #26307 start - change column header
+			ArrayList<String> columnHeaderList = new ArrayList<String>(Arrays.asList("Bil", "Tarikh Transaksi",
+					"Tarikh Resit", "No Resit", "Nama Pembekal", "No Permohonan", "No Rujukan", "Jenis Terimaan-Kod",
+					"Jenis Terimaan-Perihal", "Jenis Kad", "Harga (RM)", "GST (RM)", "Caj Perkhidmatan (RM)",
+					"GST Caj Perkhidmatan (RM)", "Amaun Bersih (RM)", "Jumlah Keseluruhan (RM)", "Status"));
+			if("Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))columnHeaderList.remove(1);
+			// #26307 end
 			long startTimePopulateCC = System.currentTimeMillis();
 			SXSSFSheet sheetCC = (SXSSFSheet) wb.createSheet(sheetName[1]);//BUG:#29454 
 	        //Setting Report Title
@@ -2275,8 +2384,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	        	Cell cellItemsVal = itemsDtlRow.createCell(2);
 	        	if(i==1)cellItemsVal.setCellValue("24010168 ");        		
 	        	if(i==2)cellItemsVal.setCellValue("Unit Perolehan Kementerian Kewangan");
-	        	// 26307 - change wording
-	        	if(i==3)cellItemsVal.setCellValue("Kad Kredit/Kad Debit"); 
+				// #26307 - change cell wording
+	        	if(i==3)cellItemsVal.setCellValue("Kad Kredit/Kad Debit");
 	        	if(i==4){
 	        		if(StringUtils.isNotBlank(params.get(SmReportConst.PARAM_COMPANY_NAME))){
 	        			cellItemsVal.setCellValue(params.get(SmReportConst.PARAM_COMPANY_NAME));
@@ -2388,16 +2497,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==5)sheetCC.setColumnWidth(i, 20*256); //Col : No. Rujukan
 	            	else if(i==6)sheetCC.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
 	            	else if(i==7)sheetCC.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-					// 26307 start - add column width
-	            	else if(i==8)sheetCC.setColumnWidth(i, 15*256); //Col : Jenis Kad
-	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM)
-	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan  
-	            	else if(i==15)sheetCC.setColumnWidth(i, 22*256); //Col : Status 
-	        		// 26307 end
+	        		// #26307 start - add column width
+	            	else if(i==8)sheetCC.setColumnWidth(i, 15*256); //Col : Jenis Kad 
+	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM) 
+	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM) 
+	            	else if(i==11)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan 
+	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan 
+	            	else if(i==13)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih 
+	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan
+	            	else if(i==15)sheetCC.setColumnWidth(i, 22*256); //Col : Status
+	        		// #26307 end
 	        	}else{
 	        		if(i==0)sheetCC.setColumnWidth(i, 8*256);//Col : Bil
 	        		else if(i==1)sheetCC.setColumnWidth(i, 20*256); //Col : Tarikh Transaksi
@@ -2408,16 +2517,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	            	else if(i==6)sheetCC.setColumnWidth(i, 20*256); //Col : No. Rujukan
 	            	else if(i==7)sheetCC.setColumnWidth(i, 23*256); //Col : Jenis Terimaan-Kod
 	            	else if(i==8)sheetCC.setColumnWidth(i, 29*256); //Col : Jenis Terimaan-Perihal
-					// 26307 start - add column width
-	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Jenis Kad
-	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM)
-	            	else if(i==11)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM)
-	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan
-	            	else if(i==13)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan
-	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih
-	            	else if(i==15)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan  
-	            	else if(i==16)sheetCC.setColumnWidth(i, 22*256); //Col : Status 
-	        		// 26307 end
+	        		// #26307 start - add column width
+	            	else if(i==9)sheetCC.setColumnWidth(i, 15*256); //Col : Jenis Kad 
+	            	else if(i==10)sheetCC.setColumnWidth(i, 15*256); //Col : Harga(RM) 
+	            	else if(i==11)sheetCC.setColumnWidth(i, 15*256); //Col : GST (RM) 
+	            	else if(i==12)sheetCC.setColumnWidth(i, 30*256); //Col : Caj Perkhidmatan 
+	            	else if(i==13)sheetCC.setColumnWidth(i, 30*256); //Col : GST Caj Perkhidmatan 
+	            	else if(i==14)sheetCC.setColumnWidth(i, 28*256); //Col : Amaun Bersih 
+	            	else if(i==15)sheetCC.setColumnWidth(i, 28*256); //Col : Jumlah Keseluruhan 
+	            	else if(i==16)sheetCC.setColumnWidth(i, 22*256); //Col : Status  
+	        		// #26307 end
 	        	}
 	        }
 	        long endTimePopulateCC = System.currentTimeMillis();
@@ -2561,11 +2670,11 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 			if(!reportList.isEmpty()){
 				for(int m=0; m<reportList.size(); m++){
 					Object[] row = (Object[]) reportList.get(m);
-					// 26307 start - change wording
-					if(row[1].toString().equalsIgnoreCase("Kad Kredit")){
-						row[1] = "Kad Kredit/Kad Debit";
-					}
-					// 26307 end
+					// #26307 start - change wording
+					if(row[1].toString().equalsIgnoreCase("Kad Kredit")){ 
+						row[1] = "Kad Kredit/Kad Debit"; 
+					} 
+					// #26307 end
 					fullList.put(m, new Object[] {
 						(Date) row[3],row[2].toString(),
 						row[5].toString() != null ? row[5].toString() : "" ,//#29454 - to cater nullpointer 
