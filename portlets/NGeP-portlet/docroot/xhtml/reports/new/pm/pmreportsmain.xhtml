@@ -8,6 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -20,10 +21,11 @@
 				<td width="10%"><p:outputLabel
 						value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td width="90%"><p:selectOneMenu
+				<td width="100%"><p:selectOneMenu
 						label="#{lbl['lbl.rpt.rptName']}" id="somReportName"
 						value="#{pmReportsBackingBean.managedBean.reportCode}"
-						required="true" style="margin-top:5px;width:300px;">
+						style="margin-top:5px;width:330px;"
+						required="true"> <!-- shafie reopen #28833  -->
 						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 							itemValue="#{null}"></f:selectItem>
 						<f:selectItems
@@ -109,6 +111,13 @@
 					test="#{PmReportConst.pmNoOfCpAndMrAccessApplicationRptVal eq pmReportsBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/pm/noOfCPandMRAccsApplicationReport.xhtml"></ui:include>
 				</c:when>
+				<!-- #28833 shafie start -->
+				<!-- PM_012 -->
+				<c:when
+					test="#{PmReportConst.pmListOfPTJAllowedToApproveOtherPTJProcurementRptVal eq pmReportsBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/pm/listOfPTJAllowedToApproveOtherPTJProcurementReport.xhtml"></ui:include>
+				</c:when>
+				<!-- #28833 shafie end -->
 				<c:otherwise>
         			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>
