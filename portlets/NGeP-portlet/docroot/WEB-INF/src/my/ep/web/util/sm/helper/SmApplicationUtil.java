@@ -1878,6 +1878,40 @@ public class SmApplicationUtil {
 			}
 
 		}
+		
+		// start #30076
+		boolean validateSmBranch = true;
+		StringBuilder sbSuppBranch = new StringBuilder();
+		sbSuppBranch.append("<br/>");
+		int x = 0;
+		for (SmSupplierBranch suppBranch : appl.getSmSupplierBranches()) {
+			if (suppBranch.getBranchName().isEmpty()
+					|| suppBranch.getSmAddress() == null
+					|| (suppBranch.getSmAddress() != null && suppBranch.getSmAddress().getAddress1().isEmpty()
+							|| suppBranch.getSmAddress().getPostcode() == null
+							|| suppBranch.getSmAddress().getCountryId() == null
+							|| suppBranch.getSmAddress().getStateId() == null
+							|| suppBranch.getSmAddress().getDistrictId() == null || suppBranch.getSmAddress()
+							.getCityId() == null) || suppBranch.getSmPersonnel() == null) {
+				validateSmBranch = false;
+				sbSuppBranch.append(++x + ". ");
+				sbSuppBranch.append(suppBranch.getBranchName());
+				sbSuppBranch.append("<br/>");
+			}
+		}
+
+		if (!validateSmBranch) {
+			validSave = false;
+			StringBuilder errMsg = new StringBuilder();
+			errMsg.append("Please complete the mandatory fields marked (*) in the 'Personnel/Branch Info' section for the following Company Branch:</br> ");
+			errMsg.append(sbSuppBranch);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
+			throw new EpException(errMsg.toString());
+		}
+		// end #30076
+
 		//16052019 - SSM INTEGRATION CR #27219
 		if (showerror && appl.isApplValidWithSsm() && managedBean.isSupplierUser() && appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			if (currentTab != -1) {
