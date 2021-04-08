@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:outputPanel id="opDefinedSearch">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">			
+			<tr>
+			<th width="15%"><p:outputLabel
+						value="#{lbl['lbl.pm.org.ptj.search.ministry']}" /></th>
+				<td>
+					<ac:lov id="minstryPtjsearch" lovId="PM_ORG_PROFILE_MINSTRY"
+						disabled = "#{pmReportsBackingBean.ministryJabatanAdmin}"
+						headerText="#{lbl['lbl.pm.org.ptj.search.ministry']}" update="@form"
+						saveObject="pmReportsBackingBean.managedBean.selectedMinistry"
+						value="#{pmReportsBackingBean.managedBean.selectedMinistry.pmOrgValidity.orgName}"
+						size="100" readonly="true"
+						postUpdateListener="pmReportsBackingBean.updateMinistrySearchCriteria" 
+						conditionField="#{pmReportsBackingBean.constructMinistryConditionFields()}" />				
+				</td>
+			</tr>		
+			<tr>
+				<td style="white-space: nowrap">
+					<p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.jabatan']}" />
+				</td>
+				<td>
+					<ac:lov id="PtjKumpulansearch" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search.jabatan']}" update="@form"
+						saveObject="pmReportsBackingBean.managedBean.selectedKumpulanPTJ"
+						value="#{pmReportsBackingBean.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
+						size="100" readonly="true" 
+						postUpdateListener="pmReportsBackingBean.updateKPTJSearchCriteria"
+						conditionField="#{pmReportsBackingBean.constuctConditionFieldsForPTJGroup()}" /> 
+				</td>
+			</tr>			
+			<tr>
+				<td style="white-space: nowrap">
+					<p:outputLabel value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" />
+				</td>
+				<td>
+					<ac:lov id="openPtjsearch" lovId="PM_ORG_PROFILE_PTJ"
+						headerText="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}"
+						saveObject="pmReportsBackingBean.managedBean.selectedPTJ"
+						value="#{pmReportsBackingBean.managedBean.selectedPTJ.pmOrgValidity.orgName}"
+						size="100" readonly="true"
+						postUpdateListener="pmReportsBackingBean.updateSearchCriteria"
+						conditionField="#{pmReportsBackingBean.constuctConditionFieldsForPTJ()}" /> 			
+				</td>	
+			</tr>
+		</table>
+		
+
+	</p:outputPanel>
+	
+</ui:composition>
