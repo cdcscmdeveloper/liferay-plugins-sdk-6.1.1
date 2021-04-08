@@ -52,11 +52,11 @@
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<ui:remove> #15391 & #11104 (add SP) - start </ui:remove>
+				<ui:remove> #15391 #11104 (add SP) - start </ui:remove>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
 					disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
 					rendered="#{stageTwoTechnical.manditory !='true' and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}">
-				<ui:remove> #15391 & #11104 - end </ui:remove>		
+				<ui:remove> #15391 #11104 - end </ui:remove>		
 					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
 				</p:selectBooleanCheckbox>
