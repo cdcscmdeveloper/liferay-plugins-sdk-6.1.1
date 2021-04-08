@@ -76,16 +76,19 @@ public abstract class BaseManagedBean implements Serializable {
 	private String statusDescFromSSM;
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
-
-	private List<SmPersonnel> personnelsRole  = new ArrayList();
 	
+	//27382
+	private boolean errorInvalidSelfRequest;
+
+	private List<SmPersonnel> personnelsRole = new ArrayList();
+
 	// For sub title displayed in screen.
 	private String title;
-	
+
 	private boolean disableFields;
-	
-	private boolean disciplinaryAction; 
-	
+
+	private boolean disciplinaryAction;
+
 	// 18685 - Start
 	private String reportDownloadFileName;
 	private ScAttachment scAttachment;
@@ -944,7 +947,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	// end #29956
-	
+
 	// start 27346
 	public StreamedContent getDownloadfile() {
 		return downloadfile;
@@ -954,6 +957,15 @@ public abstract class BaseManagedBean implements Serializable {
 		this.downloadfile = downloadfile;
 	}
 	// end 27346
+	
+	//27382
+	public boolean isErrorInvalidSelfRequest() {
+		return errorInvalidSelfRequest;
+	}
+
+	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
+		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
+	}
 }
 
 
