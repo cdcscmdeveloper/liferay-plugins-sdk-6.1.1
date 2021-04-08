@@ -19,7 +19,7 @@
 		<div class="ppRightBtn">
 			<h:panelGroup id="closeQTBtns">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{qTDetailBB.submitCloseQTDetail}" 
-					process="@form" update="@all" onstart="blockWidget.show();" soncomplete="blockWidget.hide();" />
+					process="@form" update="@all" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</h:panelGroup>
 		</div> 
 		<p:panel id="closeQTSubmitOnly" header="#{lbl['lbl.sc.qt.close.panel']}" toggleable="true">	
