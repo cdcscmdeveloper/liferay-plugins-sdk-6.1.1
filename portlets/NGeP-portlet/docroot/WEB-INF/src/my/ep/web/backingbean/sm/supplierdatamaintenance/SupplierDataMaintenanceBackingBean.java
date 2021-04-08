@@ -281,7 +281,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		initApproverRemarkInfo();
 		
 		//Redmine #18959
-		if(getManagedBean().isHasActiveTransaction()) {
+		if(getManagedBean().isHasActiveTransaction() 
+				|| getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED)
+				|| getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)) {//29943: Disciplinary Action - 26238
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
 			getManagedBean().setActiveApplList(applList);
 		}
@@ -742,9 +744,9 @@ public class SupplierDataMaintenanceBackingBean extends
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
 			//set tracking diary for Disciplinary Action
-			if (getManagedBean().isEditDisciplinaryAction()) {				
+			if (getManagedBean().isEditDisciplinaryAction()) {
 				SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
-						getManagedBean().getSmAppl(),
+						activeAppl,//26238 - Disciplinary Action - bug fix
 						getTrackingActionDesc(reqDTO,"DA"));
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
