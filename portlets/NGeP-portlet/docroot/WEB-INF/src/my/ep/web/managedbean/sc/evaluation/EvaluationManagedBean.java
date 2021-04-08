@@ -609,6 +609,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean speczonedtlReq = false;//#25138
 	
 	private boolean itemSampleReq; //#11104-start
+	//#25138 - start
+	private List<ScQtProposalAmount> qtProposalAmounts;
+	
+	private List<ScQtProposalAmount> qtProposalAmountByProposal;
+	//#25138 - end
 	/**tabIndex
 	 * Gets the today.
 	 * 
@@ -3932,4 +3937,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evalStatusComp = evalStatusComp;
 	}
 	//#28784 - end
+	//#25138 - start
+	public List<ScQtProposalAmount> getQtProposalAmounts() {
+		return qtProposalAmounts;
+	}
+
+	public void setQtProposalAmounts(List<ScQtProposalAmount> qtProposalAmounts) {
+		this.qtProposalAmounts = qtProposalAmounts;
+	}
+	
+	public List<ScQtProposalAmount> getQtProposalAmountByProposal() {
+		return qtProposalAmountByProposal;
+	}
+
+	public void setQtProposalAmountByProposal(List<ScQtProposalAmount> qtProposalAmountByProposal) {
+		this.qtProposalAmountByProposal = qtProposalAmountByProposal;
+	}
+	//#25138 - end
 }
