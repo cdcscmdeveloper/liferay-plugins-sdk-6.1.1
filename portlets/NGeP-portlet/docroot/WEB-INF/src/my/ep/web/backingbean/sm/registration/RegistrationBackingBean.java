@@ -2097,7 +2097,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
 						.getServiceObject("sm", ISupplierSearchSO.class);
 				if (this.getManagedBean().getSmBusinessAdd() != null && this.getManagedBean()
-						.getSmBusinessAdd().getAddressId()!=null) {
+						.getSmBusinessAdd().getAddressId()!=null) { //#30726
 					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
 							.getSmBusinessAdd().getAddressId());
 					this.getManagedBean().setSmBusinessAdd(smAddress);
