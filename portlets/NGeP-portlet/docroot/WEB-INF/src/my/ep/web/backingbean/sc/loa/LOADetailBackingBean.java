@@ -3848,8 +3848,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
 
 		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
-				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)
-				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
 			loaReviseStatus = true;
 		}
 
