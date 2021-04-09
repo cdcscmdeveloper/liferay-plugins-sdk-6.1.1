@@ -51,6 +51,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -299,7 +300,15 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 				assignedPOName = setPOJobRoleWeigtage(reqDTO);
 			}
-			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			
+			//add new data type in SMMOFRegDataType - saufi
+			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+			
+			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
+				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
+			}
+			
+			reqDTO.setBpmPojo(bpmObj);
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
 			reqDTO.setToken(token);
