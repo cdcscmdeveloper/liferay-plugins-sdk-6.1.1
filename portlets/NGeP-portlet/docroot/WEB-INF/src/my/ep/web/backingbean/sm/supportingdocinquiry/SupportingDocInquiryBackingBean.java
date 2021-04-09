@@ -28,7 +28,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -68,6 +67,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	/**
 	 * Pre - render Expired SDO Inquiry List Page
 	 */
+	@SuppressWarnings("deprecation")
 	public void preRenderExpiredInquiry() {
 		renewSesionObject();
 		getManagedBean().setExpiredSdoVerifySuppDocApplList(
@@ -86,6 +86,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	 * @param SmAppl
 	 *            selectedSmAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void navigateToExpiredInquiryApplication(String applNo) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
@@ -114,6 +115,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	/**
 	 * Back to Expired SDO Inquiry List Page
 	 */
+	@SuppressWarnings("deprecation")
 	public void backToExpiredSdoInquiryListPage() {
 		SmCommonUtil
 				.redirectToPage(
@@ -162,7 +164,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public void viewDocInquiry(){
-		log.info("**********viewDocInquiry*********");
+		//log.info("**********viewDocInquiry*********");
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 		//this.getManagedBean().setAppId(1258837L);
@@ -174,17 +176,17 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public String submitInquiryResponse(){
-		log.info("**********submitInquiryResponse*********");
+		//log.info("**********submitInquiryResponse*********");
 		try{
 			PmUser user = new FacesScopes().getUserSessionBean();
-			log.info("**********submitInquiryResponse*********");
+			//log.info("**********submitInquiryResponse*********");
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 			Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 			
 			Date currDate = new Date();
 			
-			log.info("**********Current Date*********" + currDate);
+			//log.info("**********Current Date*********" + currDate);
 			this.getManagedBean().getSmApplInquiry().setResponseDate(currDate);
 			reqDTO.setToken(token);
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
@@ -195,28 +197,29 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			
 			//#11641 - START
 			reqDTO.setAddedSmApplDocFiles(this.getManagedBean().getAddedDocFile());
+			reqDTO.setUpdatedSupportDocs(this.getManagedBean().getUpdatedSupportDocs());
 			//#11641 - END
 
-			//#28807 - START managedBean.smApplInquiry.smAppl.smApplSupportDocs
-			log.info("#28807 supp doc after supplier response -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo() + " -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().size());
-			int filesCount = 0;
+			//#28807 - START
+			//log.info("#28807 supp doc after supplier response -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo() + " -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().size());
+			//int filesCount = 0;
 			for(SmApplSupportDoc smApplSupportDoc : this.getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs()){
 				for(SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()){
 					if(!smApplDocFile.getFileName().isEmpty() || 
 						smApplDocFile.getFileName() != null || 
 						!smApplDocFile.getFileName().equalsIgnoreCase("")){
-						filesCount+=1;
+						//filesCount+=1;
 					}
 				}
 			}
-			log.info("#28807 total sup doc files -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo()+ " -> " + filesCount);
+			//log.info("#28807 total sup doc files -> " + this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo()+ " -> " + filesCount);
 			//#28807 - END
 			
 			SupportingDocInquiryResDTO resDTO = reqSO.updateInquiry(reqDTO);
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
 			//resDTO.setSuccessful(true);
 			if(resDTO.isSuccessful()){
-				log.info("*****is Success******");
+				//log.info("*****is Success******");
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				renewSesionObject();
 				return navigateToAck();
@@ -240,9 +243,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	
 	
 	public void preRenderView(){
-		log.info("**********preRenderView*********");
+		//log.info("**********preRenderView*********");
 		if(this.getManagedBean().getSmApplInquiry() == null){
-			//this.getManagedBean().setAppId(1259567L); //TODO
+			//this.getManagedBean().setAppId(1259567L); //
 			viewDocInquiry();
 		}
 	}
@@ -251,6 +254,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 	
+	/*
 	private String getUserRole() {
 		FacesScopes facesScopes = new FacesScopes();
 		if (facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
@@ -271,6 +275,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			return StringUtils.EMPTY;
 		}
 	}
+	*/
 	
 	/**
 	 * To check whether selected supplier has active transaction
@@ -491,12 +496,12 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
-		log.info("********handleFileAttachment********");
+		//log.info("********handleFileAttachment********");
 		if (event.getFile() != null) {
-			log.info("***** File attached *******"+ event.getFile().getFileName());
+			//log.info("***** File attached *******"+ event.getFile().getFileName());
 			
 			if (getManagedBean().getSmApplInquiry().getSmAppl().getSmApplSupportDocs().contains(this.getManagedBean().getSupportDoc())) {
-				log.info("******* Contains selected file ****");
+				//log.info("******* Contains selected file ****");
 				String filePath = Calendar.getInstance().get(Calendar.YEAR)
 						+ "/SM/APPLICATION/"
 						+ this.getManagedBean().getSmApplInquiry().getSmAppl().getApplNo() + "/SD/";
@@ -510,8 +515,6 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				smApplDocFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
 				smApplDocFile.setSmApplSupportDoc(doc);
 				smApplDocFile.setFilePath(filePath);
-				
-				doc.getSmApplDocFiles().add(smApplDocFile);
 				
 				for(int i=0; i<doc.getSmApplDocFiles().size(); i++){
 					if(doc.getSmApplDocFiles().get(i).getFileName()==null || 
@@ -549,6 +552,12 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 						}
 						smApplSupportDoc.setNewAddedFiles(smApplDocFiles);
 					}
+				}
+				if(this.getManagedBean().getUpdatedSupportDocs() != null){
+					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
+				}else{
+					this.getManagedBean().setUpdatedSupportDocs(new ArrayList<SmApplSupportDoc>());
+					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
 				}
 			}
 		}
