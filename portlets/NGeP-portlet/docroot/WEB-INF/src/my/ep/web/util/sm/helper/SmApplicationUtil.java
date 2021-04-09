@@ -2603,10 +2603,10 @@ public class SmApplicationUtil {
 		}
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			if (pers.getPersonnelId() == null && pers.equals(per)) {
-				log.info("****** Same obj before save ");
+				//log.info("****** Same obj before save ");
 			} else if (pers.getPersonnelId() != null
 					&& pers.getPersonnelId().equals(per.getPersonnelId())) {
-				log.info("**** Same obj without id ******");
+				//log.info("**** Same obj without id ******");
 			} else {
 				if (per.getIdentificationNo() != null
 						&& per.getIdentificationNo().equalsIgnoreCase(
@@ -3002,7 +3002,7 @@ public class SmApplicationUtil {
 	 */
 	public static List<SmStaffTotal> getStaffList(SmAppl app) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
-		log.info("****  getStaffList *********" + app.getSupplierType());
+		//log.info("****  getStaffList *********" + app.getSupplierType());
 		if (app.getSupplierType().equals(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
 			SmStaffTotal stf1 = new SmStaffTotal();
@@ -3241,7 +3241,7 @@ public class SmApplicationUtil {
 	 */
 	public static boolean validL3CategoryCodeForOverLapping(Long catL3Id,
 			Long supplierId, Long applId) {
-		log.info("*** Validate the code with directors and equi owners ***** ");
+		//log.info("*** Validate the code with directors and equi owners ***** ");
 		IMofRegistrationSO mofRegistrationSO = null;
 		boolean overLapCategory = false;
 		try {
@@ -3260,7 +3260,7 @@ public class SmApplicationUtil {
 			} else {
 				overLapCategory = false;
 			}
-			log.info("*** Over lap record *** " + overLapCategory);
+			//log.info("*** Over lap record *** " + overLapCategory);
 			return overLapCategory;
 		} finally {
 			mofRegistrationSO = null;
@@ -3927,7 +3927,7 @@ public class SmApplicationUtil {
 	 */
 	public static String getPOLoginId(Long statusId, Long secondaryStatusId,
 			Long docId) {
-		log.info("*** This is resubmit to get po ****** ");
+		//log.info("*** This is resubmit to get po ****** ");
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		reqDTO.setStatusId(statusId);
 		reqDTO.setSecondaryStatusId(secondaryStatusId);
@@ -3940,8 +3940,8 @@ public class SmApplicationUtil {
 		String poLogin = null;
 		if (resDTO != null && resDTO.getWorkflowStatus() != null
 				&& resDTO.getWorkflowStatus().getCreatedBy() != null) {
-			log.info("******** The user id for PO from the data ******* "
-					+ resDTO.getWorkflowStatus().getCreatedBy());
+			//log.info("******** The user id for PO from the data ******* "
+					//+ resDTO.getWorkflowStatus().getCreatedBy());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(resDTO.getWorkflowStatus().getCreatedBy());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
@@ -3973,7 +3973,7 @@ public class SmApplicationUtil {
 						}
 					}
 				}
-				log.info("******* After retrieve po details ******** ");
+				//log.info("******* After retrieve po details ******** ");
 			}
 		}
 		return poLogin;
@@ -3988,7 +3988,7 @@ public class SmApplicationUtil {
 	 * @return the PO login id
 	 */
 	public static String getPOLoginId(SmSupplier supplier, SmAppl smAppl) {
-		log.info("*** This is resubmit to get po from MOF API ****** ");
+		//log.info("*** This is resubmit to get po from MOF API ****** ");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());
 		reqDTO.setAppType(smAppl.getApplType());
@@ -4103,8 +4103,8 @@ public class SmApplicationUtil {
 				}
 			}
 
-			log.info("validate before proceed regNo:" + smSupplier.getRegNo()
-					+ " isBumi:" + smSupplier.isBumi());
+			//log.info("validate before proceed regNo:" + smSupplier.getRegNo()
+					//+ " isBumi:" + smSupplier.isBumi());
 
 			// not allowed to proceed if not answer questionaire except for
 			// bumi application and basic supplier admin role (happen for
@@ -4243,7 +4243,7 @@ public class SmApplicationUtil {
 						suppCategory.add(cat);
 					}
 				}
-				log.info("total category:" + suppCategory.size());
+				//log.info("total category:" + suppCategory.size());
 				if (suppCategory.size() >= maxCatSize) {
 					throw new EpException(MessageConst.ERROR_722675);
 				}
@@ -4551,10 +4551,10 @@ public class SmApplicationUtil {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		log.info("** getSupplierType type ***"
-				+ managedBean.getSmAppl().getSupplierType());
-		log.info("** getApplCategoryType type ***"
-				+ managedBean.getSmAppl().getApplCategoryType());
+		//log.info("** getSupplierType type ***"
+				//+ managedBean.getSmAppl().getSupplierType());
+		//log.info("** getApplCategoryType type ***"
+				//+ managedBean.getSmAppl().getApplCategoryType());
 		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		if (managedBean.getBasicCompanyFacility() != null
 				&& managedBean.getBasicCompanyFacility().getFacilityType() != null
@@ -4581,7 +4581,7 @@ public class SmApplicationUtil {
 		} else {
 			reqDTO.setIsSpecialCategory(true);
 		}
-		log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
+		//log.info("*** Bumi Percent Sent for Category L1 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 
@@ -4653,7 +4653,7 @@ public class SmApplicationUtil {
 		}
 		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
 				.getBusinessType());
-		log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
+		//log.info("*** Bumi Percent Sent for Category L2 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2s(reqDTO);
 
@@ -4697,10 +4697,10 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		log.info("** getSupplierType type ***"
-				+ managedBean.getSmAppl().getSupplierType());
-		log.info("** getApplCategoryType type ***"
-				+ managedBean.getSmAppl().getApplCategoryType());
+		//log.info("** getSupplierType type ***"
+				//+ managedBean.getSmAppl().getSupplierType());
+		//log.info("** getApplCategoryType type ***"
+				//+ managedBean.getSmAppl().getApplCategoryType());
 		reqDTO.setSupplierTypeCode(managedBean.getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(managedBean.getSmSupplier()
 				.getBusinessType());
@@ -4729,7 +4729,7 @@ public class SmApplicationUtil {
 				bumiPerc = 99;
 			}
 		}
-		log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
+		//log.info("*** Bumi Percent Sent for Category L3 ***** " + bumiPerc);
 		reqDTO.setBumiPercentage(bumiPerc);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
@@ -4747,7 +4747,7 @@ public class SmApplicationUtil {
 	 */
 	public static boolean checkCategoryPendingTransaction(
 			List<SmSupplierCategory> categories, Long supplierId) {
-		log.info("*** Validate the code having active transaction ***** ");
+		//log.info("*** Validate the code having active transaction ***** ");
 		IMofRegistrationSO mofRegistrationSO = null;
 		boolean hasActiveTransactionCategory = false;
 		try {
@@ -4767,8 +4767,8 @@ public class SmApplicationUtil {
 							.getCategoryL3Id());
 					MofRegistrationResDTO resDTO = mofRegistrationSO
 							.hasActiveTransactionsForSupplierAndCategoryCode(reqDto);
-					log.info("**** Active Transactions ********"
-							+ resDTO.isHasActiveTransaction());
+					//log.info("**** Active Transactions ********"
+							//+ resDTO.isHasActiveTransaction());
 					if (resDTO.isHasActiveTransaction()) {
 						hasActiveTransactionCategory = true;
 						sb.append("<br/>")
@@ -4783,8 +4783,8 @@ public class SmApplicationUtil {
 					}
 				}
 			}
-			log.info("*** Has active transaction  *** "
-					+ hasActiveTransactionCategory);
+			//log.info("*** Has active transaction  *** "
+					//+ hasActiveTransactionCategory);
 			if (hasActiveTransactionCategory) {
 				throw new EpException(sb.toString());
 			}
@@ -5134,7 +5134,7 @@ public class SmApplicationUtil {
 					.retrieveSmApplicationDetailsById(reqDto);
 			return resDTO;
 		} catch (Exception e) {
-			log.info("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			log.error("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			resDTO.setErrorCaued(Boolean.TRUE);
 			return resDTO;
@@ -5642,15 +5642,15 @@ public class SmApplicationUtil {
 	 */
 	public static void calculateShareHolderPercent(
 			SmApplicationManagedBean managedBean) {
-		log.info("********* calculateShareHolderPercent ********  ");
-		log.info(" *** Non Bumi Equity **** "
-				+ managedBean.getSmAppl().getSmCompanyBasic()
-						.getNonBumiEquity());
-		log.info(" *** Bumi Equity **** "
-				+ managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity());
-		log.info(" *** Non MY Equity **** "
-				+ managedBean.getSmAppl().getSmCompanyBasic()
-						.getForeignerEquity());
+		//log.info("********* calculateShareHolderPercent ********  ");
+		//log.info(" *** Non Bumi Equity **** "
+				//+ managedBean.getSmAppl().getSmCompanyBasic()
+						//.getNonBumiEquity());
+		//log.info(" *** Bumi Equity **** "
+				//+ managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity());
+		//log.info(" *** Non MY Equity **** "
+				//+ managedBean.getSmAppl().getSmCompanyBasic()
+					//	.getForeignerEquity());
 
 		IPersonnelSO perSO = null;
 		String perType = null;
@@ -5702,7 +5702,7 @@ public class SmApplicationUtil {
 			}
 			if (resDto.getSmPersonnelList() != null) {
 				selPerList = resDto.getSmPersonnelList();
-				log.info("*** List retrieved *** " + selPerList.size());
+				//log.info("*** List retrieved *** " + selPerList.size());
 			}
 			for (SmPersonnel per : selPerList) {
 				if ((per.getShareAmt() == null)) {
@@ -6098,8 +6098,8 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		log.info("*** isAllCatcodeVerified Valid For Approval After category checking Decision **** "
-				+ valid);
+		//log.info("*** isAllCatcodeVerified Valid For Approval After category checking Decision **** "
+				//+ valid);
 		if (valid) {
 			valid = false;
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
@@ -6112,7 +6112,7 @@ public class SmApplicationUtil {
 				valid = true;
 			}
 		}
-		log.info("*** Valid For Approval Final Decision **** " + valid);
+		//log.info("*** Valid For Approval Final Decision **** " + valid);
 		managedBean.setAllowedToApprove(valid);
 	}
 
@@ -7988,7 +7988,7 @@ public class SmApplicationUtil {
 				isAlreadyActivate = true;
 			}
 		} catch (Exception ex) {
-			log.info("Error in isLatestApprovedPersonnelAlreadyAuthorized:"
+			log.error("Error in isLatestApprovedPersonnelAlreadyAuthorized:"
 					+ ex.getMessage());
 		}
 		return isAlreadyActivate;
@@ -9130,7 +9130,7 @@ public class SmApplicationUtil {
 				bean.setPersnlMailCities(new ArrayList<PmCity>());
 				break;
 			default:
-				log.info("**** This is an unknown panel ***** ");
+				//log.info("**** This is an unknown panel ***** ");
 				break;
 			}
 			addr.setStateId(null);
@@ -9233,7 +9233,7 @@ public class SmApplicationUtil {
 				bean.setBankCities(new ArrayList<SelectItem>());
 				break;
 			default:
-				log.info("**** This is an unknown panel ***** ");
+				//log.info("**** This is an unknown panel ***** ");
 				break;
 			}
 			addr.setDistrictId(null);
@@ -9312,7 +9312,7 @@ public class SmApplicationUtil {
 				bean.setBankCities(cityItems);
 				break;
 			default:
-				log.info("**** This is an unknown panel ***** ");
+				//log.info("**** This is an unknown panel ***** ");
 				break;
 			}
 			addr.setCityId(null);
@@ -11981,7 +11981,7 @@ public class SmApplicationUtil {
 			}
 			//END  #27230
 		} catch (Exception ex) {
-			log.info(ex.getMessage());
+			log.error(ex.getMessage());
 		}
 		return retVal;
 	}
@@ -13344,7 +13344,7 @@ public class SmApplicationUtil {
 	private Map<Integer, Date> getPoKpiStartDate(Long docId, Long stateId) {
 		int pauseDays = 0;
 		Date startDate = new Date();
-		Map<Integer, Date> mapDate = new HashMap();
+		Map<Integer, Date> mapDate = new HashMap<Integer, Date>();
 		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 		swReqDTO.setStatusIds(Arrays
 				.asList(new Long[] {
@@ -13423,7 +13423,7 @@ public class SmApplicationUtil {
 	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
 			int numDays, int pauseDays, Long stateId) {
 		int daysLeft = numDays;
-		Map<Integer, Date> mapDate = new HashMap();
+		Map<Integer, Date> mapDate = new HashMap<Integer, Date>();
 		Calendar dateCal = Calendar.getInstance();
 		dateCal.setTime(startDate);
 
@@ -13440,6 +13440,7 @@ public class SmApplicationUtil {
 		return mapDate;
 	}
 
+	@SuppressWarnings("static-access")
 	private void calcEndDate(int numDays, Calendar dateCal, Long stateId) {
 		for (int i = numDays - 1; i >= 0; i--) {
 			dateCal.add(dateCal.DATE, 1);
@@ -13538,6 +13539,7 @@ public class SmApplicationUtil {
 		return resDTO.getSupplierCategoryList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Object[]> retrieveCancelCategory() {
 		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
@@ -13552,6 +13554,7 @@ public class SmApplicationUtil {
 		return resDTO.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Object[]> retrieveCancelCategoryBySupplier(SmSupplier supplier) {
 		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
