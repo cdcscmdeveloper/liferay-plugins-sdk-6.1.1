@@ -28,20 +28,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.StreamedContent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
-
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
@@ -65,7 +51,6 @@ import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -130,6 +115,20 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
@@ -421,6 +420,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * remove selected Interviewee
 	 */
 	public void removeInterviewee(){
+		//#24964 - start
+		if(getManagedBean().getDuplicateInterviewees() == null)
+			getManagedBean().setDuplicateInterviewees(new ArrayList<>(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()));
+		//#24964 - end
 		if(this.getManagedBean().getSelectedInterviewees() != null && this.getManagedBean().getSelectedInterviewees().length > 0){
 			for (SmSvInterviewee interviewee : this.getManagedBean().getSelectedInterviewees()) {
 				this.getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().remove(interviewee);		
@@ -883,10 +886,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int cheqNonMalaysian = 0;
 		
 		// #14055 - start
-		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet<String>();
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
@@ -1148,9 +1151,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
         }
         
         if(finalOutputFile.delete()){
-        	 log.info("**********Deleted***********");
+        	 //log.info("**********Deleted***********");
         }else{
-        	 log.info("**********Failed to Delete***********");
+        	 //log.info("**********Failed to Delete***********");
         }
 	}
 	
@@ -1953,6 +1956,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					new String[] { SmCommonUtil.getMessage("lbl.sm.sv.templ.interview.representative", null) }));
 		}
 		//#30550 - end
+		
+		//#24964 - start
+		if(getManagedBean().getDuplicateInterviewees() != null){
+			for(SmSvInterviewee dupe : getManagedBean().getDuplicateInterviewees()){
+				for(SmSvInterviewee intvw : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
+					if(intvw.getName().equals(dupe.getName())){
+						dupe.setDesignation(intvw.getDesignation());
+						getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().remove(intvw);
+						getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().add(0, dupe);
+						break;
+					}
+				}
+			}
+		}
+		//#24964 - end
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
@@ -1977,8 +1995,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING) || 
 				svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
-			//setSelectedMachineToSmSvMachineLs(svTemplate);
-			//setMachineList(svTemplate);
 		}
 		*/
 
@@ -1995,8 +2011,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		else{
 			for(SmSvAssistantOfficer smSvAssistantOfficer : svTask.getSmSvAssistantOfficers())
 			{
-				log.info("**************SV Ass. Officer*************");
-				log.info("name -> " + smSvAssistantOfficer.getName());
+				//log.info("**************SV Ass. Officer*************");
+				//log.info("name -> " + smSvAssistantOfficer.getName());
 				smSvAssistantOfficer.setNameEnterBySvo(smSvAssistantOfficer.getName());
 			}
 		}
@@ -2159,7 +2175,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SITE_VISIT_REPORT_PATH) + subFolder + "/";
 			// #28672 START
 			String fileName = String.valueOf((new Date()).getTime()) + "_" + StringUtils.replace(event.getFile().getFileName(), " ", "-"); 
-			log.info("fatin test 1st:"+ fileName);
+			//log.info("fatin test 1st:"+ fileName);
 			// #28672 END 
 			if(svTemplate.getSmAttachments() == null){
 				svTemplate.setSmAttachments(new ArrayList<SmAttachment>());
@@ -2168,7 +2184,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SmAttachment attachment = new SmAttachment();
 			// #28672 START
 			attachment.setFileName(fileName);
-			log.info("fatin test 2nd:"+ fileName);
+			//log.info("fatin test 2nd:"+ fileName);
 			// #28672 END
 			attachment.setFilePath(filePath);
 			attachment.setDocId(svTemplate.getSvTemplateId());
