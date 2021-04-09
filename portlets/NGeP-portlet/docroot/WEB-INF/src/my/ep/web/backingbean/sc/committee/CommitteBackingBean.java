@@ -1000,7 +1000,7 @@ public class CommitteBackingBean extends
 								roleReqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 								ParameterResDTO roleResDTO = parameterSO.retrieveParameterByTypeAndCode(roleReqDTO);
 								member.setMemberRole(roleResDTO.getPmParameter());
-								long memberRoleId = 378;
+								Long memberRoleId = SourcingConstants.MEMBER_ROLE_ID_CHAIRPERSON;
 								member.setMemberRoleId(memberRoleId);
 						    }
 						}
