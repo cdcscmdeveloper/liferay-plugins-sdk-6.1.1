@@ -263,7 +263,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private int totalRecords;
 	private String applicationStatusDesc;
 	//25792 - end
-	
+	// #29664 - start
+	private String poRemarkAfterSiteVisit;
+	private Date poRemarkAfterSiteVisitCreatedDate;
+	private String secondPoUserName = null;
+	// #29664 - start	
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//28771 - start
@@ -1927,6 +1931,32 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	//25792 - end	
 	
+	// #29664 - start
+	public String getPoRemarkAfterSiteVisit() {
+		return poRemarkAfterSiteVisit;
+	}
+
+	public void setPoRemarkAfterSiteVisit(String poRemarkAfterSiteVisit) {
+		this.poRemarkAfterSiteVisit = poRemarkAfterSiteVisit;
+	}
+
+	public Date getPoRemarkAfterSiteVisitCreatedDate() {
+		return poRemarkAfterSiteVisitCreatedDate;
+	}
+
+	public void setPoRemarkAfterSiteVisitCreatedDate(Date poRemarkAfterSiteVisitCreatedDate) {
+		this.poRemarkAfterSiteVisitCreatedDate = poRemarkAfterSiteVisitCreatedDate;
+	}
+
+	public String getSecondPoUserName() {
+		return secondPoUserName;
+	}
+
+	public void setSecondPoUserName(String secondPoUserName) {
+		this.secondPoUserName = secondPoUserName;
+	}
+	// #29664 - end
+
 	// #26639 - start
 	public boolean isViewSupplierMaintenancePage() {
 		return viewSupplierMaintenancePage;
