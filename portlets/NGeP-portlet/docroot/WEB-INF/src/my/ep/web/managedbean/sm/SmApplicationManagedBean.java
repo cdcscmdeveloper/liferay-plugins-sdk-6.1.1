@@ -569,6 +569,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#29315
 	private boolean flagMandatoryEpfNo;
 	
+	// #29664 - start
+	private String roleCode;
+	// #29664 - end
+	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4156,6 +4160,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setFlagMandatoryEpfNo(boolean flagMandatoryEpfNo) {
 		this.flagMandatoryEpfNo = flagMandatoryEpfNo;
 	}
+	
+	// #29664 - start
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+	// #29664 - end
 	
 	public boolean isActiveTransaction() {
 		return activeTransaction;

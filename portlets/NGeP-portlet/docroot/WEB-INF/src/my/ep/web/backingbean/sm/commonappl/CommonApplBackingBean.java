@@ -34,6 +34,7 @@ import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -305,6 +306,9 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
@@ -312,6 +316,9 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setReviewSiteVisit(
 							smObj.isSiteVisitComplete());
 
@@ -378,6 +385,9 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
@@ -385,6 +395,9 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setReviewSiteVisit(
 							smObj.isSiteVisitComplete());
 				}
@@ -469,6 +482,9 @@ public class CommonApplBackingBean extends
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 					smApplBB.getManagedBean().setPoUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
 				} else if (resDTO.getTaskName().equalsIgnoreCase(
@@ -476,6 +492,9 @@ public class CommonApplBackingBean extends
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
+					// #29664 - start
+					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
+					// #29664 - end
 					if (appl.getApplType().equals(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 						setSiteVisitView(smApplBB.getManagedBean(), appl);
@@ -652,6 +671,9 @@ public class CommonApplBackingBean extends
 			// smApplBB.getManagedBean().getSmAppl()
 			// .setApplId(new Long(smObj.getDocumentId()));
 			smApplBB.getManagedBean().setPoUser(true);
+			// #29664 - start
+			smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
+			// #29664 - end
 			smApplBB.getManagedBean().setSupplierUser(false);
 			smApplBB.getManagedBean().setApproverUser(false);
 			/*if (srcObj.getSupplierList() != null) {
