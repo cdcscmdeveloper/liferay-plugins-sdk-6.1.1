@@ -755,7 +755,7 @@ public class PurchaseInDefaultBackingBean extends
 				
 				scPID.getContractedItem();
 				scPID.getPanelItem();  
-				//scPID.setScPurchaseInDefaultAttachment(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment());
+				scPID.setScPurchaseInDefaultAttachment(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment());
 
 				reqDTO.setPurchaseInDefaultDtl(scPID);
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);	
@@ -1027,6 +1027,7 @@ public class PurchaseInDefaultBackingBean extends
 		ScPurchaseInDefault purchaseInDefault = getManagedBean()
 				.getPurchaseInDefault();
 		purchaseInDefault.setScPurchaseInDefaultAttachment(null);
+		getManagedBean().getPurchaseInDefault().setScPurchaseInDefaultAttachment(null);
 		}finally{
 		
 		}
