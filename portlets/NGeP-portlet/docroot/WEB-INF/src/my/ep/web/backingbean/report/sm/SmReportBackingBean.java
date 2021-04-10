@@ -1075,6 +1075,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal serviceCharge;
 					if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
 						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
+						if(!serviceCharge.equals(BigDecimal.ZERO)){
+							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
+							serviceCharge = amount.multiply(serviceChargeRate);
+						}
 					} else {
 						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
 					}
@@ -1520,6 +1524,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal serviceCharge;
 					if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
 						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
+						if(!serviceCharge.equals(BigDecimal.ZERO)){
+							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
+							serviceCharge = priceAmt.multiply(serviceChargeRate);
+						}
 					} else {
 						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
 					} 
@@ -2035,6 +2043,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal serviceCharge;
 					if (row[19] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
 						serviceCharge = row[20] != null ? (BigDecimal) row[20] : BigDecimal.ZERO;
+						if(!serviceCharge.equals(BigDecimal.ZERO)){
+							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
+							serviceCharge = priceAmt.multiply(serviceChargeRate);
+						}
 					} else {
 						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
 					}
