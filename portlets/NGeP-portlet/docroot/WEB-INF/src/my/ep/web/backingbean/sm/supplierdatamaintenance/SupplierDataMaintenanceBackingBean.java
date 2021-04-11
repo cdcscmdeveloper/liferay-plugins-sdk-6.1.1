@@ -3133,4 +3133,20 @@ public class SupplierDataMaintenanceBackingBean extends
 	private ISupplierSearchSO getISupplierSearchSO(){
 		return (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 	}
+
+	//26238 -  Disciplinary action - 30720 - Start
+	public int retrieveBumiPercent(SmAppl smAppl){
+		Integer bumiPerc = new Integer(0);
+
+		if(smAppl.isBumi() && smAppl.getSmSupplier().isBumi()){
+			bumiPerc = 90; 
+		} else {
+			bumiPerc = 1;  
+		}
+
+		return bumiPerc;
+	}
+	
+	//26238 -  Disciplinary action - 30720 - End
+	
 }
