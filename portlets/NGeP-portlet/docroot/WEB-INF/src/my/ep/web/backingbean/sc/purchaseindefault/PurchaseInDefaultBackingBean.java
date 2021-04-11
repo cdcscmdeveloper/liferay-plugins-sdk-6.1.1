@@ -754,7 +754,7 @@ public class PurchaseInDefaultBackingBean extends
 				
 				scPID.getContractedItem();
 				scPID.getPanelItem();  
-				//scPID.setScPurchaseInDefaultAttachment(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment());
+				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());
 
 				reqDTO.setPurchaseInDefaultDtl(scPID);
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);	
@@ -1025,7 +1025,17 @@ public class PurchaseInDefaultBackingBean extends
 		log.debug("deleteUploadFile");
 		ScPurchaseInDefault purchaseInDefault = getManagedBean()
 				.getPurchaseInDefault();
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IPurchaseInDefaultSO.class);
+		
+		if(purchaseInDefault.getScPurchaseInDefaultAttachment() != null){
+			purchaseInDefaultSO.deleteAttachmentById(purchaseInDefault.getScPurchaseInDefaultAttachment().getAttachmentId());
+		}
+		
 		purchaseInDefault.setScPurchaseInDefaultAttachment(null);
+		getManagedBean().getPurchaseInDefault().setScPurchaseInDefaultAttachment(null);
 		}finally{
 		
 		}
@@ -1748,6 +1758,11 @@ public class PurchaseInDefaultBackingBean extends
 					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 							"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 				}			
+		}
+		
+		if(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.txt.attachment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 		}
 	}
 	
