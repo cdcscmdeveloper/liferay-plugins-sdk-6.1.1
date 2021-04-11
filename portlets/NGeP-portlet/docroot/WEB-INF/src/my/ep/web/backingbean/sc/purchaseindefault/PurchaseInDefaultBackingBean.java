@@ -755,7 +755,7 @@ public class PurchaseInDefaultBackingBean extends
 				
 				scPID.getContractedItem();
 				scPID.getPanelItem();  
-				scPID.setScPurchaseInDefaultAttachment(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment());
+				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());
 
 				reqDTO.setPurchaseInDefaultDtl(scPID);
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);	
@@ -1026,6 +1026,15 @@ public class PurchaseInDefaultBackingBean extends
 		log.debug("deleteUploadFile");
 		ScPurchaseInDefault purchaseInDefault = getManagedBean()
 				.getPurchaseInDefault();
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IPurchaseInDefaultSO.class);
+		
+		if(purchaseInDefault.getScPurchaseInDefaultAttachment() != null){
+			purchaseInDefaultSO.deleteAttachmentById(purchaseInDefault.getScPurchaseInDefaultAttachment().getAttachmentId());
+		}
+		
 		purchaseInDefault.setScPurchaseInDefaultAttachment(null);
 		getManagedBean().getPurchaseInDefault().setScPurchaseInDefaultAttachment(null);
 		}finally{
