@@ -1728,7 +1728,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				orgProfileIdList.add(agency.getOrgProfile().getOrgProfileId());
 			}
 			//  sql maximum number of expressions IN is 1000, if > 1000 handle in else
-			if (orgProfileIdList.size() <= 1000) {				
+			//#25406 - Fixing 
+			if (orgProfileIdList.size() <= 1000 && !getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {				
 				SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
 						SearchOperator.OPERATOR_NOT_IN.value(),
 						orgProfileIdList);
