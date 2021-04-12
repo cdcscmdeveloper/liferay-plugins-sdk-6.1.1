@@ -1007,11 +1007,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
 				: getManagedBean().getSmAppl().getPmStatus().getStatusId()
 						.toString());
-		//#12483 - START
-		if(!getManagedBean().getSmAppl().getSmApplRevises().isEmpty()){
-			sortApplicationRevises();
+		//#30730 - START
+		if(this.getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) ||
+		   this.getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			//#12483 - START
+			if(getManagedBean().getSmAppl().getSmApplRevises() != null){
+				sortApplicationRevises();
+			}
+			//#12483 - END
 		}
-		//#12483 - END
+		//#30730 - END
 	}
 
 	/**
