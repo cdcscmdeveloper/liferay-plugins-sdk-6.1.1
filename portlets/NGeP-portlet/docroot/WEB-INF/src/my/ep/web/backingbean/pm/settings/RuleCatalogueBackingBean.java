@@ -4753,7 +4753,9 @@ public class RuleCatalogueBackingBean extends
 	public void onRuleType(org.primefaces.event.SelectEvent event) {
 
 		String selectedRuleType = null;
-		
+		// 29669,29641,29650 - start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleConfigId"); // reset form when select different Rule if UI validation error
+		// 29669,29641,29650 - end
         if (getManagedBean().getSelectedRuleDescType() != null) {
         	selectedRuleType = getManagedBean().getSelectedRuleDescType()
         			.getRuleType().getRuleType();
