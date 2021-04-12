@@ -426,10 +426,10 @@
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 					<td class="tdContent">
 					<p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" disabled="true" size="40" rendered ="#{!empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo">
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" disabled="true" size="40" rendered ="#{!empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}">
 					</p:inputText>
 					<p:inputText
-							value="#{lbl['lbl.sm.no.available']}" disabled="true" size="40" rendered ="#{empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo">
+							value="#{lbl['lbl.sm.no.available']}" disabled="true" size="40" rendered ="#{empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}">
 					</p:inputText>
 						&#160;
 						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}"/>
