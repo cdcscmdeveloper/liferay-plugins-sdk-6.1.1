@@ -72,8 +72,11 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
-					<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" styleClass="outputLabel-view"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+					<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					</td>
 				</tr>
 				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
 					<tr>
@@ -86,8 +89,10 @@
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.smAppl.bumi}"  />
 						</td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.estdate']}" /></td>
+					<td><ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" styleClass="outputLabel-view"/></td>
 						<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.viewSupplierProfile}">
-							<td colspan="2"></td>
+							<td colspan="1"></td>
 						</p:outputPanel>
 					</tr>
 				</p:outputPanel>
@@ -211,8 +216,6 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneFull}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
@@ -223,6 +226,11 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.local.authority']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
 					</p:outputPanel>
+				</tr>
+				<tr>
+				<td>
+				<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" /></td>
 				</tr>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 					<tr>
