@@ -4741,7 +4741,7 @@ public class SimpleQuoteBackingBean extends
 		// #28536 - start
 		if (!getManagedBean().isG2GFlag()) {
 			criteria.append("smAppl.supplierType")
-					.append("^").append(SupplierManagementConst. SUPP_TYPE_GOVT_TO_GOVT)
+					.append("^").append(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)
 					.append("^").append(SearchOperator.OPERATOR_NOT_EQUALS.value())
 					.append("|");
 			criteria.append("pmOrgProfile.govtSeller^0").append("|");
@@ -7993,4 +7993,5 @@ public class SimpleQuoteBackingBean extends
 			preRenderView();
 		}
 		// #29800 - end
+
 }
