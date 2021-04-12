@@ -817,6 +817,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @throws Exception  if an exception occurred
 	 * @see    Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public String saveContract(String action) throws Exception {
 		IContractSO contractSO = null;
 		//#29173 - CR 26475: Static Code Analysis
@@ -1272,30 +1273,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#28320 - During Notification Setting, no need to validate
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
 				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
-			// Bug #28479 - Start
 
-//			if ((ctBB.getManagedBean().getContractVer().getContractVerId() == null)
-//					&& (ctBB.getManagedBean().getContractVer().getDocType()
-//							.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {
-//				
-//				if (!ctBB.getManagedBean().isMinQtyCheck()) {
-//					for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
-//						ctBB.onChangeMinimumQty(item);
-//					}
-//				}
-//				ctBB.getManagedBean().setMinQtyCheck(false);
-//
-//				if (ctBB.getManagedBean().isErr100033()) {
-//					ctBB.getManagedBean().setErr100033(false);
-//					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
-//				}
-//				if (ctBB.getManagedBean().isErr100034()) {
-//					ctBB.getManagedBean().setErr100034(false);
-//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");
-//				}
-//			}
-									
-			// Bug #28479 - End
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
@@ -1888,7 +1866,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				cmbb.getManagedBean().getContractListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().getServiceListingPagingDataModel().reloadData();
 				cmbb.getManagedBean().allValue(true);
-				log.info("Value from the Cental Tab ********>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
+				//log.info("Value from the Cental Tab ********>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
 			} else if (outputTab.equalsIgnoreCase(ContractConst.DEDUCTION_DETAIL)) {
 				getManagedBean().setSelectedTabIndex(3);
 				getManagedBean().setDeductionIndex(3);
@@ -2410,7 +2388,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		/*#25956 Start*/
 		amendBB.getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 		/*#25956 End*/
-		log.info("Check Putra gotoAmendPage contractId "+contractId);
+		//log.info("Check Putra gotoAmendPage contractId "+contractId);
 		amendBB.setAmendmentContractVer(reqDTO);
 		return PROCESS_AMEND_PAGE;
 	}
@@ -2965,7 +2943,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		//Bug #29446 - start
-		log.info(ctBB.getManagedBean().isViewContract());
+		//log.info(ctBB.getManagedBean().isViewContract());
 		if(!ctBB.getManagedBean().isViewContract()){
 			if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
@@ -3594,10 +3572,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				getManagedBean().setSearchPtjProfile(newOrgProfile);
 				getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(newOrgProfile.getOrgProfileId()));
 				getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(newOrgProfile.getOrgProfileId()));
-				log.info("Cek OrgName List : "+newOrgProfile.getOrgName());
-				log.info("Cek OrgName List : "+getManagedBean().getSearchPtjProfile().getOrgProfileId());
-				log.info("Cek OrgName List : "+getManagedBean().getSearchMinistryProfile().getOrgProfileId());
-				log.info("Cek OrgName List : "+getManagedBean().getSearchPtjGroupProfile().getOrgProfileId());
+				//log.info("Cek OrgName List : "+newOrgProfile.getOrgName());
+				//log.info("Cek OrgName List : "+getManagedBean().getSearchPtjProfile().getOrgProfileId());
+				//log.info("Cek OrgName List : "+getManagedBean().getSearchMinistryProfile().getOrgProfileId());
+				//log.info("Cek OrgName List : "+getManagedBean().getSearchPtjGroupProfile().getOrgProfileId());
 			}
 			
 		}
