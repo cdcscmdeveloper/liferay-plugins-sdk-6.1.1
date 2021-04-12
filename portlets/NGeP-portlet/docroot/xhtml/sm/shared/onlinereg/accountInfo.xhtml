@@ -171,12 +171,11 @@
 				</c:choose>
 			</tr>
 			<!-- #24819 -->
+			<c:if test="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}"> 
 			<tr>
 			<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				
 				<td class="tdContent">
 					<p:outputPanel id="newRegNoPanelId">
 					<p:inputText id="newregNo1" required="#{!empty param['disableValidation']}" maxlength="30"
@@ -204,6 +203,7 @@
 						</td>
 			
 			</tr>
+		
 			<tr>
 			<td class="tdTitle">
 			</td>
@@ -212,6 +212,7 @@
 			</td>
 			</tr>
 		<!-- #24819 -->
+			</c:if>
 		</table>
 	</p:panel>
 
