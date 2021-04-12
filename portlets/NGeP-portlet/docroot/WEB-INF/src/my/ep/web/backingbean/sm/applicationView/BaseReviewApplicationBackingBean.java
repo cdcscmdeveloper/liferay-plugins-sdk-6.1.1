@@ -1049,8 +1049,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				: getManagedBean().getSmAppl().getPmStatus().getStatusId()
 						.toString());
 		//#12483 - START
-		if(!getManagedBean().getSmAppl().getSmApplRevises().isEmpty()){
-			sortApplicationRevises();
+		if(this.getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR) ||
+		   this.getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			if(getManagedBean().getSmAppl().getSmApplRevises() != null){
+				sortApplicationRevises();
+			}
 		}
 		//#12483 - END
 	}
