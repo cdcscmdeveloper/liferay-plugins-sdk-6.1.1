@@ -20,7 +20,8 @@
 	<ui:define name="contentSection">
 		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.paPendingPaymentMatch.longValue() 
 		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.poPendingPaymentQuery.longValue() 
-		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.coPendingPaymentQuery.longValue()) 
+		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.coPendingPaymentQuery.longValue()
+		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.paPendingPaymentQuery.longValue()) 
 		and not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}">
 		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
 		<h:outputText class="ui-messages-info-icon" /><ul><li>
