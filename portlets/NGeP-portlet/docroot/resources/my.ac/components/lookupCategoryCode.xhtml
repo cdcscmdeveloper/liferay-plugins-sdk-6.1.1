@@ -16,6 +16,7 @@
 	<cc:attribute name="categoryType"   type="java.lang.String"	/>
 	<cc:attribute name="bumiPercentage" type="java.lang.Integer"/>
 	<cc:attribute name="businessTypeCode" type="java.lang.String"/>
+	<cc:attribute name="supplierId" type="java.lang.Long"/>
 	<cc:attribute name="catcodeL1" type="java.lang.String"/>
 </cc:interface>
 
@@ -56,7 +57,7 @@
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl1}"
 						style="width: 500px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{categoryCodeSearchBackingBean.retrieveCategoryL1List(cc.attrs.supplierType, cc.attrs.facilityType, cc.attrs.paidUpCapital, cc.attrs.bumiPercentage, cc.attrs.categoryType, cc.attrs.businessTypeCode,cc.attrs.catcodeL1)}" />
+						<f:selectItems value="#{categoryCodeSearchBackingBean.retrieveCategoryL3List(categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2, cc.attrs.supplierType, cc.attrs.facilityType, cc.attrs.paidUpCapital, cc.attrs.bumiPercentage, cc.attrs.categoryType, cc.attrs.supplierId, cc.attrs.businessTypeCode)}" />
 						<p:ajax event="change" partialSubmit="true" process="@this" listener="#{categoryCodeSearchBackingBean.resetL2L3CategoryCode}" update="catCodeLvl2,catCodeLvl3" />
 					</h:selectOneMenu>
 				</td>
