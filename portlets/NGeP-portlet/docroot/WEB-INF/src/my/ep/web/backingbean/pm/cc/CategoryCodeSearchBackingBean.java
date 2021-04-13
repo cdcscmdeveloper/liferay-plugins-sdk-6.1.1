@@ -26,6 +26,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -663,10 +664,11 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 * @param businessTypeCode
 	 * @return
 	 */
+	//26238 - approver cannot add imposed category code - start
 	public List<SelectItem> retrieveCategoryL3List(
 			long categoryL2Id, 
 			String supplierType, String facilityType, BigDecimal paidUpCapital, 
-			Integer bumiPercentage, String categoryType, String businessTypeCode) {
+			Integer bumiPercentage, String categoryType, Long supplierId, String businessTypeCode) {
 
 		if(categoryL2Id == 0) {
 			return new ArrayList<SelectItem>();
@@ -974,11 +976,39 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			//27738 end 
 		} else { 
 			//27859 Start - 3rd level category didnot appear
-			
-			for(PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-				log.info("out pmCategoryL3.getCategoryName(): " + pmCategoryL3.getCategoryName());
-				selectItems.add(new SelectItem(pmCategoryL3.getCategoryL3Id(), 
-						pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName()));
+			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplierId(supplierId);
+			if(updateDAList != null){
+
+				for(SmDisciplinaryAction disc: updateDAList.getSmDisciplinaryActions()){
+
+					List<Object[]> cancelDA = SmApplicationUtil.retrieveCancelCategoryBySupplier(disc.getSmSupplier());
+					for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+						item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
+								pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+						
+						if(disc.isCancelCategory() || disc.isManufacturerCancel()){								
+							if(cancelDA != null
+									&& cancelDA.size() > 0){
+								for(Object[] arr : cancelDA){
+									if(arr[7].toString().equalsIgnoreCase(disc.getDisciplinaryActionId().toString())){
+										if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+											item.setDisabled(true);
+											log.info("Disciplinary Action - disabled cancel category");
+										}
+									}										
+								}
+							}  
+						} 
+						selectItems.add(item);
+					}
+				}
+			} else {
+
+				for(PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+					log.info("out pmCategoryL3.getCategoryName(): " + pmCategoryL3.getCategoryName());
+					selectItems.add(new SelectItem(pmCategoryL3.getCategoryL3Id(), 
+							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName()));
+				}
 			}
 			//27859 end - 3rd level category didnot appear
 		}
@@ -986,6 +1016,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		
 		return selectItems;
 	}
+	//26238 - approver cannot add imposed category code - end
  
 	public void resetL2L3CategoryCode() {
 		this.getManagedBean().setCategoryCodeIdLvl2(null);
