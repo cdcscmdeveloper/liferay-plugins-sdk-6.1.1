@@ -17,6 +17,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.helper.Paginator;							  
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -493,6 +494,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean isFP_Compliance = false;
 	//Enhancement #26339 -end-	
 	
+	private int tabTechnicalIndex; // #25138 for #11104 
+	
+	private int tabFinancialIndex; // #25138 for #11104 
 	//#25037-START
 	private EvaluationMeetingBackingBean meetingBB;
 	//#25037-END
@@ -3403,6 +3407,24 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.meetingBB = meetingBB;
 	}
 	//#25037-end
+
+	// #25138 for #11104 - start
+	public int getTabTechnicalIndex() {
+		return tabTechnicalIndex;
+	}
+
+	public void setTabTechnicalIndex(int tabTechnicalIndex) {
+		this.tabTechnicalIndex = tabTechnicalIndex;
+	}
+
+	public int getTabFinancialIndex() {
+		return tabFinancialIndex;
+	}
+
+	public void setTabFinancialIndex(int tabFinancialIndex) {
+		this.tabFinancialIndex = tabFinancialIndex;
+	}
+	// #25138 for #11104 - end
 	
 	/**11104-start
 	 * @return the itemSampleReq
