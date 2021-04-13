@@ -133,7 +133,7 @@
 									update="#{isReject ? '@this' : '@form'}" />
 							</h:panelGroup>
 							
-							<h:panelGroup rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE')}">
+							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}">
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
