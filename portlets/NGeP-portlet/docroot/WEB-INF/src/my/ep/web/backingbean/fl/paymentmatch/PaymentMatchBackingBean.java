@@ -458,7 +458,8 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			//26279 - start
 			if(getManagedBean().getPaymentAdvice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY.longValue() 
 					|| getManagedBean().getPaymentAdvice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY.longValue() 
-					|| getManagedBean().getPaymentAdvice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.longValue()) {
+					|| getManagedBean().getPaymentAdvice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH.longValue()
+					|| getManagedBean().getPaymentAdvice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY.longValue()) {//30738 - add new status filter
 				SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 				
