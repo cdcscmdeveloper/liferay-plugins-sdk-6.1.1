@@ -1755,13 +1755,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				orgProfileIdList.add(agency.getOrgProfile().getOrgProfileId());
 			}
 			//  sql maximum number of expressions IN is 1000, if > 1000 handle in else
-			//#25406 - Fixing 
-			if (orgProfileIdList.size() <= 1000 && !getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {				
-				SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
+			//#25406 - Start Fixing 
+			if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+				orgProfileIdList.clear();
+				orgProfileIdList.add(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				SearchFilterBean filterDefaultPtj = new SearchFilterBean("orgProfileId",
 						SearchOperator.OPERATOR_NOT_IN.value(),
 						orgProfileIdList);
-				searchBean.getDataFilterBeans().add(filterBean);
-			} else {
+				searchBean.getDataFilterBeans().add(filterDefaultPtj);
+			}else {
+				if (orgProfileIdList.size() <= 1000 && !getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {				
+					SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							orgProfileIdList);
+					searchBean.getDataFilterBeans().add(filterBean);
+			}else {
+				//#25406 - End Fixing 
 				List<List<Long>> subOrgProfileIdList = new ArrayList<List<Long>>();
 				int count = orgProfileIdList.size();
 				for (int i = 0; i < count; i += 1000) {
@@ -1786,6 +1795,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				searchBean.getDataFilterBeans().add(multi);
 			}
+			} //#25406
 		}
 		return searchBean;
 	}
