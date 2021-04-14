@@ -9,7 +9,7 @@
     <p:panel id="meetingPanel" header="#{lbl['lbl.ct.menu.meeting']}" toggleable="true"  toggleSpeed="500">
            <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
            <p:dataTable id="meetingTable" var="ctMeetingsVar" widgetVar="meetingTableWidget"
-                value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
+                value="#{ctBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}" rowIndexVar="indexMeeting"
                 selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
                 <ac:paginator for="meetingTable" />
                   <p:ajax event="toggleSelect" 
@@ -26,15 +26,24 @@
 			           <f:facet name="header">
 				             <h:outputText value="#{lbl['lbl.ct.date.of.meeting']}" styleClass="required"/>
 				        </f:facet>
-			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
-			              maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
-			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-				   		  required="true" label="#{lbl['lbl.ct.date.of.meeting']}"
-			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-			              disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
-			          </p:calendar>
+
+			          	<ac:dateTimeWithColon id="calMeeting" label="#{lbl['lbl.ct.date.of.meeting']}"
+							required="true" disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"
+							value="#{ctMeetingsVar.meetingDate}" modVal="15"
+							maxdate="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
+			              	? ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate : ctBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+					  	</ac:dateTimeWithColon>
 			    </p:column> 
-			 
+
+			 	<p:column style="width:55%;white-space:normal;" styleClass="column-align-center">
+			         <f:facet name="header">
+			             <h:outputText value="#{lbl['lbl.ct.meeting.title']}" styleClass="required" />
+			         </f:facet>
+				      <p:inputText value="#{ctMeetingsVar.meetingTitle}" style="width:95%;" maxlength="50"
+				      	required="true" label="#{lbl['lbl.ct.meeting.title']}"
+				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}"/>
+			     </p:column> 
+
 			     <p:column style="width:55%;white-space:normal;" styleClass="column-align-center">
 			         <f:facet name="header">
 			             <h:outputText value="#{lbl['lbl.ct.location.of.meeting']}" styleClass="required" />
@@ -53,7 +62,31 @@
 				      	disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
 			              <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
 			          </p:selectOneMenu>
-			     </p:column> 	
+			     </p:column>
+
+			     <p:column width="50%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.meeting.amendment.paper']}"/>
+						</f:facet>
+						<p:commandButton
+							oncomplete="uploadMeetingAmendmentAttachmentDlg.show();return false;"
+							update="meetingTable"
+							icon="ui-icon-upload"
+							action="#{ctBackingBean.setAttachFileIndex(indexMeeting)}"
+							rendered="#{ctMeetingsVar.meetingAmendmentAttachment.filePath == null}"
+							disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}" />
+						<h:commandLink value="#{ctMeetingsVar.meetingAmendmentAttachment.fileName}"
+							styleClass="blue_font"
+							action="#{ctBackingBean.commonDownload(ctMeetingsVar.meetingAmendmentAttachment.filePath, ctMeetingsVar.meetingAmendmentAttachment.fileName)}"  />
+						<p:commandLink onsuccess="delMeetingAmendmentAttachDlg.show();"
+							action="#{ctBackingBean.setAttachFileIndex(indexMeeting)}"
+							rendered="#{ctMeetingsVar.meetingAmendmentAttachment.filePath != null}"
+							disabled="#{amendmentBackingBean.managedBean.disableMeetingDetails}">
+							<h:graphicImage value="/css/images/design/icon_trash.png"
+								styleClass="tasklist_title1" />
+						</p:commandLink>
+						
+				  </p:column> 	
            </p:dataTable>
     
             <div class="ppRightBtn"> 
@@ -75,5 +108,49 @@
 			                 <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgMeetingDetails.hide();" type="button" />
 		                 </div>
                    </p:confirmDialog>
+                   
+                   
+			<p:confirmDialog id="delMeetingAmendmentAttachDlg"
+				widgetVar="delMeetingAmendmentAttachDlg"
+				message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+				closable="true" appendToBody="true"
+				header="#{lbl['lbl.msg.confirm.delete.header']}">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
+						partialSubmit="true"
+						update=":form:meetingTable" id="delMeetingAmendmentAttachId"
+						actionListener="#{ctBackingBean.deleteAttachmentActionByEvent}"
+						oncomplete="delMeetingAmendmentAttachDlg.hide();"/>
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						onclick="delMeetingAmendmentAttachDlg.hide();" type="button" />
+				</div>
+			</p:confirmDialog>
+			<p:dialog id="uploadMeetingAmendmentAttachmentDlg"
+				widgetVar="uploadMeetingAmendmentAttachmentDlg" modal="true"
+				resizable="false" width="700px" height="350px"
+				styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+				onShow="singleUploadListener(meetingAmendmentAttachmentWV);">
+				<p:ajax event="close" />
+				<p:fileUpload style="display:inline;" mode="advanced"
+					dragDropSupport="false" id="meetingAmendmendAttachmentId"
+					fileUploadListener="#{ctBackingBean.fileUpload}"
+					showButtons="false"
+					sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+					allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+					multiple="true"
+					invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+					widgetVar="meetingAmendmentAttachmentWV"
+					invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+					update="meetingTable" label="#{lbl['lbl.btn.choose']}"
+					oncomplete="uploadMeetingAmendmentAttachmentDlg.hide();">
+				</p:fileUpload>
+				<f:facet name="footer">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
+							ajax="false" onclick="uploadMeetingAmendmentAttachmentDlg.hide();" />
+					</div>
+				</f:facet>
+			</p:dialog>
+			
       	</p:panel>
 </ui:composition>
