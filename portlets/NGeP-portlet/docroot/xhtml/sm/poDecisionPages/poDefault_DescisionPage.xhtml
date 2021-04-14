@@ -69,8 +69,10 @@
 									update=":form:tt:sendInqDialog" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<!-- #26671 - START -->
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+									<!-- #26671 - END -->
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -161,8 +163,10 @@
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<!-- #26671 - START -->
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+									<!-- #26671 - END -->
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"

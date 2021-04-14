@@ -1353,8 +1353,9 @@
 				tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
 		</p:menuitem>
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-				
+			<!-- #26671 - START -->
+			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+			<!-- #26671 - END -->	
 				<p:menuitem>
 					<ac:smApplMenuItem
 						disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
@@ -1367,7 +1368,9 @@
 				</p:menuitem>
 				
 				<c:choose>
-					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+					<!-- #26671 - START -->
+					<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+					<!-- #26671 - END -->	
 						<p:menuitem>
 							<ac:smApplMenuItem
 								disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
