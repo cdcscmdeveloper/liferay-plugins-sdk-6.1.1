@@ -2291,14 +2291,14 @@ public void saveComplianceSample() {
 					evalstage.add(QTConstants.COMPLIANCE_CHECK);
 				} else if (this.getManagedBean().getScQt()
 						.isTechEvaluationReq()) {
-					evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);//#25138 Add 'TI'
 				}
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 					evalstage.add(QTConstants.PRESENTATION_DEMO_EVALUATION);
 				} else {
-					evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);//#25138 Add 'TI'
 				}
 
 			}
@@ -2369,8 +2369,12 @@ public void saveComplianceSample() {
 										this.getManagedBean().setSpeczonedtlReq(true);
 									}else{
 										for(ScQtScoreOfferPrice scoreOffer : specdetails.getScQtScoreOfferPricesZonal()){
-
-											this.getManagedBean().setOfferScoreType(scoreOffer.getScoreType().toString());
+											//#25138 - start
+											if(scoreOffer.getScoreType()!=null){
+												this.getManagedBean().setOfferScoreType(scoreOffer.getScoreType().toString());
+													
+											}
+											//#25138 - end
 											break;
 										}
 									}
@@ -2597,7 +2601,11 @@ public void saveComplianceSample() {
 					getManagedBean().setFinancialSummaryGenerated(true);
 				
 				}else{
-					financialCheckListStatusCheckPackage();//#25138 
+					//#25138 - start
+					if(!this.getManagedBean().getSingleSpecQuestion()){
+						financialCheckListStatusCheckPackage();//#25138 
+					}
+					//#25138 - end
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -3963,7 +3971,13 @@ public void saveComplianceSample() {
 										specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 									}
 								}else{
-									specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									//#25138 - start
+									if(this.getManagedBean().getTabItemPackageIndex() == 1){
+										specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+									}else{
+										specDtls.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									}
+									//#25138 - end
 								}
 								//END
 							} else {
