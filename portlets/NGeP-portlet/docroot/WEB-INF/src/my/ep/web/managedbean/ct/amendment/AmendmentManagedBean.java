@@ -178,6 +178,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//25956
 	private boolean viewOnly = false; /*#25956 notification setting*/
 	
+	private boolean disableDecisionDetails; //#29549
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1564,5 +1566,20 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	public void setViewOnly(boolean viewOnly) {
 		this.viewOnly = viewOnly;
 	}
+	
+	//#29549 start
+	/**
+	 * @return the disableDecisionDetails
+	 */
+	public boolean isDisableDecisionDetails() {
+		return disableDecisionDetails;
+	}
 
+	/**
+	 * @param disableMeetingDetails the disableDecisionDetails to set
+	 */
+	public void setDisableDecisionDetails(boolean disableDecisionDetails) {
+		this.disableDecisionDetails = disableDecisionDetails;
+	}
+	//#29549 end
 }
