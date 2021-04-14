@@ -324,7 +324,7 @@
 				#foreach($businessnature in $businessNature)
 				<tr>
 					#if ($businessnature.ssmDataIssue != 'false')
-					<th width="15%">$!businessnature.pmBusinessNature.levelCode</th>
+					<td width="15%">$!businessnature.pmBusinessNature.levelCode</td>
 					#end
 					#if ($businessnature.ssmDataIssue == 'false')
 					<td width="15%">$!smVmUtil.getBusinessNature($!businessnature) - $!businessnature.pmBusinessNature.levelCode</td>
