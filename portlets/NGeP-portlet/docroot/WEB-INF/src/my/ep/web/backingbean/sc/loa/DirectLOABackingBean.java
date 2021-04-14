@@ -4786,13 +4786,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.verifyConformationForLampiranA3(outcome);
 			}
 			/*#29007 End Vinod*/
-			// #26770 - Start.
-            validateReportAttachment();
-            // #26770 - End.
             
 			this.getManagedBean().setAction(outcome);
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+        			// #26770 - Start.
+        			validateReportAttachment();
+        			// #26770 - End.
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 			}
 			else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
