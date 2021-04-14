@@ -2595,7 +2595,11 @@ public void saveComplianceSample() {
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
 					 * );
 					 */
-					financialCheckListStatusCheckPackage();//#25138 
+					//#25138 - start
+					if(!this.getManagedBean().getSingleSpecQuestion()){
+						financialCheckListStatusCheckPackage();//#25138 
+					}
+					//#25138 - end
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
