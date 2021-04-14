@@ -28,12 +28,13 @@
 					src="/xhtml/sm/shared/mofRegistration/supplierDeclarationForm.xhtml" />
 			
 				<c:choose>
+					<!-- #26671 - START -->
 					<c:when
-						test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
-			
+						test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.showFacilityMachine}">
+					<!-- #26671 - END -->
 						<c:choose>
 							<c:when
-								test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}">
+								test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
 								<div class="nav-wrapper">
 									<table style="width: 100%">
 										<tr>

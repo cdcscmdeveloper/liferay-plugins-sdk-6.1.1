@@ -113,8 +113,10 @@
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
 						<c:choose>
+							<!-- #26671 - START -->
 							<c:when
-								test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+								test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.showFacilityMachine}">
+								<!-- #26671 - END -->
 								<div class="nav-wrapper">
 									<table style="width: 100%">
 										<tr>
@@ -122,14 +124,13 @@
 												<div align="left" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 														actionListener="#{backingBean.setTabValue('8','7')}"
-														rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
 														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 														update=":form" />
-													<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+													<!--<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 														actionListener="#{backingBean.setTabValue('7','6')}"
 														rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
 														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
-														update=":form" />
+														update=":form" />-->
 												</div>
 											</td>
 											<td>
@@ -138,15 +139,14 @@
 														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 															onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 															actionListener="#{backingBean.setTabValue('8','9')}"
-															rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
 															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
 															update=":form" />
-														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+														<!--<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 															onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 															actionListener="#{backingBean.setTabValue('7','8')}"
 															rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
 															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
-															update=":form" />
+															update=":form" />-->
 													</div>
 												</p:outputPanel>
 											</td>

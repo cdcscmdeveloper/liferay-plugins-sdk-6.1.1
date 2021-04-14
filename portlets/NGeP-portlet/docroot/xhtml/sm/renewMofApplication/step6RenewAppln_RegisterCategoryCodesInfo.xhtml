@@ -35,8 +35,10 @@
 					</c:if>
 				<div class="nav-wrapper">
 					<c:choose>
+						<!-- #26671 - START -->
 						<c:when
-							test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+							test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+							<!-- #26671 - END -->
 							<table style="width: 100%">
 								<tr>
 									<td><div align="left" style="width: 100%">
