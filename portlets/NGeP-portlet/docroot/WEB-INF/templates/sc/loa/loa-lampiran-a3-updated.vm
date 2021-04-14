@@ -208,9 +208,7 @@ u {
 				#if ($tplSpecAnswer.tplSpecQuestion.questionType == "I" )
 				<tr>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial, Helvetica, sans-serif;">
-					<strong>
 					$tplSpecAnswer.tplSpecQuestion.clItem
-					</strong>
 					</td>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-family: Arial, Helvetica, sans-serif;">
 					$tplSpecAnswer.tplSpecQuestion.clUom.uomName
@@ -308,11 +306,11 @@ u {
 				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Kekerapan/Unit Ukuran</th>
 				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Bil. Unit Ukuran Sehari</th>
 				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Bil. Unit Ukuran Sebulan</th>
-				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Tempoh (Bulan)</th>
+				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Tempoh (Bulan)</th>
 				#if ($isZonal)
-					<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Zon</th>
+					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Zon</th>
 				#end
-				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Kuantiti</th>
+				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Kuantiti</th>
 				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Tawaran Pembekal</th>
 				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">Skop Perkhidmatan / SLA</th>
 			</tr>
@@ -329,9 +327,7 @@ u {
 				#if ($tplSpecAnswer.tplSpecQuestion.questionType == "I" )
 				<tr>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
-					<strong>
 					$tplSpecAnswer.tplSpecQuestion.clItem
-					</strong>
 					</td>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
 						#if($tplSpecAnswer.tplspecQuestion.clFulfilmentTypeCode)
@@ -383,19 +379,19 @@ u {
 						#end
 					#end
 					#if ($tplSpecAnswer.tplspecQuestion.clDurationMonth)
-					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
 					$tplSpecAnswer.tplSpecQuestion.clDurationMonth
 					</td>
 					#else
-					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">$durationMonth</td>
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">$durationMonth</td>
 					#end
-					##<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; ##font-size:10px; font-family: Arial, Helvetica, sans-serif;"></td>
+					##<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; ##font-size:10px; font-family: Arial, Helvetica, sans-serif;"></td>
 					#if ($isZonal)
-						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
+						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
 						$scLoiLoaItem.tplSpecZoneDtl.zoneName
 						</td>
 					#end
-					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
+					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
 					#if ($tplSpecAnswer.tplSpecQuestion.clQuantity != $null && $tplSpecAnswer.tplSpecQuestion.clQuantity != "" )
 					$tplSpecAnswer.tplSpecQuestion.clQuantity
 					#end
@@ -408,7 +404,7 @@ u {
 					</td>
 					<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
 					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "")
-						$tplSpecAnswer.newSupplierOffer
+						<span>$tplSpecAnswer.newSupplierOffer</span>
 					#else
 						#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
 							$tplSpecAnswer.answerRemark
@@ -425,13 +421,21 @@ u {
 					#if ($isZonal)
 						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" >
 							#if ($scLoiLoaItem.itemSpecificationList)
+								#set($rowCount = 0)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+									#set($rowCount = $rowCount + 1)
 									<table width="100%">
 										<tbody>
 											<tr>
-												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="8" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-													$tpqSpec
+											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
+													<span>$tpqSpec</span>
 												</td>
+											#else
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													<span>$tpqSpec</span>
+												</td>
+											#end
 											</tr>
 										</tbody>
 									</table>
@@ -444,13 +448,21 @@ u {
 					#else
 						<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" >
 							#if ($scLoiLoaItem.itemSpecificationList)
+								#set($rowCount = 0)	
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
+									#set($rowCount = $rowCount + 1)
 									<table width="100%">
 										<tbody>
 											<tr>
-												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-													$tpqSpec
+											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif;">
+													<span>$tpqSpec</span>
 												</td>
+											#else
+												<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:10px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													<span>$tpqSpec</span>
+												</td>
+											#end
 											</tr>
 										</tbody>
 									</table>
