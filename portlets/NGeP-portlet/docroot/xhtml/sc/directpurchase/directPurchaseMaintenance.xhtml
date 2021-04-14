@@ -15,6 +15,24 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
 		<ac:lovPopup />
+		<p:confirmDialog
+			header="#{lbl['lbl.sc.message']}" 
+			message="#{lbl['lbl.sc.loa.cancel.rnapprover.popup']}" 
+			severity="alert" widgetVar="RnAppAlert">
+			<div class="ppRightBtn">			
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					oncomplete="RnAppAlert.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog
+			header="#{lbl['lbl.sc.message']}"
+			message="#{lbl['lbl.sc.loa.cancel.do.popup']}" 
+			severity="alert" widgetVar="DOAlert">
+			<div class="ppRightBtn">			
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
+					oncomplete="DOAlert.hide();" />
+			</div>
+		</p:confirmDialog>
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
 			toggleable="true">
 			<table style="width: 100%;">
