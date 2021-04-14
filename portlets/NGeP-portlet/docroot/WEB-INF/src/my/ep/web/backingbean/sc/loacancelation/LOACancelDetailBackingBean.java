@@ -24,7 +24,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.bean.application.NgepApplicationBean;
+
+//import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -729,19 +730,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		ScQtDeductionClause scQtDeductionClause = new ScQtDeductionClause();
 		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
-	}
-
-	/**
-	 * Delete deduction payment deduction payment.
-	 */
-	public void deleteDeductionPaymentAction() {
-		debugLogger("deleteDeductionPaymentAction");
-		if (getManagedBean().getScLoa().getScQtDeductions() != null
-				&& getManagedBean().getSelectedScQtDeduction() != null) {
-			getManagedBean().getScLoa().getScQtDeductions()
-			.remove(getManagedBean().getSelectedScQtDeduction());
-		}
-		getManagedBean().setSelectedScQtDeduction(null);
 	}
 
 	/**
@@ -1454,37 +1442,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	}
 
 	/**
-	 * Supplier Contract signer event.
-	 */
-	public void supplierContractSignerEvent() {
-		debugLogger("supplierContractSignerEvent");
-		PmUser supplierContractSigner = getManagedBean().getScLoa().getAckBy();
-		IUserSO userSO = null;
-		try {
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			if (supplierContractSigner != null) {
-				if (getManagedBean().getSupplierContractSignerList() != null
-						&& getManagedBean().getSupplierContractSignerList().size() > 0) {
-					List<PmUser> supplierContractSignerList = getManagedBean()
-							.getSupplierContractSignerList();
-					for (PmUser user : supplierContractSignerList) {
-						if (user.getUserId().equals(supplierContractSigner.getUserId())) {
-							UserReqDTO reqDTO = new UserReqDTO();
-							reqDTO.setUserId(user.getUserId());
-							UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
-							getManagedBean().getScLoa().setAckBy(resDTO.getPmUser());
-							break;
-						}
-					} 
-				}
-			} 
-		} finally {
-			userSO = null;
-		}
-	}
-
-	/**
 	 * Adds the schedule details in Fulfillment Schedule.
 	 */
 	public void addScheduleDetails() {
@@ -2062,69 +2019,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	}
 
 	/**
-	 * Adds the progressive details.
-	 */
-	public void addProgressiveDetails() {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		ScLoa scLoa = getManagedBean().getScLoa();
-		
-		if (this.getManagedBean().getProgressivePaymentList() == null) {
-			this.getManagedBean().setProgressivePaymentList(
-					new ArrayList<ScQtProgressivePayment>());
-		}
-		List<ScQtProgressivePayment> progressivePayList = this.getManagedBean()
-				.getProgressivePaymentList();
-		if(CollectionUtils.isNotEmpty(progressivePayList)){
-			List<ScQtProgressivePayment> progressiveList=	this.getManagedBean().getToBeRemoveProgressivePayments();
-			if(null==progressiveList){
-				progressiveList=new ArrayList<ScQtProgressivePayment>();
-			}
-
-			for(ScQtProgressivePayment payment:progressivePayList){
-				if(null!=payment.getQtPaymentId()){
-					payment.setDeleted(true);
-					progressiveList.add(payment);
-				}
-			}
-			this.getManagedBean().setToBeRemoveProgressivePayments(progressiveList);
-
-		}
-
-		/*if (null == progressivePayList) {
-			progressivePayList = new ArrayList<ScQtProgressivePayment>();
-		}
-
-		if(null == totalProgressivePayment){
-			totalProgressivePayment = new Integer(0);
-		}*/
-
-		int value=	 this.getManagedBean()
-				.getTotalProgressivePayment()!=null? this.getManagedBean()
-						.getTotalProgressivePayment():0;
-						/*	if (progressivePayList.size() > totalProgressivePayment) {
-			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
-			for (int j = 0; j < totalProgressivePayment ; j++) {
-				progressiveList.add(progressivePayList.get(j));
-			}
-
-			this.getManagedBean().setProgressivePaymentList(progressiveList);
-		} else {*/
-						progressivePayList = new ArrayList<ScQtProgressivePayment>();			
-						for (int i = 0; i < value ; i++) {
-							ScQtProgressivePayment payment = new ScQtProgressivePayment();
-							payment.setStartYear(String.valueOf(year));
-							payment.setEndYear(String.valueOf(year));
-							payment.setPhaseNo(BigDecimal.valueOf(i + 1));
-							payment.setScLoa(scLoa);
-							setUserDetails(payment);
-							progressivePayList.add(payment);
-						}
-						this.getManagedBean().setProgressivePaymentList(progressivePayList);
-						/*}*/
-
-	}
-
-	/**
 	 * Save progressive paymnt list.
 	 */
 	private void saveProgressivePaymntList() {
@@ -2161,24 +2055,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		} else {
 			getManagedBean().getScLoa().setScQtProgPayments(null);
 		}
-	}
-
-	/**
-	 * Gets the bond letter stream content.
-	 *
-	 * @return the bond letter stream content
-	 * @throws Exception the exception
-	 */
-	public StreamedContent getBondLetterStreamContent() throws Exception {
-
-		ScPbAttachment pbAttachment = new ScPbAttachment();
-		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
-		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment,null);
-		StreamedContent pbStreamContent = getAttachmentStreamContent(
-				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-
-		return pbStreamContent;
-
 	}
 
 	/**
@@ -2320,31 +2196,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	}
 
 	/**
-	 * retrieving LOI LOA List from database.
-	 *
-	 * @param qtId the qt id
-	 */
-	public void retrieveLOILOAList(Long qtId) {
-		debugLogger("retrieveLOILOAList");
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		reqDTO.setDocId(qtId);
-		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
-		QtLOABackingBean  loaBackingBean = new QtLOABackingBean();
-		if (resDTO.isSuccessful()) {
-			loaBackingBean.getManagedBean().setQt(resDTO.getScQt());
-			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
-			if (loiLoaList != null && loiLoaList.size() > 0) {
-				loaBackingBean.getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
-				loaBackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
-				loaBackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
-			}	
-		}
-		loaBackingBean.generateSuppLoiLoaList();
-	}
-
-	/**
 	 * To check is performance bond required
 	 * @return boolean isPerformanceBondRequired
 	 */
@@ -2427,136 +2278,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 	private IQTDetailSO getQtDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-	}
-
-	/**
-	 * Called on click of Update Specification button & shows item details
-	 * 
-	 * @param loa
-	 * @return
-	 */
-	public String setTemplateSpec(ScLoa loa){
-
-		List<ScLoiLoaItem> items = loa.getScLoiLoaItems();
-		ScLoiLoa scLoiLoa = loa.getScLoiLoa();
-		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
-
-		TemplateSpecBean specBean = new TemplateSpecBean();
-		int size = items.size();
-		List<String> itemNames = new ArrayList<String>(size);
-		for (ScLoiLoaItem item : items) {
-
-			TplSpecQuestion tplSpecQuestion = item.getScRequestItem()
-					.getTplSpecQuestion();
-			itemNames.add(tplSpecQuestion.getClItem());
-
-		}
-
-		Long qtId = this.getManagedBean().getScQt().getQtId();
-		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames);
-
-		if (null != specResDTO && specResDTO.isSuccessful()) {
-			List<TplSpecAnswer> answerList = specResDTO.getSpecAnswerList();
-			if (answerList != null && !answerList.isEmpty()) {
-				List<TplSpecAnswer> tempAnsList = new ArrayList<TplSpecAnswer>();
-				// tempAnsList.addAll(answerList);
-				for (TplSpecAnswer answer : answerList) {
-					TplSpecQuestion parentQuest = answer.getTplSpecQuestion().getParentSpecQuestion();
-					if (parentQuest == null) {
-						tempAnsList.add(answer);
-					} else {
-						if (tempAnsList.size() > 0) {
-
-							for (TplSpecAnswer ans : tempAnsList) {
-								if (ans.getTplSpecQuestion()
-										.getSpecQuestionId()
-										.equals(parentQuest
-												.getSpecQuestionId())) {
-									int index = tempAnsList.indexOf(ans);
-									int questionorder =  answer.getTplSpecQuestion().getQuestionOrder();
-									int parentOrder = parentQuest.getQuestionOrder();
-									int position = questionorder-parentOrder;
-									tempAnsList.add((index+position), answer);
-									break;
-								}
-
-							}
-						} else {
-							tempAnsList.add(answer);
-						}
-					}
-
-				}
-
-				specBean.setSpecAnswerList(tempAnsList);
-				specBean.setSpecMaster(answerList.get(0)
-						.getTplSpecQuestion().getTplSpecMaster());
-			}
-		}
-		specBean.setContentType(TemplateSpecConst.CONTENT_TYPE_UPDATE_SPEC);
-		specBean.setUpdateSpecByAnswers(true);
-		this.getManagedBean().setTemplateSpecBean(specBean);
-		return "loaTemplateSpecDtls";
-	}
-
-	private TemplateSpecResDTO getTplSpecAnswers(Long qtId, SmSupplier supplier,
-			List<String> itemNameList) {
-
-		ITemplateSpecSO templateSpecSO = null;
-		TemplateSpecResDTO specResDTO = null;
-		try {
-			templateSpecSO = getTemplateSpecSO();
-			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setQtId(qtId);
-			reqDTO.setSupplier(supplier);
-			reqDTO.setItemNameList(itemNameList);
-			specResDTO = templateSpecSO.retrieveSupplierTechAnswersByItemNames(reqDTO);
-
-		} finally {
-			templateSpecSO = null;
-		}
-		return specResDTO;
-	}
-
-	/**
-	 * Save template spec.
-	 *
-	 * @param templateSpecBean the template spec bean
-	 */
-	public void saveTemplateSpec(TemplateSpecBean templateSpecBean){
-
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			templateSpecSO = getTemplateSpecSO();
-			List<TplSpecAnswer> answerList = templateSpecBean
-					.getSpecAnswerList();
-			if (answerList != null && !answerList.isEmpty()) {
-				List<TplSpecQuestion> questionList = new ArrayList<TplSpecQuestion>();
-				for (TplSpecAnswer answer : answerList) {
-					questionList.add(answer.getTplSpecQuestion());
-				}
-				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-				reqDTO.setQuestionList(questionList);
-				TemplateSpecResDTO resDTO = templateSpecSO
-						.saveTemplateSpecQuestion(reqDTO);
-				if (resDTO != null && resDTO.isSuccessful()) {
-					FacesContext.getCurrentInstance()
-					.addMessage(null,new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils
-							.getMessage(
-									MessageConst.INFO_100002,
-									new String[] {},
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes()
-									.getUserLocale())));
-				}
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-
 	}
 
 	private ITemplateSpecSO getTemplateSpecSO(){
@@ -2731,28 +2452,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		} catch (IOException e) {
 			log.error("Exceptionn occured while uploading the file"+e.getMessage());
 		}
-	}
-
-
-	public void setMinSL1MParticipant(VelocityContext context,
-			ScLoa scLoa, DecimalFormat integerDF){
-
-		BigDecimal loaAmount = scLoa.getLoaAmt();
-		BigDecimal gstAmt = scLoa.getGstAmt();
-		BigDecimal value = new BigDecimal(18000);
-		BigDecimal hundred = new BigDecimal(100);
-		BigDecimal totalAmount = new BigDecimal(0);
-
-		String minSL1M = "........................";
-		if(gstAmt != null){
-			totalAmount = loaAmount.add(gstAmt);
-		}else{
-			totalAmount = loaAmount;
-		}
-		minSL1M = integerDF.format(((totalAmount)
-				.divide(hundred))
-				.divide(value,0, BigDecimal.ROUND_HALF_UP));
-		context.put("minSL1M", minSL1M);
 	}
 
 	/**
@@ -3183,10 +2882,10 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		if (outcome.contains(BpmOutcomeConst.BPM_REJECT)){
 //			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLATION_REJECTED));
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(previousStatus));
-			log.info("-----Check 62523L------ " + workFlowStatus.getPmStatus().getStatusId());
+			//log.info("-----Check 62523L------ " + workFlowStatus.getPmStatus().getStatusId());
 		}else if (outcome.contains(BpmOutcomeConst.BPM_APPROVE)){			
 			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));	
-			log.info("-----Check 62509L------ " + workFlowStatus.getPmStatus().getStatusId());
+			//log.info("-----Check 62509L------ " + workFlowStatus.getPmStatus().getStatusId());
 		}
 		workFlowStatus.setScLoa(scLoa);
 		workFlowStatus.setCurrent(true);
@@ -3218,21 +2917,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 	}
 	
-	/**
-	 * only if qt no prefix is 'QT'
-	 * @return
-	 */
-	public boolean qtPrefixIsQT(){		
-		if(this.getManagedBean().getScQt()!=null){
-			String qtNo = this.getManagedBean().getScQt().getQtNo();
-			if(!StringUtils.isBlank(qtNo)){
-				return ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(qtNo.trim().substring(0, ParameterConst.DOCTYPE_QUOTATION.length()));
-			}
-		}
-		return false;
-	}
-	
-	
 	/* 19336#99 - start */
 	public String getManagedBeanLoaContractAgencyOrgName(){
 		try{
@@ -3262,7 +2946,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
 		ScQuote scQuote = getManagedBean().getScLoa().getScQuote();
 
-		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		//Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
+		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
+				.getProperty("sqTimeValidity"));
 
 		if(scQuote != null){
 			
@@ -3311,8 +2997,6 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		log.debug("deleteUploadFile - END");
 	}
 	
-	
-	
 	public void validateRequiredAttachment() {
 		List<ScLoaCancelAttachment> attachments = getManagedBean().getScLoa().getScLoaCancelAttachments();
 		boolean noAttachment = false;
@@ -3324,9 +3008,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		if (noAttachment) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] { "Attachment" });
 		}
-
-	}
-	
+	}	
 	
 }
 

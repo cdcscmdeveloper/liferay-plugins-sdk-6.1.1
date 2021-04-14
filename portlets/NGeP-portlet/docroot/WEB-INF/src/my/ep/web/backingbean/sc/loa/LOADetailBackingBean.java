@@ -2905,6 +2905,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+			reqDTO.setCancelPrepareLoaActionMethod(true);//#22211
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -3012,6 +3013,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			//22211 - start
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			//22211 - end
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
@@ -3154,12 +3158,97 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		 		
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-		} 
-		else {
+		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+			//22111 - START
+			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+			if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
+							.getStatusId().longValue())) {
+				if (this.getManagedBean().getScQt() != null){
+					// Code for QT
+					updateBpmTaskAction(outcome);
+				}else{
+					// Code for DP
+					updateReviseBPMTaskActionWithoutQt(outcome);
+				}
+			}else{
+				updateBpmTaskAction(outcome);
+			}
+			//22211 - END
+		}else {
 			updateBpmTaskAction(outcome);
 		}
 	}
 	//20190405@asyrafhaziq - CR25062 - End
+	
+	// #22211 - Start
+	public void updateReviseBPMTaskActionWithoutQt(String outcome) {
+		debugLogger("updateReviseBPMTaskActionWithoutQt");
+	
+		AwardSupplierResDTO resDTO = null;
+	
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		parseLOADetails(scLoa, outcome);
+	
+		validateLOADetails(scLoa, outcome);
+		scLoa.setScLoaRemarks(null); //To skip adding remark
+	
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+	
+		if (this.getManagedBean().getSelectedPtj() != null) {
+			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+		}
+		reqDTO.setScLoa(scLoa);
+		reqDTO.setSourceId(getManagedBean().getSourceId());
+		reqDTO.setRequestNoteNo(getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO));
+		reqDTO.setPayLoad(getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outcome);
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
+		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
+		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);
+	
+		if (resDTO.isSuccessful()) {
+			/*******************
+			 * ACKNOWLEDGE_PAGE
+			 *******************/
+			String[] param = new String[3];
+	
+			param[0] = this.getManagedBean().getScLoa().getLoaNo();
+			param[1] = reqDTO.getRequestNoteNo();
+			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
+			if (reqDTO.getScLoa().getPmStatus().getStatusId()
+					.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+				successMessage(MessageConst.INFO_700085, param);
+			} else {
+				successMessage(MessageConst.INFO_700084, param);
+			}
+	
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
+	}
+	// #22211 - End
+	
+	// #22211 - start
+	public boolean isLoaReviseStatus() {
+	
+		Boolean loaReviseStatus = false;
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+	
+		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
+				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
+			loaReviseStatus = true;
+		}
+	
+		return loaReviseStatus;
+	}
+	
+	// #22211 - end
 	
 	/**
 	 * Update bpm task action.
@@ -3342,7 +3431,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
-
+		
 		if(BpmOutcomeConst.BPM_ACCEPT.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
 			if(CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
 				for(ScLoaReport loaReport : scLoa.getScLoaReports()) {
@@ -3362,6 +3451,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
+		
+		//22211 - start
+		if(BpmOutcomeConst.BPM_RESUBMIT.equals(outcome) && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())){
+			if(CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
+				for(ScLoaReport loaReport : scLoa.getScLoaReports()) {
+					if(loaReport.getDefinationType().getParameterCode().equals(
+							ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
+							loaReport.getScLoaReportAttachment() == null) {
+						throw new EpException(
+								MessageConst.ERROR_760441, new String[] {loaReport.getTitle()});
+					}
+					if(statusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION) && 
+							loaReport.getDefinationType().getParameterCode().equals(
+									ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD) &&
+									null == loaReport.getScLoaReportAttachment()){
+						throw new EpException(MessageConst.ERROR_760441,
+								new String[] {loaReport.getTitle()});
+					}
+				}
+			}
+		}
+		//22211 - end
+		
 		// validate deduction payamment for Others
 		validateDeductionPaymentDtls(scLoa);
 
@@ -6645,6 +6757,57 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return roleCode;
 	}
 	
+	//#22211 - show LOA Cancellation Approver Detail
+	public boolean isLOACancelByApprover(){
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);		
+		
+		Boolean loaCancelled = false;	
+		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
+		ScLoa scloa = getManagedBean().getScLoa();		
+		
+		ScLoaApproval scLoaApproval = scloa.getScLoaApproval();
+		PmUser approverUser = null;
+		if (scLoaApproval != null) {
+			approverUser = scLoaApproval.getApprover();
+		}
+		if (approverUser == null) { 
+			approverUser = new PmUser();
+		}
+		getManagedBean().setLoacancelapproverUser(approverUser);
+				
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(getUserRoleCode(scloa.getScLoiLoa().getDocType()));
+		userReqDTO.setOrgProfileId(scloa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+		
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		getManagedBean().setLoacancelapproverList(userResDTO.getUserList());	
+		
+		if(currentStatusId.equals(QTStatusConst.LOA_CANCELLED)){
+			loaCancelled = true;
+		}
+		return loaCancelled;
+	}
+	
+	//#22211 - Check if Loa already generated
+	public boolean isLoaGenerated(){
+		Boolean loaGenerated = false;	
+		ScLoa scloa = this.getManagedBean().getScLoa();
+		
+		if(!getManagedBean().getScLoa().isBrandNew()){
+			loaGenerated = true;	
+		}
+		return loaGenerated;
+	}
+	
+	public void cancelLoa(String outcome) {
+		debugLogger("cancelLoa");
+		this.getManagedBean().setAction(outcome);
+		
+		updateBPMTask(outcome,null);
+	}
+	//#22211 - End
+	
 	/**
 	 * @param e
 	 */
@@ -6814,12 +6977,5 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}	
 		}			
 		return validDate;	
-	}
-	
-	public void cancelLoa(String outcome) {
-		debugLogger("cancelLoa");
-		this.getManagedBean().setAction(outcome);
-		
-		updateBPMTask(outcome,null);
 	}
 }

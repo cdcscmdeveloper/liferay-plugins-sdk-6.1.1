@@ -601,6 +601,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
 			
+			//START - 22211
+			temp.put(SCProcessNameConst.DIRECT_PURCHASE_MAINTENANCE
+					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
+			//END - 22211
 			this.getManagedBean().setBpmMap(temp);
 		}
 

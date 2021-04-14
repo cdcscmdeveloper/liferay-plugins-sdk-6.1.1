@@ -14,6 +14,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaCancelAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -21,7 +22,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -82,7 +85,13 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	/** The sc loa approval. */
 	private ScLoaApproval scLoaApproval;
-
+	
+	/** The sc qt supplier */
+	private ScQtSupplier scQtSupplier;
+	
+	/** The sc qt proposal */
+	private ScQtProposal scQtProposal;
+	
 	/** The selected sc loa reports. */
 	private List<ScLoaReport> selectedScLoaReports;
 	
@@ -254,6 +263,18 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
     
 	/** The is loa title. */
 	private boolean isLoaTitle = Boolean.FALSE;
+	
+	//start #22211
+	private List<PmUser> loacancelapproverList;
+	
+	private PmUser loacancelapproverUser;
+	
+	private String sourcePage;
+	
+	private boolean dpMaintenanceSource = Boolean.FALSE;
+	
+	private List<ScLoaCancelAttachment> scLoaCancelAttachments;
+	//end #22211
 	
 	private List<ScQtSchedule> toBeRemoveFreqSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgressivePayments;
@@ -511,6 +532,32 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setScLoaApproval(ScLoaApproval scLoaApproval) {
 		this.scLoaApproval = scLoaApproval;
 	}
+	
+	/**
+	 * 
+	 * @return the scQtSupplier
+	 */
+	public ScQtSupplier getScQtSupplier() {
+		return scQtSupplier;
+	}
+
+	/**
+	 * 
+	 * @param scQtSupplier
+	 */
+	public void setScQtSupplier(ScQtSupplier scQtSupplier) {
+		this.scQtSupplier = scQtSupplier;
+	}
+	
+	public ScQtProposal getScQtProposal() {
+		return scQtProposal;
+	}
+
+	public void setScQtProposal(ScQtProposal scQtProposal) {
+		this.scQtProposal = scQtProposal;
+	}
+	
+	
 
 	/**
 	 * Gets the selected sc loa reports.
@@ -1563,5 +1610,45 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setFlowamt(Boolean flowamt) {
 		this.flowamt = flowamt;
+	}
+	
+	public List<PmUser> getLoacancelapproverList() {
+		return loacancelapproverList;
+	}
+
+	public void setLoacancelapproverList(List<PmUser> loacancelapproverList) {
+		this.loacancelapproverList = loacancelapproverList;
+	}
+
+	public PmUser getLoacancelapproverUser() {
+		return loacancelapproverUser;
+	}
+
+	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
+		this.loacancelapproverUser = loacancelapproverUser;
+	}
+	
+	public String getSourcePage() {
+		return sourcePage;
+	}
+
+	public void setSourcePage(String sourcePage) {
+		this.sourcePage = sourcePage;
+	}
+
+	public boolean isDpMaintenanceSource() {
+		return dpMaintenanceSource;
+	}
+
+	public void setDpMaintenanceSource(boolean dpMaintenanceSource) {
+		this.dpMaintenanceSource = dpMaintenanceSource;
+	}
+
+	public List<ScLoaCancelAttachment> getScLoaCancelAttachments() {
+		return scLoaCancelAttachments;
+	}
+
+	public void setScLoaCancelAttachments(List<ScLoaCancelAttachment> scLoaCancelAttachments) {
+		this.scLoaCancelAttachments = scLoaCancelAttachments;
 	}
 }
