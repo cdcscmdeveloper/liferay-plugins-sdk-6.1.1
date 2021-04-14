@@ -9835,9 +9835,15 @@ public class SmApplicationBackingBean extends
 									.equalsIgnoreCase(
 											SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE)) {
 						//#29823 - Start
-						if (getManagedBean().getSmAppl() == null){
+						if(this.getManagedBean().getSmAppl() != null){
+							SmAppl lastApplAppr = SmApplicationUtil.getLastApprovedApplictionForSupplier(getManagedBean());
+							reqDTO.setLastApprovedAppl(lastApplAppr);
+						}else{
 							reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 						}
+						/*	if (getManagedBean().getSmAppl() == null){
+							reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+						}*/
 						//#29823 - end
 						/*reqDTO.setLastApprovedAppl(SmApplicationUtil
 								.getLastApprovedApplictionForSupplier(getManagedBean()));*/
