@@ -4874,6 +4874,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								IQTSuppFinalizationSO.class);
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
+				// #18685 - Start.
+				finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+                // #18685 - End.
 				briefingPaperReportList.add(finalizationReport);
 				reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
 				finalizationReport = qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
