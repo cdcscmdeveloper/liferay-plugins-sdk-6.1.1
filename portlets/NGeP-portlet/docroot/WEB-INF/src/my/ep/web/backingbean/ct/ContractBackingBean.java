@@ -3082,33 +3082,44 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 		//Bug #28356 - Start
-		if (ctContractItem.getMinimumOrderQty() <= 0) {
-			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(ctContractItem.getContractItemId().equals(item.getContractItemId())){
-					item.setMinimumOrderQty(1);
-					ctContractItem.setMinimumOrderQty(1);
+		//#28479 - Start Putra
+		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
+			if (ctContractItem.getMinimumOrderQty() <= 0) {
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+						item.setMinimumOrderQty(0);
+						ctContractItem.setMinimumOrderQty(0);
+						throw new EpException(MessageConst.ERROR_100033,
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
 				}
 			}
-			throw new EpException(MessageConst.ERROR_100033,
-					new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-		} 
-		if (ctContractItem.getMinimumOrderQty() > 0) {
-			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(ctContractItem.getContractItemId().equals(item.getContractItemId()))
-				item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+			
+	if (ctContractItem.getMinimumOrderQty() > 0) {
+		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+			if (!item.getCtItemMaxQties().isEmpty()) {
+				Double maxValue = new Double(0);							
+				for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+					if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+						maxValue = maxQty.getMaxQuantity().doubleValue();				
+				}
+				if (item.getMinimumOrderQty() > maxValue) {
+					throw new EpException(MessageConst.ERROR_100034,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+				}
+				
 			}
-		} 
+		}//#28479 - End Putra
+	}
+}
+		}
+		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
-		
-//		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
-//		reqDTO.setCtContactItem(ctContractItem);
-//		
-//		
-//		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-//		
-//		contractItemSO.updateItemSearchService(reqDTO);
-//Bug #28356 - End		
 		
 	}
 

@@ -68,6 +68,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1096,18 +1097,28 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Validation for contract item details
 		//#28320 - During Notification Setting, no need to validate
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
+			// Bug #28479 - Start
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
-					item.setMinimumOrderQty(1);
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-						setTabValue("IT");
-					} else {
-						setTabCentralValue("IT");
+					throw new EpException(MessageConst.ERROR_100033,
+							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+				
+				// Start - 28292
+				if (!item.getCtItemMaxQties().isEmpty()) {
+					Double maxValue = new Double(0);							
+					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+							maxValue = maxQty.getMaxQuantity().doubleValue();				
 					}
-					throwExceptions(MessageConst.ERROR_100033, "lbl.ct.min.order.qty");
-				} 
-
+					if (item.getMinimumOrderQty() > maxValue) {
+						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+					}
+				}
+				// End - 28292/#28479
+				
 				// Validation for ceiling quantity
 				double totalCeilingQuantity = 0.0;
 				if (item.getCtItemMaxQties().size() != 0) {						
