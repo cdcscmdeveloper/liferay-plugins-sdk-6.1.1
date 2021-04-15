@@ -56,7 +56,7 @@
 				</td>
 				<td class="TableFieldRight" width="50%" style="padding-left:6.25%">
 					<c:if ctBackingBean.managedBean.attachmentList!=null>
-						<p:dataGrid value="#{ctBackingBean.managedBean.attachmentList}"
+						<p:dataGrid value="#{ctBackingBean.managedBean.attachmentList!=null}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" var="attachment"
 							rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.settingIndex and
 								contractDetailsBackingBean.managedBean.selectedTabIndex != contractDetailsBackingBean.managedBean.notificationIndex}"
