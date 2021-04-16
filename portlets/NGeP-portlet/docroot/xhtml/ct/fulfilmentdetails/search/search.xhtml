@@ -235,8 +235,20 @@
 						          action="#{contractDetailsBackingBean.gotoNotificationSetting(data.ctContract.contractId)}"
 						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 						    </p:menuitem>
-						    <!--#29374 end-->
-				
+						     <!--#29374 end-->
+						    
+						    <!-- #25406 - Start -->
+						     <p:menuitem id="menuItemId7" value="#{lbl['lbl.ct.owner.management']}" icon="ui-icon-edit" 
+						          rendered="#{contractDetailsBackingBean.isApprover() and data.ctStatus == 1 and data.status == 1
+						          and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+						          			 and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)}" 
+								  process="@this" partialSubmit="true"
+								  disabled="#{data.assignedCtAdminFlag == 1}"
+						          action="#{contractDetailsBackingBean.gotoOwnerManagementPage(data.ctContract.contractId)}"
+						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						    </p:menuitem>
+							<!-- #25406 - End -->
+			
 					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
 					   	     icon="ui-icon-termination-history" 
                              rendered="#{(data.terminate or data.mutualTerminate or data.remedy)
