@@ -3960,6 +3960,8 @@ public class SmCommonUtil {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
