@@ -32,6 +32,8 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#22211
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -54,6 +56,9 @@ import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#22211
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#22211
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -70,6 +75,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -78,6 +85,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
+import my.ep.web.backingbean.sc.loacancelation.LOACancelDetailBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -94,6 +102,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;//#25396
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate; //#22211
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -122,14 +131,20 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
 		reset(Boolean.TRUE);
+		
+		//#22211 - Start - Set Approved Cancel Status LOA to Cancel Status
+		searchApprovedCancelLoa();
+		//#22211 - End
 
-		if (isGovernment()) {
+		if (isGovernment() || isDeskOfficer()) {
+			getDefaultDocumentValues(); //#22211
 			getDocumentTypes(Boolean.TRUE, Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 
 			// show default Ministry, Kumpulan PTJ and PTJ
 			getDefaultPtjAndMinistryValues();
-			getDefaultDocumentValues();
+			/*getDefaultDocumentValues();*/ //#22211
+			
 		} else if (isSupplier()) {
 			getDocumentTypes(Boolean.FALSE, Boolean.TRUE);
 			getManagedBean().setGovernment(Boolean.FALSE);
@@ -150,6 +165,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
 		reset(Boolean.FALSE);
+		
+		//#22211 - Start - Set Approved Cancel Status LOA to Cancel Status
+		searchApprovedCancelLoa();
+		//#22211 - Start 
 		
 		if(isGovernment()){
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
@@ -267,7 +286,19 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			// #25396 - end
 			
 			if (isMaintenance) {
-				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				//start - #22211
+				if (isRnApprover() && isDeskOfficer()) {
+					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+					docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+				} else if (isRnApprover()) {
+					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				} else if (isDeskOfficer()) {
+					docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+					
+					getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+					getManagedBean().setSearchStatusId(null);
+				}
+				//end - #22211
 			}
 			// #25396 - start
 			else if (pmParameter != null && pmParameter.getParameterCode().equals(ParameterConst.ORG_TYPE_G2G_ROLECODE)){
@@ -395,8 +426,24 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	public void searchDPM() {
 		debugLogger("Entered: " + this.getClass().getName() + ".searchDPM()"); 
 		getManagedBean().setSearchDPM(true);
+		getManagedBean().setSearchLoaByRN(false);
 		if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			getManagedBean().setDocumentTypeDesc(ParameterConst.RN_TITLE);
+		}
+		else if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
+			getManagedBean().setDocumentTypeDesc(ParameterConst.LOA_TITLE);
+			getManagedBean().setSearchDPM(false);
+			
+			//#22211 - search loa by rn no - start
+			if(getManagedBean().getSearchDocumentNo()!= null && getManagedBean().getSearchDocumentNo() != ""){
+				//log.info("docNo not null--");
+				if(getManagedBean().getSearchDocumentNo().toUpperCase().startsWith("R")){
+					getManagedBean().setSearchLoaByRN(true);
+					List<String> loaList = getRequestNoteSO().retrieveLoaListByReqNote(getManagedBean().getSearchDocumentNo(), getFacesScopes().getUserSessionBean().getUserId());	
+					getManagedBean().setLoaList(loaList);
+				}
+			}
+			//#22211 - search loa by rn no - end
 		}
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
@@ -467,47 +514,62 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
 			this.viewDpMaintenance(dpObj);
 		} else {
-			log.info("viewMaintenance");
-			long docId = (long) dpObj[0];
-			String docNo = (String) dpObj[1];
-			String docType = (String) dpObj[3];
-			long statusId = (long) dpObj[4];
-			
-			TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
-			diarySearchBackingBean.getManagedBean().setDocNo(docNo);
-			diarySearchBackingBean.getManagedBean().setDocType(docType);
-			diarySearchBackingBean.getManagedBean().setStatusId(statusId);
-			
-			if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
-				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-				rnBackingBean.viewRequestNote(docId);
-				rnBackingBean.getManagedBean().setDpObj(dpObj);
-				rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-				rnBackingBean.getManagedBean().setCancel(isCancel);
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
-				PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
-				prInqBackingBean.viewPurchaseInquiry(docId);
-				prInqBackingBean.getManagedBean().setDpObj(dpObj);
-				prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
-				PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
-				pidBackingBean.viewPurchaseInDefault(docId);
-				pidBackingBean.getManagedBean().setDpObj(dpObj);
-				pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+			//if(isDeskOfficer()){ #22211 - comment out conditional statement 
+				log.info("viewMaintenance");
+				long docId = (long) dpObj[0];
+				String docNo = (String) dpObj[1];
+				String docType = (String) dpObj[3];
+				long statusId = (long) dpObj[4];
 				
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
-				SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
-				sqBackingBean.viewQuote(docId);
-				sqBackingBean.getManagedBean().setDpObj(dpObj);
-				sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				getManagedBean().setSearchStatusId(statusId);
 				
-			} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
-				LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-				loaDetailBackingBean.viewLOA(docId);
-				loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
-				loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
-			}
-			
+				TrackingDiarySearchBackingBean diarySearchBackingBean = new TrackingDiarySearchBackingBean();
+				diarySearchBackingBean.getManagedBean().setDocNo(docNo);
+				diarySearchBackingBean.getManagedBean().setDocType(docType);
+				diarySearchBackingBean.getManagedBean().setStatusId(statusId);
+				
+				if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)) {
+					RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+					rnBackingBean.viewRequestNote(docId);
+					rnBackingBean.getManagedBean().setDpObj(dpObj);
+					rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+					rnBackingBean.getManagedBean().setCancel(isCancel);
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_INQUIRY)) {
+					PurchaseInquiryBackingBean prInqBackingBean = new PurchaseInquiryBackingBean();
+					prInqBackingBean.viewPurchaseInquiry(docId);
+					prInqBackingBean.getManagedBean().setDpObj(dpObj);
+					prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)) {
+					PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+					pidBackingBean.viewPurchaseInDefault(docId);
+					pidBackingBean.getManagedBean().setDpObj(dpObj);
+					pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+					
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_SIMPLE_QUOTE)) {
+					SimpleQuoteBackingBean sqBackingBean = new SimpleQuoteBackingBean();
+					sqBackingBean.viewQuote(docId);
+					sqBackingBean.getManagedBean().setDpObj(dpObj);
+					sqBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+					
+				} else if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+					LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+					LOACancelDetailBackingBean loaCancelDetailBackingBean = new LOACancelDetailBackingBean();
+					
+					// Start 22211 - redirect to LOA cancellation page
+					if (getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_SUBMISSION) ||
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_APPROVAL) ||
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION) ||
+							getManagedBean().getSearchStatusId().equals(DPStatusConstants.LOA_PENDING_REVISION_APPROVAL)){
+						loaCancelDetailBackingBean.getManagedBean().setDpMaintenanceSource(Boolean.TRUE);
+						loaCancelDetailBackingBean.cancelationLOA(docId);
+					// End 22211
+					} else {
+						loaDetailBackingBean.viewLOA(docId);
+					}
+					
+					loaDetailBackingBean.getManagedBean().setDpObj(dpObj);
+					loaDetailBackingBean.getManagedBean().setTrackingDairyView(Boolean.FALSE);
+				}			
 		}
 	}
 	
@@ -787,6 +849,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 	private ISourcingIntegrationSO getSourcingIntegrationSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+	}
+	
+	private IRequestNoteSO getRequestNoteSO() {
+		return BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -1311,6 +1378,23 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			log.info("pID validity end");
 		}
 		
+		//START #22211- Set Approved Cancel Status LOA to Cancel Status
+		protected void searchApprovedCancelLoa() {
+			log.info("Enter searchApprovedCancelLoa");
+			IScWorkFlowStatusSO workFlowStatusSO;
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+
+			ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+			ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
+			
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(QTStatusConst.LOA_CANCELLED));
+			reqDTO.setScWorkFlowStatus(workFlowStatus);
+			workFlowStatusSO.updataApprovedCancelledLoaToCancelled(reqDTO);
+	
+		}
+		//END #22211
+		
 		/**
 		 * Pid validity.
 		 *
@@ -1333,48 +1417,90 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		
 		//12183 - end
 		
-	//  Redmine 25396: remove duplication option view by adding new drop down field
-		
-			public SelectItem[] getFunctionType() {
-				
-				List<String> typeList = new ArrayList<String>();
-				typeList.add(ParameterConst.ORG_TYPE_PTJ);
-				typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
-				
-				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		//#22211 - start -  if loa prepared by user, return true
+		public boolean allowCancel(Object[] dpObj) {
+			IQTAwardSO qtAwardSO;
+			qtAwardSO =  EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			boolean disable = true;
+			String docNo = (String) dpObj[1];
+			
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO.setLoaNo(docNo);
+			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO.retrieveLOADtlByLoaNo(awardSupplierReqDTO);
+									
+			if(String.valueOf(awardSupplierResDTO.getScLoa().getCreatedBy()).equalsIgnoreCase(String.valueOf(getFacesScopes().getUserSessionBean().getUserId()))){
+				disable = false;				
+			}
+			return disable;
+		}
+		//#22211 - end
 
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(),typeList));
+	// Redmine 25396: remove duplication option view by adding new drop down field
+	public SelectItem[] getFunctionType() {
 
-				return super.getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-				
-				
-			}
-			
-			/**
-			 * Return boolean TRUE for dual role only, else FALSE
-			 * @return boolean
-			 */
-			public boolean showFunctionType() {
-				if (hasSupplierRole() && hasGovernmentUserRole()) {
-					return true;
-				} 
-				return false;
-			}
-			
-						
-			/**
-			 * Return boolean TRUE for dual role and PTJ, else FALSE
-			 * @return boolean
-			 */
-			public boolean showRoleType() {
-				if(hasGovernmentUserRole()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-			
-			// end 25396
+		List<String> typeList = new ArrayList<String>();
+		typeList.add(ParameterConst.ORG_TYPE_PTJ);
+		typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), typeList));
+
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+	}
+	
+	//#22211 - Start
+	/**
+	 * Validate if user is RN Approver
+	 * @return boolean
+	 */
+	public boolean isRnApprover() {
+		if (getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())) {		
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	/**
+	 * Validate if user is Desk Officer
+	 * @return boolean
+	 */
+	public boolean isDeskOfficer() {
+		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {		
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	//#22211 - End
+
+	/**
+	 * Return boolean TRUE for dual role only, else FALSE
+	 * 
+	 * @return boolean
+	 */
+	public boolean showFunctionType() {
+		if (hasSupplierRole() && hasGovernmentUserRole()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Return boolean TRUE for dual role and PTJ, else FALSE
+	 * 
+	 * @return boolean
+	 */
+	public boolean showRoleType() {
+		if (hasGovernmentUserRole()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// end 25396
 }
 
