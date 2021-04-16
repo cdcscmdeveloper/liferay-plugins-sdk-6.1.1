@@ -22,6 +22,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
@@ -374,8 +375,9 @@ public class SmBulkApplicationBackingBean extends
 	}
 
 	public void onViewOverlapCategory(SmBulkApplicationVO vo) {
-		if (EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedOverlapCategoryVOList())) {
+		//#21937 - start
+		//if (EntityHelper.isCollectionEmpty(getManagedBean()
+		//		.getSelectedOverlapCategoryVOList())) {
 			List<String> overlap = Arrays.asList(
 					ParameterConst.NEW_SM_APPLN_FOR_RENEW,
 					ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
@@ -397,7 +399,8 @@ public class SmBulkApplicationBackingBean extends
 			}
 			getManagedBean().setSelectedOverlapCategoryVOList(
 					vo.getOverlapCategoryVOList());
-		}
+		//}
+		//#21937 - end
 		RequestContext.getCurrentInstance().execute(
 				"overlapCategoryDialog.show();");
 	}
@@ -523,7 +526,7 @@ public class SmBulkApplicationBackingBean extends
 		String catNoRemarks = "";
 		int countNoAction = 0;
 		int countNoRemarks = 0;
-		boolean catNoApprove = false; //21937
+		boolean catNoApprove = true; //21937
 
 		sbNoAction.append("<table>");
 		sbNoRemarks.append("<table>");
@@ -545,10 +548,22 @@ public class SmBulkApplicationBackingBean extends
 							+ ",";
 				}
 				//21937 - start
-				if (cat.getApprvrDecFlg() == 0) {
-					catNoApprove = true;
+				if (cat.getApprvrDecFlg() != 0) {
+					catNoApprove = false;
 				} //21937 - end
 			}
+			
+			//21937 - start
+			if(vo.getAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				for (SmSupplierCategory cat : vo.getApprovedCategories()){
+					if (cat.getApprvrDecFlg() == 0 && StringUtils.isBlank(cat.getApproverRemarks())) {
+						catNoRemarks = catNoRemarks + cat.getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+								+ ",";
+					}
+				}
+			}
+			//21937 - end
 
 			if (!catNoAction.equals("")) {
 				sbNoAction.append("<tr>").append("<td>").append(++countNoAction).append(") ").append("</td><td>");
@@ -865,36 +880,39 @@ public class SmBulkApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_MOF);
 
 				if (appl != null && overlap.contains(appl.getApplType())) {
+					//#21937 - start					
+					SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil.getOverlapCategoryVO
+									(bulkApplicationVO.getAppl());
+					if (overlapCategoryVO != null) {
+						bulkApplicationVO.setOverlappedCategory(overlapCategoryVO
+										.isOverLappedCategoryExist());
+						bulkApplicationVO.setOverlapMsg(overlapCategoryVO
+										.getOverLappedCategoryMsg());
+						bulkApplicationVO.setOverlapCategoryVOList(overlapCategoryVO
+										.getOverlapCategoryVOList());
+					}
 					for (SmSupplierCategory cat : appl
 							.getSmSupplierCategories()) {
 						if (getManagedBean().getApplStatus().equals(
 								getManagedBean().getRECOMMEND_REJECT())) {
 							cat.setApprvrDecFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
 						}
-						if (cat.isOverLapCategory()
-								&& (cat.getRecordStatusFlg()
-										.compareTo(
-												SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
-										.getRecordStatusFlg()
-										.compareTo(
-												SupplierManagementConst.PENDING_ACT_STATUS) == 0)
-								|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) {
-							SmOverlapCategoryVO overlapCategoryVO = SmApplicationUtil
-									.getOverlapCategoryVO(bulkApplicationVO
-											.getAppl());
-							if (overlapCategoryVO != null) {
-								bulkApplicationVO
-										.setOverlappedCategory(overlapCategoryVO
-												.isOverLappedCategoryExist());
-								bulkApplicationVO
-										.setOverlapMsg(overlapCategoryVO
-												.getOverLappedCategoryMsg());
-								bulkApplicationVO
-										.setOverlapCategoryVOList(overlapCategoryVO
-												.getOverlapCategoryVOList());
+						
+						if(bulkApplicationVO.isOverlappedCategory() &&
+							(cat.getRecordStatusFlg().intValue() == SupplierManagementConst.APPROVED_RECORD_STATUS
+								|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS
+								|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS)){
+							String catcode = cat.getPmCategoryL1().getCategoryL1Code()
+									+ cat.getPmCategoryL2().getCategoryL2Code()
+									+ cat.getPmCategoryL3().getCategoryL3Code();
+							for(SmBulkApplOverlapCatVO bulkVO : bulkApplicationVO.getOverlapCategoryVOList()){
+								if(bulkVO.getCategoryCode().equals(catcode)){
+									cat.setOverLapCategory(true);
+									break;
+								}
 							}
-							break;
-						}
+						} 
+						//#21937 - end
 					}
 				}
 
