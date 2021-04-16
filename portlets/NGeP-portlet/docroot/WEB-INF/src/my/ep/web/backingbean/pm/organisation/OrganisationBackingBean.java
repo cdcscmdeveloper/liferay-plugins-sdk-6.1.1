@@ -1193,7 +1193,24 @@ public class OrganisationBackingBean extends
 
 			reqDTO.setPmOrgProfile(orgProfile);
 			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
-			reqDTO.setUser(getFacesScopes().getUserSessionBean());
+			
+			// Bug #30651 - START
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+			PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+			if (pmUser == null) {
+				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
+				reqDTO.setUser(getFacesScopes().getUserSessionBean());
+			}else{
+				new LogKey(pmUser.getUserId());
+				reqDTO.setUser(pmUser); 
+			}
+			//reqDTO.setUser(getFacesScopes().getUserSessionBean());  
+			// Bug #30651 - END
+			
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
