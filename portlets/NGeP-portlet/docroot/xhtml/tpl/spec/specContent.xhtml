@@ -245,7 +245,7 @@
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
 				<ui:remove>#29021 Start	</ui:remove>
-				<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
 				<ui:remove>#29021 end	</ui:remove>
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{templateSpecBean.specAnswerList}" 	emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
