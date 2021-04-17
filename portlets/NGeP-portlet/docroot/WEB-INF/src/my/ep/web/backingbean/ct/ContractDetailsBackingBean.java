@@ -130,12 +130,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String CHANGE_BANK_ACCOUNT_PAGE = "/xhtml/ct/supplier/bank/changeBankAccount.xhtml?faces-redirect=true";
 	private static final String REQUEST_FACTORING_PAGE = "/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml?faces-redirect=true";
 
+	private static final String PROCESS_OWNER_MANAGEMENT_PAGE = "/xhtml/ct/ownermanagement/ownerManagement.xhtml?faces-redirect=true";//25406
 //	/*#21387-basri start*/
 	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml?faces-redirect=true";/*#21387-basri*/
 //	/*#21387-basri end*/
 
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
+	private CtAgency selectedRecommendedAgency;//25406
 
 	/**
 	 * The constructor used for initializing the variable.
