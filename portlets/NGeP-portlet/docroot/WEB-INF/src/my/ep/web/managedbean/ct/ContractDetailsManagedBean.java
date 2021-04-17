@@ -113,6 +113,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public int  bondIndex = 113;
 	private int index;
 	private boolean trackingDiarySearch;
+	private PmOrgProfile selectedPtj;
+	private PmOrgProfile oldMinistryProfile;
 
 	/**
 	 * @return the taskName
@@ -749,7 +751,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public PmOrgProfile getSearchPtjProfile() {
 		return searchPtjProfile;
 	}
-	
 
 	/**
 	 * @param searchPtjProfile the searchPtjProfile to set
@@ -909,7 +910,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
 					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);				
+					searchBean.getDataFilterBeans().add(filterBean);
 				}else if(fc.hasRoleUser(RoleCode.BPK_CCA.value()) && !fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_CENTRAL);
@@ -1044,5 +1045,21 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 			}
 			return null;
 		}
+	}
+
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+
+	public PmOrgProfile getOldMinistryProfile() {
+		return oldMinistryProfile;
+	}
+
+	public void setOldMinistryProfile(PmOrgProfile oldMinistryProfile) {
+		this.oldMinistryProfile = oldMinistryProfile;
 	}
 }
