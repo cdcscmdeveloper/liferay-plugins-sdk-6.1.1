@@ -32,6 +32,7 @@
 			<portlet id="ctContractSearch" />
 			<portlet id="ctContractDashBoard" />
 			<portlet id="ctCustomerService" />
+			<portlet id="ctContractOwnerManagement" />
 		</category>
 		
 		<!-- Profile Management - START -->
