@@ -1003,7 +1003,7 @@
 									<td></td>
 									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 												label="#{lbl['lbl.sc.qt.remark']}" id="scRemarkId"
-												required="true and !scQt.cloned" validatorMessage="Remark required" />
+												required="true and !scQt.cloned" validatorMessage="Remark required" readonly="${scQt.qtStatus.statusId == QTStatusConst.QT_CANCELLED}"/>
 										<p:message id="scRemarkMsgId" for="scRemarkId" display="icon" /></td>
 								</tr>
 							</table>
