@@ -2475,14 +2475,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								"procurementMode.parameterCode",
 								SearchOperator.OPERATOR_IN.value(), 
 								procurementModes));
-			}else {
+			}
+			/*
+			 * //9019 removed for to include SAVED QT without all mandatory all values
+			 * else {
 				// Filter By - procurementMode
 				List<String> procurementModes = new ArrayList<String>();
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
 				// ***17376#55 - start
 				//if (!(isQTMaintenanceScreen() || isQTSearchScreen())) {
-				procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
+			    procurementModes.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);	
 				//}
 				// ***17376#55 - end 
 				searchFilterBean.add(
@@ -2490,7 +2493,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								"procurementMode.parameterCode",
 								SearchOperator.OPERATOR_IN.value(), 
 								procurementModes));
-			}
+			}*/
 			
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -5853,16 +5856,22 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		switch (changedIndexNumber) {
 		case 0:
 			detailSO.validateQTDetails(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
 			renewQTSesionObject();
 			this.getManagedBean().setTaskName(taskName);
-			retrieveQuationTenderDetails(resDTO.getQtDetail().getQtId());
+			this.getManagedBean().setQt(resDTO.getQtDetail());
+			this.getManagedBean().setCurrentStatusId(currentStatus);
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			checkSettingPopUpBPKApprovalNeeded(resDTO.getQtDetail()); // #25077
 			break;
 		case 1:
 			detailSO.validateSupplierQualificationDtls(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -5882,7 +5891,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			committeReqDTO.setSaveFlow(true);
 			committeSO.validateAppointCommitteDtls(committeReqDTO);
 			
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
 
 			int committeeTabIndex = this.getManagedBean()
 					.getSelectedCommitteeTabIndex();
@@ -5904,7 +5915,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.getQtdetail().setModified(false);
 			reqDTO.getQtdetail().setFCApproval(true);
 			detailSO.validateApprovalDetails(reqDTO);
-			resDTO = detailSO.saveQTDtl(reqDTO);
+			
+			//9019 - start using new method
+			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+			//9019 - end
+			
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -9032,14 +9047,38 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			
 		}else{
-			resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()); 
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[0] = true;
+			}else{
+				resArr[0] = !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
+			}
+			 
 			resArr[1] = ParameterConst.DOCTYPE_QUOTATION.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
-			resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
-			resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
+			
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[2] = false;
+			}else{
+				resArr[2] = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode());
+			}
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[3] = false;
+			}else{
+				resArr[3] = !ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType()) && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase( scQt.getProcurementMode().getParameterCode());
+			}
+			
 			resArr[4] = ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean().getResultDocType());
 			resArr[5] = getManagedSearchBeanDocumentTypeIsLOI();
 			resArr[6] = getManagedSearchBeanDocumentTypeIsLOA();
-			resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
+			
+			//9019 in QT maintenance we need to show QT without procurement mode and handle NPE when no procurement mode.
+			if (scQt.getProcurementMode() == null) {
+				resArr[7] = false;
+			}else{
+				resArr[7] = getManagedSearchBeanDocumentTypeIsSuppFinal() && !ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO.equalsIgnoreCase(scQt.getProcurementMode().getParameterCode()) && isAllowQTViewSupplierFinalization(scQt);
+			}
 			
 			//only 1 is true
 			if(resArr[5] || resArr[6] || resArr[7]){
