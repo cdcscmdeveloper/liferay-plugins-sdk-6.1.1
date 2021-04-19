@@ -136,6 +136,32 @@
 								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
 								update=":form:tt:sendInqDialog" />
 						</c:when>
+						
+						<!-- #28778 - Start -->
+						<c:when
+							test="#{ backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL and  
+													backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew  and 
+													backingBean.managedBean.specialCategoryRechecked}">
+
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton
+									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									update=":form:tt:submitApprvrDialog"
+									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							</c:if>
+
+							<p:commandButton
+								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
+								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+
+						</c:when>
+						<!-- #28778 - End -->
+						
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
