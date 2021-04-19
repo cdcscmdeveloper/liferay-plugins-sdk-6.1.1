@@ -605,6 +605,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmEmployee selectedEmployee;
 	// 29379 - Site Visit Grouping Enhancement -28775 END
 	
+	// #28778 - Start
+	private boolean specialCategoryRechecked;
+	// #28778 - End
+	
 	//29727
 	private String deleteBranchMsg;
 	
@@ -4382,6 +4386,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDeleteBranchMsg(String deleteBranchMsg) {
 		this.deleteBranchMsg = deleteBranchMsg;
+	}
+
+	public boolean isSpecialCategoryRechecked() {
+		return specialCategoryRechecked;
+	}
+
+	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 
 	// 26671 - Site Visit Grouping Enhancement -28775 START
