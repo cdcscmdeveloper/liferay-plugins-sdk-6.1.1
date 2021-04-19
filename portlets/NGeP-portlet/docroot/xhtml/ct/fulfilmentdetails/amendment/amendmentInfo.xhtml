@@ -12,10 +12,14 @@
 			font-size: 12px;
 			font-weight: bold;
 			color: #0000FF;
-			height: 32px;
+			height: 35px;
 			vertical-align: middle;
 			margin: 10px;
 			background-color: #CCE6FF;
+			border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
 		}
 		
 		.disciplinaryNotifyCssAlign {
@@ -23,7 +27,7 @@
 		}
 	</style>
 
-	<table style="width: 70%;">
+	<table style="width: 100%;">
 		<tr>
 			<td valign="top" class="disciplinaryNotifyCss">
 				<div class="disciplinaryNotifyCssAlign">
@@ -48,4 +52,6 @@
 			</td>
 		</tr>
 	</table>
+	
+	<ac:disciplinaryActionHistory voList="#{amendmentBackingBean.managedBean.disciplineVOs}" btnView="true"/>
 </ui:composition>
