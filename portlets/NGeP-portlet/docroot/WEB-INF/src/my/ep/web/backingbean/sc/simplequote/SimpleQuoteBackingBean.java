@@ -4917,6 +4917,14 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setStartDate(startDate);
 		}
 		
+		//#28865 - start
+		if (scQuote.getPurchaseInDefault() != null){
+			if (scQuote.getPurchaseInDefault().getQuantity() != null){
+				getManagedBean().setQtyNonEditable(Boolean.TRUE);
+			}
+		}
+		//#28865 - end
+		
 		// #29800 - start
 		if (CollectionUtils.isEmpty(getManagedBean().getPanelItems())) {
 			if (getManagedBean().getScQuote().getPanelItem() != null) {
