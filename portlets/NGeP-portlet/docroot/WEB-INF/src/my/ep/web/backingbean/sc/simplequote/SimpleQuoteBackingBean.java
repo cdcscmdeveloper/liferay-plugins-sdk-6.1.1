@@ -4919,7 +4919,8 @@ public class SimpleQuoteBackingBean extends
 		
 		//#28865 - start
 		if (scQuote.getPurchaseInDefault() != null){
-			if (scQuote.getPurchaseInDefault().getQuantity() != null){
+			if (scQuote.getPurchaseInDefault().getQuantity() != null
+					&& scQuote.getPurchaseInDefault().getSuppQuantity() != null) {
 				getManagedBean().setQtyNonEditable(Boolean.TRUE);
 			}
 		}
