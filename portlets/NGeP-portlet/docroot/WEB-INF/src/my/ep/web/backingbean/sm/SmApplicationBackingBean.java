@@ -1303,7 +1303,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		if (fromBpm && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 			setRevUrl();
-
+			//#28778 - Start
+			//to recheck whether it is special or normal category
+			getManagedBean().setSpecialCategoryRechecked(specialCategoryRechecked());
+			log.info("This Application is Special Category or not >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + getManagedBean().isSpecialCategoryRechecked());
+			//#28778 - End
+			
 			// set whether to show or not approve and recommend button because
 			// of site visit
 			getManagedBean().setShowPoApprovedOrRecommendButton(showPoApprovedOrRecommendButton());
@@ -9217,6 +9222,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		return retVal;
 	}
+	
+	//#28778 - Start
+	private boolean specialCategoryRechecked(){
+		for(SmSupplierCategory smSuppCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
+		    if (smSuppCat.isSpecialCategory()){
+		    	log.info("IS IT A SPECIAL CATEGORY ? ============================== " + true);
+		      return true;
+		    }
+		  }
+		  return false;
+		}
+	//#28778 - End
 
 	private String getApproverListForSuccessMsg() {
 		StringBuilder bf = new StringBuilder();
