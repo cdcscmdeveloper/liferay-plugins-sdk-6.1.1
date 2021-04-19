@@ -44,6 +44,9 @@ public class TemplateSpecBean implements Serializable {
 	private List<TplSpecAnswer> specAnswersToDelete;
 	private TplSpecEstimation specEstimation;
 	
+	//30552 -start
+	private List<TplSpecAnswer> backupSpecAnswerList;
+	//30552 -end
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -244,5 +247,21 @@ public class TemplateSpecBean implements Serializable {
 		this.specEstimation = specEstimation;
 	}
 	//#25039 End
+
+	//30552 -start
+	/**
+	 * @return the backupSpecAnswerList
+	 */
+	public List<TplSpecAnswer> getBackupSpecAnswerList() {
+		return backupSpecAnswerList;
+	}
+
+	/**
+	 * @param backupSpecAnswerList the backupSpecAnswerList to set
+	 */
+	public void setBackupSpecAnswerList(List<TplSpecAnswer> backupSpecAnswerList) {
+		this.backupSpecAnswerList = backupSpecAnswerList;
+	}
+	//30552 -end
 	
 }
