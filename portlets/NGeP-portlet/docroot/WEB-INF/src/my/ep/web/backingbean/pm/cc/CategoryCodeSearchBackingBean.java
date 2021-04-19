@@ -975,9 +975,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			}
 			//27738 end 
 		} else { 
-			//27859 Start - 3rd level category didnot appear
+			//27859,30720 Start - 3rd level category didnot appear
 			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplierId(supplierId);
-			if(updateDAList != null){
+			if(updateDAList != null && updateDAList.getSmDisciplinaryActions().size() > 0){
 
 				for(SmDisciplinaryAction disc: updateDAList.getSmDisciplinaryActions()){
 
@@ -1010,7 +1010,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName()));
 				}
 			}
-			//27859 end - 3rd level category didnot appear
+			//27859,30720 end - 3rd level category didnot appear
 		}
 		//27438, 27613, 27673: Disciplinary Action - end
 		
