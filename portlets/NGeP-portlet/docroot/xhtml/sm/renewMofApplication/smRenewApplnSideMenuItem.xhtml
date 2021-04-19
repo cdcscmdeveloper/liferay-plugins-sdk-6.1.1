@@ -1369,7 +1369,7 @@
 				
 				<c:choose>
 					<!-- #26671 - START -->
-					<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
+					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showFacilityMachine}">
 					<!-- #26671 - END -->	
 						<p:menuitem>
 							<ac:smApplMenuItem
