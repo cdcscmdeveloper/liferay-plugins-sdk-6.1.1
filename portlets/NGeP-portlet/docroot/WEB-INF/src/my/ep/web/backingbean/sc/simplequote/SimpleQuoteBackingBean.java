@@ -485,6 +485,7 @@ public class SimpleQuoteBackingBean extends
 			scQuote = new ScQuote();
 			
 		} else {
+			
 			if (docId != null && docId > 0) {
 				boolean isPanel = scQuote.isPanel();
 				if (isPanel) {
@@ -521,6 +522,7 @@ public class SimpleQuoteBackingBean extends
 						//ERR-760162 = Select panel items only.
 						throw new EpException(MessageConst.ERROR_760162);
 					}
+					
 				} else if (panelItemFlag) {
 					//ERR-760161 = Select non contract items only.
 					throw new EpException(MessageConst.ERROR_760161);
@@ -5735,8 +5737,10 @@ public class SimpleQuoteBackingBean extends
 		// validate tpl spec - product before spki authenticate
 		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
 				.getSpecAnswerList();
+		
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			getManagedBean().getProductTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
 			specMaster.setSpecCreatedBySQ(true);
@@ -5745,8 +5749,10 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			getManagedBean().getServiceTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
 					specAnswerList.get(0).getTplSpecQuestion()
 							.getTplSpecMaster(), specAnswerList, locale);
@@ -5783,14 +5789,64 @@ public class SimpleQuoteBackingBean extends
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			// #30552 - start
+			boolean isProdContainPrice = Boolean.FALSE;
+			boolean isServiceContainPrice = Boolean.FALSE;
+			boolean isProduct = Boolean.FALSE;
+			// validate tpl spec - product before spki authenticate
+			List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
+					.getSpecAnswerList();
+			Locale locale = new FacesScopes().getUserLocale();
+			if (CollectionUtils.isNotEmpty(specAnswerList)) {
+				isProduct = Boolean.TRUE;
+				TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+				.getTplSpecMaster();
+				specMaster.setSpecCreatedBySQ(true);
+				isProdContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+						, specAnswerList, locale);
+			}
+
+			specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+			// validate tpl spec - service before spki authenticate
+			if (CollectionUtils.isNotEmpty(specAnswerList)) {
+				isProduct = Boolean.FALSE;
+				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
+						specAnswerList.get(0).getTplSpecQuestion()
+								.getTplSpecMaster(), specAnswerList, locale);
+			}
+			
+			
+			if (!isServiceContainPrice && !isProdContainPrice) {
+				throw new EpException(MessageConst.ERROR_700105);
+				
+			}
+			// #30552 - end
+			
 
 			// tpl spec - product
 			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
 			if (getManagedBean().getProductTemplateSpecBean()
 					.getSpecAnswerList() != null) {
-				specAnswers.addAll(getManagedBean()
-						.getProductTemplateSpecBean().getSpecAnswerList());
+				// #30552 - start
+				if (isProdContainPrice){
+					specAnswers.addAll(getManagedBean()
+							.getProductTemplateSpecBean().getSpecAnswerList());
+				}else {
+					if (getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList() != null){
+						specAnswers.addAll(getManagedBean()
+								.getProductTemplateSpecBean().getBackupSpecAnswerList());
+					}
+				}
+			
+				
+			}else {
+				if (getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList() != null){
+					specAnswers.addAll(getManagedBean()
+							.getProductTemplateSpecBean().getBackupSpecAnswerList());
+				}
 			}
+			// #30552 - end
 
 			// gpki
 			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -5819,10 +5875,25 @@ public class SimpleQuoteBackingBean extends
 			// tpl spec - service
 			if (getManagedBean().getServiceTemplateSpecBean()
 					.getSpecAnswerList() != null) {
-				specAnswers.addAll(getManagedBean()
-						.getServiceTemplateSpecBean().getSpecAnswerList());
+				// #30552 - start
+				if (isServiceContainPrice){
+					specAnswers.addAll(getManagedBean()
+							.getServiceTemplateSpecBean().getSpecAnswerList());
+				}else {
+					if (!isProduct){
+						if (getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
+							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
+						}
+					}
+				}
+				
+				
+			}else {
+				if (getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
+					specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
+				}
 			}
-
+			// #30552 - end
 			// update is submitted by supplier
 			if (quote.getScQuoteSuppliers() != null
 					&& quote.getScQuoteSuppliers().size() > 0) {
@@ -7695,6 +7766,7 @@ public class SimpleQuoteBackingBean extends
 		Boolean validDate = true;	
 		Long currentStatusId = null;
 		ScQuote scQuote = getManagedBean().getScQuote();
+		
 		
 		Integer sqTimeValidity = Integer.valueOf(EpPropertiesUtils.getInstance()
 				.getProperty("sqTimeValidity"));
