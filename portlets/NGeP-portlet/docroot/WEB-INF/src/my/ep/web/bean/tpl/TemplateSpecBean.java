@@ -47,6 +47,9 @@ public class TemplateSpecBean implements Serializable {
 	private List<TplSpecMaster> specMasterList;
 	/** The evaluatio stage active index. */
 	private int evaluatioStageActiveIndex;
+	// #30552 - start
+	private List<TplSpecAnswer> BackupspecAnswerList;
+	//#30552 - end
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -271,5 +274,21 @@ public class TemplateSpecBean implements Serializable {
 	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
 		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
 	}
+
+	// #30552 - start
+	/**
+	 * @return the backupspecAnswerList
+	 */
+	public List<TplSpecAnswer> getBackupspecAnswerList() {
+		return BackupspecAnswerList;
+	}
+
+	/**
+	 * @param backupspecAnswerList the backupspecAnswerList to set
+	 */
+	public void setBackupspecAnswerList(List<TplSpecAnswer> backupspecAnswerList) {
+		BackupspecAnswerList = backupspecAnswerList;
+	}
+	// #30552 - end
 	
 }

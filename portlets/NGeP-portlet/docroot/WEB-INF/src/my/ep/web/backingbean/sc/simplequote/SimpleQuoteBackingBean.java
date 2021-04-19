@@ -5551,8 +5551,12 @@ public class SimpleQuoteBackingBean extends
 		// validate tpl spec - product before spki authenticate
 		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
 				.getSpecAnswerList();
+		
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			//30552 - start
+			getManagedBean().getProductTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			// 30552 - end
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
 			specMaster.setSpecCreatedBySQ(true);
@@ -5561,8 +5565,12 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+		
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
+			// 30552 - start
+			getManagedBean().getServiceTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			// 30552 - end
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
 					specAnswerList.get(0).getTplSpecQuestion()
 							.getTplSpecMaster(), specAnswerList, locale);
@@ -5593,20 +5601,71 @@ public class SimpleQuoteBackingBean extends
 	 *            the pm digi sign
 	 * @return the string
 	 */
+	
 	public String updateSupplierResponse(PmDigiSign pmDigiSign) {
 		debugLogger("updateSupplierResponse");
 		try {
 			FacesScopes facesScopes = new FacesScopes();
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
+			
+			// #30552 - start
+			boolean isProdContainPrice = Boolean.FALSE;
+			boolean isServiceContainPrice = Boolean.FALSE;
+			boolean isProduct = Boolean.FALSE;
+			// validate tpl spec - product before spki authenticate
+			List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
+					.getSpecAnswerList();
+			Locale locale = new FacesScopes().getUserLocale();
+			if (CollectionUtils.isNotEmpty(specAnswerList)) {
+				isProduct = Boolean.TRUE;
+				TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
+				.getTplSpecMaster();
+				specMaster.setSpecCreatedBySQ(true);
+				isProdContainPrice = getTemplateSpecSO().validateSpecAnwer(specMaster
+						, specAnswerList, locale);
+			}
+
+			specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
+			// validate tpl spec - service before spki authenticate
+			if (CollectionUtils.isNotEmpty(specAnswerList)) {
+				isProduct = Boolean.FALSE;
+				isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
+						specAnswerList.get(0).getTplSpecQuestion()
+								.getTplSpecMaster(), specAnswerList, locale);
+			}
+			
+			
+			if (!isServiceContainPrice && !isProdContainPrice) {
+				throw new EpException(MessageConst.ERROR_700105);
+				
+			}
+			// #30552 - end
+			
 
 			// tpl spec - product
 			List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
 			if (getManagedBean().getProductTemplateSpecBean()
 					.getSpecAnswerList() != null) {
-				specAnswers.addAll(getManagedBean()
-						.getProductTemplateSpecBean().getSpecAnswerList());
+				// #30552 - start
+				if (isProdContainPrice){
+					specAnswers.addAll(getManagedBean()
+							.getProductTemplateSpecBean().getSpecAnswerList());
+				}else {
+					if (getManagedBean().getProductTemplateSpecBean().getBackupspecAnswerList() != null){
+						specAnswers.addAll(getManagedBean()
+								.getProductTemplateSpecBean().getBackupspecAnswerList());
+					}
+				}
+			
+				
+			}else {
+				if (getManagedBean().getProductTemplateSpecBean().getBackupspecAnswerList() != null){
+					specAnswers.addAll(getManagedBean()
+							.getProductTemplateSpecBean().getBackupspecAnswerList());
+				}
 			}
+			// #30552 - end
 
 			// gpki
 			if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -5635,10 +5694,25 @@ public class SimpleQuoteBackingBean extends
 			// tpl spec - service
 			if (getManagedBean().getServiceTemplateSpecBean()
 					.getSpecAnswerList() != null) {
-				specAnswers.addAll(getManagedBean()
-						.getServiceTemplateSpecBean().getSpecAnswerList());
+				// #30552 - start
+				if (isServiceContainPrice){
+					specAnswers.addAll(getManagedBean()
+							.getServiceTemplateSpecBean().getSpecAnswerList());
+				}else {
+					if (!isProduct){
+						if (getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList() != null){
+							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList());
+						}
+					}
+				}
+				
+				
+			}else {
+				if (getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList() != null){
+					specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList());
+				}
 			}
-
+			// #30552 - end
 			// update is submitted by supplier
 			if (quote.getScQuoteSuppliers() != null
 					&& quote.getScQuoteSuppliers().size() > 0) {
@@ -5710,6 +5784,7 @@ public class SimpleQuoteBackingBean extends
 		}
 		return null;
 	}
+
 
 	/**
 	 * Prepare original text to pass spki authentication
