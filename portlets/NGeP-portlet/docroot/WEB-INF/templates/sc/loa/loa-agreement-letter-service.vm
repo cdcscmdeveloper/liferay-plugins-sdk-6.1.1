@@ -1048,7 +1048,7 @@ u {
 		<tbody>
 			#foreach( $tplspecMaster in $masters )
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-				#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
+				#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 				#if ($itemType == "Produk" || $itemType == "Product")
 					 #if ($rowCount == 0)
 						<tr>
@@ -1086,7 +1086,7 @@ u {
 								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$tplspecQuestion.clUom.uomName</td>
 								<td bgcolor="#d0eaee"  class="standard border-bottom left">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								#if ($isZonal)
-									#if ($specType == "Financial" || $specType == "Kewangan")
+									#if ($specType == "F")
 										<td bgcolor="#d0eaee">
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1137,7 +1137,7 @@ u {
 											
 									#else 
 									
-									  #if ($specType == "Techincal" || $specType == "Teknikal")
+									  #if ($specType == "T")
 											<td bgcolor="#d0eaee">
 												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
 												<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1201,7 +1201,7 @@ u {
 		<tbody>
 		  	#foreach( $tplspecMaster in $masters )
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-					#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
+					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Produk" || $itemType == "Product")
 					  #if ($rowCount == 0)
 							<tr>
@@ -1260,7 +1260,7 @@ u {
 								<td bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$bean.getParameterDescForReport($tplspecQuestion.clPriceTypeCode)</td>
 								
 								#if ($isZonal)
-									#if ($specType == "Financial" || $specType == "Kewangan")
+									#if ($specType == "F")
 										<td bgcolor="#d0eaee">
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1311,7 +1311,7 @@ u {
 											
 									#else 
 									
-									  #if ($specType == "Techincal" || $specType == "Teknikal")
+									  #if ($specType == "T")
 											<td bgcolor="#d0eaee">
 												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
 												<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1364,7 +1364,7 @@ u {
 							
 							<td bgcolor="#d0eaee">
 								#if ($tplspecQuestion.questionType == "S")
-									#if ($specType == "Techincal" || $specType == "Teknikal")
+									#if ($specType == "T")
 										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%">
 												<tbody>
@@ -1465,7 +1465,7 @@ u {
 			<tbody>
 				#foreach( $tplspecMaster in $masters )
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-					#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
+					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 							 #if ($rowCount == 0)
 								<tr>
@@ -1521,7 +1521,7 @@ u {
 									</td>
 									
 									#if ($isZonal)
-										#if ($specType == "Financial" || $specType == "Kewangan")
+										#if ($specType == "F")
 										<td bgcolor="#d0eaee">
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1558,7 +1558,7 @@ u {
 											
 									#else 
 									
-									  #if ($specType == "Techincal" || $specType == "Teknikal")
+									  #if ($specType == "T")
 											<td bgcolor="#d0eaee">
 												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
 												<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1608,7 +1608,7 @@ u {
 			<tbody>
 	  	#foreach( $tplspecMaster in $masters )
 			#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-			#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
+			#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
 						 #if ($rowCount == 0)
 							<tr>
@@ -1682,7 +1682,7 @@ u {
 									</td>
 									
 									#if ($isZonal)
-										#if ($specType == "Financial" || $specType == "Kewangan")
+										#if ($specType == "F")
 										<td bgcolor="#d0eaee">
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1716,7 +1716,7 @@ u {
 										</td>
 									#else 
 									
-									  #if ($specType == "Techincal" || $specType == "Teknikal")
+									  #if ($specType == "T")
 											<td bgcolor="#d0eaee">
 												#foreach( $tplSpecZoneQtie in $tplspecQuestion.tplSpecZoneQties )
 												<table width="100%" border="1" cellpadding="0" cellspacing="0">
@@ -1754,7 +1754,7 @@ u {
 							
 							<td bgcolor="#d0eaee">
 								#if ($tplspecQuestion.questionType == "S")
-									#if ($specType == "Techincal" || $specType == "Teknikal")
+									#if ($specType == "T")
 										#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
 											<table width="100%">
 												<tbody>
@@ -1849,7 +1849,7 @@ u {
 								
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-						#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
+						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 						
 						#if ($isZonal)
 						
