@@ -2785,7 +2785,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					personnel.setDirector(false);
 					this.getManagedBean().setCheckRoleSSM(true);
 					//START 28454
-					if(this.getManagedBean().isResubmitAppl()){						
+			//	if (this.getManagedBean().isResubmitAppl()) {  #29956
+					
 						reqDTO.setPersonnelId(personnel.getPersonnelId());			
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
@@ -2798,7 +2799,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}else{
 							//close popup
 						}
-					}
+				//	}
 					//END 28454
 					
 				}
@@ -2941,6 +2942,44 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 							this.getManagedBean().setStatusDescFromSSM(sb.toString());
 							//throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
 						}
+						
+					// start #29956
+					if (postRegBean.getSmSupplier() != null && postRegBean.getSmSupplier().getSupplierId() != null) {
+
+						List<SmPersonnel> personnelsRole = postRegBean.getPersonnelsRole();
+						if (personnelsRole != null && personnelsRole.size() <= 0) {
+							if (postRegBean.getSmSupplier().getSmAppl() != null
+									&& postRegBean.getSmSupplier().getSmAppl().getSmPersonnels() != null) {
+								for (SmPersonnel personnel : postRegBean.getSmSupplier().getSmAppl().getSmPersonnels()) {
+									if (personnel.isEquityOwner() || personnel.isDirector()) {
+										if (personnel.getEpRole() != null) {
+											SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
+													.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+															ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+											SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
+													.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
+															ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+											if (personnelDirectorSSM == null && personnelSSM == null) {
+												personnelsRole.add(personnel);
+											}
+										}
+									}
+								}
+							}
+						}
+
+						if (personnelsRole != null && personnelsRole.size() > 0) {
+							postRegBean.setDontGetSsmData(false);
+							postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());
+							postRegBean.setShowPopup(true);
+							postRegBean.setPersonnelsRole(personnelsRole);
+							String[] params = { "Temporary Supplier Administrator" };
+							postRegBean.setTermAndConditionCheckOwnerChangeRole(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
+						}
+					}
+					// end #29956
+					
 					// #29582- end
 					}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
