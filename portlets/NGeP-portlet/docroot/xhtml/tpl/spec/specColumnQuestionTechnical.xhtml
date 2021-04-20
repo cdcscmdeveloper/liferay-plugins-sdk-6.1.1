@@ -169,6 +169,7 @@
 			<p:inputText id="qty"
 				style="min-width:0px !important;text-align:right;width:90px;"
 				value="#{question.clQuantity}" required="#{isValidationReq}"
+				disabled = "#{simpleQuoteBackingBean.managedBean.qtyNonEditable}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}">
 				<p:ajax partialSubmit="true" process="@this"

@@ -83,7 +83,7 @@
 							<tr>
 								<td><p:inputText size="30" styleClass="ppRightBtn"
 								        required="true"
-										disabled="#{isViewOnly or requestNoteBackingBean.managedBean.bpkApprover}"
+										disabled="#{isViewOnly or isQtyViewOnly}"
 										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
 										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 										value="#{requestNoteDtl.requestItem.quantity}">

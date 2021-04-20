@@ -30,6 +30,8 @@
 			requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingBpkApproval or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevisionBpkApproval}" />
 		<ui:param name="isViewOnly"
 			value="#{requestNoteBackingBean.managedBean.viewOnly}" />
+		<ui:param name="isQtyViewOnly"
+			value="#{requestNoteBackingBean.managedBean.qtyViewOnly}" />	
 		<ui:param name="isPendingItemCodificationStatus"
 			value="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingItemCodification}" />
 		<ui:param name="isSqStillValid"

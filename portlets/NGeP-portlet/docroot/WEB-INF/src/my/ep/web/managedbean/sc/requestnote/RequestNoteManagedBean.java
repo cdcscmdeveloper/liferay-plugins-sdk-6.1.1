@@ -376,6 +376,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Long purchaseRequestId;
 	//28878 - End
 	
+	//28865 - Start
+    private boolean qtyViewOnly = false;
+    //28865 - End
+    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2204,4 +2208,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.purchaseRequestId = purchaseRequestId;
 	}
 	//28878 - End
+
+	//28865 - Start
+	public boolean isQtyViewOnly() {
+		return qtyViewOnly;
+	}
+
+	public void setQtyViewOnly(boolean qtyViewOnly) {
+		this.qtyViewOnly = qtyViewOnly;
+	}
+	//28865 - End
 }
