@@ -1653,6 +1653,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("svTask", svTask);
 		//#28774 - START 
 		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
 		//#28874 - END
 		
 		String fileName = fileInitName + "sectionC.pdf";
@@ -1697,6 +1698,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 		//#28774 - START
 		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
 		//#28874 - END
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
