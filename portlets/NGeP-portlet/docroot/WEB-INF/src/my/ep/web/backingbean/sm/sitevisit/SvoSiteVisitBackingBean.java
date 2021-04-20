@@ -1647,7 +1647,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("templateCode", templateType);
 		context.put("review", review);
 		context.put("svTask", svTask);
-		context.put("categoryCodeLs", getManagedBean().getSupplierCategory());
+		//#28774 - START 
+		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
+		//#28874 - END
 		
 		String fileName = fileInitName + "sectionC.pdf";
 		//CR 28774: Static Code Analysis
@@ -1689,7 +1692,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 			
 		}
-		context.put("categoryCodeLs", getManagedBean().getSupplierCategory());
+		//#28774 - START
+		context.put("categoryCodeLs", this.getManagedBean().getCategoryApplicable());
+		context.put("smVmUtil", new VmUtil());
+		//#28874 - END
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("templateType",templateDesc);
 		context.put("templateCode", templateType);
