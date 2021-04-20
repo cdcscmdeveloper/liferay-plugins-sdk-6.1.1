@@ -216,6 +216,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.scretry.ScQtDisruptionLog;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
@@ -10245,4 +10246,44 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   		return flag;
   	}
   	//29464-end
+  	
+  	//#28784 - Start
+  	public void actionSearchPresentationDemo(){
+  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
+  			List<TplSpecQuestion> list = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
+  			if(StringUtils.isNotBlank(this.getManagedBean().getItemName())){
+  	  			String itemName = this.getManagedBean().getItemName().toLowerCase();
+  	  			for(TplSpecQuestion obj : list){
+  	  				if(StringUtils.isNotBlank(obj.getClItem())){
+  	  					if(obj.getClItem().toLowerCase().contains(itemName)){
+  	  						obj.setSelectable(true);
+  	  					}else{
+  	  						obj.setSelectable(false);
+  	  					}
+  	  				}else if(StringUtils.isNotBlank(obj.getClSpecDetail())){
+  	  					if(obj.getClSpecDetail().toLowerCase().contains(itemName)){
+  	  						obj.setSelectable(true);
+  	  					}else{
+  	  						obj.setSelectable(false);
+  	  					}
+  	  				}
+  	  			}
+  	  		}else{
+  	  			for(TplSpecQuestion obj : list){
+  	  	  			obj.setSelectable(true);
+  	  	  		}
+  	  		}
+  		}
+  	}
+
+  	public void resetSearchPresentationDemo(){
+  		if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions())){
+  			List<TplSpecQuestion> list = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getTplSpecQuestions();
+  			for(TplSpecQuestion obj : list){
+  				obj.setSelectable(true);
+  			}
+  		}
+  		this.getManagedBean().setItemName(null);
+  	}
+  	//#28784 - End
 }

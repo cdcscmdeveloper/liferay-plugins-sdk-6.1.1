@@ -271,13 +271,12 @@
 				<h:panelGroup id="scoreView">
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
 						disabled="true"
-						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') or(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M'))}">
-
+						rendered="#{((stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') or(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') or(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M') or stageTwoTechnical.definationType.parameterCode eq 'PD')}"> <!-- #28784 -->
 					</p:selectBooleanCheckbox>
-
+				
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') and !(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M'))}">
+						rendered="#{(!(stageTwoTechnical.definationType.parameterCode eq 'UP' and stageTwoTechnical.action.parameterCode  eq 'V') and !(stageTwoTechnical.definationType.parameterCode eq 'TS' and stageTwoTechnical.action.parameterCode  eq 'I') and !(stageTwoTechnical.definationType.parameterCode eq 'SP' and stageTwoTechnical.action.parameterCode  eq 'M') and !(stageTwoTechnical.definationType.parameterCode eq 'PD'))}"> <!-- #28784 -->
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="technicalSpecificationStatus,technicalChecklistEditActionView"
 							listener="#{specificationBackingBean.technicalCheckListScoreReqChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
@@ -344,6 +343,7 @@
 					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
 					update="@([id$=demoSpecTempId])"
+					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"
 					oncomplete="demoSpecList.show();"> 					
 					<ui:fragment
 						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
