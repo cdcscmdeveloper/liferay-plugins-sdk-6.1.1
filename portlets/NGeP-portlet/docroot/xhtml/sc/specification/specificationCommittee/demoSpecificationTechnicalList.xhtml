@@ -20,7 +20,8 @@
 				<h:outputText value="#{demoSpecTempList.title}"></h:outputText>
 			</p:column>
 
-			<p:column style="width:20%;white-space: normal;">
+			<!-- 28786 endorsed - Comment by Azmi
+			 <p:column style="width:20%;white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.type']}" />
 					<ac:iconTooltip id="technicalChecklistMechasine#{index}Sc"
@@ -31,13 +32,13 @@
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(demoSpecTempList.definationType)}"></h:outputText>
 				</h:panelGroup>
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
 				style="width:7%;white-space: normal;">
 				<h:panelGroup id="technicalSpecificationStatus">
 					<h:outputText
-						value="#{specificationBackingBean.getStatusDescById(demoSpecTempList.pmStatus.statusId)}"></h:outputText>
+						value="#{specificationBackingBean.getStatusDescById(demoSpecTempList.pmDemoStatus.statusId)}"></h:outputText>
 				</h:panelGroup>
 			</p:column>
 
@@ -50,11 +51,13 @@
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 				</f:facet>
 				<h:panelGroup id="technicalChecklistEditActionView">
-					<p:commandButton value="#{lbl['lbl.btn.view']}"						
-						process="@this" styleClass="BtnSpacing" 
+					<p:commandLink process="@this" styleClass="BtnSpacing" 
 						action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,'T')}"
 						update="@([id$=questionTbl])"
-						partialSubmit="true" />	
+						partialSubmit="true"> 
+							<h:graphicImage value="/css/images/design/edit.png" />
+						</p:commandLink>
+						
 						<!-- action="#{specificationBackingBean.demoSpectechnicalChecklist(index,demoSpecTempList,'T')}" -->	
 						<!-- action="#{specificationBackingBean.technicalChecklistEditAction(index,demoSpecTempList,'T')}" -->		
 				</h:panelGroup>			
