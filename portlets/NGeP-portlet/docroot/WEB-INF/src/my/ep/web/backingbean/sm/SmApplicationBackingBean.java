@@ -1252,25 +1252,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSmAppl().setApplCategoryType("N");
 		}
 
-		//26671 - Site Visit Grouping Enhancement -28775 - START
+		// 26671 - Site Visit Grouping Enhancement -28775 - START
+		getManagedBean().setShowFacilityMachine(false);
 		if (applicationType.equals("R")) {
 			log.info("------Renew MOF-----");
 			for (SmSupplierCategory parentCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				if (parentCat.isSpecialCategory() == true) {
 					log.info("-----Category is Special-----");
-					//getManagedBean().getSmAppl().setApplCategoryType("S");
+					// getManagedBean().getSmAppl().setApplCategoryType("S");
 					getManagedBean().setShowFacilityMachine(true);
-					log.info("----"+getManagedBean().isShowFacilityMachine());
+					log.info("--ShowFacility--" + getManagedBean().isShowFacilityMachine());
 					break;
-				} 
-				else
-					getManagedBean().setShowFacilityMachine(false);
+				}
 			}
-		} else {
-			getManagedBean().setShowFacilityMachine(false);
 		}
-		//26671 - Site Visit Grouping Enhancement -28775 - END
-		
+		// 26671 - Site Visit Grouping Enhancement -28775 - END
+
 		getManagedBean().setCurrentPageType(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
 				&& !smAppl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
@@ -1303,12 +1300,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		if (fromBpm && (getManagedBean().isPoUser() || getManagedBean().isApproverUser())) {
 			setRevUrl();
-			//#28778 - Start
-			//to recheck whether it is special or normal category
+			// #28778 - Start
+			// to recheck whether it is special or normal category
 			getManagedBean().setSpecialCategoryRechecked(specialCategoryRechecked());
-			log.info("This Application is Special Category or not >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + getManagedBean().isSpecialCategoryRechecked());
-			//#28778 - End
-			
+			log.info("This Application is Special Category or not >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+					+ getManagedBean().isSpecialCategoryRechecked());
+			// #28778 - End
+
 			// set whether to show or not approve and recommend button because
 			// of site visit
 			getManagedBean().setShowPoApprovedOrRecommendButton(showPoApprovedOrRecommendButton());
@@ -9226,18 +9224,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		return retVal;
 	}
-	
-	//#28778 - Start
-	private boolean specialCategoryRechecked(){
-		for(SmSupplierCategory smSuppCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
-		    if (smSuppCat.isSpecialCategory()){
-		    	log.info("IS IT A SPECIAL CATEGORY ? ============================== " + true);
-		      return true;
-		    }
-		  }
-		  return false;
+
+	// #28778 - Start
+	private boolean specialCategoryRechecked() {
+		for (SmSupplierCategory smSuppCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()) {
+			if (smSuppCat.isSpecialCategory()) {
+				log.info("IS IT A SPECIAL CATEGORY ? ============================== " + true);
+				return true;
+			}
 		}
-	//#28778 - End
+		return false;
+	}
+
+	// #28778 - End
 
 	private String getApproverListForSuccessMsg() {
 		StringBuilder bf = new StringBuilder();

@@ -46,7 +46,7 @@
 						oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 					<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
-					<c:if test="!backingBean.managedBean.showFacilityMachine">
+					<c:if test="#{!backingBean.managedBean.showFacilityMachine}">
 					<!-- #12483 - START -->
 						<ui:repeat var="bpmAction" value="#{backingBean.managedBean.bpmActions}">
 							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
@@ -145,7 +145,7 @@
 						<TABLE style="width: 100%">
 						<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 						<c:choose>
-							<c:when test="backingBean.managedBean.showFacilityMachine">
+							<c:when test="#{backingBean.managedBean.showFacilityMachine}">
 								<tr>
 									<td><h:outputText value="#{lbl['lbl.sm.apprvr.splNotes1']}"
 											styleClass="splNotesFonts" escape="false" /></td>
