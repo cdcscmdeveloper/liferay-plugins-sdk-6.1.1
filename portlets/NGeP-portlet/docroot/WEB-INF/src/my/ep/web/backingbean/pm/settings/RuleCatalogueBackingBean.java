@@ -2692,7 +2692,7 @@ public class RuleCatalogueBackingBean extends
 					newRuleValue.setGroupValueId(1);
 				}
 				// 29669 - start
-				if (configRuleType.getRuleType().equals(RuleTypeConst.PMM)) {
+				if (configRuleType.getRuleType().equals(RuleTypeConst.QTPMM)) {
 					newRuleValue.setFromValue(new BigDecimal(0));
 				} else {
 					newRuleValue.setFromValue(new BigDecimal(1));
@@ -4890,5 +4890,7 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
+	
+	
 	
 }
