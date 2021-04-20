@@ -2133,7 +2133,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//26238 - end
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
-					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
+					this.getManagedBean().getSmSuppOwners().clear(); //#29956
 					// for view owner
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
 						this.getManagedBean().setShowOwnerPersonnel(true);
@@ -2143,6 +2143,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 									personnel.setPmCountry(defaultCountry);
 								}
+								//start #29956
+								if(!resDTO.getSmSupp().getSmSupplierOwners().isEmpty()){
+									for(SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()){
+										if(personnel.getName().equals(smSuppOwner.getOwnerName())){
+											this.getManagedBean().getSmSuppOwners().add(smSuppOwner);
+										}
+									}
+								}
+								//end #29956
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
 						}
@@ -2251,6 +2260,36 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								}
 								//#29114, CR 27382: Static Code Analysis End
 							}
+							
+							// start #29956 smOwnerSsmPopup
+							String[] params = { "" };
+							int x = 0;
+							if (!personnelsRole.isEmpty()) {
+								for (SmPersonnel smPersonnel : personnelsRole) {
+									if (x != 0) {
+										for (String roles : params) {
+											if (!roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole()))) {
+												params[x] = "/ ";
+												x++;
+												params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+												x++;
+											}
+										}
+									} else {
+										params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+										x++;
+									}
+								}
+							}
+							this.getManagedBean().setTermAndConditionCheckOwner(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", params));
+							this.getManagedBean().setTermAndConditionCheckOwnerA(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", params));
+							this.getManagedBean().setTermAndConditionCheckOwnerC(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", params));
+							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", params));
+							// end #29956
 							
 							if(personnelsRole != null && !personnelsRole.isEmpty()) {
 								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
