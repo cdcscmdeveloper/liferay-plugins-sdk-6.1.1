@@ -374,13 +374,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		boolean isGenerate = false;
 		if(scLoaReport.getDefinationType().getParameterCode().equals(
-				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
-				&& (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-						QTStatusConst.LOA_PENDING_SUBMISSION)
-						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-								QTStatusConst.LOA_PENDING_VERIFICATION)
-						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-										QTStatusConst.LOA_COMPLETED))) {
+            ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) &&
+            getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
+                    QTStatusConst.LOA_PENDING_SUBMISSION)) {
 			isGenerate = true;
 		}
 		if(scLoaReport.getDefinationType().getParameterCode().equals(
@@ -4068,20 +4064,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-			
-			// #26130 - Start
-			boolean isGenerate = false;
-			if ("SuratSetujuTerima(TermasukLampiranA)".equals(scLoaReport.getTitle().replaceAll("\\s", ""))
-					&& scLoaReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD)
-					&& (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-											QTStatusConst.LOA_PENDING_VERIFICATION)
-						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-								QTStatusConst.LOA_COMPLETED))) {
-					isGenerate = true;
-			}
-			// #26130 - End
-			
-			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport, isGenerate);
+			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport, false);
 			if(scLoaReport.getDefinationType().getParameterCode().equals(
 					ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD) ||
 					scLoaReport.getDefinationType().getParameterCode().equals(
@@ -4137,21 +4120,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							generateLampiranA3PdfFromVelocity(scLoaReportAttachment, scLoa);
 						}else{
 						//#29007 End Vinod
-						if (getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-								QTStatusConst.LOA_PENDING_VERIFICATION)
-								|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(
-										QTStatusConst.LOA_COMPLETED)) {
-							filename.append(".pdf");
-							scLoaReportAttachment.setFileName(filename.toString());
-							generateAgreementLetterPdfFromVelocity(
-									(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
-
-						} else {
 							filename.append(".docx");
 							scLoaReportAttachment.setFileName(filename.toString());
 							generateAgreementLetterDocFromVelocity(
 									(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
-						}
 						}//#29007 Added Vinod
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
