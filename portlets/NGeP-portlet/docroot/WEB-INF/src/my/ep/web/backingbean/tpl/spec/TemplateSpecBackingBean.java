@@ -68,7 +68,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneOffer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -1011,6 +1010,54 @@ public class TemplateSpecBackingBean extends
 		}
 		calcGrandTotalAmount(templateSpecBean);
 	}
+	
+	//20210419@asyrafhaziq - Bug #30061 - start
+	public void CheckAndUpdateCalcTotalAmount(TemplateSpecBean templateSpecBean,
+			TplSpecAnswer specAnswer, boolean isItemTypeService) {
+		try{
+				TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+				BigDecimal quantity = null;
+				
+				if (specAnswer.getTplSpecZoneQty() != null) {
+					quantity = specAnswer.getTplSpecZoneQty().getQty();
+				} else {
+					quantity = specQuestion.getClQuantity();
+				}
+				
+				BigDecimal totalPrice = TemplateSpecHelper.getInstance()
+						.calcTotalAmount(specQuestion, specAnswer.getRatePerUom(),
+								quantity);
+			if  (!specAnswer.getAnswerNumeric().equals(totalPrice)){
+				if (totalPrice != null && isItemTypeService) {
+					TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
+					BigDecimal amountPerYear = BigDecimal.valueOf(totalPrice
+							.doubleValue());
+					BigDecimal itemDurationMonth = specQuestion
+							.getClDurationMonth();
+
+					if (itemDurationMonth != null) {
+						amountPerYear = amountPerYear.divide(itemDurationMonth, 2, RoundingMode.HALF_UP);
+					} else {
+						BigDecimal durationMonth = specMaster.getDurationMonth();
+
+						if (durationMonth != null) {
+							amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+						}
+					}
+
+					specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal
+							.valueOf(12)));
+				}
+
+			  specAnswer.setAnswerNumeric(totalPrice);
+			  calcGrandTotalAmount(templateSpecBean);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	//20210419@asyrafhaziq - Bug #30061 - end
 	
 	public void deleteConfirmationAction(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
 		debugLogger("deleteConfirmationAction");
