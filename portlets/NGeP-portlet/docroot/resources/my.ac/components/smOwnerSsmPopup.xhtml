@@ -27,9 +27,13 @@
 				
  				<c:choose>
 					<c:when test="#{!cc.attrs.bBean.managedBean.dontGetSsmData}"> 
-						<h:outputText value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwner}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+						<h:outputText value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwner}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration and cc.attrs.bBean.managedBean.smAppl.applType ne 'O'}"
 							escape="false" />
 						<h:outputText value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
+							escape="false" />
+						<h:outputText
+							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}"
+							rendered="#{!cc.attrs.bBean.managedBean.preRegistration and cc.attrs.bBean.managedBean.smAppl.applType eq 'O'}"
 							escape="false" />
 						<br /> &#160;&#160;&#160;&#160;&#160;a.
 						<p:commandLink update="#{cc.attrs.btnOkUpdate}"
