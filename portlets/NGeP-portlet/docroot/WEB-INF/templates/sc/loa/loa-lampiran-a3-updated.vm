@@ -154,7 +154,7 @@ u {
 						<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Nama Item : </b></span>
 						<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>$scLoiLoaItem.scRequestItem.itemName </b></span><br />  
 						#if ($scLoiLoaItem.loaSpecJustification != $null && $scLoiLoaItem.loaSpecJustification != "")
-							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Justification : </b></span>
+							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Justifikasi : </b></span>
 							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>Dikemas kini atas sebab $scLoiLoaItem.loaSpecJustification </b></span>
 							<span style="font-family: Arial, Helvetica, sans-serif; font-size: 10px;"><b>$dateStamp</b></span>
 						#end
