@@ -612,9 +612,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//29727
 	private String deleteBranchMsg;
 	
-	// 29379 - Site Visit Grouping Enhancement -28775 START
+	// 26671 - Site Visit Grouping Enhancement -28775 START
 	private boolean showFacilityMachine;
-	// 29379 - Site Visit Grouping Enhancement -28775 END
+	// 26671 - Site Visit Grouping Enhancement -28775 END
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**

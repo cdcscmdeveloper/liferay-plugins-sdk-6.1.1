@@ -1385,6 +1385,22 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setApplCategoryType("N");
 		}
 		
+		// 26671 - Site Visit Grouping Enhancement -28775 - START
+		getManagedBean().setShowFacilityMachine(false);
+		if (applicationType.equals("R")) {
+			log.info("------Renew MOF-----");
+			for (SmSupplierCategory parentCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if (parentCat.isSpecialCategory() == true) {
+					log.info("-----Category is Special-----");
+					// getManagedBean().getSmAppl().setApplCategoryType("S");
+					getManagedBean().setShowFacilityMachine(true);
+					log.info("--ShowFacility--" + getManagedBean().isShowFacilityMachine());
+					break;
+				}
+			}
+		}
+		// 26671 - Site Visit Grouping Enhancement -28775 - END
+		
 		getManagedBean().setCurrentPageType(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
