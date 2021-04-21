@@ -5636,11 +5636,7 @@ public class SimpleQuoteBackingBean extends
 								.getTplSpecMaster(), specAnswerList, locale);
 			}
 			
-			
-			if (!isServiceContainPrice && !isProdContainPrice) {
-				throw new EpException(MessageConst.ERROR_700105);
-				
-			}
+		
 			// #30552 - end
 			
 
@@ -5660,11 +5656,6 @@ public class SimpleQuoteBackingBean extends
 				}
 			
 				
-			}else {
-				if (getManagedBean().getProductTemplateSpecBean().getBackupspecAnswerList() != null){
-					specAnswers.addAll(getManagedBean()
-							.getProductTemplateSpecBean().getBackupspecAnswerList());
-				}
 			}
 			// #30552 - end
 
@@ -5708,10 +5699,6 @@ public class SimpleQuoteBackingBean extends
 				}
 				
 				
-			}else {
-				if (getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList() != null){
-					specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList());
-				}
 			}
 			// #30552 - end
 			// update is submitted by supplier
