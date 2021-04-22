@@ -600,6 +600,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(), scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 			}
+			
+			//#28865 - start
+			if (scRequestNoteDtl.getRequestItem().getQuantity() == null) {
+				if (scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+					if (scRequestNoteDtl.getRequestItem().getPurchaseInDefault().getSuppQuantity() != null) {
+							RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+							scRequestNoteDtl.getRequestItem().setQuantity(
+									scRequestNoteDtl.getRequestItem().getPurchaseInDefault().getQuantity());
+							requestNoteReqDTO.setScRequestItem(scRequestNoteDtl.getRequestItem());
+							getRequestNoteSO().updateRequestNoteItem(requestNoteReqDTO);
+							getManagedBean().setQtyViewOnly(Boolean.TRUE);
+					}
+				}
+			}
+			if (scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+				if (scRequestNoteDtl.getRequestItem().getPurchaseInDefault().getSuppQuantity() != null) {
+					getManagedBean().setQtyViewOnly(Boolean.TRUE);
+				}
+			}
+			//#28865 - end
 
 			requestNoteDtls.add(scRequestNoteDtl);
 			
@@ -1369,6 +1389,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								getRequestNoteSO().updateRequestNoteItem(requestNoteReqDTO);
 								getManagedBean().setQtyViewOnly(Boolean.TRUE);
 						}
+					}
+				}
+				if (scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null) {
+					if (scRequestNoteDtl.getRequestItem().getPurchaseInDefault().getSuppQuantity() != null) {
+						getManagedBean().setQtyViewOnly(Boolean.TRUE);
 					}
 				}
 				//#28865 - end
