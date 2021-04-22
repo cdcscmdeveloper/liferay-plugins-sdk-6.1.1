@@ -66,7 +66,7 @@
 			</tr>
 			
 			<tr>
-			<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+			<td><p:outputLabel  value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 			<td class="header-info-text">
 					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
