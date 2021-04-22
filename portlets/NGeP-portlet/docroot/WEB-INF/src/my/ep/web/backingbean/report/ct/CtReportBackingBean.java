@@ -142,11 +142,31 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				getManagedBean().setSelectedKumpulanPTJ(
 						retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
 				getManagedBean().setSelectedPTJ(pmOrgProfile);
+				
+				//Bug #29974 | Notes 39 - start
+				//CT021
+				if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_STATEMENT_OF_ORDER_CC_RPT_VAL)){
+					StatementOfOrderRptBackingBean ccStatementOfOrderRptBB = new StatementOfOrderRptBackingBean();
+					ccStatementOfOrderRptBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
+					ccStatementOfOrderRptBB.getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getSelectedKumpulanPTJ());
+					ccStatementOfOrderRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
+					ccStatementOfOrderRptBB.getManagedBean().setDisableMinistryField(true);
+					ccStatementOfOrderRptBB.getManagedBean().setDisableOrgField(true);}
+				//CT016
+				if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_LIST_OF_CIRCULAR_CQ_RPT_VAL)){
+					ListOfCircularRptBackingBean ccListOfCircularRptBB = new ListOfCircularRptBackingBean();
+					ccListOfCircularRptBB.getManagedBean().setSelectedMinistry(getManagedBean().getSelectedMinistry());
+					ccListOfCircularRptBB.getManagedBean().setSelectedKumpulanPTJ(getManagedBean().getSelectedKumpulanPTJ());
+					ccListOfCircularRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
+					ccListOfCircularRptBB.getManagedBean().setDisableMinistryField(true);
+					ccListOfCircularRptBB.getManagedBean().setDisableOrgField(true);}
+				//Bug #29974 | Notes 39 - end
+				
 			} else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 				getManagedBean().setSelectedMinistry(
 						pmOrgProfile);
 				getManagedBean().setDisableMinistryField(true);
-			}
+			}		
 		}
 	}
 	
