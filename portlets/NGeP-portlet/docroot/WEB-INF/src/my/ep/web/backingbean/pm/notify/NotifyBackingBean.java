@@ -184,7 +184,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		// Retrieve notifyUser
 		selectedNotify = reqSO.getPmNotifyUserByNotifyUserId(notifyUserId);
-		logger.info("Retrieve notifyDashboardId= "+selectedNotify.getPmNotifyDashboard().getNotifyDashboardId());
+		//remove this log
+		//logger.info("Retrieve notifyDashboardId= "+selectedNotify.getPmNotifyDashboard().getNotifyDashboardId());
 		
 		if (!readSelectedNotifyObj) {
 		
@@ -624,23 +625,27 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 		
 		System.out.println("Entered getFilteredNotifyDashboardContent()");
 		
-		String notifyDashboardId = pmNotifyUser[21].toString();
+		String notifyDashboardId ;
 		String notifyDashboardQtId;
+		String notifyId ;
 		
 		if (null != pmNotifyUser) {
 			
-			logger.info("notifyDashboardId= " + notifyDashboardId);
+			notifyDashboardId = (pmNotifyUser[21] != null) ? pmNotifyUser[21].toString() : "";
 			notifyDashboardQtId = (pmNotifyUser[26] != null) ? pmNotifyUser[26].toString() : "";
+			notifyId = pmNotifyUser[20].toString();
 			
+			logger.info("notifyDashboardId= " + notifyDashboardId);
 			logger.info("notifyDashboardQtId= " + notifyDashboardQtId);
+			logger.info("notifyId= " + notifyId);
 			
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
 			
-			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notifyDashboardId)
-					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notifyDashboardId)
-					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notifyDashboardId)
-					|| NotificationTextConst.TEMPLATE_ID_401050.equals(notifyDashboardId)) {
+			if (NotificationTextConst.TEMPLATE_ID_400048.equals(notifyId)
+					|| NotificationTextConst.TEMPLATE_ID_401048.equals(notifyId)
+					|| NotificationTextConst.TEMPLATE_ID_400050.equals(notifyId)
+					|| NotificationTextConst.TEMPLATE_ID_401050.equals(notifyId)) {
 			
 				NotifyReqDTO reqDTO = new NotifyReqDTO();
 				
