@@ -9300,6 +9300,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
+		//#3460 - Start
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//#3460 - End
 		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
 
@@ -9521,6 +9524,15 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setReasonId(null);
 		}
 		//		#15629 -- end - 27/1/2020
+		
+		// #3460 - start
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())
+				&& dialog.equalsIgnoreCase("rejectDialog")) {
+			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+			resetSearchRejectedReason();
+			getManagedBean().setReasonId(null);
+		}
+		// #3460 - end
 		
 		getManagedBean().setRejectReasonReqd(false);
 		//#12483 - START
