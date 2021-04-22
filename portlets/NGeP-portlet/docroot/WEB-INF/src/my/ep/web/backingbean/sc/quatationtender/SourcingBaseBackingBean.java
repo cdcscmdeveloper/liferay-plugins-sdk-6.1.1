@@ -4804,6 +4804,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								IQTSuppFinalizationSO.class);
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
+				// #18685 - Start.
+				finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+                // #18685 - End.
 				briefingPaperReportList.add(finalizationReport);
 				reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
 				finalizationReport = qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
@@ -5155,7 +5158,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
             if (scQtFinalization == null) {
               scQtFinalization = new ScQtFinalization();
             }
-            // 18685 - Start.
+            
             reqDTO.setScQtFinalization(scQtFinalization);
             List<Long> qtReportIds = new ArrayList<Long>();
             qtReportIds.add(finalizationReport.getQtReportId());
@@ -5177,13 +5180,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
                   index++;
                 }
             }
-            // 18685 - End.
+            
           } finally {
 	    	  if (!reportFound) {
 	          	finalizationReport.setReportContent("");
 	          }
               qtSuppFinalizationSO = null;
           }
+          // 18685 - End.
      }
      // #18685-End.   
         
