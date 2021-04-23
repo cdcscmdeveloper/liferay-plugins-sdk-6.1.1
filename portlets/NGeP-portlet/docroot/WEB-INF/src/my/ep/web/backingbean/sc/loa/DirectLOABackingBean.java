@@ -8471,13 +8471,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			context.put("docType", "Pembelian Terus"); 
 		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
-			// #26770 - Start.
-			if (isQuotationOrTender(scQt)) {
+			// #26770 - Start. 
+			if ("Q".equals(getManagedBean().getScLoa().getProcurementMode().getParameterCode())) {
 				context.put("docType", "Sebut Harga"); 
-			} else {
+			} else if ("T".equals(getManagedBean().getScLoa().getProcurementMode().getParameterCode())){
 				context.put("docType", "Tender"); 
 			}
-			// #26770 - End.
+			// #26770 - End. 
 		} 
 		// #25025 - End.
 				
