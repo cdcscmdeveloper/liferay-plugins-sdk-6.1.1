@@ -140,7 +140,7 @@
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple"
 						saveObject="contractRequestBackingBean.managedBean.selectedAgencyAddressList"
-						conditionField="CONTRACT_VER_ID^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						conditionField="CONTRACT_VER_ID^#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.contractVerId}|#{contractRequestBackingBean.constructDeliveryAddressConditionField()}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup,:form:messages"
 						rendered="#{contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"/>
 			
@@ -150,7 +150,7 @@
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple"
 						saveObject="contractRequestBackingBean.managedBean.selectedDeliveryFullAddr"
-						conditionField="ORG_PROFILE_ID^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId}"
+						conditionField="#{contractRequestBackingBean.constructDeliveryAddressConditionField()}"
 						update=":form:addressDataTable,:form:itemDetPanelGroup,:form:messages"
 						rendered="#{!contractRequestBackingBean.managedBean.agencyAddress and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"/>
 			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" disabled="#{!bpmTasklistBackingBean.managedBean.claim}"

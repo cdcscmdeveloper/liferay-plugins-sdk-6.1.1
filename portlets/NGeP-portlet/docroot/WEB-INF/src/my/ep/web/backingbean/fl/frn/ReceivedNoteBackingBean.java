@@ -54,6 +54,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -85,6 +87,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -114,6 +117,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.springframework.util.CollectionUtils;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -1323,10 +1327,23 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId();
 		
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		
 		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		//13291 - start
+		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+		Long roOrgProfileId = null;
+		for(PmUserOrg pmUserOrg: resDTO.getPmUser().getPmUserOrgs()) {
+			if (pmUserOrg.getRecordStatusFlg() == 1) {
+				roOrgProfileId = pmUserOrg.getPmOrgProfile().getOrgProfileId();
+				break;
+			}
+		}
+		reqDTO.setOrgProfileId(roOrgProfileId);
+		reqDTO.setOrgType(resDTO.getPmUser().getOrgTypeCode().getParameterCode());
+		//13291 - end
 		reqDTO.setRoleCode(RoleCode.ACKNOWLEDGE_OFFICER.value());
-		UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+		resDTO = userSO.retrieveUserListByRole(reqDTO);//13291
 		getManagedBean().setPmUserList(resDTO.getUserList());
 		items = new SelectItem[resDTO.getUserList().size() + 1];
 		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(

@@ -27,6 +27,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -142,6 +143,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -225,7 +227,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private PmAddressType defaultPmAddressType;
 	//end added for #24353
 	private IPagingDataModel<VPmDo> searchGlAccount = new SearchGlAccountPagingDataModel();
-	
+	//13291 - start
+	private PmOrgProfile selectedPreparedForPTJOrg;
+	//13291 - end
 	/**
 	 * Gets the class name.
 	 *
@@ -308,7 +312,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			//Bug #20701 Problem to generate DO - to monitor
 			log.info(":::fulfillmentRequestAction() "+ action +". Doc no.: "+ flFulfilmentRequest.getDocNo() +". Deliv adrs size: "+ flFulfilmentRequest.getFlDeliveryAddresses().size());
 			//end Bug #20701
-			
+			//13291 - start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				flFulfilmentRequest.setApproverId(getManagedBean().getSelectedApprover());
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
+				pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
+				flFulfilmentRequest.setApproverOrgProfile(pmOrgProfile);
+			}
+			log.info("Created PTJ: " + flFulfilmentRequest.getCreatedOrgProfile().getOrgProfileId());
+			log.info("Approver PTJ: " + flFulfilmentRequest.getApproverOrgProfile().getOrgProfileId());
+			log.info("Approver Group: " + flFulfilmentRequest.getPmUserGroup().getUserGroupId());
+			log.info("Approver Id: " + flFulfilmentRequest.getApproverId());
+			//13291 - end
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
 			reqDTO.setContractRequest(false);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -405,12 +420,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(resDTO.getFlFulfilmentRequest().getApproverId() != null){
 			getManagedBean().setSelectedApprover(resDTO.getFlFulfilmentRequest().getApproverId());
 		}
+		//13291 - start
+		if(resDTO.getFlFulfilmentRequest().getApproverOrgProfile() != null && resDTO.getFlFulfilmentRequest().getApproverOrgProfile().getOrgProfileId() != null){
+			getManagedBean().setSelectedApproverPTJ(resDTO.getFlFulfilmentRequest().getApproverOrgProfile().getOrgProfileId());
+		}
+		//13291 - end
 		if(isFlFulfilmentRequisitioner()){
 			initializeApproverGroup();
 			getApproverList();
 		}
 		getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		
 		addPurchsedItems();
 		if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()>0) {
 			getManagedBean().setTierMap(new HashMap<Long,List<FlFulfilmentItemAddr>>());
@@ -1519,6 +1538,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - initializePRBeans");
 		initializePRBeans();
 		log.info("end - initializePRBeans");
+		//13291 - start
+		if(getManagedBean().getFulfilmentRequest().getPmoOrgProfile() == null) {
+			getManagedBean().getFulfilmentRequest().setPmoOrgProfile(new PmOrgProfile());
+		}
+		//13291 - end
 		log.info("start - updateDeliveryDate");
 		updateDeliveryDate();
 		log.info("end - updateDeliveryDate");
@@ -1577,7 +1601,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
 			if(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
-				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+				//13291 - start
+				if(getManagedBean().getFulfilmentRequest().getApproverOrgProfile() != null && getManagedBean().getFulfilmentRequest().getApproverOrgProfile().getOrgProfileId() != null) {
+					reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getApproverOrgProfile().getOrgProfileId());
+				} else {
+					reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+				}
+				//13291 - end				
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
 
 				getManagedBean().getUserGroupList().clear();
@@ -1645,6 +1675,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * User group change listener.
 	 */
 	public void userGroupChangeListener() {
+		//13291 - start
+		getManagedBean().setSelectedApprover(null);
+		getManagedBean().getFulfilmentRequest().setApproverId(null);
+		//13291 - end
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -2854,6 +2888,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
+		log.info("onTabChange(int selectedTabIndex) created org: " + getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
 		//28718 - start
 		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
 		//28718 - end
@@ -2892,6 +2927,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			chargeLineValidationBeforeApproverList();
 			getApproverList();
 			initializeApproverGroup();
+			//13291 - start
+			initializeApproverPTJNameDropdown();
+			log.info("Selected Approver: " + getManagedBean().getSelectedApprover().longValue());
+			//13291 - end
 		}
 	}
 	
@@ -3460,10 +3499,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
+				//13291 - start
+				if(getManagedBean().getSelectedApproverPTJ() == null){
+					getManagedBean().setSelectedTabIndex(4);
+					initializeApproverGroup();
+					initializeApproverPTJNameDropdown();
+					throw new EpException(MessageConst.ERROR_745079);
+				}
+				//13291 - end
 				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && getManagedBean().getSelectedApprover() == null){
 					getManagedBean().setSelectedTabIndex(4);
 					throw new EpException(MessageConst.ERROR_750010);
 				}
+				//13291 - start
+				if(getManagedBean().getFulfilmentRequest().getPmoOrgProfile().getOrgProfileId() == null){
+					getManagedBean().setSelectedTabIndex(4);
+					throw new EpException(MessageConst.ERROR_745080);					
+				}
+				//13291 - end
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					getManagedBean().setSelectedTabIndex(1);
 					getManagedBean().setEmailValidate(true);
@@ -3891,15 +3944,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			e.printStackTrace();
 		}
         getManagedBean().getApproverIdList().clear();
-		items = new SelectItem[resDTO.getApproverGroupUserList().size() + 1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				getFacesScopes().getUserLocale()));
-		
-		int i = 1;
+        //13291 - start
+		items = new SelectItem[resDTO.getApproverGroupUserList().size()];		
+		int i = 0;
+		getManagedBean().getApproverMap().clear();
+		//13291 - end
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
 			items[i++] = new SelectItem(groupUser.getPmUser().getUserId(), groupUser.getPmUser().getUserName());
 			getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
+			//13291 - start
+			getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserId(), groupUser);
+			//13291 - end
 		}
 		return items;
 	}
@@ -5080,7 +5135,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
 
 			currentStatusId = flFulfilmentRequest.getFlWorkflowStatus().getPmStatus().getStatusId();
-
 			if (currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)
 					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
 					|| currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
@@ -5101,7 +5155,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())
 										.getVotFundType();
 							}
-
 							if (votFundType.equalsIgnoreCase(VotFundType.SETIA.value())
 									|| votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
 								isVotSOrAmanahExist = true;
@@ -5166,4 +5219,303 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			successMessage(MessageConst.INFO_745088, param, true);
 		}
 		//#28718 - End
+		//13291 - start
+		/**
+		 * @return the selectedPreparedForPTJOrg
+		 */
+		public PmOrgProfile getSelectedPreparedForPTJOrg() {
+			return selectedPreparedForPTJOrg;
+		}
+
+		/**
+		 * @param selectedPreparedForPTJOrg the selectedPreparedForPTJOrg to set
+		 */
+		public void setSelectedPreparedForPTJOrg(PmOrgProfile selectedPreparedForPTJOrg) {
+			this.selectedPreparedForPTJOrg = selectedPreparedForPTJOrg;
+		}
+		
+		/**
+		 * The method used for generating a list of available ministry
+		 * for searching Prepared for PTJ as selection.
+		 * 
+		 * @return the selection list of ministry
+		 */
+		public SelectItem[] getPreparedForPTJMinistryDropdown() {		
+			SelectItem[] items = null;
+			
+			try {
+			    IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+				items = new SelectItem[2];//temporary solution, wait for #27476
+			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			    items[1] = new SelectItem(resDTO.getPmOrgProfile().getOrgProfileId(), resDTO.getPmOrgProfile().getOrgName());
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		    return items;
+		}
+
+		/**
+		 * The method used for generating a list of available jabatan
+		 * for searching Prepared For PTJ as selection.
+		 * 
+		 * @return the selection list of jabatan
+		 */
+		public SelectItem[] getPreparedForPTJJabatanDropdown() {		
+			SelectItem[] items = null;
+			
+			try {
+			    int i = 1;
+			    IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+			    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				
+			    List<Object[]> list = resDTO.getOrgProfileDDList();
+			    if(list==null) {
+			    	list = new ArrayList<>();
+			    }
+			    items = new SelectItem[list.size() + 1];
+			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				
+			    for(Object[] object : list){
+				  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		    return items;
+		}
+		/**
+		 * The method used for searching the charged PTJ.
+		 */
+		public void searchPreparedForPtjDetails() {
+			try {
+				getManagedBean().getPreparedForPtjDataModel().reloadData();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), null));
+			}
+		}
+		
+		/**
+		 * The method used to reset the search criteria for charged PTJ.
+		 */
+		public void resetPreparedForPtjDetails() {
+			getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+					getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()).getOrgProfileId());
+			
+			getManagedBean().setJabatanProfileId(null);
+			getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+			getManagedBean().setPtjCodeNameSearchValues(null);
+			getManagedBean().getPreparedForPtjDataModel().resetData();
+		}
+		
+		/**
+		 * The method is use to set the Prepared For PTJ
+		 */
+		public void addPreparedForPtjDetails() {
+			if(!getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().equals(selectedPreparedForPTJOrg))
+			{
+				getManagedBean().getFulfilmentRequest().setPreparedOrgProfile(selectedPreparedForPTJOrg);
+				selectedPreparedForPTJOrg = null;
+				getAgAccount(null);
+				getManagedBean().setCurrentPreparedOrgId(null);
+			}			
+		}
+		
+		private void initializeApproverPTJNameDropdown() {
+			try {
+				if(getManagedBean().getFulfilmentRequest().getApproverOrgProfile() == null  || getManagedBean().getFulfilmentRequest().getApproverOrgProfile().getOrgProfileId() == null) {
+					PmOrgProfile tempOrg = new PmOrgProfile();
+					if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() != null) {//for WIP
+						getManagedBean().setSelectedApproverPTJ(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+					} else {
+						tempOrg.setOrgProfileId(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
+						getManagedBean().setSelectedApproverPTJ(tempOrg.getOrgProfileId());
+					}
+				}
+				log.info("PreparedForOrg: " + getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId().longValue());
+				if(getManagedBean().getCurrentPreparedOrgId() != null)
+					log.info("CurrentPreparedForOrg: " + getManagedBean().getCurrentPreparedOrgId().longValue());
+				if(CollectionUtils.isEmpty(getManagedBean().getApproverPTJOrgList()) || !getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId().equals(getManagedBean().getCurrentPreparedOrgId())) {
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();		
+					reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(reqDTO);
+					boolean isAddPreparedForPTJ = true;
+					List<PmProfileGroup> pmProfileGroups = new ArrayList<>();
+					if(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId())) {
+						isAddPreparedForPTJ = false;
+					}
+					if (CollectionUtils.isNotEmpty(resDTO.getProfileGroups())) {
+						pmProfileGroups = resDTO.getProfileGroups();
+					}
+					reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
+					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					Long ministryOrgId = resDTO.getPmOrgProfile().getOrgProfileId();
+					reqDTO = new OrgProfileReqDTO();
+					reqDTO.setParentOrgProfileId(ministryOrgId);
+					reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+					resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+
+					List<Object[]> ptjList = resDTO.getOrgProfileDDList();
+					if(ptjList==null) {
+						ptjList = new ArrayList<>();
+					}
+					Object[] obj = new Object[2];
+					log.info("AddPreparedForPTJ: " + isAddPreparedForPTJ);
+					if(isAddPreparedForPTJ)
+					{
+						boolean isExist = false;
+						for(Object[] tempObj: ptjList) {
+							if(tempObj[0].toString().equalsIgnoreCase(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId().toString())) {
+								isExist = true;
+								break;
+							}
+						}
+						log.info("IsExist: " + isExist);
+						if(!isExist) {
+							obj[0] = getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId().toString();
+							obj[1] = getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName();
+							ptjList.add(obj);
+						}						
+					}
+					for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
+						boolean addNew = true;
+						obj[0] = pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId().toString();
+						for(Object[] ptjObj: ptjList) {
+							String ptjOrgId = ptjObj[0].toString();
+							if(obj[0].toString().equalsIgnoreCase(ptjOrgId)) {
+								addNew = false;
+								log.info("Found same Approver PTJ. Skip from adding to list.");
+								break;
+							}
+						}
+						if(addNew) {
+							obj[1] = pmProfileGroup.getAuthorizedOrgProfile().getOrgName();
+							ptjList.add(obj);
+						}						
+					}
+					getManagedBean().setApproverPTJOrgList(ptjList);
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		}
+		
+		public SelectItem[] getApproverPTJNameDropdown() {
+			SelectItem[] items = null;
+			try {				
+				items = new SelectItem[getManagedBean().getApproverPTJOrgList().size()];
+				int index = 0;
+				for(Object[] object : getManagedBean().getApproverPTJOrgList()){					
+					items[index] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+					index++;
+				}
+				
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		    return items;
+		}
+		
+		/**
+		 * Approver PTJ Name change listener.
+		 */
+		public void approverPTJNameChangeListener() {
+			getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(null);
+			getManagedBean().setSelectedApprover(null);
+			getManagedBean().getFulfilmentRequest().setApproverId(null);
+			IFulfilmentRequestSO requestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			reqDTO.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
+			try {
+				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+			getManagedBean().getUserGroupList().clear();
+			getManagedBean().getApproverIdList().clear();
+			if(CollectionUtils.isNotEmpty(resDTO.getUserGroupList())) {
+				getManagedBean().getUserGroupList().addAll(resDTO.getUserGroupList());
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_745070, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+		
+		public SelectItem[] getPmoPTJNameDropdown() {
+			SelectItem[] items = null;
+			try {	
+				boolean isAddPreparedForPTJ = true;
+				if(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId())) {
+					isAddPreparedForPTJ = false;
+				}
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO;	
+				reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
+				
+				OrgProfileResDTO resDTO;
+				resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+				Long ministryOrgId = resDTO.getPmOrgProfile().getOrgProfileId();
+				reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(ministryOrgId);
+				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+				resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+
+				List<Object[]> ptjList = resDTO.getOrgProfileDDList();
+				if(ptjList==null) {
+					ptjList = new ArrayList<>();
+				}				
+				if(isAddPreparedForPTJ)
+			    {
+					boolean isExist = false;
+					for(Object[] object : ptjList) {
+						if(object[0].toString().equalsIgnoreCase(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId().toString())) {
+							isExist = true;
+							break;
+						}						
+					}
+					if(!isExist) {
+						Object[] obj = new Object[2];
+						obj[0] = getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId().toString();
+						obj[1] = getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgName();
+						ptjList.add(obj);
+					}					
+			    }
+				items = new SelectItem[ptjList.size() + 1];
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						getFacesScopes().getUserLocale())); 
+				int index = 1;
+				for(Object[] object : ptjList) {
+					items[index] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());	
+					index++;
+				}
+			    log.info("totalItem: " + ptjList.size());
+			} catch (Exception e) {
+				log.error(e.getMessage());
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		    return items;
+		}
+		//13291 - end
 }
