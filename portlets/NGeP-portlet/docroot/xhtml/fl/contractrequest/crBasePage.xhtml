@@ -154,33 +154,52 @@
 						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 4}">
 						<p:panel id="settingId" header="#{lbl['lbl.fl.ptj.approver.details']}"
 							toggleable="true" toggleSpeed="500">
-
+			  <!-- 13291 --><h:outputText styleClass="instruction" value="#{lbl['lbl.fl.ptj.approver.ptj.name.instr']}" escape="false"/>
 							<h:panelGrid columns="1">
-								<h:panelGrid columns="2">
-									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" />
-									<p:selectOneMenu
-										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
-										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}"
-										style="width:450px;">
-										<p:ajax event="change"
-											listener="#{contractRequestBackingBean.userGroupChangeListener()}"
-											process="@this" update="approverDropdown" />
-										<f:selectItems
-											value="#{contractRequestBackingBean.getUserGroupDropdown()}" />
+			    <!-- 13291 start --><h:panelGrid columns="2">
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.ptj.name']}" style="text-align: top; float:left; margin-left:0.5%;" />
+									<p:selectOneMenu id="approverPTJNameDropdown" style="width:528px; margin-bottom:5px;"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.selectedApproverPTJ}">
+										<p:ajax event="change" process="@this" update="approverGroupDropdown,approverDropdown" 
+											listener="#{contractRequestBackingBean.approverPTJNameChangeListener()}" />
+										<f:selectItems value="#{contractRequestBackingBean.getApproverPTJNameDropdown()}" />
 									</p:selectOneMenu>
-								</h:panelGrid>
-								<h:panelGrid columns="2">
-									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" />
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left; margin-left:0.5%;" />
+					<!-- 13291 --><p:selectOneMenu id="approverGroupDropdown" style="width:450px; margin-bottom:5px;"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}" >
+										<p:ajax event="change" process="@this" update="approverDropdown"
+											listener="#{contractRequestBackingBean.userGroupChangeListener()}"  />
+										<f:selectItems value="#{contractRequestBackingBean.getUserGroupDropdown()}" />
+									</p:selectOneMenu>
+									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" style="float:left; margin-left:0.5%;"/><!-- 13291 -->
 									<p:selectOneMenu id="approverDropdown"
-										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView or !bpmTasklistBackingBean.managedBean.claim}"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.selectedApprover}"
-										style="width:450px;">
+										style="width:450px;"><!-- 13291 -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" />
 										<f:selectItems
 											value="#{contractRequestBackingBean.getApproverListDropDown()}" />
 									</p:selectOneMenu>
-								</h:panelGrid>
+								</h:panelGrid><!-- 13291 - end -->
 							</h:panelGrid>
 						</p:panel>
+						<!-- 13291 start -->
+						<p:panel id="pmoDetails" header="#{lbl['lbl.fl.pmo.ptj.name.dtls.header']}" toggleable="true" toggleSpeed="500">
+							<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.pmo.ptj.name.dtls.instr']}" escape="false"/><br />
+							<h:panelGrid columns="1">
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{lbl['lbl.fl.pmo.ptj.name']}" style="text-align: top" />
+									<p:selectOneMenu style="width:450px; margin-bottom:5px;"
+										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
+										value="#{contractRequestBackingBean.managedBean.flRequest.pmoOrgProfile.orgProfileId}" >
+										<f:selectItems value="#{contractRequestBackingBean.getPmoPTJNameDropdown()}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+							</h:panelGrid>	
+						</p:panel>
+						<!-- 13291 end -->
 					</p:outputPanel></td>
 			</tr>
 		</table>

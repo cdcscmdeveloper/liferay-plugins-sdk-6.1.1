@@ -1190,7 +1190,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			for(PmPtjReorg pmPtjReorg : ptjResDTO.getPtjReorgList()) {
 				ptjList = ptjList + "," + pmPtjReorg.getOldPtjId();
 			}
-			condition = condition + "|orgProfileId^"+ptjList+"^9";
+			condition = condition + "*orgProfileId^"+ptjList+"^9";//13291
 		}
 		return condition;
 	}
@@ -1241,7 +1241,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjLov() {
 		if(getManagedBean().getPtjGroup() == null) {
 			return true;
-		} else if(hasGovernmentUserRole()) {
+		} else if(!getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
+				&& !getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()) && hasGovernmentUserRole()) {//13291 - edit if
 			if(isPTJReOrg()) {
 				return false;
 			} else {
@@ -1263,7 +1264,8 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	public boolean disablePtjGroupLov() {
 		if(getManagedBean().getMinistry() == null) {
 			return true;
-		} else if(hasGovernmentUserRole()) {
+		} else if(!getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
+				&& !getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()) && hasGovernmentUserRole()) {//13291 edit if
 			if(isPTJReOrg()) {
 				return false;
 			} else {
@@ -1324,7 +1326,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 					kumpulanPtjList = kumpulanPtjList + "," + kumpulanPtj.getOrgProfileId();
 				}
 			}
-			condition = condition + "|orgProfileId^"+kumpulanPtjList+"^9";
+			condition = condition + "*orgProfileId^"+kumpulanPtjList+"^9";//13291
 		}
 		return condition;
 	}
