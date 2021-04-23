@@ -165,10 +165,6 @@ public class PpReportsBackingBean extends
 		//end #27472
 		
 		getManagedBean().setSelectedYear(null);
-		getManagedBean().setDisabledMinistryLov(false);
-		getManagedBean().setDisabledPegawaiLov(false);
-		getManagedBean().setDisabledKumpulanPTJLov(false);
-		getManagedBean().setDisabledPTJLov(false);
 		getManagedBean().setProcurementCatId(null);
 		getManagedBean().setProcurementTypeId(null);
 		getManagedBean().setStatus(null);
