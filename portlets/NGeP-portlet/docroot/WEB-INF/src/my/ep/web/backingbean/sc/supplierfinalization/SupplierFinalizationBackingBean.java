@@ -3547,7 +3547,14 @@ return	remarksNotFound;
 				
 				if (CollectionUtils.isEmpty(getManagedBean().getNewBriefingPaperReportList())) {
 					saveNewBriefingPaperReportList(reportTitleList, _scQtFinalization, qtId);
-			}
+				}
+				
+				// #18685 - Start.
+				if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList()) && getManagedBean().getNewBriefingPaperReportList().size() > 0
+				    && getManagedBean().isSecretaryUser()) {
+				  getManagedBean().getNewBriefingPaperReportList().get(0).setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				}
+				// #18685 - End.
 			}
 			//retrieveReportTabDtl(getManagedBean().getScQt(), "KT", SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 		} finally {
