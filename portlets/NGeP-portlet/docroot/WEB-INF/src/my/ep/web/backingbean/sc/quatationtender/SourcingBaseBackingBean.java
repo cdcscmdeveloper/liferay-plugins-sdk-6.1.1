@@ -4804,21 +4804,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								IQTSuppFinalizationSO.class);
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
-				// #18685 - Start.
+				// #18685 - Start. 
+				finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 				finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
-                // #18685 - End.
+                // #18685 - End. 
 				briefingPaperReportList.add(finalizationReport);
 				reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
 				finalizationReport = qtSuppFinalizationSO.saveFinalizationReports(reqDTO);
 				int index = 0;
+				// #18685 - Start.
 				for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
 					if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
 						getManagedBean().getNewBriefingPaperReportList().set(index, finalizationReport);
+						getManagedBean().setSelectedBriefingReport(finalizationReport);
 						break;
 					}
 					index++;
 				}
-				
+				// #18685 - Start.
 			} finally {
 				qtSuppFinalizationSO = null;
 			}
