@@ -1550,6 +1550,12 @@ public class PurchaseInDefaultBackingBean extends
 			 */
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
+			//#9133 - start
+			if(purchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+				 
+				 getManagedBean().setContractTypeAsMinistry(Boolean.TRUE);
+			}
+			//#9133 - end
 		}
 		
 		if(purchaseInDefault.getCircularItem() != null) {
