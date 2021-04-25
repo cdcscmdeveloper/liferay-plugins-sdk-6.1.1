@@ -62,10 +62,10 @@
 							partialSubmit="true" process="@this" style="float:left;"
 							rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
 							action="#{purchaseInDefaultBackingBean.backToPrevious}" /> 
-							
+						<!-- #28865 change submitPurchaseInDefault() to dialogMsgCheck()-->	
 						<p:commandButton
 							value="#{lbl['lbl.btn.submit']}"
-							action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
+							action="#{purchaseInDefaultBackingBean.dialogMsgCheck}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							update="@form" process="@all" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
@@ -94,6 +94,20 @@
 				</tr>
 			</table>
 		</c:if>
+		<!-- #28865 start -->
+		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"
+			severity="alert" widgetVar="submitSuppDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.sc.submit.confirmation']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
+					onstart="submitSuppDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="submitSuppDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<!-- #28865 end -->
 		<ui:include
 			src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefault.xhtml" />
