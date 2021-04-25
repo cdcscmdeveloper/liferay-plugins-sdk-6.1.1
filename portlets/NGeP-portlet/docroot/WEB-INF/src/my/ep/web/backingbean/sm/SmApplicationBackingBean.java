@@ -9106,6 +9106,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setReasonId(null);
 		getManagedBean().setRejectReasonReqd(false);
 		getManagedBean().getPoSecReview().setRecommendation("");
+		//#3460 - Start
+		getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
+		//#3460 - End
 		RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");
 	}
 
@@ -9308,6 +9311,42 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setReasonId(null);
 		}
 		//		#15629 -- end - 27/1/2020
+		
+		// #3460 - start
+		if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSelectedReasonDescs())
+				&& dialog.equalsIgnoreCase("rejectDialog")) {
+			getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+			resetSearchRejectedReason();
+			getManagedBean().setReasonId(null);
+		}
+			
+			if(dialog.equalsIgnoreCase("approverRejDialog")){
+				if(!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplRejectReasons())) {
+					getManagedBean().setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+					List<Long> reasonIdList = new ArrayList<Long>();
+					for(SmApplRejectReason smApplRejectReason : getManagedBean().getSmAppl().getSmApplRejectReasons()){
+							for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
+								if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
+									getManagedBean().getSelectedReasonDescs().add(pmReasonDesc);
+									reasonIdList.add(pmReasonDesc.getPmReason().getReasonId());
+								}
+							}			
+					}
+					getManagedBean().setReasonId(
+							reasonIdList.toArray(new Long[reasonIdList.size()]));
+					verifySelectedRejectReasons();
+				}
+				
+				getManagedBean().setReasonDescList(
+						getManagedBean().getReasonDescInitList());
+				getManagedBean().setRejectionOtherReasonId(
+						SmApplicationUtil
+								.retrieveOtherRejectReasonIdByParamCodeAndType(
+										ReasonCategory.SUPPLIER_REJECTION_REASON
+												.value(),
+										SupplierManagementConst.SM_REASON_CODE_OTHERS));
+			}
+		// #3460 - end
 		
 		getManagedBean().setRejectReasonReqd(false);
 		//#12483 - START
