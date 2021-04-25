@@ -1823,6 +1823,18 @@
 			</css-class-wrapper>
 		</portlet>
 		<portlet>
+			<portlet-name>ResponsePurchaseInDefault</portlet-name>
+			<icon>/icon.png</icon>
+			<requires-namespaced-parameters>false</requires-namespaced-parameters>
+			<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				response purchase in default-portlet
+			</css-class-wrapper>
+		</portlet>
+		<portlet>
 			<portlet-name>ReviewSimpleQuote</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
@@ -3254,8 +3266,7 @@
 		<css-class-wrapper>
 			ss-portlet
 		</css-class-wrapper>
-	</portlet>
-	
+	</portlet>	
 	<portlet>
 		<portlet-name>softCertProvider</portlet-name>
 		<icon>/icon.png</icon>

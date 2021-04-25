@@ -151,6 +151,7 @@
             <portlet id="BusinessOwner"></portlet>
             <portlet id="ReviewPurchaseInquiry"></portlet>
 		    <portlet id="ReviewPurchaseInDefault"></portlet>
+		    <portlet id="ResponsePurchaseInDefault"></portlet>
 		    <portlet id="ReviewSimpleQuote"></portlet>
 		    <portlet id="ReviewSupplierView"></portlet>
 		    <portlet id="scRequestNoteSearch" />
