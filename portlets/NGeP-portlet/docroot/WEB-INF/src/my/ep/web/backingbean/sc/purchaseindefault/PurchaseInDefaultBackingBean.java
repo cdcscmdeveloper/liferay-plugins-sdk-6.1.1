@@ -6,12 +6,14 @@ package my.ep.web.backingbean.sc.purchaseindefault;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal; //#28865
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils; //#28865
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -19,6 +21,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
+import javax.portlet.RenderResponse; //#28865
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -29,6 +32,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO; //#28865
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -46,10 +50,12 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO; //#28865
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.entity.BaseEntity; //#28865
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularItem;
 import my.ep.persistence.entity.ct.circular.dtl.CtCircularPidReason;
@@ -122,6 +128,12 @@ public class PurchaseInDefaultBackingBean extends
 
 	/** The purchase in default page. */
 	private String PURCHASE_IN_DEFAULT_PAGE = "purchaseInDefaultMain";
+	
+	// start - #28865
+	private String PURCHASE_IN_DEFAULT_RESPONSE_PAGE = "purchaseInDefaultResponseMain";
+	
+	private String PURCHASE_IN_DEFAULT_REQUISITIONER_RESPONSE_PAGE = "/xhtml/sc/directpurchase/purchaseindefaultresponse/reqPurchaseInDefaultResponseMain.xhtml";
+	// end - #28865
 
 	/**
 	 * Instantiates a new purchase in default backing bean.
@@ -370,6 +382,20 @@ public class PurchaseInDefaultBackingBean extends
 		}
 		return uniquePanelSuppliers;
 	}
+	
+	//start #28865
+	public void dialogMsgCheck(){
+		if(getManagedBean().getPmReason() != null){
+			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue())
+				RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
+			else
+				submitPurchaseInDefault();
+		}
+		else{
+			submitPurchaseInDefault();
+		}
+	}
+	//end #28865
 
 	/**
 	 * submit PurchaseInDefault. submit - save data into database and BPM
@@ -505,6 +531,17 @@ public class PurchaseInDefaultBackingBean extends
 				}
 			}
 			
+			//start - #28865
+			if(getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue())//justification
+			{
+				if(scPurchaseInDefault.getQuantity() != null)
+					scPurchaseInDefault.setReqQuantity(scPurchaseInDefault.getQuantity());
+					
+				reqDTO.setSupRes(true);
+				reqDTO.setSmSupplier(getManagedBean().getPurchaseInDefault().getContractedItem().getCtContractVer().getCtContract().getSmSupplier());
+			}
+			//end - #28865
+			
 			reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 			// Hoa: add token authenticate to support BPM
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -518,10 +555,22 @@ public class PurchaseInDefaultBackingBean extends
 			if (resDTO.isSuccessful()) {
 				ScPurchaseInDefault purchaseInDefault = resDTO
 						.getPurchaseInDefaultDtl();
-				successMessage(MessageConst.INFO_700006,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
-						purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
+				//start - #28865
+				if(getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue()){
+					updateWorkflowStatus(purchaseInDefault, Boolean.TRUE);
+					
+					successMessage(MessageConst.INFO_700096,
+							ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
+							purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
+				}
+				else{	
+					successMessage(MessageConst.INFO_700006,
+							ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
+							purchaseInDefault.getPurchaseInDefaultNo(), Boolean.TRUE);
+				}
+				//end - #28865
 				// clear pid data
 				super.renewSesionObject();
 
@@ -588,7 +637,11 @@ public class PurchaseInDefaultBackingBean extends
 					scPurchaseInDefault.getCurrentStatus(),
 					scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
 
-			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
+			
+			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+					&& !DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(stsId)
+					&& !DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)) {// #28865
 				finalizeRemarks(scPurchaseInDefault.getRemarks());
 			}
 
@@ -607,10 +660,136 @@ public class PurchaseInDefaultBackingBean extends
 			reqDTO.setOutcome(outcome);
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setUserLocale(facesScopes.getUserLocale());
-			resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
+			
+			//#28865 start	
+			if (DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(stsId)) {
+				boolean validateRemark = true;
+				boolean isQuantityCheckNeeded = false;
+				
+				if(getManagedBean().isVisibleOrderQty()) {
+					isQuantityCheckNeeded = true;
+				}
 
+				validateResponsePID(scPurchaseInDefault, validateRemark, isQuantityCheckNeeded, outcome);
+				BigDecimal tempQty = scPurchaseInDefault.getQuantity();
+
+				//---start----set remark supplier
+				saveSupplierRemark();			
+				//---end----set remark supplier
+				savePidReason();				
+				
+				reqDTO.setContractId(getManagedBean().getContractId());
+				reqDTO.setStatusId(stsId);
+				reqDTO.setContractType(getPIDContractType (scPurchaseInDefault));
+				reqDTO.setSmSupplier(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getSmSupplier());
+				reqDTO.setPurchaseInDefaultNo(scPurchaseInDefault.getPurchaseInDefaultNo());					
+				reqDTO.setPurchaseInDefaultId(scPurchaseInDefault.getPurchaseInDefaultId());
+				reqDTO.setFetchSubEntity(true);
+				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO
+						.getPurchaseInDefault(reqDTO);				
+				
+				ScPurchaseInDefault scPID = pidResDTO.getPurchaseInDefaultDtl();
+
+				scPID.setQuantity(tempQty); //reset to previous value
+				scPID.setSuppQuantity(getManagedBean().getQtyBySupplier());
+				
+				reqDTO.setPurchaseInDefaultDtl(scPID);
+				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
+	
+				reqDTO.setSupRes(true);
+				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
+			}else if(DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)){						
+				boolean validateRemark = true;
+				boolean isQuantityCheckNeeded = false;
+				
+				if (getManagedBean().isVisibleOrderQty()) {
+					isQuantityCheckNeeded = true;
+				}
+
+				validateRequisitionerResponsePID(scPurchaseInDefault, validateRemark, isQuantityCheckNeeded, outcome);
+
+				getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));				
+				saveRemark(scPurchaseInDefault);
+				
+				//reqDTO.setPurchaseInDefaultNo(scPurchaseInDefault.getPurchaseInDefaultNo());
+				reqDTO.setContractId(getManagedBean().getContractId());
+				reqDTO.setStatusId(stsId);
+				reqDTO.setPurchaseInDefaultId(scPurchaseInDefault.getPurchaseInDefaultId());
+				reqDTO.setFetchSubEntity(true);
+				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO
+						.getPurchaseInDefault(reqDTO);
+				
+				ScPurchaseInDefault scPID = pidResDTO.getPurchaseInDefaultDtl();
+				
+				if (scPID.getContractedItem() != null) {
+					retriveContractSupplierGstInfomation(scPID.getContractedItem());
+					getManagedBean().setCheckContractItem(Boolean.TRUE);
+				}
+				
+				if(scPID.getCircularItem() != null) {
+					getManagedBean().setCheckCentralContractItem(true);    
+				}
+				// panel item
+				if (scPID.getPanelItem() != null) {
+					getManagedBean().setCheckContractItem(Boolean.FALSE);
+				}
+			
+				scPID.setTitle(getManagedBean().getPurchaseInDefault().getTitle());
+				scPID.setJustification(getManagedBean().getPurchaseInDefault().getJustification());
+				scPID.setReasonType(getManagedBean().getPmReason());
+				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
+				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				
+				if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse()
+						.getReasonId().intValue()) {
+					BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();
+					BigDecimal qtyBySupplier = getManagedBean().getPurchaseInDefault().getSuppQuantity();
+
+					if (qtyByRequisitioner.compareTo(qtyBySupplier) == -1)
+						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getSuppQuantity());
+					else
+						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				} else {
+					scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				}
+				
+				scPID.getContractedItem();
+				scPID.getPanelItem();  
+				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());
+
+				reqDTO.setPurchaseInDefaultDtl(scPID);
+				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);	
+								
+				//assign approver
+				formApprover(scPurchaseInDefault);
+				reqDTO.setBackupApproverList(getManagedBean().getBackupApprovers());
+				
+				reqDTO.setSupRes(true);
+				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
+			}else{
+				resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
+			}
+			//#28865 end
 			if (resDTO.isSuccessful()) {
-				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)
+					//#28865 start
+				if (DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(stsId)) {
+
+					successMessage(MessageConst.INFO_700097, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault()
+									.getPurchaseInDefaultNo(), Boolean.TRUE);
+
+				} else if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)) {
+					if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+						successMessage(MessageConst.INFO_700006, ParameterTypeConst.DOCUMENT_TYPES,
+								ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault()
+										.getPurchaseInDefaultNo(), Boolean.TRUE);
+					} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+						successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,
+								ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault()
+										.getPurchaseInDefaultNo(), Boolean.TRUE);
+					}
+				}
+					else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome) //#28865 end
 						|| BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(outcome)) {
 					Long statusId = getManagedBean().getPidStatus()
 							.getStatusId();
@@ -636,7 +815,8 @@ public class PurchaseInDefaultBackingBean extends
 							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT,
 							getManagedBean().getPurchaseInDefault()
 									.getPurchaseInDefaultNo(), Boolean.TRUE);
-				}
+				}				
+				super.renewSesionObject(); //#28865
 
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
@@ -787,6 +967,7 @@ public class PurchaseInDefaultBackingBean extends
 			purchaseInDefault.setJustification(getReasonDescByReasonId(pmReason.getReasonId()).getReasonDesc());
 		}
 		purchaseInDefault.setReasonDesc(otherDesc);
+		getManagedBean().setPmReason(pmReason); //#28865
 		getManagedBean().setCtReason(null);
 		getManagedBean().setPanelReason(null);
 		// update order qty
@@ -836,6 +1017,32 @@ public class PurchaseInDefaultBackingBean extends
 			purchaseInDefault.setScPurchaseInDefaultAttachment(attachment);
 		}
 	}
+	
+	//start - #28865
+	public void deleteUploadFile(BaseEntity delEntity) {
+		debugLogger("deleteUploadFile");
+		
+		try{
+		log.debug("deleteUploadFile");
+		ScPurchaseInDefault purchaseInDefault = getManagedBean()
+				.getPurchaseInDefault();
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IPurchaseInDefaultSO.class);
+		
+		if(purchaseInDefault.getScPurchaseInDefaultAttachment() != null){
+			purchaseInDefaultSO.deleteAttachmentById(purchaseInDefault.getScPurchaseInDefaultAttachment().getAttachmentId());
+		}
+		
+		purchaseInDefault.setScPurchaseInDefaultAttachment(null);
+		getManagedBean().getPurchaseInDefault().setScPurchaseInDefaultAttachment(null);
+		}finally{
+		
+		}
+
+	}	
+	//end - #28865
 
 	/**
 	 * show the attached icon based on attached type file
@@ -1133,9 +1340,710 @@ public class PurchaseInDefaultBackingBean extends
 		// title checker
 		getManagedBean().setTitleChecker(Boolean.FALSE);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		// start - #28865
+		String PID_PAGE = PURCHASE_IN_DEFAULT_PAGE;
+		
+		PortletRequest request = (PortletRequest) fc.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid.review.default.authorization.title",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		
+		if (directPurchaseDataType.getRecommend() != null && directPurchaseDataType.isIsSuppResponse() != null) {
+			if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)
+					|| directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_ACCEPT)) {
+				
+				getManagedBean().setAction(directPurchaseDataType.getRecommend());
+
+				if (purchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType()
+						.getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					getManagedBean().setContractTypeAsMinistry(Boolean.TRUE);
+					getManagedBean().setContractId(Long.valueOf(directPurchaseDataType.getContractId()));
+				}
+
+				if (purchaseInDefault.getReasonType() != null) {
+					if (directPurchaseDataType.isIsSuppResponse()) {
+						
+						Long statusId = getManagedBean().getPidStatus().getStatusId();
+
+						if (DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(statusId)) {
+							response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+						}
+						
+						if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)) {
+							String message = MessageConst.INFO_700098;
+
+							FacesContext.getCurrentInstance().addMessage(null,
+									new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+											.getMessage(
+													message,
+													null,
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
+		
+
+						} else if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_ACCEPT)) {
+							if (purchaseInDefault.getSuppQuantity() != null
+									&& purchaseInDefault.getReqQuantity() != null) {
+
+								if (purchaseInDefault.getSuppQuantity().compareTo(purchaseInDefault.getReqQuantity()) != 0) {
+									String message = MessageConst.INFO_700099;
+
+									FacesContext.getCurrentInstance().addMessage(
+											null,
+											new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+													message, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
+								}
+							}
+						}
+						PID_PAGE = PURCHASE_IN_DEFAULT_REQUISITIONER_RESPONSE_PAGE;
+					}
+				}
+			}
+		}
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_PAGE);
+		.handleNavigation(fc, null, PID_PAGE);
+		// end - #28865
 	}
+	
+	// start - #28865
+	public void preRenderResponseView(){
+		SCDirectPurchaseDataType directPurchaseDataType = super.getBpmTaskDetails(SCDirectPurchaseDataType.class, null);
+		
+		// Purchase In Default
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IPurchaseInDefaultSO.class);
+		FacesScopes facesScopes = new FacesScopes();
+		PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+		Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
+		purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
+		purchaseInDefaultReqDTO.setFetchSubEntity(true);
+		PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO
+				.getPurchaseInDefault(purchaseInDefaultReqDTO);
+		ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO
+				.getPurchaseInDefaultDtl();
+		
+		getManagedBean().setContractId(Long.valueOf(directPurchaseDataType.getContractId()));
+		
+		// approved by
+		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
+
+		if (purchaseInDefault.getSuppQuantity() == null) {
+			getManagedBean().setQtyBySupplier(purchaseInDefault.getReqQuantity());  //set default to req qty
+			getManagedBean().setQtyByRequisitioner(purchaseInDefault.getReqQuantity());
+		}
+		else if (purchaseInDefault.getSuppQuantity() != null) {
+			getManagedBean().setQtyBySupplier(purchaseInDefault.getSuppQuantity());
+			getManagedBean().setQtyByRequisitioner(purchaseInDefault.getReqQuantity());
+		}
+		if (getManagedBean().getQtyBySupplier() == null) {
+			purchaseInDefault.setSuppQuantity(getManagedBean().getQtyBySupplier());
+		}
+		
+		
+		// contract item
+		if (purchaseInDefault.getContractedItem() != null) {
+			/*
+			 * CtContractItem contractItem =
+			 * purchaseInDefault.getContractedItem(); IContractItemSO
+			 * contractItemSO =
+			 * (IContractItemSO)BusinessDelegate.getInstance
+			 * ().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+			 * IContractItemSO.class); ContractItemReqDTO contractItemReqDTO
+			 * = new ContractItemReqDTO();
+			 * contractItemReqDTO.setContractItemId
+			 * (contractItem.getContractItemId()); ContractItemResDTO
+			 * ConIresDTO =
+			 * contractItemSO.getContractItem(contractItemReqDTO);
+			 * contractItem = ConIresDTO.getCtContractItem();
+			 * purchaseInDefault.setContractedItem(contractItem);
+			 */
+			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
+			getManagedBean().setCheckContractItem(Boolean.TRUE);
+		}
+		
+		if(purchaseInDefault.getCircularItem() != null) {
+			getManagedBean().setCheckCentralContractItem(true);    
+		}
+		// panel item
+		if (purchaseInDefault.getPanelItem() != null) {
+			getManagedBean().setCheckContractItem(Boolean.FALSE);
+		}
+		getManagedBean().setPurchaseInDefault(purchaseInDefault);
+
+		getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));
+
+		// remarks
+		purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault,
+				null,
+				purchaseInDefault.getRemarks(), ScPIDRemark.class));
+		
+		List<ScPIDRemark> remarks = purchaseInDefault.getRemarks();
+		List<ScPIDRemark> finalScPIDRemarks = new ArrayList<>();
+		List<ScPIDRemark> supScPIDRemarks = new ArrayList<>();
+		
+		//remove empty remark
+		if (CollectionUtils.isNotEmpty(remarks)) {
+			for (ScPIDRemark remark : remarks) {
+				if(remark.getCreatedBy().equals(facesScopes.getUserSessionBean().getUserId()))
+				{
+					supScPIDRemarks.add(remark);
+				}
+				if(!StringUtils.isEmpty(remark.getRemark())){
+					finalScPIDRemarks.add(remark);
+				}
+			}
+		}
+		
+		purchaseInDefault.setRemarks(finalScPIDRemarks);
+		
+		if(!supScPIDRemarks.isEmpty()){
+			getManagedBean().setSuppRemarks(supScPIDRemarks);
+			getManagedBean().setSuppRemarkId(supScPIDRemarks.get(0).getRemarkId()); 
+		}
+			
+		initializeApproverGroup();
+		/*populatePidReason(purchaseInDefaultResDTO.getCtPidReasonList(), 
+				purchaseInDefaultResDTO.getCircularPidReasonList());*/
+		justificationTypeEvent(purchaseInDefault.getReasonType(), purchaseInDefault.getReasonDesc());
+		// title checker
+		getManagedBean().setTitleChecker(Boolean.FALSE);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		PortletRequest request = (PortletRequest)fc.getExternalContext().getRequest();
+		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+		response.setTitle(ResourceBundleUtils
+				.getMessage(
+						"lbl.sc.pid.response.reduce.min.title",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, PURCHASE_IN_DEFAULT_RESPONSE_PAGE);
+	}
+	
+	public void updatePID(){
+		debugLogger("updatePurchaseInDefault");
+		IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		FacesScopes facesScopes = new FacesScopes();
+		try {
+			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION,
+							IPurchaseInDefaultSO.class);
+			PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
+					.getPurchaseInDefault();
+			
+			
+			Long statusId = getManagedBean().getPidStatus().getStatusId();
+			
+			if (DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(statusId)) {
+
+				boolean validateRemark = false;
+				boolean isQuantityCheckNeeded = false;
+				String outcome = null;
+
+				if (getManagedBean().isVisibleOrderQty()) {
+					isQuantityCheckNeeded = true;
+				}
+
+				BigDecimal tempQty = scPurchaseInDefault.getQuantity();
+				validateResponsePID(scPurchaseInDefault, validateRemark, isQuantityCheckNeeded, outcome);
+
+				// ---start----set remark supplier
+				saveSupplierRemark();
+				// ---end----set remark supplier
+
+				reqDTO.setPurchaseInDefaultNo(scPurchaseInDefault.getPurchaseInDefaultNo());
+				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO.retrievePurchaseInDefault(reqDTO);
+
+				ScPurchaseInDefault scPID = pidResDTO.getPurchaseInDefaultDtl();
+
+				//to prevent ERR-100048 if user click save more than one
+				scPID.setQuantity(tempQty); // reset to previous value
+				scPID.setSuppQuantity(getManagedBean().getQtyBySupplier());
+
+				reqDTO.setPurchaseInDefaultDtl(scPID);
+				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
+							Boolean.FALSE);
+
+				}
+			}else{
+				
+				boolean validateRemark = false;
+				boolean isQuantityCheckNeeded = false;
+				String outcome = null;
+
+				if (getManagedBean().isVisibleOrderQty()) {
+					isQuantityCheckNeeded = true;
+				}
+
+				validateRequisitionerResponsePID(scPurchaseInDefault, validateRemark, isQuantityCheckNeeded, outcome);
+
+				getCurrentStatus(getPmStatusByStatusId(getManagedBean().getCurrentStatusId()));				
+				saveRemark(scPurchaseInDefault);
+				
+				//reqDTO.setPurchaseInDefaultNo(scPurchaseInDefault.getPurchaseInDefaultNo());
+				reqDTO.setPurchaseInDefaultId(scPurchaseInDefault.getPurchaseInDefaultId());
+				reqDTO.setFetchSubEntity(true);
+				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO
+						.getPurchaseInDefault(reqDTO);
+				
+				ScPurchaseInDefault scPID = pidResDTO.getPurchaseInDefaultDtl();
+
+				//to prevent ERR-100048 if user click save more than one
+				scPID.setTitle(getManagedBean().getPurchaseInDefault().getTitle());
+				scPID.setJustification(getManagedBean().getPurchaseInDefault().getJustification());
+				scPID.setReasonType(getManagedBean().getPmReason());
+				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
+				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				//scPID.setScPurchaseInDefaultAttachment(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment());
+
+				reqDTO.setPurchaseInDefaultDtl(scPID);
+				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
+				
+				if (resDTO.isSuccessful()) {
+					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, scPurchaseInDefault.getPurchaseInDefaultNo(),
+							Boolean.FALSE);
+				}
+			}
+		} catch (NullPointerException e) {
+			log.info(e.getStackTrace());
+		}
+	}
+	
+	private void validateResponsePID(ScPurchaseInDefault scPurchaseInDefault, Boolean validateRemark, Boolean isQuantityCheckNeeded, String outcome){
+		FacesScopes facesScopes = new FacesScopes();
+		BigDecimal qtyByRequisitioner = getManagedBean().getQtyByRequisitioner();
+		BigDecimal qtyBySupplier = getManagedBean().getQtyBySupplier();
+		// validate if qtyBySupplier more than qtyByRequisitioner
+		if (qtyBySupplier != null && qtyBySupplier.intValue() >= 1) {
+			if (qtyBySupplier.compareTo(qtyByRequisitioner) < 0) {
+				throw new EpException(MessageConst.ERROR_100035, new String[] {
+						ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.supplier.allowed.order.qty",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()),
+						qtyByRequisitioner.toString() });
+			}
+		}
+
+		// validate quantity
+		if (qtyBySupplier != null
+				&& qtyBySupplier.intValue() < 1) {
+			throw new EpException(MessageConst.ERROR_100033, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.supplier.allowed.order.qty",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "0" });
+		}
+
+		int checkQty = 0;
+		
+		CtContractItem contractItem = scPurchaseInDefault.getContractedItem();
+		CtPanelItem ctPanelItem = scPurchaseInDefault.getPanelItem();  
+		//BigDecimal tempQty = scPurchaseInDefault.getQuantity();
+		scPurchaseInDefault.setQuantity(getManagedBean().getQtyBySupplier());
+		if (contractItem != null) {
+
+			if (scPurchaseInDefault.getQuantity() != null) {
+				double minimumQuantity = contractItem
+						.getMinimumOrderQty();
+				if(scPurchaseInDefault.getCircularItem() != null) {
+					minimumQuantity = scPurchaseInDefault.getCircularItem().
+							getMinimumOrderQty().doubleValue();
+				}
+				checkQty = Double.compare(scPurchaseInDefault.getQuantity()
+						.doubleValue(), minimumQuantity);
+			}
+		} else if (ctPanelItem != null) {
+			if (scPurchaseInDefault.getQuantity() != null) {
+				checkQty = Double.compare(scPurchaseInDefault.getQuantity()
+						.doubleValue(), ctPanelItem
+						.getMinimumOrderQty());
+			}
+		}
+		
+		if (isQuantityCheckNeeded) {
+			if (checkQty >= 0) {
+				throw new EpException(
+						MessageConst.ERROR_760203,
+						new String[] {
+								ResourceBundleUtils
+										.getMessage(
+												"lbl.sc.purchase.in.default.supplier.allowed.order.qty",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												facesScopes
+														.getUserLocale()),
+								ResourceBundleUtils
+										.getMessage(
+												"lbl.sc.purchase.in.default.min.qty",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												facesScopes
+														.getUserLocale()) });
+			}
+		}
+		
+		if (validateRemark) {
+			if (qtyBySupplier.compareTo(qtyByRequisitioner) != 0 || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+				boolean newRemark = false;
+				for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
+					// no new remark being insert
+					if (remark.getRemark() == null || remark.getRemark().equalsIgnoreCase("")) {
+						newRemark = true;
+					}
+				}
+				if (newRemark) {
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+				}
+			}
+		}
+	}
+	
+	private void validateRequisitionerResponsePID(ScPurchaseInDefault scPurchaseInDefault, Boolean validateRemark, Boolean isQuantityCheckNeeded, String outcome){
+		FacesScopes facesScopes = new FacesScopes();
+		BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();		
+		Boolean isCheckCentralContractItem = getManagedBean().isCheckCentralContractItem();
+		BigDecimal minQty = null;
+		
+		if(qtyByRequisitioner == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.order.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+		
+		
+		if(isCheckCentralContractItem)
+			minQty = getManagedBean().getPurchaseInDefault().getCircularItem().getMinimumOrderQty();
+		else
+			minQty = new BigDecimal(getManagedBean().getPurchaseInDefault().getContractedItem().getMinimumOrderQty());
+		
+		
+		if (qtyByRequisitioner != null
+				&& qtyByRequisitioner.intValue() < 1) {
+			throw new EpException(MessageConst.ERROR_100033, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.order.qty",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "0" });
+		}
+
+		int checkQty = 0;
+		
+		checkQty = Double.compare(qtyByRequisitioner.doubleValue(), minQty.doubleValue());
+		
+		if (checkQty >= 0) {
+			throw new EpException(MessageConst.ERROR_760203, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.order.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default.min.qty",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+
+		// validate quantity
+	
+		if (validateRemark) {
+				boolean newRemark = false;
+				for (ScPIDRemark remark : getManagedBean().getPurchaseInDefault().getRemarks()) {
+					// no new remark being insert
+					if (remark.getRemark() == null || remark.getRemark().equalsIgnoreCase("") || remark.getRemark().isEmpty()) {
+						newRemark = true;
+					}
+				}
+				if (newRemark) {
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+				}			
+		}
+		
+		if(getManagedBean().getPurchaseInDefault().getScPurchaseInDefaultAttachment() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.txt.attachment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+	}
+	
+	public void saveSupplierRemark() {
+		IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		//FacesScopes facesScopes = new FacesScopes();
+		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		try {
+			for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
+				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
+					if (remark.getRemarkId() == null && getManagedBean().getSuppRemarkId() == null) {
+						reqDTO.setScPIDRemark(remark);
+						PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.updateRemark(reqDTO);
+						getManagedBean().setSuppRemarkId(resDTO.getScPIDRemark().getRemarkId());
+						break;
+					}
+
+					ScPIDRemark fetchRemark = purchaseInDefaultSO
+							.retrieveRemarkById(getManagedBean().getSuppRemarkId());
+					fetchRemark.setRemark(remark.getRemark());
+					fetchRemark.setCreatedBy(remark.getCreatedBy());
+					reqDTO.setScPIDRemark(fetchRemark);
+					purchaseInDefaultSO.updateRemark(reqDTO);
+					break;
+				}
+			}
+
+		} catch (NullPointerException e) {
+			log.info(e.getStackTrace());
+		}
+	}
+	
+	public void saveRemark(ScPurchaseInDefault scPurchaseInDefault) {
+		IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		//FacesScopes facesScopes = new FacesScopes();
+		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		
+		try {
+			for (ScPIDRemark remark : scPurchaseInDefault.getRemarks()) {
+				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
+					if (remark.getRemarkId() == null) {
+						reqDTO.setScPIDRemark(remark);
+						purchaseInDefaultSO.updateRemark(reqDTO);
+						break;
+					}
+
+					ScPIDRemark fetchRemark = purchaseInDefaultSO
+							.retrieveRemarkById(remark.getRemarkId());
+					fetchRemark.setRemark(remark.getRemark());
+					fetchRemark.setCreatedBy(remark.getCreatedBy());
+					reqDTO.setScPIDRemark(fetchRemark);
+					purchaseInDefaultSO.updateRemark(reqDTO);
+					break;
+				}
+			}
+
+		} catch (NullPointerException e) {
+			log.info(e.getStackTrace());
+		}
+	}
+	
+	public void supplierAction(String outcome) {
+		debugLogger("supplierAction");
+		this.getManagedBean().setAction(outcome);
+		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+			//getManagedBean().setAutoUpdate(Boolean.FALSE);
+			updateBPMTask(outcome, null);
+		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+			//getManagedBean().setAutoUpdate(Boolean.TRUE);
+			RequestContext.getCurrentInstance().execute("rejectDlg.show()");
+		}
+	}
+	
+	public void requisitionerAction(String outcome) {
+		debugLogger("requisitionerAction");
+		this.getManagedBean().setAction(outcome);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			//getManagedBean().setAutoUpdate(Boolean.FALSE);
+			updateBPMTask(outcome, null);
+		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
+			//getManagedBean().setAutoUpdate(Boolean.TRUE);
+			RequestContext.getCurrentInstance().execute("cancelDlg.show()");
+		}
+	}
+	
+	public void updateBPMTasks(String outcome) {
+		updateBPMTask(outcome, null);
+	}
+	
+	private String getPIDContractType (ScPurchaseInDefault scPurchaseInDefault) {
+		String contractType = null;
+		if(scPurchaseInDefault.getPanelItem() != null) {
+			contractType = SourcingConstants.PID_TYPE_PANEL;
+		}
+		else {
+			if (scPurchaseInDefault.getContractedItem().getCtContractVer()
+					.getCtContract().getContractType() != null) {
+				if (scPurchaseInDefault.getContractedItem()
+						.getCtContractVer().getCtContract()
+						.getContractType().getParameterCode()
+						.equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					contractType = SourcingConstants.PID_TYPE_MINISTRY;
+				} else if (scPurchaseInDefault.getContractedItem()
+						.getCtContractVer().getCtContract()
+						.getContractType().getParameterCode()
+						.equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+					contractType = SourcingConstants.PID_TYPE_CENTRAL;
+				}
+			}		
+		}
+		return contractType;
+	}
+	
+	public PmReason reasonAllowSupplierResponse(){
+
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
+
+		PmParameter reasonCategory = getParameterByTypeAndCode(ParameterTypeConst.REASON_CATEGORY, ReasonCategory.PID_JUSTIFICATION
+				.value());
+		
+		PmParameter sourceMethod = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
+
+		ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+		reasonReqDTO.setReasonCategoryId(reasonCategory.getParameterId()); //475 - PID
+		reasonReqDTO.setSourceMethodId(sourceMethod.getParameterId()); //842 - CR
+		ReasonResDTO reasonResDTO = reasonSO.retrieveReasonBySourceMethodUsingContractPurchase(reasonReqDTO);
+		
+		PmReason pmReason = new PmReason();
+		for (PmReason reason : reasonResDTO.getPmReasonList()) {
+			pmReason = reason;
+			break;
+		}
+		
+		return pmReason;
+	}
+	
+	public PmReason retrieveChildReason(PmReason parentReason) {
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+		reasonReqDTO.setReasonCategoryId(parentReason.getReasonCategoryCode().getParameterId());
+		reasonReqDTO.setParentReasonId(parentReason.getReasonId());
+		ReasonResDTO reasonResDTO = reasonSO.retrieveChildReason(reasonReqDTO);
+
+		PmReason pmReason = new PmReason();
+		for (PmReason reason : reasonResDTO.getPmReasonList()) {
+			pmReason = reason;
+			break;
+		}
+
+		return pmReason;
+	}
+	
+	public boolean reasonExitsCtPidReason(PmReason pmReason){
+		boolean exist = false;
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+		reasonReqDTO.setReasonCategoryId(pmReason.getReasonId());
+		reasonReqDTO.setContractVerId(getManagedBean().getPurchaseInDefault().getContractedItem()
+				.getCtContractVer().getContractVerId());
+		ReasonResDTO reasonResDTO = reasonSO.checkExistingCtPidReason(reasonReqDTO);
+		
+		if(reasonResDTO.isSuccessful())
+			exist = true;
+			
+		return exist;
+	}
+	
+	public boolean reasonExitsCtCircularPidReason(PmReason pmReason){
+		boolean exist = false;
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+
+		ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
+		reasonReqDTO.setReasonCategoryId(pmReason.getReasonId());
+		reasonReqDTO.setContractVerId(getManagedBean().getPurchaseInDefault().getContractedItem()
+				.getCtContractVer().getContractVerId());
+		ReasonResDTO reasonResDTO = reasonSO.checkExistingCtCircularPidReason(reasonReqDTO);
+		
+		if(reasonResDTO.isSuccessful())
+			exist = true;
+			
+		return exist;
+	}
+	
+	//to insert child reason
+	public void savePidReason() {
+		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+		PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+		IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
+		IPurchaseInDefaultSO purchaseInDefaultSO = null;
+		purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+
+		PmReason pmReason = retrieveChildReason(reasonAllowSupplierResponse());	
+
+		try {
+			if (getManagedBean().getPurchaseInDefault().getContractedItem().getCtContractVer().getCtContract()
+					.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+							 
+				boolean IsReasonExist = reasonExitsCtPidReason(pmReason);
+				
+				if(!IsReasonExist){
+					CtPidReason ctPidReasons = new CtPidReason();
+					ctPidReasons.setPmReason(pmReason);
+					ctPidReasons.setReasonDesc(null);
+					ctPidReasons.setCtContractVer(getManagedBean().getPurchaseInDefault().getContractedItem()
+							.getCtContractVer());
+					reqDTO.setCtPidReason(ctPidReasons);
+					purchaseInDefaultSO.insertPidReason(reqDTO);
+				}
+
+			} else {
+				
+				boolean IsReasonExist = reasonExitsCtCircularPidReason(pmReason);
+
+				if (!IsReasonExist) {
+					CtCircularPidReason ctCircularPidReasons = new CtCircularPidReason();
+					ctCircularPidReasons.setPmReason(pmReason);
+					ctCircularPidReasons.setReasonDesc(null);
+					ctCircularPidReasons.setCircularVer(getManagedBean().getPurchaseInDefault().getPanelItem()
+							.getCtCircularVer());
+					reqDTO.setCtCircularPidReason(ctCircularPidReasons);
+					purchaseInDefaultSO.insertCircularPidReason(reqDTO);
+				}
+			}
+		} catch (NullPointerException e) {
+			log.info(e.getStackTrace());
+		}
+	}
+	
+	public boolean isQtySupEqualQtyReq() {
+		Boolean isValueEqual = false;
+		if (getManagedBean().getPurchaseInDefault().getReqQuantity() != null
+				&& getManagedBean().getPurchaseInDefault().getSuppQuantity() != null) {
+			BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();
+			BigDecimal qtyBySupplier = getManagedBean().getPurchaseInDefault().getSuppQuantity();
+			
+			if (getManagedBean().getAction().equals(BpmOutcomeConst.BPM_ACCEPT)) {
+				if (qtyBySupplier.compareTo(qtyByRequisitioner) == 0)
+					isValueEqual = true;
+			}
+		}
+
+		return isValueEqual;
+	}
+	
+	public boolean isJustificationChanged() {
+		Boolean isJustificationChanged = true;
+		
+		IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+		
+		PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+		purchaseInDefaultReqDTO.setPurchaseInDefaultId(getManagedBean().getPurchaseInDefault().getPurchaseInDefaultId());
+		purchaseInDefaultReqDTO.setFetchSubEntity(true);
+		PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO
+				.getPurchaseInDefault(purchaseInDefaultReqDTO);
+		ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO
+				.getPurchaseInDefaultDtl();
+				
+		if (purchaseInDefault.getReasonType().getReasonId()
+				.compareTo(getManagedBean().getPmReason().getReasonId()) != 0) {
+			isJustificationChanged = false;
+		}
+
+		return isJustificationChanged;
+	}
+	// end - #28865
 
 	/**
 	 * Page navigation to catalogue search page in Purchase in default.
@@ -1207,6 +2115,32 @@ public class PurchaseInDefaultBackingBean extends
 			purchaseInDefaultSO = null;
 		}
 	}
+	
+	//start - #28865
+	protected void updateWorkflowStatus(ScPurchaseInDefault purchaseInDefault, Boolean duringSubmitPID ) {		
+		IScWorkFlowStatusSO workFlowStatusSO;
+					workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
+		reqDTO.setDocId(purchaseInDefault.getPurchaseInDefaultId());
+
+		ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
+
+		if (duringSubmitPID) {
+			workFlowStatus.setPmStatus(getPmStatusByStatusId(DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE));
+		}
+		
+		workFlowStatus.setPurchaseInDefault(purchaseInDefault);
+		workFlowStatus.setCurrent(true);
+		purchaseInDefault.setCurrentStatus(workFlowStatus);
+
+		reqDTO.setScWorkFlowStatus(workFlowStatus);		
+		workFlowStatusSO.updateCurrentWorkflowStatus(reqDTO);
+
+	}
+	//end - #28865
 	
 	/**
 	 * Debug logger.
@@ -1535,6 +2469,16 @@ public class PurchaseInDefaultBackingBean extends
 		StringBuilder criteria = new StringBuilder();
 		StringBuilder ctContractCriteria = new StringBuilder();
 		ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+
+		//start - 28865
+		Long statusId = getManagedBean().getPidStatus().getStatusId();
+		
+		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
+			criteria.append("pmReason.parentReason").append("^").append("null").append("^")
+			.append(SearchOperator.OPERATOR_IS_NULL.value()).append("|");
+		}
+		//end - 28865
+			
 		// contract ver id
 		if(scPurchaseInDefault.getContractedItem() != null && scPurchaseInDefault.getContractedItem().getCtContractVer() != null){
 			ctContractCriteria.append(scPurchaseInDefault.getContractedItem().getCtContractVer().getContractVerId());
@@ -1556,6 +2500,15 @@ public class PurchaseInDefaultBackingBean extends
 		StringBuilder criteria = new StringBuilder();
 		StringBuilder ctCircularCriteria = new StringBuilder();
 		ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
+		
+		// start - 28865
+		Long statusId = getManagedBean().getPidStatus().getStatusId();
+
+		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
+			criteria.append("pmReason.parentReason").append("^").append("null").append("^")
+					.append(SearchOperator.OPERATOR_IS_NULL.value()).append("|");
+		}
+		// end - 28865
 		
 		// for panel
 		if(scPurchaseInDefault.getPanelItem() != null){
