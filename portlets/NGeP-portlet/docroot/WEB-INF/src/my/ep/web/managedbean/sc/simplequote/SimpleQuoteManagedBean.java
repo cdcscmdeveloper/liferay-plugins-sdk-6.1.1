@@ -439,6 +439,10 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession;
 	// #29800 - end
 	
+	// #28865 - start
+	private boolean qtyNonEditable = Boolean.FALSE;
+	// #28865 - start
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2765,4 +2769,14 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	}
 	// #29800 - end
 
+	// #28865 - start
+	public boolean isQtyNonEditable() {
+		return qtyNonEditable;
+	}
+
+	public void setQtyNonEditable(boolean qtyNonEditable) {
+		this.qtyNonEditable = qtyNonEditable;
+	}
+	// #28865 - end
+	
 }
