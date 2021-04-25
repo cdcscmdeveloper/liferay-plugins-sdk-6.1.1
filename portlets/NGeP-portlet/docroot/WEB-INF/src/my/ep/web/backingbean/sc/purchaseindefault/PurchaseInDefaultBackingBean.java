@@ -824,6 +824,8 @@ public class PurchaseInDefaultBackingBean extends
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
 			
 			if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
+					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) //#9133
+					&& !DPStatusConstants.PID_PENDING_REVISION.equals(stsId) //#9133
 					&& !DPStatusConstants.PID_PENDING_SUPPLIER_RESPONSE.equals(stsId)
 					&& !DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)) {// #28865
 				finalizeRemarks(scPurchaseInDefault.getRemarks());
@@ -955,7 +957,8 @@ public class PurchaseInDefaultBackingBean extends
 				//#9133 -start
 				if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)
 						|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)
-						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome))
+						|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
+						|| DPStatusConstants.PID_PENDING_REVISION.equals(stsId))
 					validateRemark();
 				else
 					finalizeRemarks(scPurchaseInDefault.getRemarks());
@@ -1603,6 +1606,11 @@ public class PurchaseInDefaultBackingBean extends
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		
 		Long statusId = getManagedBean().getPidStatus().getStatusId(); // #9133
+		
+		if (DPStatusConstants.PID_PENDING_REVISION.equals(statusId)) {
+			response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		}
 		
 		if (directPurchaseDataType.getRecommend() != null && directPurchaseDataType.isIsSuppResponse() != null) {
 			if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)
@@ -2811,7 +2819,9 @@ public class PurchaseInDefaultBackingBean extends
 		//start - 28865
 		Long statusId = getManagedBean().getPidStatus().getStatusId();
 		
-		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
+		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)
+				|| DPStatusConstants.PID_PENDING_REVISION.equals(statusId)
+				&& scPurchaseInDefault.getSuppQuantity() == null) { //#9133
 			criteria.append("pmReason.parentReason").append("^").append("null").append("^")
 			.append(SearchOperator.OPERATOR_IS_NULL.value()).append("|");
 		}
@@ -2842,7 +2852,9 @@ public class PurchaseInDefaultBackingBean extends
 		// start - 28865
 		Long statusId = getManagedBean().getPidStatus().getStatusId();
 
-		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
+		if (DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)
+				|| DPStatusConstants.PID_PENDING_REVISION.equals(statusId)
+				&& scPurchaseInDefault.getSuppQuantity() == null) { //#9133
 			criteria.append("pmReason.parentReason").append("^").append("null").append("^")
 					.append(SearchOperator.OPERATOR_IS_NULL.value()).append("|");
 		}
