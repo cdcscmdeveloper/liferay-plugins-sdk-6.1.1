@@ -2,8 +2,10 @@ package my.ep.web.backingbean.sm.updatesmeinfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,21 +21,28 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.sme.SupplierSmeReqDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSmeSupplier;
 import my.ep.persistence.entity.sm.SmSmeSupplierDoc;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.supplieralert.SupplierAlertBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.updatesmeinfo.SmUpdateSmeInfoManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
@@ -41,6 +50,8 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean(name = "smUpdateSmeInfoBackingBean")
 @RequestScoped
 public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoManagedBean> {
+	
+	private static Logger log = EpLogger.getLogger(SupplierAlertBackingBean.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -54,8 +65,62 @@ public class SmUpdateSmeInfoBackingBean extends BaseBackingBean<SmUpdateSmeInfoM
 	}
 
 	public void preRenderAlertSmeInfo() {
-		FacesContext fc = FacesContext.getCurrentInstance();  
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SME_INFO);
+		//10724 START
+		renewSesionObject();
+		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
+		if (supp != null) {
+			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+			if (acc != null
+					&& acc.getExpDate() != null) {
+				Date currDate = new Date();
+				getManagedBean().setExpDate(acc.getExpDate());
+				Date expDate = getManagedBean().getExpDate(); 
+				
+				Calendar currDateAfterThreeMonths = Calendar.getInstance();
+				currDateAfterThreeMonths.setTime(currDate);
+				currDateAfterThreeMonths.add(Calendar.MONTH, 3);
+				
+				
+				if (currDateAfterThreeMonths.getTime().after(acc.getExpDate()) && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					int secsInADay = 24 * 60 * 60;
+					long togo = (getManagedBean().getExpDate().getTime() - currDate
+							.getTime()) / 1000;
+					getManagedBean().setDays((togo / secsInADay) + "");
+					
+					getManagedBean().setMofBeforeExpiryMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.MOF.alert.beforeexpiry", new String[] {getManagedBean().getDays(), DateUtils.dateToString("dd/MM/yyyy", expDate)}));
+				}
+			}
+			else {
+				SmMofAccount expiredAcc = SmCommonUtil.getExpiredMofAccountBySuppIdAndSuppType(
+						supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+				
+				Date currDate = new Date();
+				getManagedBean().setExpDate(expiredAcc.getExpDate());
+				Date expDate = getManagedBean().getExpDate(); 
+				
+				if (currDate.after(expiredAcc.getExpDate()) && expiredAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED){
+					Calendar dateAfterOneYear = Calendar.getInstance();
+					dateAfterOneYear.setTime(expDate);
+					dateAfterOneYear.add(Calendar.MONTH, 12);
+					
+					int secsInADay = 24 * 60 * 60;
+					long togo = ((dateAfterOneYear.getTimeInMillis()) - currDate
+							.getTime()) / 1000;
+					getManagedBean().setDays(((togo + secsInADay) / secsInADay) + "");
+					
+					getManagedBean().setMofAfterExpiryMsg(
+							SmCommonUtil.getMessage(
+									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
+				}
+			}
+		}
+		//10724 END
+		log.info(getManagedBean().getMofBeforeExpiryMsg());
+		log.info(getManagedBean().getMofAfterExpiryMsg());
+		SmCommonUtil.redirectToPage("alertSmeInfoWidget.xhtml", "", null, null);
 	}
 	
 	public static final String NAV_TO_SME_INFO = "/xhtml/sm/updateSmeInfo/alertSmeInfoWidget.xhtml";
