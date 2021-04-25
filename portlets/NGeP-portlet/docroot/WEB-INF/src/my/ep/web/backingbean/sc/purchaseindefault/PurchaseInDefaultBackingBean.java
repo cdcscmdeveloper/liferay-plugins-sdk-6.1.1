@@ -970,7 +970,18 @@ public class PurchaseInDefaultBackingBean extends
 				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO
 						.getPurchaseInDefault(reqDTO);
 				
-				reqDTO.setPurchaseInDefaultDtl(pidResDTO.getPurchaseInDefaultDtl());
+				ScPurchaseInDefault scPID = pidResDTO.getPurchaseInDefaultDtl();
+
+				//to prevent ERR-100048 if user click save more than one
+				scPID.setTitle(getManagedBean().getPurchaseInDefault().getTitle());
+				scPID.setJustification(getManagedBean().getPurchaseInDefault().getJustification());
+				scPID.setReasonType(getManagedBean().getPmReason());
+				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
+				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
+				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());
+
+				reqDTO.setPurchaseInDefaultDtl(scPID);
 				reqDTO.setStatusId(stsId);
 				reqDTO.setPayLoad(getManagedBean().getPayLoad()); 
 				//#9133 -end
@@ -1607,12 +1618,14 @@ public class PurchaseInDefaultBackingBean extends
 		
 		Long statusId = getManagedBean().getPidStatus().getStatusId(); // #9133
 		
-		if (DPStatusConstants.PID_PENDING_REVISION.equals(statusId)) {
+		if (DPStatusConstants.PID_PENDING_REVISION.equals(statusId)
+				|| DPStatusConstants.PID_PENDING_SUBMISSION.equals(statusId)) {
 			response.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		}
 		
-		if (directPurchaseDataType.getRecommend() != null && directPurchaseDataType.isIsSuppResponse() != null) {
+		if (directPurchaseDataType.getRecommend() != null && directPurchaseDataType.isIsSuppResponse() != null
+				&& !DPStatusConstants.PID_PENDING_REVISION.equals(statusId)) { // #9133  - add another condition
 			if (directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_REJECT)
 					|| directPurchaseDataType.getRecommend().equals(BpmOutcomeConst.BPM_ACCEPT)) {
 				
