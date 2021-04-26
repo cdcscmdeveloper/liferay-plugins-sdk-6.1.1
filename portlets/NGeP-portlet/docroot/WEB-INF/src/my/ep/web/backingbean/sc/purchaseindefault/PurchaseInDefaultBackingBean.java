@@ -970,18 +970,7 @@ public class PurchaseInDefaultBackingBean extends
 				PurchaseInDefaultResDTO pidResDTO = purchaseInDefaultSO
 						.getPurchaseInDefault(reqDTO);
 				
-				ScPurchaseInDefault scPID = pidResDTO.getPurchaseInDefaultDtl();
-
-				//to prevent ERR-100048 if user click save more than one
-				scPID.setTitle(getManagedBean().getPurchaseInDefault().getTitle());
-				scPID.setJustification(getManagedBean().getPurchaseInDefault().getJustification());
-				scPID.setReasonType(getManagedBean().getPmReason());
-				scPID.setSourceMethod(getManagedBean().getPurchaseInDefault().getSourceMethod());
-				scPID.setReqQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
-				scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());
-				scPID.setScPurchaseInDefaultAttachment(scPurchaseInDefault.getScPurchaseInDefaultAttachment());
-
-				reqDTO.setPurchaseInDefaultDtl(scPID);
+				reqDTO.setPurchaseInDefaultDtl(pidResDTO.getPurchaseInDefaultDtl());
 				reqDTO.setStatusId(stsId);
 				reqDTO.setPayLoad(getManagedBean().getPayLoad()); 
 				//#9133 -end
