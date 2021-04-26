@@ -5731,7 +5731,13 @@ public class SmApplicationBackingBean extends
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
-						throw new EpException(MessageConst.ERROR_722563);
+						// 29952: Unable to add category code that have been imposed DA (DA expired) - start
+						if(cat.isCancelCategory()){
+							validCat = true;
+						} else {
+							throw new EpException(MessageConst.ERROR_722563);
+						}
+						// 29952: Unable to add category code that have been imposed DA (DA expired) - end		
 					} else {
 						validCat = true;
 					}
