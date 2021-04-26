@@ -816,10 +816,10 @@ public class PurchaseInDefaultBackingBean extends
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
 			// remarks
-			scPurchaseInDefault.setRemarks(initializeRemarks(
+			/*scPurchaseInDefault.setRemarks(initializeRemarks(
 					scPurchaseInDefault,
 					scPurchaseInDefault.getCurrentStatus(),
-					scPurchaseInDefault.getRemarks(), ScPIDRemark.class));
+					scPurchaseInDefault.getRemarks(), ScPIDRemark.class));*/
 
 			Long stsId = getManagedBean().getPidStatus().getStatusId(); //#28865
 			
@@ -1952,7 +1952,7 @@ public class PurchaseInDefaultBackingBean extends
 
 				ScPurchaseInDefault sPID = getManagedBean().getPurchaseInDefault();
 
-				sPID.setRemarks(initializeRemarks(sPID, null, sPID.getRemarks(), ScPIDRemark.class));
+				sPID.setRemarks(initializeRemarks(sPID, scPurchaseInDefault.getCurrentStatus(), sPID.getRemarks(), ScPIDRemark.class));
 
 				justificationTypeEvent(sPID.getReasonType(), sPID.getReasonDesc());
 				// #9133 - start					
