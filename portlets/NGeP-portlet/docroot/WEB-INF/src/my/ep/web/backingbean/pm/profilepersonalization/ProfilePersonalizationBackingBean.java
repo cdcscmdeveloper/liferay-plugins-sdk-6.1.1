@@ -1704,7 +1704,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 						this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
 					}
 				}
-				
+				//30842 Start
+				this.getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(this.getManagedBean().getSmSupplier().getSupplierId()));
+				//30842 End
 				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
 				if(resDTO.getErrorMessage() != null){
 					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());

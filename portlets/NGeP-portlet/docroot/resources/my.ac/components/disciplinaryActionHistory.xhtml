@@ -16,6 +16,9 @@
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="dialogMessage" default=""/>
 		<cc:attribute name="smSupplier" type="my.ep.persistence.entity.sm.SmSupplier" />
+		<!-- 30842 Start -->
+		<cc:attribute name="smAppl" type="my.ep.persistence.entity.sm.SmAppl" />
+		<!-- 30842 End -->
 		<cc:attribute name="btnView" default="false" />
 	</cc:interface>
 	<cc:implementation>
@@ -96,9 +99,11 @@
 			</p:column>
 			<!-- 27796: Disciplinary Action - end - 26238 -->
 			<!-- 28613, 28637 -->
+			<!-- 30842 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
-				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.mofView}"
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.smAppl.supplierType eq 'K' || cc.attrs.smAppl.supplierType eq 'J'}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
+				<!-- 30842 End -->
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" style="border: none !important;">
 					<p:column style="border: none !important;">
