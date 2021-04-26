@@ -94,6 +94,7 @@
 			</tr>
 			
 						<!-- #24819 -->
+		<c:if test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
 			<tr>
 			<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" />
@@ -129,6 +130,7 @@
 			<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
 			</td>
 			</tr>
+		</c:if>
 		<!-- #24819 -->
 		</table>
 	</p:panel>
