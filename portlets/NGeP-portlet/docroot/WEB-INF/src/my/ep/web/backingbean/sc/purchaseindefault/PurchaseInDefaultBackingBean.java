@@ -816,6 +816,7 @@ public class PurchaseInDefaultBackingBean extends
 			ScPurchaseInDefault scPurchaseInDefault = getManagedBean()
 					.getPurchaseInDefault();
 			// remarks
+			//#9133 - comment out
 			/*scPurchaseInDefault.setRemarks(initializeRemarks(
 					scPurchaseInDefault,
 					scPurchaseInDefault.getCurrentStatus(),
