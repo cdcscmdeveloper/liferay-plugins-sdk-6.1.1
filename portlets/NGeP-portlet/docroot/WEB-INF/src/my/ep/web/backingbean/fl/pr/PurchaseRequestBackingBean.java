@@ -2929,7 +2929,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			initializeApproverGroup();
 			//13291 - start
 			initializeApproverPTJNameDropdown();
-			log.info("Selected Approver: " + getManagedBean().getSelectedApprover().longValue());
 			//13291 - end
 		}
 	}
