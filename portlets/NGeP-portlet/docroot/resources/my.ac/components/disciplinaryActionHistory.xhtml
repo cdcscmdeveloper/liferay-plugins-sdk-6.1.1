@@ -101,7 +101,7 @@
 			<!-- 28613, 28637 -->
 			<!-- 30842 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
-				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.smAppl.supplierType eq 'K' || cc.attrs.smAppl.supplierType eq 'J'}"
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.mofView || cc.attrs.smAppl.supplierType eq 'K' || cc.attrs.smAppl.supplierType eq 'J'}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<!-- 30842 End -->
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
