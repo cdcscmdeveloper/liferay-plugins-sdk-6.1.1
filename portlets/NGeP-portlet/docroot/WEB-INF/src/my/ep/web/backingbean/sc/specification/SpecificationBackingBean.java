@@ -1465,7 +1465,9 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSpecItemWeightageRequired(
 						istechnicalSpec);
 				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
-				specMaster.setWeightageReq(weightageType);
+				if(istechnicalSpec){//#8979-start
+					specMaster.setWeightageReq(weightageType);
+				}//#8979-End
 				templateSpecBean.setSpecMaster(specMaster);
 				TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 				templateSpecBackingbean
@@ -13223,7 +13225,9 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSpecItemWeightageRequired(
 						istechnicalSpec);
 				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
-				specMaster.setWeightageReq(weightageType);
+				if(istechnicalSpec){//#8979-start
+					specMaster.setWeightageReq(weightageType);
+				}//#8979-End
 				templateSpecBean.setSpecMaster(specMaster);
 				TemplateSpecBackingBean templateSpecBackingbean = new TemplateSpecBackingBean();
 				templateSpecBackingbean
