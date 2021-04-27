@@ -4303,8 +4303,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		if(discList != null && !discList.isEmpty()){
 			for(SmDisciplinaryAction disc : discList){
+				//Start 30842
 				if(disc.isWarning() || disc.isSuspendRegistration() 
-						|| disc.isCancelRegistration() || disc.isBlacklistOwner()){
+						|| disc.isCancelRegistration() || disc.isBlacklistOwner() || disc.isCancelCategory()){
 					if(disc.isWarning())
 						this.getManagedBean().setWarning(true);					
 					if(disc.isSuspendRegistration())
@@ -4313,6 +4314,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						this.getManagedBean().setCancelRegistration(true);
 					if(disc.isBlacklistOwner())
 						this.getManagedBean().setBlacklistowner(true);
+					if(disc.isCancelCategory())
+						this.getManagedBean().setCancelCategory(true);
+				//End 30842
 					
 					if(!disc.isWarning()){
 						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();

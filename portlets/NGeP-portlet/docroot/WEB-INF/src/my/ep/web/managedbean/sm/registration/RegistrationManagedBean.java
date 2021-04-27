@@ -134,15 +134,15 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean viewMode;
 	private boolean deletedNotActivatedSupplier;
 	//#16052019 - SSM INTEGRATION CR - Fahmi
-	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
-	private List<SmPersonnel> smPersonnelDirector = new ArrayList();
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList<SmSupplierOwner>();
+	private List<SmPersonnel> smPersonnelDirector = new ArrayList<SmPersonnel>();
 	private List dummy = new ArrayList();
-	private List<SmPersonnel> smPersonnelOwners = new ArrayList();
+	private List<SmPersonnel> smPersonnelOwners = new ArrayList<SmPersonnel>();
 	private SmPersonnel smPersonnelSelected= new SmPersonnel();
-	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList();
-	private List<SmPersonnel> SmPersonnelAll = new ArrayList();
-	private List<SmEquityCompany> smEquityCompany = new ArrayList();
-	 private List<SmSupplierBranch> smSupplierBranches = new ArrayList();
+	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList<SelectItem>();
+	private List<SmPersonnel> SmPersonnelAll = new ArrayList<SmPersonnel>();
+	private List<SmEquityCompany> smEquityCompany = new ArrayList<SmEquityCompany>();
+	 private List<SmSupplierBranch> smSupplierBranches = new ArrayList<SmSupplierBranch>();
 	private String headerName = "";
 	private boolean ownerIsEquity=false;
 	private boolean ownerIsDirector=false;
@@ -159,6 +159,9 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean suspendRegistration;
 	private boolean cancelRegistration;
 	private boolean blacklistowner;
+	//30842 Start
+	private boolean cancelCategory;
+	//30842 End
 	private String startDate;
 	private String endDate;
 	private String remarks;
@@ -894,10 +897,20 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.blacklistowner = blacklistowner;
 	}
 
+	//30842 Start
+	public boolean isCancelCategory() {
+		return cancelCategory;
+	}
+
+	public void setCancelCategory(boolean cancelCategory) {
+		this.cancelCategory = cancelCategory;
+	}
+	//30842 End
+	
 	public String getStartDate() {
 		return startDate;
 	}
-
+	
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
@@ -1046,4 +1059,5 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
 		this.permenantDivisionLs = permenantDivisionLs;
 	}
+	
 }

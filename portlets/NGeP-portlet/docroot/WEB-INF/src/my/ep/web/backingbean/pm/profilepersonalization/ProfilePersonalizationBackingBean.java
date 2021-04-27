@@ -76,7 +76,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
@@ -285,7 +284,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * load clean view for my account
 	 */
 	public void preLoadingMyAccount() {
-		logger.info("preLoadingMyAccount");
+		//logger.info("preLoadingMyAccount");
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser sUsers = facesScopes.getUserSessionBean();
 		if (sUsers == null) {
@@ -300,7 +299,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	public void preLoadingUserCommonDetails() {
-		logger.info("preLoadingUserCommonDetails");
+		//logger.info("preLoadingUserCommonDetails");
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -328,7 +327,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	public void preLoadingUserCommonDetailsR() {
-		logger.info("preLoadingUserCommonDetailsR");
+		//logger.info("preLoadingUserCommonDetailsR");
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -391,7 +390,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param id
 	 */
 	private void loadUserProfile(Long id) {
-		logger.info("loadUserProfile");
+		//logger.info("loadUserProfile");
 		try {
 			// initialUserProfile();
 			if (id == null) {
@@ -443,7 +442,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	private void loadUserCommonDetails(Long id) {
-		logger.info("loadUserCommonDetails");
+		//logger.info("loadUserCommonDetails");
 		try {
 			if (id == null) {
 				throw new EpException(MessageConst.ERROR_770015);
@@ -479,7 +478,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return role description
 	 */
 	public String getRoleDescByRoleCode(String roleCode) {
-		logger.info("getRoleDescByRoleCode");
+		//logger.info("getRoleDescByRoleCode");
 		return PmCommonUtil.getRoleDescByRoleCode(roleCode);
 	}
 
@@ -490,7 +489,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return String
 	 */
 	public String userImagePathWithDefaultImage(String loginId) {
-		logger.info("userImagePathWithDefaultImage");
+		//logger.info("userImagePathWithDefaultImage");
 		String imagePath = "";
 
 		imagePath = userImagePath(loginId);
@@ -505,6 +504,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * 
 	 * @param pmUser
 	 */
+	/*
 	private void populateUserAddress(PmUser pmUser) {
 		logger.info("populateUserAddress");
 		try {
@@ -537,6 +537,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			throw new EpException(MessageConst.ERROR_770017, new String[] { e.getMessage() });
 		}
 	}
+	*/
 
 	public String retrieveParamDesc(String type, String code) {
 		if (code != null) {
@@ -551,13 +552,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmSalutation>
 	 */
 	public List<PmSalutation> salutationOptions() {
-		logger.info("salutationOptions");
+		//logger.info("salutationOptions");
 		// return getDropdownValues(ParameterTypeConst.SALUTATIONS);
 		return PmCommonUtil.retrievePmSalutationList();
 	}
 
 	/**
-	 * get YES & NO options //TODO: to load dynamically
+	 * get YES & NO options
 	 * 
 	 * @return SelectItem[]
 	 */
@@ -571,7 +572,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmCountry>
 	 */
 	public List<PmCountry> getCountryList() {
-		logger.info("getCountryList");
+		//logger.info("getCountryList");
 		return PmCommonUtil.retrievePmCountryList();
 	}
 
@@ -582,7 +583,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmState>
 	 */
 	public List<PmState> getStateList(Long countryId) {
-		logger.info("getStateList");
+		//logger.info("getStateList");
 		return PmCommonUtil.retrievePmStateList(countryId);
 	}
 
@@ -593,7 +594,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmDivision>
 	 */
 	public List<PmDivision> getDivisionList(Long stateId) {
-		logger.info("getDivisionList");
+		//logger.info("getDivisionList");
 		return PmCommonUtil.retrievePmDivisionList(stateId);
 	}
 
@@ -604,7 +605,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmDistrict>
 	 */
 	public List<PmDistrict> getDistrictList(Long stateId) {
-		logger.info("getDistrictList");
+		//logger.info("getDistrictList");
 		return PmCommonUtil.retrievePmDistrictList(stateId);
 	}
 
@@ -615,7 +616,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmCity>
 	 */
 	public List<PmCity> getCityList(Long districtId) {
-		logger.info("getCityList");
+		//logger.info("getCityList");
 		return PmCommonUtil.retrievePmCityList(districtId);
 	}
 
@@ -626,7 +627,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param stateId
 	 */
 	public void updateDivisionFlag(Long stateId) {
-		logger.info("updateDivisionFlag");
+		//logger.info("updateDivisionFlag");
 		if (stateId != null) {
 			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
 			this.getManagedBean().setDivisionFlagC(
@@ -641,8 +642,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param address
 	 */
 	public void updateAddress(int address) {
-		logger.info("updateAddress");
-		logger.info("address: " + address);
+		//logger.info("updateAddress");
+		//logger.info("address: " + address);
 		if (0 == address) { // country
 			this.getManagedBean().getUserAddress().setPmState(new PmState());
 			this.getManagedBean().getUserAddress().setPmDivision(new PmDivision());
@@ -664,7 +665,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] getIdentityTypeList() {
-		logger.info("getIdentityTypeList");
+		//logger.info("getIdentityTypeList");
 		return getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
 	}
 
@@ -687,7 +688,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @return List<PmLanguage>
 	 */
 	public List<PmLanguage> getLanguageList() {
-		logger.info("getLanguageList");
+		//logger.info("getLanguageList");
 		return PmCommonUtil.retrieveLanguageObjs();
 	}
 
@@ -697,7 +698,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param user
 	 */
 	private void validateUser(PmUser user) {
-		logger.info("validateUser");
+		//logger.info("validateUser");
 		if (StringUtils.isBlank(user.getLoginId())) {
 			throw new EpException(MessageConst.ERROR_770030);
 		}
@@ -748,6 +749,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * 
 	 * @param pmAddress
 	 */
+	/*
 	private boolean validateUserAddress(PmAddress pmAddress) {
 		logger.info("validateUserAddress");
 		boolean addressEntered = false;
@@ -789,6 +791,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 		return addressEntered;
 	}
+	*/
 
 	/**
 	 * Validation for PmUser
@@ -796,7 +799,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param PmUser
 	 */
 	private void validatePreference(PmUser pmUser) {
-		logger.info("validatePreferences");
+		//logger.info("validatePreferences");
 		if (pmUser != null) {
 			if (StringUtils.isBlank(pmUser.getPreferredLanguage())) {
 				throw new EpException(MessageConst.ERROR_770046);
@@ -823,6 +826,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param user
 	 * @param isAddressExist
 	 */
+	/*
 	private void loadUserAddress(PmUser user, boolean isAddressExist) {
 		logger.info("loadUserAddress");
 
@@ -880,6 +884,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 
 	}
+	*/
 
 	/**
 	 * Method to update the user details
@@ -887,7 +892,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public void saveUserProfile() throws Exception {
 		debugLogger("saveUserProfile");
 		PmUser user = this.getManagedBean().getSelectedUser();
-		boolean addressEntered = false;
+		//boolean addressEntered = false;
 		// validation
 		validateUser(user);
 		// addressEntered
@@ -908,7 +913,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				// track changes for tracking Diary
 				if (user.isModified()) {
 
-					logger.info("Tracking diary for my profile :saveUserProfile");
+					//logger.info("Tracking diary for my profile :saveUserProfile");
 					String messageId = MessageConst.TD_80014;
 					String[] msgParam = new String[] { user.getUserName() };
 					reqDTO.setTrackingStatus(true);
@@ -951,7 +956,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	/**
-	 * get record status options //TODO: to load dynamically
+	 * get record status options 
 	 * 
 	 * @return SelectItem[]
 	 */
@@ -973,7 +978,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @throws Exception
 	 */
 	public void updatePortrait() throws Exception {
-		logger.info("updatePortrait - START");
+		//logger.info("updatePortrait - START");
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = new UserResDTO();
@@ -1005,7 +1010,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		} finally {
 			userSO = null;
 		}
-		logger.info("updatePortrait - END");
+		//logger.info("updatePortrait - END");
 	}
 
 	/**
@@ -1014,7 +1019,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @throws Exception
 	 */
 	public void deletePortrait() throws Exception {
-		logger.info("deletePortrait - START");
+		//logger.info("deletePortrait - START");
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = new UserResDTO();
@@ -1043,7 +1048,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		} finally {
 			userSO = null;
 		}
-		logger.info("deletePortrait - END");
+		//logger.info("deletePortrait - END");
 	}
 
 	/**
@@ -1053,13 +1058,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @throws Exception
 	 */
 	public void handlePortraitUpload(FileUploadEvent event) throws Exception {
-		logger.info("handlePortraitUpload - START");
+		//logger.info("handlePortraitUpload - START");
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
 		updatePortrait();
-		logger.info("handlePortraitUpload - END");
+		//logger.info("handlePortraitUpload - END");
 	}
 
 	/**
@@ -1068,17 +1073,17 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @throws Exception
 	 */
 	public void clearPortraitUpload() throws Exception {
-		logger.info("clearPortraitUpload - START");
+		//logger.info("clearPortraitUpload - START");
 		this.getManagedBean().getSelectedUser().setPortrait(null);
 		this.getManagedBean().getSelectedUser().setReplacePortrait(false);
-		logger.info("clearPortraitUpload - END");
+		//logger.info("clearPortraitUpload - END");
 	}
 
 	/**
 	 * reset password ui
 	 */
 	public void clearPassword() {
-		logger.info("clearPassword");
+		//logger.info("clearPassword");
 		this.getManagedBean().getSelectedUser().setPassword(null);
 		this.getManagedBean().getSelectedUser().setConfirmPassword(null);
 	}
@@ -1089,7 +1094,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @throws Exception
 	 */
 	public void changePassword() throws Exception {
-		logger.info("changePassword - START");
+		//logger.info("changePassword - START");
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();
 		UserResDTO resDTO = new UserResDTO();
@@ -1116,7 +1121,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 
-			logger.info("Tracking diary for my profile: change password :changePassword");
+			//logger.info("Tracking diary for my profile: change password :changePassword");
 			String messageId = MessageConst.TD_80015;
 			String[] msgParam = new String[] { user.getUserName() };
 			reqDTO.setTrackingStatus(true);
@@ -1145,7 +1150,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		} finally {
 			userSO = null;
 		}
-		logger.info("changePassword - END");
+		//logger.info("changePassword - END");
 	}
 
 	// public SelectItem[] getChallengeQAList(){
@@ -1471,7 +1476,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	
 	
 	public void searchAdminProfile() {
-		logger.info("searchAdminProfile - start");
+		//logger.info("searchAdminProfile - start");
 		IUserSO userSO = null;
 		IParameterSO parameterSO = null;
 		IAdminMatrixSO adminMatrixSO = null;
@@ -1565,7 +1570,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 	//#16052019 - SSM INTEGRATION CR
 	public void preLoadingRobExpire() {
-		logger.info("preLoadingRobExpire");
+		//logger.info("preLoadingRobExpire");
 		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1595,7 +1600,6 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 	}
 	
-	// //TODO: testing
 	// public void handleFileUpload(FileUploadEvent event) {
 	// System.out.println("handleFileUploadTest - start");
 	// UploadedFile item = event.getFile();s
@@ -1648,7 +1652,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	//26238 - start
 	public void preRenderDisciplinaryAction() {
 		//26238 -  START Disciplinary Action - 28111,28496
-		logger.info("preRenderDisciplinaryAction");
+		//logger.info("preRenderDisciplinaryAction");
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
@@ -1674,7 +1678,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				reqDTO.setSupplier(srcAppl.getSmSupplier());
 				
 			} else if(reqDTO.getSupplier() != null){ 
-				logger.info("----------------------preRenderDisciplinaryAction from site visit----------------"); 
+				//logger.info("----------------------preRenderDisciplinaryAction from site visit----------------"); 
 
 				retrieveDisciplinaryAction(reqDTO.getSupplier());
 				this.getManagedBean().setSmSupplier(reqDTO.getSupplier()); 
@@ -1704,7 +1708,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 						this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
 					}
 				}
-				
+				//30842 Start
+				this.getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(this.getManagedBean().getSmSupplier().getSupplierId()));
+				//30842 End
 				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
 				if(resDTO.getErrorMessage() != null){
 					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
@@ -1754,7 +1760,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 	//26238 -  END Disciplinary Action - 28111
 	private void loadSupplierCommonDetails(Long id) {
-		logger.info("loadSupplierCommonDetails");
+		//logger.info("loadSupplierCommonDetails");
 		try {
 			if (id != null) {
 				long startTime = System.currentTimeMillis();
@@ -1788,7 +1794,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		boolean checkFactUser = true;
 		
 		for(PmUserRole userRole : getManagedBean().getUserActiveRoles()) {
-			logger.info("User Roles: " + userRole.getPmRole().getRoleCode());
+			//logger.info("User Roles: " + userRole.getPmRole().getRoleCode());
 			if(userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.FACTORING_USER.value())) {
 				checkFactUser = false;
 			}

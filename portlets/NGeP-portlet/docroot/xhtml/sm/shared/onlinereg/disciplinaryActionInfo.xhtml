@@ -35,6 +35,11 @@
 						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.registration']}"/>
 					<p:outputLabel rendered="#{registrationBackingBean.managedBean.blacklistOwner}" styleClass="outputLabel-view"
 						value="#{lbl['lbl.sm.disciplinary.jktt.blacklist.owner']}"/>
+					<!-- 30842 Start -->
+					<p:outputLabel rendered="#{registrationBackingBean.managedBean.cancelCategory}" styleClass="outputLabel-view"
+						value="#{lbl['lbl.sm.disciplinary.jktt.cancel.cat.code']}"/>
+					<!-- 30842 End -->	
+						
 				</td>
 			</tr>
 			<tr>
@@ -89,5 +94,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<ac:disciplinaryActionHistory mofView="false" voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
+	<!-- 30842 Start -->
+	<ac:disciplinaryActionHistory mofView="false" voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" smAppl="#{registrationBackingBean.managedBean.smAppl}" />
+	<!-- 30842 End -->
 </ui:composition>
