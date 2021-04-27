@@ -188,11 +188,14 @@ public class SmBulkApplicationBackingBean extends
 
 			try {
 				//21937 - start
+				//21937, 15629 - reject pop-up removed
+				/*
 				if(bulkAppl.getSelectedReasonDescs() == null
 						|| bulkAppl.getSelectedReasonDescs().size() == 0){
 					throw new EpException(
 							SmCommonUtil.getMessage("lbl.sm.mandatory.rejection.remark", null));
 				}
+				*/
 				//21937 - end
 				setApplPmStatus(
 						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER,
@@ -627,6 +630,8 @@ public class SmBulkApplicationBackingBean extends
 	 * Sets the SM application rejection reasons selected.
 	 */
 	private void setSmApplRejectionReasons(SmBulkApplicationVO bulkVO) {
+		//21937, 15629 - reject pop-up removed
+		if(bulkVO.getSelectedReasonDescs() == null) return;
 		StringBuilder sb = new StringBuilder();
 		int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
