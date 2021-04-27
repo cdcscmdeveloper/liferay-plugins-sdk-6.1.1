@@ -47,6 +47,12 @@ public class SmRuleHelper {
 		return SmServiceLookup.getSmRuleSO().retrieveEmailActivationDays()
 				.getEmailActivationDays();
 	}
+	
+	public int getRestrictionsUpdatePersonnel() {
+		return SmServiceLookup.getSmRuleSO()
+				.restrictionsUpdatePersonnel()
+				.getRestrictionsUpdatePersonnelMonths();
+	}
 
 	/**
 	 * Duration restriction to maintain Personnel after approved (6 Months)
