@@ -212,14 +212,16 @@
 						update=":form:settingTabId:ruleTypeValueTableID, :form:settingTabId:errorDialog" />
 				</p:inputText>
 				<!-- 29669 - START -->
-				<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
-					partialSubmit="true"
-					update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
-					oncomplete="errorDialog.show();"
-					rendered="#{ruleCatalogueBackingBean.updateToRequired(index)}">
-					<f:param name="index" value="#{index}"></f:param>
-					<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
-				</p:commandLink>
+				<h:panelGroup id="toErrorLink">
+					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
+						partialSubmit="true" id="toErrorRequired"
+						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
+						oncomplete="errorDialog.show();"
+						rendered="#{ruleCatalogueBackingBean.updateToRequired(index)}">
+						<f:param name="index" value="#{index}"></f:param>
+						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+					</p:commandLink>
+				</h:panelGroup>
 				<!-- 29669 - END -->
 				<p:message id="toValueMsg" for="toValueId" display="icon" />
 			</p:column>
