@@ -905,11 +905,11 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setCancelCategory(boolean cancelCategory) {
 		this.cancelCategory = cancelCategory;
 	}
+	//30842 End
 	
 	public String getStartDate() {
 		return startDate;
 	}
-	//30842 End
 	
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
