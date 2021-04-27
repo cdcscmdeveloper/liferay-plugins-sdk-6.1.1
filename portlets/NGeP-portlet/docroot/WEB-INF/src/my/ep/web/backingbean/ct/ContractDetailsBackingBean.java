@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -308,7 +309,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 		getManagedBean().setSelectedTabIndex(0);
-
+		
+		//#25406 - Start
+		/* re-Setting Cancel button*/
+		if(this.getManagedBean().getOutComes()!= null 
+				&& getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME)){
+		String[] str_array = this.getManagedBean().getOutComes();
+		List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+		if(list.contains(BpmOutcomeConst.BPM_CANCEL)){
+			list.remove(BpmOutcomeConst.BPM_CANCEL);
+			list.add(BpmOutcomeConst.BPM_CANCEL);
+			str_array = list.toArray(new String[0]);
+			this.getManagedBean().setOutComes(null);
+			this.getManagedBean().setOutComes(str_array);
+		}
+	}
+		//#25406 - End	
+	
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setTaskName(getManagedBean().getTaskName());
 		if (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
@@ -3491,7 +3508,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractSO	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO reqDTO  = new ContractReqDTO();
 		reqDTO.setContractId(getManagedBean().getContractId());
+		log.info("CEK VerID :"+getManagedBean().getLoaContractVerId());
 		Long  contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+		
 		reqDTO.setContractVerId(contractVerId);
 		reqDTO.setAgreement(withAgreement);
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -3757,7 +3776,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) &&
 				ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
 			if(getManagedBean().getSearchPtjProfile() != null){
-				if(getManagedBean().getSearchPtjProfile().getOrgProfileId() == ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()){
+				if(getManagedBean().getSearchPtjProfile().getOrgProfileId().equals(ctBB.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())){
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_775156);
 				}
