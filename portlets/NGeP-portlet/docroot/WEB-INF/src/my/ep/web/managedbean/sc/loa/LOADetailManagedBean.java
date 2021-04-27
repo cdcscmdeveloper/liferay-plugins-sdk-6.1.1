@@ -317,6 +317,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long selectedItemId;
 	//#29006 - end
 	
+	//#25725 start
+	private boolean disabledButton = true;
+	public BigDecimal limit = new BigDecimal(10000);
+	public boolean above500K = true;
+	//#25725 end
+	
 	//#19336
 		private boolean isValidatewitness=false;
 		
@@ -1879,8 +1885,26 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	/*#29007 End Vinod*/
 
-
-
+	//#25725 start
+	public boolean isDisabledButton() {
+		return disabledButton;
+	}
+	public void setDisabledButton(boolean disabledButton) {
+		this.disabledButton = disabledButton;
+	}
+	public BigDecimal getLimit() {
+		return limit;
+	}
+	public void setLimit(BigDecimal limit) {
+		this.limit = limit;
+	}
+	public boolean isAbove500K() {
+		return above500K;
+	}
+	public void setAbove500K(boolean above500k) {
+		above500K = above500k;
+	}
+	//#25725 end
 }
 
 
