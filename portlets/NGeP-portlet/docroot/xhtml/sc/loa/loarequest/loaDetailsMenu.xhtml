@@ -13,6 +13,22 @@
 		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}" />
 	<ui:param name="isContractTypeCentral"
 		value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode eq ParameterConst.contractTypeCentral}" />
+	<!-- #25725 start -->
+	<ui:param name="isPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen) or
+	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled)}"></ui:param>
+	<ui:param name="isOneOff" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}"></ui:param>
+	<ui:param name="isNonPeriodic" value="#{(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicAsAndWhen) or
+	(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeNonPeriodicScheduled)}"></ui:param>
+	<ui:param name="isPK7" value="#{(lOADetailBackingBean.managedBean.scLoa.scQuote.procurementType.parameterCode eq ParameterConst.procTypePk7)}"></ui:param>
+	
+	<c:if test="#{lOADetailBackingBean.managedBean.above500K}">
+		<ui:param name="above500K" value="#{true}"></ui:param>
+	</c:if>
+	<c:if test="#{!lOADetailBackingBean.managedBean.above500K}">
+		<ui:param name="above500K" value="#{false}"></ui:param>
+	</c:if>
+	
+	<!-- #25725 end -->	
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -293,7 +309,23 @@
 				</p:inputText>
 			</td>
 		</tr>
-		
+		<!-- #25725 start -->
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.request.note.fulfill.type']}" />				
+			</td>
+			<td>
+				<p:inputText 
+					value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode)}"
+					disabled="true" size="35">
+				</p:inputText>				
+			</td>
+			<td>
+				<ac:iconTooltip id="fulfilmentTypeTP"
+						value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+			</td>
+		</tr>
+		<!-- #25725 end -->
 		<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
 		<tr>
 			<td>
@@ -603,14 +635,20 @@
 					<table>
 						<tr>
 							<td>
-								<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
-									value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
-									required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-									disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">
-									<f:selectItems
-										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								</p:selectOneRadio>
-								<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+								<!--#25725 start-->																
+								<h:panelGroup id="agReqID">								
+									<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
+										value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
+										required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+										disabled="#{lOADetailBackingBean.disabledButton()}">									
+									<f:selectItems id="agreementReqSelect"
+										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />																		
+									<p:ajax partialSubmit="true" update="@([id$=uploadApprovalLetterPg])"
+									listener="#{lOADetailBackingBean.onChangeAgreementReqType}"/>
+									</p:selectOneRadio>
+									<p:message id="agreementReqMsg" for="agreementReq" display="icon" />								
+							</h:panelGroup>
+							<!--#25725 end-->	
 							</td>
 							<td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
@@ -629,7 +667,37 @@
 								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio> <p:message id="isFollowLOAAmtMsg" for="isFollowLOAAmt"
 							display="icon" /></td>
-				</h:panelGroup>
+				</h:panelGroup>					
+				</tr>
+				<!-- #25725 start -->
+				<tr><td>
+					<p:outputPanel id="uploadApprovalLetterPg"> 
+							<ui:fragment rendered="#{((!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
+							required="true">
+							<h:panelGroup>
+								<p:outputLabel
+								value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+							</h:panelGroup>					 
+							<h:panelGroup>	
+								<p:commandButton 
+								oncomplete="uploadApprovalLetterDlg.show();return false;"
+					 			icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg"/>
+								<h:commandLink
+								title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+								value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+								action="#{lOADetailBackingBean.fileDownload}"
+									styleClass="blue_font"
+								rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
+								<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
+								rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" process="@this" partialSubmit="true"
+								disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
+			   					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 				</p:commandLink>							
+							</h:panelGroup>
+							</ui:fragment>
+					</p:outputPanel>											
+				</td>
 			</tr>
 			
 		</table>
@@ -644,4 +712,73 @@
 	<!-- Bug #30600 Start -->
 	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 	<!-- Bug #30600 End -->
+	
+	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
+		modal="true" width="400px" height="200px" resizable="false"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
+		onShow="singleUploadListener(approvalLetterUploadWV);">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
+		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
+			fileUploadListener="#{lOADetailBackingBean.fileUpload}" multiple="false"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
+			update=":form:uploadApprovalLetterPg" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
+		</p:fileUpload>
+		<f:facet name="footer">
+		<div class="ppRightBtn">
+	    	<p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadApprovalLetterDlg.hide();" />
+  		</div>
+  		</f:facet>
+	</p:dialog>
+	
+	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
+		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"
+			partialSubmit="true"  update=":form:uploadApprovalLetterPg"
+			action="#{lOADetailBackingBean.fileDelete}"
+			oncomplete="deleteApprovalLetterDlg.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteApprovalLetterDlg.hide();" />	
+		</div>
+	</p:confirmDialog>
+	
+	<p:confirmDialog id="changeAgreementReqDlg" widgetVar="changeAgreementReqDlg"  appendToBody="true" 
+		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="true">
+		<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="uploadApprovalLetterPg" process="@this"
+				partialSubmit="true" oncomplete="changeAgreementReqDlg.hide();" action="#{lOADetailBackingBean.agreementReqYes}"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" update="agReqID" onclick="changeAgreementReqDlg.hide();"
+				process="@this" partialSubmit="true" action="#{lOADetailBackingBean.agreementReqNo}"/>					
+		</div>
+	</p:confirmDialog>
+	
+	<p:dialog id="approvalLetterAlert" widgetVar="approvalLetterAlertDlg"
+		header="#{lbl['lbl.txt.alert']}" resizable="false" width="600"
+		modal="true">
+			<p:panel>				
+				<table>
+					<tr>
+						<td>
+							<h:graphicImage value="/css/images/design/exclamation.png" />
+							<ui:fragment>
+								<h:outputText value="#{lbl['lbl.sc.approval.letter.alert']}" />
+								<br />
+								<br />
+							</ui:fragment> 							
+						</td>
+					</tr>
+				</table>			
+				
+				<p:spacer height="1px" />
+				<div class="ppRightBtn" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						id="approvalLetterAlertButton"
+						onclick ="approvalLetterAlertDlg.hide();"/>
+				</div>				
+			</p:panel>	
+		</p:dialog>	
+	
+	<!-- #25725 end -->		
 </ui:composition>
