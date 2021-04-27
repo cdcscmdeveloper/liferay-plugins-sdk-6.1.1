@@ -636,7 +636,7 @@
 						<tr>
 							<td>
 								<!--#25725 start-->																
-								<h:panelGroup id="agReqID">								
+								<h:panelGroup id="agReqID" rendered="#{lOADetailBackingBean.managedBean.scLoa.procurementMode.parameterCode == ParameterConst.procurementModeDirectPurchase}">								
 									<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 										value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
 										required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
@@ -647,7 +647,20 @@
 									listener="#{lOADetailBackingBean.onChangeAgreementReqType}"/>
 									</p:selectOneRadio>
 									<p:message id="agreementReqMsg" for="agreementReq" display="icon" />								
-							</h:panelGroup>
+								</h:panelGroup>
+								
+								<h:panelGroup rendered="#{(lOADetailBackingBean.managedBean.scLoa.procurementMode.parameterCode == ParameterConst.procurementModeTender) 
+								or (lOADetailBackingBean.managedBean.scLoa.procurementMode.parameterCode == ParameterConst.procurementModeQuotation) 
+								or(lOADetailBackingBean.managedBean.scLoa.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego)}">
+									<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
+									value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
+									required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
+									disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">
+									<f:selectItems
+										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									</p:selectOneRadio>
+									<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+								</h:panelGroup>
 							<!--#25725 end-->	
 							</td>
 							<td style="margin-top: -3px">
