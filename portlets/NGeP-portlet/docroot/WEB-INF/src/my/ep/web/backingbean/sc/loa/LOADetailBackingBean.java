@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -1488,6 +1489,53 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setTempFilePath(getActualFilePath(scAttachment));
 		}
 	}
+	
+	//#25725 - start
+	public void fileUpload(FileUploadEvent event)
+		throws FileNotFoundException, IOException {
+		debugLogger("FileUpload");
+		FacesScopes facesScopes = new FacesScopes();
+		if (event.getFile() != null) {
+			ScLoa scLoa = getManagedBean().getScLoa();			
+			ScLoaAttachment attachment = new ScLoaAttachment();							
+			
+			attachment.setScLoa(scLoa);			
+			
+			attachment.setDocNo(scLoa.getScQuote().getQuoteNo());
+			attachment
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			uploadAttachment(event.getFile(), attachment);
+			scLoa.setScLoaAttachment(attachment);
+			}
+	}
+	
+	public void fileDownload(){
+		debugLogger("FileDownload");
+		ScAttachment scAttachment = getManagedBean().getScLoa().getScLoaAttachment();
+		log.info(scAttachment.getFileName());
+		if(scAttachment != null){
+			try{
+				downloadFile(scAttachment);
+			}
+			catch(IOException ex){
+				if(ex instanceof FileNotFoundException){
+					handleException(new EpException(MessageConst.ERROR_760411, new String[]{scAttachment.getFileName()}));
+				}
+				
+			}
+			catch(EpException ex){
+				handleException(ex);
+			}
+		}
+	}
+	
+	public void fileDelete(){
+		debugLogger("FileDelete");
+		getManagedBean().getScLoa().setScLoaAttachment(null);
+	}
+	
+	//#25725 - end
 
 	/**
 	 * Download report as pdf or xlsx files in Letter of Acceptance.
@@ -3269,7 +3317,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return the string
 	 * page navigate to acknowledge page.
 	 */
-	public String submitAction() {
+	//#25725 start change return type to void
+	public void submitAction() {
+		//#25725 end
 		debugLogger("submitAction");
 
 		try {
@@ -3303,6 +3353,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}	
 				}
+				
+				//#25725 start
+				Boolean isPK7 = scLoa.getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+				Boolean isNonPeriodic = (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+				if((!scLoa.isAgreementReq())&&(isNonPeriodic && !isPK7 && over500K(scLoa))){
+					if(scLoa.getScLoaAttachment() != null){
+						
+					}else{
+						RequestContext.getCurrentInstance().execute("approvalLetterAlertDlg.show()");
+						return;
+						
+					}
+				}else{
+					scLoa.setScLoaAttachment(null);
+				}
+				//#25725 end
 	
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
@@ -3329,8 +3395,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} finally {
 			//qtAwardSO = null;
 		}
-
-		return null;
+		//#25725 start - remove return null
+		//#25725 end
 	}
 	
 	//Enhancement #12177
@@ -5748,19 +5814,56 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
-		if(!isOneOffFulfilment) {
-			isAgreementMandatory = true;
+		
+		//#25725 start
+		
+		boolean isPeriodic = (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType));
+		boolean isNonPeriodic = (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType));
+		
+		if(isOneOffFulfilment) {
+			isAgreementMandatory = false;
 			loa.setAgreementReq(isAgreementMandatory);
-		} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
+		} else if (isPeriodic){
 			//Bug #24065
 			//isAgreementMandatory = false;
 			isAgreementMandatory = true;
 			loa.setAgreementReq(isAgreementMandatory);
-		}
+		}else if(isNonPeriodic && !over500K(loa)){
+			isAgreementMandatory = false;
+			loa.setAgreementReq(isAgreementMandatory);
+		}else if(isNonPeriodic && over500K(loa)){
+			isAgreementMandatory = true;
+			loa.setAgreementReq(isAgreementMandatory);
+		}		
 
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
 	}
-
+	
+	private boolean over500K (ScLoa loa){
+		BigDecimal contractAmt = loa.getOverallContractAmt();
+		BigDecimal limit = this.getManagedBean().getLimit();		
+		
+		if(contractAmt.compareTo(limit) == 0){
+			return false;
+		}else if(contractAmt.compareTo(limit) == 1){
+			return true;
+		}else{
+			return false;
+		}		
+	}
+	
+	private boolean isPK7(ScLoa loa){		
+		boolean PK7 = loa.getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+		
+		if(PK7){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	//#25725 - end
+	
 	private BigDecimal overallCtAmtOrLoaAmt(ScLoa loa){
 		BigDecimal overallContractAmtOrLoaAmt = BigDecimal.valueOf(0d);
 		// if supplier Gst Registered  
@@ -8783,6 +8886,72 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	/*#29007 End Vinod*/
+	
+	//#25725 start
+	public void onChangeAgreementReqType(AjaxBehaviorEvent event){
+		Boolean agreementReq = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
+		Boolean isPK7 = this.getManagedBean().getScLoa().getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+		Boolean above500K;
+		
+		if(over500K(this.getManagedBean().getScLoa()) == true){
+			above500K = true;
+			this.getManagedBean().setAbove500K(true);
+		}else{
+			above500K = false;
+			this.getManagedBean().setAbove500K(false);
+		}
+		
+				
+		log.info("Radio button value from loaDetailsMenu is " + agreementReq);
+		log.info("AgreementReq : "+agreementReq);
+		log.info("isNonPeriodic : "+isNonPeriodic);
+		log.info("isPK7 : "+isPK7);
+		log.info("isPeriodic : "+isPeriodic);
+		log.info("above500K : "+above500K);
+		if((isPK7 && (isPeriodic || isNonPeriodic))&& !agreementReq){
+			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
+		}else if((agreementReq == false)&&((isNonPeriodic && above500K) && !isPK7)){
+			ScLoa scLoa = this.getManagedBean().getScLoa();			
+			scLoa.setAgreementReq(false);			
+			RequestContext.getCurrentInstance().update("contractDetailsId");
+		}else{
+			ScLoa scLoa = this.getManagedBean().getScLoa();			
+			scLoa.setAgreementReq(true);
+			RequestContext.getCurrentInstance().update("contractDetailsId");
+		}
+			
+	}
+	
+	public boolean disabledButton(){
+		Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
+		Boolean isPK7 = this.getManagedBean().getScLoa().getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+		Boolean result = true;		
+		
+		if(isNonPeriodic || (isPK7 && isPeriodic)){
+			result = false;
+		}
+		
+		return result;
+	}
+	
+	public void agreementReqYes(){
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		
+		scLoa.setAgreementReq(false);
+		RequestContext.getCurrentInstance().update("agReqID");
+	}
+	
+	public void agreementReqNo(){
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		
+		scLoa.setAgreementReq(true);
+		RequestContext.getCurrentInstance().update("agReqID");
+	}
+	//#25725 end
 
 }
 
