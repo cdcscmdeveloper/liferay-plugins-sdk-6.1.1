@@ -5820,6 +5820,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		boolean isPeriodic = (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType));
 		boolean isNonPeriodic = (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType));
 		
+		if(getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
 		if(isOneOffFulfilment) {
 			isAgreementMandatory = false;
 			loa.setAgreementReq(isAgreementMandatory);
@@ -5834,6 +5835,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else if(isNonPeriodic && over500K(loa)){
 			isAgreementMandatory = true;
 			loa.setAgreementReq(isAgreementMandatory);
+		}
+		}else{
+			if(!isOneOffFulfilment) {
+				isAgreementMandatory = true;
+				loa.setAgreementReq(isAgreementMandatory);
+			} else if (isOneOffFulfilment && !isQuotationThresHold(overallContractAmtOrLoaAmt)){
+				//Bug #24065
+				//isAgreementMandatory = false;
+				isAgreementMandatory = true;
+				loa.setAgreementReq(isAgreementMandatory);
+			}
 		}		
 
 		getManagedBean().setAgreementMandatory(isAgreementMandatory);
