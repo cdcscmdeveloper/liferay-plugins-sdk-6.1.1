@@ -2,9 +2,12 @@ package my.ep.web.backingbean.sm.sdoreview;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -51,6 +54,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -299,10 +303,23 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 				assignedPOName = setPOJobRoleWeigtage(reqDTO);
 			}
-			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			
+			// 29810 - start - add new data type in SMMOFRegDataType - saufi
+			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+			
+			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
+				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");	
+				String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
+				bpmObj.setReceivedDate(dateStr);
+			}
+			
+			reqDTO.setBpmPojo(bpmObj);
+			//29810 - end
+			
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
 			reqDTO.setToken(token);
+			
 			reqDTO.setOutcome(resAction);
 			
 			//3460 - Start

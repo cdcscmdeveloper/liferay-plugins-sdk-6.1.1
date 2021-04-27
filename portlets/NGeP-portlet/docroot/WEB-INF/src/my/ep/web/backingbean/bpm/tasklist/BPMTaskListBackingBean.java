@@ -750,6 +750,13 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
 		
+		//29810 - start
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(RoleCode.UPS_PO.value())) {
+			getManagedBean().setRoleType("PO");
+		}
+		//29810 - start
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
 	
