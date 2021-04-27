@@ -2431,6 +2431,18 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
+			
+			//#25725 start
+			ParameterReqDTO prmtrReqDTO = new ParameterReqDTO();
+			prmtrReqDTO.setParameterId(quote
+					.getProcurementType().getParameterId());
+			PmParameter procType = getParameterSO()
+					.retrieveParameterById(prmtrReqDTO)
+					.getPmParameter();
+			quote.setProcurementType(procType);
+			
+			log.info("Procurement Type" + procType);
+			//#25725 end
 		} finally {
 			// quoteSO = null;
 		}
@@ -3967,6 +3979,53 @@ public class SimpleQuoteBackingBean extends
 		debugLogger("submitPromptAction");
 		ScQuote quote = getManagedBean().getScQuote();
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		
+		// #25725 start
+		BigDecimal val = new BigDecimal ("5");
+		int result = 0;		
+		for(TplSpecQuestion tplSpecQuestion : getManagedBean()
+				.getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions()){		
+			
+			
+			if(tplSpecQuestion.getClDurationMonth()!=null){
+				result =  tplSpecQuestion.getClDurationMonth().compareTo(val);
+			}
+			
+			if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && result<0)){
+				log.info("Periodic (Schedule) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
+				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
+				log.info(result);
+				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+				return;				
+			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && result<0)){
+				log.info("Periodic (As and When) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
+				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
+				log.info(result);
+				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+				return;				
+			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) && result>0)){
+				log.info("Non-Periodic (Schedule) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
+				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
+				log.info(result);
+				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+				return;			
+			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
+					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)&& result>0)){
+				log.info("Non-Periodic (As and When) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
+				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
+				log.info(result);
+				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+				return;				
+			}
+		}
+		//#25725 end		
 		
 		// validate quote
 		validateQuote(quote, true);
