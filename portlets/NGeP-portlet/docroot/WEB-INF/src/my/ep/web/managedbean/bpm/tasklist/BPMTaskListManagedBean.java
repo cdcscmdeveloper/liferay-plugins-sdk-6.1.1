@@ -30,6 +30,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -139,6 +140,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private Date  myTaskCreatedDateTo;
 	private Date groupTaskCreatedDateFrom;
 	private Date  groupTaskCreatedDateTo;
+	private String roleType;
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -464,8 +466,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				}
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
-				//log.info("getSort_by() = "+getSort_by());
-				/*
+				//29810 - START
+				log.info("getSort_by() = "+getSort_by());
+				
 				if (isFromSearchBttn()) {
 					if (getSort_by() != null && !getSort_by().equals("")) {
 						
@@ -479,8 +482,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
-						} else {
-							//reqDTO.setSortBy(getSort_by());
+						} else if (getSort_by().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
 						}					
 					}
 				} else {
@@ -495,8 +498,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_CREATEDATE);
 						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_STATUS)) {
 							reqDTO.setSortBy(BpmConstants.SORT_BY_STATUS);
-						} else {
-							//reqDTO.setSortBy(getSort_by());
+						} else if (this.getSortField().equalsIgnoreCase(BpmConstants.SORT_BY_RECEIVEDDATE)){
+							reqDTO.setSortBy(BpmConstants.SORT_BY_RECEIVEDDATE);
 						}
 					}
 				}				 			
@@ -512,8 +515,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				reqDTO.setCreatedDateFrom(getMyTaskCreatedDateFrom());
 				reqDTO.setCreatedDateTo(getMyTaskCreatedDateTo());
-				*/
+				
 				//End - Task list sorting n search criteria date from and date to by Najmi 
+				//29810 - END
 				
 				reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 				reqDTO.setCtxToken(token);
@@ -531,6 +535,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								processWorklistItemByTitle(worklistItemVO, face);
 								
 								processWorklistItemByTaskName(worklistItemVO, face);
+								
+								log.info("receive date " +worklistItemVO.getReceivedDate());
 								
 								//CR 28766: Static Code Analysis Start
 								/*
@@ -552,7 +558,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 									worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.ct.revise.circular.cancellation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));									
 								}
 								//CR 28766: Static Code Analysis End
-								
+	
 						       processWorklistItemByDocType(worklistItemVO);
 							}catch(Exception ex){
 								worklistItemVO.setTitle("Please check");
@@ -660,8 +666,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setCtxToken(token);
 				
 				//Start - Task list sorting n search criteria date from and date to by Najmi 
-				//log.info("getSort_by() = "+getSort_byGroup());
-				/*
+				//29810 - START
+				log.info("getSort_by() = "+getSort_byGroup());
+				
 				if (isFromSearchBttn()) {
 					if (getSort_byGroup() != null && !getSort_byGroup().equals("")) {
 						
@@ -710,8 +717,9 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				
 				reqDTO.setCreatedDateFrom(getGroupTaskCreatedDateFrom());
 				reqDTO.setCreatedDateTo(getGroupTaskCreatedDateTo());
-				*/
+				
 				//End - Task list sorting n search criteria date from and date to by Najmi 
+				//29810 - END
 				
 				//SDO User - filer Search
 				sdoSearchFilter(reqDTO);
@@ -1890,6 +1898,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setGroupTaskCreatedDateTo(Date groupTaskCreatedDateTo) {
 		this.groupTaskCreatedDateTo = groupTaskCreatedDateTo;
+	}
+
+	public String getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(String roleType) {
+		this.roleType = roleType;
 	}
 	
 }
