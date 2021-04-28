@@ -3,6 +3,7 @@
  */
 package my.ep.web.constant.sm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -490,6 +491,12 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPLICATION_INQUIRY = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_INQUIRY;
 	public static final long PM_STATUS_PENDING_APPLICATION_DECLARATION_L = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION;
 	public static final String REJECTED_STATUSES[] = my.ep.constant.sm.SupplierManagementConst.REJECTED_STATUSES;
+	
+	// #30574 - start
+	public static final List<Long> LIST_APPLICATION_DETAILS_REPORT = new ArrayList<Long>(Arrays.asList(PM_STATUS_MOF_ACCT_REG_APPROVED, PM_STATUS_REGISTRATION_STATUS_REGISTERED,
+			PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME,
+			PM_STATUS_PO_REJECTED_APPLICATION, PM_STATUS_APPROVER_REJECTED_APPLICATION));
+	// #30574 - end
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC;
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH;
