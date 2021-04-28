@@ -69,10 +69,8 @@
 									update=":form:tt:sendInqDialog" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<!-- #26671 - START -->
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
-									<!-- #26671 - END -->
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' }">
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
@@ -101,12 +99,9 @@
 								process="@this"
 								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 						</c:when>
-						<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
-							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
-							or backingBean.managedBean.showFacilityMachine}">
-							<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
 							
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -145,7 +140,24 @@
 						<c:when
 							test="#{ backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL and  
 													backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew  and 
-													backingBean.managedBean.specialCategoryRechecked}">
+													backingBean.managedBean.specialCategoryRechecked and backingBean.managedBean.showFacilityMachine}">
+
+							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								update=":form:tt:rejectDialogId" partialSubmit="true"
+								process="@this"
+								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
+
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton
+									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									update=":form:tt:submitApprvrDialog"
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" />
+								<!-- #27297 -->
+							</c:if>
 
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton
@@ -162,6 +174,12 @@
 								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
 								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+
+							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								partialSubmit="true" process="@this"
+								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+								update=":form:tt:sendInqDialog" />
 
 						</c:when>
 						<!-- #28778 - End -->
@@ -194,10 +212,8 @@
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<!-- #26671 - START -->
 								<c:if
-									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.showFacilityMachine}">
-									<!-- #26671 - END -->
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
