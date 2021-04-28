@@ -22,29 +22,6 @@
 				word-wrap: break-word;
 				padding: 3px;
 			}
-			.blink_text {
-				animation:1s blinker linear infinite;
-				-webkit-animation:1s blinker linear infinite;
-				-moz-animation:1s blinker linear infinite;
-			}
-			
-			@-moz-keyframes blinker {  
-				 0% { opacity: 1.0; }
-				 50% { opacity: 0.0; }
-				 100% { opacity: 1.0; }
-			 }
-			
-			@-webkit-keyframes blinker {  
-				 0% { opacity: 1.0; }
-				 50% { opacity: 0.0; }
-				 100% { opacity: 1.0; }
-			 }
-			
-			@keyframes blinker {  
-				 0% { opacity: 1.0; }
-				 50% { opacity: 0.0; }
-				 100% { opacity: 1.0; }
-			 }
 		</style>
 		<span class='blink_text smeAlertText'><p:graphicImage
 				value="/css/images/priority.png" />&#160;<h:outputText
@@ -52,20 +29,5 @@
 			href="update-sme-information"><h:outputText
 					value="#{lbl['lbl.sm.sme.alert.here']}" /></a>&#160;<h:outputText
 				value="#{lbl['lbl.sm.sme.alert.second']}" /></span>
-		<br/>
-		<!-- #10724 START -->
-		<p:outputPanel rendered="#{not empty smUpdateSmeInfoBackingBean.managedBean.mofBeforeExpiryMsg}">
-			<span class='blink_text smeAlertText'>
-				<h:outputText value="#{smUpdateSmeInfoBackingBean.managedBean.mofBeforeExpiryMsg} "/>
-			</span>
-		</p:outputPanel>
-		<br/>
-		<p:outputPanel rendered="#{not empty smUpdateSmeInfoBackingBean.managedBean.mofAfterExpiryMsg}">
-			<span class='blink_text smeAlertText'>
-				<h:outputText value="#{smUpdateSmeInfoBackingBean.managedBean.mofAfterExpiryMsg} "/>
-			</span>
-		</p:outputPanel>
-		<!-- #10724 START -->
-		
 	</ui:define>
 </ui:composition>
