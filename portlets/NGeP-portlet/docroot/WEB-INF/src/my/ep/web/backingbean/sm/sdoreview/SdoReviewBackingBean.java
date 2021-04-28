@@ -310,7 +310,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
 				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");	
 				String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
-				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
+//				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
 			}
 			
 			reqDTO.setBpmPojo(bpmObj);
