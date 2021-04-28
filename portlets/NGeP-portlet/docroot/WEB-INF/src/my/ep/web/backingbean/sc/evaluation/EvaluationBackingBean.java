@@ -9527,7 +9527,7 @@ private void retriveCommitteeRemarksList(){
 			
 			// #28784 - start
 			if (qt.getScQt().isDemoRequired()) {
-				successMessage(MessageConst.INFO_700101, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qt
+				successMessage(MessageConst.INFO_700101, getMessageCommon("lbl.sc.eva.technical.presentation.demo.signoff"), qt
 						.getScQt().getQtNo(), Boolean.TRUE);
 			} else {
 				successMessage(MessageConst.INFO_700032, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qt
@@ -15491,5 +15491,5 @@ private void retriveCommitteeRemarksList(){
 
 	}
 	//#25138 - user score bug - end
-
+	
 }
