@@ -370,6 +370,9 @@
 		<portlet id="updateSmeInfo"></portlet>
 		<portlet id="alertSmeInfo"></portlet>
 		<!-- #29617 end -->
+		<!-- #10724 start -->
+		<portlet id="commonSmOverviewInfo"></portlet>
+		<!-- #10724 end -->
 		<portlet id="updateGstInfo"></portlet>
 		<portlet id="basicAccountDeactivation"></portlet>
 		<portlet id="basicDataMaintenance"></portlet>
