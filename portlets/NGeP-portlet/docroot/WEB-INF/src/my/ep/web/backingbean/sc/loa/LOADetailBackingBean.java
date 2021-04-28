@@ -37,7 +37,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -64,8 +63,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
@@ -145,7 +142,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
-import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
@@ -173,7 +169,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -2985,142 +2980,142 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/**
 	 * The Class SupplierBankFK.
 	 */
-	private class SupplierBankFK {
-
-		/** The account no. */
-		private String accountNo;
-
-		/** The bank name. */
-		private String bankName;
-
-		/** The bank branch. */
-		private String bankBranch;
-
-		/**
-		 * Instantiates a new supplier bank fk.
-		 *
-		 * @param smSupplierBank the sm supplier bank
-		 */
-		public SupplierBankFK(SmSupplierBank smSupplierBank) {
-			this.accountNo = smSupplierBank.getAccountNo();
-			this.bankName = smSupplierBank.getPmFinancialOrg().getFinOrgName();
-			this.bankBranch = smSupplierBank.getBankBranch();
-		}
-
-		/**
-		 * Instantiates a new supplier bank fk.
-		 *
-		 * @param scLoa the sc loa
-		 */
-		@SuppressWarnings("unused")
-		public SupplierBankFK(ScLoa scLoa) {
-			this.accountNo = scLoa.getBankAccNo();
-			this.bankName = scLoa.getBankName();
-			this.bankBranch = scLoa.getBankBranch();
-		}
-
-		/**
-		 * Equals.
-		 *
-		 * @param other the other
-		 * @return true, if successful
-		 */
-		public boolean equals(SupplierBankFK other) {
-			return getPK(this).equals(getPK(other));
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		public int hashCode() {
-			int result = 3;
-
-			if (this.getAccountNo() != null) {
-				result = 31 * result + this.getAccountNo().hashCode();
-			}
-
-			if (this.getBankName() != null) {
-				result = 31 * result + this.getBankName().hashCode();
-			}
-
-			if (this.getBankBranch() != null) {
-				result = 31 * result + this.getBankBranch().hashCode();
-			}
-
-			return result;
-		}
-
-		/**
-		 * Gets the account no.
-		 *
-		 * @return the accountNo
-		 */
-		public String getAccountNo() {
-			return accountNo;
-		}
-
-		/**
-		 * Sets the account no.
-		 *
-		 * @param accountNo            the accountNo to set
-		 */
-		public void setAccountNo(String accountNo) {
-			this.accountNo = accountNo;
-		}
-
-		/**
-		 * Gets the bank name.
-		 *
-		 * @return the bankName
-		 */
-		public String getBankName() {
-			return bankName;
-		}
-
-		/**
-		 * Sets the bank name.
-		 *
-		 * @param bankName            the bankName to set
-		 */
-		public void setBankName(String bankName) {
-			this.bankName = bankName;
-		}
-
-		/**
-		 * Gets the bank branch.
-		 *
-		 * @return the bankBranch
-		 */
-		public String getBankBranch() {
-			return bankBranch;
-		}
-
-		/**
-		 * Sets the bank branch.
-		 *
-		 * @param bankBranch            the bankBranch to set
-		 */
-		public void setBankBranch(String bankBranch) {
-			this.bankBranch = bankBranch;
-		}
-
-		/**
-		 * Gets the pk.
-		 *
-		 * @param fk the fk
-		 * @return the pk
-		 */
-		private String getPK(SupplierBankFK fk) {
-			return new StringBuilder(
-					fk.getAccountNo() != null ? fk.getAccountNo() : "")
-			.append("_")
-			.append(fk.getBankName() != null ? fk.getBankName() : "")
-			.append("_")
-			.append(fk.getBankBranch() != null ? fk.getBankBranch()
-					: "").toString();
-		}
-
-	}
+//	private class SupplierBankFK {
+//
+//		/** The account no. */
+//		private String accountNo;
+//
+//		/** The bank name. */
+//		private String bankName;
+//
+//		/** The bank branch. */
+//		private String bankBranch;
+//
+//		/**
+//		 * Instantiates a new supplier bank fk.
+//		 *
+//		 * @param smSupplierBank the sm supplier bank
+//		 */
+//		public SupplierBankFK(SmSupplierBank smSupplierBank) {
+//			this.accountNo = smSupplierBank.getAccountNo();
+//			this.bankName = smSupplierBank.getPmFinancialOrg().getFinOrgName();
+//			this.bankBranch = smSupplierBank.getBankBranch();
+//		}
+//
+//		/**
+//		 * Instantiates a new supplier bank fk.
+//		 *
+//		 * @param scLoa the sc loa
+//		 */
+//		@SuppressWarnings("unused")
+//		public SupplierBankFK(ScLoa scLoa) {
+//			this.accountNo = scLoa.getBankAccNo();
+//			this.bankName = scLoa.getBankName();
+//			this.bankBranch = scLoa.getBankBranch();
+//		}
+//
+//		/**
+//		 * Equals.
+//		 *
+//		 * @param other the other
+//		 * @return true, if successful
+//		 */
+//		public boolean equals(SupplierBankFK other) {
+//			return getPK(this).equals(getPK(other));
+//		}
+//
+//		/* (non-Javadoc)
+//		 * @see java.lang.Object#hashCode()
+//		 */
+//		public int hashCode() {
+//			int result = 3;
+//
+//			if (this.getAccountNo() != null) {
+//				result = 31 * result + this.getAccountNo().hashCode();
+//			}
+//
+//			if (this.getBankName() != null) {
+//				result = 31 * result + this.getBankName().hashCode();
+//			}
+//
+//			if (this.getBankBranch() != null) {
+//				result = 31 * result + this.getBankBranch().hashCode();
+//			}
+//
+//			return result;
+//		}
+//
+//		/**
+//		 * Gets the account no.
+//		 *
+//		 * @return the accountNo
+//		 */
+//		public String getAccountNo() {
+//			return accountNo;
+//		}
+//
+//		/**
+//		 * Sets the account no.
+//		 *
+//		 * @param accountNo            the accountNo to set
+//		 */
+//		public void setAccountNo(String accountNo) {
+//			this.accountNo = accountNo;
+//		}
+//
+//		/**
+//		 * Gets the bank name.
+//		 *
+//		 * @return the bankName
+//		 */
+//		public String getBankName() {
+//			return bankName;
+//		}
+//
+//		/**
+//		 * Sets the bank name.
+//		 *
+//		 * @param bankName            the bankName to set
+//		 */
+//		public void setBankName(String bankName) {
+//			this.bankName = bankName;
+//		}
+//
+//		/**
+//		 * Gets the bank branch.
+//		 *
+//		 * @return the bankBranch
+//		 */
+//		public String getBankBranch() {
+//			return bankBranch;
+//		}
+//
+//		/**
+//		 * Sets the bank branch.
+//		 *
+//		 * @param bankBranch            the bankBranch to set
+//		 */
+//		public void setBankBranch(String bankBranch) {
+//			this.bankBranch = bankBranch;
+//		}
+//
+//		/**
+//		 * Gets the pk.
+//		 *
+//		 * @param fk the fk
+//		 * @return the pk
+//		 */
+//		private String getPK(SupplierBankFK fk) {
+//			return new StringBuilder(
+//					fk.getAccountNo() != null ? fk.getAccountNo() : "")
+//			.append("_")
+//			.append(fk.getBankName() != null ? fk.getBankName() : "")
+//			.append("_")
+//			.append(fk.getBankBranch() != null ? fk.getBankBranch()
+//					: "").toString();
+//		}
+//
+//	}
 	
 	/**
 	 * save the LOA details.
@@ -4995,16 +4990,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param serviceList the service list
 	 * @throws Exception the exception
 	 */
+	/*
 	private void generateJadualHarga(ScAttachment attachment,
 			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList, boolean isS1OrS2)
 					throws Exception {
 		if (serviceList.size() > 0 || productList.size() > 0) {
 			InputStream inputStream = null;
 			try {
-				/*FileInputStream inputStream = new FileInputStream(new File(
-						FacesContext.getCurrentInstance().getExternalContext()
-						.getRealPath("/WEB-INF/templates")
-						+ "/sc/loa/jadual-harga.xlsx"));*/
 
 				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
 				inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
@@ -5117,6 +5109,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 	}
+	*/
 
 	/**
 	 * Form specification.
@@ -5164,6 +5157,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param serviceList the service list
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("resource")
 	private void generateSpecification(ScAttachment attachment,
 			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
 					throws Exception {
@@ -5411,6 +5405,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/**
 	 * Save progressive paymnt list.
 	 */
+	/*
 	private void saveProgressivePaymntList() {
 		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
 				.getProgressivePaymentList();
@@ -5446,6 +5441,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().getScLoa().setScQtProgPayments(null);
 		}
 	}
+	*/
 
 	/**
 	 * Gets the bond letter stream content.
@@ -6159,7 +6155,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	private void calculateOverallCtAmtForSupplier(){
 		ScLoa scLoa = getManagedBean().getScLoa();
-		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+		//SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		BigDecimal overallContractAmt = scLoa.getLoaAmt();
 //		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
 //				&& null != scLoa.getGstAmt()) {
@@ -6699,6 +6695,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}	
 
+	/*
 	private PmDocument getDocumentDtls(String docCategoryCode){
 		IDocumentSO documentSO = null;
 		PmDocument document = null;
@@ -6723,6 +6720,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			documentSO = null;
 		}
 	}
+	*/
 
 	/**
 	 * Prepare signer info.
@@ -7204,6 +7202,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setContractAdmin(pmUserNull);
 		}
 		//#26475 - end
+		
+		//Bug #30837
+		BigDecimal contractDuration = scLoa.getContractDuration();
+		Calendar contractExpDate = Calendar.getInstance();
+		contractExpDate.setTime(scLoa.getContractEffDate());
+		contractExpDate.add(Calendar.MONTH, contractDuration.intValue());
+		contractExpDate.add(Calendar.DATE, -1);
+
+		if (!scLoa.getContractExpDate().equals(contractExpDate.getTime())){
+			scLoa.setContractExpDate(contractExpDate.getTime());
+		}
 	}
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
@@ -7522,11 +7531,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return false;
 	}
 	
-	
+	/*
 	private FacesScopes getFacesScopes(){
 		FacesScopes fs = new FacesScopes();
 		return fs;
 	}
+	*/
 	
 	/**
 	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
