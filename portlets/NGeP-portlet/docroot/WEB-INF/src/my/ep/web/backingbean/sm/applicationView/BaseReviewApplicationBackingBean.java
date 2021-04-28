@@ -191,6 +191,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmAppl
 	 *            smAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void initApplication(SmAppl smAppl) {
 
 		try {
@@ -281,8 +282,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		finalFilePath = null;
 	}
@@ -1337,7 +1337,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			// TODO reset few values that could have been already submit by
 			// partial submit on ajax functions
 			SmPersonnel per = getManagedBean().getSelectedPersonnel();
 			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
@@ -1539,7 +1538,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// TODO use this object to reset some values on back button click
 		SmPersonnel per = new SmPersonnel();
 		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
@@ -2270,6 +2268,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * View Supplier Profile from Application List
 	 */
+	@SuppressWarnings("deprecation")
 	public void viewApplication(SmAppl selectedSmAppl) {
 		String baseUrl = "";
 		String baseUrlLabel = "";
@@ -2471,13 +2470,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			generateReport(ReportConst.SM_SUPPLIER_PROFILE_G2G_REPORT, paramMap);
 		} else {
 			paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
-			// #29367 - start
-			if (getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED)) {
+			// #29367 & #30574 - start
+			System.out.println("applStatusId ::: " + getManagedBean().getSmAppl().getPmStatus().getStatusId());
+			if(SupplierManagementConst.LIST_APPLICATION_DETAILS_REPORT.contains(getManagedBean().getSmAppl().getPmStatus().getStatusId().longValue())){
+				log.info("1 - SM_APPLICATION_DETAILS");
 				generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 			} else {
+				log.info("2 - SM_SUPPLIER_UNREGIS_REPORT");
 				generateReport(ReportConst.SM_SUPPLIER_UNREGIS_REPORT, paramMap);
 			}
-			// #29367 - end
+			// #29367 & #30574 - end
 		}
 		//25792 - end
 	}

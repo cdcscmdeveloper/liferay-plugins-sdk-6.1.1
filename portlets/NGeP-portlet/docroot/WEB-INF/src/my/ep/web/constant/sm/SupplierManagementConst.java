@@ -3,6 +3,7 @@
  */
 package my.ep.web.constant.sm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,20 +22,13 @@ public class SupplierManagementConst {
 	public static final Map<String, String> APPLICATION_BASE_PAGE_BY_TYPE;
 	static {
 		Map<String, String> tmp = new HashMap<String, String>();
-		tmp.put("N",
-				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-		tmp.put("C",
-				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-		tmp.put("A",
-				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("B",
-				"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
-		tmp.put("U",
-				"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
-		tmp.put("R",
-				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("RE",
-				"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+		tmp.put("N", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("C", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("A", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("B", "/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+		tmp.put("U", "/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+		tmp.put("R", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("RE", "/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 		APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
 	}
 	// Navigation
@@ -105,10 +99,10 @@ public class SupplierManagementConst {
 	public static final int RECORD_DELETED = 1;
 	public static final String COUNTRY_MALAYSIA_CODE = "MY";
 	public static final String ICT_CATEGORY_L1_CODE = "21";
-	//#28253 - start
+	// #28253 - start
 	public static final String COUNTRY_UNKNOWN_CODE = "ZZ";
 	public static final String COUNTRY_UNKNOWN_NAME = "UNKNOWN";
-	//#28253 - end
+	// #28253 - end
 	public static final String ICT_L2_COMMUNICATION_CODE = "02";
 
 	// Panel Names
@@ -148,37 +142,27 @@ public class SupplierManagementConst {
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
 		FACILITY_TYPE_MAP = new HashMap<String, String>();
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil
-				.getMessage("lbl.sm.facility.type.home.office", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil
-				.getMessage("lbl.sm.facility.type.business.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY, SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
+		FACILITY_TYPE_MAP
+				.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
+		FACILITY_TYPE_MAP
+				.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE, SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE,
+				SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
 	}
 
-	public static String[] CAT_TYPE_CODES = new String[] {
-			SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
-			SupplierManagementConst.CAT_TYPE_WORKSHOP,
-			SupplierManagementConst.CAT_TYPE_INSURANCE,
-			SupplierManagementConst.CAT_TYPE_DOCKYARD,
-			SupplierManagementConst.CAT_TYPE_MANUFACTURING,
-			SupplierManagementConst.CAT_TYPE_PRINTING,
-			SupplierManagementConst.CAT_TYPE_TRAVEL };
+	public static String[] CAT_TYPE_CODES = new String[] { SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
+			SupplierManagementConst.CAT_TYPE_WORKSHOP, SupplierManagementConst.CAT_TYPE_INSURANCE,
+			SupplierManagementConst.CAT_TYPE_DOCKYARD, SupplierManagementConst.CAT_TYPE_MANUFACTURING,
+			SupplierManagementConst.CAT_TYPE_PRINTING, SupplierManagementConst.CAT_TYPE_TRAVEL };
 
-	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3" });
-	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3", "4" });
-	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3", "4", "5" });
-	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3" });
+	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3" });
+	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3", "4" });
+	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3", "4", "5" });
+	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3" });
 
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
@@ -252,10 +236,10 @@ public class SupplierManagementConst {
 	public static final String SVO = "UPS_SVO";
 	public static final String SM_RMK_DOC_TYPE_SVO = "SVO";
 	public static final String SM_RMK_DOC_TYPE_SVC = "SVC";
-	
-	//3460 - Start
+
+	// 3460 - Start
 	public static final String SM_RMK_DOC_TYPE_SDOR = "SD";
-	//3460 - End
+	// 3460 - End
 
 	// Site Visit
 	public static final String CAT_TYPE_TRANSPORTATION = "A";
@@ -309,7 +293,7 @@ public class SupplierManagementConst {
 	public static final int SOFT_CERT_REJECTED = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_REJECTED;
 	public static final int SOFT_CERT_READY_FOR_RENEWAL = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL;
 	public static final int SOFT_CERT_REQ_FAILED = my.ep.constant.sm.SupplierManagementConst.SOFT_CERT_REQ_FAILED;
-	
+
 	public static List<Integer> SOFT_CERT_SHOW_INFORMATION = Arrays.asList(SOFT_CERT_ISSUED,
 			SOFT_CERT_READY_FOR_RENEWAL, IS_SOFTCERT_REQ, SOFT_CERT_PROCESSING);
 
@@ -325,10 +309,10 @@ public class SupplierManagementConst {
 	public static final long PM_STAT_PENDING_PAYMENT = 20401;
 	public static final long PM_STAT_FAILED_PAYMENT = 20402;
 	public static final long PM_STAT_SUCCESS_PAYMENT = 20405;
-	
-	//26555 - START
+
+	// 26555 - START
 	public static final long PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT = 20400;
-	//26555 - END
+	// 26555 - END
 
 	// PO and Approver
 	public static final String PO_HQ = "UPS_PO";
@@ -374,12 +358,11 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_TYPE_FRGNR = "NON-MALAYSIAN";
 	public static final String PERSONNEL_TYPE_BUMI = "BUMI";
 	public static final String PERSONNEL_TYPE_NON_BUMI = "NON-BUMI";
-	//16052019 - SSM INTEGRATION CR
+	// 16052019 - SSM INTEGRATION CR
 	public static final String CAPITAL_GOV_AGENCY = "CAPITAL_GOV_AGENCY";
 	public static final String CAPITAL_GOV_EQUITY = "CAPITAL_GOV_EQUITY";
 	public static final String CAPITAL_FOREIGN = "CAPITAL_FOREIGN";
 	public static final String CAPITAL_LOCAL = "CAPITAL_LOCAL";
-	
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";
@@ -412,21 +395,21 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER;
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY = my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY;
 
-	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
-			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
-	public static List<String> LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME = Arrays
-			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
-	public static List<String> LOCAL_AUTH_BUSINESS_TYPE = Arrays
-			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
-					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
+	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
+	public static List<String> LIST_OF_BUSINESS_TYPE_NOT_ALLOWED_TO_EDIT_COMPANY_NAME = Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG);
+	public static List<String> LOCAL_AUTH_BUSINESS_TYPE = Arrays.asList(
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK,
+			SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK);
 
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT = "ROS";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT = "ROB_I";
@@ -446,12 +429,12 @@ public class SupplierManagementConst {
 	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
 	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
 	// bug #29156 -END
-	
+
 	// bug #29156 -START
 	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
 	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	// bug #29156 -END
-	
+
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
@@ -476,9 +459,9 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
-	//#12483 - START
+	// #12483 - START
 	public static final String PM_STATUS_PENDING_REVISE_APPLICATION = "20398";
-	//#12483 - END
+	// #12483 - END
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
@@ -496,17 +479,24 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_REVIEW_CANCELLATION = 20301;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED = 20117;
 	public static final long PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED = 20116;
-	//26238 -  Disciplonary action - 28801 - START
+	// 26238 - Disciplonary action - 28801 - START
 	public static final long PM_STATUS_PENDING_REVIEW_APPLICATION = 20104;
-	//28801 - END
+	// 28801 - END
 	public static final long PM_STATUS_REJECTED_BY_SYS = 20118L;
 	public static final long PM_STATUS_REGISTRATION_STATUS_REGISTERED = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED;
 	public static final long PM_STATUS_REGISTRATION_STATUS_FOREIGN = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_FOREIGN;
+	public static final long PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
 	public static final long PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
 	public static final long PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
 	public static final long PM_STATUS_PENDING_APPLICATION_INQUIRY = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_INQUIRY;
 	public static final long PM_STATUS_PENDING_APPLICATION_DECLARATION_L = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION;
 	public static final String REJECTED_STATUSES[] = my.ep.constant.sm.SupplierManagementConst.REJECTED_STATUSES;
+	
+	// #30574 - start
+	public static final List<Long> LIST_APPLICATION_DETAILS_REPORT = new ArrayList<Long>(Arrays.asList(PM_STATUS_MOF_ACCT_REG_APPROVED, PM_STATUS_REGISTRATION_STATUS_REGISTERED,
+			PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA, PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME, PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME,
+			PM_STATUS_PO_REJECTED_APPLICATION, PM_STATUS_APPROVER_REJECTED_APPLICATION));
+	// #30574 - end
 
 	public static final String SM_APPL_PAGE_TYPE_BASIC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC;
 	public static final String SM_APPL_PAGE_TYPE_BRANCH = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH;
@@ -585,12 +575,11 @@ public class SupplierManagementConst {
 	public static final String PM_CERT_BODY_OTHERS = "PB00010";
 
 	// delete pending application reason
-	public static final List<String> DPA_REASON_OTHERS_LIST = Arrays
-			.asList(new String[] {
-					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS,
-					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1,
-					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2,
-					my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_3 });
+	public static final List<String> DPA_REASON_OTHERS_LIST = Arrays.asList(new String[] {
+			my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS,
+			my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1,
+			my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2,
+			my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_3 });
 	public static final String DPA_REASON_OTHERS = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS;
 	public static final String DPA_REASON_OTHERS_1 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_1;
 	public static final String DPA_REASON_OTHERS_2 = my.ep.constant.sm.SupplierManagementConst.DPA_REASON_OTHERS_2;
@@ -620,9 +609,9 @@ public class SupplierManagementConst {
 	public static final String PO_ESCALATE_APPROVER = "PO hantar permohonan kepada Pelulus untuk keputusan akhir";
 	public static final String SUPP_REGISTRATION = "Pendaftaran Pembekal";
 	public static final String SUPP_ACCOUNT_ACTIVATION = "Pengaktifan Akaun Pendaftaran";
-	//#12483 - START
+	// #12483 - START
 	public static final String APPROVER_SEND_REVISE_APPL = "Pelulus hantar permohonan kaji semula";
-	//#12483 - END
+	// #12483 - END
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -673,9 +662,9 @@ public class SupplierManagementConst {
 	public static final String BANK_VERIFICATION_FORM_PREFIX = "_PENANDATANGAN_CEK.pdf";
 
 	public static final int MAX_PAYMENT_BANK = 35;
-	
-	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dibatalkan kerana dikenakan Tindakan Tatatertib"; //26238
-	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; //26238
+
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dibatalkan kerana dikenakan Tindakan Tatatertib"; // 26238
+	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
 	public static final String KEY_MAP_PERSONNEL_LIST = "personnelList";
@@ -829,10 +818,11 @@ public class SupplierManagementConst {
 	public String getSTYPE_CONTRACTOR() {
 		return STYPE_CONTRACTOR;
 	}
+
 	public String getSTYPE_BASIC() {
 		return STYPE_BASIC;
 	}
-	
+
 	public String getCOUNTRY_MALAYSIA_CODE() {
 		return COUNTRY_MALAYSIA_CODE;
 	}
@@ -964,6 +954,7 @@ public class SupplierManagementConst {
 	public String getACC_GOVT_SELLER() {
 		return ACC_GOVT_SELLER;
 	}
+
 	public String getSTYPE_GOVT_SELLER() {
 		return STYPE_GOVT_SELLER;
 	}
@@ -1211,31 +1202,35 @@ public class SupplierManagementConst {
 	public String getSmApplCategoryTypeSpecial() {
 		return SM_APPL_CATEGORY_TYPE_SPECIAL;
 	}
-	
+
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
 
-//25792 - start
+	// 25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
 	}
-//25792 - end	
 
-	//28278 -START
+	// 25792 - end
+
+	// 28278 -START
 	public String getMOF_STATUS_DELETED() {
 		return MOF_STATUS_DELETED;
 	}
+
 	public String getMOF_STATUS_CANCELLED() {
 		return MOF_STATUS_CANCELLED;
 	}
-	//28278 -END		
 
-	//26555 -START
+	// 28278 -END
+
+	// 26555 -START
 	public long getPM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT() {
 		return PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT;
 	}
-	//26555 -END
+
+	// 26555 -END
 
 	// #29156 -START
 	public String getMOF_STATUS_DELETED_SUPPLIER() {
@@ -1245,6 +1240,7 @@ public class SupplierManagementConst {
 	public String getMOF_STATUS_EXPIRED_SYSTEM() {
 		return MOF_STATUS_EXPIRED_SYSTEM;
 	}
+
 	// #29156 -END
 
 	// #29156 -START
@@ -1255,11 +1251,13 @@ public class SupplierManagementConst {
 	public String getSM_MOF_DISCIPLINARY_ACTION_CANCEL_REG() {
 		return SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
+
 	// #29156 -START
-	
-	//#12483 - START
-	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE(){
+
+	// #12483 - START
+	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE() {
 		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
 	}
-	//#12483 - END
+
+	// #12483 - END
 }
