@@ -2514,11 +2514,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
 			// #29367 & #29367 - start
 			System.out.println("applStatusId ::: " + getManagedBean().getSmAppl().getPmStatus().getStatusId());
-			if (getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED)
-					|| getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_REGISTERED)
-					|| getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA)
-					|| getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME)
-					|| getManagedBean().getSmAppl().getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME)) {
+			if(SupplierManagementConst.LIST_APPLICATION_DETAILS_REPORT.contains(getManagedBean().getSmAppl().getPmStatus().getStatusId().longValue())){
 				log.info("1 - SM_APPLICATION_DETAILS");
 				generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 			} else {
