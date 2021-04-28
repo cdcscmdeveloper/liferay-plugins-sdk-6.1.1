@@ -171,10 +171,15 @@ public class SmBulkApplicationBackingBean extends
 
 	public void rejectBulkApplication() {
 		setSelectedRejectedResonsToVO();
+		//#21937 - start
+		if(getManagedBean().getApplStatus().equals(getManagedBean().getRECOMMEND_APPROVE())){
+			RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+		} else {
 		// #15629 -- start - 20/1/2020
 		//		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
-		submitReject();
-		// #15629 -- end - 20/1/2020
+			submitReject();
+		}
+		// #15629 -- end - 20/1/2020, #21937 - end
 	}
 
 	public void submitReject() {
@@ -188,14 +193,11 @@ public class SmBulkApplicationBackingBean extends
 
 			try {
 				//21937 - start
-				//21937, 15629 - reject pop-up removed
-				/*
 				if(bulkAppl.getSelectedReasonDescs() == null
 						|| bulkAppl.getSelectedReasonDescs().size() == 0){
 					throw new EpException(
 							SmCommonUtil.getMessage("lbl.sm.mandatory.rejection.remark", null));
 				}
-				*/
 				//21937 - end
 				setApplPmStatus(
 						SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER,
@@ -630,8 +632,6 @@ public class SmBulkApplicationBackingBean extends
 	 * Sets the SM application rejection reasons selected.
 	 */
 	private void setSmApplRejectionReasons(SmBulkApplicationVO bulkVO) {
-		//21937, 15629 - reject pop-up removed
-		if(bulkVO.getSelectedReasonDescs() == null) return;
 		StringBuilder sb = new StringBuilder();
 		int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
