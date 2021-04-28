@@ -2529,6 +2529,18 @@ public class EvaluationBackingBean extends
 					evaluationStageStatusCheck();
 					evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 					getManagedBean().setTechnicalSummaryGenerated(true);
+					//#25138,#21695 - display summary package if demorequired - start 
+					if(this.getManagedBean().getScQt().isDemoRequired()){
+						this.getManagedBean().setQualifiedSuppliersDM(
+								new SummarySupplierPagingDataModel(
+										"oneTierQualifiedSupplier", true, false,
+										null, evalReqDTO.getResultStages()));
+						this.getManagedBean().setDisqualifiedSuppliersDM(
+								new SummarySupplierPagingDataModel(
+										"oneTierDisQualifiedSupplier", false,
+										false, null, evalReqDTO.getResultStages()));
+					}
+					//#25138,#21695 - display summary package if demorequired - start
 				}
 
 				/*this.getManagedBean().setQualifiedSuppliersDM(
