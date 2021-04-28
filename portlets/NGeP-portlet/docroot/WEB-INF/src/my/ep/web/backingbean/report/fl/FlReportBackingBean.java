@@ -26,12 +26,12 @@ import my.ep.dto.pm.authorization.orgprofile.PtjReorgReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.PtjReorgResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmPtjReorg;
-import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -103,8 +103,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			resDTO = rptRequestSO.generateReport(reqDTO);
 			
 			//R5 #14076 start
-			RPTRequestDtl rdtl = new RPTRequestDtl();
-			rdtl.setRequestId(resDTO.getRequestId());
+			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
 			
 			//1 = Contract No 
 			//2 = Contract Request No || Invoice No(Supplier)
@@ -112,39 +112,42 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			//4 = Purchase Request No || Delivery Order No || Fulfilment Received Note  No || Stop Delivery Instruction No || Invoice No
 			
 			if(params.get(FlReportConst.FL_RPT_CONTRACT_NO) != null){	
-				rdtl.setDocumentNo01(params.get(FlReportConst.FL_RPT_CONTRACT_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(FlReportConst.FL_RPT_CONTRACT_NO));
 			}	
 			
 			if(params.get(FlReportConst.FL_RPT_CONTRACT_REQ_NO) != null){	
-				rdtl.setDocumentNo02(params.get(FlReportConst.FL_RPT_CONTRACT_REQ_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(FlReportConst.FL_RPT_CONTRACT_REQ_NO));
 			} 
 			if(params.get(FlReportConst.FL_RPT_SUPPL_INV_NO) != null){	
-				rdtl.setDocumentNo02(params.get(FlReportConst.FL_RPT_SUPPL_INV_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(FlReportConst.FL_RPT_SUPPL_INV_NO));
 			} 
 			
 			if(params.get(FlReportConst.FL_RPT_PURCHASE_ORDER) != null){	
-				rdtl.setDocumentNo03(params.get(FlReportConst.FL_RPT_PURCHASE_ORDER));
+				restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(FlReportConst.FL_RPT_PURCHASE_ORDER));
 			}
 			
 			if(params.get(FlReportConst.FL_RPT_COTRACT_ORDER) != null){	
-				rdtl.setDocumentNo03(params.get(FlReportConst.FL_RPT_COTRACT_ORDER));
+				restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(FlReportConst.FL_RPT_COTRACT_ORDER));
 			}
 			
 			if(params.get(FlReportConst.FL_RPT_DELI_ORD_NO) != null){
-				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_DELI_ORD_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo04(params.get(FlReportConst.FL_RPT_DELI_ORD_NO));
 			}
 			if(params.get(FlReportConst.FL_RPT_FRN_NO) != null){
-				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_FRN_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo04(params.get(FlReportConst.FL_RPT_FRN_NO));
 			}
 			if(params.get(FlReportConst.FL_RPT_STOP_INSTR_NO) != null){
-				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_STOP_INSTR_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo04(params.get(FlReportConst.FL_RPT_STOP_INSTR_NO));
 			}		
 			if(params.get(FlReportConst.FL_RPT_INV_NO) != null){	
-				rdtl.setDocumentNo04(params.get(FlReportConst.FL_RPT_INV_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo04(params.get(FlReportConst.FL_RPT_INV_NO));
 			}
-		
-			if(rdtl.getDocumentNo01() != null || rdtl.getDocumentNo02() != null || rdtl.getDocumentNo03() != null || rdtl.getDocumentNo04() != null ){
-				addRptRequestDetail(rdtl);	
+			if(params.get(FlReportConst.FL_RPT_PURCHASE_REQUEST) != null){	
+				restDtlDTO.getRptRequestDtl().setDocumentNo04(params.get(FlReportConst.FL_RPT_PURCHASE_REQUEST));
+			}
+
+			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null || restDtlDTO.getRptRequestDtl().getDocumentNo02() != null || restDtlDTO.getRptRequestDtl().getDocumentNo03() != null || restDtlDTO.getRptRequestDtl().getDocumentNo04() != null ){
+				addRptRequestDetail(restDtlDTO);	
 			}
 			//R5 #14076 end
 				
@@ -156,10 +159,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 
 	//R5 #14076 start
-	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
-				
-		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
-		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
+	public void addRptRequestDetail(RPTRequestDtlReqDTO restDtlDTO){
+					
+		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
+		if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
+				.getUserSessionBean().getUserId());
+		}
+		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}
 	//end
 	/**

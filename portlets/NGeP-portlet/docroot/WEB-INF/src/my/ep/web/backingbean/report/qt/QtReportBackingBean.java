@@ -43,6 +43,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -53,7 +54,6 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.RoleCode;
@@ -209,16 +209,16 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 	
 			//R5 #14076 start		
-			RPTRequestDtl rdtl = new RPTRequestDtl();
-			rdtl.setRequestId(resDTO.getRequestId());
+			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
 			
 			if(params.get(QtReportConst.QUOTATION_TENDER_ID) != null){
 				if(getManagedBean().getQuotationNumber()!= null){
-					rdtl.setDocumentNo01(getManagedBean().getQuotationNumber());
+					restDtlDTO.getRptRequestDtl().setDocumentNo01(getManagedBean().getQuotationNumber());
 				}		
 			}	
-			if(rdtl.getDocumentNo01() != null ){
-				addRptRequestDetail(rdtl);	
+			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null ){
+				addRptRequestDetail(restDtlDTO);		
 			}
 			//R5 #14076 end
 			
@@ -230,14 +230,14 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	}
 	
 	//R5 #14076 start
-	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
+	public void addRptRequestDetail(RPTRequestDtlReqDTO restDtlDTO){
 		
 		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
-		if(rPTRequestDtl.getCreatedBy() == null){
-			rPTRequestDtl.setCreatedBy(getFacesScopes()
+		if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
 				.getUserSessionBean().getUserId());
 		}
-		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
+		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}
 	
 	//Bug #28440 start

@@ -11,10 +11,10 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -76,21 +76,21 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			
 			//R5 #14076 start
-			RPTRequestDtl rdtl = new RPTRequestDtl();
-			rdtl.setRequestId(resDTO.getRequestId());
+			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
 			
 			if(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO) != null){
-				rdtl.setDocumentNo01(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(CtReportConst.PARAM_KEY_CONTRACT_NO));
 			}
 			if(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO) != null){
-				rdtl.setDocumentNo02(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(CtReportConst.PARAM_KEY_PHYSICAL_CONTRACT_NO));
 			}
 			if(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO) != null){
-				rdtl.setDocumentNo03(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(CtReportConst.PARAM_KEY_CIRCULAR_NO));
 			}
 				
-			if(rdtl.getDocumentNo01() != null || rdtl.getDocumentNo02() != null || rdtl.getDocumentNo03() != null ){
-				addRptRequestDetail(rdtl);	
+			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null || restDtlDTO.getRptRequestDtl().getDocumentNo02() != null || restDtlDTO.getRptRequestDtl().getDocumentNo03() != null ){
+				addRptRequestDetail(restDtlDTO);	
 			}
 			//R5 #14076 end
 			
@@ -106,10 +106,14 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 	}
 	
 	//R5 #14076 start
-	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
+	public void addRptRequestDetail(RPTRequestDtlReqDTO restDtlDTO){
 				
 		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
-		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
+		if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
+				.getUserSessionBean().getUserId());
+		}
+		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}
 	//end
 
