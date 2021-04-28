@@ -26,15 +26,14 @@ import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.rpt.RPTRequestDtl;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
 import my.ep.web.constant.report.DpReportConst;
-import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.dp.DpReportManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -113,28 +112,28 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 			//3 = Purchase In Default No.
 			//4 = Request Note No.
 			
-			//R5 #14076 start		
-			RPTRequestDtl rdtl = new RPTRequestDtl();
-			rdtl.setRequestId(resDTO.getRequestId());
+			//R5 #14076 start	
+			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
+			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
 			
 			if(params.get(DpReportConst.PARAM_PI_NO) != null){	
-				rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_PI_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(DpReportConst.PARAM_PI_NO));
 			}
 			if(params.get(DpReportConst.PARAM_SQ_NO) != null){	
-				rdtl.setDocumentNo01(params.get(DpReportConst.PARAM_SQ_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo01(params.get(DpReportConst.PARAM_SQ_NO));
 			}
 			if(params.get(DpReportConst.PARAM_LOA_NUM) != null){	
-				rdtl.setDocumentNo02(params.get(DpReportConst.PARAM_LOA_NUM));
+				restDtlDTO.getRptRequestDtl().setDocumentNo02(params.get(DpReportConst.PARAM_LOA_NUM));
 			}
 			if(params.get(DpReportConst.PARAM_PID_NO) != null){	
-				rdtl.setDocumentNo03(params.get(DpReportConst.PARAM_PID_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo03(params.get(DpReportConst.PARAM_PID_NO));
 			}
 			if(params.get(DpReportConst.PARAM_RN_NO) != null){	
-				rdtl.setDocumentNo04(params.get(DpReportConst.PARAM_RN_NO));
+				restDtlDTO.getRptRequestDtl().setDocumentNo04(params.get(DpReportConst.PARAM_RN_NO));
 			}
 			
-			if(rdtl.getDocumentNo01() != null || rdtl.getDocumentNo02() != null || rdtl.getDocumentNo03() != null || rdtl.getDocumentNo04() != null ){
-				addRptRequestDetail(rdtl);	
+			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null || restDtlDTO.getRptRequestDtl().getDocumentNo02() != null || restDtlDTO.getRptRequestDtl().getDocumentNo03() != null || restDtlDTO.getRptRequestDtl().getDocumentNo04() != null ){
+				addRptRequestDetail(restDtlDTO);	
 			}
 			//R5 #14076 end
 			
@@ -148,11 +147,16 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 	}
 	
 	//R5 #14076 start
-	public void addRptRequestDetail(RPTRequestDtl rPTRequestDtl){
-			
-		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);	
-		rptRequestDtlSO.saveRPTRequestDtl(rPTRequestDtl);
+		public void addRptRequestDetail(RPTRequestDtlReqDTO restDtlDTO){
+					
+			IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
+			if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
+				restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
+					.getUserSessionBean().getUserId());
+			}
+			rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}
+	//end
 	
 	//TODO to have in base class
 	public FacesScopes getFacesScopes() {
