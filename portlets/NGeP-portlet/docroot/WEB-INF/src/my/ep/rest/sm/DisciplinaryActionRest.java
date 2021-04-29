@@ -3,14 +3,21 @@ package my.ep.rest.sm;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import my.ep.constant.MessageConst;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -43,11 +50,32 @@ public class DisciplinaryActionRest {
 				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
 				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
+					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
+					 
 					if(disc != null
-							&& disc.getSmSupplier() != null){
+							&& disc.getSmSupplier() != null ){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
-						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);	
+						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
+						
+						if(disc.isSuspendRegistration()){
+							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+							FacesScopes fs = new FacesScopes();
+							reqDTO.setServerName(fs.getRequest().getServerName());
+							reqDTO.setServerPort(fs.getRequest().getServerPort());
+							reqDTO.setSmSupp(disc.getSmSupplier());
+							try {
+								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
+										reqDTO); 
+								SmCommonUtil.redirectToPage(
+										SmApplicationUtil.getApplicationErrorPage(),
+										MessageConst.INFO_721029, new String[] {resDTO.getBasicSupplierAdmin().getPmUser().getLoginId() },
+										FacesMessage.SEVERITY_INFO);
+							} catch (Exception ex) {
+								throw new EpException(ex.getMessage());
+							}
+							
+						}
 						log.info("-----------After------------------"+i);
 						i++;
 					}										
@@ -58,13 +86,19 @@ public class DisciplinaryActionRest {
 					&& updateDAList.getSmDisciplinaryActions() != null
 					&& updateDAList.getSmDisciplinaryActions().size() > 0){
 				for (SmDisciplinaryAction pendingDisc : updateDAList.getSmDisciplinaryActions()) {
-					pendingDisc.getSmSupplier();
-					pendingDisc.getSmSupplier().getSmAppl(); 
-					//27426 : Disciplinary Action - end
-					PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
-					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
-							.getUserId());
-					SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
+					log.info("updateDAList. supplier id=============="+pendingDisc.getSmSupplier().getSupplierId());
+					 
+					if(pendingDisc != null
+							&& pendingDisc.getSmSupplier() != null ){
+
+						pendingDisc.getSmSupplier();
+						pendingDisc.getSmSupplier().getSmAppl(); 
+						//27426 : Disciplinary Action - end
+						PmUser user = SmCommonUtil.getUserByUserId(pendingDisc.getChangedBy());
+						List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user
+								.getUserId());
+						SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(pendingDisc, user, userRoles);
+					}	
 				}
 			}
 			
@@ -72,17 +106,22 @@ public class DisciplinaryActionRest {
 			if(updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0){
 				Date today = new Date(); 
 				for(SmDisciplinaryAction cancelRegBlacklist: updateBCDAList.getSmDisciplinaryActions()){
-					if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
-						if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
-							cancelRegBlacklist.getSmSupplier();
-							cancelRegBlacklist.getSmSupplier().getSmAppl(); 
-							PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
-							List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-							SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
-						}
-						if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
-							cancelRegBlacklist.getSmSupplier();
-							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
+					log.info("updateBCDAList. supplier id=============="+cancelRegBlacklist.getSmSupplier().getSupplierId()); 
+					if(cancelRegBlacklist != null
+							&& cancelRegBlacklist.getSmSupplier() != null){
+
+						if(cancelRegBlacklist.getStartDate().compareTo(today) <= 0){
+							if(cancelRegBlacklist.isPendingBlacklist() || cancelRegBlacklist.isPendingCancel()){
+								cancelRegBlacklist.getSmSupplier();
+								cancelRegBlacklist.getSmSupplier().getSmAppl(); 
+								PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
+								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
+							}
+							if( (cancelRegBlacklist.isBlacklistOwner() || cancelRegBlacklist.isCancelRegistration()) && (!cancelRegBlacklist.isPendingCancel() && !cancelRegBlacklist.isPendingBlacklist() )){//29597 : Disciplinary Action - 26238
+								cancelRegBlacklist.getSmSupplier();
+								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(cancelRegBlacklist);	
+							}
 						}
 					}
 				}
