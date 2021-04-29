@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
 		</p:blockUI>
 
 		<ui:param name="isQTStatusReFinalized"
@@ -21,41 +21,45 @@
 		<ui:param name="validityDaysExpiredQt"
 			value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
 		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-		     				
-		<ui:param name="isBPKTask" 
-				  value="#{suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}" />
-		<ui:param name="readOnlyTask" 
-				  value="#{suppFinalizationBackingBean.managedBean.readOnly}" />
-		<ui:param name="isBPKTaskAndClaimed"  value="#{isBPKTask and !readOnlyTask}" />		
-		
-		<ui:param name="isSecretaryUser" 
-				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />	
-				  
-		<ui:param name="isMofFinalization" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofFinalization}" />	
-				  
-		<ui:param name="isMofSelection" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />	
-				  
-				  
-	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
-		     				
-		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
-					autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
-		
+
+		<ui:param name="isBPKTask"
+			value="#{suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}" />
+		<ui:param name="readOnlyTask"
+			value="#{suppFinalizationBackingBean.managedBean.readOnly}" />
+		<ui:param name="isBPKTaskAndClaimed"
+			value="#{isBPKTask and !readOnlyTask}" />
+
+		<ui:param name="isSecretaryUser"
+			value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />
+
+		<ui:param name="isMofFinalization"
+			value="#{suppFinalizationBackingBean.managedBean.mofFinalization}" />
+
+		<ui:param name="isMofSelection"
+			value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />
+
+
+		<ui:param name="itemOnly"
+			value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />
+
+		<p:messages id="supplierFinalization" showDetail="true"
+			showSummary="false"
+			autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error, info" />
+
 		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
-		
+
 		<ac:gpkiPopup
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
-			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
+			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
 		<div class="BtnSpacing" style="display: inline-block; width: 30%">
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-						immediate="true"
-						action="#{suppFinalizationBackingBean.backAction}"
-						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
+			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+				action="#{suppFinalizationBackingBean.backAction}"
+				rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
 		</div>
-		<div align="right" class="BtnSpacing" style="display: inline-block; width: 100%">
+		<div align="right" class="BtnSpacing"
+			style="display: inline-block; width: 100%">
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
@@ -64,34 +68,34 @@
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-<!-- ***28834 start -->
-						<ui:repeat var="bpmAction"
+					<!-- ***28834 start -->
+					<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-                             <h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button"
-							action="#{suppFinalizationBackingBean.submitAction}"
-							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
-							partialSubmit="true" process="@form" update="@form"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
-							</h:panelGroup>
-							 <h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button"
-							action="#{suppFinalizationBackingBean.submitAction}"
-							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
-							disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
-							partialSubmit="true" process="@form" update="@form"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
-							</h:panelGroup>
-							
+						<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+						</h:panelGroup>
+
 					</ui:repeat>
-		<!-- ***28834 end -->			
-					
+					<!-- ***28834 end -->
+
 				</ui:define>
 			</ui:decorate>
 		</div>
@@ -99,64 +103,75 @@
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 
-		<p:remoteCommand name="onMainTabMenuChangeAction" update="@form" 
-						 partialSubmit="true" process="@form" action="#{suppFinalizationBackingBean.onTabMenuChangeAction}" />
-		<p:tabMenu id="tab" activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}"
-				   model="#{suppFinalizationBackingBean.managedBean.mainMenuModel}">
-				   
+		<p:remoteCommand name="onMainTabMenuChangeAction" update="@form"
+			partialSubmit="true" process="@form"
+			action="#{suppFinalizationBackingBean.onTabMenuChangeAction}" />
+		<p:tabMenu id="tab"
+			activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}"
+			model="#{suppFinalizationBackingBean.managedBean.mainMenuModel}">
+
 			<!-- Menu items are dynamically populated from backing bean -->
-			
+
 		</p:tabMenu>
 
 		<p:panel id="contentPanel">
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.preparationTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/preparation/preparation.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.evaluationReportIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/supplierFinalization/evaluationReport/evaluationReport.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.reportTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.finalizationTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierFinalization.xhtml" />
 			</c:if>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.commEndorsementTabIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/committeeEndorsement/committeeEndorsement.xhtml" />
 			</c:if>
 
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
+			<c:if
+				test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
 							suppFinalizationBackingBean.managedBean.endorsementReportActiveIndex}">
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/committeeEndorsement/endorsementReport.xhtml" />
 			</c:if>
 		</p:panel>
-		 <!-- #29729 Start -->	
-        <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierBranchListPopup.xhtml" />
-        <!-- #29729 End -->
+		<!-- #29729 Start -->
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierBranchListPopup.xhtml" />
+		<!-- #29729 End -->
 
-		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
-		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
-		
-		<p:dialog id="reviseSuppFinalizationDlgs" widgetVar="reviseSuppFinalizationDlgs"
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
+
+		<p:dialog id="reviseSuppFinalizationDlgs"
+			widgetVar="reviseSuppFinalizationDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="400" height="75" closable="false">
 			<table>
 				<tr>
-					<td align="center">
-						<h:graphicImage value="/css/images/design/exclamation.png" /> 
-						<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
-					</td>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
@@ -168,14 +183,14 @@
 					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-		
-		
-					
-			
-			<!-- ***28834 start -->
-			<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
-			width="30%" height="100" closable="false">
+
+
+
+
+		<!-- ***28834 start -->
+		<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+			height="100" closable="false">
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -184,21 +199,22 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-				    onclick="blockWidget.show();"
-					oncomplete="confirmBriefPopup.hide(); "
-					 partialSubmit="true" process="@form" update="@form" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="blockWidget.show();"
+					oncomplete="confirmBriefPopup.hide(); " partialSubmit="true"
+					process="@form" update="@form"
 					action="#{suppFinalizationBackingBean.submitBrief(bpmAction)}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					onclick="confirmBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmBriefPopup.hide();" type="button"
+					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
 		<!-- ***28834 end -->
-		
+
 		<!-- ***28834 start -->
 		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
-			width="30%" height="100" closable="true">
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+			height="100" closable="true">
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -207,14 +223,15 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-			
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-					onclick="ReamrksBriefPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
+
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					onclick="ReamrksBriefPopup.hide();" type="button"
+					partialSubmit="true" process="@this" />
 			</div>
-			
+
 		</p:dialog>
 		<!-- ***28834 end -->
-		
+
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -239,7 +256,7 @@
 
 			</div>
 		</p:dialog>
-		
+
 	</ui:define>
 
 </ui:composition>
