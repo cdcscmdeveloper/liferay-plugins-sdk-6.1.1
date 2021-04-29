@@ -562,6 +562,10 @@ No. Surat Setuju Terima : <span style="font-family:calibri; font-size:13px; text
 		</tr>
 	#end
 	
+	<div style="margin-top: 200px; font-family:calibri; font-size:13px; float:right">
+		$pageNo
+	</div>
+	
 	<div style="margin-top: 200px; font-family:calibri; font-size:13px;">
 	Tandatangan & Cop (Kerajaan) : _____________
 	<br/>

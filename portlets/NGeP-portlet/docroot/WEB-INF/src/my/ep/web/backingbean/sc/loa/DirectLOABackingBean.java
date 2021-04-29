@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -4377,7 +4378,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
             try {
               String filePath = getActualFilePath(scLoaReportAttachment);
               
-              if(filePath.endsWith(".gz")){
+              if(!filePath.endsWith("_merged.pdf.gz")){
                 inputStream = new FileInputStream(new File(filePath));
                 GZIPInputStream gis = new GZIPInputStream(inputStream); 
                 filePath = filePath.replace(".pdf.gz", ".pdf");
@@ -4436,9 +4437,41 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
                 }
                 sstDocument.save(filePath);  
                 File tempFile = new File(tempFilePath);
-                tempFile.delete();
+                if (tempFile.exists()) {
+                  tempFile.delete();
+                }
+                
+                
+                String destinatonZipFilepath = filePath.replace(".pdf", "_merged.pdf.gz");
+                byte[] buffer = new byte[1024];
+                FileInputStream fileInput = null;
+                FileOutputStream fileOutputStream = null;
+                GZIPOutputStream gzipOuputStream = null;
+                try {
+                    fileOutputStream =new FileOutputStream(destinatonZipFilepath);
+                    gzipOuputStream = new GZIPOutputStream(fileOutputStream);
+                    fileInput = new FileInputStream(filePath);
+                    int bytes_read;
+                    while ((bytes_read = fileInput.read(buffer)) > 0) {
+                        gzipOuputStream.write(buffer, 0, bytes_read);
+                    }
+                    gzipOuputStream.finish();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } finally {
+                  if (null != fileInput)
+                    fileInput.close();
+                  if (null != fileOutputStream)
+                    fileOutputStream.close();
+                  if (null != gzipOuputStream)
+                    gzipOuputStream.close();
+                }
+                
+                if (file.exists()) {
+                  file.delete();
+                }
                 if(scLoaReportAttachment.getFilePath().endsWith(".gz")){
-                  String filepath = scLoaReportAttachment.getFilePath().substring(0, scLoaReportAttachment.getFilePath().length() -3);
+                  String filepath = scLoaReportAttachment.getFilePath().replace(".pdf.gz", "_merged.pdf.gz");
                   scLoaReportAttachment.setFilePath(filepath);
                 }
               }
