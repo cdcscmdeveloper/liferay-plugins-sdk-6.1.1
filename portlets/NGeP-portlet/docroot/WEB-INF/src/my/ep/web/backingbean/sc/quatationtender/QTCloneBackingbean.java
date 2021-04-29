@@ -534,6 +534,7 @@ public class QTCloneBackingbean extends
 		// logic to check whether committe will allow for clone or not..
 		// checkIsSpecCommitteFormOrNot();
 		getManagedBean().setCloneCommitteeSelectQt(null);
+		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
 				.getCloneSearchQTDataModel();
@@ -3715,7 +3716,9 @@ public class QTCloneBackingbean extends
 		FacesContext context = FacesContext.getCurrentInstance();
 		ELContext elContext = context.getELContext();
 		CreateQtBackingBean createQtBB = (CreateQtBackingBean) elContext.getELResolver().getValue(elContext, null, "createQtBB");
+		if(null!=scQt.getCircularVer()){//25635-start
 		createQtBB.changePanelGroupItem();
+		}//25635-End
 		}
 	
 	}

@@ -126,7 +126,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 				throw new EpException(MessageConst.ERROR_760495);
 			}
 			
-			if(this.totalClone>=10){
+			if(this.totalClone>10){//25635
 				throw new EpException(MessageConst.ERROR_775151);
 			}
 			
@@ -777,7 +777,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		Integer parametervalue = (Integer) event.getComponent().getAttributes().get("value");
 		if(null==parametervalue || parametervalue.equals(0)){
 			this.totalClone=1;
-		}
+		}else if(parametervalue>10){//25635-start
+			this.totalClone=10;	
+			//throw new EpException(MessageConst.ERROR_775151);
+		}//25635-End
 		
 	}
 	//#29942-End

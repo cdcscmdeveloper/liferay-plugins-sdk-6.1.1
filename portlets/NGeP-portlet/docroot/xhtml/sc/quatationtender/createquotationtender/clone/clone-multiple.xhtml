@@ -24,7 +24,7 @@
 									required="true" label="#{lbl['lbl.sc.quotation.tender.noClone']}"  
 								onkeypress="if (event.keyCode == 13) { quotationTndrCommitteeAppointmentMainCloneSearch.jq.click(); return false; }"
 								value="#{qtMultipleCloneBackingBean.totalClone}"
-								maxlength="1" size="35" >
+								maxlength="2" size="35" >
 								<p:ajax event="change" process="@this" partialSubmit="true" listener="#{qtMultipleCloneBackingBean.validateQuotationTender}" update="clonemultipleTextIdvalue"></p:ajax>
 								</p:inputText>
 								<h:inputHidden value="#{qtMultipleCloneBackingBean.selectedScqt.qtId}" />

@@ -174,6 +174,7 @@ public class QtSpecCloneBackingBean extends
 		// logic to check whether committe will allow for clone or not..
 		// checkIsSpecCommitteFormOrNot();
 		getManagedBean().setCloneCommitteeSelectQt(null);
+		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
 				.getCloneSearchQTDataModel();
@@ -898,6 +899,17 @@ public class QtSpecCloneBackingBean extends
 		FacesContext context = FacesContext.getCurrentInstance();
 		ELContext elContext = context.getELContext();
 		SpecificationBackingBean specificationBackingBean = (SpecificationBackingBean) elContext.getELResolver().getValue(elContext, null, "specificationBackingBean");
+		//25635-start
+		this.getManagedBean().setMarkDeletedScQtScoreSettingTechnical(null);
+		this.getManagedBean().setMarkDeletedScQtScoreSettingFinancial(null);
+		this.getManagedBean().setMarkDeletedScQtScoreSettingOverall(null);
+		getManagedBean().setMarkDeletedTechChecklist(null);
+		getManagedBean().setMarkDeletedFinChecklist(null);
+		this.getManagedBean().setScQtCheckSt2techProposal(null);
+		this.getManagedBean().setScQtCheckSt2financeProposalList(null);
+		this.getManagedBean().setRecommendationPackageScore(null);
+		this.getManagedBean().setRecommendationScore(null);
+		//25635-End
 		specificationBackingBean.retriveTechnicalCheckList();
 		specificationBackingBean.retriveFinancialCheckList();
 		retrieveTechnicalChecklist(tenderResDTO.getQtDetail());
