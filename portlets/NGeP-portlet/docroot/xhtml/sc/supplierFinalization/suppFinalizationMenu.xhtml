@@ -36,9 +36,9 @@
 				  
 		<ui:param name="isMofSelection" 
 				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />
-				  
+		 <!-- #28834 Start -->		  
 	  <ui:param name="checkDisableBfButtonAfterValidation" value="#{suppFinalizationBackingBean.checkDisableBfButtonAfterValidation()}" /> 	
-				  
+			 <!-- #28834 ends -->	  
 				  
 	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
 		     				
@@ -66,7 +66,7 @@
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-<!-- ***28834 start -->
+<!-- ***28834 starts -->
 						<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -93,7 +93,7 @@
 							</h:panelGroup>
 							
 					</ui:repeat>
-		<!-- ***28834 end -->			
+		<!-- ***28834 ends -->			
 					
 				</ui:define>
 			</ui:decorate>
@@ -205,7 +205,7 @@
 		</p:dialog>
 		<!-- ***28834 end -->
 		
-		<!-- ***28834 start -->
+		<!-- ***28834 starts -->
 		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="true">
@@ -223,9 +223,9 @@
 			</div>
 			
 		</p:dialog>
-		<!-- ***28834 end -->
+		<!-- ***28834 ends -->
 		
-		<!-- ***28834 start -->
+		<!-- ***28834 starts -->
 			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="false">
@@ -246,8 +246,8 @@
 					onclick="confirmBriefPopup1.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-		<!-- ***28834 end -->
-		
+		<!-- ***28834 ends -->
+		<!-- #28834 Starts -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -274,6 +274,8 @@
 
 			</div>
 		</p:dialog>
+		
+		<!-- #28834 ends -->
 		
 	</ui:define>
 
