@@ -2497,7 +2497,7 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 
-				// changeMeetingStatusBrief();
+				
 
 			} else {
 				RequestContext.getCurrentInstance().execute("submissionPopup.show()");
