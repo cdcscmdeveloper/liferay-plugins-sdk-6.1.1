@@ -2462,9 +2462,13 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
 	 */
-	//28834 starts
+	//28834 starts new
 	public void submitAction() {
 		ScQtMeeting scQtMeeting = new ScQtMeeting();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		String decisionTypeCode = scQtFinalization.getDecision()
+				  .getParameterCode();
+	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
@@ -2497,16 +2501,25 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 
-				
+				// changeMeetingStatusBrief();
 
 			} else {
-				RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+				if (ParameterConst.DECISION_RBP
+						.equals(decisionTypeCode)
+						)  {
+					RequestContext.getCurrentInstance().execute("confirmBriefPopup1.show()");
+				}
+				else
+				{
+					RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+				}
+				
 			}
 		} else {
 			this.submitSuppFinalization();
 		}
 	}
-	//28834 ends
+	//28834 ends new
 //28834 starts
 	public boolean changeMeetingStatusBrief() {
 		Boolean Meetingstatus= false;
