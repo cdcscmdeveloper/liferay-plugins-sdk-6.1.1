@@ -778,8 +778,8 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 		if(null==parametervalue || parametervalue.equals(0)){
 			this.totalClone=1;
 		}else if(parametervalue>10){//25635-start
-			this.totalClone=10;	
-			//throw new EpException(MessageConst.ERROR_775151);
+			//this.totalClone=10;	
+			throw new EpException(MessageConst.ERROR_775151);
 		}//25635-End
 		
 	}
