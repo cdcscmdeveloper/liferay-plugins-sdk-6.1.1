@@ -41,6 +41,10 @@
 
 		<ui:param name="itemOnly"
 			value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />
+			
+			 <!-- #28834 Start new -->		  
+	  <ui:param name="checkDisableBfButtonAfterValidation" value="#{suppFinalizationBackingBean.checkDisableBfButtonAfterValidation()}" /> 	
+			 <!-- #28834 ends  new-->	
 
 		<p:messages id="supplierFinalization" showDetail="true"
 			showSummary="false"
@@ -68,7 +72,7 @@
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-					<!-- ***28834 start -->
+					<!-- ***28834 start  new -->
 					<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -88,13 +92,14 @@
 								action="#{suppFinalizationBackingBean.submitAction}"
 								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 								disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
+								widgetVar="disableBfButtonAfterValidation"
 								partialSubmit="true" process="@form" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 						</h:panelGroup>
 
 					</ui:repeat>
-					<!-- ***28834 end -->
+					<!-- ***28834 end new-->
 
 				</ui:define>
 			</ui:decorate>
@@ -231,7 +236,7 @@
 		</p:dialog>
 		<!-- ***28834 end -->
 		
-		<!-- ***28834 starts -->
+		<!-- ***28834 starts  new -->
 			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="false">
@@ -252,8 +257,8 @@
 					onclick="confirmBriefPopup1.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-		<!-- ***28834 ends -->
-
+		<!-- ***28834 ends new -->
+<!-- ***28834 starts  new -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -270,7 +275,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="submissionPopup.hide();" update="@form">
+					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "  update="@form">
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
@@ -282,6 +287,6 @@
 	</ui:define>
 
 </ui:composition>
-
+<!-- ***28834 ends new -->
 
 <!-- ***25201 -->
