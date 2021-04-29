@@ -35,10 +35,8 @@
 				  value="#{suppFinalizationBackingBean.managedBean.mofFinalization}" />	
 				  
 		<ui:param name="isMofSelection" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />
-		 <!-- #28834 Start -->		  
-	  <ui:param name="checkDisableBfButtonAfterValidation" value="#{suppFinalizationBackingBean.checkDisableBfButtonAfterValidation()}" /> 	
-			 <!-- #28834 ends -->	  
+				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />	
+				  
 				  
 	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
 		     				
@@ -66,7 +64,7 @@
 						action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
 						rendered="#{(isSecretaryUser or isBPKTaskAndClaimed) and !suppFinalizationBackingBean.isQTMaintenanceScreen()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-<!-- ***28834 starts -->
+<!-- ***28834 start -->
 						<ui:repeat var="bpmAction"
 						value="#{suppFinalizationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -86,14 +84,13 @@
 							action="#{suppFinalizationBackingBean.submitAction}"
 							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 							disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
-							widgetVar="disableBfButtonAfterValidation"
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
 							</h:panelGroup>
 							
 					</ui:repeat>
-		<!-- ***28834 ends -->			
+		<!-- ***28834 end -->			
 					
 				</ui:define>
 			</ui:decorate>
@@ -143,18 +140,11 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/committeeEndorsement/endorsementReport.xhtml" />
 			</c:if>
-			<ui:remove>
-				Enhancement #21694
-			</ui:remove>
-			<c:if test="#{suppFinalizationBackingBean.managedBean.activeIndex eq 
-							suppFinalizationBackingBean.managedBean.reverseTabIndex}">
-				<ui:include
-					src="/xhtml/sc/loiLoaReverse/loiLoaReverseDetails.xhtml" />
-			</c:if>
 		</p:panel>
-       <!-- #29729 Start -->	
+		 <!-- #29729 Start -->	
         <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierBranchListPopup.xhtml" />
         <!-- #29729 End -->
+
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 		
@@ -205,7 +195,7 @@
 		</p:dialog>
 		<!-- ***28834 end -->
 		
-		<!-- ***28834 starts -->
+		<!-- ***28834 start -->
 		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="true">
@@ -223,36 +213,12 @@
 			</div>
 			
 		</p:dialog>
-		<!-- ***28834 ends -->
+		<!-- ***28834 end -->
 		
-		<!-- ***28834 starts -->
-			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
-			width="30%" height="100" closable="false">
-			<table>
-				<tr>
-					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.popup.revisebp']}" /></td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-				    onclick="blockWidget.show();"
-					oncomplete="submissionPopup.show();"
-					 partialSubmit="true" process="@form" update="@form" 
-					/>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					onclick="confirmBriefPopup1.hide();" type="button" partialSubmit="true"  process="@this"/>
-			</div>
-		</p:dialog>
-		<!-- ***28834 ends -->
-		<!-- #28834 Starts -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
 			modal="true">
-			
 
 			<table>
 				<tr>
@@ -265,8 +231,7 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } " 
-					update="@form">
+					oncomplete="submissionPopup.hide();" update="@form">
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
@@ -274,8 +239,6 @@
 
 			</div>
 		</p:dialog>
-		
-		<!-- #28834 ends -->
 		
 	</ui:define>
 
