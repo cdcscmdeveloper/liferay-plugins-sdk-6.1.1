@@ -1796,9 +1796,12 @@ public class SmApplicationUtil {
 		int semiProfCount = 0;
 		//16052019 - SSM INTEGRATION CR
 		int i = 0;
+		int j = 0; //#30444
+		int k = 0; //#30444
 		StringBuilder sb = new StringBuilder();
 		sb.append("<br/>");
 		boolean validPersonnel = true;
+		boolean validPersonnels = true; //#30444
 		boolean showerror = false;
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//16052019 - SSM INTEGRATION CR - To check address complete or not
@@ -1839,6 +1842,16 @@ public class SmApplicationUtil {
 				if (per.isClerical()) {
 					staffCount = staffCount + 1;
 				}
+				//#30444 --START
+				if (per.isClerical() && (per.isManagement() || per.isDirector() )
+						&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
+					validPersonnels = false;
+					sb.append(++k + ". ");
+					sb.append(per.getName());
+					sb.append("<br/>");
+				}
+				//#30444 --END
 			}
 			if (appl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT)) {
@@ -1853,9 +1866,39 @@ public class SmApplicationUtil {
 				if (per.isSemiProf() && !StringUtils.isBlank(per.getEpfNo())) {
 					semiProfCount = semiProfCount + 1;
 				}
+				//#30444 --START
+				if (per.isClerical() && (per.isManagement() || per.isDirector() 
+						|| per.isProf() || per.isSemiProf())
+						&& !managedBean.getBusinessTypeVal().equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)){
+					validPersonnels = false;
+					sb.append(++j + ". ");
+					sb.append(per.getName());
+					sb.append("<br/>");
+				}
+				//#30444 --END				
 			}
-
 		}
+		//#30444 --START	
+		if (!validPersonnels) {
+			validSave = false;
+			StringBuilder sbd = new StringBuilder();
+			sbd.append(sb);
+			if (currentTab != -1) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+			}
+			if (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONTRACTOR)){
+			throw new EpException(MessageConst.ERROR_722687, new String[]
+					{sbd.toString() });
+			}
+			if (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT)){
+			throw new EpException(MessageConst.ERROR_722688, new String[]
+					{sbd.toString() });
+			}
+		}
+		//#30444 --END
 		
 		// start #30076
 		boolean validateSmBranch = true;
