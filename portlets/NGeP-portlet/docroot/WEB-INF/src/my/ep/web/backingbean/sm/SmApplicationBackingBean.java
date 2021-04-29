@@ -5776,6 +5776,10 @@ public class SmApplicationBackingBean extends
 				// update applRefId to NULL if previous data is deleted (9)
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) {
 					cat.setApplRefId(null);
+					
+					//#30864 Start
+					cat.setDisciplinaryActionId(null);
+					//#30864 End
 				}
 				// #25794 & #26031 - end
 				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
