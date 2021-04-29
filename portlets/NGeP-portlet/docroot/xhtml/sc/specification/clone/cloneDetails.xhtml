@@ -115,7 +115,7 @@
 						<td><p:selectOneMenu style="width: 283px;margin-bottom: 5px;"
 								value="#{qtSpecCloneBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions(SourcingConstants.SUPPLIER_SELECTION, SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE,QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)}" />
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions(SourcingConstants.SUPPLIER_SELECTION, SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE,QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,QTStatusConst.QT_PENDING_DOCUMENT_REVISION)}" />
 							</p:selectOneMenu></td>
 						<td />
 						<td />
@@ -206,6 +206,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						onclick="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
+						disabled="#{empty qtSpecCloneBackingBean.managedBean.selectedCloneTender}"
 						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId3" update="@form" process="@all"
 						action="#{qtSpecCloneBackingBean.addToClone()}">
 					 <f:param name="skipvalidation" value="1" />
