@@ -2607,7 +2607,34 @@ return	remarksNotFound;
 	}
 	//28834  ends
 	
+	//28834 starts
+	 public boolean checkDisableBfButtonAfterValidation(){
+
+         boolean hidden = false;
+
+         List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+
+         for (ScQtMeeting meeting : meetingListList) {
+
+                         if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+
+                                                         && QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+
+                                                         && meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+
+                                         hidden = true;
+                                         this.getManagedBean().setDisableBfButton(true);
+                                         
+
+                         }
+
+         }
+
+         return hidden;
+
+}
 	
+		//28834  ends	
 	
 	//28834 start
 		private SuppFinalizationReqDTO validateInfobreif(int index) {
