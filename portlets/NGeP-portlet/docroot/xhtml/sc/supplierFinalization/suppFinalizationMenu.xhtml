@@ -35,7 +35,9 @@
 				  value="#{suppFinalizationBackingBean.managedBean.mofFinalization}" />	
 				  
 		<ui:param name="isMofSelection" 
-				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />	
+				  value="#{suppFinalizationBackingBean.managedBean.mofSelection}" />
+				  
+	  <ui:param name="checkDisableBfButtonAfterValidation" value="#{suppFinalizationBackingBean.checkDisableBfButtonAfterValidation()}" /> 	
 				  
 				  
 	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
@@ -84,6 +86,7 @@
 							action="#{suppFinalizationBackingBean.submitAction}"
 							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
 							disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
+							widgetVar="disableBfButtonAfterValidation"
 							partialSubmit="true" process="@form" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
@@ -149,9 +152,9 @@
 					src="/xhtml/sc/loiLoaReverse/loiLoaReverseDetails.xhtml" />
 			</c:if>
 		</p:panel>
-        <!-- #29729 Start -->	
+       <!-- #29729 Start -->	
         <ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierBranchListPopup.xhtml" />
-        <!-- #29729 End -->	
+        <!-- #29729 End -->
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
 		
@@ -222,6 +225,29 @@
 		</p:dialog>
 		<!-- ***28834 end -->
 		
+		<!-- ***28834 start -->
+			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.popup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
+					oncomplete="submissionPopup.show();"
+					 partialSubmit="true" process="@form" update="@form" 
+					/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="confirmBriefPopup1.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		<!-- ***28834 end -->
+		
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -239,7 +265,8 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="submissionPopup.hide();" update="@form">
+					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } " 
+					update="@form">
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
