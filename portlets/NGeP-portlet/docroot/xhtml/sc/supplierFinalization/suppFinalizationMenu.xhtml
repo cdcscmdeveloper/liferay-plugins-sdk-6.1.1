@@ -157,7 +157,6 @@
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierBranchListPopup.xhtml" />
 		<!-- #29729 End -->
-
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include
@@ -231,6 +230,29 @@
 
 		</p:dialog>
 		<!-- ***28834 end -->
+		
+		<!-- ***28834 starts -->
+			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.popup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
+					oncomplete="submissionPopup.show();"
+					 partialSubmit="true" process="@form" update="@form" 
+					/>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="confirmBriefPopup1.hide();" type="button" partialSubmit="true"  process="@this"/>
+			</div>
+		</p:dialog>
+		<!-- ***28834 ends -->
 
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
