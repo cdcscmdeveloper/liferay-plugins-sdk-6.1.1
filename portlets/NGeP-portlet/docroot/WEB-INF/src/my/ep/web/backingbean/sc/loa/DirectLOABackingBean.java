@@ -4372,120 +4372,142 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
             // scLoa 
             context.put("scLoa", scLoa);
             
+            // #26130 - Start.
             FileInputStream inputStream = null;
-            PDDocument sstDocument = null;
-            PDDocument lampiranA3Doc = null;
             try {
               String filePath = getActualFilePath(scLoaReportAttachment);
-              
-              if(!filePath.endsWith("_merged.pdf.gz")){
-                inputStream = new FileInputStream(new File(filePath));
-                GZIPInputStream gis = new GZIPInputStream(inputStream); 
-                filePath = filePath.replace(".pdf.gz", ".pdf");
-                
-                File pdfFile = new File(filePath);
-                if (pdfFile.exists()) {
-                  pdfFile.delete();
-                }
-                Path path = FileSystems.getDefault().getPath(filePath); 
-                
-                try {
-                  Files.copy(gis, path );
-                } catch (Exception e) {
-                  log.error("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: " + e.getMessage());
-                }
-    
-                String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
+              if(filePath.endsWith(".gz")){
+                if(!filePath.endsWith("_merged.pdf.gz")){
+                  inputStream = new FileInputStream(new File(filePath));
+                  GZIPInputStream gis = new GZIPInputStream(inputStream); 
+                  filePath = filePath.replace(".pdf.gz", ".pdf");
+                  
+                  File pdfFile = new File(filePath);
+                  if (pdfFile.exists()) {
+                    pdfFile.delete();
+                  }
+                  Path path = FileSystems.getDefault().getPath(filePath); 
+                  
+                  try {
+                    Files.copy(gis, path );
+                  } catch (Exception e) {
+                    log.error("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: " + e.getMessage());
+                  }
       
-                
+                  String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
+                  File file = new File(filePath);
+                  mergePdf(file, filePath, tempFilePath, context);
+                  
+                  String destinatonZipFilepath = filePath.replace(".pdf", "_merged.pdf.gz");
+                  byte[] buffer = new byte[1024];
+                  FileInputStream fileInput = null;
+                  FileOutputStream fileOutputStream = null;
+                  GZIPOutputStream gzipOuputStream = null;
+                  try {
+                      fileOutputStream =new FileOutputStream(destinatonZipFilepath);
+                      gzipOuputStream = new GZIPOutputStream(fileOutputStream);
+                      fileInput = new FileInputStream(filePath);
+                      int bytes_read;
+                      while ((bytes_read = fileInput.read(buffer)) > 0) {
+                          gzipOuputStream.write(buffer, 0, bytes_read);
+                      }
+                      gzipOuputStream.finish();
+                  } catch (IOException ex) {
+                      ex.printStackTrace();
+                  } finally {
+                    if (null != fileInput)
+                      fileInput.close();
+                    if (null != fileOutputStream)
+                      fileOutputStream.close();
+                    if (null != gzipOuputStream)
+                      gzipOuputStream.close();
+                  }
+                  
+                  if (file.exists()) {
+                    file.delete();
+                  }
+                  if(!scLoaReportAttachment.getFilePath().endsWith("_merged.pdf.gz")){
+                    String filepath = scLoaReportAttachment.getFilePath().replace(".pdf.gz", "_merged.pdf.gz");
+                    scLoaReportAttachment.setFilePath(filepath);
+                  }
+                }
+              } else if (filePath.endsWith(".pdf")) {
+                String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
                 File file = new File(filePath);
-                sstDocument = PDDocument.load(file);
-                int noOfPages = sstDocument.getNumberOfPages();
-                StringBuffer sb = new StringBuffer();
-                sb.append(noOfPages);
-                sb.append(" ");
-                sb.append("daripada");
-                sb.append(" ");
-                sb.append(noOfPages);
-                context.put("pageNo", sb.toString());
-                
-                log.info("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: filePath is: " + filePath);
-                log.info("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: tempFilePath is: " + tempFilePath);
-                
-                DocumentGenerator.getInstance().generatePdfFromVelocity(
-                            SourcingConstants.LOA_AGREEMENT_LAMPIRAN_A3, context,
-                            new FileOutputStream(tempFilePath));
-                
-                log.info("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: SST pages: " + noOfPages);
-                
-                if (noOfPages >= 14) {
-                  sstDocument.removePage(noOfPages-1);
-                }
-                
-                lampiranA3Doc = PDDocument.load(tempFilePath);
-                for (int i = 0; i < noOfPages -1; i++) {
-                    PDPage page = (PDPage) sstDocument.getDocumentCatalog().getAllPages().get(i);
-                    page.setMediaBox(PDPage.PAGE_SIZE_A4);
-                }
-                
-                noOfPages = lampiranA3Doc.getNumberOfPages();
-                log.info("DirectLOABackingBean: generaateUpdatedLampiraA3PDF: Lamiran A3 pages: " + noOfPages);
-                for (int i = 0; i < noOfPages; i++) {
-                  PDPage page = (PDPage) lampiranA3Doc.getDocumentCatalog().getAllPages().get(i);
-                  page.setMediaBox(PDPage.PAGE_SIZE_A4);
-                  sstDocument.addPage(page);   
-                }
-                sstDocument.save(filePath);  
-                File tempFile = new File(tempFilePath);
-                if (tempFile.exists()) {
-                  tempFile.delete();
-                }
-                
-                
-                String destinatonZipFilepath = filePath.replace(".pdf", "_merged.pdf.gz");
-                byte[] buffer = new byte[1024];
-                FileInputStream fileInput = null;
-                FileOutputStream fileOutputStream = null;
-                GZIPOutputStream gzipOuputStream = null;
-                try {
-                    fileOutputStream =new FileOutputStream(destinatonZipFilepath);
-                    gzipOuputStream = new GZIPOutputStream(fileOutputStream);
-                    fileInput = new FileInputStream(filePath);
-                    int bytes_read;
-                    while ((bytes_read = fileInput.read(buffer)) > 0) {
-                        gzipOuputStream.write(buffer, 0, bytes_read);
-                    }
-                    gzipOuputStream.finish();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } finally {
-                  if (null != fileInput)
-                    fileInput.close();
-                  if (null != fileOutputStream)
-                    fileOutputStream.close();
-                  if (null != gzipOuputStream)
-                    gzipOuputStream.close();
-                }
-                
-                if (file.exists()) {
-                  file.delete();
-                }
-                if(scLoaReportAttachment.getFilePath().endsWith(".gz")){
-                  String filepath = scLoaReportAttachment.getFilePath().replace(".pdf.gz", "_merged.pdf.gz");
-                  scLoaReportAttachment.setFilePath(filepath);
-                }
+                mergePdf(file, filePath, tempFilePath, context);
               }
             } finally {
-              if (null != sstDocument)
-              sstDocument.close();  
-              if (null != lampiranA3Doc)
-              lampiranA3Doc.close();
               if (null != inputStream)
               inputStream.close();
             }
+            // #26130 - End.
         }
     }
     // #26130 - End.
+    
+    // #26130 - Start.
+    /**
+     * @param file
+     * @param filePath
+     * @param tempFilePath
+     * @param context
+     * @throws IOException
+     */
+    public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
+      PDDocument sstDocument = null;
+      PDDocument lampiranA3Doc = null;
+      try {
+        sstDocument = PDDocument.load(file);
+        int noOfPages = sstDocument.getNumberOfPages();
+        StringBuffer sb = new StringBuffer();
+        sb.append(noOfPages);
+        sb.append(" ");
+        sb.append("daripada");
+        sb.append(" ");
+        sb.append(noOfPages);
+        context.put("pageNo", sb.toString());
+        
+        log.info("DirectLOABackingBean: mergePdf(): filePath is: " + filePath);
+        log.info("DirectLOABackingBean: mergePdf(): tempFilePath is: " + tempFilePath);
+        
+        DocumentGenerator.getInstance().generatePdfFromVelocity(
+            SourcingConstants.LOA_AGREEMENT_LAMPIRAN_A3, context,
+            new FileOutputStream(tempFilePath));
+        
+        log.info("DirectLOABackingBean: mergePdf(): SST pages: " + noOfPages);
+        
+        if (noOfPages >= 14) {
+          sstDocument.removePage(noOfPages-1);
+        }
+        
+        lampiranA3Doc = PDDocument.load(tempFilePath);
+        for (int i = 0; i < noOfPages -1; i++) {
+          PDPage page = (PDPage) sstDocument.getDocumentCatalog().getAllPages().get(i);
+          page.setMediaBox(PDPage.PAGE_SIZE_A4);
+        }
+        
+        noOfPages = lampiranA3Doc.getNumberOfPages();
+        log.info("DirectLOABackingBean: mergePdf(): Lamiran A3 pages: " + noOfPages);
+        for (int i = 0; i < noOfPages; i++) {
+          PDPage page = (PDPage) lampiranA3Doc.getDocumentCatalog().getAllPages().get(i);
+          page.setMediaBox(PDPage.PAGE_SIZE_A4);
+          sstDocument.addPage(page);   
+        }
+        sstDocument.save(filePath);  
+        File tempFile = new File(tempFilePath);
+        if (tempFile.exists()) {
+          tempFile.delete();
+        }
+      } catch (Exception e) {
+        log.error("DirectLOABackingBean: mergePdf(): error message is: " + e.getMessage());
+      } finally {
+        if (null != sstDocument)
+        sstDocument.close();  
+        if (null != lampiranA3Doc)
+        lampiranA3Doc.close();
+      }
+    }
+    // #26130 - End. 
     
 	/**
 	 * Gets the qt award so.
