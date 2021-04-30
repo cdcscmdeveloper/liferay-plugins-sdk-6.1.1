@@ -3205,6 +3205,18 @@ return	remarksNotFound;
 			throw new EpException(MessageConst.ERROR_760360);
 		}
 		
+		if (ParameterConst.DECISION_RBP
+				  .equals(decisionTypeCode) && 
+		CollectionUtils.isEmpty(
+			scQtFinalization.getScQtFinalizationRemarks())) {
+	navigateToSupplierFinalizationTab();
+	initializeFinalizationRemarks();
+	
+	// Remarks are mandatory for QT cancellation
+	throw new EpException(MessageConst.ERROR_760360);
+}
+		
+		
 		/*
 		 * Enhancement #21694
 		 * SET MEETING MEMBER ACTIVITY
