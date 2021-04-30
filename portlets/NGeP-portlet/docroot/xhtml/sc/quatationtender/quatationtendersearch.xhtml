@@ -108,7 +108,7 @@
 					<ui:remove>
 						Bug #27412 START
 					</ui:remove>
-					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;" rendered="#{!qTDetailBB.isMofSupplier()}">
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:200px;white-space: normal;" rendered="#{!qTDetailBB.isMofSupplier()}">
 						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" rendered="#{ParameterConst.doctypeSupplierFinalization ne qTDetailBB.managedBean.qtnTenderSearchBean.docType and !qTDetailBB.managedBean.bdSfFlow}"/>
 						<h:outputText value="#{scQt.statusDesc}" rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}"/>
 					</p:column>
