@@ -34,6 +34,11 @@
 				<br />
 				<h:outputText
 					value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
+				<!-- 30865 Start -->	
+				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" style="color:red;text-align:left;">
+					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
+				</p:outputLabel>
+				<!-- 30865 End -->	
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
@@ -52,6 +57,10 @@
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
+				<!-- 30865 Start -->
+				<h:outputText value="#{lbl['lbl.sm.catCodes.cancel']}"
+					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.CANCEL_RECORD_STATUS}" />
+				<!-- 30865 End -->	
 			</p:column>
 		</p:dataTable>
 		<br />

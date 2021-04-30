@@ -207,6 +207,9 @@ public class SupplierManagementConst {
 	public static final String NEW_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
+	//30865 Start
+	public static final int CANCEL_RECORD_STATUS = 2;
+	//30865 End
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int MIGRATION_DATA_RECORD_STATUS = 7;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
@@ -1125,6 +1128,12 @@ public class SupplierManagementConst {
 		return APPROVED_RECORD_STATUS;
 	}
 
+	//30865 Start
+	public int getCANCEL_RECORD_STATUS() {
+		return CANCEL_RECORD_STATUS;
+	}
+	//30865 End
+	
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
 	}
