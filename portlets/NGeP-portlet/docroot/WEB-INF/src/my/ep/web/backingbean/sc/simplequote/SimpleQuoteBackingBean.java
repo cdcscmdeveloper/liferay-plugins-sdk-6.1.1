@@ -2099,7 +2099,16 @@ public class SimpleQuoteBackingBean extends
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote, null,
 				scQuote.getRemarks(), ScSQRemark.class));
-		log.info(" in reloadSimpleQuote : --- HERE 5 : QuoteNo = " + scQuote.getQuoteNo());
+		
+		//#28865 - start
+		if (scQuote.getPurchaseInDefault() != null) {
+			if (scQuote.getPurchaseInDefault().getQuantity() != null
+					&& scQuote.getPurchaseInDefault().getSuppQuantity() != null) {
+				getManagedBean().setQtyNonEditable(Boolean.TRUE);
+			}
+		}
+		// #28865 - end
+
 		getManagedBean().setScQuote(scQuote);
 		// duration calc
 		calculateDuration(scQuote);
