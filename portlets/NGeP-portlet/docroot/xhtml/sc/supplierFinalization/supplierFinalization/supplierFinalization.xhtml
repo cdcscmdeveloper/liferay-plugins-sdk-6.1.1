@@ -70,6 +70,11 @@
 										<c:when test="#{disableSelect}">
 											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownAll()}" />
 										</c:when>
+										<ui:remove>#26169 : START Added By Haidah</ui:remove>
+										<c:when test="#{!suppFinalizationBackingBean.managedBean.hasSupplierQualified}">
+											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDownNoSupplierQualified()}" />
+										</c:when>
+										<ui:remove>#26169 : END</ui:remove>
 										<c:otherwise>
 											<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 										</c:otherwise>

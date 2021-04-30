@@ -2205,7 +2205,17 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public ScRemark getPendingRecItemizedRemark() {
 		return pendingRecItemizedRemark;
 	}
+	
+	//#26169 #38 - Start
+	public boolean isHasSupplierQualified() {
+		return isHasSupplierQualified;
+	}
 
+	public void setHasSupplierQualified(boolean isHasSupplierQualified) {
+		this.isHasSupplierQualified = isHasSupplierQualified;
+	}
+	//#26169 #38 - End
+		
 	/**
 	 * @param pendingRecItemizedRemark the pendingRecItemizedRemark to set
 	 */
