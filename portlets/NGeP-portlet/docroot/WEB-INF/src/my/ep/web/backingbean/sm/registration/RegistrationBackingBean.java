@@ -124,7 +124,7 @@ import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#13320 - Rahim
 
-//import com.liferay.portal.security.auth.AuthVerifierResult.State;
+import com.liferay.portal.security.auth.AuthVerifierResult.State;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
