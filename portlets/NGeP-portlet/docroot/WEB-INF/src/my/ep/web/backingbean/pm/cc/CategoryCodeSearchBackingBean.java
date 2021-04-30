@@ -998,7 +998,14 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 									}										
 								}
 							}  
-						} 
+						} else if(disc.isBumiputeraCancel()){
+							//30841 - All Bumiputera category code did not display in the system when supplier want to add new Bumiputera category code - start
+							if (pmCategoryL3.getBumiPercentage() > 50 ){ 
+								item.setDisabled(true);
+								log.info("Disciplinary Action - disabled by bumiputera"); 
+							//30841 - All Bumiputera category code did not display in the system when supplier want to add new Bumiputera category code - end
+						}
+					}  
 						selectItems.add(item);
 					}
 				}
