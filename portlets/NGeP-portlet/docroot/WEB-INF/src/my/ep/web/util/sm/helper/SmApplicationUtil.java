@@ -3739,8 +3739,7 @@ public class SmApplicationUtil {
 					apprvList.add(cat);
 					//30865 - Start
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
-					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-							|| managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
 						cat.setCancelCategory(true);
 						apprvList.add(cat);
 					}
@@ -3792,7 +3791,12 @@ public class SmApplicationUtil {
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					addtnlList.add(cat);
 				}
+				//30865 - Start
+			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
+					cat.setCancelCategory(true);
+					existingList.add(cat);
 			}
+				//30865 - End
 		}
 		if (managedBean.getActiveCategoryList() != null
 				&& !managedBean.getActiveCategoryList().isEmpty()) {
