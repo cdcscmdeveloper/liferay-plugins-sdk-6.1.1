@@ -4366,12 +4366,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if(null!=finalizationReport.getPmDocument()){
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocDefinitionKey())) {
 						++count;
+						
 						// #18685 - Start
 						if (null == getManagedBean().getNewBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
-							getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList );
+							getManagedBean().setNewBriefingPaperReportList(newBriefingPaperReportList);
 						}
 						// #18685 - End
+						
 						if (reportTitleList.contains(finalizationReport.getPmDocument().getDocName())) {
 							getManagedBean().getNewBriefingPaperReportList().add(finalizationReport);
 							iterator.remove();
@@ -4379,14 +4381,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						} 
 					} 
 					
-					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) && finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
+					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK) &&
+							finalizationReport.getPmDocument().getDocName().equals(SourcingConstants.UDPUPBM_REPORT)) {
 						// #18685 - Start
 						if (null == getManagedBean().getSfBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> sFBriefingPaperReportList = new ArrayList<>();
-							getManagedBean().setSfBriefingPaperReportList(sFBriefingPaperReportList );
+							getManagedBean().setSfBriefingPaperReportList(sFBriefingPaperReportList);
 						}
+						
 						getManagedBean().getSfBriefingPaperReportList().add(finalizationReport);
 						// #18685 - End
+						
 						iterator.remove();
 						continue;
 					}
@@ -4401,8 +4406,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<ScQtFinalizationReport> consolidationBriefingPaperReportList = new ArrayList<>();
 							getManagedBean().setConsolidationBriefingPaperReportList(consolidationBriefingPaperReportList );
 						}
+						
 						getManagedBean().getConsolidationBriefingPaperReportList().add(finalizationReport);
 						// #18685 - End
+						
 						iterator.remove(); 
 						continue;
 						
@@ -4754,6 +4761,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			
 			List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
+
+			finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+			finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+			
 			briefingPaperReportList.add(finalizationReport);
 			
 			reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
@@ -4763,7 +4774,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport report : getManagedBean().getNewBriefingPaperReportList()) {
 				if (report.getTitle().equalsIgnoreCase(finalizationReport.getTitle())) {
 					getManagedBean().getNewBriefingPaperReportList().set(index, finalizationReport);
-					
+					getManagedBean().setSelectedBriefingReport(finalizationReport);
+
 					break;
 				}
 				

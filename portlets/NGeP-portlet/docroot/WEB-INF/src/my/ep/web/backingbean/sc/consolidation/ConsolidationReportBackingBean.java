@@ -112,9 +112,10 @@ public class ConsolidationReportBackingBean extends
 	private static final Logger log = EpLogger
 			.getLogger(ConsolidationReportBackingBean.class);
 
-	private final static int BRIEFING_PAPER_TAB_INDEX = 0;
+	private final static int BRIEFING_PAPER_TAB_INDEX = 3; //#18685
 	private final static int PACKAGE_TYPE_TAB_INDEX = 1;
 	private final static int ITEMIZED_TYPE_TAB_INDEX = 2;
+	private final static int EVALUATION_REPORT_TAB_INDEX = 0; //#18685
 
 	private final static Long DEFAULT_ITEM = 0L;
 	private final static Long DEFAULT_ZONE = 0L;
@@ -160,7 +161,7 @@ public class ConsolidationReportBackingBean extends
 	public void onTabMenuChangeAction(int tabIndex) {
 		switch (tabIndex) {
 		case 0:
-			navigateToBriefingPaperTab();
+			navigateToEvaluationReport(); //#18685
 			break;
 		case 1:
 			navigateToPackagewiseTab();
@@ -168,6 +169,11 @@ public class ConsolidationReportBackingBean extends
 		case 2:
 			navigateToItemizedTab();
 			break;
+		//#18685 -start-	
+		case 3:
+			navigateToBriefingPaperTab();
+			break;
+		//#18685 -end-
 		}
 		onTabMenuChangeAction(tabIndex, true);
 	}
@@ -186,7 +192,7 @@ public class ConsolidationReportBackingBean extends
 		}
 		switch (tabIndex) {
 		case 0:
-			navigateToBriefingPaperTab();
+			navigateToEvaluationReport(); //#18685
 			break;
 		case 1:
 			navigateToPackagewiseTab();
@@ -194,6 +200,11 @@ public class ConsolidationReportBackingBean extends
 		case 2:
 			navigateToItemizedTab();
 			break;
+		//#18685 -start-
+		case 3: 
+			navigateToBriefingPaperTab();
+			break;
+		//#18685 -end-
 		}
 	}
 
@@ -529,9 +540,11 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		ScQtFinalizationReportAttachment reportAttachment = null;
+		
 		if (null != getManagedBean().getCurrentStatusId() 
 				&& getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue()) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+			
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		} else {
 			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
@@ -541,22 +554,24 @@ public class ConsolidationReportBackingBean extends
 				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 			}
 		}
+		
 		downloadFile(reportAttachment);
 	}
 	// #18685 - End
 	
+	//#18685 -start-
 	/**
-	 * To download all reports under Briefing Paper/Kertas Taklimat tab
+	 * To download all reports under Evaluation Report tab.
 	 * 
 	 * @throws Exception
 	 *             the exception that would be thrown in case of any error while
 	 *             downloading the report(s)
 	 */
-	public void downloadAllReports() throws Exception {
-		debugLogger("downloadAllReports");
+	public void downloadAllEvaluationReports() throws Exception {
+		debugLogger("downloadAllEvaluationReports");
 
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
-				.getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
+		//#18685 -end-
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
@@ -573,7 +588,9 @@ public class ConsolidationReportBackingBean extends
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
-			downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+			//#18685 -start-
+			downloadAllFiles("NGeP-Evaluation-Report", scAttachments);
+			//#18685 -end-
 		}
 	}
 
@@ -590,29 +607,43 @@ public class ConsolidationReportBackingBean extends
 			// #18685 - Start.
 			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
 			// #18685 - End.
+			
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getSfBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(getManagedBean().getSfBriefingPaperReportList());
+			}
+			// #18685 - End
+			
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			
 			// #18685 - Start 
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
 				for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
+					
 					if (StringUtils.isNotEmpty(remark.getRemark())) {
 						reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
+						
 						break;
 					}
 				}
 			}
 			
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationUlasanremarks())) {
-              for (ScQtRecommendationUlasanRemarks remark : getManagedBean().getFinalizationUlasanremarks()) {
-                  if (StringUtils.isNotEmpty(remark.getRemark())) {
-                      remark.setSourceName(CommonConstants.BRIEFING_PAPER);
-                  }
-              }
+				for (ScQtRecommendationUlasanRemarks remark : getManagedBean().getFinalizationUlasanremarks()) {
+                 
+					if (StringUtils.isNotEmpty(remark.getRemark())) {
+						remark.setSourceName(CommonConstants.BRIEFING_PAPER);
+					}
+				}
 			}
 			// #18685 - End 
+			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 
@@ -660,6 +691,9 @@ public class ConsolidationReportBackingBean extends
 		SuppFinalizationReqDTO reqDTO = prepareDataToSave();
 
 		try {
+			//#18685 -start-
+			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
+			//#18685 -end-
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
@@ -672,6 +706,20 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			// reqDTO.getScQtFinalization().setBriefingPaperUploaded(false);
+			
+			// #18685 - Start
+			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getSfBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+						getManagedBean().getSfBriefingPaperReportList());
+			}
+			
+			for (ScQtFinalizationReport scQtFinalizationReport : getManagedBean().getNewBriefingPaperReportList()) {
+				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
+			}
+
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			//#18685 -end-
 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.submitConsolidationReport(reqDTO);
@@ -887,12 +935,29 @@ public class ConsolidationReportBackingBean extends
 
 			List<ScQtFinalizationReport> finalizationReports = _scQtFinalization
 					.getScQtFinalizationReports();
-			checkKertasTaklimatReports(finalizationReports);
+			
+			//#18685 -start-
+			List<String> reportTitleList = new ArrayList<>();
+			reportTitleList.add(SourcingConstants.LATAR_BELAKANG_REPORT);
+			reportTitleList.add(SourcingConstants.TUJUAN_REPORT);
+			reportTitleList.add(SourcingConstants.METODOLOGI_PENILAIAN_REPORT);
+			reportTitleList.add(SourcingConstants.UDPUP_REPORT);
+			
+			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.CONSOLIDATION_TASK);
+			//#18685 -end-
+			
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 
 			if (finalizationReports != null) {
-				this.getManagedBean().setFinalizationReports(
-						finalizationReports);
+				//#18685 -start-
+				populateEvolutionReports(finalizationReports, getManagedBean().getScQt());
+				
+				this.getManagedBean().setFinalizationReports(finalizationReports);
+				
+				if (CollectionUtils.isEmpty(getManagedBean().getNewBriefingPaperReportList())) {
+					saveNewBriefingPaperReportList(reportTitleList, _scQtFinalization, qtId);
+				}
+				//#18685 -end-
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -1389,7 +1454,8 @@ public class ConsolidationReportBackingBean extends
 				.getScQtFinalization();
 
 		ScQtFinalizationReportAttachment reportAttachment = null;
-		// Commented this condition for #18685.
+
+		// Commented this condition for #18685 -start-.
 		/*if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
 				.equals(definitionType)) {*/
 			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
@@ -1419,7 +1485,8 @@ public class ConsolidationReportBackingBean extends
 				reportAttachment = null;
 			}
 
-		/*}*/
+		/*}*/ //#18685 -end-
+
 		return reportAttachment;
 	}
 
@@ -1910,4 +1977,55 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 
+	//#18685 -start-
+	public void addDocumentList(ScQt scqt) {
+		log.debug("addDocumentList");
+		List<ScQtFinalizationReport> newBPReportList = this.getManagedBean().getNewBriefingPaperReportList();
+		
+		if (newBPReportList == null) {
+			newBPReportList = new ArrayList<ScQtFinalizationReport>();
+		}
+		
+		ScQtFinalizationReport report = new ScQtFinalizationReport();
+		report.setDocCategory(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		
+		if (scQtFinalization == null) {
+			scQtFinalization = new ScQtFinalization();
+		}
+		
+		report.setScQtFinalization(scQtFinalization);
+		
+		IParameterSO parameterSO = null;
+		
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+
+			report.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		
+		newBPReportList.add(report);
+	}
+	
+	/**
+	 * @return the evaluationReportTabIndex
+	 */
+	public static int getEvaluationReportTabIndex() {
+		return EVALUATION_REPORT_TAB_INDEX;
+	}
+	
+	private void navigateToEvaluationReport() {
+		getManagedBean().setActiveIndex(EVALUATION_REPORT_TAB_INDEX);
+	}
+	//#18685 -end-
+	
 }
