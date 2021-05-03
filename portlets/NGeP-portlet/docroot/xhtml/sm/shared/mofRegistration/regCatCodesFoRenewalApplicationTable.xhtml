@@ -335,16 +335,19 @@
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
 			
+			<!-- 30865 Start -->
 			<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"
 					catcodeL1 ="#{backingBean.managedBean.physicalConsulting}"
 					update="@([id$=catCodeInfPan])"
 					supplierType="#{backingBean.managedBean.smAppl.supplierType}"
+					supplierId="#{backingBean.managedBean.smAppl.smSupplier.supplierId}"
 					facilityType="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
 					paidUpCapital="#{backingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
 					categoryType="#{backingBean.managedBean.smAppl.applCategoryType}"
 					bumiPercentage="#{(backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smSupplier.bumi) ? backingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage : 0}"
 					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
 					special="#{backingBean.managedBean.smAppl.supplierType}" />
+			<!-- 30865 End -->
 			
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
