@@ -785,6 +785,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 										if(arr[7].toString().equalsIgnoreCase(disciplinaryAction.getDisciplinaryActionId().toString())){
 											if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
 												item.setDisabled(true);
+												//Start 30865
+												item.setLabel(item.getLabel()+" (Cancellation of Category Code due to Disciplinary Action.)");
+												//End 30865
 												log.info("Disciplinary Action - disabled cancel category");
 											}
 										}										
@@ -874,6 +877,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 										if(arr[7].toString().equalsIgnoreCase(disciplinaryAction.getDisciplinaryActionId().toString())){
 											if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
 												item.setDisabled(true);
+												//Start 30865
+												item.setLabel(item.getLabel()+" (Cancellation of Category Code due to Disciplinary Action.)");
+												//End 30865
 												log.info("Disciplinary Action - disabled cancel category");
 											}
 										}										
@@ -993,6 +999,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 									if(arr[7].toString().equalsIgnoreCase(disc.getDisciplinaryActionId().toString())){
 										if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
 											item.setDisabled(true);
+											//Start 30865
+											item.setLabel(item.getLabel()+" (Cancellation of Category Code due to Disciplinary Action.)");
+											//End 30865
 											log.info("Disciplinary Action - disabled cancel category");
 										}
 									}										
