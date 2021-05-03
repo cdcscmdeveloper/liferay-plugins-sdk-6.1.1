@@ -217,7 +217,7 @@
 						partialSubmit="true" id="toErrorRequired"
 						update=":form:settingTabId:ruleTypeValueTableID :form:settingTabId:errorDialog"
 						oncomplete="errorDialog.show();"
-						rendered="#{ruleCatalogueBackingBean.updateToRequired(index)}">
+						rendered="#{typeValueObj.errorToRequired}">
 						<f:param name="index" value="#{index}"></f:param>
 						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 					</p:commandLink>
