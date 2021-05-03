@@ -210,6 +210,9 @@ public class SupplierManagementConst {
 	//30865 Start
 	public static final int CANCEL_RECORD_STATUS = 2;
 	//30865 End
+	// 29952 Start
+	public static final int PENDING_ACTIVATION_RECORD_STATUS = 8;
+	// 29952 End
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int MIGRATION_DATA_RECORD_STATUS = 7;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
