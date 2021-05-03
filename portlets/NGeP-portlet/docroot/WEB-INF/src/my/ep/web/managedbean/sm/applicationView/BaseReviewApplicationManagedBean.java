@@ -11,7 +11,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -263,7 +262,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private int totalRecords;
 	private String applicationStatusDesc;
 	//25792 - end
-	
+	// #29664 - start
+	private String poRemarkAfterSiteVisit;
+	private Date poRemarkAfterSiteVisitCreatedDate;
+	private String secondPoUserName = null;
+	// #29664 - start	
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//28771 - start
@@ -1683,44 +1686,45 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	
 	//25792 - start
-		private class SupplierItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	@SuppressWarnings("serial")
+	private class SupplierItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
-			public SupplierItemPagingDataModel() {
-				super("supplierItemTableId");
-				
-			}
-			@Override
-			protected ISearchResultBean<CmSupplierItem> pageChangeListener(
-					ISearchBean<CmSupplierItem> searchBean) {
-				
-				ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-						.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-				try {
-					CatalogueBackingBean bb = new CatalogueBackingBean();
-					bb.getManagedBean().setExpiredTabPageSize(this.getPageSize());
-					
-					System.out.println("Supplier: " + getSmSupplier().getSupplierId());
-					System.out.println("CatalogueInfo: " + getCatalogueInfoItemStatus());
-					reqDTO.setSupplierId(getSmSupplier().getSupplierId());
-					reqDTO.setItemStatus(getCatalogueInfoItemStatus());
-					reqDTO.setSearchBean(searchBean);
-					CatalogueResDTO resDTO = catalogueSO
-							.searchCmSupplierItemByStatus(reqDTO);
-									
-					return resDTO.getSuppItemResultBean();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new SearchResultBean();
-				} finally {
-					catalogueSO = null;
-				}
-			}
+		public SupplierItemPagingDataModel() {
+			super("supplierItemTableId");
 			
 		}
+		@Override
+		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
+				ISearchBean<CmSupplierItem> searchBean) {
+			
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+			try {
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setExpiredTabPageSize(this.getPageSize());
+				
+				//System.out.println("Supplier: " + getSmSupplier().getSupplierId());
+				//System.out.println("CatalogueInfo: " + getCatalogueInfoItemStatus());
+				reqDTO.setSupplierId(getSmSupplier().getSupplierId());
+				reqDTO.setItemStatus(getCatalogueInfoItemStatus());
+				reqDTO.setSearchBean(searchBean);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchCmSupplierItemByStatus(reqDTO);
+								
+				return resDTO.getSuppItemResultBean();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new SearchResultBean<CmSupplierItem>();
+			} finally {
+				catalogueSO = null;
+			}
+		}
+		
+	}
 		
 	
 	public String getAccountType() {
@@ -1927,6 +1931,32 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	//25792 - end	
 	
+	// #29664 - start
+	public String getPoRemarkAfterSiteVisit() {
+		return poRemarkAfterSiteVisit;
+	}
+
+	public void setPoRemarkAfterSiteVisit(String poRemarkAfterSiteVisit) {
+		this.poRemarkAfterSiteVisit = poRemarkAfterSiteVisit;
+	}
+
+	public Date getPoRemarkAfterSiteVisitCreatedDate() {
+		return poRemarkAfterSiteVisitCreatedDate;
+	}
+
+	public void setPoRemarkAfterSiteVisitCreatedDate(Date poRemarkAfterSiteVisitCreatedDate) {
+		this.poRemarkAfterSiteVisitCreatedDate = poRemarkAfterSiteVisitCreatedDate;
+	}
+
+	public String getSecondPoUserName() {
+		return secondPoUserName;
+	}
+
+	public void setSecondPoUserName(String secondPoUserName) {
+		this.secondPoUserName = secondPoUserName;
+	}
+	// #29664 - end
+
 	// #26639 - start
 	public boolean isViewSupplierMaintenancePage() {
 		return viewSupplierMaintenancePage;
