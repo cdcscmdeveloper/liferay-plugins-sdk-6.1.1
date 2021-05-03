@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -46,7 +47,7 @@ public class DisciplinaryActionRest {
 			//26238 - Disciplinary Action - 28798 - end
 			
 			if(releaseDAList.getSmDisciplinaryActions() != null
-					&& releaseDAList.getSmDisciplinaryActions().size() > 0){
+					&& releaseDAList.getSmDisciplinaryActions().size() > 0 ){
 				log.info("releaseDAList.getSmDisciplinaryActions()=============="+releaseDAList.getSmDisciplinaryActions().size());
 				int i = 0;
 				for (SmDisciplinaryAction disc : releaseDAList.getSmDisciplinaryActions()) {
@@ -56,13 +57,10 @@ public class DisciplinaryActionRest {
 							&& disc.getSmSupplier() != null ){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
-						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
 						
 						if(disc.isSuspendRegistration()){
 							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-							FacesScopes fs = new FacesScopes();
-							reqDTO.setServerName(fs.getRequest().getServerName());
-							reqDTO.setServerPort(fs.getRequest().getServerPort());
+
 							reqDTO.setSmSupp(disc.getSmSupplier());
 							try {
 								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
@@ -76,6 +74,8 @@ public class DisciplinaryActionRest {
 							}
 							
 						}
+						 
+						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
 						log.info("-----------After------------------"+i);
 						i++;
 					}										
