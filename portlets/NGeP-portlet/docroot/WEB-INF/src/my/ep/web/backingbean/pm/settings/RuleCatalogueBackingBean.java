@@ -2637,20 +2637,6 @@ public class RuleCatalogueBackingBean extends
 		// 29669 end
 	}
 	
-	// 29669 - start
-	public boolean updateToRequired(int index) {
-		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
-		if (configRuleType.getRangeType() == 1 && index < configRuleType.getConfigRuleValues().size() - 1) {
-			PmConfigRuleValue rulevalue = configRuleType.getConfigRuleValues().get(index + 1);
-			if(rulevalue.getGroupValueId().equals(configRuleType.getConfigRuleValues().get(index).getGroupValueId())) {
-				if (configRuleType.getConfigRuleValues().get(index).getToValue() == null)
-					return true;
-				else return false;
-			} else return false;
-		} else return false;
-	}
-	// 29669 - end
-
 	/**
 	 * update Group Child Date.
 	 * 
