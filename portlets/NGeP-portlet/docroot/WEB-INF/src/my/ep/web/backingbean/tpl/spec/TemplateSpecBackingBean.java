@@ -665,6 +665,10 @@ public class TemplateSpecBackingBean extends
 			filteredList.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 		}
 		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		//#25725 start
+		filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
+		filteredList.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);
+		//#25725 end
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
