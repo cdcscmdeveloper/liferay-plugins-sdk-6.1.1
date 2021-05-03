@@ -3714,14 +3714,18 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					apprvList.add(cat);
-					//30865 - Start
-				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
+					//30865 - Starts
+				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
+						|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
 					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-						cat.setCancelCategory(true);
-						apprvList.add(cat);
+						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
+						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
+							cat.setCancelCategory(true);
+							apprvList.add(cat);
+						}
 					}
 				}
-				//30865 - End
+				//30865 - Ends
 			}
 			if (managedBean.getActiveCategoryList() != null
 					&& !managedBean.getActiveCategoryList().isEmpty()) {
@@ -3768,12 +3772,16 @@ public class SmApplicationUtil {
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					addtnlList.add(cat);
 				}
-				//30865 - Start
-			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
-					cat.setCancelCategory(true);
-					existingList.add(cat);
+				//30865 - Starts
+			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
+					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
+						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
+						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
+							cat.setCancelCategory(true);
+							existingList.add(cat);
+						}
 			}
-				//30865 - End
+				//30865 - Ends
 		}
 		if (managedBean.getActiveCategoryList() != null
 				&& !managedBean.getActiveCategoryList().isEmpty()) {
@@ -13571,6 +13579,18 @@ public class SmApplicationUtil {
 		return resDTO.getSmDisciplinaryActions();
 	}  
 	//26238 -  Disciplonary action - 29399 - end
+	
+	//30865 - Start
+	public static SmDisciplinaryAction retrieveActiveSmDisciplinaryActionByDisciplinaryId(Long disciplinaryId) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+		SmDisciplinaryAction smDisciplinaryAction = new SmDisciplinaryAction();
+		smDisciplinaryAction = supplierDataMaintenanceSO.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryId);
+
+		return smDisciplinaryAction;
+	}  
+	//30865 - End
 	
 	
 	/**
