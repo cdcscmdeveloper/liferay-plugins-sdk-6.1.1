@@ -1316,7 +1316,11 @@ public class ViewApplHistoryBackingBean extends
 			SmSupplier newCurrSupp =  new SmSupplier();
 			newCurrSupp = currSupp;
 			newCurrSupp.setFlagSupplier(true);
-			//27876: Disciplinary Action - start - <27876>
+			//27876: Disciplinary Action - end - <27876>
+			
+			//30872: Disciplinary Action - start - <30872>
+			newCurrSupp.setFlagDASuppProfile(false);
+			//30872: Disciplinary Action - end - <30872>
 			
 			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(newCurrSupp);
 			if(!EntityHelper.isCollectionEmpty(voList)

@@ -471,7 +471,11 @@ public class ViewSuppProfileBackingBean extends
 
 		//27876: Disciplinary Action - start - <27876>
 		currSupp.setFlagSupplier(true);
-		//27876: Disciplinary Action - start - <27876>
+		//27876: Disciplinary Action - end - <27876>
+		
+		//30872: Disciplinary Action - start - <30872>
+		currSupp.setFlagDASuppProfile(true);
+		//30872: Disciplinary Action - end - <30872>
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 		if(!EntityHelper.isCollectionEmpty(voList)
