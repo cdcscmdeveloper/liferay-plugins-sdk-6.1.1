@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -24,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -44,10 +42,13 @@ import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -62,13 +63,13 @@ import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSapVendorCode;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -76,8 +77,6 @@ import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
-import my.ep.web.constant.CommonUIConst;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -145,13 +144,13 @@ public class ViewApplHistoryBackingBean extends
 						.equalsIgnoreCase(getManagedBean().getAccountType())) {
 
 			if (outputTab == 1) {
-				log.info("2nd tab");
+				//log.info("2nd tab");
 				initSecondTabInfo();
 			} else if (outputTab == 2) {
-				log.info("3rd tab");
+				//log.info("3rd tab");
 				initThirdTabInfo();
 			} else if (outputTab == 3) {
-				log.info("4th tab");
+				//log.info("4th tab");
 				if ((SupplierManagementConst.SUPP_TYPE_BASIC
 						.equalsIgnoreCase(getManagedBean().getAccountType())
 						&& !SupplierManagementConst.BUSINESS_TYPE_IND
@@ -163,7 +162,7 @@ public class ViewApplHistoryBackingBean extends
 				}
 
 			} else if (outputTab == 4) {
-				log.info("5th tab");
+				//log.info("5th tab");
 				if (SupplierManagementConst.SUPP_TYPE_BASIC
 						.equalsIgnoreCase(getManagedBean().getAccountType())
 						&& !SupplierManagementConst.BUSINESS_TYPE_IND
@@ -181,6 +180,7 @@ public class ViewApplHistoryBackingBean extends
 	/**
 	 * Pre-render for View Application History
 	 */
+	@SuppressWarnings("deprecation")
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
@@ -337,7 +337,7 @@ public class ViewApplHistoryBackingBean extends
 		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
-		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
+		//log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			personnelsRole.clear();
@@ -352,7 +352,7 @@ public class ViewApplHistoryBackingBean extends
 					}
 				}
 			}
-			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
+			//log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
 			if(personnelsRole != null && personnelsRole.size() > 0) {
 					proceed = false;
 					getManagedBean().setPreRegistration(true);
@@ -474,9 +474,9 @@ public class ViewApplHistoryBackingBean extends
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 		// 25792 - start
-		log.info("Init Sm Appl");
-		log.info("Appl Id: " + smAppl.getApplId());		
-		log.info("Supplier type: " + smAppl.getSupplierType());
+		//log.info("Init Sm Appl");
+		//log.info("Appl Id: " + smAppl.getApplId());		
+		//log.info("Supplier type: " + smAppl.getSupplierType());
 		getManagedBean().setTabActiveIndex(0);
 		viewApplication(smAppl);
 		initWorkflowStatus(getManagedBean().getSmAppl(), status);	
@@ -554,15 +554,15 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	private void initPOApproverDecisionInfo() {
 
-		log.info("initPOApproverDecisionInfo");
+		//log.info("initPOApproverDecisionInfo");
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO()
 				.retrievePOApproverFAandOLASmRemarks(
 						getManagedBean().getSmAppl().getApplNo(),
 						getManagedBean().getSmAppl().getApplId());
 		resetPOApproverDecisionInfo();
 		if (resDTO.getPoApproverRemarksList() != null) {
-			log.info("PoApproverRemarksList() size:"
-					+ resDTO.getPoApproverRemarksList().size());
+			//log.info("PoApproverRemarksList() size:"
+					//+ resDTO.getPoApproverRemarksList().size());
 			for (Object[] obj : resDTO.getPoApproverRemarksList()) {
 				boolean isPoUser = false;
 				boolean isApproverUser = false;
@@ -573,9 +573,9 @@ public class ViewApplHistoryBackingBean extends
 				String docType = (String) obj[3];
 				String remark = (String) obj[4];
 
-				log.info("userName:" + userName + ",remarkCreatedDate:"
-						+ remarkCreatedDate + ",roleType:" + roleType
-						+ ",docType:" + docType + ",remark:" + remark);
+				//log.info("userName:" + userName + ",remarkCreatedDate:"
+						//+ remarkCreatedDate + ",roleType:" + roleType
+						//+ ",docType:" + docType + ",remark:" + remark);
 				
 				if (roleType != null){
 					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
@@ -598,6 +598,49 @@ public class ViewApplHistoryBackingBean extends
 				}
 			}
 		}
+		
+		// #29664 - start
+		SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
+		remarksReqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE);
+		remarksReqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
+
+		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
+
+		if (remaksResDTO.getRemarksList().size() > 0) {
+			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
+				if (poRemark.getRoleCode() != null && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
+					getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
+					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
+
+					if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
+						PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
+						getManagedBean().setSecondPoUserName(user.getUserName());
+					}
+				} else {
+					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(poRemark.getCreatedBy());
+					String roleCode = StringUtils.EMPTY;
+					if (!EntityHelper.isCollectionEmpty(userRoles)) {
+						for (PmUserRole pmRole : userRoles) {
+							if (pmRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value()) && pmRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+								roleCode = pmRole.getPmRole().getRoleCode();
+								break;
+							}
+						}
+					}
+					if ((roleCode != null && roleCode.equals(RoleCode.UPS_PO.value()))) {
+						//System.out.println("getCreatedBy: " + poRemark.getCreatedBy() + " || getRoleCode = " + poRemark.getRoleCode() + " || getRemarkId = "
+								//+ poRemark.getRemarkId() + " || getRemark = " + poRemark.getRemark());
+						getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
+						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
+						if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
+							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
+							getManagedBean().setSecondPoUserName(user.getUserName());
+						}
+					}
+				}
+			}
+		}
+		// #29664 - end
 	}
 
 	/**
@@ -611,6 +654,10 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setApproverUserName(null);
 		getManagedBean().setApproverRemarkCreatedDate(null);
 		getManagedBean().setApproverRemark(null);
+		// #29664 - start
+		getManagedBean().setSecondPoUserName(null);		
+		getManagedBean().setPoRemarkAfterSiteVisit(null);
+		// #29664 - end
 	}
 
 	/**
@@ -788,7 +835,7 @@ public class ViewApplHistoryBackingBean extends
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
 			
-			log.info("Error found while downloading file "+filePath+" : "+e);
+			//log.info("Error found while downloading file "+filePath+" : "+e);
 			//log.error(e);
 			//			e.printStackTrace();
 			
@@ -1226,7 +1273,7 @@ public class ViewApplHistoryBackingBean extends
 	}
 	public void resetInputOnChangeAccountType() {
 		
-		log.info("OnChangeAccountType");
+		//log.info("OnChangeAccountType");
 		getManagedBean().setAgencyType(null);
 		getManagedBean().setAgencyName(StringUtils.EMPTY);
 		getManagedBean().setSearchEpNo(StringUtils.EMPTY);
