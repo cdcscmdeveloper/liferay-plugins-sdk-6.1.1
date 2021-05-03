@@ -7436,7 +7436,7 @@ public class SmApplicationUtil {
 	 */
 	// #29664 & #29663- start
 	public static void manageAndSaveNewSmRemarksWithRoleCode(Long docId, String docType, String remarks, String roleCode) {
-		System.out.println("manageAndSaveNewSmRemarksWithRoleCode | roleCode = " + roleCode);
+		//System.out.println("manageAndSaveNewSmRemarksWithRoleCode | roleCode = " + roleCode);
 		SmRemark remark = new SmRemark();
 		remark.setDocId(docId);
 		remark.setDocType(docType);
@@ -10381,9 +10381,9 @@ public class SmApplicationUtil {
 					.getName());
 			context.put("csIc" + i, smChequeSignatory.getSmPersonnel()
 					.getIdentificationNo());
-			System.out.println("Signatory " + i + ": "
-					+ smChequeSignatory.getSmPersonnel().getName() + " : "
-					+ smChequeSignatory.getSmPersonnel().getIdentificationNo());
+			//System.out.println("Signatory " + i + ": "
+					//+ smChequeSignatory.getSmPersonnel().getName() + " : "
+					//+ smChequeSignatory.getSmPersonnel().getIdentificationNo());
 		}
 		return context;
 	}
