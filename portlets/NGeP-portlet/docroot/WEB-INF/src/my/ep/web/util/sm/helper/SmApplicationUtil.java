@@ -3737,7 +3737,7 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					apprvList.add(cat);
-					//30865 - Start
+					//30865 - Starts
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 						|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
 					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
@@ -3745,7 +3745,7 @@ public class SmApplicationUtil {
 						apprvList.add(cat);
 					}
 				}
-				//30865 - End
+				//30865 - Ends
 			}
 			if (managedBean.getActiveCategoryList() != null
 					&& !managedBean.getActiveCategoryList().isEmpty()) {
@@ -3792,13 +3792,13 @@ public class SmApplicationUtil {
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
 					addtnlList.add(cat);
 				}
-				//30865 - Start
+				//30865 - Starts
 			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
 					cat.setCancelCategory(true);
 					existingList.add(cat);
 			}
-				//30865 - End
+				//30865 - Ends
 		}
 		if (managedBean.getActiveCategoryList() != null
 				&& !managedBean.getActiveCategoryList().isEmpty()) {

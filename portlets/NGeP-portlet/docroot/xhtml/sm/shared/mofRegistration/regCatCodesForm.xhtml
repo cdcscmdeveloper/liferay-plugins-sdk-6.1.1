@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<!-- 30865 Start -->
+	<!-- 30865 Starts -->
 	<table>
 		<tr>
 			<td style="width: 15"><h:outputLabel rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessDesc}" escape="false"  value="#{lbl['lbl.sm.business.desc']}"></h:outputLabel></td>
@@ -59,7 +59,7 @@
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.cancel']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.CANCEL_RECORD_STATUS}" />
-				<!-- 30865 End -->	
+				<!-- 30865 Ends -->	
 			</p:column>
 		</p:dataTable>
 		<br />
