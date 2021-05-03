@@ -4125,21 +4125,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setItemSpecification(itemSpecList);
 			
 			for(ScRequestItemSpecOffer j: itemSpecOfferList){
-				if((j.getSupplierOffer()) != null && !j.getSupplierOffer().isEmpty()){
-					if((j.getNewOfferSpec()) != null && !j.getNewOfferSpec().isEmpty()){
-						getManagedBean().setSupplierOffer(j.getSupplierOffer());	
-						getManagedBean().setNewOfferSpec(j.getNewOfferSpec());
-					}
-				}else if((j.getSupplierOffer()) != null && !j.getSupplierOffer().isEmpty()){
-					if((j.getNewOfferSpec()) == null || j.getNewOfferSpec().isEmpty()){
-						getManagedBean().setSupplierOffer(j.getSupplierOffer());	
-						getManagedBean().setNewOfferSpec(null);
-					}					
-				}else if((j.getNewOfferSpec()) != null && !j.getNewOfferSpec().isEmpty()){
-					if((j.getSupplierOffer()) == null || j.getSupplierOffer().isEmpty()){
-						getManagedBean().setSupplierOffer(null);	
-						getManagedBean().setNewOfferSpec(j.getNewOfferSpec());
-					}
+				if((j.getSupplierOffer() != null && !j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() != null && !j.getNewOfferSpec().isEmpty())){
+					getManagedBean().setSupplierOffer(j.getSupplierOffer());	
+					getManagedBean().setNewOfferSpec(j.getNewOfferSpec());					
+				}else if((j.getSupplierOffer() != null && !j.getSupplierOffer().isEmpty()) && (j.getNewOfferSpec() == null || j.getNewOfferSpec().isEmpty())){
+					getManagedBean().setSupplierOffer(j.getSupplierOffer());	
+					getManagedBean().setNewOfferSpec(null);										
+				}else if((j.getNewOfferSpec() != null && !j.getNewOfferSpec().isEmpty()) && (j.getSupplierOffer() == null || j.getSupplierOffer().isEmpty())){
+					getManagedBean().setSupplierOffer(null);	
+					getManagedBean().setNewOfferSpec(j.getNewOfferSpec());					
 				}else{
 					getManagedBean().setSupplierOffer(null);
 					getManagedBean().setNewOfferSpec(null);
