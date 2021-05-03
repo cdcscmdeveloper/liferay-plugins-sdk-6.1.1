@@ -66,6 +66,36 @@
 						rendered="#{empty viewSmApplBackingBean.managedBean.poRemarkCreatedDate}" />
 				</td>
 			</tr>
+			<!-- #29664 start -->
+			<p:column rendered="#{not empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}">
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.name']}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.secondPoUserName}" /></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.secondPoUserName}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.secondPoUserName}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.remark']}" /></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}" />
+				    <p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisit}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.approver.decision.remark.date']}" /></td>
+				<td><c:if test="#{not empty viewSmApplBackingBean.managedBean.poRemarkCreatedDate}" >
+					<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisitCreatedDate}" />
+					</c:if>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.poRemarkAfterSiteVisitCreatedDate}" />
+				</td>
+			</tr>
+			</p:column>			
+			<!-- #29664 end -->
 		</table>
 	</p:panel>
 	
