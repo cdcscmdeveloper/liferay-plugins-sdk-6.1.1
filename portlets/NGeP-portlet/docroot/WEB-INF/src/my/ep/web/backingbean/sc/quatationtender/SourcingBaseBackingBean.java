@@ -5258,5 +5258,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return result;
 	}
     // #11134 - end
+    
+    public boolean isQTCloneStatus(Long currentStatusId){//25635-start
+  		List<Long> CheckStatus=new ArrayList<Long>();
+  		CheckStatus.add(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER);
+  		CheckStatus.add(QTStatusConst.QT_CANCELED_DUETO_PROPOSALVALIDITY_EXPIRED);
+  		CheckStatus.add(QTStatusConst.QT_CLOSE_PERMANENTLY);
+  		CheckStatus.add(QTStatusConst.QT_CANCELED_DUETO_MINISTRY_RESTRUCTING);
+  		CheckStatus.add(QTStatusConst.QT_PENDING_SPECIFICATION_COMMITTEE_APPOINTMENT);
+  		return CheckStatus.contains(currentStatusId);
+ 
+  	}//25635-End
 
 }

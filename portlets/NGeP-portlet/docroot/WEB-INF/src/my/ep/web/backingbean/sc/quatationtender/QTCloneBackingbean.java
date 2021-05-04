@@ -534,6 +534,7 @@ public class QTCloneBackingbean extends
 		// logic to check whether committe will allow for clone or not..
 		// checkIsSpecCommitteFormOrNot();
 		getManagedBean().setCloneCommitteeSelectQt(null);
+		this.getManagedBean().setSelectedCloneTender(null);//25635
 
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
 				.getCloneSearchQTDataModel();
@@ -1493,7 +1494,18 @@ public class QTCloneBackingbean extends
 					if (!getManagedBean().isSubmit()) {
 						backingBean.retrievePmStateList();
 					}
+				}else{//25635_start
+					QuationTenderReqDTO reqDTO1 = new QuationTenderReqDTO();
+					// reqDTO.setQtId(getManagedBean().getQt().getQtId());
+					reqDTO1.setQtdetail(getManagedBean().getQt());
+					QuationTenderResDTO res1DTO = detailSO
+							.retriveQTScheduleDetails(reqDTO1);
+					if(CollectionUtils.isEmpty(this
+								.getManagedBean().getScQtSampleSubmissionList())){
+					this.getManagedBean().setScQtSampleSubmissionList(
+							res1DTO.getSampleSubmissionResultBean());
 				}
+				}//25635_End
 			}
 			
 			
@@ -3699,7 +3711,9 @@ public class QTCloneBackingbean extends
 		FacesContext context = FacesContext.getCurrentInstance();
 		ELContext elContext = context.getELContext();
 		CreateQtBackingBean createQtBB = (CreateQtBackingBean) elContext.getELResolver().getValue(elContext, null, "createQtBB");
+		if(null!=scQt.getCircularVer()){//25635-start
 		createQtBB.changePanelGroupItem();
+		}//25635-End
 		}
 	
 	}
