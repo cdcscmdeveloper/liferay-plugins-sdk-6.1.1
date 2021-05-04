@@ -52,6 +52,8 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	private Date toDate;
 	
 	private Long statusDescId;
+	/*29554 - Beginning*/
+	private String userRole="";
 	
 	private List<String> highRoleCodeList = new ArrayList<String>();
 	private List<SelectItem> requisitionerList = new ArrayList<SelectItem>();
@@ -354,4 +356,14 @@ public class FlReportManagedBean extends ReportBaseManagedBean{
 	public void setSupplier(boolean supplier) {
 		this.supplier = supplier;
 	}
+    /*Logan - 29554 - Beginning*/
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+	/*29554 - Ends*/
+	
 }
