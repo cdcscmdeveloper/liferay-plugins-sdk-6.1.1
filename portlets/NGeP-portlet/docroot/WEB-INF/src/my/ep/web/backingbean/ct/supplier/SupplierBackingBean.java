@@ -80,7 +80,6 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.primefaces.component.log.Log;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -1002,8 +1001,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					// Default the bank account no if only 1 bank account is available
 
 					if (resDTO.getPmFinancialAccList().size() == 1) {
-						getManagedBean().getFactoring().setBankAccountNo(account);
-						
+						//Start Fixing - 29829
+						getManagedBean().getFactoring().setBankAccountNo(pmFinancialAcc.getAccountNo());
+						//End Fixing - 29829
 					}
 				}
 				getManagedBean().setPopulateBankAccountList(items);	
@@ -1123,7 +1123,7 @@ public void selectFinancialAcc(){
 		this.getManagedBean().getFactoring().setBankAccountNo(str[0]);
 		this.getManagedBean().getFactoring().setBankName(str[1]);
 		
-		log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
+		//log.info(this.getManagedBean().getFactoring().getBankAccountNo()+" "+this.getManagedBean().getFactoring().getBankName());
 		
 		
 	}
@@ -1417,8 +1417,7 @@ public void selectFinancialAcc(){
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e.getMessage());
 			}
 		}
 	}
