@@ -8,17 +8,19 @@
 
 	<ui:param name="viewFlag" value="true" />
 	
-	<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+	<!-- #12483 - START -->
+	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
-					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}">
-					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
+   			<!-- 29430 -->
+			<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false" onclick="submissionConfirmDlg.hide()">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}" />
 				</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.proceed']}"
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}" oncomplete="submissionConfirmDlg.hide()"
 				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
 		</div>
 	</p:dialog>
+	<!-- #12483 - END -->
 	
 	<p:dialog widgetVar="attachmentDeleteDlg" id="attachmentDeleteDlg" modal="true" height="100" width="500">
    			 #{svoSiteVisitBackingBean.managedBean.attachmentDeleteMsg}

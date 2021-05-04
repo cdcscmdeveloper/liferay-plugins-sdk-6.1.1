@@ -216,10 +216,12 @@ public class CommonApplBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sm/payment/paymentSummary.xhtml");
-		} else if (resDTO.getTaskName().equalsIgnoreCase(
-				SMProcessNameConst.RESPOND_PO_INQUIRY)) {
-			//log.info("** Respond to PO Inquiry *********"
-					//+ resDTO.getProcessName());
+			//#12483 - START
+		} else if (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY) || 
+				   resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.RESPOND_PO_INQUIRY_REVISE)) {
+			//#12483 - END
+			log.info("** Respond to PO Inquiry *********"
+					+ resDTO.getProcessName());
 			if (resDTO.getProcessName().equalsIgnoreCase(
 					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
@@ -237,8 +239,10 @@ public class CommonApplBackingBean extends
 				smApplBB.getManagedBean().setTaskId(taskId);
 				smApplBB.getManagedBean().setClaimTask(isClaim);
 				setNavigationForSmDecision("RS", smApplBB);
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+				//#12483 - START
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION) ||
+					resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_SITE_VISIT)) {
+				//#12483 - END
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				//log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
 						//+ resDTO.getDocNumber());
@@ -503,8 +507,18 @@ public class CommonApplBackingBean extends
 								.getTaskName()
 								.equalsIgnoreCase(
 										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE)) {
-					//log.info("*** This is po or approver action after site visit *** ");
-					smApplBB.getManagedBean().setReviewSiteVisit(true);
+					log.info("*** This is po or approver action after site visit *** ");
+					//#12483 - START
+					if(!appl.getSmApplRevises().isEmpty()){
+						if(!appl.getSmSvTasks().isEmpty()){
+							smApplBB.getManagedBean().setReviewSiteVisit(true);
+						} else {
+							smApplBB.getManagedBean().setReviewSiteVisit(false);
+						}
+					} else {
+						smApplBB.getManagedBean().setReviewSiteVisit(true);
+					}
+					//#12483 - END
 				} else if (!resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.REVIEW_APPL_ESCALATED)) {
 					//log.info("*** This is po or approver for normal review without site visit *** ");

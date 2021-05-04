@@ -463,6 +463,9 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PAYMENT = "20119";
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PROCESSING_FEE = "20120";
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
+	// #12483 - START
+	public static final String PM_STATUS_PENDING_REVISE_APPLICATION = "20398";
+	// #12483 - END
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
@@ -601,6 +604,9 @@ public class SupplierManagementConst {
 	public static final String PO_ESCALATE_APPROVER = "PO hantar permohonan kepada Pelulus untuk keputusan akhir";
 	public static final String SUPP_REGISTRATION = "Pendaftaran Pembekal";
 	public static final String SUPP_ACCOUNT_ACTIVATION = "Pengaktifan Akaun Pendaftaran";
+	// #12483 - START
+	public static final String APPROVER_SEND_REVISE_APPL = "Pelulus hantar permohonan kaji semula";
+	// #12483 - END
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -1202,4 +1208,11 @@ public class SupplierManagementConst {
 		return PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT;
 	}
 	// 26555 -END
+	
+	// #12483 - START
+	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE() {
+		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
+	}
+
+	// #12483 - END
 }

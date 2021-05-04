@@ -28,8 +28,11 @@
 					<ui:include
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
-			<td><h:inputHidden
-					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+			<td>
+				<!-- #12483 - START -->
+				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+				<!-- #12483 - END -->
+				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 						partialSubmit="true" process="@this" onstart="blockWidget.show()"
@@ -42,7 +45,17 @@
 						process="@this" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
-
+					<!-- #12483 - START -->
+						<ui:repeat var="bpmAction" value="#{backingBean.managedBean.bpmActions}">
+							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.revise']}"
+								update=":form:tt:approverRevDialog" partialSubmit="true"
+								process="@this" onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{backingBean.assignFinalApproveOrReject('approverRevDialog')}" />
+							</h:panelGroup>	
+						</ui:repeat>
+					<!-- #12483 - END -->
 				</div> <c:if
 					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
 					<table style="width: 100%">
@@ -174,4 +187,47 @@
 		</ac:smSearchRejectReasons>
 	</p:dialog>
 	
+	<!-- #12483 - START -->
+	<p:dialog width="780px" header="#{lbl['lbl.sm.revise.application']}" height="auto"
+		closable="false" id="approverRevDialog" widgetVar="approverRevDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+		<p:outputPanel layout="block" id="approverReviseBlockPanel">
+			<p:messages id="reviseReasonDialogMsg" showSummary="false" showDetail="true" autoUpdate="false" closable="true" />
+			<br/>
+			<table>
+				<tr>
+					<td style="width:30px;"></td>
+					<td valign="top">
+						<p:outputLabel value="#{lbl['lbl.sm.revise.reason']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputTextarea cols="90"
+							style="width:450px;" rows="10"
+							value="#{backingBean.managedBean.reviseReason}"
+							id="apprReviseReason"
+							maxlength="2500"
+							required="#{backingBean.managedBean.reviseMandatory}"
+							requiredMessage="#{lbl['lbl.sm.revise.reason.required']}">
+							<f:validateLength maximum="2500" />
+							<p:ajax process="@this" update="@this"/>
+						</p:inputTextarea>
+					</td>
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onclick="approverReviseBlockWidget.show()" oncomplete="approverReviseBlockWidget.hide();" 
+					action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','REVISE')}"
+					partialSubmit="true" process="approverReviseBlockPanel, approverRevDialog" update="@([id$=Msg])"/>
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					action="#{backingBean.cancelFinalApproveOrReject('approverRevDialog')}"
+					partialSubmit="true" process="@this" />
+			</div>
+			<p:blockUI block="approverReviseBlockPanel" widgetVar="approverReviseBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:outputPanel>
+	</p:dialog>
+	<!-- #12483 - END -->
 </ui:composition>

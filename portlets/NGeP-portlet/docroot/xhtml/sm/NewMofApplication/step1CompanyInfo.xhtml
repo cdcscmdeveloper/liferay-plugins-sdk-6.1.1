@@ -14,6 +14,10 @@
 						src="smMofApplnSideMenuItem.xhtml" /></td>
 				<td style="vertical-align: top;">
 				<!-- #16052019 - SSM INTEGRATION CR -->
+				<!-- #12483 - START -->
+				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+				<br/>
+				<!-- #12483 - END -->
 				<ui:include
 						src="/xhtml/sm/shared/mofRegistration/AccountInfoDetail.xhtml" />
 						<ui:include
