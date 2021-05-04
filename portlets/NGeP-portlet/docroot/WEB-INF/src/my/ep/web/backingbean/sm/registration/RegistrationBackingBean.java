@@ -96,7 +96,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -114,7 +113,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
@@ -152,7 +150,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
 		if (pmUser != null && pmUser.getUserId() != null) {
-			log.info("***userId: " + pmUser.getUserId());
+			//log.info("***userId: " + pmUser.getUserId());
 
 			new LogKey(pmUser.getUserId()); 
 		}else{
@@ -328,7 +326,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setCompanyValidWithSSM(false);
 			this.getManagedBean().getDummy().clear();
 			if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
-				//TODO: start check registration ic with ssm #27148
 				//CR 27382: Static Code Analysis End				
 				this.getManagedBean().setStatusDescFromSSM(setStatusMessageFromSSM(ssmResDTO.getStatusFromSSM()));
 				String status = ssmResDTO.getStatusFromSSM().toUpperCase();
@@ -440,7 +437,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				/*for(SmSupplierBusiness smSupplierBusiness : ssmResDTO.getSmSupplierBusinessList()){
 					PmBusinessNature pmBusinessNature = SmCommonUtil.retrieveBusinessNatureByLevelCode(smSupplierBusiness.getPmBusinessNature().getLevelCode());
 					smSupplierBusiness.setPmBusinessNature(pmBusinessNature);
-				}*/				
+				}*/
 				this.getManagedBean().getSmSupp().setSmSupplierBusinesses(ssmResDTO.getSmSupplierBusinessList());
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().getDummy().add("");//use to display data file ssmcheck
@@ -449,7 +446,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//this.populateCityByAddType("business", false);
 				
 				//16052019 - SSM INTEGRATION CR 
-				//TODO: start check rob type and owners count #26270
 				//CR 27382: Static Code Analysis Start
 				/*Asal
 				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)){
@@ -1811,7 +1807,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(this.getManagedBean().getSmBusinessAdd().getPmDivision()==null) {
 						getManagedBean().getSmBusinessAdd().setPmDivision(new PmDivision());
 					} else {
-						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId());			
+						//start - #30483
+						ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+								.getServiceObject("sm", ISupplierSearchSO.class);
+						SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean().getSmBusinessAdd().getAddressId());
+						List<SelectItem> districtLs = SmCommonUtil.getDistrictListByID(smAddress.getPmDivision().getDivisionId());			
+						//end - #30483
 						this.getManagedBean().setBusinessDistrictLs(districtLs);
 					}
 															
@@ -1909,7 +1910,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						this.getManagedBean().setPermenantDistrictLs(districtLs);
 						this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 	
-						log.info("------permenant LS-------------" + this.getManagedBean().getPermenantDistrictLs().size());
+						//log.info("------permenant LS-------------" + this.getManagedBean().getPermenantDistrictLs().size());
 				}	
 			}
 			
@@ -1921,11 +1922,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @param typeAdd - business, residential, permenant
 	 */
 	public void populateCityByAddType(String typeAdd, boolean reset) {
-		log.info("---------------City By Type--------------------");
+		//log.info("---------------City By Type--------------------");
 		if (typeAdd.equals("business")) {
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 			}
+			// start - #30483
+			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
+					.getPmState().getStateId()));
+			if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+						.getServiceObject("sm", ISupplierSearchSO.class);
+				if (this.getManagedBean().getSmBusinessAdd() != null) {
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
+							.getSmBusinessAdd().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
+				}
+			}
+			// end - #30483
 			this.getManagedBean().getSmBusinessAdd().setPmDistrict(SmCommonUtil.getInstance().getDistrictById(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId()));
 			List<SelectItem> cityLs = SmCommonUtil.getCityList(this.getManagedBean().getSmBusinessAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setBusinessCityLs(cityLs);
@@ -2059,7 +2073,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
 				//this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
 
-				log.info("---------Supplier Type-----------" + this.getManagedBean().getSmAppl().getSupplierType());
+				//log.info("---------Supplier Type-----------" + this.getManagedBean().getSmAppl().getSupplierType());
 				if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 					SmPersonnel personnel = getManagedBean().getSmAppl().getSmPersonnels().get(0);
 					getManagedBean().setSmPersonnel(personnel);
@@ -2083,7 +2097,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						this.getManagedBean().setSabahSarawakType(true);
 					}
 					
-					this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+					// start - #30483
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", ISupplierSearchSO.class);
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
+					// end - #30483
 					
 					this.populateStateByAddType("business", false);		
 					
@@ -2247,7 +2267,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//SET SMPERSONNEL
 						if(ssmResDTO.getSmPersonnelAll()!=null){
 							if(this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()==null){
-								this.getManagedBean().getSmSupp().getSmAppl().setSmPersonnels(new ArrayList());
+								this.getManagedBean().getSmSupp().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 							}
 							for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 								if(EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels(), "identificationNo") == null){
@@ -2263,7 +2283,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//SET SMSUPPLIEROWNER
 						if(ssmResDTO.getSmSupplierOwners() != null) {
 							if(this.getManagedBean().getSmSuppOwners() == null){
-								this.getManagedBean().setSmSuppOwners(new ArrayList());
+								this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>());
 							}
 							for(SmSupplierOwner suppOwner : ssmResDTO.getSmSupplierOwners()){
 								SmSupplierOwner suppOwnerOld = (SmSupplierOwner)EntityHelper.getEntityBySinglePropertyFromList(suppOwner.getIdentificationNo(), this.getManagedBean().getSmSuppOwners(), "identificationNo");
@@ -2360,6 +2380,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					
 				}
 				//END 17906
+				
+				// start - #30483
+				PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
+						.getPmState().getStateId()));
+				if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
+							.getServiceObject("sm", ISupplierSearchSO.class);
+					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(resDTO.getSmSupp().getSmAppl()
+							.getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddressId());
+					this.getManagedBean().setSmBusinessAdd(smAddress);
+				}
+				// end - #30483
+				
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 			}
 			
@@ -2545,10 +2578,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		bizNatureL5Map = new HashMap<Long,Object>();
 		for(PmBusinessNature bizNat : resDTO.getBusinessNatureList()){
 			bizNatureL5Map.put(bizNat.getBusinessNatureId(), bizNat);
-			log.info("*****MAP Result******" + bizNat.getBusinessNatureId());
+			//log.info("*****MAP Result******" + bizNat.getBusinessNatureId());
 		}
 		
-		log.info("************MAP Result***************" + bizNatureL5Map.size());
+		//log.info("************MAP Result***************" + bizNatureL5Map.size());
 	}
 
 	/**
@@ -2599,13 +2632,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setEmail(email);
-		log.info("******checkExistEmailInPersonnel STart********" + new Date());
+		//log.info("******checkExistEmailInPersonnel STart********" + new Date());
 		PersonnelResDTO resDTO = personnelSO.retrievePersonnelByEmail(reqDTO);
-		log.info("******checkExistEmailInPersonnel end********" + new Date());
+		//log.info("******checkExistEmailInPersonnel end********" + new Date());
 		if(resDTO.getSmPersonnelList().size() > 0){
 			SmPersonnel personnel = resDTO.getSmPersonnelList().get(0);
-			log.info("---personnel email---" + personnel.getEmail());
-			log.info("---personnel created---" + personnel.getCreatedDate());
+			//log.info("---personnel email---" + personnel.getEmail());
+			//log.info("---personnel created---" + personnel.getCreatedDate());
 			if(personnel.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS){
 				long applDateInMilis = personnel.getCreatedDate().getTime();
 				long dayInMilis = 1000 * 60 * 60 * 24;
@@ -2834,7 +2867,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * update correspondence address based on "same address" value
 	 */
 	public void updateCorrespondenceAddress(){
-		log.info("----updateCorrespondenceAddress----");
+		//log.info("----updateCorrespondenceAddress----");
 		if(this.getManagedBean().isSameAddress()){
 			SmAddress smPermAdd = this.getManagedBean().getSmPermenantAdd();
 			this.getManagedBean().setSmResAdd(smPermAdd);
@@ -2876,7 +2909,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public boolean checkDuplicatedProfessionalBody(){
 		List<String> assocBodyList = new ArrayList<String>();
 		for(SmAssociationBody assocBody : this.getManagedBean().getSmAppl().getSmAssociationBodies()){
-			log.info("*********assocBody.getPmCertBody.getCertBodyId****" + assocBody.getPmCertBody().getCertBodyId());
+			//log.info("*********assocBody.getPmCertBody.getCertBodyId****" + assocBody.getPmCertBody().getCertBodyId());
 
 			String uniqAssocBody = assocBody.getPmCertBody().getCertBodyId().toString() + assocBody.getRegNo();
 			if(assocBodyList.contains(uniqAssocBody)){
@@ -2906,7 +2939,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		if(this.getManagedBean().getSmSupp().getBusinessType() != null && !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase("")){
-			log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
+			//log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
 			if(SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(this.getManagedBean().getSmSupp().getBusinessType())){
 
 				PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -3218,7 +3251,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
 			SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
 
-			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
+			//log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
 
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 			reqDTO.setSupplierId(smSupp.getSupplierId());
@@ -3265,7 +3298,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @param bisNatures
 	 */
 	public void postUpdateBizNature(List<BaseEntity> bisNatures) {
-		log.info("bisNatures: " + bisNatures);
+		//log.info("bisNatures: " + bisNatures);
 
 		IBusinessNatureSO bizNatureSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
 		Map<Long, PmBusinessNature> bizNatureUniqueMap = new HashMap<Long, PmBusinessNature>();
@@ -3277,7 +3310,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		String duplicateCode = null;
 		for(int i = 0; i < bisNatures.size(); i++) {
 			PmBusinessNature bn = (PmBusinessNature)bisNatures.get(i);
-			log.info("bn.getLevelName(): " + bn.getLevelName());
+			//log.info("bn.getLevelName(): " + bn.getLevelName());
 			
 			if(!bizNatureUniqueMap.containsKey(bn.getBusinessNatureId())) {
 				
@@ -3511,6 +3544,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/*
 	private SelectItem convertToStateSelectItem(PmState state){
 		SelectItem si = new SelectItem();
 		si.setLabel(state.getStateName());
@@ -3518,6 +3552,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		return si;
 	}
+	*/
 	
 	/**
 	 * Redirect to liferay logout url
@@ -3702,7 +3737,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
 			SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
-			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
+			//log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
 
 			getManagedBean().setSmSupp(smSupp);
 			initHasActiveTransactionStatus();
@@ -3967,7 +4002,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					try{
 						SmServiceLookup.getSmSchedulerSO().updateMOFSupplierPersonnelToBasic(schedulerReqDTO);
 					}catch(Exception ex){
-						log.info("ChangeExpiredMofPersonnel updateMoFAcc -  Exception>>>>" + 
+						log.error("ChangeExpiredMofPersonnel updateMoFAcc -  Exception>>>>" + 
 								ex.getMessage() + "- supplier ID -" + mofAccount.getSmSupplier());
 					}
 				}
@@ -3975,7 +4010,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		
-		log.info("**********RegistrationBB - ChangeExpiredMofPersonnelToBasicJob - End************");
+		//log.info("**********RegistrationBB - ChangeExpiredMofPersonnelToBasicJob - End************");
 	}
 	
 	public void sameAsOwnerOnChange(){
