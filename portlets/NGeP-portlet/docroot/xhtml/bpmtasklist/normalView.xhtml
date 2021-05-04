@@ -9,7 +9,7 @@
 
 	<h:outputStylesheet library="ep/css" name="blinktext.css" />
 	
-	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true" toggleable="true">
+	<p:panel header="#{lbl['lbl.bpm.my.task']}" collapsed="true" toggleable="true" id="normalViewPanelId">
 
 		<table style="width: 100%">
 			<tr>
@@ -42,7 +42,7 @@
 				<td width="10%"></td>
 				<td width="40%"></td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.created.date']} : " /></td>
 				<td width="40%">
 					<p:selectOneMenu style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.viewBy}">
@@ -55,18 +55,20 @@
 				<td width="10%"></td>
 				<td width="40%"></td>
 			</tr>
+			-->
 			<!--#29810-START-->
 			<tr>
 				<td width="10%"><p:outputLabel value="Sort By : " /></td>
 				<td width="40%">
 					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
 						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="Document No" itemValue="DOCNUMBER"></f:selectItem>
-						<f:selectItem itemLabel="Document Type" itemValue="DOCTYPE"></f:selectItem>
-						<f:selectItem itemLabel="Created Date" itemValue="CREATEDATE"></f:selectItem>
-						<f:selectItem itemLabel="Description" itemValue="TITLE"></f:selectItem>
-						<f:selectItem itemLabel="Status" itemValue="DOCSTATUS"></f:selectItem>
-						<f:selectItem itemLabel="Document Received Date" itemValue="RECEIVEDDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.type']}" itemValue="DOCTYPE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.received.date']}" itemValue="RECEIVEDDATE"></f:selectItem>
 						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
 					</p:selectOneMenu>
 				</td>
@@ -74,8 +76,8 @@
 				<td width="40%">
 					<p:selectOneMenu id="taskListOrderBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascending}">
 						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="Ascending" itemValue="true"></f:selectItem>
-						<f:selectItem itemLabel="Descending" itemValue="false"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.bpm.descending']}" itemValue="false"></f:selectItem>
 					</p:selectOneMenu>
 				</td>
 			</tr>
@@ -87,9 +89,10 @@
 						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateFrom"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}"
-						/>
-						
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateFrom}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+					</p:calendar>
 				</td>
 				<td width="10%"><p:outputLabel value="Created Date To : " /></td>
 				<td width="40%">
@@ -98,13 +101,23 @@
 						label="#{lbl['lbl.cm.doc.createdDate']}" id="myTaskCreatedDateTo"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}"
-						/>
+						value="#{bpmTasklistBackingBean.managedBean.myTaskCreatedDateTo}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
+					</p:calendar>
 				</td>
 			</tr>
 			<!--#29810-END-->
 		</table>
 		<div class="clear"></div>
+		<!-- <div style="text-align: left; margin-right: 2px; float: right;">
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}" 
+				action="#{bpmTasklistBackingBean.resetSearch}"
+				update="normalViewPanelId" >
+			</p:commandButton>
+		</div>
+		-->
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -227,6 +240,36 @@
 	</p:dataTable>
 
 	<!-- 	</p:panel> -->
-
+	
+	<!--#29810-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="dateFromDialog"
+		id="dateFromDialogId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="dateFromDialogPanel">
+			<p:messages id="dateFromDialogMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.bpm.dialog.date.to']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="dateFromDialog.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="validateDateDialog"
+		id="validateDateDialogId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="validateDateDialogPanel">
+			<p:messages id="validateDateDialogMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.bpm.dialog.maximumDate']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="validateDateDialog.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#29810-END-->
 
 </ui:composition>
