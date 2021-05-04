@@ -14,6 +14,7 @@
 		<cc:attribute name="dateRange" default = "0" />
 		<cc:attribute name="mandatoryDateTo" default="false" />
 		<cc:attribute name="noMaxdate" default="false" />
+		<cc:attribute name="oneYearBeforeOnly" default="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -77,9 +78,9 @@
 						<p:message id="calDtToMsg" for="calDtTo" display="icon" showDetail="false" />
 					</td>
 				</tr>
-				</table>
+				</table>				
 			</c:when>
-			
+				
 			<c:when test="#{cc.attrs.limitYearRange}">
 				<table style="width: 100%;">
 				<tr>
