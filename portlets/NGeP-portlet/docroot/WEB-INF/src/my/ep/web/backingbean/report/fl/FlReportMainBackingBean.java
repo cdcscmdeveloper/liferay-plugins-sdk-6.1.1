@@ -29,14 +29,22 @@ public class FlReportMainBackingBean extends FlReportBackingBean<FlReportMainMan
 	private static final Logger log = EpLogger
 			.getLogger(FlReportMainBackingBean.class);
 
+	Long userId = getFacesScopes().getUserSessionBean().getUserId();
+
 	public void preRenderView() {
 		log.info("preRenderView");
 		this.renewSesionObject();
 		retrieveReportCategoryListByModuleCode(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
-		
+
+		String userRole = retrieveRoleByUserId(userId);
+
+		if (userRole != null) {
+			getManagedBean().setUserRole(userRole);
+		}
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_FLREPORT);
 	}
-	
-	
+
+
 }
