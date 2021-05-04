@@ -1159,6 +1159,16 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			}
 		}		
 	} 
+	
+	public void resetDate(String type){
+		if(type.equalsIgnoreCase("normal")){
+			this.getManagedBean().setMyTaskCreatedDateFrom(null);
+			this.getManagedBean().setMyTaskCreatedDateTo(null);	
+		}else if(type.equalsIgnoreCase("advance")){
+			this.getManagedBean().setGroupTaskCreatedDateFrom(null);
+			this.getManagedBean().setGroupTaskCreatedDateTo(null);
+		}
+	}
 	//29810 - end
 }
 
