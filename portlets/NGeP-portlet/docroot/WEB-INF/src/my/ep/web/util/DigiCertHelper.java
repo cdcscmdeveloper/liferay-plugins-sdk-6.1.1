@@ -23,6 +23,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.constant.SPKIConst;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
@@ -183,14 +184,14 @@ public class DigiCertHelper {
 					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
 					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
 						throw new EpException(MessageConst.ERROR_DIGICERT_776064, 
-								new String[] {ResourceBundleUtils.getMessage("lbl.sm.qt.supplierAdmin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								new String[] { SmCommonUtil.getMessage("lbl.sm.qt.supplierAdmin", null) });
 					}
 					if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
 					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
 					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
 					   fs.hasRoleUser(RoleCode.FL_USER.value())){
 						throw new EpException(MessageConst.ERROR_DIGICERT_776064, 
-								new String[] {ResourceBundleUtils.getMessage("lbl.sm.qt.supplierUser", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+								new String[] { SmCommonUtil.getMessage("lbl.sm.qt.supplierUser", null) });
 					}
 					//#30855 - END
 				}
