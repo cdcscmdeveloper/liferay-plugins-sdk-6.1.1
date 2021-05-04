@@ -5198,9 +5198,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							Long status = this.getManagedBean().getQt().getQtStatus() !=null? 
 									this.getManagedBean().getQt().getQtStatus().getStatusId(): null;
 							if(null != status && (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
-								if(BooleanUtils.isFalse(this.getManagedBean().getQt().isPartial())){
-									this.getManagedBean().setDemoType(true);
-								}
+								this.getManagedBean().setDemoType(true);
 							}
 						}
 					}

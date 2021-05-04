@@ -425,7 +425,7 @@
 										<c:when
 											test="#{!scQt.panel and !isReadOnly}">
 											<p:outputPanel id="demoPop">
-												<p:selectOneRadio value="#{scQt.demoRequired}">
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 <!-- 													<p:ajax event="change" partialSubmit="true" -->

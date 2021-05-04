@@ -3634,9 +3634,7 @@ public class CreateQtBackingBean extends
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 			String type = (String) event.getComponent().getAttributes().get("value");
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
-				if(BooleanUtils.isFalse(this.getManagedBean().getQt().isPartial())){
-					this.getManagedBean().setDemoType(true);
-				}
+				this.getManagedBean().setDemoType(true);
 			} else {
 				this.getManagedBean().setDemoType(false);
 				this.getManagedBean().getQt().setDemoRequired(false);
