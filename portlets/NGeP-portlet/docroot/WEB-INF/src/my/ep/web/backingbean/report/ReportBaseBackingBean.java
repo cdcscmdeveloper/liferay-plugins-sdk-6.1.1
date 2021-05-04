@@ -28,10 +28,13 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.rpt.PMReport;
@@ -191,6 +194,45 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		}
 
 	}
+	
+	/*29554 - Beginning*/
+	public String retrieveRoleByUserId(Long userId) {
+		log.info("retrieveRoleOfUser");
+		
+		RoleResDTO resDTO = null;
+		if (userId != null) {
+			IRoleSO roleSO = null;
+			
+			try {
+				roleSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRoleSO.class);
+				String languageCode = getFacesScopes().getUserLocale()
+						.getLanguage();
+				RoleReqDTO reqDTO = new RoleReqDTO();
+				reqDTO.setUserId(userId);
+				
+				resDTO = roleSO.retrieveRoleByUserId(reqDTO);
+				
+				if (resDTO.isSuccessful()){
+					
+					log.info("resDTO is " +resDTO);
+					
+				}
+			} catch (Exception e) {
+				throw new EpException(e.getMessage());
+			} finally {
+				roleSO = null;
+			}
+		}
+	    if(resDTO.getPmUserRole().getPmRole().getRoleCode()!=null)
+		return resDTO.getPmUserRole().getPmRole().getRoleCode();
+	    else 
+	    	return null;
+		
+
+	}
+	/*29554 - Ending*/
+	
 
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
