@@ -7,7 +7,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true" toggleable="true">
+	<p:panel header="#{lbl['lbl.bpm.group.task']}" collapsed="true" toggleable="true" id="advanceViewPanelId">>
 
 		<p:outputPanel id="outPnlGroupSearch">
 			<table style="width: 100%">
@@ -75,12 +75,12 @@
 					<td width="10%"><p:outputLabel value="Sort By : " /></td>
 					<td width="40%">
 						<p:selectOneMenu id="taskListSortByGroup" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_byGroup}">
-							<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-							<f:selectItem itemLabel="Document No" itemValue="DOCNUMBER"></f:selectItem>
-							<f:selectItem itemLabel="Document Type" itemValue="DOCTYPE"></f:selectItem>
-							<f:selectItem itemLabel="Created Date" itemValue="CREATEDATE"></f:selectItem>
-							<f:selectItem itemLabel="Description" itemValue="TITLE"></f:selectItem>
-							<f:selectItem itemLabel="Status" itemValue="DOCSTATUS"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.no']}" itemValue="DOCNUMBER"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.doc.type']}" itemValue="DOCTYPE"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.created.date']}" itemValue="CREATEDATE"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.description']}" itemValue="TITLE"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.status']}" itemValue="DOCSTATUS"></f:selectItem>
 							<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem>--> 
 						</p:selectOneMenu>
 					</td>
@@ -88,8 +88,8 @@
 					<td width="40%">
 						<p:selectOneMenu id="taskListOrderByGroup" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascendingGroup}">
 							<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-							<f:selectItem itemLabel="Ascending" itemValue="true"></f:selectItem>
-							<f:selectItem itemLabel="Descending" itemValue="false"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.ascending']}" itemValue="true"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.bpm.descending']}" itemValue="false"></f:selectItem>
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -101,8 +101,10 @@
 						label="#{lbl['lbl.cm.doc.createdDate']}" id="groupTaskCreatedDateFrom"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.groupTaskCreatedDateFrom}"
-						/>
+						value="#{bpmTasklistBackingBean.managedBean.groupTaskCreatedDateFrom}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('advance')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('advance')}"/>
+					</p:calendar>
 						
 				</td>
 				<td width="10%"><p:outputLabel value="Created Date To : " /></td>
@@ -112,8 +114,10 @@
 						label="#{lbl['lbl.cm.doc.createdDate']}" id="groupTaskCreatedDateTo"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" maxdate="#{backingBean.managedBean.currDate}"
-						value="#{bpmTasklistBackingBean.managedBean.groupTaskCreatedDateTo}"
-						/>
+						value="#{bpmTasklistBackingBean.managedBean.groupTaskCreatedDateTo}">
+						<p:ajax event="dateSelect" listener="#{bpmTasklistBackingBean.compareDate('advance')}"/>
+						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('advance')}"/>
+					</p:calendar>
 				</td>
 			</tr>
 			<!--#29810-END-->
@@ -121,6 +125,14 @@
 		</p:outputPanel>
 
 		<div class="clear"></div>
+		<!-- <div style="text-align: left; margin-right: 2px; float: right;">
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}" 
+				action="#{bpmTasklistBackingBean.resetSearch}"
+				update="normalViewPanelId" >
+			</p:commandButton>
+		</div>
+		-->
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{bpmTasklistBackingBean.refreshAdvanceTaskList}"
@@ -224,4 +236,35 @@
 		<!--#29810-END-->
 	</p:dataTable>
 	<!-- 	</p:panel> -->
+	
+	<!--#29810-START-->
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="dateFromDialogAdvance"
+		id="dateFromDialogAdvanceId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="dateFromDialogAdvancePanel">
+			<p:messages id="dateFromDialogAdvanceMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.bpm.dialog.date.to']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="dateFromDialogAdvance.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<p:dialog style="width: 20px; height: auto;top: 261px; align:center" widgetVar="validateDateDialogAdvance"
+		id="validateDateDialogAdvanceId" resizable="false" modal="true" closable="false">
+		
+		<p:outputPanel layout="block" id="validateDateDialogAdvancePanel">
+			<p:messages id="validateDateDialogAdvanceMessagePanel" showSummary="false" showDetail="true"
+				autoUpdate="true" closable="true" />
+			<div align="center">
+				<p>#{lbl['lbl.bpm.dialog.maximumDate']}</p>
+			</div>
+			<div class="ppRightBtn">		    
+		 		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"  onclick="validateDateDialogAdvance.hide();" type="button" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
+	<!--#29810-END-->
 </ui:composition>
