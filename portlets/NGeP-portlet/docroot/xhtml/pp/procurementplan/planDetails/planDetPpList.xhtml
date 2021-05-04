@@ -293,7 +293,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<!-- #25549@20200818 - start --> 
 		<!-- 02022021@#27624 - start --> 
 		     <p:commandButton id="btnClone" value="#{lbl['lbl.btn.clone']}"
-		        disabled="#{!pPlanBackingBean.managedBean.modeEditable}" 
+		        disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" 
 			    action="#{pPlanBackingBean.rowSelectProcurement()}"
 			    update="dtProcurementPlan, ppProcurementCloneid, dtcloneprosearchresults"
 			    onclick="cloneAcquirementPopUp.show()"
@@ -303,11 +303,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<!-- end --> 
 		
 			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
-		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable}"  partialSubmit="true"
+		 		disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}"  partialSubmit="true"
 		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/> 
 		 		
 			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtProcurementPlan" 
-				disabled="#{!pPlanBackingBean.managedBean.modeEditable}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
+				disabled="#{!pPlanBackingBean.managedBean.modeEditable or (pPlanBackingBean.managedBean.isAudit())}" action="#{pPlanBackingBean.deletePpItemDet()}"	/> 
 				<!-- 02022021@#27624 - end --> 
 		</div>
 		
