@@ -6404,8 +6404,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return;
 			}
 			//#25037-end
-
-
+			log.info("--> submitQtDetailsFormMaintanace 01");//25037 - debug 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
@@ -6420,9 +6419,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setDoaList(this.getManagedBean().getPmuserContactpersonList());
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
+			log.info("--> submitQtDetailsFormMaintanace 01.2");//25037 - debug 
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
+			log.info("--> submitQtDetailsFormMaintanace 02");//25037 - debug 
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				Long currentStatusId = qtDetails.getQtStatus().getStatusId();
@@ -6491,6 +6492,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					msgCode = MessageConst.INFO_700004;
 				}
 				//#25037
+				log.info("--> submitQtDetailsFormMaintanace 03");//25037 - debug 
 				if(CollectionUtils.isNotEmpty(quationTenderResDTO.getCmtModififationRequests())){
 					int count = 0;
 					String committeeType = "";
@@ -6513,6 +6515,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
 							scQt.getQtNo(), Boolean.TRUE);
 				}
+				log.info("--> submitQtDetailsFormMaintanace 04");//25037 - debug 
 			}
 		} finally {
 			detailSO = null;
