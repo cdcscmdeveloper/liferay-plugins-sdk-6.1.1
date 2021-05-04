@@ -116,13 +116,13 @@
 						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}"
 								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002)}" />
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60039)}" />
 						</p:selectOneMenu>
 						
-						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}"
+						<p:selectOneMenu style="width: 283px;margin-bottom: 5px;" rendered="#{qTCloneBackingbean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}"
 								value="#{qTCloneBackingbean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
-									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60033,60024,60003,60025,60026,60028,60037,60027,60034,60004)}" />
+									value="#{qTDetailBB.getStatusDropdownValuesWithExclusions('SC', 'QT',60002,60033,60024,60003,60025,60026,60028,60037,60027,60034,60004,60030,60006,60039)}" />
 						</p:selectOneMenu>
 						
 						</td>
@@ -216,6 +216,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						onclick="blockWidgetClone.show()" oncomplete="blockWidgetClone.hide()"
+						disabled="#{empty qTCloneBackingbean.managedBean.selectedCloneTender}"
 						styleClass="BtnSpacing" id="cloneCommitteeTreeBtnOnId2" update="@(form,.briefingList,.amendButton,.sampleSubmitionUpdate)"
 						action="#{qTCloneBackingbean.addToClone()}">
 					 <f:param name="skipvalidation" value="1" />
