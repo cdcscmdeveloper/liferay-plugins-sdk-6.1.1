@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
@@ -229,7 +230,23 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
 						}
 						if (!result) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							//#30855 - START
+							FacesScopes fs = new FacesScopes();
+							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776064, 
+										new String[] {ResourceBundleUtils.getMessage("lbl.sm.qt.supplierAdmin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.FL_USER.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776064, 
+										new String[] {ResourceBundleUtils.getMessage("lbl.sm.qt.supplierUser", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+							}
+							//#30855 - END
 						}
 					}
 				}
