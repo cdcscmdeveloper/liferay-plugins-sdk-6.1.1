@@ -343,8 +343,7 @@
 					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
 					update="@([id$=demoSpecTempId])"
-					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"
-					oncomplete="demoSpecList.show();"> 					
+					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			
 					<ui:fragment
 						rendered="#{specificationBackingBean.isQTStatusChecklistScoring() or 
 						(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or(specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance() and specificationBackingBean.managedBean.specMaintenance)}">
@@ -427,6 +426,6 @@
 	
 	<ui:include src="medicineinstructionspopup.xhtml"></ui:include>
 	
-	<ui:include src="demoSpecificationTechnicalList.xhtml"></ui:include><!-- #26784 -->
+	<!-- comment for #28784 <ui:include src="demoSpecificationTechnicalList.xhtml"></ui:include>#26784 -->
 
 </ui:composition>
