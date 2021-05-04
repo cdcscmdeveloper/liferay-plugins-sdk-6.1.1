@@ -15,7 +15,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
@@ -35,7 +34,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -430,11 +428,20 @@ public class SelfRequestSupplierAdminBackingBean extends
 								SmCommonUtil.getMessage(mofStatusMsg, null)));
 			} else {
 				// set mof account message status
-				SmMofAccount mofAcc = getManagedBean().getSupplier()
-						.getSmMofAccounts().get(0);
-				
-				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE || mofAcc
-						.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
+				//#29612-start
+				SmMofAccount mofAcc = null;
+				for (SmMofAccount acc : getManagedBean().getSupplier().getSmMofAccounts()) {
+					if (acc.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+						mofAcc = acc; 
+						break;
+					}
+				}
+				if (mofAcc == null) {
+					mofAcc = getManagedBean().getSupplier().getSmMofAccounts().get(0);
+				}//#29612-end
+			
+				if ((mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
+						|| mofAcc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED)
 						&& mofAcc.getExpDate() != null) {
 					Calendar c = Calendar.getInstance();
 					c.setTime(mofAcc.getExpDate());
