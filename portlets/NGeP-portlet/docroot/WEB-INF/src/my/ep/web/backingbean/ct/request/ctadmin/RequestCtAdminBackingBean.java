@@ -2,6 +2,7 @@ package my.ep.web.backingbean.ct.request.ctadmin;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -547,6 +548,22 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		getManagedBean().setViewOnly(false);
 		CTContractReqadminDataType dataType =  super.getBpmTaskDetails(CTContractReqadminDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
 
+		//#21387 - basri
+		/* re-Setting Cancel button*/
+		if(this.getManagedBean().getOutComes()!= null){
+		String[] str_array = this.getManagedBean().getOutComes();
+		List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+		if(list.contains(BpmOutcomeConst.BPM_CANCEL)){
+			list.remove(BpmOutcomeConst.BPM_CANCEL);
+			list.add(BpmOutcomeConst.BPM_CANCEL);
+			str_array = list.toArray(new String[0]);
+			this.getManagedBean().setOutComes(null);
+			this.getManagedBean().setOutComes(str_array);
+			}
+		}
+
+		//#21387 - End
+		
 		/*Retrieve contract id from BPM  */
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setUpdateAction(false);
