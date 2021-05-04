@@ -6484,14 +6484,21 @@ public class SmApplicationBackingBean extends
 		}
 
 		// set muslim flg
-		if (getManagedBean().getSelectedShareHolder().getMuslimFlgTrans() == null) {
-			getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
-		} else {
-			getManagedBean().getSelectedShareHolder().setMuslimFlg(
-					getManagedBean().getSelectedShareHolder()
-							.getMuslimFlgTrans());
+		//#29856 - start
+		if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase
+				(getManagedBean().getSelectedShareHolder().getIdentificationType().getParameterCode())){
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);
+		//#29856 - end
+		} else{
+			if(getManagedBean().getSelectedShareHolder().getMuslimFlgTrans()== null){
+				getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
+			}else{
+				getManagedBean().getSelectedShareHolder().setMuslimFlg(
+						getManagedBean().getSelectedShareHolder()
+								.getMuslimFlgTrans());
+			}	
 		}
-
+		
 		if (validShrHldr) {
 			if (getManagedBean().getSelectedShareHolder().getPmRace() != null
 					&& getManagedBean().getSelectedShareHolder().getPmRace()
