@@ -12,6 +12,7 @@
 	
 		<table style="margin-top: 10px; width: 100%;">
 			
+			<c:if test='#{flReportBB.managedBean.userRole ne "COLLECTOR_GOV"}'>
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
@@ -31,7 +32,8 @@
 							process="@this" partialSubmit="true" update="@all" />
 					</p:selectOneMenu>
 				</td>
-			</tr> 
+			</tr>
+			</c:if>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
