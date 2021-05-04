@@ -8149,15 +8149,19 @@ public class SmApplicationBackingBean extends
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			//#30516 - start
 			if (this.getManagedBean()
 					.getSmAppl()
-					.getSupportingDocMode()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+					.getSupportingDocMode()== null || this.getManagedBean()
+							.getSmAppl()
+							.getSupportingDocMode()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);
 			}
+			//#30516 - end
 
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
