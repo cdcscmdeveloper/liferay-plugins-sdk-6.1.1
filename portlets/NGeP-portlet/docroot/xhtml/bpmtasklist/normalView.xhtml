@@ -58,7 +58,7 @@
 			-->
 			<!--#29810-START-->
 			<tr>
-				<td width="10%"><p:outputLabel value="Sort By : " /></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.sort.by']} :" /></td>
 				<td width="40%">
 					<p:selectOneMenu id="taskListSortBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.sort_by}">
 						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
@@ -72,7 +72,7 @@
 						<!-- <f:selectItem itemLabel="Document Receive Date" itemValue="CREATEDATE"></f:selectItem> -->
 					</p:selectOneMenu>
 				</td>
-				<td width="10%"><p:outputLabel value="Order By : " /></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.order.by']} :"  /></td>
 				<td width="40%">
 					<p:selectOneMenu id="taskListOrderBy" style="width: 200px;" value="#{bpmTasklistBackingBean.managedBean.ascending}">
 						<f:selectItem itemLabel="" itemValue=""></f:selectItem>
@@ -82,7 +82,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="10%"><p:outputLabel value="Created Date From : " /></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateFrom']} :" /></td>
 				<td width="40%">
 					<p:calendar showOn="button" navigator="true"
 						display="inline" required="false" readonlyInput="false"
@@ -94,7 +94,7 @@
 						<p:ajax event="change" listener="#{bpmTasklistBackingBean.compareDate('normal')}"/>
 					</p:calendar>
 				</td>
-				<td width="10%"><p:outputLabel value="Created Date To : " /></td>
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.bpm.createdDateTo']} :" /></td>
 				<td width="40%">
 					<p:calendar showOn="button" navigator="true"
 						display="inline" required="false" readonlyInput="false"
@@ -110,14 +110,15 @@
 			<!--#29810-END-->
 		</table>
 		<div class="clear"></div>
-		<!-- <div style="text-align: left; margin-right: 2px; float: right;">
+		<!--#29810-START-->
+		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton
 				value="#{lbl['lbl.btn.reset']}" 
-				action="#{bpmTasklistBackingBean.resetSearch}"
+				action="#{bpmTasklistBackingBean.resetDate('normal')}"
 				update="normalViewPanelId" >
 			</p:commandButton>
 		</div>
-		-->
+		<!--#29810-end-->
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
