@@ -158,7 +158,7 @@
 							<h:panelGrid columns="1">
 			    <!-- 13291 start --><h:panelGrid columns="2">
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.ptj.name']}" style="text-align: top; float:left; margin-left:0.5%;" />
-									<p:selectOneMenu id="approverPTJNameDropdown" style="width:528px; margin-bottom:5px;"
+									<p:selectOneMenu id="approverPTJNameDropdown" style="width:528px; margin-bottom:5px; float: right; margin-right: -5% !important;"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.selectedApproverPTJ}">
 										<p:ajax event="change" process="@this" update="approverGroupDropdown,approverDropdown" 
@@ -166,7 +166,7 @@
 										<f:selectItems value="#{contractRequestBackingBean.getApproverPTJNameDropdown()}" />
 									</p:selectOneMenu>
 									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left; margin-left:0.5%;" />
-					<!-- 13291 --><p:selectOneMenu id="approverGroupDropdown" style="width:450px; margin-bottom:5px;"
+					<!-- 13291 --><p:selectOneMenu id="approverGroupDropdown" style="width:450px; margin-bottom:5px; float: right; margin-right: 9.8% !important;"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}" >
 										<p:ajax event="change" process="@this" update="approverDropdown"
@@ -177,7 +177,7 @@
 									<p:selectOneMenu id="approverDropdown"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.selectedApprover}"
-										style="width:450px;"><!-- 13291 -->
+										style="width:450px; float: right; margin-right: 9.8% !important;""><!-- 13291 -->
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" />
 										<f:selectItems
 											value="#{contractRequestBackingBean.getApproverListDropDown()}" />
