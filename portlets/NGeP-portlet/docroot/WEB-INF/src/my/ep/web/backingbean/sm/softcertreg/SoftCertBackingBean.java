@@ -224,7 +224,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
 						}
 						if (!result) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							//#30855 - START
+							FacesScopes fs = new FacesScopes();
+							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							}
+							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.FL_USER.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							}
+							//#30855 - END
 						}
 					}
 				}
