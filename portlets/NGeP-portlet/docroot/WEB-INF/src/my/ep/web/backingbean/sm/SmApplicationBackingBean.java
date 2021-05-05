@@ -1993,10 +1993,6 @@ public class SmApplicationBackingBean extends
 									return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);								
 								}
 							}else{
-								//start #29956
-								personnelsRole.clear();
-								personnelsRole = this.getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels();
-								//end #29956
 								//set latest role to personnel
 								for(SmPersonnel personnel :  personnelsRole){
 									SmPersonnel personnelActive = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), this.getManagedBean().getSmAppl().getSmPersonnels(), "identificationNo");
