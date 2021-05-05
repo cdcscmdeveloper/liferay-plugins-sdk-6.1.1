@@ -6517,7 +6517,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				log.info("--> submitQtDetailsFormMaintanace 04");//25037 - debug 
 			}
-		} finally {
+		}catch(Exception e){
+			log.error("File: QTDetailBackingBean Method: submitQtDetailsFormMaintanace "+ e.getMessage());
+			e.printStackTrace();
+		}finally {
 			detailSO = null;
 		}
 	}
