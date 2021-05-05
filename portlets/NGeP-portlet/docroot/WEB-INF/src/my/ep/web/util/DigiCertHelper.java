@@ -18,6 +18,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
@@ -174,7 +175,21 @@ public class DigiCertHelper {
 						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
 					}
 					//#29630 - end
-					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+					//#30855 - START
+					FacesScopes fs = new FacesScopes();
+					if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+					   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+						throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+					}
+					if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+					   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+					   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+					   fs.hasRoleUser(RoleCode.FL_USER.value())){
+						throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+					}
+					//#30855 - END
 				}
 			}
 
