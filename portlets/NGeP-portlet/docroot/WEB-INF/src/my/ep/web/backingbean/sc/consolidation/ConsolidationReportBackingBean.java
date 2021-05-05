@@ -732,9 +732,9 @@ public class ConsolidationReportBackingBean extends
 				scQtFinalizationReport.setPreviousReportContent(scQtFinalizationReport.getReportContent());
 			}
 			// #18685 - End
-			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			
 			// #18685 - Start.
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
               reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
             }
