@@ -635,16 +635,13 @@ public class ConsolidationReportBackingBean extends
 						getManagedBean().getSfBriefingPaperReportList());
 			}
 			// #18685 - End
+			
+			// #18685 - Start.
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			// #18685 - Start 
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
-				for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
-					if (StringUtils.isNotEmpty(remark.getRemark())) {
-						reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
-						break;
-					}
-				}
+				reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
 			}
+	         // #18685 - End.
 			
 			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationUlasanremarks())) {
               for (ScQtRecommendationUlasanRemarks remark : getManagedBean().getFinalizationUlasanremarks()) {
@@ -657,6 +654,17 @@ public class ConsolidationReportBackingBean extends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
 			//saveEvaluationReportsDetaills();
+			
+            // #18685 - Start.
+            for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
+              for (ScQtFinalizationRemarks remark : getManagedBean().getFinalizationItemizedRemarks()) {
+                if (updatedRemark.getRemark().equalsIgnoreCase(remark.getRemark()) && CommonConstants.ITEMIZED.equals(remark.getSourceName())) {
+                    getManagedBean().getFinalizationItemizedRemarks().set(0, updatedRemark);
+                }
+              }
+            }
+            // #18685 - End.
+            
 			if (resDTO.isSuccessful()) {
 				renewSessionAndRetrieve(getManagedBean().getActiveIndex());
 
