@@ -733,6 +733,12 @@ public class ConsolidationReportBackingBean extends
 			}
 			// #18685 - End
 			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			
+			// #18685 - Start.
+			if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationItemizedRemarks())) {
+              reqDTO.setFinalizationItemizedRemarks(getManagedBean().getFinalizationItemizedRemarks());
+            }
+	         // #18685 - End.
 			//this.downloadAllBriefingPaperReports();
 
 			//#27502 -- Start
