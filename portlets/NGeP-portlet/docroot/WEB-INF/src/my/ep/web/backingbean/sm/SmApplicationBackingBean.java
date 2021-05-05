@@ -5733,25 +5733,25 @@ public class SmApplicationBackingBean extends
 						SupplierManagementConst.DELETED_RECORD_STATUS) == 0 || cat.getCancelledDate() != null) {
 					if (cat.getCancelledDate() != null
 							&& !isValidToAddAfterDeleted(cat.getCancelledDate())) {
-						// 29952: Unable to add category code that have been imposed DA (DA expired) - start
+						// 29952 - Start
 						if (cat.isCancelCategory() && currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
 							validCat = true;
 						} else {
 							throw new EpException(MessageConst.ERROR_722563);
 						}
-						// 29952: Unable to add category code that have been imposed DA (DA expired) - end		
+						// 29952 - End		
 					} else {
 						validCat = true;
 					}
 				} else {
-					// 29952: Unable to add category code that have been imposed DA (DA expired) - start
-					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS) != 0 && cat.isCancelCategory() && 
+					// 29952 - Start
+					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACTIVATION_RECORD_STATUS) != 0 && (cat.isCancelCategory() || cat.getRecordStatusFlg() == 2) && 
 							currentDate.after(getManagedBean().getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
 						validCat = true;
 					} else {
 						throw new EpException(MessageConst.ERROR_722533);
 					}
-					// 29952: Unable to add category code that have been imposed DA (DA expired) - start
+					// 29952 - End
 				}
 			}
 		}
