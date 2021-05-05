@@ -157,7 +157,7 @@
 			  <!-- 13291 --><h:outputText styleClass="instruction" value="#{lbl['lbl.fl.ptj.approver.ptj.name.instr']}" escape="false"/>
 							<h:panelGrid columns="1">
 			    <!-- 13291 start --><h:panelGrid columns="2">
-									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.ptj.name']}" style="text-align: top; float:left; margin-left:0.5%;" />
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.ptj.name']}" style="text-align: top; float:left;" />
 									<p:selectOneMenu id="approverPTJNameDropdown" style="width:528px; margin-bottom:5px; float: right; margin-right: -5% !important;"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.selectedApproverPTJ}">
@@ -165,7 +165,7 @@
 											listener="#{contractRequestBackingBean.approverPTJNameChangeListener()}" />
 										<f:selectItems value="#{contractRequestBackingBean.getApproverPTJNameDropdown()}" />
 									</p:selectOneMenu>
-									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left; margin-left:0.5%;" />
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left;" />
 					<!-- 13291 --><p:selectOneMenu id="approverGroupDropdown" style="width:450px; margin-bottom:5px; float: right; margin-right: 9.8% !important;"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}" >
@@ -173,7 +173,7 @@
 											listener="#{contractRequestBackingBean.userGroupChangeListener()}"  />
 										<f:selectItems value="#{contractRequestBackingBean.getUserGroupDropdown()}" />
 									</p:selectOneMenu>
-									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" style="float:left; margin-left:0.5%;"/><!-- 13291 -->
+									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" style="float:left;"/><!-- 13291 -->
 									<p:selectOneMenu id="approverDropdown"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{contractRequestBackingBean.managedBean.selectedApprover}"

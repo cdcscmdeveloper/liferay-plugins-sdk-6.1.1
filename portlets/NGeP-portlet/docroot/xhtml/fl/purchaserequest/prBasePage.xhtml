@@ -171,7 +171,7 @@
 											listener="#{purchaseRequestBackingBean.approverPTJNameChangeListener()}" />
 										<f:selectItems value="#{purchaseRequestBackingBean.getApproverPTJNameDropdown()}" />
 									</p:selectOneMenu>
-									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left; margin-left:0.5%;" />
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top; float:left;" />
 					<!-- 13291 --><p:selectOneMenu id="approverGroupDropdown" style="width:450px; margin-bottom:5px; float: right; margin-right: 9.8% !important;"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
@@ -179,7 +179,7 @@
 											listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"  />
 										<f:selectItems value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
 									</p:selectOneMenu>
-									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" style="float:left; margin-left:0.5%;"/><!-- 13291 -->
+									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" style="float:left;"/><!-- 13291 -->
 									<p:selectOneMenu id="approverDropdown"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal==BpmOutcomeConstant.bpmView}"
 										value="#{purchaseRequestBackingBean.managedBean.selectedApprover}"
