@@ -779,8 +779,10 @@ public class SmApplicationUtil {
 		//		&& !businessTypeVal
 		//		.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
 		
+		//Bug #30829 START
 		if (personnel.isEquityOwner()) { // start - end = Bug #28313
 			return true;
+		//Bug #30829 END
 		} else if(smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)){//change by fahmi, log : 23858 13/03/2019
 			return true;
 		}else if (businessTypeVal
@@ -3688,6 +3690,9 @@ public class SmApplicationUtil {
 		} else {
 			List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 			List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+			//29952 - Start 
+			Date currentDate = new Date();
+			//29952 - End
 			for (SmSupplierCategory cat : managedBean.getSmAppl()
 					.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg().compareTo(
@@ -3702,7 +3707,13 @@ public class SmApplicationUtil {
 							for(Object[] arr : cancelCat){
 								if(arr[2].toString()
 										.equalsIgnoreCase(cat.getPmCategoryL3().getCategoryL3Id().toString())){
-									cat.setCancelCategory(true);
+									//29952 - Start 
+									if(currentDate.after(cat.getSmAppl().getSmSupplier().getSmDisciplinaryActions().get(0).getEndDate())){
+										cat.setCancelCategory(false);
+									} else {
+										cat.setCancelCategory(true);
+									}
+									//29952 - End
 								} else {
 									cat.setCancelCategory(false);
 								}
