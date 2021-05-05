@@ -48,6 +48,7 @@ import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -99,6 +100,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
@@ -364,6 +367,47 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					PmUserGroupUser groupUser = getManagedBean().getApproverMap().get(getManagedBean().getSelectedApprover());
 					if(groupUser!=null) { 
 						List<PmUser> approverUserList = sortApproverUserList(getManagedBean().getApproverGroupUserList(), groupUser.getPmUser(),getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+						//13291 - start
+						List<Long> orgProfileIdList = new ArrayList<>();
+						if(!flRequest.getCreatedOrgProfile().getOrgProfileId().equals(flRequest.getPreparedOrgProfile().getOrgProfileId())) {
+							orgProfileIdList.add(flRequest.getPreparedOrgProfile().getOrgProfileId());
+						}						
+						orgProfileIdList.add(flRequest.getCreatedOrgProfile().getOrgProfileId());
+						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();		
+						orgProfileReqDTO.setOrgProfileId(flRequest.getCreatedOrgProfile().getOrgProfileId());
+						IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(orgProfileReqDTO);
+						List<PmProfileGroup> pmProfileGroups = orgProfileResDTO.getProfileGroups();
+						if(!CollectionUtils.isEmpty(pmProfileGroups)) {
+							for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
+								if(!orgProfileIdList.contains(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId())) {
+									orgProfileIdList.add(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+								}
+							}
+						}
+						
+						List<Long> excludeUserIds = new ArrayList<>();
+						for(PmUser pmUser: approverUserList) {
+							excludeUserIds.add(pmUser.getUserId());
+						}
+					
+						IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+						UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+						BigDecimal totalAmount = calculatesTotalOrderedAmt();
+						userGroupReqDTO.setOrgProfileIdList(orgProfileIdList);
+						userGroupReqDTO.setApprovalLimit(totalAmount);
+						userGroupReqDTO.setExcludeUserIds(excludeUserIds);
+						UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByOrgProfiles(userGroupReqDTO);
+						List<PmUser> otherApproverUserList = userGroupResDTO.getPmUserList();
+						if(!CollectionUtils.isEmpty(otherApproverUserList)) {
+							for(PmUser pmUser: otherApproverUserList) {
+								if(!approverUserList.get(approverUserList.size() - 1).getUserId().equals(pmUser.getUserId())) {//filter for duplicate user even having different group id
+									approverUserList.add(pmUser);
+								}
+							}
+						}						
+						//13291 - end
 						reqDTO.setApproverUserList(approverUserList);
 						reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 					}
@@ -394,10 +438,38 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				pmOrgProfile.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
 				flRequest.setApproverOrgProfile(pmOrgProfile);
 			}
-			log.info("Created PTJ: " + flRequest.getCreatedOrgProfile().getOrgProfileId());
-			log.info("Approver PTJ: " + flRequest.getApproverOrgProfile().getOrgProfileId());
-			log.info("Approver Group: " + flRequest.getPmUserGroup().getUserGroupId());
-			log.info("Approver Id: " + flRequest.getApproverId());
+			if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) && !flRequest.getApproverId().equals(getFacesScopes().getUserSessionBean().getUserId())) {
+				List<Long> orgProfileIdList = new ArrayList<>();
+				if(!flRequest.getCreatedOrgProfile().getOrgProfileId().equals(flRequest.getPreparedOrgProfile().getOrgProfileId())) {
+					orgProfileIdList.add(flRequest.getPreparedOrgProfile().getOrgProfileId());
+				}						
+				orgProfileIdList.add(flRequest.getCreatedOrgProfile().getOrgProfileId());
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();		
+				orgProfileReqDTO.setOrgProfileId(flRequest.getCreatedOrgProfile().getOrgProfileId());
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(orgProfileReqDTO);
+				List<PmProfileGroup> pmProfileGroups = orgProfileResDTO.getProfileGroups();
+				if(!CollectionUtils.isEmpty(pmProfileGroups)) {
+					for(PmProfileGroup pmProfileGroup: pmProfileGroups) {
+						if(!orgProfileIdList.contains(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId())) {
+							orgProfileIdList.add(pmProfileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+						}
+					}
+				}			
+				IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+				UserGroupReqDTO userGroupReqDTO = new UserGroupReqDTO();
+				BigDecimal totalAmount = calculatesTotalOrderedAmt();
+				userGroupReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				userGroupReqDTO.setOrgProfileIdList(orgProfileIdList);
+				userGroupReqDTO.setApprovalLimit(totalAmount);
+				UserGroupResDTO userGroupResDTO = userGroupSO.retrieveUserGroupUserListByUser(userGroupReqDTO);
+				List<PmUserGroupUser> pmUserGroupUserList = userGroupResDTO.getUserGroupUserList();
+				if(!CollectionUtils.isEmpty(pmUserGroupUserList)) {
+					flRequest.setApproverOrgProfile(pmUserGroupUserList.get(0).getPmUserGroup().getPmOrgProfile());
+					flRequest.setPmUserGroup(pmUserGroupUserList.get(0).getPmUserGroup());
+				}
+			}
 			//13291 - end
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
@@ -2139,10 +2211,18 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		try {
 			if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
 				//13291 - start
-				if(getManagedBean().getFlRequest().getApproverOrgProfile() != null) {
+				if(getManagedBean().getFlRequest().getApproverOrgProfile() != null && getManagedBean().getFlRequest().getApproverOrgProfile().getOrgProfileId() != null) {
 					reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getApproverOrgProfile().getOrgProfileId());
 				} else {
-					reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+					if(getManagedBean().getSelectedApproverPTJ() != null) {
+						reqDTO.setOrgProfileId(getManagedBean().getSelectedApproverPTJ());
+					} else {//for WIP
+						if(getManagedBean().getFlRequest().getPmUserGroup() != null && getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() != null ) {
+							reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+						} else {
+							reqDTO.setOrgProfileId(982865L);
+						}						
+					}					
 				}
 				//13291 - end
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
@@ -2165,11 +2245,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					getManagedBean().getApproverList().clear();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserId());
-					}
-					if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
-						PmUserGroup pmUserGroup = new PmUserGroup();
-						getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
-						getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 					}
 				}
 			}
@@ -2939,9 +3014,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		initialize();
 		
-		if(selectedTabIndex==0){
-			initializeApproverGroup();
-		}
+		
 		if(selectedTabIndex==1){
 			if(!getManagedBean().isFlRequestLink()){
 				validatePreparedOrgAndAgencies();
@@ -2982,7 +3055,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				validatePreparedOrgAndAgencies();
 				getApproverList();
 			}
-			initializeApproverGroup();
+			initializeApproverGroup();	
 			//13291 - start
 			initializeApproverPTJNameDropdown();
 			//13291 - end
@@ -3760,7 +3833,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public AgOfficeResDTO getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
-		initializeApproverGroup();
 		initializeDelAddr();
 		getEspkbCommitmentNo();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
@@ -3786,7 +3858,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if(getManagedBean().getShowItemAddrList()!=null) {
 				getManagedBean().getShowItemAddrList().clear();
 			}
-			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			//getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());//13291
 		}
 		
 	}
@@ -4907,7 +4979,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				validateSuspensionItems(action);
 				validateChargelineLimit(action);
-				validateDeliveryAddress(action);//29401
+				//validateDeliveryAddress(action);//29401 13291
 			}
 			
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
@@ -5101,7 +5173,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
 			if(!BpmOutcomeConst.BPM_REJECT.equals(action)){
-				reqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+				//13291 - start
+				if(getManagedBean().getFlRequest().getPmUserGroup() != null) {
+					reqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());	
+				}
+				//13291 - end
 			}
 			
 			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
@@ -7128,6 +7204,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			selectedPreparedForPTJOrg = null;
 			getAgAccount(null);
 			getManagedBean().setCurrentPreparedOrgId(null);
+			initializeApproverGroup();
+			initializeApproverPTJNameDropdown();						
 		}
 	}
 	
@@ -7143,7 +7221,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		Long preparedForPtjOrg = getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId();
 		Long preparedByOrg = getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId();
 		PmAddressType pmAddrType;
-		
+		if(preparedByOrg == null) {
+			preparedByOrg = getUserOrg();
+		}
 		condition.append("ORG_PROFILE_ID^");
 		condition.append(preparedForPtjOrg);
 		condition.append(",");
@@ -7177,25 +7257,30 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	private void initializeApproverPTJNameDropdown() {
 		try {
-			if(getManagedBean().getFlRequest().getApproverOrgProfile() == null  || getManagedBean().getFlRequest().getApproverOrgProfile().getOrgProfileId() == null) {
-				PmOrgProfile tempOrg = new PmOrgProfile();
-				if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() != null) {//for WIP
+			if((getManagedBean().getFlRequest().getApproverOrgProfile() == null  
+					|| getManagedBean().getFlRequest().getApproverOrgProfile().getOrgProfileId() == null) 
+					&& getManagedBean().getSelectedApproverPTJ() == null) {
+				PmOrgProfile tempOrg = new PmOrgProfile();					
+				if(getManagedBean().getFlRequest().getPmUserGroup() != null && getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() != null) {//for WIP
 					getManagedBean().setSelectedApproverPTJ(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				} else {
 					tempOrg.setOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
 					getManagedBean().setSelectedApproverPTJ(tempOrg.getOrgProfileId());
 				}
 			}
-			log.info("PreparedForOrg: " + getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().longValue());
-			if(getManagedBean().getCurrentPreparedOrgId() != null)
-				log.info("CurrentPreparedForOrg: " + getManagedBean().getCurrentPreparedOrgId().longValue());
 			if(CollectionUtils.isEmpty(getManagedBean().getApproverPTJOrgList()) || !getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId().equals(getManagedBean().getCurrentPreparedOrgId())) {
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();		
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveAuthorizedProfileGroupByMainProfileId(reqDTO);
 				boolean isAddPreparedForPTJ = true;
+				if(getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId() == null) {
+					Long orgProfileId = getUserOrg();
+					getManagedBean().getFlRequest().getCreatedOrgProfile().setOrgProfileId(orgProfileId);
+					getManagedBean().setSelectedApproverPTJ(orgProfileId);
+				}			
+				
 				List<PmProfileGroup> pmProfileGroups = new ArrayList<>();
 				if(getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId().equals(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId())) {
 					isAddPreparedForPTJ = false;
@@ -7358,6 +7443,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	    return items;
+	}
+	
+	private Long getUserOrg() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		return userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
 	}
 	//13291 - end
 }
