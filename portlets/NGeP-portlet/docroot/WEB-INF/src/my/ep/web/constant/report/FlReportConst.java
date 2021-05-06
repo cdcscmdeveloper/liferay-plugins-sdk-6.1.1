@@ -72,6 +72,11 @@ public class FlReportConst implements Serializable {
 	//Year End Report Const
 	public static final String FL_067_YEAR_END_REPORT = "FL_067";
 	
+	/*29554 - Beginning - Logan*/
+	// Service Report Const
+	public static final String FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE = "FL_071";
+	public static final String FL_072_ACCUMULATED_SERVICE_FEE_REPORT = "FL_072";
+	
 	public static final String FL_RPT_FROM_DATE = "PFROMDATE";
 	public static final String FL_RPT_TO_DATE = "PTODATE";
 	public static final String FL_RPT_COTRACT_ORDER = "PCONO";
@@ -309,4 +314,16 @@ public class FlReportConst implements Serializable {
 	public String getFl067YearEndReport() {
 		return FL_067_YEAR_END_REPORT;
 	}
+
+	/*29554 - Logan - Beginning*/
+	public static String getFl071ServiceFeeReportBasedOfAccountingOffice() {
+		return FL_071_SERVICE_FEE_REPORT_BASED_OF_ACCOUNTING_OFFICE;
+	}
+
+	public static String getFl072AccumulatedServiceFeeReport() {
+		return FL_072_ACCUMULATED_SERVICE_FEE_REPORT;
+	}
+	/*Ends 29554*/
+	
+	
  }
