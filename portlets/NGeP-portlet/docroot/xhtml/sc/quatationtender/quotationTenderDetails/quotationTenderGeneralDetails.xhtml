@@ -958,7 +958,7 @@
 				<p:outputLabel value="*" styleClass="mandatory"  />
 				</td>
 				<td>
-				<p:selectOneRadio value="#{scQt.sampleReq}" disabled="#{scQt.partial or isReadOnly}">
+				<p:selectOneRadio value="#{scQt.sampleReq}" disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
 				<f:selectItems
 			value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			<p:ajax event="change" partialSubmit="true" listener="#{createQtBB.sampleChange}"
