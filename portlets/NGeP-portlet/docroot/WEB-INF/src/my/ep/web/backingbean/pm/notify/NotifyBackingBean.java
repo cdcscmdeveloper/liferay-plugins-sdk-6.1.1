@@ -17,9 +17,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
@@ -28,8 +25,6 @@ import my.ep.dto.pm.common.notify.NotifyResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
-import my.ep.type.aut.SearchCondition;
-import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -37,6 +32,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.notify.NotifyManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.LazyDataModel;
@@ -45,6 +41,11 @@ import org.primefaces.model.SortOrder;
 @ManagedBean(name = "notifyBackingBean")
 @ViewScoped
 public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = EpLogger
 			.getLogger(NotifyBackingBean.class);
 
