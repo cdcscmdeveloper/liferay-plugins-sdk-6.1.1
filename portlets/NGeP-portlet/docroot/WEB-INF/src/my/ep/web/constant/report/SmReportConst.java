@@ -655,4 +655,8 @@ public class SmReportConst implements Serializable {
 	public static String getSmSupplierPerformanceVRptVal() {
 		return SM_SUPPLIER_PERFORMANCE_V_RPT_VAL;
 	}
+
+	public String getSmApplRevisedRptVal() {
+		return SM_APPL_REVISED_RPT_VAL;
+	}
 }
