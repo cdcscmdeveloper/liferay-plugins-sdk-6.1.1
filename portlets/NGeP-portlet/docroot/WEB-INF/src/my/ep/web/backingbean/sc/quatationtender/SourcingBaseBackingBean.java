@@ -5404,5 +5404,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
   		return CheckStatus.contains(currentStatusId);
  
   	}//25635-End
+  	
+	public boolean isQTSampleStatus(Long currentStatusId){//11104-start
+  		List<Long> CheckStatus=new ArrayList<Long>();
+  		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+  		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+  		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+  		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+  		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
+  		return CheckStatus.contains(currentStatusId);
+ 
+  	}//11104-End
 
 }
