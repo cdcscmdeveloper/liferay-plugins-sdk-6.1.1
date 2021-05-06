@@ -259,6 +259,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			reqDTO.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
+			//30491
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());
+			if(flBB.getManagedBean().getRemarkList().size() >0){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			//30491
 			reqDTO.setUserRole(getUserRole());
 			if(null != getManagedBean().getPmDigiSign()){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
