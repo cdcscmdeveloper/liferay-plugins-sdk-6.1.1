@@ -1081,8 +1081,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal amount = row[7] != null ? (BigDecimal)row[7] : BigDecimal.ZERO;
 					BigDecimal gstAmount = row[8] != null ? (BigDecimal)row[8] : BigDecimal.ZERO;
 					// #26307 start - change service charge
-					BigDecimal serviceCharge;
-					if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+					//START #26307#146 - Fix issue service charge
+					BigDecimal serviceCharge = row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO;
+					/*if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
 						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
 						if(!serviceCharge.equals(BigDecimal.ZERO)){
 							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
@@ -1090,13 +1091,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						}
 					} else {
 						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
-					}
+					}*/
+					//END #26307#146
 					// #26307 end
 					BigDecimal gstRate = row[10] != null ? (BigDecimal)row[10] : BigDecimal.ZERO;
 					BigDecimal gstServiceChargeAmt = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = amount.add(gstAmount).subtract(serviceCharge).subtract(gstServiceChargeAmt).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					// #26307 start - get and add card type
-					String cardType = "-"; 
+					String cardType = "Kad Kredit";//START - #26307#146 
 					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
 					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
 						cardType = "Kad Kredit"; 
@@ -1530,8 +1532,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal priceAmt = row[13] != null ? (BigDecimal)row[13] : BigDecimal.ZERO;
 					BigDecimal gstAmt = row[15] != null ? (BigDecimal)row[15] : BigDecimal.ZERO;
 					// #26307 start - change service charge
-					BigDecimal serviceCharge;
-					if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+					//START #26307#147 - Fix issue on Service Charge
+					BigDecimal serviceCharge= row[9] != null ? (BigDecimal) row[9] : BigDecimal.ZERO;
+					/*if (row[17] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
 						serviceCharge = row[18] != null ? (BigDecimal) row[18] : BigDecimal.ZERO;
 						if(!serviceCharge.equals(BigDecimal.ZERO)){
 							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
@@ -1539,13 +1542,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						}
 					} else {
 						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
-					} 
+					}*/
+					//END #26307#147
 					// #26307 end
 					BigDecimal gstRate = row[16] != null ? (BigDecimal)row[16] : BigDecimal.ZERO;
 					BigDecimal gstServiceCharge = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = (priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge)).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					// #26307 start - get and add card type
-					String cardType = "-"; 
+					String cardType = "Kad Kredit"; //START - #26307#147
 					BigDecimal cardTypeCode = row[17] != null ? (BigDecimal) row[17] : BigDecimal.ZERO;
 					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
 						cardType = "Kad Kredit"; 
@@ -2049,8 +2053,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					BigDecimal priceAmt = row[14] != null ? (BigDecimal)row[14] : BigDecimal.ZERO;
 					BigDecimal gstAmt = row[15] != null ? (BigDecimal)row[15] : BigDecimal.ZERO;
 					// #26307 start - change service charge
-					BigDecimal serviceCharge;
-					if (row[19] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
+					// START #26307#139 - Fix issue on service charge, fix based on pdf.
+					BigDecimal serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
+					/*if (row[19] != null || !"FPX".equalsIgnoreCase(row[1].toString())) {
 						serviceCharge = row[20] != null ? (BigDecimal) row[20] : BigDecimal.ZERO;
 						if(!serviceCharge.equals(BigDecimal.ZERO)){
 							BigDecimal serviceChargeRate = serviceCharge.divide(new BigDecimal(100));
@@ -2058,13 +2063,14 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 						}
 					} else {
 						serviceCharge = row[10] != null ? (BigDecimal) row[10] : BigDecimal.ZERO;
-					}
+					}*/
+					// END #26307#139
 					// #26307 end
 					BigDecimal gstRate = row[18] != null ? (BigDecimal)row[18] : BigDecimal.ZERO;
 					BigDecimal gstServiceCharge = serviceCharge.multiply(gstRate).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					BigDecimal netPrice = priceAmt.add(gstAmt).subtract(serviceCharge).subtract(gstServiceCharge).setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,BigDecimal.ROUND_HALF_UP);
 					// #26307 start - get card type
-					String cardType = "-"; 
+					String cardType = "Kad Kredit"; //START #26307#139
 					BigDecimal cardTypeCode = row[19] != null ? (BigDecimal) row[19] : BigDecimal.ZERO;
 					if (cardTypeCode.compareTo(BigDecimal.valueOf(5125L)) == 0) {
 						cardType = "Kad Kredit"; 
@@ -2306,8 +2312,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 					if(x==0 && "Tarikh Resit".equalsIgnoreCase(params.get(SmReportConst.PARAM_RPT_TYPE)))continue;
 					Cell cell = row.createCell(cellid);
 					if(objectArr[x] instanceof Date){
-						cell.setCellValue((Date) objectArr[x]);
-						cell.setCellStyle(columnStyleDate);
+						//START #26307#139
+						if((Date) objectArr[x] != null){
+							cell.setCellValue((Date) objectArr[x]);
+							cell.setCellStyle(columnStyleDate);
+						}else{
+							cell.setCellValue("");
+							cell.setCellStyle(columnStyleString);
+						}
+						//cell.setCellValue((Date) objectArr[x]);
+						//cell.setCellStyle(columnStyleDate);
 					}else if(objectArr[x] instanceof BigDecimal){
 						cell.setCellValue(((BigDecimal) objectArr[x]).doubleValue());
 						cell.setCellStyle(columnStyleBigDecimal);
