@@ -315,7 +315,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();	
 		FulfilmentResDTO resDTOInvoice = new FulfilmentResDTO();
 		if(taskId != null){
 			renewSesionObject();
@@ -481,23 +481,23 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			/*#14650 - Logan - Beginning*/
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-
+			
 			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
 					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
 				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
-
+							
 				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
 				BigDecimal frnReceivedAmt = BigDecimal.ZERO;
 				FulfilmentReqDTO reqDTOsum = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTOsum = new FulfilmentResDTO();
-
+				
 				reqDTOsum.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
 				if(getManagedBean().getFulfilmentNote()!=null && getManagedBean().getFulfilmentNote().getFulfilmentNoteId()!=null){					
 					reqDTOsum.setRequestNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());
 				}else{
 					reqDTOsum.setRequestNoteId(null);
 				}
-
+				
 				//get accumulative FRN exclude this FRn amount (to avoid duplicate if frn newBrand)
 				resDTOsum = receivedNoteSO.retriveSumReceivedAmtByReqId(reqDTOsum);
 				sumReceivedAmt = resDTOsum.getAccumulativeProcuValue();
@@ -509,13 +509,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				reqDTO.setAmount(sumReceivedAmt);
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
-
+				
 				if(!resDTOInvoice.isCrComplete()){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
 				}
 			}
 			/*#14650 - Ending*/
+			
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -578,6 +579,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			if(item.getReceivedQty()==null) {
 				item.setReceivedQty(BigDecimal.ZERO);
 			}
+			//30468-start
+			if(item.getReceivedQty().doubleValue()<0) {		
+				item.setReceivedQty(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.qty",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+			}
+			//30468-end
 			if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
 				item.setReceivedQty(BigDecimal.ZERO);
 				item.setReceivedAmt(BigDecimal.ZERO);
@@ -1655,5 +1662,27 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public void closeListener() {
 		RequestContext.getCurrentInstance().execute("rejectionRemarksHistory.hide()");
 	}
+	
+	//30468-start
+	/**
+	 * validate  received amount 
+	 *
+	 * @param item the item
+	 */
+	public void validateReceivedAmt() {
+		if(null != getManagedBean().getSelectedItem()){
+			FlFulfilmentNoteItem item=	getManagedBean().getSelectedItem();
+			
+			if(item.getReceivedAmt()==null) {
+				item.setReceivedAmt(BigDecimal.ZERO);
+			}
+			
+			if(item.getReceivedAmt().doubleValue()<0) {
+				item.setReceivedAmt(BigDecimal.ZERO);
+				throw new EpException(MessageConst.ERROR_100033, new String[]{ResourceBundleUtils.getMessage("lbl.fl.received.amount",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),"0"});
+			}		
+		}
+	}
+	//30468-end
 		
 }
