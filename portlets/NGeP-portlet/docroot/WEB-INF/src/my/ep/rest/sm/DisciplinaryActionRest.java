@@ -10,6 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import my.ep.constant.MessageConst;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
@@ -17,6 +19,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -54,14 +57,21 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null ){
+							&& disc.getSmSupplier() != null  && (disc.getSmSupplier().getSupplierId() == 1010669 || disc.getSmSupplier().getSupplierId() == 74848)){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
+						//30784 : Release Disciplinary Action 
 						if(disc.isSuspendRegistration()){
-							RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+							RegistrationReqDTO reqDTO = new RegistrationReqDTO();   
+							
+							PersonnelReqDTO reqPersonnelDTO = new PersonnelReqDTO();
+							reqPersonnelDTO.setSmSupplierId(disc.getSmSupplier().getSupplierId());
 
-							reqDTO.setSmSupp(disc.getSmSupplier());
+							PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(reqPersonnelDTO);
+							 
+							reqDTO.setSmSupp(disc.getSmSupplier());  
+							reqDTO.getSmSupp().getSmAppl().setSmPersonnels(personnelResDTO.getSmPersonnelList());  
 							try {
 								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 										reqDTO); 
