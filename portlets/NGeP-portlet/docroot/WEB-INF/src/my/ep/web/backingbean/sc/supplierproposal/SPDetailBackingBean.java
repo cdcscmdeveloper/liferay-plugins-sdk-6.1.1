@@ -597,11 +597,20 @@ public class SPDetailBackingBean extends
 				|| getManagedBean().getSmAppl() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
 		}
-		IQTProposalSO proposalSO = null;
+
+		// #29134 - CR 27233: Static Code Analysis -start-
+		// start
+		// initialized proposalSO outside of try to prevent nullpointerexception in catch clause
+		// removed finally clause as it is not needed
+		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 		ProposalReqDTO reqDTO = null;
+		
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+//			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+//			#29134 - CR 27233: Static Code Analysis -end-
+			
 			reqDTO = populateProposalDetailsTosave();
 			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
 			scQtProposalChecklists.addAll(reqDTO.getTechnicalChecklist());
@@ -623,6 +632,10 @@ public class SPDetailBackingBean extends
 						scQtProposal.getQtProposalId(),
 						scQtProposal.getProposalNo(), originalText);
 			}
+			
+			// #27233 : CR add new tracking diary entry for update - START
+			reqDTO.setResubmit(scQtProposal.getLastSubmitDate() != null);
+			// #27233 : CR add new tracking diary entry for update - END
 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			scQtProposal.setLastSubmitDate(DateUtils.getCurrentDate());
@@ -651,10 +664,15 @@ public class SPDetailBackingBean extends
 			getManagedBean().getQtProposal().setLastSubmitDate(getManagedBean().getLastSubmittedDate());
 			proposalSO.insertTrackingDiary(reqDTO);
 			throw e;
-		} finally {
-			proposalSO = null;
-			reqDTO = null;
 		}
+		
+//		#29134 - CR 27233: Static Code Analysis -start-
+//		} finally {
+//			proposalSO = null;
+//			reqDTO = null;
+//		}
+//		#29134 - CR 27233: Static Code Analysis -end-
+		
 	}
 	
 	//20191023@asyrafhaziq - Prevent Auto Score null - Start
@@ -2886,52 +2904,54 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 
 		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
+		//#29134 - CR 27233: Static Code Analysis
+		//shaqimi start - removed try-finally clause as it is not needed
 		ITemplateSpecSO templateSpecSO = null;
-		try {
+		templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+			
+		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+		reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
-			templateSpecSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-							ITemplateSpecSO.class);
-			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+		SmSupplier smSupplier = new SmSupplier();
+		smSupplier.setSupplierId(getManagedBean().getSupplierId());
+		
+		reqDTO.setSupplier(smSupplier);
+		reqDTO.setSpecMaster(specMaster);
 
-			SmSupplier smSupplier = new SmSupplier();
-			smSupplier.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setSupplier(smSupplier);
-
-			reqDTO.setSpecMaster(specMaster);
-			if (getManagedBean().getSelectedZone() != null) {
-				reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
-			}
-			if (getManagedBean().getQt().getMaxProposal() > 1) {
-				reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
-			}
-			reqDTO.setScQt(getManagedBean().getQt());
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.getTemplateMaster(reqDTO);
-			if (resDTO.isSuccessful()) {
-				specMaster = resDTO.getSpecMaster();
-				TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-				templateSpecBean.setSpecMaster(specMaster);
-				templateSpecBean.setContentType(reqDTO.getContentType());
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				templateSpecBean.setSelectedSpecQuestion(null);
-				this.getManagedBean().getTemplateSpecBackingBean()
-						.calcGrandTotalAmount(templateSpecBean);
-				if (getManagedBean().getQt().isZonal()) {
-					getManagedBean().getZoneTplSpecBeanMap().put(
-							getManagedBean().getSelectedZone().getSpecZoneId(),
-							templateSpecBean);
-				} else {
-					getManagedBean().setTemplateSpecBean(templateSpecBean);
-				}
-
-			}
-		} finally {
-
-			templateSpecSO = null;
+		if (getManagedBean().getSelectedZone() != null) {
+			reqDTO.setTplSpecZoneDtl(getManagedBean().getSelectedZone());
 		}
+		if (getManagedBean().getQt().getMaxProposal() > 1) {
+			reqDTO.setSubProposalNo(getManagedBean().getProposalIndex());
+		}
+		
+		reqDTO.setScQt(getManagedBean().getQt());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		
+		TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
+			
+		if (resDTO.isSuccessful()) {
+			specMaster = resDTO.getSpecMaster();
+		
+			TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+			templateSpecBean.setSpecMaster(specMaster);
+			templateSpecBean.setContentType(reqDTO.getContentType());
+			templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+			templateSpecBean.setSelectedSpecQuestion(null);
+			
+			this.getManagedBean().getTemplateSpecBackingBean()
+				.calcGrandTotalAmount(templateSpecBean);
+			
+			if (getManagedBean().getQt().isZonal()) {
+				getManagedBean().getZoneTplSpecBeanMap().put(
+					getManagedBean().getSelectedZone().getSpecZoneId(), templateSpecBean);
+			} else {
+				getManagedBean().setTemplateSpecBean(templateSpecBean);
+			}
+			//shaqimi start - removed useless assignment to templateSpecSO
+		}
+		// end #29134 - CR 27233: Static Code Analysis
 
 	}
 
@@ -5257,16 +5277,34 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		ScQtProposal proposal = this.getManagedBean().getQtProposal();
 		proposal.setSubmitted(false);
 		IQTProposalSO proposalSO;
-		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setScQtProposal(proposal);
-			 proposalSO = getProposalSO();
-			ProposalResDTO resDTO = proposalSO
-					.updateQTProposalForReSubmit(reqDTO);
-			this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
-		} finally {
-			proposalSO = null;
+
+		// #29134 - CR 27233: Static Code Analysis
+		// start
+		// removed try and finally clause
+//		try {
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setScQtProposal(proposal);
+			
+		// #27233 : CR add new tracking diary entry for update - START
+		Long scQtSuppId = proposal.getScQtSupplier() != null ? proposal.getScQtSupplier().getQtSupplierId() : null;
+
+		if(scQtSuppId != null){
+			reqDTO.setUpdating(true);
+			reqDTO.setQtSupplierId(scQtSuppId); // need real scSupplier
+			reqDTO.setRoleCode(super.getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		}
+		// #27233 : CR add new tracking diary entry for update - END
+			
+		proposalSO = getProposalSO();
+		
+		ProposalResDTO resDTO = proposalSO.updateQTProposalForReSubmit(reqDTO);			
+		this.getManagedBean().setQtProposal(resDTO.getScQtProposal());
+//		} finally {
+//			proposalSO = null;
+//		}
+		// end #29134 - CR 27233: Static Code Analysis 
+			
 	}
 
 	/**
