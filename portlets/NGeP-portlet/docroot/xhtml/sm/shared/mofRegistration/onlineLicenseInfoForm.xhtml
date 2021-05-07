@@ -60,7 +60,7 @@
 								<p:outputLabel value="*" styleClass="mandatory" rendered="#{onlineLicenseTable.pmDocument.mandatory}"/>
 							</td>
 							<td style="border-style: none !important;">
-								<p:inputText value="#{onlineLicenseTable.licenseNo}" size="20" id="licenseNoId" required="#{onlineLicenseTable.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" >
+								<p:inputText value="#{onlineLicenseTable.licenseNo}" size="20" id="licenseNoId" required="#{onlineLicenseTable.pmDocument.mandatory}" label="#{lbl['lbl.sm.suppdoc.license.no']}" maxlength="30">
 									<p:ajax process="@this" partialSubmit="true"/>
 								</p:inputText>
 								<p:message id="licenseNoIdMsg" for="licenseNoId" showSummary="true" showDetail="false" display="icon" />
