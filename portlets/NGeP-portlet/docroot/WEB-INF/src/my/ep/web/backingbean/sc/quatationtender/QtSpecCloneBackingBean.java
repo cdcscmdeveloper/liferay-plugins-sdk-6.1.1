@@ -696,6 +696,17 @@ public class QtSpecCloneBackingBean extends
 						&& null != supplierCriteria.getQtZoneCriterias()) {
 					TemplateSpecHelper.getInstance().updateZoneDtl(copy,
 							supplierCriteria.getQtZoneCriterias());
+					if(copy.getTplSpecQuestions() != null){//21695&25635-start
+						for(TplSpecQuestion specQuestion :copy.getTplSpecQuestions()){
+						if(null!=specQuestion&& TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specQuestion.getQuestionType())){
+						if(null!=specQuestion.getTplSpecZoneQties()&&CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())&& null!=this.getManagedBean().getTemplateSpecZoneDtls()&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())&&specQuestion.getTplSpecZoneQties().size()==this.getManagedBean().getTemplateSpecZoneDtls().size()){
+							for(int i=0;i<specQuestion.getTplSpecZoneQties().size();i++){
+								specQuestion.getTplSpecZoneQties().get(i).setTplSpecZoneDtl(this.getManagedBean().getTemplateSpecZoneDtls().get(i));
+							}
+						}
+						}
+						}
+					}//21695&25635-End
 				} else {
 					throw new EpException(
 							"Please choose the zones before proceed.");
