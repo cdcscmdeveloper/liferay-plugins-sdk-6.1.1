@@ -26,6 +26,7 @@ import my.ep.persistence.entity.pm.common.PmMachine;
 import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory; //#29665
 import my.ep.web.bean.pm.CategoryCodePublicSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -220,6 +221,12 @@ public class CategoryManagedBean extends BaseManagedBean {
 	
 	public long machineSection;
 	
+	//Start #29665
+	private Integer fromLevel = 0;
+	private String remarkCategory;
+	private String updatedCategoryDesc;
+	private List<PmRemarkCategory> remarkHistoryList;
+	//ENd #29665
 	
 	
 	/**
@@ -1335,5 +1342,39 @@ public class CategoryManagedBean extends BaseManagedBean {
 	public void setMachineSection(long machineSection) {
 		this.machineSection = machineSection;
 	}
+	
+	//start #29665
+	public Integer getFromLevel() {
+		return fromLevel;
+	}
+
+	public void setFromLevel(Integer fromLevel) {
+		this.fromLevel = fromLevel;
+	}
+
+	public String getRemarkCategory() {
+		return remarkCategory;
+	}
+
+	public void setRemarkCategory(String remarkCategory) {
+		this.remarkCategory = remarkCategory;
+	}
+
+	public List<PmRemarkCategory> getRemarkHistoryList() {
+		return remarkHistoryList;
+	}
+
+	public void setRemarkHistoryList(List<PmRemarkCategory> remarkHistoryList) {
+		this.remarkHistoryList = remarkHistoryList;
+	}
+
+	public String getUpdatedCategoryDesc() {
+		return updatedCategoryDesc;
+	}
+
+	public void setUpdatedCategoryDesc(String updatedCategoryDesc) {
+		this.updatedCategoryDesc = updatedCategoryDesc;
+	}
+	//end #29665
 	
 }
