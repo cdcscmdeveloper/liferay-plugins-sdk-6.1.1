@@ -5645,9 +5645,9 @@ public class SimpleQuoteBackingBean extends
 							.getTplSpecMaster(), specAnswerList, locale);
 		}
 		
-		if (!isServiceContainPrice && !isProdContainPrice) {
-			throw new EpException(MessageConst.ERROR_700105);
-		}
+//		if (!isServiceContainPrice && !isProdContainPrice) {
+//			throw new EpException(MessageConst.ERROR_700105);
+//		}
 		
 		//gpki for only govt seller
 		if(isDigiSigningRequired(RoleCode.GOVT_SELLER.value())) {
@@ -5791,6 +5791,11 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmDigiSign(pmDigiSign);
+			
+			//#30840 - Start
+			reqDTO.setServiceContainPrice(isServiceContainPrice);
+			reqDTO.setProdContainPrice(isProdContainPrice);
+			//#30840 - End
 
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
