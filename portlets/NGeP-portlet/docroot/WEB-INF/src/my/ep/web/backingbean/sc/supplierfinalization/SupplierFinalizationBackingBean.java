@@ -2609,29 +2609,27 @@ return	remarksNotFound;
 	
 	//28834 starts
 	 public boolean checkDisableBfButtonAfterValidation(){
+		 
+		    ScQt scQt = this.getManagedBean().getScQt();
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+			scQt = qtBackingBean.getManagedBean().getQt();
+			boolean isBpkCentralContract = false;
+			isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean hidden = false;
 
-         boolean hidden = false;
-
-         List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
-
-         for (ScQtMeeting meeting : meetingListList) {
-
-                         if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
-
-                                                         && QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
-
-                                                         && meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-
-                                         hidden = true;
-                                         this.getManagedBean().setDisableBfButton(true);
-                                         
-
-                         }
-
-         }
-
-         return hidden;
-
+			 if(!isBpkCentralContract){
+		         List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+		         for (ScQtMeeting meeting : meetingListList) {
+	 	        	  if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+                          && QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+                          && meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					             hidden = true;
+					             this.getManagedBean().setDisableBfButton(true);
+                   } 
+		         }
+	         }
+	         return hidden;
 }
 	
 		//28834  ends	
@@ -3204,6 +3202,19 @@ return	remarksNotFound;
 			// Remarks are mandatory for QT cancellation
 			throw new EpException(MessageConst.ERROR_760360);
 		}
+		
+		if (ParameterConst.DECISION_RBP
+				  .equals(decisionTypeCode) && 
+				  CollectionUtils.isEmpty(
+							scQtFinalization.getScQtFinalizationRemarks())) {
+			log.info("--->DECISION_RBPDECISION_RBPDECISION_RBPDECISION_RBP");
+	navigateToSupplierFinalizationTab();
+	initializeFinalizationRemarks();
+	
+	
+	// Remarks are mandatory for QT cancellation
+	throw new EpException(MessageConst.ERROR_700093);
+}
 		
 		
 		
