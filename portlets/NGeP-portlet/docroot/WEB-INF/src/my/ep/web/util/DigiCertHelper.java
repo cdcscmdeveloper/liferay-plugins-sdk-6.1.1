@@ -81,7 +81,7 @@ public class DigiCertHelper {
 	}
 
 	public void revoke(String identificationNo, String epNo) throws IOException {
-		log.info("DIGICERT REVOKE:" + identificationNo + "||" + epNo);
+		//log.info("DIGICERT REVOKE:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -94,7 +94,7 @@ public class DigiCertHelper {
 
 	public void changePIN(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
-		log.info("DIGICERT CHANGE PIN:" + identificationNo + "||" + epNo);
+		//log.info("DIGICERT CHANGE PIN:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -106,7 +106,7 @@ public class DigiCertHelper {
 
 	public void updateChallResp(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
-		log.info("DIGICERT UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
+		//log.info("DIGICERT UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -118,8 +118,8 @@ public class DigiCertHelper {
 
 	public void resetPIN(String identificationNo, String epNo, String email)
 			throws IOException, PortalException, SystemException {
-		log.info("DIGICERT RESET PIN:" + identificationNo + "||" + epNo + "||"
-				+ email);
+		//log.info("DIGICERT RESET PIN:" + identificationNo + "||" + epNo + "||"
+				//+ email);
 		String token = generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
@@ -130,8 +130,9 @@ public class DigiCertHelper {
 		externalContext.redirect(url);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getChallengeQuestion(String identificationNo) {
-		log.info("DIGICERT GET CHALL QUEST:" + identificationNo);
+		//log.info("DIGICERT GET CHALL QUEST:" + identificationNo);
 		List<String> retVal = new ArrayList<String>();
 		try {
 			KMCClient client = getClient();
@@ -142,20 +143,31 @@ public class DigiCertHelper {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setUserId(pmUser.getUserId());
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
-			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
+			//log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
+			//log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
 			
 			/*#29228 - Start*/
 			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
 			/*#29228 - End	*/
-				log.info("#25061 getSoftcertFlg:: if log 1");
+				//log.info("#25061 getSoftcertFlg:: if log 1");
 				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
 						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
 						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					//log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
 					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
 				} else {
-					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					//log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+					//#29630 - start
+					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
+					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+						log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
+					} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+						log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+					} else {
+						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
+					}
+					//#29630 - end
 					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
 				}
 			}
@@ -186,8 +198,8 @@ public class DigiCertHelper {
 
 	public SpkiVO getSignedData(String identificationNo, String epNo,
 			String pin, Map<Object, Object> challenges, String dataForSigning) {
-		log.info("BEFORE DIGICERT SIGNING:" + identificationNo + "||" + epNo
-				+ "||" + pin + "||" + dataForSigning);
+		//log.info("BEFORE DIGICERT SIGNING:" + identificationNo + "||" + epNo
+				//+ "||" + pin + "||" + dataForSigning);
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
 		try {
@@ -198,8 +210,8 @@ public class DigiCertHelper {
 							challenges,
 							new ByteArrayInputStream(dataForSigning.getBytes())));
 
-			log.info("DIGICERT SIGNING STATUS CODE:" + res.getStatusCode()
-					+ " MESSAGE:" + res.getStatusMessage());
+			//log.info("DIGICERT SIGNING STATUS CODE:" + res.getStatusCode()
+					//+ " MESSAGE:" + res.getStatusMessage());
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -219,21 +231,25 @@ public class DigiCertHelper {
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+					log.info("51; "+ MessageConst.ERROR_DIGICERT_776059); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776059,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+					log.info("50; "+ MessageConst.ERROR_DIGICERT_776060); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776060,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+					log.info("0; "+ MessageConst.ERROR_DIGICERT_776061); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776061,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()));
 				} else {
+					log.info("99; "+MessageConst.ERROR_TRUSTGATE_776063); //#29630
 					vo.setErrMsg(MessageUtils.getMessage(
 							MessageConst.ERROR_DIGICERT_776062,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -242,7 +258,7 @@ public class DigiCertHelper {
 
 			}
 		} catch (KMCAPIException | InvalidKMCAPIFieldException e) {
-			log.info("DIGICERT SIGNING:" + identificationNo + "||" + epNo
+			log.error("DIGICERT SIGNING:" + identificationNo + "||" + epNo
 					+ "||" + pin + "||" + dataForSigning + " ERROR MSG:"
 					+ e.getMessage());
 			e.printStackTrace();
@@ -251,8 +267,8 @@ public class DigiCertHelper {
 					new FacesScopes().getUserLocale()));
 		}
 		vo.setSignedData(signedData);
-		log.info("AFTER DIGICERT SIGNING:" + identificationNo + "||" + epNo
-				+ "||" + pin + "||" + dataForSigning);
+		//log.info("AFTER DIGICERT SIGNING:" + identificationNo + "||" + epNo
+				//+ "||" + pin + "||" + dataForSigning);
 		return vo;
 	}
 
