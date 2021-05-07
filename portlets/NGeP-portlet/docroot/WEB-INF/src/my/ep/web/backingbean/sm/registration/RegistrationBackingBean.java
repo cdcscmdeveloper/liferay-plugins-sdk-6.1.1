@@ -1693,7 +1693,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									errorMessageSSM(supplier);
 								}
 							}else if(!getManagedBean().getSmAppl().getSupplierType().equals(supplier.getSmAppl().getSupplierType()) && resDTO.getSmSuppliers().size() == 1){
-								if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+								//start #30571
+							if (supplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+								throw new EpException(MessageConst.ERROR_721074, new String[] { supplier.getRegNo() }); // end #30571
+							} else if(supplier.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
 									String labelText = null;
 									//START 27503
 									if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
