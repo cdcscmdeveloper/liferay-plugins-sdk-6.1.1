@@ -64,7 +64,8 @@ public class DisciplinaryActionRest {
 						//30784 : Release Disciplinary Action 
 						if(disc.isSuspendRegistration()){
 							RegistrationReqDTO reqDTO = new RegistrationReqDTO();   
-							
+
+							log.info("-----------suspend registration-----------------"+disc.isSuspendRegistration());
 							PersonnelReqDTO reqPersonnelDTO = new PersonnelReqDTO();
 							reqPersonnelDTO.setSmSupplierId(disc.getSmSupplier().getSupplierId());
 
