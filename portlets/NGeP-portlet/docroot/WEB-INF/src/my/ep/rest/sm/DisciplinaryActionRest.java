@@ -57,7 +57,7 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null  && (disc.getSmSupplier().getSupplierId() == 1010669 || disc.getSmSupplier().getSupplierId() == 74848)){
+							&& disc.getSmSupplier() != null ){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
