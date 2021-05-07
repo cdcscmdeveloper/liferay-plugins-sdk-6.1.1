@@ -22,10 +22,14 @@
 						immediate="true" update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" /></td>
 				
-				<td><p:commandButton value="#{lbl['lbl.btn.update']}"
-						action="#{categoryBackingBean.saveCategory}"
+				<td>
+					<!-- Start #29665 change update button behaviour -->
+					<p:commandButton value="#{lbl['lbl.btn.update']}"
+						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
-						update=":form" style="float:right;width: auto;" /> <p:commandButton
+						style="float:right;width: auto;" />
+					<!-- End #29665 -->
+					<p:commandButton
 						value="#{lbl['lbl.btn.save']}"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
@@ -70,15 +74,56 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<p:inputTextarea 
+						<!-- Start #29665 Add action -->
+						<c:if test="#{categoryBackingBean.managedBean.newCategory}">
+							<p:inputTextarea 
 							style="text-transform:uppercase;"
-							disabled="#{!categoryBackingBean.managedBean.newCategory}"
 							cols="40" maxlength="255"  
-							value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}"							
+							value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}"
 						/>
+						</c:if>
+						
+						<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+							<p:inputTextarea 
+							style="text-transform:uppercase;"
+							required="#{!categoryBackingBean.descriptionEditDisable}"
+							disabled="#{categoryBackingBean.descriptionEditDisable}"
+							cols="40" maxlength="255" 
+							value="#{categoryBackingBean.managedBean.updatedCategoryDesc}" 
+							/>
+							&#160; 
+							<p:commandLink action="#{categoryBackingBean.enableDiscription}"
+								update="catLevel" disabled="#{!categoryBackingBean.descriptionEditDisable}">
+								<p:graphicImage library="ep/images/design" 
+									title="#{lbl['lbl.pm.edit.description']}"
+									value="/css/images/design/edit.png" />
+							</p:commandLink>
+						</c:if>
+						<!-- End #29665 -->
 						
 					</td>
 				</tr>
+				<!-- Start #29665: Add History Field -->
+				<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.categ.history']}" />
+					</td>
+					<td>
+						<p:commandLink onclick="remarkHisCatCodePopup.show()">
+							<p:graphicImage id="hisImage" value="/css/images/design/document.png" /> 
+						</p:commandLink> 
+						
+						<p:graphicImage id="hisTipImage" value="/css/images/design/tooltips.png" /> 
+						<p:tooltip
+							id="historyTip" for="hisTipImage">
+							<p:outputLabel escape="false"  dir="rtl" 
+								value="#{lbl['lbl.pm.categ.history.main.tooltips']}" />
+						</p:tooltip>
+					</td>
+				</tr>
+				</c:if>
+				<!-- End #29665 -->
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.pm.status']}" />
@@ -89,10 +134,33 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}">
 							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" />
+								update="@form" listener="#{categoryBackingBean.onchangeDiscription}"/> <!-- @29665 add listener -->
 						</p:selectOneMenu>
 					</td>
 				</tr>
+				<!-- Start #29665: Add Remark Field -->
+				<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.pm.remarks']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td>
+						<p:inputTextarea id="remarkFieldId" cols="50" maxlength="1000" value="#{categoryBackingBean.managedBean.remarkCategory}"
+						disabled="#{categoryBackingBean.remarkDisable}" required="#{!categoryBackingBean.remarkDisable}"
+						requiredMessage="#{lbl['lbl.pm.categ.remark.main.required']}"
+						validatorMessage="#{lbl['lbl.pm.categ.remark.main.required']}"/>
+						&#160; 
+						<p:graphicImage id="tipImage" value="/css/images/design/tooltips.png" /> 
+						<p:tooltip
+							id="remarkTip" for="tipImage">
+							<p:outputLabel escape="false"  dir="rtl" 
+								value="#{lbl['lbl.pm.categ.remark.main.tooltips']}" />
+						</p:tooltip>
+					</td>
+				</tr>
+				</c:if>
+				<!-- End #29665 -->
 			</table>
 		</p:panel>
 
@@ -118,8 +186,9 @@
 						<h:outputText value="#{pmCategoryL2.categoryL2Code}" />
 					</p:column>
 					<p:column>
+						<!-- 29665 rename column header -->
 						<f:facet name="header">
-					#{lbl['lbl.pm.contact.name']}
+					#{lbl['lbl.pm.ctrl.description']}
 				</f:facet>
 						<h:outputText value="#{pmCategoryL2.categoryName}" />
 					</p:column>
@@ -132,6 +201,21 @@
 						<h:outputText value="#{lbl['lbl.pm.status.inactive']}"
 							rendered="#{pmCategoryL2.recordStatusFlg == 0}" />
 					</p:column>
+					
+				<!-- Start #29665 Add action column -->
+				<p:column style="text-align: center" rendered="#{!categoryBackingBean.managedBean.newCategory}">
+					<f:facet name="header">
+					#{lbl['lbl.pm.organisation.action']}
+					</f:facet>
+					<p:commandLink
+						action="#{categoryBackingBean.editSubCategory(pmCategoryL2.categoryL2Id, 1, false)}"
+						update="@form" immediate="true">
+						<p:graphicImage library="ep/images/design" 
+							title="#{lbl['lbl.pm.edit.sub.category']}"
+							value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+				<!-- End #29665 -->
 
 				</p:dataTable>
 
@@ -145,6 +229,24 @@
 
 			</p:panel>
 		</c:if>
+		
+		<!-- Start #29665 Add confirmation dialog -->
+		<ui:param name="contentDialog" value="#{categoryBackingBean.updateDialogContent}"></ui:param>
+		
+		<ac:confirmationPopup id="updateCategDialog" widget="updateCategDialog"
+				okAction="categoryBackingBean.saveCategory"
+				cancelAction = "categoryBackingBean.cancelCategory(1)"
+				width="400" height="100"
+				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
+				content="#{categoryBackingBean.getUpdateContent(1)}"
+				update=":form"
+				oncomplete="updateCategDialog.hide();"/>
+				
+		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+			<ac:pmCategoryHistoryPopup catCode="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" 
+			historyList="#{categoryBackingBean.managedBean.remarkHistoryList}" widget="remarkHisCatCodePopup"/>
+		</c:if>
+		<!-- End #29665 -->
 
 	</ui:define>
 </ui:composition>
