@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +31,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -42,12 +40,10 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
-import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
@@ -64,7 +60,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -204,6 +199,38 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @return String
 	 */
 	public void navigateToPaymentPage() {
+		// #29630 - start
+		boolean result = false;
+		boolean isAdmin = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(getManagedBean()
+				.getLoginUserPersonnelInfo().getEpRole());
+		if (isAdmin) {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(getManagedBean().getSmAppl().getSmSupplier().getSupplierId());
+			reqDTO.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+			if (!getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+				for (SoftcertUploadSuppDocVO softCertList : getManagedBean().getSoftcertUploadSuppDocList()) {
+					if(softCertList.getPersonnel().getPmUser() == null){
+						continue;
+					}
+					reqDTO.setUserId(getManagedBean().getLoginUserPersonnelInfo().getPmUser().getUserId());
+					if (!reqDTO.getUserId()
+							.equals(getManagedBean().getLoginUserPersonnelInfo().getPmUser().getUserId())) {
+						SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO()
+								.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();
+						if (softcertRequest != null && softcertRequest.getPmDigiCert() != null
+								&& softcertRequest.getPmDigiCert().getValidFrom() != null
+								&& softcertRequest.getPmDigiCert().getValidTo() != null) {
+							result = DateUtils.isDateOvarlapping(softcertRequest.getPmDigiCert().getValidFrom(),
+									softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
+						}
+						if (!result) {
+							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+						}
+					}
+				}
+			}
+		}
+		// #29630 - end
 		if (getManagedBean().getSuppDocMode().equals(
 				SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
 			validateUploadSuppDoc();
@@ -389,10 +416,26 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 								RoleCode.SUPPLIER_TEMP.value())) {
 					getManagedBean().setSupplierTmpPersonnel(personnel);
 				}
-				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
-					personnel.setFreeSoftCert(true);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 */
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL || personnel.getEpRole().equals(
+                        RoleCode.MOF_SUPPLIER_USER.value())) {
+					personnel.setFreeSoftCert(false);
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
+					amount = amount.add(amountPerPersonnel);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				} else {
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - Start	
+					 */
 					personnel.setFreeSoftCert(true);
+					/**
+					 * 20200908@MohdHafizAbdRahim - Bug #28264 - End
+					 */
 				}
 			} else {
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
@@ -434,6 +477,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		this.getManagedBean().setTotalPaymentAmount(
 				gst.add(amount).setScale(2, BigDecimal.ROUND_UP));
 		setPaymentBtnLbl();
+
 	}
 
 	/**
@@ -1265,8 +1309,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	public void validateSelectedPersonnelInfo() {
 		if (getManagedBean().getSoftCertSelectList() != null) {
 			for (SmPersonnel selectedPersonnel : getManagedBean().getSoftCertSelectList()) {
-				log.info("selectedPersonnel: " + selectedPersonnel.getSmAppl().getApplId() + " || " + selectedPersonnel.getPersonnelId() + " || " + selectedPersonnel.getName()
-						+ " || " + selectedPersonnel.getIdentificationNo());
+				//log.info("selectedPersonnel: " + selectedPersonnel.getSmAppl().getApplId() + " || " + selectedPersonnel.getPersonnelId() + " || " + selectedPersonnel.getName()
+						//+ " || " + selectedPersonnel.getIdentificationNo());
 
 				if (StringUtils.isBlank(selectedPersonnel.getEmail())) {
 					throw new EpException(MessageConst.ERROR_721056, new String[] { selectedPersonnel.getName() });
@@ -1514,14 +1558,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if (getManagedBean().getSoftCertPayList() != null) {
 			for (SmPersonnel payPersonnel : getManagedBean()
 					.getSoftCertPayList()) {
-				log.info("payPersonnel: " + payPersonnel.getName() + " : "
-						+ payPersonnel.getIdentificationNo());
-				log.info("login Personnel: "
-						+ getManagedBean().getLoginUserPersonnelInfo()
-								.getName()
-						+ " : "
-						+ getManagedBean().getLoginUserPersonnelInfo()
-								.getIdentificationNo());
+				//log.info("payPersonnel: " + payPersonnel.getName() + " : "
+						//+ payPersonnel.getIdentificationNo());
+				//log.info("login Personnel: "
+						//+ getManagedBean().getLoginUserPersonnelInfo()
+								//.getName()
+						//+ " : "
+						//+ getManagedBean().getLoginUserPersonnelInfo()
+								//.getIdentificationNo());
 
 				if (getManagedBean().getLoginUserPersonnelInfo() != null
 						&& !getManagedBean()
@@ -1556,13 +1600,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	public void navigateToViewSoftCert() {
-		log.info("navigateToViewSoftCert");
+		//log.info("navigateToViewSoftCert");
 
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
 				.getRequestScope(WebKeys.THEME_DISPLAY);
 
-		log.info("getURLCurrent" + themeDisplay.getURLCurrent());
+		//log.info("getURLCurrent" + themeDisplay.getURLCurrent());
 
 		try {
 			String commonUrl = themeDisplay.getURLCurrent().substring(
@@ -1572,7 +1616,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.getFriendlyURL())
 							+ themeDisplay.getLayout().getGroup()
 									.getFriendlyURL().length());
-			log.info("commonUrl" + commonUrl);
+			//log.info("commonUrl" + commonUrl);
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
