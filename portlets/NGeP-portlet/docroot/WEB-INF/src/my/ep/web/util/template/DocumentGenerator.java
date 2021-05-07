@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 
+import my.ep.factory.EpLogger;
+
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -50,8 +52,6 @@ import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
 import org.xhtmlrenderer.pdf.ITextRenderer;
-
-import my.ep.factory.EpLogger;
 
 /**
  * Singleton Helper For Document Generator.
@@ -164,28 +164,30 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		debugLogger("generatePdf");
 		
 		ITextRenderer render = new ITextRenderer();
+		
 		try{
-			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", "");
-		        	html = html.replaceAll("&amp;", "&amp;amp;")
-		        			   .replaceAll("&", "&amp;");
-		        	html = html.replaceAll("&amp;#62", "&#62");
-		          	html = html.replaceAll("&amp;#60", "&#60");
-		          	
-					//20220921@asyrafhaziq - 29076 -  Start
-					html = html.replaceAll("&amp;nbsp;", " ");
-					html = html.replaceAll("&amp;amp;", "&");
-					//20220921@asyrafhaziq - 29076 - End 
-					
-		            render.setDocumentFromString(html);
-		            render.layout();
-		            render.createPDF(os);
-		        }
-		        
-		        os.flush();
+			//#26180
+			if (html != null) {
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;", "&amp;amp;").replaceAll("&", "&amp;");
+				html = html.replaceAll("&amp;#62", "&#62");
+				html = html.replaceAll("&amp;#60", "&#60");
+				//20220921@asyrafhaziq - 29076 -  Start == //#25142 - start
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;amp;", "&");
+				//20220921@asyrafhaziq - 29076 - End == //#25142 - end
+
+				render.setDocumentFromString(html);
+				render.layout();
+				render.createPDF(os);
+			}
+
+			os.flush();
 		}finally{
+			html = null; //#25142
 			render = null;
 			os.close();
+			os = null; //#25142
 		}
 	}
 	
