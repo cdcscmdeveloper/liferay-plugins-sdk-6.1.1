@@ -76,10 +76,10 @@ public class DisciplinaryActionRest {
 							try {
 								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 										reqDTO); 
-								SmCommonUtil.redirectToPage(
+								/*SmCommonUtil.redirectToPage(
 										SmApplicationUtil.getApplicationErrorPage(),
 										MessageConst.INFO_721029, new String[] {resDTO.getBasicSupplierAdmin().getPmUser().getLoginId() },
-										FacesMessage.SEVERITY_INFO);
+										FacesMessage.SEVERITY_INFO);*/
 							} catch (Exception ex) {
 								throw new EpException(ex.getMessage());
 							}
