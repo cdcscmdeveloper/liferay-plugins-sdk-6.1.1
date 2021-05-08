@@ -14527,7 +14527,18 @@ public class SmApplicationBackingBean extends
 				} else if (getManagedBean().getBusinessTypeVal()     
 						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
-					//log.info("roc--fatintest");
+					log.info("roc--fatintest");
+			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
+					getManagedBean().getSelectedShareHolder().setDirector(false);
+					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+					getManagedBean().getSelectedShareHolder().setManagement(false);
+					getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
+			//#30444 - END
+			//#30444 - START 07052021
+				} else if (getManagedBean().getBusinessTypeVal()     
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+						&& (getManagedBean().getSelectedShareHolder().isClerical())) {
+					log.info("rob-sole p");
 			    	getManagedBean().getSelectedShareHolder().setEquityOwner(false);
 					getManagedBean().getSelectedShareHolder().setDirector(false);
 					getManagedBean().getSelectedShareHolder().setHigherManagement(false);
@@ -14536,25 +14547,28 @@ public class SmApplicationBackingBean extends
 			//#30444 - END
 			    }else {
 			    getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
-			    //log.info("enable equity owner contractor");
+			    log.info("unchecked all roles for contractor");
 			    }
 			    
 		   } else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
-			if (getManagedBean().getSelectedShareHolder().isClerical()) {
-			    	//log.info("insert clerical consultant");
-				getManagedBean().getSelectedShareHolder().setEquityOwner(false);
-				getManagedBean().getSelectedShareHolder().setDirector(false);
-				getManagedBean().getSelectedShareHolder().setHigherManagement(false);
+		//#30444 - START 07052021
+			 if (getManagedBean().getBusinessTypeVal()     
+					.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+					&& (getManagedBean().getSelectedShareHolder().isClerical())) {
+				log.info("rob-sole i");
 				getManagedBean().getSelectedShareHolder().setManagement(false);
-				getManagedBean().getSelectedShareHolder().setProf(false);
-				getManagedBean().getSelectedShareHolder().setSemiProf(false);
+		    	getManagedBean().getSelectedShareHolder().setDisableProf(true);
+		    	getManagedBean().getSelectedShareHolder().setDisableSemiProf(true);
+				getManagedBean().getSelectedShareHolder().setDisableManagement(true);
 				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(true);
 			}else {
-				/*getManagedBean().getSelectedShareHolder().setEquityOwner(true);
-				getManagedBean().getSelectedShareHolder().setManagement(true);*/
+				getManagedBean().getSelectedShareHolder().setDisableProf(false);
+		    	getManagedBean().getSelectedShareHolder().setDisableSemiProf(false);
+				getManagedBean().getSelectedShareHolder().setDisableManagement(false);
 				getManagedBean().getSelectedShareHolder().setDisableEquityOwner(false);
-				//log.info("enable equity owner consultant");
+		//#30444 - END
+				log.info("unchecked all roles for consultant");
 			}
 		}
    }
