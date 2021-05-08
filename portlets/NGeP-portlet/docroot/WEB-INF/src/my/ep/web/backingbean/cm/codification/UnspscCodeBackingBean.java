@@ -395,9 +395,6 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	public String bpmTesting(String action){
 
-
-
-
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject("cm", ICodificationSO.class);
@@ -606,6 +603,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 
 		//20190830@emy - CR15028 - end
+		
+		//#30878@08052021 - start
+		if (action.equalsIgnoreCase("OK")) {
+			log.info("azzatest01 " + this.getManagedBean().getRequestCode().getRequestId());
+			reqDTO.setDocId(this.getManagedBean().getRequestCode().getRequestId());
+			resDTO = unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
+		}
+		//#30878@08052021 - end
 
 		return "BPMtesting";
 
@@ -2554,6 +2559,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		boolean isDDBrandSelected = false;
 		boolean isDDMeasurementSelected = false;
 		boolean isDDColorSelected = false;
+		
+		//#30878@08052021 - start
+		if (action.equalsIgnoreCase("OK")) {
+			log.info("azzatest01 " + this.getManagedBean().getRequestCode().getRequestId());
+			reqDTO.setDocId(this.getManagedBean().getRequestCode().getRequestId());
+			resDTO = unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
+		}
+		//#30878@08052021 - end
 
 			if (this.getManagedBean().getReviewExtCodeList() != null
 					&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
@@ -2791,6 +2804,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		if(!this.isAllSupplier()){
 			reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
 		}
+		
 
 		if (action.equalsIgnoreCase("PUBLISH")) {
 
@@ -2946,6 +2960,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				
 			}
 		}
+		
+	
 
 		//20190830@emy CR15028 - start
 		
