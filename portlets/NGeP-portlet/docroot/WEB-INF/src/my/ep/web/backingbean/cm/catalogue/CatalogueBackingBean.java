@@ -973,7 +973,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CodificationResDTO codeResDTO1 = null;
 			UnspscCodeBackingBean cd = new UnspscCodeBackingBean();
 			reqCodeDTO1.setDocId(cd.getManagedBean().getRequestCode().getRequestId());
-			codeResDTO1 = unspscSO.updateIsCompletedTaskWorkflowStatus(codeReqDTO);
+			codeResDTO1 = unspscSO.updateIsCompletedTaskWorkflowStatus(reqCodeDTO1);
 		}
 		// #30878@08052021 - end
 
