@@ -3570,7 +3570,9 @@ return	remarksNotFound;
 			//27502 - End.
 			if (isBpkCentralContract || !getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
-
+				// #28834 - Strat.
+				totalFinalizationRounds = totalFinalizationRounds - findReviseBpCount();
+                // #28834 - End.
 				finalizationReports.removeAll(endorsementReports);
 				if (endorsementReportCount < totalFinalizationRounds) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
@@ -4932,6 +4934,37 @@ return	remarksNotFound;
 		
 		return 0;
 	}
+	
+    // #28834 - Strat.
+	/**
+	 * To find Revise Briefing COunt of QT from the Workflow Status.
+	 * @return
+	 */
+	private int findReviseBpCount() {
+      log.info("findReviseBpCount");
+      IScWorkFlowStatusSO scWorkFlowStatusSO = null;
+      
+      try {
+          scWorkFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+                  ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+          ScWorkFlowStatusReqDTO tenderReqDTO = new ScWorkFlowStatusReqDTO();
+          tenderReqDTO.setDocId(this.getManagedBean().getScQt().getQtId()); 
+          List<Long> statusIds = new ArrayList<Long>();
+          statusIds.add(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER);
+          tenderReqDTO.setStatusIds(statusIds);
+          List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO
+                          .retrieveWorkFlowStatus(tenderReqDTO)
+                          .getWorkFlowStatusList();
+          if (statusList != null) {
+              return statusList.size();
+          } 
+      } finally {
+          scWorkFlowStatusSO = null;
+      }   
+      
+      return 0;
+    }
+    // #28834 - End.
 	
 	private void retrieveStatusQTMaintenance(Long qtId) {
 		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
