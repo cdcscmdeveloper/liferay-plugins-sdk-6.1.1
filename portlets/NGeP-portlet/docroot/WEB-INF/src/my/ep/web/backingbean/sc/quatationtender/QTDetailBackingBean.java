@@ -3890,9 +3890,9 @@ public class QTDetailBackingBean extends
 				
 				this.getManagedBean().setPublicationApproval(
 						publicationApproval);
-				log.info("Remark Size : "
-						+ this.getManagedBean().getPublicationApproval()
-								.getScQtApprovalRemarks().size());
+				//log.info("Remark Size : "
+						//+ this.getManagedBean().getPublicationApproval()
+								//.getScQtApprovalRemarks().size());
 			} 
 			
 			// set up approval pick list
@@ -4873,7 +4873,7 @@ public class QTDetailBackingBean extends
 	 * @return the list
 	 */
 	public List<PmUser> retrievePmUserSecratryDtl(String committeeType) {
-		log.info(":::retrievePmUserSecratryDtl() committeeType: "+ committeeType);
+		//log.info(":::retrievePmUserSecratryDtl() committeeType: "+ committeeType);
 		this.getManagedBean().setPmUsersList(null);
 		ICommitteSO committeSO;
 		
@@ -5532,7 +5532,6 @@ public class QTDetailBackingBean extends
 				return;
 			}
 			//#25037-end
-			log.info("--> submitQtDetailsFormMaintanace 01");//25037 - debug 
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
@@ -5547,10 +5546,8 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setDoaList(this.getManagedBean().getPmuserContactpersonList());
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
-			log.info("--> submitQtDetailsFormMaintanace 01.2");//25037 - debug 
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
-			log.info("--> submitQtDetailsFormMaintanace 02");//25037 - debug 
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				Long currentStatusId = qtDetails.getQtStatus().getStatusId();
@@ -5619,7 +5616,6 @@ public class QTDetailBackingBean extends
 					msgCode = MessageConst.INFO_700004;
 				}
 				//#25037
-				log.info("--> submitQtDetailsFormMaintanace 03");//25037 - debug 
 				if(CollectionUtils.isNotEmpty(quationTenderResDTO.getCmtModififationRequests())){
 					int count = 0;
 					String committeeType = "";
@@ -5642,7 +5638,6 @@ public class QTDetailBackingBean extends
 					successMessage(msgCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION,
 							scQt.getQtNo(), Boolean.TRUE);
 				}
-				log.info("--> submitQtDetailsFormMaintanace 04");//25037 - debug 
 			}
 		}catch(Exception e){
 			log.error("File: QTDetailBackingBean Method: submitQtDetailsFormMaintanace "+ e.getMessage());
@@ -6919,8 +6914,8 @@ public class QTDetailBackingBean extends
 	 * 		the quotation / tender id
 	 */
 	public void closeProposal(ScQt scQt) {
-		log.info("closeProposal-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
-		log.info("##### Proposal Close started @"+DateUtils.getCurrentDate());
+		//log.info("closeProposal-->loginId: " + new FacesScopes().getUserSessionBean().getLoginId());
+		//log.info("##### Proposal Close started @"+DateUtils.getCurrentDate());
 		
 		ScRetryResDTO resDTO = saveAndSubmitQTDisruption(scQt, 
 				ScDisruptionConst.QT_CLOSE_WORK_FLOW_DISRUPTION, 
@@ -6948,7 +6943,7 @@ public class QTDetailBackingBean extends
 						scQt.getQtNo() + " Closing Started. Please wait a while for QT closing."
 		));
 		
-		log.info("##### Proposal Close completed @"+DateUtils.getCurrentDate());
+		//log.info("##### Proposal Close completed @"+DateUtils.getCurrentDate());
 	}
 	
 	/**
@@ -7027,7 +7022,7 @@ public class QTDetailBackingBean extends
 		}
 		
 		if (pbbSecretaryOnly) {
-			log.info(":::getDocTypeQtLOADropdownValues() -in true- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
+			//log.info(":::getDocTypeQtLOADropdownValues() -in true- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
@@ -7038,7 +7033,7 @@ public class QTDetailBackingBean extends
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL);
 			/*Bug #27412 END */
 		}else {
-			log.info(":::getDocTypeQtLOADropdownValues() -in false- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
+			//log.info(":::getDocTypeQtLOADropdownValues() -in false- pbbSecretaryOnly = "+ pbbSecretaryOnly +" :::");
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_BIDDING);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 			qtLoaDoctypes.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
