@@ -479,7 +479,10 @@ public class QtSpecCloneBackingBean extends
 							localcheckList.add(copy);
 						}
 					} else {
+						if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+								.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {//21695&25635-start
 						localcheckList.add(copy);
+						}//21695&25635-End
 					}
 				}
 			}
@@ -692,6 +695,17 @@ public class QtSpecCloneBackingBean extends
 						&& null != supplierCriteria.getQtZoneCriterias()) {
 					TemplateSpecHelper.getInstance().updateZoneDtl(copy,
 							supplierCriteria.getQtZoneCriterias());
+					if(copy.getTplSpecQuestions() != null){//21695&25635-start
+						for(TplSpecQuestion specQuestion :copy.getTplSpecQuestions()){
+						if(null!=specQuestion&& TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specQuestion.getQuestionType())){
+						if(null!=specQuestion.getTplSpecZoneQties()&&CollectionUtils.isNotEmpty(specQuestion.getTplSpecZoneQties())&& null!=this.getManagedBean().getTemplateSpecZoneDtls()&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())&&specQuestion.getTplSpecZoneQties().size()==this.getManagedBean().getTemplateSpecZoneDtls().size()){
+							for(int i=0;i<specQuestion.getTplSpecZoneQties().size();i++){
+								specQuestion.getTplSpecZoneQties().get(i).setTplSpecZoneDtl(this.getManagedBean().getTemplateSpecZoneDtls().get(i));
+							}
+						}
+						}
+						}
+					}//21695&25635-End
 				} else {
 					throw new EpException(
 							"Please choose the zones before proceed.");
@@ -706,6 +720,23 @@ public class QtSpecCloneBackingBean extends
 			qtCheckList.setTitle(origin.getSpecName());
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
+			if (this.getManagedBean().getQt().isPartial() == true){//21695&25635_partialOfferCloneStart
+				this.getManagedBean().setSpecItemWeightageRequired(true);
+				if(this.getManagedBean().getTemplateSpecBean() != null){
+					//if(this.getManagedBean().getTemplateSpecBean().getSpecMaster() != null){
+					copy.setWeightageReq(false);
+					copy.getTplSpecQuestions();
+						if(copy.getTplSpecQuestions() != null){
+							for(TplSpecQuestion specQuestWeightage :copy.getTplSpecQuestions()){
+								if(specQuestWeightage!=null){
+									specQuestWeightage.setWeightageReq(false);
+								}
+							}
+						}
+						
+					}
+				//}
+			}//21695&25635_partialOfferCloneEnd
 			
 			templateSpecBean.setSpecMaster(copy);
 			
@@ -2648,7 +2679,15 @@ public class QtSpecCloneBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(),
 								evaluationType));
 			}
-
+	if (null != this.getManagedBean().getQt()){//21695&25635-start
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("isPartial");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getQt().isPartial());
+				searchFilterBean.add(bean);
+				
+			}//21695&25635-End
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}

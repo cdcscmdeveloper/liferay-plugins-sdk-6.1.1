@@ -510,6 +510,16 @@ public class QTCloneBackingbean extends
 								SearchOperator.OPERATOR_EQUALS.value(),
 								evaluationType));	
 			}
+			// Filter by - PartialOffer		
+	if (null != this.getManagedBean().getQt()){//21695&25635-start
+				
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("isPartial");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(this.getManagedBean().getQt().isPartial());
+				searchFilterBean.add(bean);
+				
+			}//21695&25635-End
 						
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
