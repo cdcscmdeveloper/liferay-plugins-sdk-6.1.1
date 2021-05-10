@@ -746,11 +746,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CodificationResDTO cdResDTO = codificationSO.updateExtensionRequest(codeReqDTO);
 		
 		// #30878@08052021 - start
+		log.info("DA CMCD 1 " + action);
 		if (action.equalsIgnoreCase("OK")) {
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
 			CodificationReqDTO cdReqDTO = new CodificationReqDTO();
 			CodificationResDTO cdResDTO1 = null;
+			log.info("DA CMCD 1 IN");
 			cdReqDTO.setDocId(bb.getManagedBean().getRequestCode().getRequestId());
 			cdResDTO1 = unspscSO.updateIsCompletedTaskWorkflowStatus(cdReqDTO);
 		}
@@ -966,12 +968,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		codeResDTO = codificationSO.updateExtensionRequest(codeReqDTO);
 		
 		// #30878@08052021 - start
+		log.info("DA CMCD 2 " + action);
 		if (action.equalsIgnoreCase("OK")) {
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
 			CodificationReqDTO reqCodeDTO1 = new CodificationReqDTO();
 			CodificationResDTO codeResDTO1 = null;
 			UnspscCodeBackingBean cd = new UnspscCodeBackingBean();
+			log.info("DA CMCD 2 IN");
 			reqCodeDTO1.setDocId(cd.getManagedBean().getRequestCode().getRequestId());
 			codeResDTO1 = unspscSO.updateIsCompletedTaskWorkflowStatus(reqCodeDTO1);
 		}
@@ -9715,11 +9719,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null || cmSupplierItem.getCmPromotionPricing().getEndDate()!=null || cmSupplierItem.getCmPromotionPricing().getPrice() !=null )
 			return true;
 		//201002@akmal - Bug29265 - Start
-		else if(this.getManagedBean().isPromoPriceExist())
-			return true;
+		//#29177 - CR 27627: Static Code Analysis
+		//changed else-if-else statement to single-returned else statement
+//		else if(this.getManagedBean().isPromoPriceExist())
+//			return true;
 		//201002@akmal - Bug29265 - End
+//		else
+//			return false;
 		else
-			return false;
+			return this.getManagedBean().isPromoPriceExist();
+		//end #29177
 	}
 	//20200520@akmal - Enhancement27627 - End
 
