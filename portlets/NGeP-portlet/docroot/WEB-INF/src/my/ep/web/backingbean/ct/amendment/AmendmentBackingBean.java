@@ -20,9 +20,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -4566,6 +4567,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			SelectItem[] items = null;
 			ICommitteSO committeSO = null;
 			ISearchResultBean<PmUser> userResultList = null;
+			//Bug #29740
+			ISearchResultBean<PmUser> userListDO = null;
+			List<PmUser> userList = new ArrayList<PmUser>();
 			try {
 
 				int i = 1;
@@ -4577,23 +4581,47 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//Bug #25326
 				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				//end Bug #25326
+				
+				//Bug #29740 - Add DO PB
+				CommitteReqDTO commReqDO = new CommitteReqDTO();
+				commReqDO.setDocId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
+				commReqDO.setDocType(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode());
+				commReqDO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 								
 				if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+					//Bug #29740 - Add DO PB
+					commReqDO.setRoleCode(RoleCode.PPB_SECRETARY.value());
+					userListDO = committeSO.retrieveUserListByCommType(commReqDO).getUserResultBean();
+					
 				} else {
 					committeReqDTO.setRoleCode(getManagedBean().getCommitteeType()+"_SECRETARY");
 				}
-				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();			
-
+				userResultList = committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();	
+				//Bug #29740
+				userList = new ArrayList<PmUser>(userResultList.getResultList());
+				
 				if (userResultList != null && userResultList.getResultList() != null) {
-					items = new SelectItem[userResultList.getResultList().size() + 1];
+					//Bug #29740 - start
+					if(userListDO != null && userListDO.getResultList() != null) {
+						userList.addAll(userListDO.getResultList());
+					}
+					
+					Set<PmUser> set = new LinkedHashSet<PmUser>(userList);
+					userList.clear();
+					userList.addAll(set);
+
+					items = new SelectItem[userList.size() + 1];
+					//Bug #29740 - end
+					
 					items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
-					for (PmUser user : userResultList.getResultList()) {
+					for (PmUser user : userList) {//Bug #29740
 						items[i++] = new SelectItem(user.getUserId(), user.getUserName());
 					}
+					
 					// Default the secretary if selection list only have one secretary
 					if (items != null && items.length == 2) {
 						getManagedBean().setSecretaryId((Long)items[1].getValue());
@@ -5626,7 +5654,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value())) {
+					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) { //#29740
 						userRole = RoleCode.FPB_SECRETARY.value();
 					} else if (getFacesScopes().getUserRoleList().size() != 0) {
 						userRole = RoleCode.FPB_SECRETARY.value();
