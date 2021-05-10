@@ -2780,10 +2780,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void onSelectProductItem() {
 		try{
 			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			//log.info("Selected Item ***"+getManagedBean().getSelectedItem());
-			//log.info("Show Item ****"+getManagedBean().getShowItem());
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				//cisbb.getManagedBean().setItemServiceExist(false);
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
@@ -3043,9 +3040,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (getManagedBean().getSelectedItem() != null) {
 			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
 			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
+				  //#30428 - agency not display because isChkStatus is false
+				  //to re-check status for isChkStatus if it is false
+				  if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				  }
+				  
+				  if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
-				}
+				  }
 			  }
 			}
 		}
@@ -3112,59 +3120,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				
 			}
-//		   break;
-		   //#28479 - Start remove Code (related to #28292)
-//		if (ctContractItem.getCtItemMaxQties() != null || ctContractItem.getCtItemMaxQties().size() != 0) {
-//			Double maxValue = new Double(0);							
-//			for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-//				if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-//					maxValue = maxQty.getMaxQuantity().doubleValue();				
-//			}
-//			if (item.getMinimumOrderQty() > maxValue) {
-//				throw new EpException(MessageConst.ERROR_100034,
-//						new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-//								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});				
-//				}
-//			}
-		 //#28479 - End remove Code (related to #28292)
 		}//#28479 - End Putra
 	}
 }
-//		}//28292 - null checker
-		// Start - 28292
-//		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
-//			Double maxValue = new Double(0);							
-//			for (CtItemMaxQty maxQty : ctContractItem.getCtItemMaxQties()) {
-//				if (maxValue < maxQty.getMaxQuantity().doubleValue())
-//					maxValue = maxQty.getMaxQuantity().doubleValue();				
-//			}
-//			if (ctContractItem.getMinimumOrderQty() > maxValue) {
-//				//Bug #28479 - Start
-//				if ((getManagedBean().getContractVer().getContractVerId() == null)
-//						&& (getManagedBean().getContractVer().getDocType()
-//								.equals(ParameterConst.DOCTYPE_CONTRACT_UPDATE))) {					
-//					getManagedBean().setErr100034(true);
-//					getManagedBean().setMinQtyCheck(true);
-//					ctContractItem.setMinimumOrderQty(1);
-//			}
-//			//Bug #28479 - End
-//			throw new EpException(MessageConst.ERROR_100034);
-//
-//			}
-
 		}
 		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
-		
-//		ContractItemReqDTO reqDTO =  new ContractItemReqDTO();
-//		reqDTO.setCtContactItem(ctContractItem);
-//		
-//		
-//		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-//		
-//		contractItemSO.updateItemSearchService(reqDTO);
-//Bug #28356 - End		
-			//#28479 - End Putra		
 		
 	}
 
@@ -4046,4 +4007,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		this.filteredAgencies = filteredAgencies;
 	}
 	
+	//#30428 - Start
+	/**
+	 * The method used to entered new ceiling quantity.
+	 * 
+	 * @param ctItemCeilingQty   object of CeilingQty item
+	 */
+	public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
+
+			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+
+						if (!item.getCtItemCeilingQties().isEmpty()) {						
+							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
+								if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
+									ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
+									break;
+									}								
+								}
+							}							
+						}
+					}
+				}
+			}
+	//#30428 - End
 }  

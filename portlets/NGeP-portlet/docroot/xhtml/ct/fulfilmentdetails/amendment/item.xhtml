@@ -324,7 +324,7 @@
 						  	  disabled="#{ctBackingBean.managedBean.disableAmendDetails}" >
 							<f:converter converterId="dynamicNumberConverter" />
 							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
-							<p:ajax event="blur" update="@this"/>
+							<p:ajax event="change" update="@this" listener="#{amendmentBackingBean.onChangeCeilingQty(itemCeilingQtiesVar)}"/>
 						</p:inputText>
 						</h:panelGroup>
 						<h:outputText value="#{itemCeilingQtiesVar.ceilingQuantity}"

@@ -1343,7 +1343,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 		}
 		// for Fixing Enhancement #20997 and #Bug #28339 - End	
-			
+
 			// Change Code #20997 End
 			
 			ctBackingBean.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
@@ -3447,6 +3447,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if (getManagedBean().getSelectedItem() != null) {
 			for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				//#30428 - agency not display because isChkStatus is false. To re-check status for isChkStatus if it is false
+				if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
+							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
+					  } else {
+						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
+					  }
+				}
+				
 				if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
 					activeList.add(ctItemCeilingQty);
 				}
@@ -4375,7 +4385,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						representativeSecretary = false;  
 					}
 				}
-				
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					if (representativeCode.equalsIgnoreCase(ParameterConst. COMMITTEE_REPRESENT_FEDERAL_SECRETARY_SWK)) {
 						representativeSecretary = false;  
@@ -5896,6 +5905,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	//#25890 - End
+	
+	//#30428 - Start
+	/**
+	 * The method used to entered new ceiling quantity.
+	 * 
+	 * @param ctItemCeilingQty   object of CeilingQty item
+	 */
+	public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
+
+			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+				for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+					if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+
+						if (!item.getCtItemCeilingQties().isEmpty()) {						
+							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
+								if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
+									ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
+									break;
+									}								
+								}
+							}							
+						}
+					}
+				}
+			}
+	//#30428 - End
 	
 	
 	/**
