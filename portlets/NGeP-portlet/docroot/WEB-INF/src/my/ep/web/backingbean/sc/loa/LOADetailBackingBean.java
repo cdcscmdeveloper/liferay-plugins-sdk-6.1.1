@@ -6,13 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,14 +33,12 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -63,8 +59,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -73,7 +67,6 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
-import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -88,7 +81,6 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -101,14 +93,10 @@ import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
-import my.ep.persistence.entity.sc.loaloi.ScLoaForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -122,7 +110,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -146,9 +133,8 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
-import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
-import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -162,7 +148,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -172,7 +157,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -216,7 +200,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Instantiates a new LOA detail backing bean.
 	 */
 	public LOADetailBackingBean() {
-		log.info("inside LOADetailBackingBean constructor");
+		//log.info("inside LOADetailBackingBean constructor");
 	}
 
 	/**
@@ -261,10 +245,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoa.setSameSupplierLoiLoaList(supplierLoiLoas);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
+			
 			if(!scLoa.isBrandNew())
 			{
 				getManagedBean().setFlowamt(scLoa.isFollowLoaAmt());
 			}
+			
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
 			if (awardDataType != null){
@@ -354,7 +340,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return QTConstants.LOA_PAGE;
 	}
-		
+	
 	/**
 	 * Get the supplier loa details.
 	 * 
@@ -587,9 +573,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class, null);
             
-			log.info("SCAwardSupplierDataType     "+dpDataType);
-            log.info(" Source Id   "+dpDataType.getSourceId());
-            log.info(" Award Id    "+dpDataType.getAwardId());
+			//log.info("SCAwardSupplierDataType     "+dpDataType);
+            //log.info(" Source Id   "+dpDataType.getSourceId());
+            //log.info(" Award Id    "+dpDataType.getAwardId());
             
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			
@@ -619,8 +605,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setEditFlag(Boolean.FALSE);
 
 			// QT Proposal validity expired
-			getQtProposalValidExpiredMessage(getManagedBean().getScQt());		
-			
+			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
@@ -804,7 +790,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//Enhancement #24259 #24269
 //		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
 		BigDecimal overallCtAmout = overallCtAmountWithSST(scLoa.getLoaAmt(), scLoa.getSstAmt());
-		log.info(":::populateLOADetails() overallCtAmout (RM) = "+ overallCtAmout);
+		//log.info(":::populateLOADetails() overallCtAmout (RM) = "+ overallCtAmout);
 		//end Enhancement #24259 #24269
 		getManagedBean().setOverallContractAmt(overallCtAmout);
 		scLoa.setOverallContractAmt(overallCtAmout);
@@ -984,7 +970,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.sortFrequentScheduleList(scLoa.getScQtSchedules());
 
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 		} else{
@@ -1378,7 +1363,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private ScLoaReportAttachment generateDocumentAttachment(
 			ScLoaReport scLoaReport) {
 		ScLoa scLoa = getManagedBean().getScLoa();	
-		ScQt scQt = getManagedBean().getScQt();
+		//ScQt scQt = getManagedBean().getScQt();
 		
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
@@ -1477,7 +1462,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					// if pending supplier acknowledgment , always regenerate 
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
-					
+
 					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
 						//filename.append(".pdf");
@@ -1573,7 +1558,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				validateLoaWitnessAndAckBy();
 				} //#19336
 			}
-															
+
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
 			ScLoaReportAttachment scLoaReportAttachmentGenerated = generateDocumentAttachment(scLoaReport);
@@ -1782,7 +1767,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
-		log.info("supplierAddress" + supplierAddress);
+		//log.info("supplierAddress" + supplierAddress);
 		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
@@ -1793,7 +1778,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				supplierAddressTable.append("<br />");
 			}
 		}
-		log.info("SupplierAddressTable" + supplierAddressTable);
+		//log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
 
 
@@ -1954,7 +1939,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()))){
 			
 			constructPRSupplierSpecificationAndRemarks(context, scLoa);
-			log.info(".....CR Enhancement 26226 generateAgreementLetterDocFromVelocity method.....");
+			//log.info(".....CR Enhancement 26226 generateAgreementLetterDocFromVelocity method.....");
 		}
 		// #26226 - End
 		
@@ -2146,7 +2131,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierSignerAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
-		log.info("supplierAddress" + supplierSignerAddress);
+		//log.info("supplierAddress" + supplierSignerAddress);
 		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierSignerAddress)){
@@ -2157,7 +2142,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				supplierAddressTable.append("<br />");
 			}
 		}
-		log.info("SupplierAddressTable" + supplierAddressTable);
+		//log.info("SupplierAddressTable" + supplierAddressTable);
 
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
@@ -2258,7 +2243,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			qtNo = scLoa.getScQuote().getQuoteNo();
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
-			log.info("=====if dp generateDeclarationFromVelocity");
+			//log.info("=====if dp generateDeclarationFromVelocity");
 			ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),scLoa.getScQuote().getCreatedDate());
 			if(null==ptjName || "".equals(ptjName)){
 				ptjName= pmOrgProfile.getOrgName();
@@ -2267,12 +2252,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				.getDocType())) {
 			if (scQt != null) {
 				if(null!=scLoa.getPmStatus() && null!=scLoa.getPmStatus().getStatusId()){
-					log.info("=====if qt generateDeclarationFromVelocity");
-					log.info("publish date qt "+scQt.getPublishDate());
-					log.info("current date qt "+scQt.getCreatedDate());
+					//log.info("=====if qt generateDeclarationFromVelocity");
+					//log.info("publish date qt "+scQt.getPublishDate());
+					//log.info("current date qt "+scQt.getCreatedDate());
 					ptjName=retrievePTJByOrgProfileId(pmOrgProfile.getOrgProfileId(),isQTStatusPublished(scLoa.getPmStatus().getStatusId())?scQt.getPublishDate() : scQt.getCreatedDate());
 				}else{
-					log.info("=====else generateOfferedAndQTDtlsPdf");
+					//log.info("=====else generateOfferedAndQTDtlsPdf");
 					ptjName=pmOrgProfile.getOrgName();
 				}
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
@@ -2654,7 +2639,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
 				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
-					log.info("found hq address");
+					//log.info("found hq address");
 
 					scLoa.setSupplierBranch(supplierBranchAsHQ);
 
@@ -2680,7 +2665,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
 				if (supplierBranch.getBranchCode().equals(selectedSupplierBranchCode)) {
-					log.info("found branch address");
+					//log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
 
@@ -2726,7 +2711,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			for (SmSupplierBank supplierBank : bankList) {
 				if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
-					log.info("found supplier bank");
+					//log.info("found supplier bank");
 
 					scLoa.setBankAccNo(supplierBank.getAccountNo());
 					scLoa.setBankName(supplierBank.getPmFinancialOrg()
@@ -3312,7 +3297,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scAttachments.add(scLoaReportAttachment);
 		}
 	}
-  
 	
 	//20190405@asyrafhaziq - CR25062 - Start 
 	/**
@@ -3349,21 +3333,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//20190405@asyrafhaziq - CR25062 - End
-		
+	
 	// #22211 - Start
 	public void updateReviseBPMTaskActionWithoutQt(String outcome) {
 		debugLogger("updateReviseBPMTaskActionWithoutQt");
-
+	
 		AwardSupplierResDTO resDTO = null;
-
+	
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		parseLOADetails(scLoa, outcome);
-
+	
 		validateLOADetails(scLoa, outcome);
 		scLoa.setScLoaRemarks(null); //To skip adding remark
-
+	
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-
+	
 		if (this.getManagedBean().getSelectedPtj() != null) {
 			scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
 		}
@@ -3381,13 +3365,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 		reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 		resDTO = getQtAwardSO().reviseDocumentLOAwithoutQt(reqDTO);
-
+	
 		if (resDTO.isSuccessful()) {
 			/*******************
 			 * ACKNOWLEDGE_PAGE
 			 *******************/
 			String[] param = new String[3];
-
+	
 			param[0] = this.getManagedBean().getScLoa().getLoaNo();
 			param[1] = reqDTO.getRequestNoteNo();
 			param[2] = this.getManagedBean().getScLoa().getScLoiLoa().getSupplierName();
@@ -3397,27 +3381,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else {
 				successMessage(MessageConst.INFO_700084, param);
 			}
-
+	
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
 	}
 	// #22211 - End
-
+	
 	// #22211 - start
 	public boolean isLoaReviseStatus() {
-
+	
 		Boolean loaReviseStatus = false;
 		Long currentStatusId = getManagedBean().getScLoa().getPmStatus().getStatusId();
-
+	
 		if (currentStatusId.equals(QTStatusConst.LOA_REVISE_DOC)
 				|| currentStatusId.equals(QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION)) {
 			loaReviseStatus = true;
 		}
-
+	
 		return loaReviseStatus;
 	}
-
+	
 	// #22211 - end
 	
 	/**
@@ -3638,7 +3622,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 									null == loaReport.getScLoaReportAttachment()){
 						throw new EpException(MessageConst.ERROR_760441,
 								new String[] {loaReport.getTitle()});
-					}	
+					}
 				}
 			}
 		}
@@ -3839,7 +3823,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				} catch(EpException e) {
 					//
-					log.info("Org validity is null for supplier user");
+					log.error("Org validity is null for supplier user");
 				}
 				finally {
 					userSO = null;
@@ -4046,10 +4030,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void addScheduleDetails() {
 		IParameterSO parameterSo = null;
 		try {
+			//#30474 - start
 			if(this.getManagedBean().getScLoa()
 					.getScQtSchedules()==null){
 				this.getManagedBean().getScLoa().setScQtSchedules(new ArrayList<ScQtSchedule>());
 			}
+			//#30474 - end
 			List<ScQtSchedule> freqSchedules = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
 			
@@ -4105,6 +4091,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param locale 
 	 * @return the month
 	 */
+	/*
 	private String getMonth(String month){
 		//#25022
 		FacesScopes facesScopes = new FacesScopes();
@@ -4137,6 +4124,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return finalMonth;
 
 	}
+	*/
 	
 	/**
 	 * Gets the month.
@@ -4565,6 +4553,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param serviceList the service list
 	 * @throws Exception the exception
 	 */
+/*
 	private void generateJadualHarga(ScAttachment attachment,
 			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList, boolean isS1OrS2)
 					throws Exception {
@@ -4575,7 +4564,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						FacesContext.getCurrentInstance().getExternalContext()
 						.getRealPath("/WEB-INF/templates")
 						+ "/sc/loa/jadual-harga.xlsx"));*/
-
+/*
 				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
 				inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
 				if (inputStream != null) {
@@ -4687,6 +4676,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 	}
+	*/
 
 	/**
 	 * Form specification.
@@ -4734,6 +4724,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param serviceList the service list
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("resource")
 	private void generateSpecification(ScAttachment attachment,
 			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
 					throws Exception {
@@ -4920,7 +4911,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public void addProgressiveDetails() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		Integer totalProgressivePayment = getManagedBean().getTotalProgressivePayment();
+		//Integer totalProgressivePayment = getManagedBean().getTotalProgressivePayment();
 		ScLoa scLoa = getManagedBean().getScLoa();
 		
 		if (this.getManagedBean().getProgressivePaymentList() == null) {
@@ -5045,12 +5036,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public String getApprovalActionDisplayName(String value) {
 		FacesScopes scope=new FacesScopes();
 		Locale locale=	scope.getUserLocale();
-		log.info("display language"+locale.getDisplayLanguage());
+		//log.info("display language"+locale.getDisplayLanguage());
 		String approverName= ApprovalAction.getDisplayName(value);
-		log.info("approver Status"+approverName);
+		//log.info("approver Status"+approverName);
 
 		if (!locale.getDisplayLanguage().equalsIgnoreCase("english")) {
-			log.info("not  equallanguage");
+			//log.info("not  equallanguage");
 
 			if("Approved".equalsIgnoreCase(approverName)){	 
 				approverName=getApproverStatus("lbl.sc.status.approved");	 
@@ -5211,7 +5202,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Page navigation from loa details page to qt loa list or dp loa list.
 	 */
 	public void backToPrevious() {
-		log.info("backToPrevious");
+		//log.info("backToPrevious");
 
 		// back to qt loa list
 		if(getManagedBean().getScQt() != null && getManagedBean().getSourceId() != null){
@@ -5490,7 +5481,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param tabIndex the tab index
 	 */
 	public void backToPrevious(int tabIndex) {
-		log.info("backToPrevious");
+		//log.info("backToPrevious");
 		getManagedBean().setSelectedTabIndex(tabIndex);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -5727,7 +5718,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	private void calculateOverallCtAmtForSupplier(){
 		ScLoa scLoa = getManagedBean().getScLoa();
-		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+		//SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		BigDecimal overallContractAmt = scLoa.getLoaAmt();
 //		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
 //				&& null != scLoa.getGstAmt()) {
@@ -5947,7 +5938,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (sstAmt != null) {
 			sstAmount = amountDF.format(sstAmt);
 			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
-			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
+			//log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));						
 		} else {
 			overallctAmt = amountDF.format(loaAmount);
@@ -6261,6 +6252,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}	
 
+	/*
 	private PmDocument getDocumentDtls(String docCategoryCode){
 		IDocumentSO documentSO = null;
 		PmDocument document = null;
@@ -6285,6 +6277,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			documentSO = null;
 		}
 	}
+	*/
 
 	/**
 	 * Prepare signer info.
@@ -6397,21 +6390,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
-			log.info("Old Path : " + tFilePath.toString());
+			//log.info("Old Path : " + tFilePath.toString());
 			//create destination File object
 			//StringBuilder aFilePath = new StringBuilder("c:");
 			StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
-			log.info("New Path : " + aFilePath.toString());
-			log.info("Before rename to new path");
+			//log.info("New Path : " + aFilePath.toString());
+			//log.info("Before rename to new path");
 			boolean isFileRenamed = oldName.renameTo(newName);
-			log.info("After rename to new path");
-			if(isFileRenamed)
-				log.info("Temporary Loa No folder has been renamed.");
+			//log.info("After rename to new path");
+			/*
+			if(isFileRenamed) 
+				//log.info("Temporary Loa No folder has been renamed.");
 			else
-				log.info("Temporary Loa No folder has not been renamed.");
-
+				//log.info("Temporary Loa No folder has not been renamed.");
+			*/
 		}
 	}
 
@@ -6487,7 +6481,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param requestItem the request item
 	 */
 	public void updateUnspscItem(ScRequestItem requestItem) {
-		log.info("updateUnspscItem " + requestItem);
+		//log.info("updateUnspscItem " + requestItem);
 		ScLoa scLoa = getManagedBean().getScLoa();
 
 		if(scLoa.getScLoiLoaItems() != null){
@@ -6601,7 +6595,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return
 	 */
 	public String assignProductCode(ScLoiLoaItem loiLoaItem) {
-		log.info(">>>>>>>>>loaDetailBackingBean assignProductCode");
+		//log.info(">>>>>>>>>loaDetailBackingBean assignProductCode");
 		ScRequestItem requestItem = loiLoaItem.getScRequestItem();
 		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
 		reqDTO.setRequestItemId(requestItem.getRequestNoteItemId());
@@ -6683,13 +6677,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void downloadViewLoa() throws Exception {
-		log.info("start downloadViewLoa");
+		//log.info("start downloadViewLoa");
 		List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
 		if(CollectionUtils.isNotEmpty(scloaReports)){
 			ScLoaReport report=null;
 			for(ScLoaReport loaReport:scloaReports){
 				if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
-					log.info("LoaReport Title"+loaReport.getTitle());
+					//log.info("LoaReport Title"+loaReport.getTitle());
 					//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
 					//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
 					report = loaReport;									
@@ -6706,10 +6700,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public String constructUserConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		ScLoa scLoa = getManagedBean().getScLoa();
+		//Bug #30698
+		Long MinistryOrgProfileId = retrieveMinistryOrgProfile(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
 		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 		sb.append(RoleCode.CONTRACT_SIGNER.value());
 		sb.append("^9");
-
+		//Bug #30698
+		 if (null != MinistryOrgProfileId) {
+			 sb.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+			 sb.append("pmUserOrgs.pmOrgProfile.");
+			 sb.append(OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + MinistryOrgProfileId);
+		} 		
 		if (scLoa.getLoaAmt() != null) {
 			sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
 			sb.append(true);
@@ -6725,7 +6728,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	public void signerUserListener(PmUser contractSignerUser) {
-		log.info("signerUserListener");
+		//log.info("signerUserListener");
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
@@ -6739,7 +6742,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		Locale locale = new FacesScopes().getUserLocale();
+		//Locale locale = new FacesScopes().getUserLocale();
 		
 		//#26475 - start
 		List<PmUser> pmUserList = getUsersByAgency();
@@ -6800,7 +6803,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	public void confirmSupplierAccept() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
-		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" LOA.");
+		//log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" LOA.");
 
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -6809,7 +6812,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	public void confirmSupplierReject() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_REJECT);
-		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOA.");
+		//log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" LOA.");
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 	}
 	//end Enhancement #21573
@@ -7066,11 +7069,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return false;
 	}
 	
-	
+	/*
 	private FacesScopes getFacesScopes(){
 		FacesScopes fs = new FacesScopes();
 		return fs;
 	}
+	*/
 
 	/**
 	 * Check either SQ is valid or not (SQ only valid for 60 days after it closing date)
@@ -7153,7 +7157,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#22211 - Check if Loa already generated
 	public boolean isLoaGenerated(){
 		Boolean loaGenerated = false;	
-		ScLoa scloa = this.getManagedBean().getScLoa();
+		//ScLoa scloa = this.getManagedBean().getScLoa();
 		
 		if(!getManagedBean().getScLoa().isBrandNew()){
 			loaGenerated = true;	

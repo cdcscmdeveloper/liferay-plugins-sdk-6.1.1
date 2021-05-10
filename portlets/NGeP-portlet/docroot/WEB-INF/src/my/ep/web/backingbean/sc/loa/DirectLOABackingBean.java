@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -12,7 +11,6 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,13 +34,10 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
-import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -67,13 +62,10 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
@@ -103,7 +95,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
-import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -117,9 +108,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDocAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -155,7 +144,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
@@ -182,10 +170,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
@@ -195,7 +179,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class directLOABackingBean.
  * 
@@ -232,7 +215,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * Instantiates a new LOA detail backing bean.
 	 */
 	public DirectLOABackingBean() {
-		log.info("inside DirectLOABackingBean constructor");
+		//log.info("inside DirectLOABackingBean constructor");
 	}
 
 	/**
@@ -430,7 +413,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractDetails(scLoa);
 			validateContractAdmin(scLoa);  // #26474 validate contract admin
 
-			log.info("submitAction loop executed");
+			//log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
@@ -686,6 +669,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param bankAccNo
 	 * @return
 	 */
+	/*
 	private Long getBankByAccountNo(String bankAccNo) {
 		if (StringUtils.isNotEmpty(bankAccNo)) {
 			List<SmSupplierBank> bankAccounts = this.getManagedBean()
@@ -700,6 +684,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		return null;
 	}
+	*/
 
 	/**
 	 * Pre render page navigation to loa supplier page based on task id
@@ -1057,7 +1042,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.getSmCompanyAddresses()) {
 				if (AddressType.CONTACT_ADDRESS.value().equals(
 						smCompanyAddress.getAddressType())) {
-					log.info("found hq address");
+					//log.info("found hq address");
 
 					scLoa.setSupplierBranch(SourcingConstants.SUPPLIER_BRANCH_HQ);
 					
@@ -1079,7 +1064,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
 				if (supplierBranch.getBranchCode().equals(
 						selectedSupplierBranchCode)) {
-					log.info("found branch address");
+					//log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
 					
@@ -1121,7 +1106,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			for (SmSupplierBank supplierBank : bankList) {
 				if (supplierBank.getAccountNo().equals(scLoa.getBankAccNo())) {
-					log.info("found supplier bank");
+					//log.info("found supplier bank");
 
 					scLoa.setBankAccNo(supplierBank.getAccountNo());
 					scLoa.setBankName(supplierBank.getPmFinancialOrg()
@@ -1659,7 +1644,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
 								.equals(contractType)) {
-					// TODO - filter user based on central contract.
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
 					reqDTO.setOrgProfileId(
@@ -2122,7 +2106,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			for (ScQtSchedule schedule : schdules) {
 
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String fromdate = 01 + "/"
 						+ getMonth(schedule.getStartMonth()) + "/"
@@ -2307,7 +2291,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void onQTSelected(ScQt scQt) {
 		debugLogger("onQTSelected");
-		// TODO ministry name cleared after selected QT.
 		ScLoa loa  = getManagedBean().getScLoa();
 		getManagedBean().setZoneTrees(null);
 		populateMinistryBasedOnLoginUser();
@@ -3604,7 +3587,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	}
     private void checkFulFilmentType(ScLoa scLoa){
-    log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
+    //log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
 	PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
 	if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
 			this.getManagedBean()
@@ -3618,10 +3601,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		.setDurationMonth(
 				scLoa.getContractDuration());
 	}
-	  log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
-				.getSpecTemplateSpecBean()
-				.getSpecMaster()
-				.getDurationMonth());
+	  //log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
+				//.getSpecTemplateSpecBean()
+				//.getSpecMaster()
+				//.getDurationMonth());
 }
 	/**
 	 * Gets the dropdown location values.display the Location level dropdown
@@ -4179,7 +4162,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						// download from system
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						//TODO generate acknowledgement LOA receipt
+						
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
 					}*/
 				} else if (scLoaReportAttachment != null
@@ -4519,7 +4502,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	
 	public void calculateServiceTemplate(){
-		log.info("start calculateServiceTemplate");
+		//log.info("start calculateServiceTemplate");
 		try{
 			TplSpecMaster serviceSpecMaster=this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
 			/*TemplateSpecBean serviceBean = new TemplateSpecBean(
@@ -4533,7 +4516,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			List<TplSpecAnswer> specAnswerList = null;
 
 			if (serviceSpecMaster.getTplSpecQuestions() != null) {
-				log.info("calculateServiceTemplateQuestionsNotNull");
+				//log.info("calculateServiceTemplateQuestionsNotNull");
 				specAnswerList = new ArrayList<TplSpecAnswer>();
 				for (TplSpecQuestion specQuestion : serviceSpecMaster
 						.getTplSpecQuestions()) {
@@ -4543,7 +4526,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 			if (null!=specAnswerList && CollectionUtils.isNotEmpty(specAnswerList)) {
-				log.info("calculateServiceTemplateSpecAnswersNotNull");
+				//log.info("calculateServiceTemplateSpecAnswersNotNull");
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 				//backingBean.retrieveTemplateSpecMaster(serviceBean);
 				for(TplSpecAnswer specAnswer:specAnswerList){
@@ -4563,7 +4546,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * Page navigation from loa details page to qt loa list or dp loa list.
 	 */
 	public String backToPrevious() {
-		log.info("backToPrevious");
+		//log.info("backToPrevious");
 		
 		return getManagedBean().getBackToPreviousPage();
 	}
@@ -5354,7 +5337,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title);
 
-		context.put("hasLoi", false); // TODO
+		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "";
@@ -5655,7 +5638,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (sstAmt != null) {
 			sstAmount = amountDF.format(sstAmt);
 			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
-			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
+			//log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));						
 		} else {
 			overallctAmt = amountDF.format(loaAmount);
@@ -5799,6 +5782,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/**
 	 * Save schedule list.
 	 */
+	/*
 	private void saveScheduleList() {
 		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
@@ -5838,6 +5822,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().getScLoa().setScQtSchedules(null);
 		}
 	}
+	*/
 
 	/**
 	 * Generate frequency schedule pdf from velocity.
@@ -5849,6 +5834,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateFrequencySchedulePdfFromVelocity(
 			ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
 		debugLogger("generateFrequencySchedulePdfFromVelocity");
@@ -5958,6 +5944,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
+	*/
 
 
 	private List<ItemBean> convertSpecToJadualHargaBean(
@@ -6064,6 +6051,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateJadualHarga(ScAttachment attachment,
 			List<JadualHargaBean> productList,
 			List<JadualHargaBean> serviceList, boolean isS1OrS2)
@@ -6076,7 +6064,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			 * .getRealPath("/WEB-INF/templates") +
 			 * "/sc/loa/jadual-harga.xlsx"));
 			 */
-
+/*
 			final String templatePath = "templates"
 					+ SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
 			inputStream = this.getClass().getClassLoader()
@@ -6191,6 +6179,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			inputStream.close();
 		}
 	}
+	*/
 
 	private List<ItemBean> convertSpecQuestionToSpecAnswer(
 			TplSpecMaster specMaster) {
@@ -6236,6 +6225,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateSpecification(ScAttachment attachment,
 			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
 			throws Exception {
@@ -6247,7 +6237,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			 * .getRealPath("/WEB-INF/templates") +
 			 * "/sc/loa/specification.xlsx"));
 			 */
-
+/*
 			final String templatePath = "templates"
 					+ SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
 			inputStream = this.getClass().getClassLoader()
@@ -6303,7 +6293,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 										.getClQuantity() ? "" : answer
 										.getTplSpecQuestion().getClQuantity()
 										.toString());*/
-
+/*
 					}
 
 					// Auto size all the columns
@@ -6375,6 +6365,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 										.getClQuantity() ? "" : answer
 										.getTplSpecQuestion().getClQuantity()
 										.toString());*/
+/*
 					}
 
 					for (int x = 0; x < serviceSheet.getRow(0)
@@ -6399,6 +6390,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			inputStream.close();
 		}
 	}
+	*/
 
 	/**
 	 * Generate negotiation result pdf.
@@ -6410,6 +6402,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @throws Exception
 	 *             the exception
 	 */
+	/*
 	private void generateNegotiationResultPdf(ScAttachment attachment)
 			throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
@@ -6467,6 +6460,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
+	*/
 	
 	/**
 	 * Generate negotiation result pdf.
@@ -6954,6 +6948,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 
+	/*
 	private PmDocument getDocumentDtls(String docCategoryCode) {
 
 		IDocumentSO documentSO = null;
@@ -6979,6 +6974,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			documentSO = null;
 		}
 	}
+	*/
 
 	/**
 	 * Sets the overall ct amount.
@@ -7300,22 +7296,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			tFilePath.append(tempFilePath);
 			//create source File object
 			File oldName = new File(tFilePath.toString());
-			log.info("Old Path : " + tFilePath.toString());
+			//log.info("Old Path : " + tFilePath.toString());
 			//create destination File object
 			//StringBuilder aFilePath = new StringBuilder("c:");
 			StringBuilder aFilePath = new StringBuilder();
 			aFilePath.append(actualFilePath);
 			File newName = new File(aFilePath.toString());
-			log.info("New Path : " + aFilePath.toString());
-			log.info("Before rename to new path");
-			boolean isFileRenamed = oldName.renameTo(newName);
+			//log.info("New Path : " + aFilePath.toString());
+			//log.info("Before rename to new path");
+			oldName.renameTo(newName); //new
+			//boolean isFileRenamed = oldName.renameTo(newName); //ori
 			
-			log.info("After rename to new path");
-			
+			//log.info("After rename to new path");
+			/*
 			if(isFileRenamed)
-			log.info("Temporary Loa No folder has been renamed.");
+			//log.info("Temporary Loa No folder has been renamed.");
 			else 
-			log.info("Temporary Loa No folder has not been renamed.");
+			//log.info("Temporary Loa No folder has not been renamed.");
+			*/
 		}
 	}
 
@@ -7372,6 +7370,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param scLoa the sc loa
 	 * @return the ministry condition field
 	 */
+	/*
 	private void getMinistryConditionField(ScLoa scLoa) {
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		
@@ -7397,6 +7396,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		criteria.append("recordStatus^1");
 		getManagedBean().setMinistryConditionField(criteria.toString());
 	}
+	*/
 
 	/**
 	 * Localize date.
@@ -7429,7 +7429,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * Cancel zone pop up.
 	 */
 	public void cancelZonePopUp() {
-		log.info("cancelZonePopUp");
+		//log.info("cancelZonePopUp");
 		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
 		// zone required validation
 		getManagedBean().setZoneLocation(Boolean.FALSE);
@@ -7745,7 +7745,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierSignerAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
-		log.info("supplierAddress" + supplierSignerAddress);
+		//log.info("supplierAddress" + supplierSignerAddress);
 		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierSignerAddress)){
@@ -7756,7 +7756,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				supplierAddressTable.append("<br />");
 			}
 		}
-		log.info("SupplierAddressTable" + supplierAddressTable);
+		//log.info("SupplierAddressTable" + supplierAddressTable);
 		
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
@@ -7833,7 +7833,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param selectedSpecQuestion the selected spec question
 	 */
 	public void updateUnspscItem(TplSpecQuestion selectedSpecQuestion) {
-		log.info("selectedSpecQuestion " + selectedSpecQuestion);
+		//log.info("selectedSpecQuestion " + selectedSpecQuestion);
 		// product
 		TplSpecMaster  prodMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
 		if(prodMaster.getTplSpecQuestions() != null){
@@ -7966,7 +7966,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
-		log.info("supplierAddress" + supplierAddress);
+		//log.info("supplierAddress" + supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
 			String[] address = supplierAddress.split(System.getProperty("line.separator"));
@@ -7977,7 +7977,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 //			supplierAddressTable.append("</table>");
 		}
-		log.info("SupplierAddressTable" + supplierAddressTable);
+		//log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
 
 		String headerTitle = "";
@@ -8009,7 +8009,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("loaTitle", title);
 		
-		context.put("hasLoi", false); // TODO
+		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "______________";
@@ -8199,6 +8199,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param item the item
 	 * @return the item bean
 	 */
+	/*
 	private ItemBean mappingJadualHarga(ScLoiLoaItem item) {
 		ItemBean itemBean = new ItemBean();
 		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item
@@ -8234,6 +8235,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.getTplSpecQuestion().getClDurationMonth() ? "" : item
 				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
 				.toString());*/
+/*
 		itemBean.setQuantity(null == item.getQty()? "" : item.getQty()
 				.toString());
 
@@ -8243,10 +8245,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		totalAmount = totalAmount.add(subTotal);
 		totalAmount =  totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setTotalAmount(totalAmount.toString());*/
-		
+/*		
 		return itemBean;
 	}
-	
+	*/
 	/**
 	 * Validate ScLoaWitness and suppler contract signer before download attachment of Acknowledge LOA Receipt
 	 */
@@ -8324,13 +8326,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	
 	public void downloadViewLoa() throws Exception {
-		log.info("start downloadViewLoa");
+		//log.info("start downloadViewLoa");
 	List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
 	if(CollectionUtils.isNotEmpty(scloaReports)){
 		ScLoaReport report=null;
 		for(ScLoaReport loaReport:scloaReports){
 			if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
-				log.info("LoaReport Title"+loaReport.getTitle());
+				//log.info("LoaReport Title"+loaReport.getTitle());
 				//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
 				//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
 				report = loaReport;									
@@ -8347,9 +8349,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public String constructUserConditionFields() {
 		StringBuilder sb = new StringBuilder();
 		ScLoa scLoa = getManagedBean().getScLoa();
+		//Bug #30698
+		Long MinistryOrgProfileId = retrieveMinistryOrgProfile(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId()).getOrgProfileId();
 		sb.append("pmUserOrgs.pmUserRoles.pmRole.roleCode^");
 		sb.append(RoleCode.CONTRACT_SIGNER.value());
 		sb.append("^9");
+		//Bug #30698
+		 if (null != MinistryOrgProfileId) {
+			 sb.append(SourcingConstants.LOV_FIELD_SEPARATOR);
+			 sb.append("pmUserOrgs.pmOrgProfile.");
+			 sb.append(OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ SourcingConstants.LOV_CONDITION_SEPARATOR + MinistryOrgProfileId);
+		}
 		if (scLoa.getLoaAmt() != null) {
 			sb.append("|pmUserOrgs.pmUserRoles.pmRole.isLimitRequired^");
 			sb.append(true);
@@ -8362,7 +8374,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	public void signerUserListener(PmUser contractSignerUser) {
-		log.info("signerUserListener");
+		//log.info("signerUserListener");
 
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
@@ -8377,7 +8389,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(null != fulfillmentType) {
 			fullfillmentTypeParamCode = fulfillmentType.getParameterCode();
 		}
-		log.info("isFulfillmentTypeOneOffOrAsAndWhen:"+ fullfillmentTypeParamCode);
+		//log.info("isFulfillmentTypeOneOffOrAsAndWhen:"+ fullfillmentTypeParamCode);
 		
 		return ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fullfillmentTypeParamCode)
 				|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fullfillmentTypeParamCode);
@@ -8416,7 +8428,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return PmOrgValidity 
 	 */
 	public PmOrgValidity getOrgProfileByUserId(Long userId) {
-		log.info("getOrgProfileByUserId");
+		//log.info("getOrgProfileByUserId");
 		PmOrgValidity orgValidity = null;
 		String roleCode = "MIN_CONTRACT_ADMIN";
 		IUserSO userSo = BusinessDelegate.getInstance().getServiceObject(
@@ -8491,17 +8503,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 	public void confirmSupplierAccept() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
-		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" DIRECT LOA.");
+		//log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" DIRECT LOA.");
 		
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-		log.info("::: #25061 before spki_dlg.show ");
+		//log.info("::: #25061 before spki_dlg.show ");
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");		
 	}
 	
 	public void confirmSupplierReject() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_REJECT);
-		log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" DIRECT LOA.");
+		//log.info(":::confirmSupplierReject() to "+ BpmOutcomeConst.BPM_REJECT +" DIRECT LOA.");
 		updateBPMTask(BpmOutcomeConst.BPM_REJECT, null);
 	}
 	//END Enhancement #21573
@@ -8575,7 +8587,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
-		log.info("validateDuplicateItems");	
+		//log.info("validateDuplicateItems");	
 			List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
 			if(null!=productScQtDoc){
 				if(null!=productScQtDoc.getTplSpecMaster()){
