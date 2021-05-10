@@ -9811,7 +9811,7 @@ public class SupplierApplicationBackingBean extends
 	public void calculateCapital() {
 		try {
 			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(
-					getManagedBean().getSmAppl().getSmCompanyBasic(),
+					getManagedBean().getSmAppl().getSmCompanyBasic(), null, //#30900
 					getManagedBean().getBusinessTypeVal());
 			validatePaidCaptialAmt(false);
 			SmCommonUtil
