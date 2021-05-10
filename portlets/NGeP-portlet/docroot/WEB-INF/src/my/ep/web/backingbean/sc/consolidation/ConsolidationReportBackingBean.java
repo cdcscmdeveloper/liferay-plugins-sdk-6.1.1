@@ -684,9 +684,9 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public void submitAction() {
 		// Validate Desk officer ranking
-		//28834 starts
-		//validateConsolidationReport();
-		//28834 ends
+		// #30874 - Start.
+	    validateConsolidationReport();
+	    // #30874 - End.
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
 	}
