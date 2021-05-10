@@ -57,7 +57,7 @@ public class DisciplinaryActionRest {
 					log.info("releaseDAList. supplier id=============="+disc.getSmSupplier().getSupplierId()); 
 					 
 					if(disc != null
-							&& disc.getSmSupplier() != null ){
+							&& disc.getSmSupplier() != null){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
 						
@@ -76,6 +76,8 @@ public class DisciplinaryActionRest {
 							try {
 								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 										reqDTO); 
+
+								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
 								/*SmCommonUtil.redirectToPage(
 										SmApplicationUtil.getApplicationErrorPage(),
 										MessageConst.INFO_721029, new String[] {resDTO.getBasicSupplierAdmin().getPmUser().getLoginId() },
@@ -84,9 +86,10 @@ public class DisciplinaryActionRest {
 								throw new EpException(ex.getMessage());
 							}
 							
+						}else { 
+							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
 						}
 						 
-						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
 						log.info("-----------After------------------"+i);
 						i++;
 					}										
