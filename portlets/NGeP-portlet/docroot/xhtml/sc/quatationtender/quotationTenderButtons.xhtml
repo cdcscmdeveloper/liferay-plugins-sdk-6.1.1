@@ -198,7 +198,8 @@
 			  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />	
 			  	</c:if>		
 			  	<!-- 26095@hatta - end -->
-					<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
+			  	 <!--9019 update condition to disable cancel button for QT status was pending  -->
+					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
