@@ -11539,9 +11539,11 @@ public class SmApplicationBackingBean extends
 	 */
 	public void calculateCapital() {
 		try {
-			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(
-					getManagedBean().getSmAppl().getSmCompanyBasic(),
-					getManagedBean().getBusinessTypeVal());
+			//start #30900
+			calcPersonnelShareAmt(getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmCompanyBasic());
+			SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(getManagedBean().getSmAppl().getSmCompanyBasic(),
+					getManagedBean().getSmAppl().getSmEquityCompanies(), getManagedBean().getBusinessTypeVal());
+			//end #30900
 			// #28466 start - fix reopen
 			SmCommonUtil
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
