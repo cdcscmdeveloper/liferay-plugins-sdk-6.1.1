@@ -284,6 +284,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 										new FacesScopes().getUserLocale())));
 				ctBB.getManagedBean().setServiceTaxAlertFlg(false);				
 			}
+			
+			//Start - Fix 29368
+			//from maintenance
+			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+				if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+					ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+				  }
+			   }
+			//End - Fix 29368
 
 			return;
 		}
@@ -323,7 +332,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
 					ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 		}
-
+		
+		//Start - Fix 29368
+		//from tasklist
+		if(ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBB.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
+			if(ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBB.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
+				ctBB.getManagedBean().getCtContractAmount().setBondExempted(false);
+			  }
+		   }
+		//End - Fix 29368
+	
 	}
 
 	/**
@@ -1164,6 +1182,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#28320 - During Notification Setting, no need to validate
 		if ((ctBB.getManagedBean().getContractVer().getCtContractItems() != null) && !(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
 				&& !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+			// Bug #28479 - Start
 			for (CtContractItem item : ctBB.getManagedBean().getContractVer().getCtContractItems()) {
 				// Validation for minimum order quantity
 				if (item.getMinimumOrderQty() <= 0) {
@@ -1182,9 +1201,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (item.getMinimumOrderQty() > maxValue) {
 						throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
 					}
-					
 				}
-				// End - 28292
+				// End - 28292/#28479
 				
 				// Validation for ceiling quantity
 				double totalCeilingQuantity = 0.0;
