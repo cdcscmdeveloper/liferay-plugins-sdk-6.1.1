@@ -9,10 +9,6 @@ import java.util.List;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -67,11 +63,6 @@ public class MergeDocx {
 
 		String combinedContent = "";
 		String combinedContentHtml="";
-		//25142 -start-
-		Document doc = null;
-		Elements elements = null;
-		//25142 -end-
-		
 		for (TplDocSection obj : inputStreamList) {
 			String text = "";
 			if(obj.getSectionTitle() != null && !obj.getSectionTitle().isEmpty()){
@@ -82,18 +73,10 @@ public class MergeDocx {
 				
 				obj.setSectionContent(obj.getSectionContent().trim().replace("Apple-tab-span", "Apple-converted-space"));
 				
-				//25142 -start-
-				if(obj.getSectionContent().trim().startsWith("<p") && obj.getSectionContent().trim().endsWith("</p>")){
-					doc = Jsoup.parse(obj.getSectionContent());
-					elements = doc.getElementsByTag("p");
-					
-					for(Element element: elements) {
-						element.clearAttributes();
-						element.replaceWith(new Element("span"));
-					}
-					//25142 -end-
+				if(obj.getSectionContent().trim().startsWith("<p>") && obj.getSectionContent().trim().endsWith("</p>")){
+					obj.setSectionContent(obj.getSectionContent().trim().replaceFirst("<p>", "<span>"));
+					obj.setSectionContent(obj.getSectionContent().trim().substring(0,obj.getSectionContent().trim().length()-4)+ "</span>");
 				}
-				
 				text += obj.getSectionContent();
 			}
 						
@@ -107,25 +90,11 @@ public class MergeDocx {
 			//=========================== START PDF ======================================
 //			log.info("combinedContent ==== " + combinedContent);
 			
-			//25142 -start-
-			//combinedContentHtml = "<html><body>" 
-					//+ combinedContent + "</body></html>";	
-			//25142 -end-
+			combinedContentHtml = "<html><body>" 
+					+ combinedContent + "</body></html>";	
+			
 	    	//=========================== END PDF ======================================
 			
-			//25142 -start-
-			doc = Jsoup.parse(combinedContent);
-			
-			for(int i = 1; i<=6; i++) {
-          		elements = doc.getElementsByTag("h" + i);
-          		
-				for(Element element: elements) {
-					element.clearAttributes();
-				}
-          	 }
-			
-			combinedContentHtml = doc.html().replace("<br>", "<br/>");
-			//25142 -end-
 		}
 		
 		if(action.equals("S")){
