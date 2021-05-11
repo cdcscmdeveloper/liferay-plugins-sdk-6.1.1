@@ -47,7 +47,36 @@ public class DisciplinaryActionRest {
 							&& disc.getSmSupplier() != null){
 						disc.getSmSupplier();
 						log.info("-----------Bilangan------------------"+i);
-						SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);	
+						
+						//30784 : Release Disciplinary Action 
+						if(disc.isSuspendRegistration()){
+							RegistrationReqDTO reqDTO = new RegistrationReqDTO();   
+
+							log.info("-----------suspend registration-----------------"+disc.isSuspendRegistration());
+							PersonnelReqDTO reqPersonnelDTO = new PersonnelReqDTO();
+							reqPersonnelDTO.setSmSupplierId(disc.getSmSupplier().getSupplierId());
+
+							PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(reqPersonnelDTO);
+							 
+							reqDTO.setSmSupp(disc.getSmSupplier());  
+							reqDTO.getSmSupp().getSmAppl().setSmPersonnels(personnelResDTO.getSmPersonnelList());  
+							try {
+								RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
+										reqDTO); 
+
+								SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
+								/*SmCommonUtil.redirectToPage(
+										SmApplicationUtil.getApplicationErrorPage(),
+										MessageConst.INFO_721029, new String[] {resDTO.getBasicSupplierAdmin().getPmUser().getLoginId() },
+										FacesMessage.SEVERITY_INFO);*/
+							} catch (Exception ex) {
+								throw new EpException(ex.getMessage());
+							}
+							
+						}else { 
+							SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(disc);
+						}
+						 
 						log.info("-----------After------------------"+i);
 						i++;
 					}										
