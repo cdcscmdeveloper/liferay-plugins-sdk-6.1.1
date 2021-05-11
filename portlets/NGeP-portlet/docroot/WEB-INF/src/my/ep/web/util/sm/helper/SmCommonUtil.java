@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -217,7 +216,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -234,7 +232,6 @@ import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
-// TODO: Auto-generated Javadoc
 public class SmCommonUtil {
 	private static Logger log = Logger.getLogger(SmCommonUtil.class);
 	private static SmCommonUtil instance;
@@ -255,7 +252,7 @@ public class SmCommonUtil {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {
-			log.info(ex.getMessage());
+			log.error(ex.getMessage());
 			// return;
 		}
 		md.update(str.getBytes());
@@ -276,7 +273,7 @@ public class SmCommonUtil {
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException ex) {
-			log.info(ex.getMessage());
+			log.error(ex.getMessage());
 			// return;
 		}
 		md.update(str.getBytes());
@@ -563,7 +560,7 @@ public class SmCommonUtil {
 	 * @return the application type description
 	 */
 	public static String getApplTypeDesc(String applType) {
-		log.info("--------getApplTypeDesc start--------" + applType);
+		//log.info("--------getApplTypeDesc start--------" + applType);
 		String apType = "";
 
 		switch (applType) {
@@ -596,7 +593,7 @@ public class SmCommonUtil {
 			break;
 		}
 
-		log.info("--------getApplTypeDesc--------" + apType);
+		//log.info("--------getApplTypeDesc--------" + apType);
 
 		return apType;
 	}
@@ -615,7 +612,7 @@ public class SmCommonUtil {
 	public static SmPersonnleCalcVO calcPersonnelListCount(
 			List<SmPersonnel> personnelList, List<SmStaffTotal> stfTotals,
 			String supplierType) {
-		log.info("********* Staff calculation from Util class ********* ");
+		//log.info("********* Staff calculation from Util class ********* ");
 		SmPersonnleCalcVO personVO = new SmPersonnleCalcVO();
 		personVO = resetAllPersonnelCount(stfTotals, personVO);
 		// setValidSmUserLimit(validatePersonLimit());
@@ -624,7 +621,7 @@ public class SmCommonUtil {
 			personVO = calcSumUpByPersonnel(per, personVO, supplierType, locale);
 		}
 		calcuteStaffSubTotalSummary(personVO);
-		log.info("********* END calcPersonnelListCount ********* ");
+		//log.info("********* END calcPersonnelListCount ********* ");
 		return personVO;
 	}
 
@@ -993,7 +990,7 @@ public class SmCommonUtil {
 				//Bug #29940 - END - The Percentage for Composition of BOD/Management/Staff Company to the nearest 2 decimal place.
 				// retVal = retVal.setScale(2, RoundingMode.CEILING);
 			} catch (ArithmeticException e) {
-				log.info("FAILED GET PERCENTAG:" + e.getMessage());
+				log.error("FAILED GET PERCENTAG:" + e.getMessage());
 			}
 		}
 		return retVal;
@@ -1487,10 +1484,9 @@ public class SmCommonUtil {
 						.setScale(2, RoundingMode.HALF_UP));
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
+		//log.info("**** Paid up capital ****** " + compBasic.getPaidUpCapital());
 	}
 
 	/**
@@ -1502,7 +1498,7 @@ public class SmCommonUtil {
 	public static void calculateSmApplicationPaidUpCapitalPercent(
 			SmCompanyBasic compBasic) {
 		BigDecimal mul = new BigDecimal(100);
-		log.info(" *** Intial Calc ***** ");
+		//log.info(" *** Intial Calc ***** ");
 		if (compBasic.getPaidUpCapital() != null
 				&& compBasic.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
 			compBasic.setBumiPercent(compBasic
@@ -1665,10 +1661,10 @@ public class SmCommonUtil {
 		String smRevisionDir = "SM" + File.separator + applNo + File.separator
 				+ "Revision" + File.separator;
 		exist = new File(baseDir + smRevisionDir, fileName).exists();
-		log.info("File Name:" + fileName);
-		log.info("SER type:" + serType);
-		log.info("Directory:" + baseDir + smRevisionDir);
-		log.info("Is File Exist:" + exist);
+		//log.info("File Name:" + fileName);
+		//log.info("SER type:" + serType);
+		//log.info("Directory:" + baseDir + smRevisionDir);
+		//log.info("Is File Exist:" + exist);
 		return exist;
 	}
 
@@ -1686,10 +1682,10 @@ public class SmCommonUtil {
 				+ File.separator;
 		String smRevisionDir = "SM" + File.separator + applNo + File.separator
 				+ "Revision" + File.separator;
-		log.info("File Name:" + fileName);
-		log.info("SER type:" + serType);
-		log.info("Directory:" + baseDir + smRevisionDir);
-		log.info("Is File Exist:" + exist);
+		//log.info("File Name:" + fileName);
+		//log.info("SER type:" + serType);
+		//log.info("Directory:" + baseDir + smRevisionDir);
+		//log.info("Is File Exist:" + exist);
 		if (exist) {
 			retVal = baseDir + smRevisionDir + fileName;
 		}
@@ -1707,8 +1703,8 @@ public class SmCommonUtil {
 	public static void createSerFile(SmAppl smAppl, String serType) {
 		ISmApplRevisionSO applRevisionSO = null;
 		try {
-			log.info("start creating SER file for appNo:" + smAppl.getApplNo()
-					+ "  serType:" + serType);
+			//log.info("start creating SER file for appNo:" + smAppl.getApplNo()
+					//+ "  serType:" + serType);
 			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							ISmApplRevisionSO.class);
@@ -1722,7 +1718,7 @@ public class SmCommonUtil {
 			}
 			applRevisionSO.applicationHist(reqDTO);
 		} catch (Exception ex) {
-			log.info("Failed to create SER file  [" + ex.getMessage() + "]");
+			log.error("Failed to create SER file  [" + ex.getMessage() + "]");
 		} finally {
 			applRevisionSO = null;
 		}
@@ -2628,7 +2624,7 @@ public class SmCommonUtil {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LOGOUT URL:" + logoutcookie);
+		//log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LOGOUT URL:" + logoutcookie);
 		return logoutcookie;
 	}
 
@@ -2671,7 +2667,7 @@ public class SmCommonUtil {
 	 */
 	public static String getPortalLoginPage() {
 		String retVal = getBasePortalUrl() + "/" + "ssologin";
-		log.info(">>>>>>>>>LOG IN URL:" + retVal + "<<<<<<<<<<<");
+		//log.info(">>>>>>>>>LOG IN URL:" + retVal + "<<<<<<<<<<<");
 		return retVal;
 	}
 
@@ -3011,7 +3007,7 @@ public class SmCommonUtil {
 						+ httpServletRequest.getParameter(paramName));
 				strParams.append("&");
 				/*
-				 * log.info(paramName + " - " +
+				 * //log.info(paramName + " - " +
 				 * httpServletRequest.getParameter(paramName));
 				 */
 			}
@@ -3019,7 +3015,7 @@ public class SmCommonUtil {
 		strParams.append("treq=1");
 		strParams.append("&");
 		strParams.append("sa=" + merchantId);
-		log.info("StrParams>>>>>>" + strParams);
+		//log.info("StrParams>>>>>>" + strParams);
 		// URL url = null;
 		// BufferedReader reader = null;
 
@@ -3056,7 +3052,7 @@ public class SmCommonUtil {
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line + "\n");
 			}
-			log.info(">>>" + stringBuilder.toString());
+			//log.info(">>>" + stringBuilder.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3750,20 +3746,21 @@ public class SmCommonUtil {
 		// }
 	}
 
+	@SuppressWarnings("unchecked")
 	public static boolean isValidEmailDomain(String email) {
 		boolean retVal = false;
 		String[] hostNameArr = StringUtils.isNotBlank(email) ? email.split("@")
 				: new String[] {};
 		try {
 			if (hostNameArr != null && hostNameArr.length > 1) {
-				Hashtable env = new Hashtable();
+				Hashtable<String, String> env = new Hashtable<String, String>();
 				env.put("java.naming.factory.initial",
 						"com.sun.jndi.dns.DnsContextFactory");
 				DirContext ictx = new InitialDirContext(env);
 				Attributes attrs = ictx.getAttributes(hostNameArr[1],
 						new String[] { "NS" });
 				Attribute attr = attrs.get("NS");
-				ArrayList res = new ArrayList();
+				ArrayList<String> res = new ArrayList<String>();
 
 				if (attr != null) {
 					NamingEnumeration en = attr.getAll();
@@ -3776,15 +3773,15 @@ public class SmCommonUtil {
 				}
 
 				if (!isCollectionEmpty(res)) {
-					log.info("Email " + email + " name servers:" + res);
+					//log.info("Email " + email + " name servers:" + res);
 					retVal = true;
 				} else {
-					log.info("Email " + email
-							+ "dont have any name servers exist!!!");
+					//log.info("Email " + email
+							//+ "dont have any name servers exist!!!");
 				}
 			}
 		} catch (Exception e) {
-			log.info(">>>>>>>>>>>>>>ERROR EMAIL LOOKUP[" + email + "]"
+			log.error(">>>>>>>>>>>>>>ERROR EMAIL LOOKUP[" + email + "]"
 					+ e.getMessage() + "<<<<<<<<<<<<<");
 		}
 		return retVal;
@@ -4276,8 +4273,8 @@ public class SmCommonUtil {
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
-					+ ">>code>>" + resDTO.getStatusCode());
+			//log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
+					//+ ">>code>>" + resDTO.getStatusCode());
 			if (!resDTO
 					.getSeverity()
 					.equalsIgnoreCase(
@@ -4337,7 +4334,6 @@ public class SmCommonUtil {
 		try {
 			return reqSO.ssmActive();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -4421,7 +4417,7 @@ public class SmCommonUtil {
 	 */
 	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
 			String postCode, String type, String supplierType) {
-		log.info(">>>>>>>>>>>>>>verifyOwnerWithMyIdentity<<<<<<<<<<<");
+		//log.info(">>>>>>>>>>>>>>verifyOwnerWithMyIdentity<<<<<<<<<<<");
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
@@ -4439,8 +4435,8 @@ public class SmCommonUtil {
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-			log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
-					+ ">>code>>" + resDTO.getStatusCode());
+			//log.info("verifyWithMyIdentity>>>>" + resDTO.getSeverity()
+					//+ ">>code>>" + resDTO.getStatusCode());
 			// log.info("resDTO.getResidentStatus()>>>>>>>>" +
 			// resDTO.getResidentStatus());
 			if (!resDTO
@@ -4531,15 +4527,15 @@ public class SmCommonUtil {
 
 		try {
 			MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
-			log.info("verifyPersonnelWithMyIdentity >>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
-			log.info("resDTO.getStatusCode() >>>>>>>>>>>" + resDTO.getStatusCode());
-			log.info("resDTO.getResidentStatus() >>>>>>>" + resDTO.getResidentStatus());
+			//log.info("verifyPersonnelWithMyIdentity >>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
+			//log.info("resDTO.getStatusCode() >>>>>>>>>>>" + resDTO.getStatusCode());
+			//log.info("resDTO.getResidentStatus() >>>>>>>" + resDTO.getResidentStatus());
 
 			if (!StringUtils.isBlank(resDTO.getStatusCode())) {
 				pers.setIdentityResponseCode(resDTO.getStatusCode());
 				pers.setIdentityResidentStatus(resDTO.getResidentStatus());
 			}
-			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
+			//log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 			if (!resDTO.getSeverity().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
 				switch (resDTO.getStatusCode()) {
 				case "70020":
@@ -5194,7 +5190,6 @@ public class SmCommonUtil {
 
 			@Override
 			public int compare(SmApplRejectReason o1, SmApplRejectReason o2) {
-				// TODO Auto-generated method stub
 				return o1.getPmReason().getReasonId().compareTo(o2.getPmReason().getReasonId());
 			}
 
@@ -5337,7 +5332,7 @@ public class SmCommonUtil {
 		Object site = SmServiceLookup.getSiteVisitSO()
 				.retrieveSmSvAddressInfoBySiteTypeAndRefId(svReqDTO).getSite();
 
-		log.info("<<<<<<<Site>>>>>>>>>>" + site);
+		//log.info("<<<<<<<Site>>>>>>>>>>" + site);
 		if (site != null) {
 			if (siteType
 					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.SITE_ADDRESS_HQ)
@@ -5504,11 +5499,11 @@ public class SmCommonUtil {
 	public static void redirectToPageForPublicPage(String xhtml,
 			String portletUrl) {
 		if (isNotFilterHttps()) {
-			log.info(">>>>>>>>>>>>NO NEED TO FILTER URL");
+			//log.info(">>>>>>>>>>>>NO NEED TO FILTER URL");
 			redirectToPage(xhtml, null, null, null);
 		} else {
 			String url = SmCommonUtil.getBasePortalUrl() + "/" + portletUrl;
-			log.info(">>>>>>>>>>>>>>>>>>>>FILTER URL:" + url);
+			//log.info(">>>>>>>>>>>>>>>>>>>>FILTER URL:" + url);
 			if (!StringUtils.isBlank(url) && !url.contains("https")) {
 				redirectToPage("/xhtml/pm/shared/outputMsg.xhtml",
 						MessageConst.ERROR_722653,
