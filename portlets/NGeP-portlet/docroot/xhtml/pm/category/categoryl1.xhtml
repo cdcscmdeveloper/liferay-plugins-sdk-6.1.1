@@ -30,7 +30,7 @@
 						style="float:right;width: auto;" />
 					<!-- End #29665 -->
 					<p:commandButton
-						value="#{lbl['lbl.btn.save']}"
+						value="#{lbl['lbl.btn.save']}" ajax="false"
 						action="#{categoryBackingBean.saveCategory}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
 						update="@([id$=Msg])" style="float:right;width: auto;" /></td>				
@@ -110,7 +110,7 @@
 						<p:outputLabel value="#{lbl['lbl.pm.categ.history']}" />
 					</td>
 					<td>
-						<p:commandLink onclick="remarkHisCatCodePopup.show()">
+						<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
 							<p:graphicImage id="hisImage" value="/css/images/design/document.png" /> 
 						</p:commandLink> 
 						

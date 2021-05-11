@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 
-		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true"
+		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true" globalOnly="true"
 			severity="error,info" showSummary="false"></p:messages>
 		<ui:remove>
 			<p:blockUI block=":form" widgetVar="blockWidget">
@@ -225,7 +225,8 @@
 					style="width :5%">
 
 
-					<p:commandLink rendered="#{category[0]==1}"
+					<!-- #29665 add ajax false -->
+					<p:commandLink rendered="#{category[0]==1}" ajax="false"
 						action="#{categoryBackingBean.addSubCategory(category[1])}"
 						style="margin-right: 10px;" update="@form">
 						<p:graphicImage title="#{lbl['lbl.pm.add.sub.category']}"
@@ -239,8 +240,8 @@
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
 
-
-					<p:commandLink rendered="#{category[0]==2}"
+					<!-- #29665 add ajax false -->
+					<p:commandLink rendered="#{category[0]==2}" ajax="false"
 						action="#{categoryBackingBean.addSubDivision(category[1])}"
 						style="margin-right: 10px;" update="@form">
 						<p:graphicImage title="#{lbl['lbl.pm.add.sub.div']}"
