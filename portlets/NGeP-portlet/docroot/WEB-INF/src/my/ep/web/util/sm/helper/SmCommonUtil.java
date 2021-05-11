@@ -3746,7 +3746,6 @@ public class SmCommonUtil {
 		// }
 	}
 
-	@SuppressWarnings("unchecked")
 	public static boolean isValidEmailDomain(String email) {
 		boolean retVal = false;
 		String[] hostNameArr = StringUtils.isNotBlank(email) ? email.split("@")
@@ -5968,8 +5967,13 @@ public class SmCommonUtil {
 			//27264
 		case MessageConst.ERROR_721084:
 			throw new EpException(MessageConst.ERROR_721084);			
-		case "70067"://No SSM Data for requested BusinessRegistrationNo		
+		case "70067"://No SSM Data for requested BusinessRegistrationNo
+			//27214 && #29584
+			if(resDTO.isPreRegistration()){
+				throw new EpException(MessageConst.ERROR_721086);
+			}else{
 				throw new EpException(MessageConst.ERROR_721078);
+			}
 		case "70068"://Encounter Technical Error at SSM
 			//27214  -> this changes is remove in this case. replace with  27225
 			//27225			
