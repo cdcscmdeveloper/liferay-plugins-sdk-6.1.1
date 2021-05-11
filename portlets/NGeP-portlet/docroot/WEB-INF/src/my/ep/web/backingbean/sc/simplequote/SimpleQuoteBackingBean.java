@@ -5657,6 +5657,11 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmDigiSign(pmDigiSign);
+			
+			//#30840 - Start
+			reqDTO.setServiceContainPrice(isServiceContainPrice);
+			reqDTO.setProdContainPrice(isProdContainPrice);
+			//#30840 - End
 
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
