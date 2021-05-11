@@ -80,6 +80,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.component.log.Log;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
@@ -1468,6 +1469,7 @@ public void selectFinancialAcc(){
 	private void getContractAdminlist() {
 		IUserSO userSO = null;
 		UserReqDTO userReqDTO = null;
+		UserReqDTO reqDTO = null;
 		try{
 			if (getManagedBean().getContractAdminlist() == null) {
 				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
@@ -1485,9 +1487,27 @@ public void selectFinancialAcc(){
 										ctContractVer.getContractVerId(),
 										ctContractVer.getDocType(),
 										roleCode);
-
-								if (ctActor != null) {
-									getManagedBean().getContractAdminlist().add(ctActor.getUser());
+                                // Start Fixing - #29369
+								if (ctActor != null && ctActor.getUser().getRecordStatusFlg() ==1)  {
+							       // in-case of user active, send user id to check whether user active in same profileid
+									userReqDTO = new UserReqDTO();
+									userReqDTO.setRoleCode(roleCode);
+									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());	
+									userReqDTO.getIncludeUserIds().add(ctActor.getUser().getUserId());
+									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);									
+									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());
+									
+									if(getManagedBean().getContractAdminlist() == null || getManagedBean().getContractAdminlist().isEmpty()){	
+										// in-case of when user is active but not in targeted profileid, reassigned and fetch new contract admins base on same profile id
+										reqDTO = new UserReqDTO();
+										reqDTO.setRoleCode(roleCode);
+										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+										getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(reqDTO).getUserList());
+									}
+									//getManagedBean().getContractAdminlist().add(userResDTO);
+																	
+							    // End Fixing - #29369
 								} else {
 									userReqDTO = new UserReqDTO();	      	  		
 									userReqDTO.setRoleCode(roleCode);
