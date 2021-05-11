@@ -2048,6 +2048,9 @@ public class LOIDetailBackingBean extends
 							currentStatus,
 							getManagedBean().getScLoi().getScLoiRemarks(),
 							ScLoiRemark.class));
+			// # 11134
+			List<ScLoiRemark> supplierRemarks = filterSupplierRemarks(getManagedBean().getScLoi().getScLoiRemarks(), false);
+			getManagedBean().setSupplierRemarks(supplierRemarks);
 		}
 		// status
 		getCurrentStatus(currentStatus.getPmStatus()
@@ -2492,6 +2495,19 @@ public class LOIDetailBackingBean extends
 					.getStatusId().longValue();
 
 			parseLOIDetails(scLoi, outcome);
+			
+			// remove empty remark - start
+			List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
+			List<ScLoiRemark> finalScLoiRemarks = new ArrayList<>();
+			if(CollectionUtils.isNotEmpty(scLoiRemarks)){
+				for(ScLoiRemark each : scLoiRemarks){
+					if(!StringUtils.isEmpty(each.getRemark())){
+						finalScLoiRemarks.add(each);
+					}
+				}
+			}
+			scLoi.setScLoiRemarks(finalScLoiRemarks);
+			// remove empty remark - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -3822,32 +3838,32 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// #11134 - Start
-				if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
-						&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-					
-					boolean remarksEmpty = false;
-					
-					// check if remark is empty
-					List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
-					if(CollectionUtils.isNotEmpty(scLoiRemarks)){
-						for(ScLoiRemark each : scLoiRemarks){
-							if(StringUtils.isEmpty(each.getRemark())){
-								remarksEmpty = true;
-								break;
-							}
-						}
-					}else {
+		if(QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+				&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+			
+			boolean remarksEmpty = false;
+			
+			// check if remark is empty
+			List<ScLoiRemark> scLoiRemarks = scLoi.getScLoiRemarks();
+			if(CollectionUtils.isNotEmpty(scLoiRemarks)){
+				for(ScLoiRemark each : scLoiRemarks){
+					if(StringUtils.isEmpty(each.getRemark())){
 						remarksEmpty = true;
-					}
-					
-					//throw message
-					if(remarksEmpty){
-						throw new EpException(
-								MessageConst.ERROR_716024);
-						 // Remark is mandatory for rejection.
+						break;
 					}
 				}
-				// #11134 -end
+			}else {
+				remarksEmpty = true;
+			}
+			
+			//throw message
+			if(remarksEmpty){
+				throw new EpException(
+						MessageConst.ERROR_716024);
+				 // Remark is mandatory for rejection.
+			}
+		}
+		// #11134 -end
 	}
 
 	/**
