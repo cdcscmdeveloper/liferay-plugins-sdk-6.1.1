@@ -31,10 +31,10 @@
 						rendered="#{!categoryBackingBean.managedBean.newCategory}"
 						style="float:right;width: auto;" />
 					<p:commandButton
-						value="#{lbl['lbl.btn.save']}"
+						value="#{lbl['lbl.btn.save']}" ajax="false"
 						action="#{categoryBackingBean.saveSubDivision}"
 						rendered="#{categoryBackingBean.managedBean.newCategory}"
-						update="@([id$=Msg])" style="float:right;width: auto;" /></td> 						
+						update=":form" style="float:right;" /></td> 						
 					<!-- End #29665 -->
 			</tr>
 		</table>
@@ -397,7 +397,7 @@
 						<p:outputLabel value="#{lbl['lbl.pm.categ.history']}" />
 					</td>
 					<td>
-						<p:commandLink onclick="remarkHisCatCodePopup.show()">
+						<p:commandLink onclick="remarkHisCatCodePopup.show()" immediate="true">
 							<p:graphicImage id="hisImage" value="/css/images/design/document.png" /> 
 						</p:commandLink> 
 						

@@ -851,7 +851,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		} finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl1.xhtml";
+		return "/xhtml/pm/category/categoryl1.xhtml?faces-redirect=true"; //#29665 
 	}
 
 	/**
@@ -991,7 +991,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.remarkDisable = true;
 		//end #29665
 
-		return "/xhtml/pm/category/categoryl2.xhtml";
+		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";//#29665 
 	}
 
 	/**
@@ -1154,13 +1154,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						}
 					}
 				}
+				
+				//start #29665 - comment out unused function, it can cause initialized error
+				//this.getManagedBean().setPmCategoryL2(
+				//		resDTO.getCategoryL3().getPmCategoryL2());
 
-				this.getManagedBean().setPmCategoryL2(
-						resDTO.getCategoryL3().getPmCategoryL2());
-				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
+				//this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setPmCategoryL1(
-						this.getManagedBean().getPmCategoryL2()
+						resDTO.getCategoryL3().getPmCategoryL2()
 								.getPmCategoryL1());
+				//end #29665
 
 				PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
 						.cloneBean(resDTO.getCategoryL3());
@@ -1296,9 +1299,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (resDTO.isSuccessful()) {
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
-					returnUrl = "/xhtml/pm/category/search.xhtml";
+					returnUrl = "/xhtml/pm/category/search.xhtml?faces-redirect=true"; //#29665 add redirect true
 					result = resDTO.isSuccessful();
 					// resetCategory();
+					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true); //#29665 add keep message after redirect true
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1541,11 +1545,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 
 				if (this.getManagedBean().isNewCategory()) {
-					returnUrl = "/xhtml/pm/category/search.xhtml";
+					returnUrl = "/xhtml/pm/category/search.xhtml?faces-redirect=true"; //#29665 add redirect true
 					this.getManagedBean().setNewCategory(false);
 		
 					result = resDTO.isSuccessful();
 					// resetCategory();
+					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true); //#29665 add keep message after redirect true
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1829,9 +1834,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				// categoryCodeSO.saveCategory(reqDTO);
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
-					returnUrl = "/xhtml/pm/category/search.xhtml";
+					returnUrl = "/xhtml/pm/category/search.xhtml?faces-redirect=true"; //#29665 add redirect true
 					result = resDTO.isSuccessful();
 					// resetCategory();
+					FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true); //#29665 add keep message after redirect true
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
