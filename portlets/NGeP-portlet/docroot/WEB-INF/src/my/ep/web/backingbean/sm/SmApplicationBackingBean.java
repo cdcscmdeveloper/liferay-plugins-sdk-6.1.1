@@ -3739,9 +3739,9 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
-			if(!getManagedBean().getSmAppl().isResubmit()){
+//			if(!getManagedBean().getSmAppl().isResubmit()){ //#30556
 				getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
-			}
+//			}
 
 			// sort by document is mandatory or not
 			Collections.sort(getManagedBean().getSmAppl()
