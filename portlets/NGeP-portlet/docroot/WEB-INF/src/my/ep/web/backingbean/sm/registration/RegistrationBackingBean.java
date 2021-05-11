@@ -1933,7 +1933,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if (state != null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
 						.getServiceObject("sm", ISupplierSearchSO.class);
-				if (this.getManagedBean().getSmBusinessAdd() != null) {
+				if (this.getManagedBean().getSmBusinessAdd() != null && this.getManagedBean()
+						.getSmBusinessAdd().getAddressId()!=null) { //#30726
 					SmAddress smAddress = supplierSearchSO.retrieveSmAddressByAddressId(this.getManagedBean()
 							.getSmBusinessAdd().getAddressId());
 					this.getManagedBean().setSmBusinessAdd(smAddress);
