@@ -65,7 +65,6 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -184,6 +183,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmAppl
 	 *            smAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void initApplication(SmAppl smAppl) {
 
 		try {
@@ -274,7 +274,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;
@@ -1289,7 +1288,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			// TODO reset few values that could have been already submit by
 			// partial submit on ajax functions
 			SmPersonnel per = getManagedBean().getSelectedPersonnel();
 			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
@@ -1491,7 +1489,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// TODO use this object to reset some values on back button click
 		SmPersonnel per = new SmPersonnel();
 		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
@@ -2209,6 +2206,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * View Supplier Profile from Application List
 	 */
+	@SuppressWarnings("deprecation")
 	public void viewApplication(SmAppl selectedSmAppl) {
 		String baseUrl = "";
 		String baseUrlLabel = "";
