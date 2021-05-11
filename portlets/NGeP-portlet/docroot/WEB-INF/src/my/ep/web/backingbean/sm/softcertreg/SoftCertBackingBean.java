@@ -1645,7 +1645,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					&& (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 							.contains(getManagedBean()
 									.getLoginUserPersonnelInfo().getEpRole()))
-					&& getManagedBean().getRevokePersonnelList().size() > 1) {
+					&& getManagedBean().getRevokePersonnelList().size() >= 1) {//29616
 				getManagedBean().setRenderRevokeButton(true);
 			} else {
 				getManagedBean().setRenderRevokeButton(false);
