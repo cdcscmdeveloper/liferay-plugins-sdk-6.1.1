@@ -601,12 +601,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
-			//#29616 -start
-			//check old admin have active softcert
-			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				throw new EpException(MessageConst.ERROR_722685,
-						new String[] { getManagedBean().getOldAdmin().getName() });
-			}//#29616 -end
+//			//#29616 -start
+//			//check old admin have active softcert
+//			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+//				throw new EpException(MessageConst.ERROR_722685,
+//						new String[] { getManagedBean().getOldAdmin().getName() });
+//			}//#29616 -end
 		}
 		
 		listenerChangeRole();
