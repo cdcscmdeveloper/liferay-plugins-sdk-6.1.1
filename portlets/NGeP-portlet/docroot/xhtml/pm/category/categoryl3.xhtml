@@ -38,170 +38,8 @@
 					<!-- End #29665 -->
 			</tr>
 		</table>
-		<ui:remove>
-			<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
-				id="catLevel">
-				<h:panelGrid columns="1">
-
-					<h:panelGrid columns="2" columnClasses="cmWidth1,cmPadding5">
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.bn.level']}" />
-						</h:panelGroup>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.catLevel}"
-							disabled="true" style="width: 108px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
-								itemValue="1" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
-								itemValue="2" />
-							<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-						</p:selectOneMenu>
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
-						</h:panelGroup>
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
-							size="15" maxlength="2"
-							rendered="#{categoryBackingBean.managedBean.newCategory}" />
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}"
-							size="15" maxlength="2"
-							rendered="#{!categoryBackingBean.managedBean.newCategory}"
-							readonly="true" disabled="true" />
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.desc']}" />
-						</h:panelGroup>
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryName}"
-							size="120" />
-					</h:panelGrid>
-					<h:panelGrid columns="4"
-						columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5">
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
-						</h:panelGroup>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}"
-							rendered="#{!categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.supplierType}"
-								var="supplierType" itemLabel="#{supplierType.codeName}"
-								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCodeVal}"
-							rendered="#{categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0"></f:selectItem>
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.supplierType}"
-								var="supplierType" itemLabel="#{supplierType.codeName}"
-								itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu>
-
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.special.category']}" />
-						</h:panelGroup>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}"
-							rendered="#{!categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.specialCategory}"
-								var="specialCategory" itemLabel="#{specialCategory.codeName}"
-								itemValue="#{specialCategory.pmParameter.parameterId}">
-							</f:selectItems>
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{categoryBackingBean.updateSpecialCategory}"
-								update="@form" />
-						</p:selectOneMenu>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCodeVal}"
-							rendered="#{categoryBackingBean.managedBean.newCategory}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.specialCategory}"
-								var="specialCategory" itemLabel="#{specialCategory.codeName}"
-								itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
-						</p:selectOneMenu>
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.paid.capital']}" />
-						</h:panelGroup>
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.paidUpCapital}"
-							size="15" maxlength="17"
-							converterMessage="#{lbl['lbl.pm.paid.capital.invalid']}">
-							<f:validateDoubleRange minimum="1" />
-							<f:validateDoubleRange maximum="99999999999999" />
-							<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							<p:ajax event="blur" process="@this" update="@this" />
-							</p:inputText>
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.bumi.percentage']}" />
-						</h:panelGroup>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}"
-							style="width: 200px;">
-							<f:selectItem itemLabel="0%" itemValue="0" />
-							<f:selectItem itemLabel="51%" itemValue="51" />
-							<f:selectItem itemLabel="100%" itemValue="100" />
-						</p:selectOneMenu>
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="#{lbl['lbl.pm.special.group']}" />
-						</h:panelGroup>
-						<p:selectBooleanCheckbox
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
-							<p:ajax event="change"
-								listener="#{categoryBackingBean.updateSpecialGroup}"
-								update="groupdetails" />
-						</p:selectBooleanCheckbox>
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="#{lbl['lbl.pm.operate.from.home']}" />
-						</h:panelGroup>
-						<p:selectBooleanCheckbox
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" />
-
-						<h:panelGroup style="float: right">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.pm.status']}" />
-						</h:panelGroup>
-						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}"
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.recordStatusFlg}"
-							disabled="false" style="width: 108px;">
-							<f:selectItems
-								value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
-						</p:selectOneMenu>
-
-						<h:panelGroup style="float: right">
-							<h:outputText
-								value="#{lbl['lbl.pm.category.company.restriction']}" />
-						</h:panelGroup>
-						<p:selectBooleanCheckbox
-							value="#{categoryBackingBean.managedBean.pmCategoryL3.byCompType}">
-							<p:ajax event="change" update="outpnlCatRes"
-								listener="#{categoryBackingBean.getcategoryRestrList}" />
-						</p:selectBooleanCheckbox>
-					</h:panelGrid>
-
-				</h:panelGrid>
-			</p:panel>
-		</ui:remove>
+		
+		<!-- #29665 remove UI remove -->
 
 		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true"
 			id="catParent">
@@ -642,44 +480,13 @@
 											<f:selectItems
 												value="#{categoryBackingBean.managedBean.searchField}" />
 										</p:selectOneMenu>
-										<!-- <p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchOperatorValue[0]}">
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchOperator}" />
-						</p:selectOneMenu> -->
+										
+										<!-- #29665 - remove commented tag -->
 										<p:inputText
 											value="#{categoryBackingBean.managedBean.searchValue[0]}"
 											style="margin-top:2.5%;" />
-
-										<!-- <p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchField}" />
-						</p:selectOneMenu>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchOperatorValue[1]}">
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchOperator}" />
-						</p:selectOneMenu>
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.searchValue[1]}"
-							style="margin-top:6px;" />
-
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchFieldValue[2]}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchField}" />
-						</p:selectOneMenu>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchOperatorValue[2]}">
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchOperator}" />
-						</p:selectOneMenu>
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.searchValue[2]}"
-							style="margin-top:6px;" /> -->
+											
+										<!-- #29665 - remove commented tag -->
 
 									</h:panelGrid>
 
@@ -758,57 +565,13 @@
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.pm.company.type']}" />
 								</f:facet>
+								
+								<!-- start #29665 return valid name -->
 								<ui:fragment rendered="#{!pmCategoryRestr.brandNew}">
-									<h:outputText value="#{lbl['lbl.pm.company.individu']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'A'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.llp']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'B'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.rob.perkongsian']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'C'}" />
-									<h:outputText value="#{lbl['lbl.pm.company.perniagaan.sabah']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'D'}" />
-
-									<h:outputText
-										value="#{lbl['lbl.pm.company.perniagaan.sarawak']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'E'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.rob.perseorangan']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'F'}" />
-
-									<h:outputText
-										value="#{lbl['lbl.pm.company.pendaftaran.sabah']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'G'}" />
-
-									<h:outputText
-										value="#{lbl['lbl.pm.company.pendaftaran.sarawak']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'H'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.roc.sdn']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'I'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.roc.bhd']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'J'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.ros.pertubuhan']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'K'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.ros.skm.koperasi']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'L'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.ros.persatuan']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'M'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.ros.pertubuhan']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'O'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.ros.koperasi']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'P'}" />
-
-									<h:outputText value="#{lbl['lbl.pm.company.ros.ngo']}"
-										rendered="#{pmCategoryRestr.companyTypeId.parameterCode == 'N'}" />
+									<ui:param name="paramCode" value="#{pmCategoryRestr.companyTypeId.parameterCode}"></ui:param>
+									<h:outputText value="#{categoryBackingBean.getParamCategRestr(paramCode)}"/>
 								</ui:fragment>
+								<!-- end #29665 -->
 
 								<ui:fragment rendered="#{pmCategoryRestr.brandNew}">
 									<p:selectOneMenu
@@ -978,29 +741,12 @@
 											<f:selectItems
 												value="#{categoryBackingBean.managedBean.searchField}" />
 										</p:selectOneMenu>
-										<!-- <p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchOperatorValue[1]}">
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchOperator}" />
-						</p:selectOneMenu> -->
+										<!-- #29665 - remove commented tag -->
 										<p:inputText
 											value="#{categoryBackingBean.managedBean.searchValue[1]}"
 											style="margin-top:2.5%;" />
 
-										<!-- <p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchField}" />
-						</p:selectOneMenu>
-						<p:selectOneMenu
-							value="#{categoryBackingBean.managedBean.searchOperatorValue[1]}">
-							<f:selectItems
-								value="#{categoryBackingBean.managedBean.searchOperator}" />
-						</p:selectOneMenu>
-						<p:inputText
-							value="#{categoryBackingBean.managedBean.searchValue[1]}"
-							style="margin-top:6px;" /> -->
+										<!-- #29665 - remove commented tag -->
 
 
 									</h:panelGrid>
