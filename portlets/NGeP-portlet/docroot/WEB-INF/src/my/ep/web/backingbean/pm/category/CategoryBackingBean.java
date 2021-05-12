@@ -93,6 +93,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.web.util.pm.helper.ParameterHelper;
 //end #29665
 
 /**
@@ -1969,6 +1970,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		List<PmCategoryRestr> pmCategoryRestrList = this.getManagedBean()
 				.getPmCategoryL3().getPmCategoryRestrs();
+
+		this.getManagedBean().getTobeAddedCategoryRestrList().removeAll(this.getManagedBean().getDeletedPmPmCategoryRestrList());//#29665 remove parameterId null in to be added list
 
 		List<PmCategoryRestr> tobeAddedPmCategoryRestr = this.getManagedBean()
 				.getTobeAddedCategoryRestrList();
@@ -4262,6 +4265,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			rc.setCreatedUsername(user.getUserName());
 		}
 		return remarkList;
+	}
+	
+	public String getParamCategRestr(String parameterCode){
+		return ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SUPPLIER_BUSINESS_TYPE, parameterCode);
 	}
 	//end 29665
 
