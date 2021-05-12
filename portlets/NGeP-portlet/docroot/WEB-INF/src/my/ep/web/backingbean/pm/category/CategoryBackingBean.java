@@ -1713,6 +1713,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			loginSessionUserId = pmUser.getUserId();
 		}
 		new LogKey(loginSessionUserId);
+		
+		if(!this.getManagedBean().isNewCategory()){
+			this.getManagedBean().setPmCategoryL2(
+					this.getManagedBean().getPmCategoryL3().getPmCategoryL2());
+		}
 		//end #29665
 
 		// check the duplicate restriction
