@@ -39,8 +39,9 @@
 		</p:blockUI>
 			<h:panelGroup id="#{cc.attrs.id}Popup">
 			<table>
-				<tr>
-					<td align="center"><h:graphicImage
+				<tr><!-- #28765 START -->
+					<td align="center" style="white-space: normal; word-wrap: break-word !important;">
+					<!-- #28765 END --><h:graphicImage
 							value="/css/images/design/exclamation.png" /> <p:outputLabel
 							value="#{confirmationContent}" /></td>
 				</tr>
