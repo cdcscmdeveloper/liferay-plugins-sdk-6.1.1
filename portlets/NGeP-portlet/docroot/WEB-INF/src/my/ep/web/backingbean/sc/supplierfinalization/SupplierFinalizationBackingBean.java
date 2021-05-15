@@ -3760,8 +3760,16 @@ return	remarksNotFound;
 	 * @throws Exception
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (null != getManagedBean().getCurrentStatusId() 
+	    // #28834 - Start.
+	    ScQtFinalizationReportAttachment reportAttachment = null;
+		boolean latestBriefingPaper = false;
+		if (CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+          ScQtFinalizationReport latestScQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+          if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
+            latestBriefingPaper = true;
+          }
+		}
+		if (null != getManagedBean().getCurrentStatusId() && latestBriefingPaper
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
 						// 25638 - Start.
 						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
@@ -3771,6 +3779,7 @@ return	remarksNotFound;
 						)) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		    // #28834 - End.
 		} else {
 			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 

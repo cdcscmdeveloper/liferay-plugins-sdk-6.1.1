@@ -548,26 +548,22 @@ public class ConsolidationReportBackingBean extends
 	 * @throws Exception
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		//28834 starts.
 		ScQtFinalizationReportAttachment reportAttachment = null;
-		//28834 starts
-		boolean latest = true;
-		for(ScQtFinalizationReport rep: this.getManagedBean().getFinalizationReports()){//with assumption on KT report exist
-			Date date = new Date();  
-            Timestamp tsPlaceholder = new Timestamp(date.getTime());
-			Timestamp ts1 = scQtFinalizationReport.getCreatedDate()== null ? tsPlaceholder: scQtFinalizationReport.getCreatedDate();
-			Timestamp ts2 = rep.getCreatedDate()==null ? tsPlaceholder: rep.getCreatedDate();
-			if((ts1.compareTo(ts2)< 0) && rep.getPmDocument().getDocDefinitionKey().equalsIgnoreCase(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER)){
-				latest = false;
-				break;
-			}
-		}
+        boolean latestBriefingPaper = false;
+        if (CollectionUtils.isNotEmpty(getManagedBean().getFinalizationReports()) && getManagedBean().getFinalizationReports().size() > 0) {
+          ScQtFinalizationReport latestScQtFinalizationReport = getManagedBean().getFinalizationReports().get(getManagedBean().getFinalizationReports().size() -1);
+          if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
+            latestBriefingPaper = true;
+          }
+        }
 		
 		if (null != getManagedBean().getCurrentStatusId() 
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_CONSOLIDATION_REPORT.longValue() ||
-						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()) && latest) {
+						getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()) && latestBriefingPaper) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-			//28834 ends
+			//28834 ends.
 		} else {
 			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 
