@@ -578,7 +578,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_722594);
 		} else {
 			// [#26050] check if selected old admin does have any pending task - start
-			if (getManagedBean().getOldAdmin() != null) {
+			//28765 -  Checking null pm user
+			if (getManagedBean().getOldAdmin() != null && getManagedBean().getOldAdmin().getPmUser() !=null) {
 				//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
 				if (!StringUtils.isBlank(getManagedBean().getOldAdmin().getPmUser().getLoginId())				
 						&& PmCommonUtil.isAnyPendingTask(getManagedBean().getOldAdmin().getPmUser().getLoginId())) {
