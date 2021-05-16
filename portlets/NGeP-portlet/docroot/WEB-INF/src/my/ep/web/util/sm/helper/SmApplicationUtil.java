@@ -3729,7 +3729,7 @@ public class SmApplicationUtil {
 				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
 					if(managedBean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
-						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
+						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1 && !smDisciplinaryAction.isBumiputeraCancel() && !smDisciplinaryAction.isManufacturerCancel()){
 							cat.setCancelCategory(true);
 							apprvList.add(cat);
 						}
