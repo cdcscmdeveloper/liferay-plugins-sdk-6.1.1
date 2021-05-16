@@ -3080,6 +3080,35 @@ return	remarksNotFound;
 		}
 		//27502 - End.
 		
+		// #28834 - Start.
+		if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
+          boolean remarksNotFound = true;
+          if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+            for (ScRemark finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+              if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+                if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+                  if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+                    remarksNotFound = true;
+                    break;
+                  } else {
+                    remarksNotFound = false;
+                  }
+                }
+              }
+            }
+          } 
+          
+          if (remarksNotFound) {
+            navigateToSupplierFinalizationTab();
+            if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)) {
+              throw new EpException(MessageConst.ERROR_760360);
+            } else if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
+              throw new EpException(MessageConst.ERROR_700093);
+            }
+          }
+		} 
+		// #28834 - End.
+		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(this.getManagedBean().getCurrentStatusId())) {
@@ -3217,36 +3246,6 @@ return	remarksNotFound;
         	throw new EpException(MessageConst.ERROR_700093);
         }*/
 		
-		if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
-            boolean remarksNotFound = true;
-            if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
-              for (ScRemark finalizationRemark : getManagedBean().getFinalizationRemarks()) {
-                if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
-                  if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
-                    if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
-                      remarksNotFound = true;
-                      break;
-                    } else {
-                      remarksNotFound = false;
-                    }
-                  }
-                }
-              }
-            } 
-            
-            if (remarksNotFound) {
-              if (CollectionUtils.isNotEmpty(getManagedBean().getNewSfRemarks())) {
-                getManagedBean().getNewSfRemarks().clear();
-              }
-              loadSupplierFinalizationTabDetails();
-              navigateToSupplierFinalizationTab();
-              if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)) {
-                throw new EpException(MessageConst.ERROR_760360);
-              } else if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
-                throw new EpException(MessageConst.ERROR_700093);
-              }
-            }
-		}
 		// #28834 - End.
 		
 		
