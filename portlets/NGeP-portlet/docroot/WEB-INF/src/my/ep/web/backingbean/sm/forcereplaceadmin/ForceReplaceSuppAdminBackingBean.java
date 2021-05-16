@@ -377,6 +377,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
 		getManagedBean().setNewAdmin(null);
 		getManagedBean().setOldAdmin(null);
+		//28765 - START
+		if(getManagedBean().getSmReplaceSupplierAdminDocs() != null){
+			getManagedBean().getSmReplaceSupplierAdminDocs().clear();
+		}
+		//28765 - END
 		return "forceReplaceAdmin.xhtml";
 	}
 
