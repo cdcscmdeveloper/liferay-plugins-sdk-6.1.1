@@ -3191,8 +3191,9 @@ return	remarksNotFound;
 			
 			throw epException;
 		}
-
-		if (ParameterConst.DECISION_CANCEL
+		
+		// #28834 - Start.
+		/*if (ParameterConst.DECISION_CANCEL
 						  .equals(decisionTypeCode) && 
 				CollectionUtils.isEmpty(
 					scQtFinalization.getScQtFinalizationRemarks())) {
@@ -3208,14 +3209,45 @@ return	remarksNotFound;
 				  CollectionUtils.isEmpty(
 							scQtFinalization.getScQtFinalizationRemarks())) {
 			log.info("--->DECISION_RBPDECISION_RBPDECISION_RBPDECISION_RBP");
-	navigateToSupplierFinalizationTab();
-	initializeFinalizationRemarks();
-	
-	
-	// Remarks are mandatory for QT cancellation
-	throw new EpException(MessageConst.ERROR_700093);
-}
+        	navigateToSupplierFinalizationTab();
+        	initializeFinalizationRemarks();
+        	
+        	
+        	// Remarks are mandatory for QT cancellation
+        	throw new EpException(MessageConst.ERROR_700093);
+        }*/
 		
+		if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
+            boolean remarksNotFound = true;
+            if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+              for (ScRemark finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+                if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+                  if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+                    if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+                      remarksNotFound = true;
+                      break;
+                    } else {
+                      remarksNotFound = false;
+                    }
+                  }
+                }
+              }
+            } 
+            
+            if (remarksNotFound) {
+              if (CollectionUtils.isNotEmpty(getManagedBean().getNewSfRemarks())) {
+                getManagedBean().getNewSfRemarks().clear();
+              }
+              loadSupplierFinalizationTabDetails();
+              navigateToSupplierFinalizationTab();
+              if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)) {
+                throw new EpException(MessageConst.ERROR_760360);
+              } else if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
+                throw new EpException(MessageConst.ERROR_700093);
+              }
+            }
+		}
+		// #28834 - End.
 		
 		
 		/*
@@ -3223,7 +3255,6 @@ return	remarksNotFound;
 		 * SET MEETING MEMBER ACTIVITY
 		 */
 		reqDTO.setMeetingMembersActivity(getManagedBean().getCommitteeList());
-		
 		return reqDTO;
 	}
 	
