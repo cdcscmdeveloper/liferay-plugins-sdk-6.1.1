@@ -182,6 +182,14 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
 						selectItem.setValue(object[1].toString());
+						// #29592 - start
+						if (StringUtils.equals(selectItem.getLabel(), "List of Pending Code Assignment")) {
+							selectItem.setLabel("List of Pending Item Code Assignment");
+						}
+						if (StringUtils.equals(selectItem.getLabel(), "Senarai Menunggu Penetapan Kod")) {
+							selectItem.setLabel("Senarai Menunggu Penetapan Kod Item");
+						}
+						// #29592 - end
 						this.getManagedBean().getReportList().add(selectItem);
 
 					}
