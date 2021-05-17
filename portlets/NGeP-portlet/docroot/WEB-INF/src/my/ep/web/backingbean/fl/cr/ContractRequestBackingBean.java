@@ -2220,7 +2220,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						if(getManagedBean().getFlRequest().getPmUserGroup() != null && getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() != null ) {
 							reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 						} else {
-							reqDTO.setOrgProfileId(982865L);
+							reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getOrgProfileId());
 						}						
 					}					
 				}
