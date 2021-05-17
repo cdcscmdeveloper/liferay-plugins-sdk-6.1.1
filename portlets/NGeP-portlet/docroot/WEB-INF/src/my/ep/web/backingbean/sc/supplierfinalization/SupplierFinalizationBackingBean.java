@@ -2940,6 +2940,35 @@ return	Meetingstatus;
 		}
 		//27502 - End.
 		
+		// #28834 - Start.
+		if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
+          boolean remarksNotFound = true;
+          if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+            for (ScRemark finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+              if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+                if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+                  if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+                    remarksNotFound = true;
+                    break;
+                  } else {
+                    remarksNotFound = false;
+                  }
+                }
+              }
+            }
+          } 
+          
+          if (remarksNotFound) {
+            navigateToSupplierFinalizationTab();
+            if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)) {
+              throw new EpException(MessageConst.ERROR_760360);
+            } else if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
+              throw new EpException(MessageConst.ERROR_700093);
+            }
+          }
+		} 
+		// #28834 - End.
+		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
 					.equals(this.getManagedBean().getCurrentStatusId())) {
@@ -3051,8 +3080,9 @@ return	Meetingstatus;
 			
 			throw epException;
 		}
-
-		if (ParameterConst.DECISION_CANCEL
+		
+		// #28834 - Start.
+		/*if (ParameterConst.DECISION_CANCEL
 						  .equals(decisionTypeCode) && 
 				CollectionUtils.isEmpty(
 					scQtFinalization.getScQtFinalizationRemarks())) {
@@ -3062,6 +3092,21 @@ return	Meetingstatus;
 			// Remarks are mandatory for QT cancellation
 			throw new EpException(MessageConst.ERROR_760360);
 		}
+		
+		if (ParameterConst.DECISION_RBP
+				  .equals(decisionTypeCode) && 
+				  CollectionUtils.isEmpty(
+							scQtFinalization.getScQtFinalizationRemarks())) {
+			log.info("--->DECISION_RBPDECISION_RBPDECISION_RBPDECISION_RBP");
+        	navigateToSupplierFinalizationTab();
+        	initializeFinalizationRemarks();
+        	
+        	
+        	// Remarks are mandatory for QT cancellation
+        	throw new EpException(MessageConst.ERROR_700093);
+        }*/
+		
+		// #28834 - End.
 		
 		return reqDTO;
 	}
@@ -3585,8 +3630,16 @@ return	Meetingstatus;
 	 * @throws Exception
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (null != getManagedBean().getCurrentStatusId() 
+	    // #28834 - Start.
+	    ScQtFinalizationReportAttachment reportAttachment = null;
+		boolean latestBriefingPaper = false;
+		if (CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+          ScQtFinalizationReport latestScQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+          if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
+            latestBriefingPaper = true;
+          }
+		}
+		if (null != getManagedBean().getCurrentStatusId() && latestBriefingPaper
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
 						// 25638 - Start.
 						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
@@ -3596,6 +3649,7 @@ return	Meetingstatus;
 						)) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		    // #28834 - End.
 		} else {
 			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 
@@ -4762,7 +4816,6 @@ return	Meetingstatus;
 			scWorkFlowStatusSO = null;
 		}	
 	}
-	*/
 
 	private List<String> getRejectedRecommendDtlIds() {
 		List<String> rejectedRecommendDtlIds = null;
@@ -9621,6 +9674,22 @@ return	Meetingstatus;
 				}
 				// #25638 - End.
 			} else {
+			   
+			    // #28834 - Start.
+			    if (CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+			      ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+			      ScQtFinalizationReportAttachment reportAttachment = null;
+			      if (null != scQtFinalizationReport) {
+			        try {
+			          reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			        } catch (Exception e) {
+			          log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
+			        }
+			        scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			      }
+			    }
+	            // #28834 - End.
+	            
 				signOff();
 				updateBPMTaskBrief(outcome, null, reqDTO);
 			}
