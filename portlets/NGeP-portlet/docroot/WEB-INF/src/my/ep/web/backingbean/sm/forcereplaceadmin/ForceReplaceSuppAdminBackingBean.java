@@ -1322,7 +1322,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// selected old admin not exist
 				if (getManagedBean().getOldAdmin() == null) {
 					throw new EpException(MessageConst.ERROR_722594);
-				} else {
+				} /*else { // disable 28765 -> because
 					// [#26050] check if selected old admin does have any pending task - start
 					if (getManagedBean().getOldAdmin() != null) {
 						//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
@@ -1334,7 +1334,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 						}				
 					}
 					// [#26050] check if selected old admin does have any pending task - end
-				}
+				}*/
 
 				// selected old admin does not hold role as supplier admin
 				if (getManagedBean().getOldAdmin() != null) {
