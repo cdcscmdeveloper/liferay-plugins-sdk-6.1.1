@@ -42,9 +42,9 @@
 		<ui:param name="itemOnly"
 			value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />
 			
-			 <!-- #28834 Start new -->		  
+			 <!-- #28834 Starts new -->		  
 	  <ui:param name="checkDisableBfButtonAfterValidation" value="#{suppFinalizationBackingBean.checkDisableBfButtonAfterValidation()}" /> 	
-			 <!-- #28834 ends  new-->	
+			 <!-- #28834 end  new-->	
 
 		<p:messages id="supplierFinalization" showDetail="true"
 			showSummary="false"
@@ -236,7 +236,7 @@
 		</p:dialog>
 		<!-- ***28834 end -->
 		
-		<!-- ***28834 starts  new -->
+		<!-- ***28834 start  new -->
 			<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
 			width="30%" height="100" closable="false">
@@ -257,8 +257,8 @@
 					onclick="confirmBriefPopup1.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-		<!-- ***28834 ends new -->
-<!-- ***28834 starts  new -->
+		<!-- ***28834 end new -->
+<!-- ***28834 start  new -->
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -287,6 +287,6 @@
 	</ui:define>
 
 </ui:composition>
-<!-- ***28834 ends new -->
+<!-- ***28834 end new -->
 
 <!-- ***25201 -->
