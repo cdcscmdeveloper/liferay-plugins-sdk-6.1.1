@@ -2961,7 +2961,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
-		log.info("onTabChange(int selectedTabIndex) created org: " + getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().getOrgProfileId());
 		//28718 - start
 		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
 		//28718 - end
