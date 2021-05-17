@@ -2127,9 +2127,10 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 									String.valueOf(row[6]),//No Permohonan
 									row[7] != null ? row[7].toString() : "",//No Rujukan ,CR: #14203, Bug:#29454
 									row[12].toString(),//Jenis Terimaan-Kod
-									row[13].toString(),//Jenis Terimaan-Perihal
-									// #26307 - add card type
-									cardType,//Jenis Kad
+									//#14203 - uppercase perihal
+									row[13].toString().toUpperCase(),//Jenis Terimaan-Perihal
+									// #26307 start - add card type
+									cardType,// Jenis Kad
 									priceAmt ,//Harga
 									gstAmt,//GST
 									serviceCharge, // Caj Perkhidmatan 
