@@ -17,6 +17,55 @@
 						value="#{lbl['lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH']}" /></td>
 			</tr>
 		</table>
+		
+		<!-- #29592 - START -->
+		<table style="width: 100%;">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.ministry']}" /></td>
+				<td><ac:lov id="ministrySearchInputLovId" lovId="PM_ORG_PROFILE_MINSTRY"
+						headerText="#{lbl['lbl.pm.org.ptj.search.ministry.lov']}"
+						size="60" update="@form" readonly="true"
+						saveObject="cmReportsBackingBean.managedBean.selectedMinistryOrgProfile"
+						value="#{cmReportsBackingBean.managedBean.selectedMinistryOrgProfile.pmOrgValidity.orgName}"
+						postUpdateListener="cmReportsBackingBean.updateMinistrySearchCriteria" 
+						conditionField="#{cmReportsBackingBean.constructMinistryConditionFields()}">
+					</ac:lov> <ac:lovPopup /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}" /></td>
+				<td>
+					<ac:lov id="kptjSearchInputLovId" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search.kptj.lov']}"
+						size="60" update="@form" readonly="true"
+						disabled="#{cmReportsBackingBean.managedBean.selectedMinistryOrgProfile == null or cmReportsBackingBean.managedBean.selectedMinistryOrgProfile.pmOrgValidity == null or cmReportsBackingBean.managedBean.selectedMinistryOrgProfile.pmOrgValidity.orgName == null}"
+						saveObject="cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile"
+						value="#{cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity.orgName}"
+						postUpdateListener="cmReportsBackingBean.updateKPTJSearchCriteria"
+						conditionField="#{cmReportsBackingBean.constuctConditionFieldsForPTJGroup()}">
+					</ac:lov> <ac:lovPopup /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.rpt.ptj']}" /></td>
+				<td>
+					<ac:lov id="ptjSearchInputLovId" lovId="PM_ORG_PROFILE_PTJ"
+						headerText="#{lbl['lbl.pm.org.ptj.search']}"
+						disabled="#{cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile == null or cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity == null or cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity.orgName == null}"
+						size="60" update="@form" readonly="true"
+						saveObject="cmReportsBackingBean.managedBean.selectedPTJOrgProfile"
+						value="#{cmReportsBackingBean.managedBean.selectedPTJOrgProfile.pmOrgValidity.orgName}"
+						postUpdateListener="cmReportsBackingBean.updateSearchCriteria"
+						conditionField="#{cmReportsBackingBean.constuctConditionFieldsForPTJ()}">
+					</ac:lov> <ac:lovPopup /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}" /></td>
+				<td colspan="3"><p:inputText id="docNoSearchInput" size="40"
+						value="#{cmReportsBackingBean.managedBean.docNoSearchInput}"
+						 /> <ac:iconTooltip
+						value="#{lbl['lbl.cm.report.doc.no.search.field.tooltip']}" /></td>
+			</tr>
+		</table>
+		<!-- #29592 - END -->
 
 
 		<table style="margin-top: 5px; width: 100%;">
