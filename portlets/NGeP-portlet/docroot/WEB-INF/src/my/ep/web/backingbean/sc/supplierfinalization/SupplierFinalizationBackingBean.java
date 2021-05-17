@@ -2327,7 +2327,7 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 *  If the LoogedIn user is Secretary, then show pop-up confirmation during the Supplier Finalization submission.
 	 */
-	//28834 starts new
+	//28834 start new 
 	public void submitAction() {
 		ScQtMeeting scQtMeeting = new ScQtMeeting();
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
@@ -2384,7 +2384,7 @@ public class SupplierFinalizationBackingBean extends
 			this.submitSuppFinalization();
 		}
 	}
-	//28834 ends new
+	//28834 end new
 //28834 starts
 	public boolean changeMeetingStatusBrief() {
 		Boolean Meetingstatus= false;
@@ -2463,11 +2463,16 @@ return	Meetingstatus;
 				}
 				
 			}
-		return	remarksNotFound;			
-	}	
+		
+		
+		
+return	remarksNotFound;	
+		
+		
+	}
 	//28834  ends
 	
-	//28834 starts
+	//28834 start
 	 public boolean checkDisableBfButtonAfterValidation(){
 		 
 		    ScQt scQt = this.getManagedBean().getScQt();
@@ -2492,7 +2497,7 @@ return	Meetingstatus;
 	         return hidden;
 }
 	
-		//28834  ends	
+		//28834  end
 	
 	//28834 start
 		private SuppFinalizationReqDTO validateInfobreif(int index) {
