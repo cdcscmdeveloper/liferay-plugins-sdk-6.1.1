@@ -32,7 +32,9 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
+// #29592 - start
 import my.ep.web.bean.pm.ProfileManagementSearchBean;
+// #29592 - end
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.managedbean.BaseManagedBean;
