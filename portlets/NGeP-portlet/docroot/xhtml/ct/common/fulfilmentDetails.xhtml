@@ -5,6 +5,27 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<!-- #25002 start  -->
+	<style type="text/css">
+		.ui-datagrid-content-empty {
+    		 padding-top: 1px;
+    		 padding-right: 0px;
+    		 padding-left: 3px;
+   			 padding-bottom: 5px;
+   			 max-width : 140px;
+		}	
+	
+		.ui-datagrid-column{
+			padding-top: 1px;
+		    padding-right: 0px;
+		    padding-left: 3px;
+		    padding-bottom: 5px;
+		}	
+		
+	</style>
+	<!-- #25002 end -->
+
 	<p:panel id="fd" toggleable="true" collapsed="false" toggleSpeed="500">
 	<f:facet name="header">
 		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
@@ -223,7 +244,26 @@
 			     <h:outputText value="#{lbl['lbl.ct.has.agreement']}" />
 				 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement']}" />
 			 </h:panelGrid>
+	       </h:panelGrid>
+	       <!-- #25002 start -->
+		    <h:panelGrid columns="3">
+		     <h:outputText value="#{lbl['lbl.ct.approval.letter.of.pegawai']}" style="padding-top:3px;" escape ='false'/>
+		     <p:spacer width="2" />	
+		     <h:panelGrid columns="2">	
+		      <!-- ctBackingBean.managedBean.contractVer.ctContractAmount.ctPerformanceBonds -->
+		      <p:dataGrid id="ApprovalLetterPegawaiPengawal" value="#{ctBackingBean.getApprovalLetter()}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1" styleClass="ui-datagrid-content-empty"
+					emptyMessage ="#{lbl['lbl.txt.na']}">
+					
+						<h:commandLink value="#{attachFile.fileName}"
+									styleClass="blue_font"  action="#{ctBackingBean.commonDownload(attachFile.filePath, attachFile.fileName)}" />
+				
+				</p:dataGrid>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter.of.pegawai']}" style="padding-top:2px;" />
+				</h:panelGrid> 	
+		    
 	       </h:panelGrid>	
+		    <!-- #25002 end -->		
 	       <h:panelGrid columns="3" 
 	           rendered="#{false and !ctBackingBean.managedBean.directPurchase}">
 			  <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.contractVer.ctContract.mto}"
@@ -233,7 +273,9 @@
 				  <h:outputText value="#{lbl['lbl.ct.mto']}"  />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
-		   </h:panelGrid>		
+		   </h:panelGrid>	
+		   
+
 	    </h:panelGrid>
 	</h:panelGrid>
 	<p:outputPanel>
