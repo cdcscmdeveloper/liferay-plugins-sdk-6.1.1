@@ -4707,6 +4707,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 		
+		// #11134 - start
+		scLoa.setScLoaRemarks(filterSupplierRemarks(scLoa.getScLoaRemarks(), false));
+		// #11134 - end
+		
 		// bond calculation
 		//Enhancement #24259 #24269
 		scLoa = calcBondAmountWithSST(scLoa, true);
