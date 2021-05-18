@@ -29,11 +29,11 @@
 	</script>
 
 	<p:outputPanel id="opDefinedSearch">
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">			
+		<table style="width: 100%;">			
 			<tr>
-				<th width="15%"><p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
+				<td width="15%"><p:outputLabel value="#{lbl['lbl.pm.org.ptj.search.ministry']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
-				</th>
+				</td>
 				<td>
 					<ac:lov id="minstryPtjsearchRpt" lovId="PM_ORG_PROFILE_MINSTRY"
 						headerText="#{lbl['lbl.pm.org.ptj.search.ministry.lov']}" update="@form"
@@ -85,7 +85,6 @@
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 					</p:selectOneMenu></td>
 			</tr>
-			<br/><br/>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.rpt.month']}" /></td>
 				<td>
