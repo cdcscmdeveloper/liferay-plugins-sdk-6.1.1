@@ -22,9 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;//Enhancement 13847 - shaqimi
+import java.util.concurrent.TimeUnit;
 
-import my.ep.factory.EpLogger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -48,6 +47,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -84,6 +84,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -117,6 +118,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -148,6 +150,7 @@ import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SerializationUtils;
@@ -161,6 +164,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+//Enhancement 13847 - shaqimi
 //import my.ep.biz.service.ct.dtl.ContractItemSO;
 
 /**
@@ -4637,5 +4641,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 			}
-	//#30428 - End	
+	//#30428 - End
+	
+	  //#25002 - start
+		
+		public List<ScAttachment> getApprovalLetter(){
+			List<ScAttachment> listAttachments = new ArrayList<>();
+			IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+			listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
+			return listAttachments;
+		}
+		
+		//#25002 - end
 }  
