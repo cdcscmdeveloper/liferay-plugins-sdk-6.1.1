@@ -961,6 +961,11 @@
 			</tr>
 		</table>
 	</p:panel>
-	
+	<p:outputPanel id="remarksPanel">
+		<ac:scRemarkAndAttachment rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			showAttachment="false" 
+			readonly="true" />
+	</p:outputPanel>
 	<ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" />
 </ui:composition>
