@@ -145,30 +145,34 @@
 						<div style="display:inline-block;">
 							<h:panelGroup id="orgProfilePG">
 								<ui:fragment rendered="#{isFFCOrgType}">
+								<!-- 20210113@Jacky - Enhancement#28836 - Start -->
 							       <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="103" 
 							    	required="true" 
-							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
 					            	update=":form:orgProfilePG,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
-									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"									
+									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"									
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
 									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />	
+								<!-- 20210113@Jacky - Enhancement#28836 - End -->
 							    </ui:fragment>
-							    <ui:fragment rendered="#{isSupplierOrgType}">							    
+							    <ui:fragment rendered="#{isSupplierOrgType}">
+							    <!-- 20210113@Jacky - Enhancement#28836 - Start -->						    
 							        <ac:lov id="lovSuppOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="103" 
 							    	required="true" 
-							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+							    	label="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
 					            	update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 					            	disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
-									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.smSupplier.companyName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
 									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />
+							    <!-- 20210113@Jacky - Enhancement#28836 - End -->
 							    </ui:fragment>
 							     <ui:fragment rendered="#{isPTJOrgType or isKPTJOrgType}">								  
 							    	<h:panelGroup id="lovResOrg">
@@ -189,17 +193,19 @@
 									</h:panelGroup>
 							    </ui:fragment>
 							    <ui:fragment rendered="#{not isFFCOrgType and not isSupplierOrgType and not isPTJOrgType and not isKPTJOrgType}">		
+							        <!-- 20210113@Jacky - Enhancement#28836 - Start -->
 							        <ac:lov id="lovOtherOrg" lovId="PM_ORG_PROFILE" size="103"
 												required="true"
-												label="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+												label="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
 												update=":form:orgProfilePG, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
 												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null or profileManagementBackingBean.managedBean.disabledOrgFields}"
-												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov.name']}"
 												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}"
 												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />	
+							    <!-- 20210113@Jacky - Enhancement#28836 - End -->
 							    </ui:fragment>
 							</h:panelGroup>
 							</div>

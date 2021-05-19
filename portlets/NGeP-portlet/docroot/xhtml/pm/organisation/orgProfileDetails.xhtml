@@ -148,10 +148,14 @@
 					<td><p:selectBooleanCheckbox id="isGovtSellerCheckBoxId"
 							disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew}"
 							value="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
+							<!-- 20201105@Jacky - Enhancement#28836 - Start -->
 							<p:ajax  event="change" 
+								onstart="blockWidget.show()" 
+								oncomplete="blockWidget.hide()" 
 								listener="#{organisationBackingBean.govtSellerChange()}"
 								process="@this"
 								update="@form" />
+							<!-- 20201105@Jacky - Enhancement#28836 - Start -->
 						</p:selectBooleanCheckbox></td>
 				</ui:fragment>				
 			</tr>
