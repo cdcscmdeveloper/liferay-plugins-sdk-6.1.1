@@ -2367,8 +2367,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 						//END 27488
 						this.getManagedBean().getSmSupp().getSmAppl().setApplValidWithSsm(true);
-						//set establish date
-						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						//start - #29956
+						if (ssmResDTO.getSmCompanyBasic() != null) {
+							// set establish date
+							this.getManagedBean().getSmAppl().getSmCompanyBasic()
+									.setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						}
+						//end - #29956
 						
 						//CHECK EQUITY OWNER EXIT IN SSM TO DISABLE CHECKBOX
 						int i = 0;
