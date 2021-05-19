@@ -24,6 +24,8 @@ public class PpReportsManagedBean extends ReportBaseManagedBean {
 	private Long procurementTypeId;
 	private Integer status;
 	private boolean ministryMandatory;	//[#27197]
+	
+	private String documentType; //#27472
 
 	public PpReportsManagedBean() {
 	}
@@ -206,6 +208,16 @@ public class PpReportsManagedBean extends ReportBaseManagedBean {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	//START #27472
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+	//END #27472
 	
 	
 }

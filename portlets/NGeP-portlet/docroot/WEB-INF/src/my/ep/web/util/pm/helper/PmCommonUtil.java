@@ -2837,5 +2837,15 @@ public class PmCommonUtil implements Serializable{
 		UserResDTO resDTO = userSO.findUserRoleByUserRoleId(reqDTO);
 		return resDTO.getUserRole();
 	}
-
+	//START #27472 get list of roles
+	public static List<PmUserRole> getUserRolesByUserId(Long userId) {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserIds(new ArrayList<Long>());
+		reqDTO.getUserIds().add(userId);
+		
+		return userSO.retrieveUserRoleListByUserIds(reqDTO).getUserRoleList();
+	}
+	//END #27472
 }
