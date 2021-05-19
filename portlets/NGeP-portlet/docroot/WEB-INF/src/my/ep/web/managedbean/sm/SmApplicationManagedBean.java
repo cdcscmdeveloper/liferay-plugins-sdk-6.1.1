@@ -573,6 +573,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String roleCode;
 	// #29664 - end
 	
+	//#15629 - START
+	private List<PmReasonDesc> selectedRecommendReasonDescs;
+	private List<PmReasonDesc> recommendReasonDescList;
+	private List<PmReasonDesc> recommendReasonDescInitList;
+	private Long[] recommendReasonId;
+	private boolean recommendRejectReasonReqd;
+	private String searchRecommendRejectReason;
+	//#15629 - END
+	
 	private class RejectReasonPagingDataModel extends
 			PagingDataModel<PmReasonDesc> {
 		/**
@@ -4370,5 +4379,55 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
 	}
+	
+	//#15629 - START
+	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
+		return selectedRecommendReasonDescs;
+	}
+
+	public void setSelectedRecommendReasonDescs(List<PmReasonDesc> selectedRecommendReasonDescs) {
+		this.selectedRecommendReasonDescs = selectedRecommendReasonDescs;
+	}
+
+	public List<PmReasonDesc> getRecommendReasonDescList() {
+		return recommendReasonDescList;
+	}
+
+	public void setRecommendReasonDescList(List<PmReasonDesc> recommendReasonDescList) {
+		this.recommendReasonDescList = recommendReasonDescList;
+	}
+
+	public List<PmReasonDesc> getRecommendReasonDescInitList() {
+		return recommendReasonDescInitList;
+	}
+
+	public void setRecommendReasonDescInitList(List<PmReasonDesc> recommendReasonDescInitList) {
+		this.recommendReasonDescInitList = recommendReasonDescInitList;
+	}
+
+	public Long[] getRecommendReasonId() {
+		return recommendReasonId;
+	}
+
+	public void setRecommendReasonId(Long[] recommendReasonId) {
+		this.recommendReasonId = recommendReasonId;
+	}
+
+	public boolean isRecommendRejectReasonReqd() {
+		return recommendRejectReasonReqd;
+	}
+
+	public void setRecommendRejectReasonReqd(boolean recommendRejectReasonReqd) {
+		this.recommendRejectReasonReqd = recommendRejectReasonReqd;
+	}
+
+	public String getSearchRecommendRejectReason() {
+		return searchRecommendRejectReason;
+	}
+
+	public void setSearchRecommendRejectReason(String searchRecommendRejectReason) {
+		this.searchRecommendRejectReason = searchRecommendRejectReason;
+	}
+	//#15629 - END
 
 }

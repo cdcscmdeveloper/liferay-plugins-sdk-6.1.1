@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm.sdoreview;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPendingPoWeightage;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -95,6 +97,22 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			mofReqDTO.setSmAppl(getManagedBean().getSmAppl());
 			SmAppl latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveLatestRejectedApplication(mofReqDTO).getSmAppl();
+			
+			//	Refs #15629 - Start - 5/2/2021
+			if(!EntityHelper.isCollectionEmpty(latestRejectedAppl
+					.getSmApplRejectReasons())){
+
+				Iterator<SmApplRejectReason> smApplRejectReasonIter = latestRejectedAppl
+						.getSmApplRejectReasons().iterator();
+			    while(smApplRejectReasonIter.hasNext()){
+			    	SmApplRejectReason smApplRejectReason = smApplRejectReasonIter.next();
+			        if(smApplRejectReason.isReasonByPo()){
+			        	smApplRejectReasonIter.remove();
+			          }
+			      }
+			}
+			// Refs #15629 - End - 5/2/2021
+			
 			getManagedBean().setRejectReasonsMsg(
 					SmCommonUtil
 							.getHtmlApplicationRejectReasons(latestRejectedAppl
