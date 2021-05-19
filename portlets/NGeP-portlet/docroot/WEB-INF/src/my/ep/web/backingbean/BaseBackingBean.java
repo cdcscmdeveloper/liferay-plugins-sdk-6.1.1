@@ -1299,9 +1299,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		
 		filePath += "/" + path;
-		//#25002 - start to trace download path for approval letter
-		log.info("#25002 test filepath"+filePath);
-		//#25002 - end
 		commonDownloadUtil(filePath, displayFileName);
 		
 		return null;
@@ -1324,7 +1321,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		InputStream docInputStream = null;
 		try {
-			URLConnection uc = new URL(filePath).openConnection();
+			URLConnection uc = new URL("file:///C://"+filePath).openConnection();//192.168.8.145
+			
+			log.info("ZAIM getURL "+uc.getURL().toString());
 			docInputStream = new BufferedInputStream(uc.getInputStream());
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
