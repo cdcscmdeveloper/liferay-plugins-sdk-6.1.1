@@ -15453,4 +15453,16 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//12492 - END
+	//  #28720 - Start
+	public void onChangeEmail()
+	{
+		String email = getManagedBean().getSelectedShareHolder().getEmail().toLowerCase();
+		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		{
+			getManagedBean().getSelectedShareHolder().setEmail("");
+			RequestContext.getCurrentInstance().execute(
+					"emailPopUpWidgetVar.show()");
+		}
+	}
+	//  #28720 - End
 }

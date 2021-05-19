@@ -746,5 +746,18 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 		}
 	}
+	// #28720 Start
+	public void onChangeEmail()
+	{
+		// managedBean.selectedAdmin.email
+		String email = this.getManagedBean().getSelectedAdmin().getEmail().toLowerCase();
+		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		{
+			this.getManagedBean().getSelectedAdmin().setEmail("");
+			RequestContext.getCurrentInstance().execute(
+					"emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 
 }

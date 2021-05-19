@@ -330,6 +330,7 @@
 							disabled="#{backingBean.managedBean.disableIcEmail}" validator="#{backingBean.validateEmail}"
 							value="#{backingBean.managedBean.selectedShareHolder.email}" size="35">
 							<p:ajax process="@this" update="@this" partialSubmit="true" event="blur" />
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeEmail()}" update="emailInputPanelId"/> 
 							<f:param name="disableValidate" value="true" />
 						</p:inputText> 
 					</p:outputPanel>
@@ -742,6 +743,9 @@
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
+	
+	<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+				btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	
 	<ac:confirmationPopup id="equiJobFunctionDeletePopUpId"
 		widget="equiJobFunctionDeletePopUp"
@@ -1456,7 +1460,4 @@
 			</table>
 		</p:scrollPanel>
 	</p:dialog>
-
-
-
 </ui:composition>

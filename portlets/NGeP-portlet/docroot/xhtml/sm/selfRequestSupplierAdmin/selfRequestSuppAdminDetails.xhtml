@@ -397,6 +397,7 @@
 							<f:validateRegex 
 								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							<p:ajax process="@this" partialSubmit="true"/>
+							<p:ajax event="change" process="@this" listener="#{selfRequestSupplierAdminBackingBean.onChangeEmail()}" update="suppAdminEmail"/> 
 						</p:inputText> 
 					</p:outputPanel>
 					&#160; <p:graphicImage id="tooltip2"
@@ -490,6 +491,8 @@
 				</td>
 			</tr>
 		</table>
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</p:panel>
 
 </ui:composition>
