@@ -1299,7 +1299,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		
 		filePath += "/" + path;
-
+		//#25002 - start to trace download path for approval letter
+		log.info("#25002 test filepath"+filePath);
+		//#25002 - end
 		commonDownloadUtil(filePath, displayFileName);
 		
 		return null;
