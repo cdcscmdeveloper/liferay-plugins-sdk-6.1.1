@@ -25,6 +25,8 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.helper.Paginator;
@@ -169,7 +171,10 @@ public class SmBulkApplicationBackingBean extends
 
 	public void rejectBulkApplication() {
 		setSelectedRejectedResonsToVO();
-		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+		// #15629 -- start - 20/1/2020
+		//		RequestContext.getCurrentInstance().execute("rejectDialog.show();");
+		submitReject();
+		// #15629 -- end - 20/1/2020
 	}
 
 	public void submitReject() {
@@ -221,7 +226,9 @@ public class SmBulkApplicationBackingBean extends
 						bulkAppl.getAppl());
 			}
 		}
-		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
+		// #15629 -- start - 20/1/2020
+		//		RequestContext.getCurrentInstance().execute("rejectDialog.hide();");
+		// #15629 -- end - 20/1/2020
 		showSuccessApplicationMsg(successSubmittedList, "REJECT");
 	}
 
@@ -453,7 +460,11 @@ public class SmBulkApplicationBackingBean extends
 	public void searchRejectedReason(SmBulkApplicationVO vo) {
 
 		// reset selected reject reason during search
-		vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+		//		#15629 -- start - 19/1/2020
+		if(EntityHelper.isCollectionEmpty(vo.getSelectedReasonDescs())){
+			vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+		} 
+		//		#15629 -- end - 19/1/2020
 
 		// reset selected reject reason remarks during search
 		verifySelectedRejectReasons(vo);
@@ -587,6 +598,18 @@ public class SmBulkApplicationBackingBean extends
 	private void setSelectedRejectedResonsToVO() {
 		for (SmBulkApplicationVO vo : getManagedBean().getSelectedTasks()) {
 			vo.setSelectedReasonDescs(new ArrayList<PmReasonDesc>());
+			//			#15629 -- start - 19/1/2020
+			if(!EntityHelper.isCollectionEmpty(vo.getAppl().getSmApplRejectReasons())) {
+				
+				for(SmApplRejectReason smApplRejectReason : vo.getAppl().getSmApplRejectReasons()){
+						for(PmReasonDesc pmReasonDesc : getManagedBean().getReasonDescList()){
+							if(smApplRejectReason.getPmReason().getReasonId().equals(pmReasonDesc.getPmReason().getReasonId())){
+								vo.getSelectedReasonDescs().add(pmReasonDesc);
+							}
+						}			
+				}
+			}
+			//			#15629 -- end - 19/1/2020
 			vo.setReasonDescList(getManagedBean().getReasonDescList());
 		}
 	}
@@ -703,7 +726,10 @@ public class SmBulkApplicationBackingBean extends
 				bulkApplicationVO.setPo(SmCommonUtil.getUserByUserId(poRev
 						.getChangedBy()));
 				bulkApplicationVO.setReceivedDate(poRev.getChangedDate());
-
+			    //#15629 - Start
+				bulkApplicationVO.setRejectReasons(StringUtils.isNotBlank(getApplicationRejectionReason(appl)) ?
+						getApplicationRejectionReason(appl) : "N/A");
+			    //#15629 - End
 				if (poRev.getRecommendation().equalsIgnoreCase("Approve")
 						|| poRev.getRecommendation().equalsIgnoreCase("Lulus")) {
 					poRecommend = "APPROVE";
@@ -851,4 +877,62 @@ public class SmBulkApplicationBackingBean extends
 		}
 		return payReq;
 	}
+	
+	/**
+	 * Get application rejection reasons
+	 * 
+	 * @return String
+	 */
+	private String getApplicationRejectionReason(SmAppl smAppl) {
+		String rejectReasons = StringUtils.EMPTY;
+		if (smAppl.isActiveAppl()
+				&& smAppl.isResubmit()
+				&& smAppl.getOriginalAppl() != null) {
+
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			mofReqDTO.setSmAppl(smAppl);
+			List<SmApplRejectReason> rejectReasonList = SmServiceLookup
+					.getMofRegistrationSO()
+					.retrieveLatestRejectedApplicationRejectReasons(mofReqDTO)
+					.getRejectReasons();
+			rejectReasons = SmCommonUtil
+					.getHtmlApplicationRejectReasons(rejectReasonList);
+
+			if (StringUtils.isBlank(rejectReasons)) {
+				rejectReasons = SmApplicationUtil.getSmRemarksByDocTypeAndId(
+						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+						smAppl.getOriginalAppl()
+								.getApplId());
+			}
+
+		} else {
+			if (smAppl.getApplType()
+					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				SmRemarksReqDTO remarkReqDTO = new SmRemarksReqDTO();
+				remarkReqDTO.setDocId(smAppl.getApplId());
+				remarkReqDTO
+						.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT);
+				SmRemaksResDTO remarkResDTO = SmServiceLookup.getSmRemarksSO()
+						.retrieveSmRemarksByDocument(remarkReqDTO);
+				if (!EntityHelper.isCollectionEmpty(remarkResDTO
+						.getRemarksList())) {
+					rejectReasons = remarkResDTO.getRemarksList().get(0)
+							.getRemark();
+				}
+			} else {
+				rejectReasons = SmCommonUtil
+						.getHtmlApplicationRejectReasons(smAppl.getSmApplRejectReasons());
+
+				if (StringUtils.isBlank(rejectReasons)) {
+					rejectReasons = SmApplicationUtil
+							.getSmRemarksByDocTypeAndId(
+									ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
+									smAppl.getApplId());
+				}
+			}
+		}
+		log.info("HTML REJECT REASON:" + rejectReasons);
+		return rejectReasons;
+	}
+
 }

@@ -97,7 +97,12 @@
 					
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="white-space: normal;">
-					<h:outputText value="#{tasks.poRecommendation}" />
+				<h:outputText value="#{tasks.poRecommendation}" />
+				<br /><br />
+				<!-- #15629 - Start -->
+				<h:outputText value="#{lbl['lbl.sm.rejection.reasons.bulk']} :&lt;br/&gt;#{tasks.rejectReasons}" escape ="false" rendered="#{not empty tasks.rejectReasons}"/>
+				<!-- #15629 - End  -->
+				<br />
 				</p:column>
 			</p:dataTable>
 
@@ -114,13 +119,15 @@
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.approveBulkApplication}" />
 				&#160;
-			<p:commandButton
+			<!-- #15629 start -->
+		    <p:commandButton
 				value="#{lbl['lbl.btn.reject']}"
 				id="rejectBtnId" update="@form" onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()" process="@this"
+				oncomplete="blockWidget.hide()" process="@this,:#{p:component('resultPanelId')}"
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.rejectBulkApplication}" />
 			&#160;
+			<!-- #15629 end -->
 			<p:commandButton
 				disabled="#{empty bulkApplicationBackingBean.managedBean.selectedTasks}"
 				action="#{bulkApplicationBackingBean.onReleaseBpmTask}" process="@this"
