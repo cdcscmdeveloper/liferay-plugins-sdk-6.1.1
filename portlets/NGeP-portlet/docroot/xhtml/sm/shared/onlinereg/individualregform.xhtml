@@ -304,6 +304,7 @@
 						value="#{registrationBackingBean.managedBean.smPersonnel.email}" validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+ 							<p:ajax event="change" process="@this" listener="#{registrationBackingBean.onChangeEmail()}" update="usrEmail"/> 
 					</p:inputText> &#160;
 					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="emailtt" for="emailti">
@@ -320,12 +321,17 @@
 				</td>
 				<td class="tdContent">
 				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" 
-				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80"/>
+				required="#{!empty param['disableValidation']}"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80">
+				<p:ajax event="change" process="@this" listener="#{registrationBackingBean.onChangeConfirmEmail()}" update="conEmail"/>
+				</p:inputText>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
 	</table>
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 	</c:if>
+	<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+				btnOkLabel="#{lbl['lbl.btn.ok']}" />
+	
 	</p:panel>
 </ui:composition>

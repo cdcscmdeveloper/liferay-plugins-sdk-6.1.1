@@ -493,7 +493,7 @@
 					</tr>
 					<tr>
 						<th width="20%"><p:outputLabel
-								value="#{lbl['lbl.pm.profiles.userdetails.email']}" /> <p:outputLabel
+								value="#{lbl['lbl.pm.profiles.userdetails.email']} KKKK" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 						<td><p:inputText id="itEmail"
 								required="#{!empty param['disableValidation']}" maxlength="80"
@@ -504,6 +504,8 @@
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
 									pattern="^[_'A-Za-z0-9-\+]+(\.[_'A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="change" process="@this" listener="#{profileManagementBackingBean.onChangeEmail()}" update="itEmail"/> 
+							
 							</p:inputText> &#160; <p:graphicImage id="giEmail"
 								value="/css/images/design/ico-tooltips.png" /> <p:tooltip
 								for="giEmail" id="ttEmail"
@@ -573,7 +575,8 @@
 			</p:outputPanel>
 		</h:panelGrid>
 		<ac:lovPopup />
-		
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</p:panel>
 
 	<!-- Upload Image Popup -->

@@ -73,6 +73,7 @@
 					size="40" required="true" >
 					<f:validateRegex
 				pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					<p:ajax event="change" process="@this" listener="#{reactivateBasicBackingBean.onChangeEmail()}" update="email"/> 
 					</p:inputText>
 				<p:message id="emailMsg" for="email"
 					showSummary="true" showDetail="false" display="icon" /></td>
@@ -83,7 +84,8 @@
 		<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
 					action="#{reactivateBasicBackingBean.reactivateBasic}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 	</div>
-
+	<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
 
 

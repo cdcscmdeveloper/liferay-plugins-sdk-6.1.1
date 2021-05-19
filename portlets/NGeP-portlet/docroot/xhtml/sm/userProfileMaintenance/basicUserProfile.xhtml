@@ -200,6 +200,7 @@
 							size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 							<f:validateRegex
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="change" process="@this" listener="#{smPersonnelBackingBean.onChangeEmail()}" update="basicBUEmail"/> 
 							</p:inputText>
 						<p:message id="basicBUEmailMsg" for="basicBUEmail"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -733,6 +734,7 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
-		
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
 </ui:composition>
