@@ -22,8 +22,8 @@
 
 			<!-- #29592 - START -->
 			<tr>
-				<td style="padding-bottom: 20px; width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ministry']}" /></td>
-				<td width="35%"><ac:lov id="ministrySearchInputLovId" lovId="PM_ORG_PROFILE_MINSTRY"
+				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ministry']}" /></td>
+				<td width="60%"><ac:lov id="ministrySearchInputLovId" lovId="PM_ORG_PROFILE_MINSTRY"
 						headerText="#{lbl['lbl.pm.org.ptj.search.ministry.lov']}"
 						size="100" update="@form" readonly="true"
 						saveObject="cmReportsBackingBean.managedBean.selectedMinistryOrgProfile"
@@ -34,8 +34,8 @@
 			</tr>
 			
 			<tr>
-				<td style="padding-bottom: 20px; width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}" /></td>
-				<td width="35%">
+				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.kumpulan.ptj']}" /></td>
+				<td width="60%">
 					<ac:lov id="kptjSearchInputLovId" lovId="PM_ORG_PROFILE_KUMPULAN_PTJ"
 						headerText="#{lbl['lbl.pm.org.ptj.search.kptj.lov']}"
 						size="100" update="@form" readonly="true"
@@ -48,8 +48,8 @@
 			</tr>
 			
 			<tr>
-				<td style="padding-bottom: 20px; width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ptj']}" /></td>
-				<td width="35%">
+				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ptj']}" /></td>
+				<td width="60%">
 					<ac:lov id="ptjSearchInputLovId" lovId="PM_ORG_PROFILE_PTJ"
 						headerText="#{lbl['lbl.pm.org.ptj.search']}"
 						disabled="#{cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile == null or cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity == null or cmReportsBackingBean.managedBean.selectedKumpulanPTJOrgProfile.pmOrgValidity.orgName == null}"
