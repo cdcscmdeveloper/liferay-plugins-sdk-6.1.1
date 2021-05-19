@@ -2941,7 +2941,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 						if (errMsg) {
 							this.getManagedBean().setStatusDescFromSSM(sb.toString());
-							//throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+							throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
 						}
 						
 					// #29582- end
