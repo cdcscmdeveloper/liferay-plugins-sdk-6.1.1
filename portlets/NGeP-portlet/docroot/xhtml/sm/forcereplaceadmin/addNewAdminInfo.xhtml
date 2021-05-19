@@ -35,11 +35,12 @@
 				<!-- #28765 -->
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="@this" 
 					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
-					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"/>
+					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					<ac:confirmationPopup id="declareDeletePopUpId"
 		widget="declareDeletePopUp"
 		okAction="forceReplaceSuppAdminBackingBean.declare()"
-		width="400" height="100"
+		width="400" height="150"
 		title="#{lbl['lbl.msg.confirm.declare.header']}"
 		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
 		update=":form"/>

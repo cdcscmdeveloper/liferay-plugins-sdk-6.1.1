@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.forcereplaceadmin;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,15 +12,10 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -29,12 +23,32 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+//#28765 - Start
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import java.util.Calendar;
+import java.util.Iterator;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
+import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
+import my.ep.persistence.entity.sm.SmSoftcertDoc;
+import my.ep.persistence.entity.sm.SmSoftcertDocFile;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.SoftcertUploadSuppDocVO;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.FileUploadEvent;
 //#28765 - End
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -47,15 +61,13 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDoc;
-import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -67,8 +79,6 @@ import my.ep.web.vo.ReactivateSupplierVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
-//#28765 - Start
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -276,6 +286,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER))) {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 					.inactiveSupplierRole(getOldAdminReqDTO());
+		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
+				(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+				getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+			getManagedBean().setBypassFlag1(1);
 		}
 		//#28765 - End
 		redirectToSuccessPage(resDto);
@@ -367,6 +381,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		getManagedBean().getReactivateBasic().setShowEmailInput(false);
 		getManagedBean().setNewAdmin(null);
 		getManagedBean().setOldAdmin(null);
+		//28765 - START
+		if(getManagedBean().getSmReplaceSupplierAdminDocs() != null){
+			getManagedBean().getSmReplaceSupplierAdminDocs().clear();
+		}
+		//28765 - END
 		return "forceReplaceAdmin.xhtml";
 	}
 
@@ -1307,7 +1326,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		// selected old admin not exist
 				if (getManagedBean().getOldAdmin() == null) {
 					throw new EpException(MessageConst.ERROR_722594);
-				} else {
+				} /*else { // disable 28765 -> because
 					// [#26050] check if selected old admin does have any pending task - start
 					if (getManagedBean().getOldAdmin() != null) {
 						//log.info("[#26050] Old Admin login Id: " + getManagedBean().getOldAdmin().getPmUser().getLoginId());
@@ -1319,7 +1338,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 						}				
 					}
 					// [#26050] check if selected old admin does have any pending task - end
-				}
+				}*/
 
 				// selected old admin does not hold role as supplier admin
 				if (getManagedBean().getOldAdmin() != null) {
@@ -1391,7 +1410,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null));
 			}
 			getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
-			
+			getManagedBean().setSmAppl(appl);
 			if(getManagedBean().getBypassFlag1()==1 || getManagedBean().getBypassFlag2()==1) {
 				getManagedBean().setBypassFlag(true);
 				executeDecision();
