@@ -509,9 +509,9 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	public String saveAgreement(String action) throws Exception {
 		IAgreementSO agreementSO = null;
 		try {
-			
+			System.out.println("Bug #30924 before validateAgreement");
 			validateAgreement(action);
-
+			System.out.println("Bug #30924 after validateAgreement");
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 
@@ -522,7 +522,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				reqDTO.setAgreementType(ContractConst.AGREEMENT);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 			}
-
+			
+			System.out.println("Bug #30924 1.0");
 			getManagedBean().getCtAgreement().setCtContract(getManagedBean().getCtContract());
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(action);
@@ -530,10 +531,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 
+			System.out.println("Bug #30924 2.0");
 			if(getManagedBean().getCtAgreement().getCtSignParties().size() > 0) {
 				getManagedBean().getCtAgreement().getCtSignParties().clear();
 			}
 
+			System.out.println("Bug #30924 3.0");
 			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtAgencySigner());
 			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSupplierSigner());
 			getManagedBean().getCtAgreement().getCtSignParties().addAll(getManagedBean().getCtSignAgencyWitness());
@@ -541,6 +544,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 			// Generate agreement File
 			//#28715
+			System.out.println("Bug #30924 4.0");
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_AGREEMENT_HT_NAME)
 					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				generateAgreementFile();
@@ -548,6 +552,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				getManagedBean().getCtAgreement().setFileName(agreementZipFileName);
 			}
 
+			System.out.println("Bug #30924 5.0");
 			Long statusId = getManagedBean().getCtAgreement().getStatus().getStatusId();
 			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -562,6 +567,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
 
+			System.out.println("Bug #30924 6.0");
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -593,6 +599,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					messageId = MessageConst.INFO_700001;
 				}
 
+				System.out.println("Bug #30924 7.0");
 				if (!isBrandNew) {
 					if(StringUtils.isNotBlank(nextRole)){
 						PmRoleDesc roleDesc = RoleHelper.getInstance().getRoleDescByCode(nextRole);
@@ -610,6 +617,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					}
 				}
 
+				System.out.println("Bug #30924 8.0");
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
 					renewSesionObject();
@@ -624,6 +632,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					}
 					ContractAgreementResDTO agreementResDTO = agreementSO.retrieveAgreement(agreementReqDTO);
 					setCtAgreementDetails(agreementResDTO);
+					System.out.println("Bug #30924 9.0");
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
@@ -645,6 +654,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 */
 	private void validateAgreement(String outcome) {
 		// Validate for Revise's Remarks
+		System.out.println("Bug #30924 revise");
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			if (getManagedBean().getRemarkList().get(0).getRemark() == null  
 					|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
@@ -654,7 +664,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}
-
+		System.out.println("Bug #30924 save");
 		if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 			if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() == null  
 					|| getManagedBean().getAgreementContractVer().getContractPhysicalNo().isEmpty()) {
