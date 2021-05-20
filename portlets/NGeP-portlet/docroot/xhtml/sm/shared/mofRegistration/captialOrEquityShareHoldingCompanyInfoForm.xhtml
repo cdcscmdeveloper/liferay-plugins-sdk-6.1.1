@@ -89,7 +89,8 @@
 									style="float:left" />
 								<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
 							</f:facet>
-							<p:inputText value="#{equiBean.shareAmt}">
+							<!-- #30660 - disable edit -->
+							<p:inputText value="#{equiBean.shareAmt}" disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax event="blur" update="eqiComDt"
@@ -227,9 +228,9 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<!-- #28466 start - remove #27308 showstopper -->
-					<td><p:inputText id="equiCompShrAmt"
-							disabled="#{!backingBean.managedBean.valueReqd}"
+					<!-- #28466 start - remove #27308 showstopper #30660 - disable edit -->
+					<td><p:inputText id="equiCompShrAmt" 
+							disabled="#{backingBean.managedBean.disAllowOwnerEdit or !backingBean.managedBean.valueReqd}"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.equiComp.shrAmt']}"
 							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}"
