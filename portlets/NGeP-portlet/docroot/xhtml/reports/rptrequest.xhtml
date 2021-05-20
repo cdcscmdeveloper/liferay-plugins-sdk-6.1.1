@@ -5,7 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="resourceSection">
 	
@@ -36,15 +37,15 @@
 			<tr>
 	
 				<td width="42%" valign="top">
-					
+					<!-- 14076 -start- -->
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.rpt.quegen.instruction']}" escape="false" style="margin-left:12px;" />
+					<!-- 14076 -end- -->
 					<table width="100%">
 					
 						<tr style="background-color:#f4f4f4;">
-						
-							<td>
-<!-- 								<p:commandButton action="target" icon="ui-icon-arrowthick-1-w" onclick="window.history.back();"/> -->
-							</td>
-						
+
+							<td></td>
+
 							<td style="text-align: right;">
 							
 								<p:commandButton value="#{lbl['lbl.btn.refresh']}"
@@ -75,6 +76,12 @@
 									<p:column headerText="#{lbl['lbl.rpt.reportName']}" style="padding-left:8px!important;">
 										<h:outputText value="#{rptRequestBackingBean.getReportName(rptRequest.reportCode)}"/>
 									</p:column>
+									
+									<!-- 14076 -start- -->
+									<p:column headerText="#{lbl['lbl.td.doc.no']}" style="text-align:center;">
+    									<h:outputText value="#{fn:replace(rptRequestBackingBean.getDocumentsNo(rptRequest.requestId),',','&lt;/br&gt;')}" escape="false"/> 																				
+									</p:column>
+									<!-- 14076 -end- -->
 	
 									<p:column headerText="#{lbl['lbl.rpt.requestId']}" style="text-align:center;">
 										<h:outputText value="#{rptRequest.requestId}" style="text-align:center;"/>
