@@ -3744,10 +3744,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								ScQtApprovalRemark.class));
                     	}
                          }else{
+                        	 if(!isApprovalScreen()){//13344_start
                         	 qtApproval.setScQtApprovalRemarks(initializeRemarks(
      								qtApproval, scQt.getCurrentWorkFlowStatus(),
      								qtApproval.getScQtApprovalRemarks(),
      								ScQtApprovalRemark.class)); 
+                        	 }//13344_End
                          }
 						// qtApproval.setScQtApprovalAttachment(null);
 						// qtApproval.setScQt(this.getManagedBean().getQt());
