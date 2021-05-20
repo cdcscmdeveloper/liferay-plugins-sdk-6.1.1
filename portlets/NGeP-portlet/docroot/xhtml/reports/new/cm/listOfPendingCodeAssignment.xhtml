@@ -20,7 +20,6 @@
 
 		<table style="margin-top: 5px; width: 100%;">
 
-			<!-- #29592 - START -->
 			<tr>
 				<td style="width: 15%;"><p:outputLabel value="#{lbl['lbl.rpt.ministry']}" /></td>
 				<td width="60%"><ac:lov id="ministrySearchInputLovId" lovId="PM_ORG_PROFILE_MINSTRY"
@@ -69,6 +68,8 @@
 						value="#{lbl['lbl.cm.report.doc.no.search.field.tooltip']}" /></td>
 			</tr>
 			
+			<!-- For #29592, swapped the positions of Item type with Date From/Date To search fields -->
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}" /></td>
 				<td><p:selectOneMenu
@@ -83,7 +84,11 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<!-- #29592 - END -->
+
+			<!-- For #29592, modified the width of Date From/Date To search field labels from
+			fixed value of 15% to current value. Also modified the width of the search field
+			of Date From/Date To from fixed value of 35% to their respective current values
+			(where applicable)-->
 
 			<tr>
 				<td width="15%"><p:outputLabel
@@ -95,7 +100,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 
 					</p:calendar></td>
-				<td width="5%"><p:outputLabel value="#{lbl['lbl.rpt.dtTo']}" />
+				<td width="10%"><p:outputLabel value="#{lbl['lbl.rpt.dtTo']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td width="35%"><p:calendar showOn="button" navigator="true"
 						readonlyInput="true" size="9"
@@ -104,7 +109,6 @@
 
 					</p:calendar></td>
 			</tr>
-			
 			
 			
 
