@@ -4737,8 +4737,8 @@ return	remarksNotFound;
 									/* Enhancement #21694 END*/
 								}else if (recommendDtlId != null
 									&& supplierId != null
-									&& supplierId.compareTo(currentSupplierId) == 0
-									&& specZoneId == evaZoneId
+									&& supplierId.equals(currentSupplierId)//#11134 - fix change to object comparator
+									&& specZoneId.equals(evaZoneId)//#11134 - fix change to object comparator
 									&& (recommendDtl.getRecordStatusFlg().equals(
 												DbValueConst.RECORD_STATUS_REJECTED))) {
 								//#11134 - add new param
