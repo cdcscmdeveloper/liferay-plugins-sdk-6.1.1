@@ -23,6 +23,14 @@
 		    padding-bottom: 5px;
 		}	
 		
+		a.blue_font_wrap {
+			font-family: Tahoma, Arial;
+			font-size: 11px;
+			font-weight: bold;
+			color: #3c8bc2;
+			text-decoration: none;
+			overflow-wrap: anywhere;
+		}
 	</style>
 	<!-- #25002 end -->
 
@@ -256,7 +264,7 @@
 					emptyMessage ="#{lbl['lbl.txt.na']}">
 					
 						<h:commandLink value="#{attachFile.fileName}"
-									styleClass="blue_font"  action="#{ctBackingBean.downloadFile(attachFile)}" />
+									styleClass="blue_font_wrap"  action="#{ctBackingBean.downloadFileSCAttachment(attachFile)}" />
 				
 				</p:dataGrid>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.approval.letter.of.pegawai']}" style="padding-top:2px;" />
