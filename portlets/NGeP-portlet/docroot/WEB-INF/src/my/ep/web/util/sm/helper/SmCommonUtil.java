@@ -4428,7 +4428,7 @@ public class SmCommonUtil {
 					}
 				}
 				if (errMsg) {
-//					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
 				}
 			}//#29582- end
 			
