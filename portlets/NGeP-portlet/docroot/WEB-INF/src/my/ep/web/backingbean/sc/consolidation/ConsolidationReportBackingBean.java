@@ -1016,7 +1016,9 @@ public class ConsolidationReportBackingBean extends
 			}
 			reqDTO.setQtId(qtId);
 			reqDTO.setScQtFinalization(scQtFinalization);
-
+			 //28834 start
+			reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+			//28834 ends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveFinalizationReports(reqDTO);
 			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
