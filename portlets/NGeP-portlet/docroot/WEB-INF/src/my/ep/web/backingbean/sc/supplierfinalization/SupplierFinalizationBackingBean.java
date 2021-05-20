@@ -3561,7 +3561,9 @@ return	remarksNotFound;
 			}
 			reqDTO.setQtId(qtId);
 			reqDTO.setScQtFinalization(scQtFinalization);
-
+			//28834 start
+			reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+			//28834 ends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveFinalizationReports(reqDTO);
 			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
@@ -3659,6 +3661,22 @@ return	remarksNotFound;
 				}
 				
 				// 28834 - ends.
+
+
+//28834 starts
+		String decisionTypeCode1 = scQtFinalization.getDecision()
+				  .getParameterCode();
+			log.info("decision" + decisionTypeCode1);
+			if (ParameterConst.DECISION_RBP.equals(decisionTypeCode1)) {
+				for (ScQtFinalizationReport report : finalizationReports) {
+					if (report.isBrandNew()) {// find the correct additional
+												// condition
+						finalizationReports.remove(report);
+						break;
+					}
+				}
+			}
+			//28834 ends
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
 			
