@@ -2297,6 +2297,20 @@ public class SupplierFinalizationBackingBean extends
 		finalizationReports.addAll(this.getManagedBean().getDocumentList());
 		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 		scQtFinalization.setScQtFinalizationReports(finalizationReports);
+		//28834 starts
+		String decisionTypeCode1 = scQtFinalization.getDecision()
+				  .getParameterCode();
+			log.info("decision" + decisionTypeCode1);
+			if (ParameterConst.DECISION_RBP.equals(decisionTypeCode1)) {
+				for (ScQtFinalizationReport report : finalizationReports) {
+					if (report.isBrandNew()) {// find the correct additional
+												// condition
+						finalizationReports.remove(report);
+						break;
+					}
+				}
+			}
+			//28834 ends
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		log.info("currentStatusId === "+currentStatusId);
 		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
@@ -3070,9 +3084,9 @@ return	remarksNotFound;
 		EpException epException = null;
 		
 		 // #27502  //#29699  //28780#52
-		//27502 - Start.
-		if ((getManagedBean().isBpkCentralContract() || !getManagedBean().isInitialDecisionFwdToBPK()) && 
-				this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
+		//27502 - Start //28834 starts.
+		if ((getManagedBean().isBpkCentralContract() || !getManagedBean().isInitialDecisionFwdToBPK()) && null !=this.getManagedBean().getEndorsementReport()
+				&& this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
 			throw new EpException(MessageConst.ERROR_775150,new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.committee.endorsement.report",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -3604,13 +3618,36 @@ return	remarksNotFound;
 				totalFinalizationRounds = totalFinalizationRounds - findReviseBpCount();
                 // #28834 - End.
 				finalizationReports.removeAll(endorsementReports);
-				if (endorsementReportCount < totalFinalizationRounds) {
+				
+				// 28834 - starts.
+				int meetingStatusOtherThanDonecount = 0;
+	            List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
+	            if (CollectionUtils.isNotEmpty(meetingListList)) {
+	              for (ScQtMeeting meeting : meetingListList) {
+	                if (null != meeting.getMeetingStatus() && null != meeting.getMeetingStatus().getStatusId()
+	                    && !QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())) {
+	                  meetingStatusOtherThanDonecount++;
+	                } 
+	              }
+	              totalFinalizationRounds = totalFinalizationRounds - meetingStatusOtherThanDonecount;
+	            }
+	            
+				if (null != getManagedBean().getCurrentStatusId() 
+	                && (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
+                    || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
+                    || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
+                    || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
+                    || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
-					String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
-				 			+ SPACE + "(" + totalFinalizationRounds + ")";
-					addEndorsementReport(reportTitle);
-					//Sort reports
+				    
+				    if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()) {
+    				      String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.committee.endorsement.report", 
+    				          ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+    				          + SPACE + "(" + totalFinalizationRounds + ")";
+    				      addEndorsementReport(reportTitle);
+				    }
+
+				    //Sort reports
 					sortEndorsementReports(endorsementReports);
 				} else {
 					sortEndorsementReports(endorsementReports);
@@ -3620,6 +3657,8 @@ return	remarksNotFound;
 						this.getManagedBean().setEndorsementReport(endorsementReports.get(0));
 					}
 				}
+				
+				// 28834 - ends.
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
 			
