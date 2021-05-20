@@ -4469,8 +4469,8 @@ return	remarksNotFound;
 					
 					// disabled selection for rejected supplier.
 					if (recommend.getRecommendDtls() != null) {
-						Long evaZoneId = null;
-						Long specZoneId = null;
+						Long evaZoneId = 0L; //11134
+						Long specZoneId = 0L; //11134
 						if (evalResultDtl.getTplSpecZoneDtl() != null) {
 							evaZoneId = evalResultDtl.getTplSpecZoneDtl().getSpecZoneId();
 						}
