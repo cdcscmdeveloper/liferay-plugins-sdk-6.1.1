@@ -1455,19 +1455,11 @@ public class SmCommonUtil {
 			compBasic.setAuthorizedCapital(new BigDecimal(0));
 		}
 		if (compBasic.getTotalShare() != null) {
-			//start #30900
-			BigDecimal smEquityCompanyShareAmt = new BigDecimal(0);
-			if(businessTypeVal
-				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) &&!smEquityCompany.isEmpty()){
-				for(SmEquityCompany smEquCompany: smEquityCompany){
-					smEquityCompanyShareAmt = smEquityCompanyShareAmt.add(smEquCompany.getShareAmt());
-				}
-			} //end #30900
 			// 28466 - recalculate total share
 			compBasic.setTotalShare(compBasic.getBumiEquity().add(compBasic.getNonBumiEquity())
 					.add(compBasic.getLocalCompanyEquity()).add(compBasic.getForeignCompanyEquity())
 					.add(compBasic.getForeignerEquity()).add(compBasic.getGovtEquity())
-					.add(compBasic.getGovtUnitrustEquity()).add(smEquityCompanyShareAmt)  //#30900
+					.add(compBasic.getGovtUnitrustEquity())
 					.setScale(2, RoundingMode.HALF_UP));
 		} else {
 			compBasic.setTotalShare(new BigDecimal(0));
