@@ -10099,6 +10099,11 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute("approverRevDialog.hide()");
 		} else if (res != null && res.equalsIgnoreCase("INQUIRY")) {
 			RequestContext.getCurrentInstance().execute("sendInqDialog.hide()");
+		} //#30859 - START
+		  else if(res != null && res.equalsIgnoreCase("APPROVE")) {
+			RequestContext.getCurrentInstance().execute("approveAppCanDialog.hide()");
+			RequestContext.getCurrentInstance().execute("approvedCancelMofBlockWidget.hide()");
+		  //#30859 - END
 		} else {
 			// #26136
 			RequestContext.getCurrentInstance().execute("submitApprvrDialog.hide()");			
