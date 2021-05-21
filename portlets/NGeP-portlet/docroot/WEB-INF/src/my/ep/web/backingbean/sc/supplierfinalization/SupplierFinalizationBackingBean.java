@@ -3564,7 +3564,7 @@ return	remarksNotFound;
 			}
 			reqDTO.setQtId(qtId);
 			reqDTO.setScQtFinalization(scQtFinalization);
-			//28834 start
+			//28834 starts
 			reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
 			//28834 ends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
@@ -3624,7 +3624,7 @@ return	remarksNotFound;
                 // #28834 - End.
 				finalizationReports.removeAll(endorsementReports);
 				
-				// 28834 - starts.
+				// 28834 - start.
 				int meetingStatusOtherThanDonecount = 0;
 	            List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
 	            if (CollectionUtils.isNotEmpty(meetingListList)) {
@@ -3663,7 +3663,7 @@ return	remarksNotFound;
 					}
 				}
 				
-				// 28834 - ends.
+				// 28834 - end.
 
 
 //28834 starts
