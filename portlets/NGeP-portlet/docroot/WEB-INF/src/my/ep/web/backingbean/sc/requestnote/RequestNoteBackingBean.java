@@ -4572,9 +4572,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (uomPerMonth != null) {
 						zonalSubTotalAmount = zonalSubTotalAmount.multiply(uomPerMonth);
 					}
-
+					
+					//#25725 add fullfilment type non periodic to the condition.
 					// add fix for 24348 calculation for RN
-					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+					if (!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && 
+							!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)) {
 						if (itemDurationMonth != null) {
 							zonalSubTotalAmount = zonalSubTotalAmount.multiply(itemDurationMonth);
 						} else {
