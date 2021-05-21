@@ -2417,6 +2417,22 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			// #29921 - End.
+			
+			 // #28834 - Start.
+            if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+              ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+              ScQtFinalizationReportAttachment reportAttachment = null;
+              if (null != scQtFinalizationReport) {
+                try {
+                  reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+                } catch (Exception e) {
+                  log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
+                }
+                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+              }
+            }
+            // #28834 - End.
+            
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
 		}
@@ -9946,21 +9962,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				// #25638 - End.
 			} else {
 			   
-			    // #28834 - Start.
-			    if (CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
-			      ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
-			      ScQtFinalizationReportAttachment reportAttachment = null;
-			      if (null != scQtFinalizationReport) {
-			        try {
-			          reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-			        } catch (Exception e) {
-			          log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
-			        }
-			        scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-			      }
-			    }
-	            // #28834 - End.
-	            
 				signOff();
 				updateBPMTaskBrief(outcome, null, reqDTO);
 			}
