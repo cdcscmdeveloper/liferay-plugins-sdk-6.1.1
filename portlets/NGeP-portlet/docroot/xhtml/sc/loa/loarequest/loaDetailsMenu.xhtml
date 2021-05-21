@@ -640,7 +640,7 @@
 									<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 										value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
 										required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-										disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory or lOADetailBackingBean.managedBean.readOnly}">									
+										disabled="#{lOADetailBackingBean.disabledButton()}">									
 									<f:selectItems id="agreementReqSelect"
 										value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />																		
 									<p:ajax partialSubmit="true" update="@([id$=uploadApprovalLetterPg])"
@@ -652,7 +652,7 @@
 							</td>
 							<td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
-							</td>
+							</td>							
 						</tr>
 					</table>
 				</td>
@@ -668,36 +668,45 @@
 						</p:selectOneRadio> <p:message id="isFollowLOAAmtMsg" for="isFollowLOAAmt"
 							display="icon" /></td>
 				</h:panelGroup>					
-				</tr>
+				</tr>				
 				<!-- #25725 start -->
-				<tr><td>
+								
+				<tr>
+				<td>
+				<table>
+					<tr>
 					<p:outputPanel id="uploadApprovalLetterPg"> 
-							<ui:fragment rendered="#{((!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
-							required="true">
-							<h:panelGroup>
-								<p:outputLabel
-								value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-							</h:panelGroup>					 
-							<h:panelGroup>	
-								<p:commandButton 
-								oncomplete="uploadApprovalLetterDlg.show();return false;"
-					 			icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg"/>
-								<h:commandLink
-								title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
-								value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
-								action="#{lOADetailBackingBean.fileDownload}"
+							<ui:fragment rendered="#{((lOADetailBackingBean.managedBean.agreementReqChange) and (!lOADetailBackingBean.managedBean.scLoa.agreementReq) and (isNonPeriodic and !isPK7) and (lOADetailBackingBean.managedBean.above500K))}" 
+							required="true">							
+								
+								<td>
+									<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.approval.letter']}" /> 
+									<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+								</td>
+								<td>						
+									<p:commandButton 
+									oncomplete="uploadApprovalLetterDlg.show();return false;"
+					 				icon="ui-icon-upload" immediate="true" update="uploadApprovalLetterDlg" 
+					 				rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}"/>
+									<h:commandLink
+									title="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+									value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"						
+									action="#{lOADetailBackingBean.fileDownload}"
 									styleClass="blue_font"
-								rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
-								<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
-								rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" process="@this" partialSubmit="true"
-								disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
-			   					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
-			 	 				</p:commandLink>							
-							</h:panelGroup>
+									rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.filePath != null}"/>
+									<p:commandLink oncomplete="deleteApprovalLetterDlg.show();return false;"
+									rendered="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null and !lOADetailBackingBean.disabledButton()}" process="@this" partialSubmit="true"
+									disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment eq null}">
+			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+			 	 					</p:commandLink>
+			 	 										 	 					 	 				
+			 	 				</td>
+			 	 								 	 									
 							</ui:fragment>
-					</p:outputPanel>											
-				</td>
+					</p:outputPanel>
+					</tr>
+			 	 				</table>	
+					</td>		
 			</tr>
 			
 		</table>
@@ -745,7 +754,7 @@
 	</p:confirmDialog>
 	
 	<p:confirmDialog id="changeAgreementReqDlg" widgetVar="changeAgreementReqDlg"  appendToBody="true" 
-		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="true">
+		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
 		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="uploadApprovalLetterPg" process="@this"
 				partialSubmit="true" oncomplete="changeAgreementReqDlg.hide();" action="#{lOADetailBackingBean.agreementReqYes}"/>

@@ -319,8 +319,10 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(10000);
+	public BigDecimal limit = new BigDecimal(500000);
 	public boolean above500K = true;
+	public boolean AgreementReqChange = false;
+	public String docStatus;
 	//#25725 end
 	
 	//#19336
@@ -1903,7 +1905,24 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	public void setAbove500K(boolean above500k) {
 		above500K = above500k;
+	}	
+
+	public boolean isAgreementReqChange() {
+		return AgreementReqChange;
 	}
+
+	public void setAgreementReqChange(boolean agreementReqChange) {
+		AgreementReqChange = agreementReqChange;
+	}
+
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	
 	//#25725 end
 }
 

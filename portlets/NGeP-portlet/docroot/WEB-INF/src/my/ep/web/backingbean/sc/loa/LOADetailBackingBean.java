@@ -1072,8 +1072,34 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setSupplierRemarks(supplierRemarks);
 		// #11134 - end
 		
+		//#25725 start
 		// check agreement
-		checkAgreementMandatory();
+		if(scLoa.getLoaId() == null){
+			checkAgreementMandatory();			
+		}else{			
+			ScLoa loa = getManagedBean().getScLoa();
+			String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();			
+			boolean isPeriodic = (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType));
+			boolean isNonPeriodic = (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType));
+			boolean agreementReq = getManagedBean().isAgreementMandatory();
+										
+			if (isPeriodic){
+				if(agreementReq == false){
+					getManagedBean().setAgreementReqChange(true);
+				}					
+			}else if(isNonPeriodic && !over500K(loa)){
+				if(agreementReq == true){
+					getManagedBean().setAgreementReqChange(true);
+				}					
+			}else if(isNonPeriodic && over500K(loa)){
+				if(agreementReq == false){
+					getManagedBean().setAgreementReqChange(true);
+				}					
+			}else{
+				getManagedBean().setAgreementReqChange(false);
+			}			
+		}
+		//#25725 end
 
 		// check performance bond		
 		//Bug #29885 start isPendingSubmissionStatus or isPendingRevisionStatus
@@ -5821,21 +5847,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		boolean isNonPeriodic = (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType))||(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType));
 		
 		if(getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-		if(isOneOffFulfilment) {
-			isAgreementMandatory = false;
-			loa.setAgreementReq(isAgreementMandatory);
-		} else if (isPeriodic){
-			//Bug #24065
-			//isAgreementMandatory = false;
-			isAgreementMandatory = true;
-			loa.setAgreementReq(isAgreementMandatory);
-		}else if(isNonPeriodic && !over500K(loa)){
-			isAgreementMandatory = false;
-			loa.setAgreementReq(isAgreementMandatory);
-		}else if(isNonPeriodic && over500K(loa)){
-			isAgreementMandatory = true;
-			loa.setAgreementReq(isAgreementMandatory);
-		}
+			if(isOneOffFulfilment) {
+				isAgreementMandatory = false;
+				loa.setAgreementReq(isAgreementMandatory);
+			} else if (isPeriodic){
+				//Bug #24065
+				//isAgreementMandatory = false;
+				isAgreementMandatory = true;
+				loa.setAgreementReq(isAgreementMandatory);
+			}else if(isNonPeriodic && !over500K(loa)){
+				isAgreementMandatory = false;
+				loa.setAgreementReq(isAgreementMandatory);
+			}else if(isNonPeriodic && over500K(loa)){
+				isAgreementMandatory = true;
+				loa.setAgreementReq(isAgreementMandatory);
+			}
 		}else{
 			if(!isOneOffFulfilment) {
 				isAgreementMandatory = true;
@@ -8926,36 +8952,39 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			above500K = false;
 			this.getManagedBean().setAbove500K(false);
 		}
-		
-				
-		log.info("Radio button value from loaDetailsMenu is " + agreementReq);
-		log.info("AgreementReq : "+agreementReq);
-		log.info("isNonPeriodic : "+isNonPeriodic);
-		log.info("isPK7 : "+isPK7);
-		log.info("isPeriodic : "+isPeriodic);
-		log.info("above500K : "+above500K);
 		if((isPK7 && (isPeriodic || isNonPeriodic))&& !agreementReq){
+			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().execute("changeAgreementReqDlg.show()");			
 		}else if((agreementReq == false)&&((isNonPeriodic && above500K) && !isPK7)){
 			ScLoa scLoa = this.getManagedBean().getScLoa();			
-			scLoa.setAgreementReq(false);			
+			scLoa.setAgreementReq(false);
+			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
 		}else{
 			ScLoa scLoa = this.getManagedBean().getScLoa();			
 			scLoa.setAgreementReq(true);
+			this.getManagedBean().setAgreementReqChange(true);
 			RequestContext.getCurrentInstance().update("contractDetailsId");
 		}
 			
 	}
 	
 	public boolean disabledButton(){
-		Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
-		Boolean isPK7 = this.getManagedBean().getScLoa().getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
-		Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
-		Boolean result = true;		
-		
-		if(isNonPeriodic || (isPK7 && isPeriodic)){
-			result = false;
+		Boolean result = true;
+		if(this.getManagedBean().getScLoa().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
+			Boolean isPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
+			Boolean isPK7 = this.getManagedBean().getScLoa().getScQuote().getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7);
+			Boolean isNonPeriodic = (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) || (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
+			Long disabledID = new Long(62505);
+			
+			if(isNonPeriodic || (isPK7 && isPeriodic)){
+				result = false;
+				if(getManagedBean().getScLoa().getPmStatus().getStatusId().equals(disabledID)){
+					result = true;
+				}
+			}
+		}else{
+			result = true;
 		}
 		
 		return result;
@@ -8974,6 +9003,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		scLoa.setAgreementReq(true);
 		RequestContext.getCurrentInstance().update("agReqID");
 	}
+	
+	public String docStatus(){
+		log.info("LOA ID : "+getManagedBean().getScLoa().getLoaId());
+		log.info("Status ID : "+getManagedBean().getScLoa().getPmStatus().getStatusId());
+		return getStatusDescById(getManagedBean().getScLoa().getPmStatus().getStatusId());			
+	}	
+	
 	//#25725 end
 
 }
