@@ -2297,20 +2297,7 @@ public class SupplierFinalizationBackingBean extends
 		finalizationReports.addAll(this.getManagedBean().getDocumentList());
 		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 		scQtFinalization.setScQtFinalizationReports(finalizationReports);
-		//28834 starts
-		String decisionTypeCode1 = scQtFinalization.getDecision()
-				  .getParameterCode();
-			log.info("decision" + decisionTypeCode1);
-			if (ParameterConst.DECISION_RBP.equals(decisionTypeCode1)) {
-				for (ScQtFinalizationReport report : finalizationReports) {
-					if (report.isBrandNew()) {// find the correct additional
-												// condition
-						finalizationReports.remove(report);
-						break;
-					}
-				}
-			}
-			//28834 ends
+		
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		log.info("currentStatusId === "+currentStatusId);
 		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
