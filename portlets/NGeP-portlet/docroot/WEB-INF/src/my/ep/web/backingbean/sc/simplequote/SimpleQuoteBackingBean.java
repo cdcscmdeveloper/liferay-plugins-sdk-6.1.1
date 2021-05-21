@@ -24,8 +24,10 @@ import java.util.concurrent.TimeUnit;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
@@ -3994,34 +3996,21 @@ public class SimpleQuoteBackingBean extends
 			if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && result<0)){
-				log.info("Periodic (Schedule) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
-				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
-				log.info(result);
-				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+				validateDuration();
 				return;				
 			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN) && result<0)){
-				log.info("Periodic (As and When) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
-				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
-				log.info(result);
-				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+				validateDuration();
 				return;				
 			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) && result>0)){
-				log.info("Non-Periodic (Schedule) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
-				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
-				log.info(result);
-				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED) && (result>0 || result == 0))){
 				return;			
 			}else if(tplSpecQuestion.getClFulfilmentTypeCode() != null && 
 					(tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)&& result>0)){
-				log.info("Non-Periodic (As and When) : "+tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
-				log.info("Duration : " + tplSpecQuestion.getClDurationMonth());
-				log.info(result);
-				RequestContext.getCurrentInstance().execute("durAlertDlg.show();");
+					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)&& (result>0 || result == 0))){
+				validateDuration();
 				return;				
 			}
 		}
@@ -8162,4 +8151,21 @@ public class SimpleQuoteBackingBean extends
 			return getManagedBean();
 		}
 		// #29832 end
+		
+		//#25725 start
+		public void validateDuration() {
+			
+			Locale locale = new FacesScopes().getUserLocale();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+							.getMessage(
+									ResourceBundleUtils.getMessage("lbl.ct.sq.duration",
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));		
+				
+			
+		}
+		//#25725 end
 }
