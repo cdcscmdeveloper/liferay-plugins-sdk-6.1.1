@@ -135,6 +135,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentItemAddr> showItemAddrList;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private List<ScRequestItemSpecOffer> specificationList;
+	private List<ScRequestItemSpecOffer> itemSpecList;
 	private List<FlDeliveryAddress> selectedAddressRows;
 	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
@@ -349,6 +350,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private List<Object[]> approverPTJOrgList;
     private Long selectedApproverPTJ;
     //13291 - end
+    
+    //24956 start
+    private boolean CtTypeMinistry;
+    //24956 end
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3218,6 +3223,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.specificationList = specificationList;
 	}
 
+	public List<ScRequestItemSpecOffer> getItemSpecList() {
+		return itemSpecList;
+	}
+
+	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+		this.itemSpecList = itemSpecList;
+	}
+
 	public String getSupplierOffer() {
 		return supplierOffer;
 	}
@@ -3266,6 +3279,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.preparedBy = preparedBy;
 	}
 	//29555 end
+
+	public boolean isCtTypeMinistry() {
+		return CtTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		CtTypeMinistry = ctTypeMinistry;
+	}
+
 	//13291 - start
 	private class PreparedForPtjPagingDataModel extends PagingDataModel<PmOrgProfile> {
 

@@ -250,7 +250,7 @@
 		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{receivedNoteBackingBean.managedBean.itemName}"
 						size="85" /></td>
@@ -270,7 +270,7 @@
 			</tr>
 			
 			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{receivedNoteBackingBean.managedBean.specificationList}"  >
+			value="#{receivedNoteBackingBean.managedBean.itemSpecList}"  >
 			<ac:paginator for="specificationDt" />
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"

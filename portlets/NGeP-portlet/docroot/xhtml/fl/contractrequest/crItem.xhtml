@@ -682,7 +682,7 @@
 		modal="true" width="900" height="600" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{contractRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
@@ -799,7 +799,7 @@
 			</tr>
 			
 			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{contractRequestBackingBean.managedBean.specificationList}"  >
+			value="#{contractRequestBackingBean.managedBean.itemSpecList}"  >
 			<ac:paginator for="specificationDt" />
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
