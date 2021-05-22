@@ -188,6 +188,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -1667,6 +1668,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getEspkbCommitmentNo();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage.xhtml");
+		
+		//24956
+		if (getManagedBean().getFlRequest().getCtContract().getContractType().
+				getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			getManagedBean().setCtTypeMinistry(true);
+		}
+		
 	}
 
 	private void getEspkbCommitmentNo() {
@@ -4250,13 +4258,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		
 		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
-		getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
-		getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
-		getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());	
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
+				if (specification.getSupplierOffer()!= null) {
+					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
+				}
+				if (specification.getNewOfferSpec()!= null) {
+					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
+				}
+				if (specification.getItemSpec()!= null) {
+					getManagedBean().setItemSpecification(specification.getItemSpec());	
+					getManagedBean().getItemSpecList().add(specification);
+				}			
+			}
 		} else {
 		getManagedBean().setSupplierOffer(null);
 		getManagedBean().setNewOfferedSpec(null);
 		getManagedBean().setItemSpecification(null);
+		getManagedBean().setItemSpecList(null);
 		}
 		
 		flItemAddr.setPriceType(flItemAddr.getPriceType());

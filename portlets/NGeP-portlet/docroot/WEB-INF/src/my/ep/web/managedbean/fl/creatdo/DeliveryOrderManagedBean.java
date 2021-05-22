@@ -132,7 +132,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
-	//28855 -start
 	private String supplierOffer;
 	private String newOfferedSpec;
 	private String itemSpecification;
@@ -140,7 +139,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean dpFlag;
 	private boolean contractFlag;
 	private List<ScRequestItemSpecOffer> specificationList;
-	//28855 -end
+	private List<ScRequestItemSpecOffer> itemSpecList;
+
 	/**
 	 * Gets the item selected for cal.
 	 *
@@ -1350,5 +1350,13 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
 		this.specificationList = specificationList;
+	}
+
+	public List<ScRequestItemSpecOffer> getItemSpecList() {
+		return itemSpecList;
+	}
+
+	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+		this.itemSpecList = itemSpecList;
 	}
 }
