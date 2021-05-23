@@ -1702,6 +1702,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long currentQTStatus;
 	private Long currentCMTStatus;
 	private boolean committeeUpdateFlow;
+	private List<String> mainTaskNames;
 
 	//#25037-END
 	//#25077 - Start
@@ -10959,7 +10960,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.committeeAppointmentMenuTab = committeeAppointmentMenuTab;
 		}
 		//29464-end
-		
+
+		//#25037-start
+		public List<String> getMainTaskNames() {
+			return mainTaskNames;
+		}
+
+		public void setMainTaskNames(List<String> mainTaskNames) {
+			this.mainTaskNames = mainTaskNames;
+		}
+		//#25037-end
+
 }
 
 

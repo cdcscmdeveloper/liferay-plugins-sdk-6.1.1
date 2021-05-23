@@ -1920,6 +1920,15 @@ public class QTCommitteBackingBean extends
 						|| Arrays.asList(QTStatusConst.CMT_REVISION_GROUP).contains(currentCmtStatus)) {
 				return false;
 			} 
+			
+			if(this.getManagedBean().getMainTaskNames()==null){
+				List<String> taskNames = this.getCurrentlyAssignedTaskNames(scQt);
+				taskNames = taskNames==null ? new ArrayList<String>(): taskNames;
+				this.getManagedBean().setMainTaskNames(taskNames);
+			}
+			if(this.getManagedBean().getMainTaskNames().contains(SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE)){
+				return false;
+			}
 			//#25037-end
 
 			if (super.isQTStatusPublished(currentStatusId)) {
