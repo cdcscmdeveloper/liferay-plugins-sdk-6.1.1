@@ -256,6 +256,7 @@ import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.ApproverSettings;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.QTFieldMapper;
@@ -3475,7 +3476,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
 						for(ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()){
 							for(ScQtApproverSettings approverSetting : approval.getApproverSettings()){
-								if(approverSetting.getPmUser().getRecordStatusFlg() == 0){
+								if(isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId())){ //#30477#23
 									throw new EpException(MessageConst.ERROR_775171);
 								}
 							}
@@ -9887,9 +9888,35 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return !StringUtils.join(previousListArr, ",").equalsIgnoreCase(StringUtils.join(currentListArr, ","));
 	}
   	//#25037 - end
+  	
+    //#30477#23 - Start
+  	public boolean isInactiveCommiteeApproverRole(Long userId) {
+		IQTDetailSO detailSO = null;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			PmUserOrg pmUserOrgs = new PmUserOrg();
+			
+			quationTenderReqDTO.setUserId(userId);
+			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+			
+			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
+			
+			boolean inactive = false;
+			for (PmUserRole roles : pmUserOrg.getPmUserRoles()) {	
+				if(RoleCode.COMMITTEE_APPROVER.value().equals(roles.getPmRole().getRoleCode()) && 
+						roles.getRecordStatusFlg().equals(0) && roles.isRecordStatus() == false){
+					inactive = true;	
+				}
+			}
+			return inactive;
+			
+		} finally {
+			detailSO = null;
+		}
+	}
+    //#30477#23 - End
     
 }
-
-
-// ***19336#40
-// ***25692
