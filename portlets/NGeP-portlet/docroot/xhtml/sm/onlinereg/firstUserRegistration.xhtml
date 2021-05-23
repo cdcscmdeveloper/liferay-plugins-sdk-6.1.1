@@ -628,10 +628,10 @@
 						<p:ajax event="blur" partialSubmit="true"></p:ajax>
 						<p:ajax event="change" process="@this" listener="#{registrationBackingBean.onChangeEmail()}" update="usrEmail"/> 
 					</p:inputText> &#160;
-					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
-					<p:tooltip id="emailtt" for="emailti">
-						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
-					</p:tooltip>
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip> 
 					<p:message id="usrEmailMsg" for="usrEmail" display="icon" />
 				</td>
 			</tr>
