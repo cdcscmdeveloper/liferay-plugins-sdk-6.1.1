@@ -72,6 +72,7 @@ import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.bpm.vo.WorklistVO;
@@ -86,8 +87,8 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -5156,6 +5157,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 		}
 		
+		public List<String> getCurrentlyAssignedTaskNames(ScQt qt){
+			List<String> taskNames = new ArrayList<String>();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(qt.getQtNo());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+			if(resDTO.getWorklistVO()!=null){
+				if(CollectionUtils.isNotEmpty(resDTO.getWorklistVO().getWorklistItem())){
+					for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
+						if(StringUtils.isNotBlank(currentVO.getTaskName())){
+							taskNames.add(currentVO.getTaskName());
+						}
+					}
+				}
+			}
+
+			if(CollectionUtils.isEmpty(taskNames)){
+				return null;
+			}
+			return taskNames;
+		}		
 		//25037 - End
 		
 		/*
