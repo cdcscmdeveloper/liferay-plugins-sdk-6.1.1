@@ -400,12 +400,11 @@
 							<p:ajax event="change" process="@this" listener="#{selfRequestSupplierAdminBackingBean.onChangeEmail()}" update="suppAdminEmail"/> 
 						</p:inputText> 
 					</p:outputPanel>
-					&#160; <p:graphicImage id="tooltip2"
-						value="/css/images/design/tooltips.png" /> <p:tooltip
-						id="toolinfo2" for="tooltip2">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
-					</p:tooltip>&#160;
+					&#160;&#160;
+					<p:graphicImage id="toolTipIcon" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sourceTooltip" for="toolTipIcon">
+						<h:outputText id="sourceLabel" escape="false" value="#{lbl['lbl.sm.email.change.tooltip']}" />
+					</p:tooltip> 
 					<p:message id="suppAdminEmailMsg" for="suppAdminEmail"
 						showSummary="true" showDetail="false" display="icon" />
 				</td>
