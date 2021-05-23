@@ -125,6 +125,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentItemAddr> showItemAddrList;
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private List<ScRequestItemSpecOffer> specificationList;
+	private List<ScRequestItemSpecOffer> itemSpecList;
 	private List<FlDeliveryAddress> selectedAddressRows;
 	private List<VAddressTypeDeliveryAddress> selectedDeliveryFullAddr;
 	private List<VAgencyDeliveryAddress> selectedAgencyAddressList;
@@ -330,6 +331,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static int backFlag;
     private static String catalogueFlag;
     //13984-end
+    
+    //24956 start
+    private boolean CtTypeMinistry;
+    //24956 end
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3198,6 +3203,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.specificationList = specificationList;
 	}
 
+	public List<ScRequestItemSpecOffer> getItemSpecList() {
+		return itemSpecList;
+	}
+
+	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+		this.itemSpecList = itemSpecList;
+	}
+
 	public String getSupplierOffer() {
 		return supplierOffer;
 	}
@@ -3236,4 +3249,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.isBranchNeedToBeChanged = isBranchNeedToBeChanged;
 	}
 	//29728 - end
+	
+	public boolean isCtTypeMinistry() {
+		return CtTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		CtTypeMinistry = ctTypeMinistry;
+	}
 }

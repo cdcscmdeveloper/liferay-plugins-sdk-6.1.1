@@ -74,6 +74,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1610,9 +1611,19 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 		
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
-			getManagedBean().setSupplierOffer(getManagedBean().getSpecificationList().get(0).getSupplierOffer());
-			getManagedBean().setNewOfferedSpec(getManagedBean().getSpecificationList().get(0).getNewOfferSpec());
-			getManagedBean().setItemSpecification(getManagedBean().getSpecificationList().get(0).getItemSpec());	
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+				for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
+					if (specification.getSupplierOffer()!= null) {
+						getManagedBean().setSupplierOffer(specification.getSupplierOffer());
+					}
+					if (specification.getNewOfferSpec()!= null) {
+						getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
+					}
+					if (specification.getItemSpec()!= null) {
+						getManagedBean().setItemSpecification(specification.getItemSpec());	
+						getManagedBean().getItemSpecList().add(specification);
+					}
+				}
 			} else {
 			getManagedBean().setSupplierOffer(null);
 			getManagedBean().setNewOfferedSpec(null);
