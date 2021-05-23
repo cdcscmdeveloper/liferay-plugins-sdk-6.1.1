@@ -303,4 +303,15 @@ public class ResendAccountActivationEmailBackingBean extends
 	public void setSuppAdminMobileTelcoId(String suppAdminMobileTelcoId) {
 		this.suppAdminMobileTelcoId = suppAdminMobileTelcoId;
 	}
+	
+	public void onChangeEmail()
+	{
+		String email = suppAdminEmail.toLowerCase();
+		if(email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))
+		{
+			suppAdminEmail = "";
+			RequestContext.getCurrentInstance().execute(
+					"emailPopUpWidgetVar.show()");
+		}
+	}
 }
