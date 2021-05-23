@@ -2188,12 +2188,29 @@ public class SupplierFinalizationBackingBean extends
 		// #25638 - Start.
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
 		// #25638 - End.
+  			 // #28834 - Start
+			 if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+				  ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1); 
+				  ScQtFinalizationReport report = new ScQtFinalizationReport();
+				  report.setScQtFinalization(scQtFinalization);
+				  report.setDocCategory(scQtFinalizationReport.getPmDocument().getDocCategoryCode().getParameterCode());
+				  report.setPmDocument(scQtFinalizationReport.getPmDocument());
+				  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
+						  ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
+						  + SPACE + "(" + getManagedBean().getDocumentList().size() + ")";
+				  report.setTitle(reportTitle);
+				  report.setDefinationType(scQtFinalizationReport.getPmDocument().getDocDefinitionTypeCode());
+				  report.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				  scQtFinalization.getScQtFinalizationReports().add(report);
+			  }
+			  // #28834 - End
 			if (CollectionUtils.isNotEmpty(
 					this.getManagedBean().getCommitteeList())
 					// #25638 - Start
 					&& !BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
 					// #25638 - End
 					) {
+				log.info("committeeList is not empty !!");
 				int totalMembersEndorsed = 0;
 				int totalMembersAttended = 0;
 				boolean isChairperson = false;
@@ -2281,6 +2298,22 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			// #29921 - End.
+			
+			 // #28834 - Start.
+            if (ParameterConst.DECISION_RBP.equals(decisionTypeCode) && CollectionUtils.isNotEmpty(getManagedBean().getDocumentList()) && getManagedBean().getDocumentList().size() > 0) {
+              ScQtFinalizationReport scQtFinalizationReport = getManagedBean().getDocumentList().get(getManagedBean().getDocumentList().size() -1);
+              ScQtFinalizationReportAttachment reportAttachment = null;
+              if (null != scQtFinalizationReport) {
+                try {
+                  reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+                } catch (Exception e) {
+                  log.error("SupplierFinalizationBackingBean.submitBrief(): Error while genarate briefing paper: " + e.getMessage());
+                }
+                scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+              }
+            }
+            // #28834 - End.
+            
 			signOff();
 			updateBPMTask(outcome, null, reqDTO);
 		}
@@ -2935,9 +2968,9 @@ return	remarksNotFound;
 		EpException epException = null;
 		
 		 // #27502  //#29699  //28780#52
-		//27502 - Start.
-		if ((getManagedBean().isBpkCentralContract() || !getManagedBean().isInitialDecisionFwdToBPK()) && 
-				this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
+		//27502 - Start //28834 starts.
+		if ((getManagedBean().isBpkCentralContract() || !getManagedBean().isInitialDecisionFwdToBPK()) && null !=this.getManagedBean().getEndorsementReport()
+				&& this.getManagedBean().getEndorsementReport().getScQtFinalizationReportAttachment() == null){
 			throw new EpException(MessageConst.ERROR_775150,new String[] { ResourceBundleUtils.getMessage(
 					"lbl.sc.committee.endorsement.report",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -2946,32 +2979,39 @@ return	remarksNotFound;
 		//27502 - End.
 		
 		// #28834 - Start.
-		if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
-          boolean remarksNotFound = true;
-          if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
-            for (ScRemark finalizationRemark : getManagedBean().getFinalizationRemarks()) {
-              if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
-                if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
-                  if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
-                    remarksNotFound = true;
-                    break;
-                  } else {
-                    remarksNotFound = false;
-                  }
-                }
-              }
-            }
-          } 
-          
-          if (remarksNotFound) {
-            navigateToSupplierFinalizationTab();
-            if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)) {
-              throw new EpException(MessageConst.ERROR_760360);
-            } else if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
-              throw new EpException(MessageConst.ERROR_700093);
-            }
-          }
-		} 
+		if (null != getManagedBean().getCurrentStatusId() 
+                && (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
+			if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
+				boolean remarksNotFound = true;
+				if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
+					for (ScRemark finalizationRemark : getManagedBean().getFinalizationRemarks()) {
+						if (null != finalizationRemark.getCreatedUser() && null != finalizationRemark.getCreatedUser().getUserId()) {
+							if (finalizationRemark.getCreatedUser().getUserId().longValue() == new FacesScopes().getUserSessionBean().getUserId().longValue()) {
+								if (StringUtils.isEmpty(finalizationRemark.getRemark()) ) {
+									remarksNotFound = true;
+									break;
+								} else {
+									remarksNotFound = false;
+								}
+							}
+						}
+					}
+				} 
+				
+				if (remarksNotFound) {
+					navigateToSupplierFinalizationTab();
+					if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode)) {
+						throw new EpException(MessageConst.ERROR_760360);
+					} else if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
+						throw new EpException(MessageConst.ERROR_700093);
+					}
+				}
+			} 
+		}
 		// #28834 - End.
 		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -3401,7 +3441,9 @@ return	remarksNotFound;
 			}
 			reqDTO.setQtId(qtId);
 			reqDTO.setScQtFinalization(scQtFinalization);
-
+			//28834 starts
+			reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+			//28834 ends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveFinalizationReports(reqDTO);
 			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
@@ -3450,11 +3492,10 @@ return	remarksNotFound;
 			boolean isBpkCentralContract = false;
 			isBpkCentralContract = isBpkCentralContract(scQt);
 			
+			// #28834 - Strat.
 			if (isBpkCentralContract || !getManagedBean().isInitialDecisionFwdToBPK()) {
 				int totalFinalizationRounds = findFinalizationCount();
-				// #28834 - Strat.
-				totalFinalizationRounds = totalFinalizationRounds - findReviseBpCount();
-                // #28834 - End.
+				
 				finalizationReports.removeAll(endorsementReports);
 				if (endorsementReportCount < totalFinalizationRounds) {
 					// No need to generate Kertas Keputusan under Briefing Paper Preparation tab.
@@ -3474,7 +3515,7 @@ return	remarksNotFound;
 				}
 				this.getManagedBean().setEndorsementReports(endorsementReports);
 			}
-			
+			// #28834 - End.
 			if (finalizationReports != null) {
 				//sortReports(finalizationReports);
 				
@@ -9578,12 +9619,14 @@ return	remarksNotFound;
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
-			for(ScQtFinalizationReport  report: finalizationReports){
+			// #28834 - Start
+			/*for(ScQtFinalizationReport  report: finalizationReports){
 				if(report.isBrandNew()){//find the correct additional condition
 					finalizationReports.remove(report);
 					break;
 				}
-			}
+			}*/
+			// #28834 - End
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			log.info("currentStatusId === "+currentStatusId);

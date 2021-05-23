@@ -671,7 +671,16 @@ public class ConsolidationReportBackingBean extends
 	public void submitAction() {
 		// Validate Desk officer ranking
 		// #30874 - Start.
-	    validateConsolidationReport();
+		//28834 starts
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
+		if (ParameterConst.DECISION_RBP.equals(decisionTypeCode)) {
+			log.info("decisionTypeCode " + decisionTypeCode);
+		} else {
+			validateConsolidationReport();
+		}
+		//28834 ends
+	   
 	    // #30874 - End.
 		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 
@@ -1006,7 +1015,9 @@ public class ConsolidationReportBackingBean extends
 			}
 			reqDTO.setQtId(qtId);
 			reqDTO.setScQtFinalization(scQtFinalization);
-
+			 //28834 start
+			reqDTO.setCommitteeType(getManagedBean().getCommitteeType());
+			//28834 ends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveFinalizationReports(reqDTO);
 			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
