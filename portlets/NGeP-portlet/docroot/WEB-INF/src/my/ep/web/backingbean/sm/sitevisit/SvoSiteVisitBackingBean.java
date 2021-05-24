@@ -29,6 +29,10 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+//#30504 start
+import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
+//#30504 end
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -2027,6 +2031,26 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
+				// #30504 start
+				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
+				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
+
+				if (currPo.getPmUserOrgs().get(0).getRecordStatusFlg() == 0) {
+					IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+					zoneReqDTO.setStateId(svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+							.getSmAddress().getPmState().getStateId());
+					PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
+							svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
+							svTask.getSmAppl().getApplCategoryType(),
+							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(newPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
+
+				}
+				// #30504 end
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
