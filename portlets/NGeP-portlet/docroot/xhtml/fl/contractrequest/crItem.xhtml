@@ -784,34 +784,34 @@
 	<h:panelGroup>   
 		<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}" toggleable="false" >
 			
-		  <table style="width: 100%">	
+		  <table style="width: 67%">	
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
 						value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}"
-						size="85" /></td>
+						size="35" /></td>
 			</tr>
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
 				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
 						value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
-						size="85" /></td>
+						size="35" /></td>
 			</tr>
 			</table> 
 			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{contractRequestBackingBean.managedBean.itemSpecList}"  >
+			value="#{contractRequestBackingBean.managedBean.itemSpecList}">
 			<ac:paginator for="specificationDt" />
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" width="750"
 			rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
 			<p:inputTextarea disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="120" rows="2"/>
+						value="#{specificationList.itemSpec}" cols="130" rows="2"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
 			rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="35" rows="6" id="itemSpecification"
+			<p:inputTextarea cols="44" rows="6" id="itemSpecification"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -820,7 +820,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.supp.offer']}" style="text-align:center"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="35" rows="6" id="supplierOffer"
+			<p:inputTextarea cols="44" rows="6" id="supplierOffer"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
@@ -829,7 +829,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.new.offer.spec']}" style="text-align:center"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea cols="35" rows="6" id="newOfferedSpec"
+			<p:inputTextarea cols="44" rows="6" id="newOfferedSpec"
 						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
 						autoResize="false"
 						style=" margin-bottom:5px;" 
